@@ -53,34 +53,34 @@ def frontmatter(text):
 
 def static(allow_branded):
     print("Static checks")
-    pj = json.loads((ROOT / ".claude-plugin" / "plugin.json").read_text())
+    pj = json.loads((ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
     check(re.fullmatch(r"[a-z0-9-]+", pj.get("name", "")) is not None, f"plugin name kebab-case ({pj.get('name')})")
     check(re.fullmatch(r"\d+\.\d+\.\d+", pj.get("version", "")) is not None, f"plugin version semver ({pj.get('version')})")
-    mcp = json.loads((ROOT / ".mcp.json").read_text())
+    mcp = json.loads((ROOT / ".mcp.json").read_text(encoding="utf-8"))
     url = mcp.get("mcpServers", {}).get("GradientCIO", {}).get("url", "")
     check(url.startswith("https://"), f"GradientCIO connector url https ({url})")
     skills = sorted(p for p in (ROOT / "skills").iterdir() if (p / "SKILL.md").exists())
     check(len(skills) >= 11, f"{len(skills)} skills found")
     for s in skills:
-        text = (s / "SKILL.md").read_text(); fm = frontmatter(text)
+        text = (s / "SKILL.md").read_text(encoding="utf-8"); fm = frontmatter(text)
         check(fm.get("name") == s.name and s.name.startswith("gradient-"), f"{s.name}: name matches folder and starts with gradient-")
         check(bool(fm.get("description")), f"{s.name}: has description")
         check((s / "scripts" / "gradient_report.py").exists(), f"{s.name}: has renderer copy")
-        body = text + "".join(p.read_text() for p in (s / "references").glob("*.md")) if (s / "references").exists() else text
+        body = text + "".join(p.read_text(encoding="utf-8") for p in (s / "references").glob("*.md")) if (s / "references").exists() else text
         check(".pdf" in body.lower() or "pdf" in fm.get("description", "").lower(), f"{s.name}: declares PDF output")
         check(len(text.split()) < 3000, f"{s.name}: SKILL.md under 3,000 words ({len(text.split())})")
     stale = []
     for p in ROOT.rglob("*"):
-        if p.is_file() and p.suffix in (".md", ".py", ".json") and "tests" not in p.parts and STALE.search(p.read_text(errors="ignore")):
+        if p.is_file() and p.suffix in (".md", ".py", ".json") and "tests" not in p.parts and STALE.search(p.read_text(encoding="utf-8", errors="ignore")):
             stale.append(str(p.relative_to(ROOT)))
     check(not stale, "no stale skill names" + (f": {stale}" if stale else ""))
-    r = subprocess.run([sys.executable, str(ROOT / "tools" / "sync_shared.py"), "--check"], capture_output=True, text=True)
+    r = subprocess.run([sys.executable, str(ROOT / "tools" / "sync_shared.py"), "--check"], capture_output=True, text=True, encoding="utf-8", errors="replace")
     check(r.returncode == 0, "shared renderer and style guide in sync in every skill")
     py311 = shutil.which("python3.11")
     if py311:
-        r = subprocess.run([py311, "-m", "py_compile", str(RENDER)], capture_output=True, text=True)
+        r = subprocess.run([py311, "-m", "py_compile", str(RENDER)], capture_output=True, text=True, encoding="utf-8", errors="replace")
         check(r.returncode == 0, "renderer compiles on Python 3.11")
-    b = json.loads((ROOT / "branding.json").read_text())
+    b = json.loads((ROOT / "branding.json").read_text(encoding="utf-8"))
     check(allow_branded or not b.get("client_name"), "branding.json is unbranded (use --allow-branded for a client build)")
 
 def render(keep):
@@ -90,13 +90,13 @@ def render(keep):
     for name, args, lo, hi, must in CASES:
         pdf = out / f"{name}.pdf"
         argv = [str(pdf) if a == "OUT" else (str(FIX / a) if (FIX / a).exists() else a) for a in args]
-        r = subprocess.run([sys.executable, str(RENDER)] + argv, capture_output=True, text=True, cwd=FIX)
+        r = subprocess.run([sys.executable, str(RENDER)] + argv, capture_output=True, text=True, encoding="utf-8", errors="replace", cwd=FIX)
         if r.returncode != 0:
             check(False, f"{name}: render exit {r.returncode}: {(r.stderr or r.stdout).strip()[-300:]}"); continue
-        info = subprocess.run(["pdfinfo", str(pdf)], capture_output=True, text=True).stdout
+        info = subprocess.run(["pdfinfo", str(pdf)], capture_output=True, text=True, encoding="utf-8", errors="replace").stdout
         pages = int(re.search(r"Pages:\s+(\d+)", info).group(1))
         check(lo <= pages <= hi, f"{name}: {pages} pages (expected {lo}–{hi})")
-        text = subprocess.run(["pdftotext", "-layout", str(pdf), "-"], capture_output=True, text=True).stdout
+        text = subprocess.run(["pdftotext", "-layout", str(pdf), "-"], capture_output=True, text=True, encoding="utf-8", errors="replace").stdout
         norm = lambda t: re.sub(r"\s+", "", t).upper()   # tolerate CSS uppercase and letter-spacing
         missing = [m for m in must if norm(m) not in norm(text)]
         check(not missing, f"{name}: contains {must}" + (f" — missing {missing}" if missing else ""))

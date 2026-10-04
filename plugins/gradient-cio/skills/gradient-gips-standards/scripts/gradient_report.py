@@ -83,7 +83,7 @@ def load_branding(explicit=None):
              os.path.join(here, "..", "branding.json")]               # shared/ -> plugin root
     for c in cands:
         if c and os.path.isfile(c):
-            b = json.load(open(c))
+            b = json.load(open(c, encoding="utf-8"))
             logo = b.get("client_logo")
             if logo:
                 lp = logo if os.path.isabs(logo) else os.path.join(os.path.dirname(os.path.abspath(c)), logo)
@@ -727,7 +727,7 @@ def render_deck(d, out, html_out=None):
     DECK_MODE = True
     src = deck_html(d)
     if html_out:
-        open(html_out, "w").write(src)
+        open(html_out, "w", encoding="utf-8").write(src)
     from playwright.sync_api import sync_playwright
     with sync_playwright() as p:
         br = _launch(p); pg = br.new_page(viewport={"width": 1280, "height": 720})
@@ -751,22 +751,22 @@ def main():
     if len(a) < 2:
         raise SystemExit(__doc__)
     if a[0] == "--deck":   # gradient_report.py --deck deck.json out.pdf [--html out.html]
-        d = json.load(open(a[1]))
+        d = json.load(open(a[1], encoding="utf-8"))
         return render_deck(d, a[2], a[a.index("--html") + 1] if "--html" in a else None)
     if a[0] == "--md":   # gradient_report.py --md doc.md [--meta meta.json] out.pdf [--json out.json]
-        md = open(a[1]).read()
-        meta = json.load(open(a[a.index("--meta") + 1])) if "--meta" in a else {}
+        md = open(a[1], encoding="utf-8").read()
+        meta = json.load(open(a[a.index("--meta") + 1], encoding="utf-8")) if "--meta" in a else {}
         r = md_document_to_report(md, meta)
         rest = [x for i, x in enumerate(a[2:], 2) if x not in ("--meta", "--json", "--html") and a[i - 1] not in ("--meta", "--json", "--html")]
         out = rest[0]
         if "--json" in a:
-            json.dump(r, open(a[a.index("--json") + 1], "w"), indent=1)
+            json.dump(r, open(a[a.index("--json") + 1], "w", encoding="utf-8"), indent=1)
     else:
-        r = json.load(open(a[0])); out = a[1]
+        r = json.load(open(a[0], encoding="utf-8")); out = a[1]
     html_out = a[a.index("--html") + 1] if "--html" in a else None
     cov, body = cover_html(r), body_html(r)
     if html_out:
-        open(html_out, "w").write(body)
+        open(html_out, "w", encoding="utf-8").write(body)
     from playwright.sync_api import sync_playwright
     tmp = tempfile.mkdtemp()
     p1, p2 = os.path.join(tmp, "cover.pdf"), os.path.join(tmp, "body.pdf")

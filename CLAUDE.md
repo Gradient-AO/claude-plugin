@@ -20,6 +20,7 @@ This repo is a **public** Claude plugin marketplace. Clients install from it dir
 5. Run, and fix until both pass:
    - `python plugins/gradient-cio/tests/run_tests.py`
    - `claude plugin validate .`
+   - if the change adds or changes which GradientCIO tools a skill calls: update `skills/gradient-setup/references/contracts.json` and `skill-requirements.md`, then run the gradient-setup full self-test against the live connector and update its known-issues table.
    - a secrets scan: `git diff main --stat` plus `grep -rInE "(api[_-]?key|secret|token|password|bearer)" plugins/ | grep -v -i "no credentials"` and review any hits.
 6. Commit with a clear message, push the branch, open a PR, wait for the `validate` check to pass, then merge to `main` (squash). If the owner asks to publish directly, push to `main` only after step 5 passes.
 7. Tag the release: `git tag v<version> && git push origin v<version>`, and create a GitHub release with the changelog entry (`gh release create v<version> --notes-from-tag` or paste the notes).

@@ -341,7 +341,7 @@ def main():
     p.add_argument("command", choices=["ips", "liquidity", "brinson"])
     p.add_argument("--input", required=True, help="Path to JSON input")
     args = p.parse_args()
-    with open(args.input) as f:
+    with open(args.input, encoding="utf-8") as f:
         data = json.load(f)
     fn = {"ips": run_ips, "liquidity": run_liquidity, "brinson": run_brinson}[args.command]
     json.dump(fn(data), sys.stdout, indent=2, ensure_ascii=False, default=float)
