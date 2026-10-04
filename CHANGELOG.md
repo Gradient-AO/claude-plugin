@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.1
+- Licensed under Apache-2.0 (LICENSE and NOTICE at the repository root; `license` set in plugin.json).
+- Plugin icon added (`.claude-plugin/icon.png`).
+- The PDF renderer no longer reads any environment variable; pass a branding file with `--brand` or use `branding.json` at the plugin root.
+
 ## 1.2.0
 - New skill **gradient-portfolio-review**: quarterly or annual total-portfolio review (returns vs benchmark, calendar years, risk, allocation vs policy ranges, exposure, 13F look-through). Works on Gradient's illustrative portfolio without Portfolio Analytics.
 - New skill **gradient-manager-compare**: screen advisers or compare 2–5 managers side by side (Form ADV, service providers, operational flags, 13F overlap) with next steps.

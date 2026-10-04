@@ -7,7 +7,7 @@ dark cover with lime accents, executive band, chips, source tags, running header
 Usage:  python gradient_report.py report.json out.pdf [--html out.html]
         python gradient_report.py --md document.md [--meta meta.json] out.pdf [--json report.json]
         python gradient_report.py --deck deck.json out.pdf          (16:9 slide deck)
-Options: --brand branding.json  (default: GRADIENT_BRANDING env var, else branding.json at the plugin root)
+Options: --brand branding.json  (default: branding.json at the plugin root)
 Needs:  playwright (Chromium) and poppler's pdfunite (or qpdf). No other dependencies.
 
 Labels are set per report in `meta` (header_label, signal_title, meter_title); brand
@@ -70,7 +70,7 @@ STATUS_COLOR = {"available": LIME, "used": LIME, "passed": LIME, "aligned": LIME
 SEV_COLOR = {"high": CORAL, "medium": AMBER, "low": SLATE, "info": LIME}
 
 # ---- client branding ---------------------------------------------------------
-# branding.json (at the plugin root, or via --brand / GRADIENT_BRANDING):
+# branding.json (at the plugin root, or via --brand):
 #   {"client_name": "Acme Pension Fund", "client_logo": "assets/client-logo.png",
 #    "confidentiality": "Confidential — prepared for Acme Pension Fund", "powered_by": true}
 # Colours and fonts never change per client; only names, logo and footer text do.
@@ -78,7 +78,7 @@ BRANDING = {}
 
 def load_branding(explicit=None):
     here = os.path.dirname(os.path.abspath(__file__))
-    cands = [explicit, os.environ.get("GRADIENT_BRANDING"),
+    cands = [explicit,
              os.path.join(here, "..", "..", "..", "branding.json"),   # skills/<skill>/scripts -> plugin root
              os.path.join(here, "..", "branding.json")]               # shared/ -> plugin root
     for c in cands:
