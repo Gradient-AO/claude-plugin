@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.3
+- The PDF renderer makes no network requests: the Inter font (OFL-1.1) now ships in `assets/fonts/` and is embedded in each report, instead of being downloaded from Google Fonts. Reports look the same and render offline.
+- Test fixtures: removed a leftover real assets-under-management figure.
+
 ## 1.2.2
 - Privacy policy link added (`privacyPolicyUrl`: https://www.gradientcio.com/home/privacy) and linked from the README.
 

@@ -14,8 +14,8 @@ these reports, and do not change colours or fonts per report.
 | Slide deck (16:9) | The skill produces slides (macro briefing) | `python <skill dir>/scripts/gradient_report.py --deck deck.json "<file>.pdf"` |
 
 `<skill dir>` is the base directory of the skill being run. The script needs Python 3.11+, Playwright with
-Chromium (it uses `/opt/pw-browsers/chromium` when present) and `pdfunite` or `qpdf`. It loads Inter from Google
-Fonts and falls back to local fonts offline. If Playwright is missing, install it (`pip install playwright` and
+Chromium (it uses `/opt/pw-browsers/chromium` when present) and `pdfunite` or `qpdf`. It embeds the Inter font
+from the plugin's `assets/fonts/` and makes no network requests. If Playwright is missing, install it (`pip install playwright` and
 `python -m playwright install chromium`) before falling back to anything else.
 
 ## `meta` fields (both modes)

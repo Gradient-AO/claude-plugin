@@ -423,7 +423,32 @@ def render_blocks(blocks):
     return "".join(out)
 
 # ---- pages -----------------------------------------------------------------
-FONT_LINK = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">'
+# Inter (OFL-1.1) ships with the plugin in assets/fonts/ and is embedded in the page, so rendering makes no
+# network requests. If the files are missing, the CSS falls back to Helvetica Neue / Arial.
+FONT_FILES = (("inter-latin-wght-normal.woff2",
+               "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,"
+               "U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"),
+              ("inter-latin-ext-wght-normal.woff2",
+               "U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1D00-1DBF,U+1E00-1E9F,"
+               "U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF"))
+
+def font_faces():
+    here = os.path.dirname(os.path.abspath(__file__))
+    for d in (os.path.join(here, "..", "..", "..", "assets", "fonts"),   # skills/<skill>/scripts -> plugin root
+              os.path.join(here, "..", "assets", "fonts")):              # shared/ -> plugin root
+        faces = []
+        for name, rng in FONT_FILES:
+            fp = os.path.join(d, name)
+            if os.path.isfile(fp):
+                data = base64.b64encode(open(fp, "rb").read()).decode()
+                faces.append("@font-face{font-family:Inter;font-style:normal;font-display:block;font-weight:100 900;"
+                             f"src:url(data:font/woff2;base64,{data}) format('woff2-variations');unicode-range:{rng}}}")
+        if faces:
+            return "<style>" + "".join(faces) + "</style>"
+    print("warning: Inter font files not found in assets/fonts; using system fonts", file=sys.stderr)
+    return ""
+
+FONT_LINK = font_faces()
 CSS = f"""
 *{{box-sizing:border-box;margin:0;padding:0}}
 html{{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
@@ -716,10 +741,8 @@ def _launch(p):
     return p.chromium.launch(**kw)
 
 def _set(pg, src):
-    try:
-        pg.set_content(src, wait_until="networkidle", timeout=15000)
-    except Exception:  # offline: fall back to locally installed fonts
-        pg.set_content(src.replace(FONT_LINK, ""), wait_until="load")
+    pg.set_content(src, wait_until="load")
+    pg.evaluate("document.fonts.ready.then(() => true)")
     pg.emulate_media(media="print")
 
 def render_deck(d, out, html_out=None):
