@@ -17,7 +17,13 @@ After installing, sign in to the **GradientCIO** connector once, then run the **
 
 ## Updates
 
-New versions are published to this repository. To pick one up: `/plugin marketplace update gradientcio` (Claude Code), or update the marketplace from Customize → Plugins (desktop).
+New versions are published to this repository.
+
+- **Claude Code:** turn on automatic updates once: `/plugin` → **Marketplaces** → **gradientcio** → **Enable auto-update**. New versions then install at startup (run `/reload-plugins` to apply mid-session). To update by hand: `/plugin marketplace update gradientcio`.
+- **Claude desktop (Cowork):** update the marketplace from Customize → Plugins.
+- **Team and Enterprise admins:** add the marketplace for everyone in Organization settings with auto-update on and **gradient-cio** enabled, so users never need to update manually.
+
+Changes to the GradientCIO connector itself reach you immediately and need no plugin update.
 
 ## What's included
 

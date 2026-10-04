@@ -21,7 +21,7 @@ def get(obj, path):
     return obj
 
 def load(p):
-    d = json.load(open(p))
+    d = json.load(open(p, encoding="utf-8"))
     if isinstance(d, list) and d and isinstance(d[0], dict) and "text" in d[0]:   # MCP content wrapper
         d = json.loads(d[0]["text"])
     return d
@@ -29,7 +29,7 @@ def load(p):
 def main():
     if len(sys.argv) != 4:
         raise SystemExit(__doc__)
-    c = json.load(open(sys.argv[1])); pid = sys.argv[2]; resp = load(sys.argv[3])
+    c = json.load(open(sys.argv[1], encoding="utf-8")); pid = sys.argv[2]; resp = load(sys.argv[3])
     probe = next((p for p in c["probes"] if p["id"] == pid), None)
     if not probe:
         raise SystemExit(f"unknown probe {pid}")

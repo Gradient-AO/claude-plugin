@@ -34,7 +34,7 @@ def main():
             shutil.copyfile(src, dst); b["client_logo"] = f"assets/{dst.name}"
         b["confidentiality"] = a.confidentiality or ""
         b["powered_by"] = not a.no_powered_by
-    (ROOT / "branding.json").write_text(json.dumps(b, indent=2) + "\n")
+    (ROOT / "branding.json").write_text(json.dumps(b, indent=2) + "\n", encoding="utf-8")
     print("branding:", json.dumps(b))
 
 if __name__ == "__main__":

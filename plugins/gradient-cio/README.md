@@ -45,21 +45,5 @@ Gradient branding. A single report can also be branded at run time (see `shared/
 
 ## Maintainers
 
-The canonical renderer and style guide live in `shared/`. Each skill carries an identical copy so it works on
-its own. After editing either file, run `python tools/sync_shared.py`, then `python tools/sync_shared.py --check`
-before packaging.
-
-Release checklist:
-
-1. `python tools/sync_shared.py` after editing anything in `shared/`.
-2. `python tests/run_tests.py --keep` — static checks plus a render of every report type (fixtures in
-   `tests/fixtures/`); look through `tests/out/*.pdf`.
-3. Run the gradient-setup skill with a full self-test against the live connector; update the known-issues
-   table in `skills/gradient-setup/references/contract-checks.md` when an issue is fixed or a new one appears.
-4. Bump the version in `.claude-plugin/plugin.json`, then zip the plugin folder (without `tests/out/`) as
-   `gradient-cio.plugin`.
-
-## Limits
-
-Form ADV and Schedule D are adviser-reported, not SEC-verified. GIPS reviews are diligence aids, not
-verifications or legal opinions. Nothing in these reports is investment advice.
+Follow `CLAUDE.md` at the repository root: it is the single source for the change, test, versioning and
+release process. Edit the renderer and style guide only in `shared/`, then run `python tools/sync_shared.py`.
