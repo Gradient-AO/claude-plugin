@@ -15,6 +15,17 @@
     {"id": "gradient_signal", "set": "full", "tool": "get_macro_signals", "args": {"view": "gradient_signal"}, "required": ["signal.composite_score", "signal.driver_scores"]},
     {"id": "regime_state", "set": "full", "tool": "get_macro_signals", "args": {"view": "regime_state", "regions": ["NA"], "history_limit": 6}, "required": []},
     {"id": "cma_baseline", "set": "full", "tool": "get_capital_market_assumptions", "args": {"view": "baseline", "per_page": 5}, "required": ["items", "risk_free_rate.freshness_status", "quality_receipt.status", "comparability.horizon_years"]},
-    {"id": "watchlist", "set": "full", "tool": "get_research_watchlist_changes", "args": {"limit": 5}, "required": ["status", "observations"]}
+    {"id": "watchlist", "set": "full", "tool": "get_research_watchlist_changes", "args": {"limit": 5}, "required": ["status", "observations"]},
+    {"id": "portfolio_list", "set": "standard", "tool": "list_portfolios", "args": {}, "required": ["portfolios[0].portfolio_id", "portfolios[0].record_kind", "portfolios[0].base_currency"]},
+    {"id": "portfolio_tree", "set": "full", "tool": "get_portfolio_structure", "args": {"view": "allocation_tree", "portfolio_id": "<first portfolio_id>", "max_depth": 2}, "required": ["nodes[0].target_weight", "nodes[0].actual_weight", "coverage.status"]},
+    {"id": "portfolio_returns", "set": "full", "tool": "get_portfolio_historical_returns", "args": {"portfolio_id": "<first portfolio_id>", "sections": ["standard_periods"]}, "required": ["standard_periods"]},
+    {"id": "portfolio_series", "set": "full", "tool": "get_return_series", "args": {"series_kind": "portfolio", "series_id": "<first portfolio_id>", "trailing_months": 3}, "required": ["availability.status", "points[0].return"]},
+    {"id": "adv_13f_consistency", "set": "full", "tool": "get_cross_domain_research", "args": {"view": "adv_13f_consistency", "firm_id": "<first roster parent_firm_id>"}, "required": ["status", "rows[0].values.flags", "rows[0].values.latest_13f_age_days"]},
+    {"id": "screen", "set": "full", "tool": "screen_managers", "args": {"min_raum": 1000000000, "limit": 3}, "required": ["advisers", "advisers[0].crd_number", "has_more"], "envelope": false},
+    {"id": "cftc_positioning", "set": "full", "tool": "get_market_positioning", "args": {"view": "cftc", "marketGroup": "all", "historyWeeks": 4}, "required": ["report_date", "flags", "flags[0].percentile"]},
+    {"id": "hf_crowding", "set": "full", "tool": "get_market_positioning", "args": {"view": "hedge_fund_crowding", "limit": 5}, "required": ["consensus", "publishable_period", "staleness_days"]},
+    {"id": "regional_facts", "set": "full", "tool": "get_regional_research", "args": {"view": "facts", "regions": ["north_america"], "metrics": ["real_gdp_growth_rate"]}, "required": ["status", "regions[0].aggregates[0].value"]},
+    {"id": "equity_fundamentals", "set": "full", "tool": "get_public_equity_fundamentals", "args": {"view": "fundamentals", "symbol": "<test ticker>"}, "required": ["resolved_subject.cik", "facts.revenue.value"]},
+    {"id": "equity_risk_findings", "set": "full", "tool": "get_public_equity_filing_evidence", "args": {"view": "risk_findings", "symbol": "<test ticker>"}, "required": ["findings", "findings[0].accession_number"]}
   ]
 }

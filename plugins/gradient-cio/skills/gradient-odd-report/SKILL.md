@@ -114,6 +114,7 @@ Then call:
 | 3 | `get_manager_diligence_findings` `view: open` for the firm (and the fund) | Findings |
 | 4 | `get_firm_fund_events` for the firm, `include_event_type_counts: true` | Events |
 | 5 | If a DDQ was supplied: follow `gradient-ddq-reconcile` steps 1–3 (transcribe claims with quotes, reconcile per subject) | DDQ section |
+| 6 | `get_cross_domain_research` `view: adv_13f_consistency` with the parent `firm_id` | ADV-to-13F consistency (Holdings section) |
 
 Rules:
 
@@ -154,6 +155,12 @@ Rules:
 - **Schedule A/B ownership bands:** NA <5%, A 5–<10%, B 10–<25%, C 25–<50%, D 50–<75%, E ≥75%,
   F other (general partner, trustee, elected manager).
 - **13F** is firm-level, lagged, long-only reportable exposure. Never present it as the fund's holdings.
+- **ADV-to-13F consistency** (call 6) returns flags only (`rows[0].values.flags`, e.g.
+  `13f_total_is_subset_of_adv_raum`), the two totals, their ratio, the 13F age in days and an `identity`
+  check. Report it as scope and recency context, never a conclusion. `status: partial` with
+  `crd_cik_legal_entity_unconfirmed` means Gradient could not confirm the CRD and the 13F CIK are the same
+  legal entity: say so in the section and do not draw inferences from the ratio. A 13F older than ~135 days
+  is stale; say so.
 - **ODD evidence signal** (deterministic; put the rubric in the appendix):
   - `elevated`: any Item 11 disclosure, high-severity finding or tier-1 alert, or 2+ cohort metrics ≥75th
     percentile.
@@ -184,7 +191,8 @@ the gap in it):
    tiles for the composite and the top-quartile count.
 5. **Fund operations & service providers** — a callout if the subject fund's record is missing, a fund table
    sorted by gross assets, and observation bullets.
-6. **Reported equity holdings (Form 13F)** — 4 tiles, a top-10 `bars` chart, and a "how to read this" callout.
+6. **Reported equity holdings (Form 13F)** — 4 tiles, a top-10 `bars` chart, a "how to read this" callout, and a
+   small `kv` "ADV vs 13F consistency" (ADV RAUM, 13F total, ratio, 13F period and age, identity check, flags).
 7. **Monitoring, findings & DDQ** — two `kv`s, a `findings` block, and the DDQ status.
 8. **Follow-up questions & open items** — `questions`, then an open-items table with status chips.
 9. **Appendix — sources & method** — a sources table, calculations next to the rubric, and the disclaimer
@@ -238,3 +246,15 @@ Every section starts on a new page; set `"new_page": false` on a section to cont
    three-line summary (signal and completeness, the top concern, the number of open items) and the file. Don't
    repeat the report in chat. For several reports (Step 1C), use the closing table instead of a three-line
    summary per fund.
+
+## Step 6 — Follow-up actions (only when the user asks)
+
+After delivering, offer one line of next steps the evidence supports; never perform them unprompted:
+- "Log this review" → `log_diligence_review` (`firm_id`, `reviewed_at`, `notes` citing the report file name,
+  `evidence_limit_acknowledged: true`). Not idempotent: commit once.
+- "Start ADV monitoring" for a manager not yet monitored → `update_manager_monitoring` `action: subscribe`.
+- "Add to research watchlist" → `update_watchlist` `action: add` (`kind: manager`).
+- "Compare with other managers" → `gradient-manager-compare`.
+
+Every write: call with `dry_run: true` first, show the preview in plain words, and repeat with `dry_run: false`
+and the same `idempotency_key` only after the user confirms that specific change. Report the receipt ID.

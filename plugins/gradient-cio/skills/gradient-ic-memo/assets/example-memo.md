@@ -289,7 +289,7 @@ Not assessed — no GIPS Asset Owner Report provided.
 | S4 | get_cma_consensus_check | mode=allocation | 2026-06-30 | User-Authorized Live | passed | n/a |
 | S5 | get_manager_diligence_findings | view=exposure_weighted | 2026-10-02 | Illustrative, Gradient Maintained | advisory | n/a |
 | S6 | run_strategy_lab_factor_loads | portfolio_id=example | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
-| S7 | get_macro_signals | view=grip_index | 2026-10-01 | User-Authorized Live | passed | n/a |
+| S7 | get_macro_signals | view=gradient_signal (sources.grip) | 2026-10-01 | User-Authorized Live | passed | n/a |
 | S8 | run_strategy_lab_simulation | scenarios=default | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
 | S9 | run_strategy_lab_private_markets_pme | portfolio_id=example | 2026-06-30 | Illustrative, Gradient Maintained | passed | n/a |
 | S10 | get_macro_conditions; get_the_read; get_macro_calendar | theme=inflation; am edition; 30 days | 2026-10-02 | User-Authorized Live | passed | n/a |

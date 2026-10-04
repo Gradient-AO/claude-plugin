@@ -1,6 +1,6 @@
 ---
 name: gradient-ic-memo
-description: Write a deterministic, fully sourced investment committee (IC) memo for a portfolio, total fund, allocation change, rebalance, or manager hire/fire, using GradientCIO data (portfolio exposure, Strategy Lab attribution, factor loads, expected statistics, simulations, CMAs, liquidity, manager diligence) and the gradient-gips-* skills. Delivers a branded PDF memo in the Gradient house style. Use this skill whenever the user asks for an IC memo, investment committee memo, board memo, investment memo, committee paper, allocation recommendation, rebalance proposal, quarterly or annual portfolio review, IPS compliance review, or a client or trustee memo about a portfolio — even if they don't say "IC memo". Also use it when another skill (such as gradient-gips-manager-diligence) hands over a section "for the investment memo".
+description: Write a deterministic, fully sourced investment committee (IC) memo for a portfolio, total fund, allocation change, rebalance, or manager hire/fire, using GradientCIO data (portfolio exposure, Strategy Lab attribution, factor loads, expected statistics, simulations, CMAs, liquidity, manager diligence) and the gradient-gips-* skills. Delivers a branded PDF memo in the Gradient house style. Use this skill whenever the user asks for an IC memo, investment committee memo, board memo, investment memo, committee paper, allocation recommendation, rebalance proposal, a portfolio review that ends in a decision or vote, IPS compliance review, or a client or trustee memo about a portfolio — even if they don't say "IC memo". Also use it when another skill (such as gradient-gips-manager-diligence) hands over a section "for the investment memo". For a periodic performance report with no decision requested, use gradient-portfolio-review instead.
 metadata:
   version: "0.1.0"
 ---
@@ -132,6 +132,19 @@ Determinism rules (summary — the template is authoritative):
    editable Claude Doc copy built from the same markdown when the committee secretary needs to edit it.
 5. In the reply, give a three-line summary (recommendation, IPS status, number of open items) and the
    document. Do not repeat the memo in chat.
+
+### Step 7 — Save the scenario (only when the user asks)
+
+For an Allocation Change or Rebalance memo, offer to save the proposed scenario to Strategy Lab so the
+committee can revisit it: `save_strategy_lab_scenario` (`domain` rebalance/optimization/simulation/relative,
+`name` "<Portfolio> - <memo type> <meeting date>", the `form` and basket used in Section 13). Call with
+`dry_run: true` first, show the preview, then repeat with `dry_run: false` and `confirmation_receipt_id` set to
+the preview receipt only after the user confirms. Unavailable on illustrative access: say so instead.
+
+## Related skills
+
+- A periodic performance and allocation report with no decision requested → `gradient-portfolio-review`.
+- Choosing between candidate managers before a Manager Hire memo → `gradient-manager-compare`.
 
 ## Judgment notes
 
