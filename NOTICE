@@ -4,3 +4,7 @@ Copyright 2026 GradientCIO
 Licensed under the Apache License, Version 2.0 (see LICENSE).
 "GradientCIO", "Gradient" and the Gradient report design are trademarks of GradientCIO;
 the license does not grant permission to use them (Apache-2.0, section 6).
+
+This product bundles the Inter typeface (plugins/gradient-cio/assets/fonts/), Copyright 2016 The Inter
+Project Authors (https://github.com/rsms/inter), licensed under the SIL Open Font License 1.1
+(see plugins/gradient-cio/assets/fonts/OFL.txt).
