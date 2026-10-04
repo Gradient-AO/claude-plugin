@@ -30,8 +30,11 @@ CASES = [
     ("digest",   ["digest.json", "OUT"],                             3, 5,  ["Manager Monitoring Digest", "Needs attention"]),
     ("setup",    ["setup.json", "OUT"],                              3, 6,  ["Readiness", "Contract checks"]),
     ("blocks",   ["blocks.json", "OUT"],                             2, 4,  ["Synthetic TEST series", "A single large message"]),
-    ("deck",     ["--deck", "deck.json", "OUT"],                     10, 10, ["Macro Briefing", "Takeaway"]),
+    ("deck",     ["--deck", "deck.json", "OUT"],                     11, 11, ["Macro Briefing", "Takeaway"]),
     ("branded",  ["--brand", "branding-test.json", "blocks.json", "OUT"], 2, 4, ["Northwind Pension Plan (TEST)", "Powered by GradientCIO.com"]),
+    ("portfolio", ["portfolio.json", "OUT"],                         5, 8,  ["Portfolio Review", "Standard periods to", "Growth of 100", "Look-through concentration"]),
+    ("compare",  ["compare.json", "OUT"],                            5, 9,  ["Manager Comparison", "Side-by-side comparison", "Form 13F overlap"]),
+    ("equity",   ["equity.json", "OUT"],                             5, 8,  ["Equity Research Note", "Review flags", "not a recommendation"]),
 ]
 
 fails = []
@@ -60,7 +63,7 @@ def static(allow_branded):
     url = mcp.get("mcpServers", {}).get("GradientCIO", {}).get("url", "")
     check(url.startswith("https://"), f"GradientCIO connector url https ({url})")
     skills = sorted(p for p in (ROOT / "skills").iterdir() if (p / "SKILL.md").exists())
-    check(len(skills) >= 11, f"{len(skills)} skills found")
+    check(len(skills) >= 14, f"{len(skills)} skills found")
     for s in skills:
         text = (s / "SKILL.md").read_text(encoding="utf-8"); fm = frontmatter(text)
         check(fm.get("name") == s.name and s.name.startswith("gradient-"), f"{s.name}: name matches folder and starts with gradient-")
@@ -103,7 +106,7 @@ def render(keep):
         if name == "deck":
             size = re.search(r"Page size:\s+([\d.]+) x ([\d.]+)", info)
             check(size and abs(float(size.group(1)) - 960) < 2 and abs(float(size.group(2)) - 540) < 2, "deck: 16:9 page size")
-        if name in ("odd", "digest"):
+        if name in ("odd", "digest", "portfolio", "compare", "equity"):
             check("Powered by" not in text, f"{name}: no client branding by default")
     print(f"PDFs in {out}")
 

@@ -18,22 +18,22 @@ field path in Appendix A's "Parameters" column.
 
 | § | Content | Primary tool (view / mode) | Fallback if unavailable |
 |---|---|---|---|
-| 3 | NAV, unfunded, holdings, allocation | `get_portfolio_exposure` | User-supplied holdings file; else Not available |
+| 3 | NAV, unfunded, holdings, allocation | `get_portfolio_exposure`; policy hierarchy and weights from `get_portfolio_structure` (`view: allocation_tree`, then `ownership_weights`) | User-supplied holdings file; else Not available |
 | 4 | IPS compliance | IPS (user document, see ips-schema.md) + Section 3, 6, 7, 9 values → `memo_calcs.py ips` | Not assessed — IPS not provided |
-| 5.1 | Returns vs benchmark | `run_strategy_lab_relative_return` | User performance report; else Not available |
+| 5.1 | Returns vs benchmark | Realized: `get_portfolio_historical_returns` (`sections: standard_periods, calendar_years, risk_metrics, benchmark_relative`; keep partial-period labels and coverage states). Modeled: `run_strategy_lab_relative_return` | User performance report; else Not available |
 | 5.2 | Attribution | `run_strategy_lab_relative_return` (attribution output) | `memo_calcs.py brinson` from weights and returns if Gradient returns them; else Not available |
 | 5.3 | Contributors / detractors | `run_strategy_lab_relative_return` | Not available |
 | 6.1 | Factor exposures | `run_strategy_lab_factor_loads` | Not available |
-| 6.2 | Concentration, diversification | `run_strategy_lab_diversification` + `get_portfolio_exposure` | Concentration rows from exposure only; diversification ratio Not available |
+| 6.2 | Concentration, diversification | `run_strategy_lab_diversification` + `get_portfolio_exposure`; issuer look-through across managers from `get_cross_domain_research` `view: portfolio_13f_lookthrough` (an estimate from lagged, long-only 13F weights — label it so) | Concentration rows from exposure only; diversification ratio Not available |
 | 7.1 | Expected return, vol, Sharpe, drawdown, CVaR | `run_strategy_lab_expected_statistics` (current and policy) | `get_capital_market_assumptions` (baseline) × weights via memo_calcs only for expected return; risk rows Not available |
 | 7.1 | Probability of meeting objective | `run_strategy_lab_simulation` | Not available |
 | 7.2 | Consensus check | `get_cma_consensus_check` (mode `allocation`, with `portfolio_id`, `target_return` = IPS objective) | mode `asset_class` for held classes |
-| 7.3 | Regime overlay | `get_macro_signals` (view `grip_index`); `get_capital_market_assumptions` (regime view) | Regime row Not available |
+| 7.3 | Regime overlay | `get_macro_signals` (view `gradient_signal` → `sources.grip.current`; `grip_index` currently fails, see gradient-setup known issues); `get_capital_market_assumptions` (regime view) | Regime row Not available |
 | 8 | Stress tests, scenarios | `run_strategy_lab_simulation`; `run_strategy_lab_date_window_robustness` | Not available |
 | 9 | Liquidity tiers, unfunded, pacing | `get_portfolio_exposure` (liquidity terms, commitments); `run_strategy_lab_private_markets_pme` for private-markets context → `memo_calcs.py liquidity` | User liquidity schedule; else Not available |
 | 10 | Managers: exposure, ODD, findings, alerts | `get_manager_diligence_findings` (view `exposure_weighted`); `get_manager_diligence_attention_queue`; per manager ≥ 1% NAV: `get_manager_odd_profile` (view `red_flags`), `get_manager_monitor_evidence` (mode `alerts`) | Per manager: `get_manager_diligence_brief` (one call covers ADV, monitor, 13F, events) |
 | 11 | GIPS | gradient-gips-asset-owner-review; gradient-gips-manager-diligence (which call `list_diligence_documents`, DDQ tools) | Not assessed — reason |
-| 12 | Market context | `get_macro_signals` (grip_index), `get_macro_conditions` (indicators, themes relevant to holdings), `get_the_read`, `get_macro_calendar` (scheduled_events, 30 days) | Omit unavailable bullets' content but keep the bullet with Not available |
+| 12 | Market context | `get_macro_signals` (`gradient_signal`; GRIP from `sources.grip.current`), `get_macro_conditions` (indicators, themes relevant to holdings), `get_the_read`, `get_macro_calendar` (scheduled_events, 30 days) | Omit unavailable bullets' content but keep the bullet with Not available |
 | 13 | Proposed change and impact | `run_strategy_lab_rebalance` or `run_strategy_lab_optimization`; `compare_strategy_lab_saved_scenarios` / `analyze_strategy_lab_compare` for current vs proposed; rerun `run_strategy_lab_expected_statistics` on the proposed weights | User-specified target weights → memo_calcs ips for IPS status after; impact rows Not available |
 
 ## Manager-level rules (Section 10)

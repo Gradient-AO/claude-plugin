@@ -5,96 +5,731 @@
   "title": "Macro Briefing",
   "subtitle": "Gradient investment committee · data to 2026-10-02",
   "data_as_of": "2026-10-02",
-  "cover_facts": [["As of", "2026-10-02"], ["The Read", "AM edition"], ["GRIP stance", "Defensive · 78"], ["Next high-importance event", "ISM Services · 2026-10-05"]]
+  "cover_facts": [
+   [
+    "As of",
+    "2026-10-02"
+   ],
+   [
+    "The Read",
+    "AM edition"
+   ],
+   [
+    "GRIP stance",
+    "Defensive · 78"
+   ],
+   [
+    "Next high-importance event",
+    "ISM Services · 2026-10-05"
+   ]
+  ]
  },
  "slides": [
-  {"kicker": "The Read · 2026-10-02 [S1]", "title": "Diesel carries the Gulf premium", "layout": "full", "blocks": [
-    {"type": "statement", "text": "Before the carrier report, the Gulf energy premium sat in Gulf Coast diesel margins rather than Brent — and no crude or diesel price since has tested whether that split holds.", "sub": "Governing thesis of The Read, 2026-10-02 AM edition [S1]"},
-    {"type": "tiles", "tiles": [
-      {"label": "Gulf diesel crack vs Brent", "value": "+$9.29/bbl", "sub": "One session to 2026-09-29 [S1]", "tone": "watch"},
-      {"label": "5y5y inflation expectation", "value": "2.36%", "sub": "2026-09-30; top of 12-week range [S1]", "tone": "watch"},
-      {"label": "5-year Treasury", "value": "+58 bps", "sub": "Month-over-month to 2026-09-29 [S1]", "tone": "bad"},
-      {"label": "Crude tanker freight", "value": "+318.5%", "sub": "Quarter-over-quarter to 2026-09-30 [S1]", "tone": "bad"}]}],
-   "takeaway": "The energy shock is showing up in refined products, not crude — The Read holds this lean with low confidence until new prices print."},
-  {"kicker": "Rates [S2]", "title": "Rates are doing the tightening: front end up 26–39 bps in a month", "layout": "wide",
-   "left": [{"type": "bars", "title": "One-month change to 2026-10-01/02 (bps)", "items": [
-      {"label": "2-Year Treasury", "value": 39, "display": "+39 bps · 4.78%"},
-      {"label": "1-Year Treasury", "value": 26, "display": "+26 bps · 4.44%"},
-      {"label": "Fed funds effective", "value": 25, "display": "+25 bps · 3.88%"},
-      {"label": "3-Month Treasury", "value": 25, "display": "+25 bps · 4.17%"},
-      {"label": "10Y–3M spread", "value": 22, "display": "+22 bps · 1.09%"},
-      {"label": "SOFR", "value": 21, "display": "+21 bps · 3.87%"},
-      {"label": "10Y term premium (ACM)", "value": 18.09, "display": "+18 bps · 1.02%"},
-      {"label": "10Y–2Y spread", "value": 5, "display": "+5 bps · 0.45%"}], "all_accent": false, "note": "Latest observations 2026-10-01 or 2026-10-02; term premium 2026-09-25 [S2]."}],
-   "right": [{"type": "table", "title": "Where levels sit", "columns": ["Series", "1y pct", "5y pct"], "align": ["l", "r", "r"], "rows": [
-      ["2-Year Treasury", "97.6", "88.2"], ["3-Month Treasury", "97.6", "42.6"], ["10Y term premium", "99.6", "99.9"], ["10Y–3M spread", "100.0", "85.0"], ["10Y–2Y spread", "28.2", "69.0"]], "note": "Percentile rank of the level over 1 and 5 years [S2]. Context, not fair value."}],
-   "takeaway": "The front end and the term premium are both near one-year highs: financial conditions are tightening through rates, not credit."},
-  {"kicker": "Gradient signal · 2026-10-02 [S3]", "title": "Risk posture: neutral composite, defensive GRIP, rates pressing", "layout": "wide",
-   "left": [{"type": "bars", "title": "Driver scores (0–100; higher = more risk pressure)", "items": [
-      {"label": "Rates", "value": 76.7, "display": "76.7 · risk-off", "color": "#FF6B5E"},
-      {"label": "Macro risk", "value": 68, "display": "68.0 · risk-off", "color": "#FF6B5E"},
-      {"label": "Growth", "value": 67.7, "display": "67.7 · risk-off", "color": "#FF6B5E"},
-      {"label": "Risk appetite", "value": 61.1, "display": "61.1 · neutral", "color": "#9AA5B1"},
-      {"label": "Credit", "value": 57.5, "display": "57.5 · neutral", "color": "#9AA5B1"},
-      {"label": "Liquidity", "value": 49.4, "display": "49.4 · neutral", "color": "#9AA5B1"},
-      {"label": "Inflation", "value": 21.9, "display": "21.9 · risk-on", "color": "#C6F432"}], "max": 100}],
-   "right": [{"type": "tiles", "tiles": [
-      {"label": "Composite score", "value": "57.2", "sub": "Regime neutral · confidence 0.35 [S3]", "tone": "watch"},
-      {"label": "GRIP index", "value": "78", "sub": "Defensive · above average · coverage 95% [S3]", "tone": "bad"}]},
-     {"type": "callout", "tone": "watch", "text": "GRIP is degraded: one stale input (GEBP, 93 days) was excluded and the GRIP Outlook calibration is missing [S3]. Signals describe modeled context; they are not return forecasts."}],
-   "takeaway": "Rates are the main source of pressure; credit and inflation drivers are not adding to it."},
-  {"kicker": "Signal detail [S3]", "title": "What supports risk and what detracts", "layout": "two",
-   "left": [{"type": "table", "title": "Detracting (stress)", "columns": ["Signal", "Driver", "z"], "align": ["l", "l", "r"], "rows": [
-      ["Gradient Term Premium Proxy", "Rates", "+2.48"], ["10-Year TIPS real yield", "Rates", "+2.91"], ["5-Year Treasury yield", "Rates", "+2.76"], ["Private markets carrying-mark pressure", "Growth", "+2.18"], ["Private markets alt-manager pressure", "Risk appetite", "+2.04"]]}],
-   "right": [{"type": "table", "title": "Supportive (risk-on)", "columns": ["Signal", "Driver", "z"], "align": ["l", "l", "r"], "rows": [
-      ["Gradient High Yield Proxy", "Credit", "−1.28"], ["Commodity Cycle Composite", "Inflation", "+1.36"], ["Gold Conditions Proxy", "Inflation", "−3.65"], ["Livestock Proxy", "Inflation", "−3.83"]],
-      "note": "z-scores as reported for each signal's own basis [S3]."}],
-   "takeaway": "Stress is concentrated in real yields and private-markets marks; credit spreads remain supportive."},
-  {"kicker": "The other side [S1]", "title": "What would confirm or break the thesis by CPI on 2026-10-14", "layout": "two",
-   "left": [{"type": "callout", "tone": "info", "title": "The rival view (The Read)", "text": "“The Gulf premium already lives in crude and has been fading … A domestic refinery or distillate-inventory squeeze could explain the margin spike just as well.” [S1]"},
-     {"type": "bullets", "items": ["No post-report reading of tanker transits, war-risk premia or Brent backwardation yet separates the two explanations [S1]."]}],
-   "right": [{"type": "table", "title": "Levels The Read is watching", "columns": ["Gulf diesel crack vs Brent", "Reading"], "align": ["l", "l"], "rows": [
-      ["$102/bbl or higher by 2026-10-14", "Refined products carry the Gulf premium"], ["$78/bbl or lower by 2026-10-14", "Spike transitory; favours crude-or-fading view"]],
-      "note": "Levels from The Read's monitoring unit [S1]; current level not restated here because it appears only in prose."}],
-   "takeaway": "Treat the diesel thesis as a hypothesis with explicit tests, not a call."},
-  {"kicker": "Calendar · next 30 days [S4]", "title": "A crowded window: CPI, FOMC, ECB and BOJ inside two weeks", "layout": "full", "blocks": [
-    {"type": "table", "columns": ["Date", "Event", "Importance", "What to watch"], "align": ["n", "l", "l", "l"], "rows": [
-      ["2026-10-05", "U.S. ISM Services PMI", {"chip": "High", "status": "watch"}, "Sub-50 activity with rising prices would break the cooling path"],
-      ["2026-10-14", "U.S. CPI", {"chip": "High", "status": "watch"}, "Breadth of core: services re-acceleration lifts front-end yields"],
-      ["2026-10-15", "U.S. retail sales; PPI", {"chip": "High", "status": "watch"}, "Control group = real consumption; PPI margins = pass-through"],
-      ["2026-10-28", "FOMC decision", {"chip": "High", "status": "watch"}, "Projections and press conference set the front-end path"],
-      ["2026-10-29", "U.S. GDP; PCE; ECB decision", {"chip": "High", "status": "watch"}, "Core PCE vs spending; ECB persistence vs growth"],
-      ["2026-10-30", "BOJ decision", {"chip": "High", "status": "watch"}, "Earlier hike signal lifts JGB yields and the yen"],
-      ["2026-10-31", "China NBS PMIs", {"chip": "Medium", "status": "medium"}, "New orders below 50 would pressure commodities"]],
-     "note": "Scheduled dates are known calendar events, not forecasts; 14 events in the window, 12 retrieved [S4]."}],
-   "takeaway": "The thesis test (CPI, 2026-10-14) lands two weeks before the FOMC."},
-  {"kicker": "Long-run assumptions · Q3-2026 policy v2.1 [S5]", "title": "10-year assumptions: equities ~4–6% over cash, bonds ≈ cash", "layout": "wide",
-   "left": [{"type": "bars", "title": "Expected excess return over USD cash, 10 years, arithmetic", "items": [
-      {"label": "Global Small Cap DM", "value": 5.87, "display": "5.9% · vol 19.5%"},
-      {"label": "Global Value DM", "value": 5.20, "display": "5.2% · vol 16.6%"},
-      {"label": "Global Public Equity EM", "value": 4.98, "display": "5.0% · vol 18.4%"},
-      {"label": "Global Public Equity DM", "value": 4.69, "display": "4.7% · vol 15.2%"},
-      {"label": "Global Large Cap DM", "value": 4.50, "display": "4.5% · vol 15.8%"},
-      {"label": "Global Growth DM", "value": 4.20, "display": "4.2% · vol 20.5%"},
-      {"label": "Convertibles", "value": 3.61, "display": "3.6% · vol 10.5%"},
-      {"label": "Global Aggregate Bonds", "value": 0.06, "display": "0.1% · vol 5.8%"},
-      {"label": "Global Government Bonds", "value": 0.05, "display": "0.1% · vol 6.9%"}], "all_accent": true}],
-   "right": [{"type": "kv", "rows": [["Risk-free rate", "3.81% (3-month T-bill, 2026-10-01; fresh)", "S5"], ["Base currency", "USD, unhedged", "S5"], ["Horizon / basis", "10 years · excess over local cash · arithmetic", "S5"], ["Quality receipt", "Unvalidated", "S5"]]},
-     {"type": "callout", "tone": "watch", "text": "Bond excess returns near zero rest on a policy value shared by both bond factors; Gradient flags these rows and raw kurtosis below 3 for review [S5]. Use for context, not comparison."}],
-   "takeaway": "House assumptions favour equity risk premia; the fixed-income rows need methodology review before use in sizing."},
-  {"kicker": "For discussion [S1]", "title": "Questions for the committee", "layout": "full", "blocks": [
-    {"type": "questions", "items": [
-      {"q": "How did real yields and credit spreads reprice around jumbo issuance and the FOMC run-up — and what does that imply for risk appetite?", "why": "Rates are the dominant pressure in the Gradient signal; credit has not confirmed it."},
-      {"q": "How likely is escalation to disrupt Gulf crude flows, and where are we exposed if it does?", "why": "The Read's thesis depends on whether the premium moves from diesel into crude."},
-      {"q": "What must the 2026-10-28 FOMC resolve about long-end real yields for the risk-off lean to hold?", "why": "10-year TIPS real yield is a +2.9 z-score detractor."},
-      {"q": "How would the Fed weigh a diesel squeeze against rising real yields?", "why": "Determines whether energy is an inflation or a growth risk for the portfolio."}]}]},
-  {"kicker": "Sources and method", "title": "Sources, data quality and limits", "layout": "full", "blocks": [
-    {"type": "table", "columns": ["Tag", "Source", "As of", "Validation", "Notes"], "align": ["n", "l", "n", "l", "l"], "rows": [
-      ["S1", "The Read (get_the_read, AM)", "2026-10-02", {"chip": "passed", "status": "passed"}, "Coverage partial: analysis and chart history unavailable"],
-      ["S2", "Rate indicators (get_macro_conditions)", "2026-10-02", {"chip": "passed", "status": "passed"}, "FRED via Gradient; 8 series"],
-      ["S3", "Gradient signal and GRIP (get_macro_signals)", "2026-10-02", {"chip": "passed", "status": "passed"}, "GRIP degraded; regime-state view unavailable (500)"],
-      ["S4", "Scheduled events (get_macro_calendar)", "2026-10-04", {"chip": "passed", "status": "passed"}, "12 of 14 events retrieved"],
-      ["S5", "CMA baseline (get_capital_market_assumptions)", "2026-10-04", {"chip": "advisory", "status": "advisory"}, "Quality receipt unvalidated; 15 quality flags"]]},
-    {"type": "text", "text": "Numbers come only from structured fields; The Read's prose is quoted, not mined for figures. Signals, percentiles and GRIP describe historical or modeled context, not forecasts. CMAs are Gradient house assumptions, not realized performance. Not investment advice."}]}
+  {
+   "kicker": "The Read · 2026-10-02 [S1]",
+   "title": "Diesel carries the Gulf premium",
+   "layout": "full",
+   "blocks": [
+    {
+     "type": "statement",
+     "text": "Before the carrier report, the Gulf energy premium sat in Gulf Coast diesel margins rather than Brent — and no crude or diesel price since has tested whether that split holds.",
+     "sub": "Governing thesis of The Read, 2026-10-02 AM edition [S1]"
+    },
+    {
+     "type": "tiles",
+     "tiles": [
+      {
+       "label": "Gulf diesel crack vs Brent",
+       "value": "+$9.29/bbl",
+       "sub": "One session to 2026-09-29 [S1]",
+       "tone": "watch"
+      },
+      {
+       "label": "5y5y inflation expectation",
+       "value": "2.36%",
+       "sub": "2026-09-30; top of 12-week range [S1]",
+       "tone": "watch"
+      },
+      {
+       "label": "5-year Treasury",
+       "value": "+58 bps",
+       "sub": "Month-over-month to 2026-09-29 [S1]",
+       "tone": "bad"
+      },
+      {
+       "label": "Crude tanker freight",
+       "value": "+318.5%",
+       "sub": "Quarter-over-quarter to 2026-09-30 [S1]",
+       "tone": "bad"
+      }
+     ]
+    }
+   ],
+   "takeaway": "The energy shock is showing up in refined products, not crude — The Read holds this lean with low confidence until new prices print."
+  },
+  {
+   "kicker": "Rates [S2]",
+   "title": "Rates are doing the tightening: front end up 26–39 bps in a month",
+   "layout": "wide",
+   "left": [
+    {
+     "type": "bars",
+     "title": "One-month change to 2026-10-01/02 (bps)",
+     "items": [
+      {
+       "label": "2-Year Treasury",
+       "value": 39,
+       "display": "+39 bps · 4.78%"
+      },
+      {
+       "label": "1-Year Treasury",
+       "value": 26,
+       "display": "+26 bps · 4.44%"
+      },
+      {
+       "label": "Fed funds effective",
+       "value": 25,
+       "display": "+25 bps · 3.88%"
+      },
+      {
+       "label": "3-Month Treasury",
+       "value": 25,
+       "display": "+25 bps · 4.17%"
+      },
+      {
+       "label": "10Y–3M spread",
+       "value": 22,
+       "display": "+22 bps · 1.09%"
+      },
+      {
+       "label": "SOFR",
+       "value": 21,
+       "display": "+21 bps · 3.87%"
+      },
+      {
+       "label": "10Y term premium (ACM)",
+       "value": 18.09,
+       "display": "+18 bps · 1.02%"
+      },
+      {
+       "label": "10Y–2Y spread",
+       "value": 5,
+       "display": "+5 bps · 0.45%"
+      }
+     ],
+     "all_accent": false,
+     "note": "Latest observations 2026-10-01 or 2026-10-02; term premium 2026-09-25 [S2]."
+    }
+   ],
+   "right": [
+    {
+     "type": "table",
+     "title": "Where levels sit",
+     "columns": [
+      "Series",
+      "1y pct",
+      "5y pct"
+     ],
+     "align": [
+      "l",
+      "r",
+      "r"
+     ],
+     "rows": [
+      [
+       "2-Year Treasury",
+       "97.6",
+       "88.2"
+      ],
+      [
+       "3-Month Treasury",
+       "97.6",
+       "42.6"
+      ],
+      [
+       "10Y term premium",
+       "99.6",
+       "99.9"
+      ],
+      [
+       "10Y–3M spread",
+       "100.0",
+       "85.0"
+      ],
+      [
+       "10Y–2Y spread",
+       "28.2",
+       "69.0"
+      ]
+     ],
+     "note": "Percentile rank of the level over 1 and 5 years [S2]. Context, not fair value."
+    }
+   ],
+   "takeaway": "The front end and the term premium are both near one-year highs: financial conditions are tightening through rates, not credit."
+  },
+  {
+   "kicker": "Gradient signal · 2026-10-02 [S3]",
+   "title": "Risk posture: neutral composite, defensive GRIP, rates pressing",
+   "layout": "wide",
+   "left": [
+    {
+     "type": "bars",
+     "title": "Driver scores (0–100; higher = more risk pressure)",
+     "items": [
+      {
+       "label": "Rates",
+       "value": 76.7,
+       "display": "76.7 · risk-off",
+       "color": "#FF6B5E"
+      },
+      {
+       "label": "Macro risk",
+       "value": 68,
+       "display": "68.0 · risk-off",
+       "color": "#FF6B5E"
+      },
+      {
+       "label": "Growth",
+       "value": 67.7,
+       "display": "67.7 · risk-off",
+       "color": "#FF6B5E"
+      },
+      {
+       "label": "Risk appetite",
+       "value": 61.1,
+       "display": "61.1 · neutral",
+       "color": "#9AA5B1"
+      },
+      {
+       "label": "Credit",
+       "value": 57.5,
+       "display": "57.5 · neutral",
+       "color": "#9AA5B1"
+      },
+      {
+       "label": "Liquidity",
+       "value": 49.4,
+       "display": "49.4 · neutral",
+       "color": "#9AA5B1"
+      },
+      {
+       "label": "Inflation",
+       "value": 21.9,
+       "display": "21.9 · risk-on",
+       "color": "#C6F432"
+      }
+     ],
+     "max": 100
+    }
+   ],
+   "right": [
+    {
+     "type": "tiles",
+     "tiles": [
+      {
+       "label": "Composite score",
+       "value": "57.2",
+       "sub": "Regime neutral · confidence 0.35 [S3]",
+       "tone": "watch"
+      },
+      {
+       "label": "GRIP index",
+       "value": "78",
+       "sub": "Defensive · above average · coverage 95% [S3]",
+       "tone": "bad"
+      }
+     ]
+    },
+    {
+     "type": "callout",
+     "tone": "watch",
+     "text": "GRIP is degraded: one stale input (GEBP, 93 days) was excluded and the GRIP Outlook calibration is missing [S3]. Signals describe modeled context; they are not return forecasts."
+    }
+   ],
+   "takeaway": "Rates are the main source of pressure; credit and inflation drivers are not adding to it."
+  },
+  {
+   "kicker": "Positioning · CFTC report 2026-09-29 [S6]",
+   "title": "Positioning: crowded short gold dealers, long duration asset managers",
+   "layout": "full",
+   "blocks": [
+    {
+     "type": "table",
+     "title": "Most crowded futures positions (TEST data)",
+     "columns": [
+      "Market",
+      "Trader category",
+      "Side",
+      "Percentile (156w)",
+      "Direction"
+     ],
+     "align": [
+      "l",
+      "l",
+      "l",
+      "r",
+      "l"
+     ],
+     "rows": [
+      [
+       "Gold",
+       "Swap dealers",
+       "Short",
+       "4th",
+       "Building"
+      ],
+      [
+       "British pound",
+       "Asset managers",
+       "Short",
+       "2nd",
+       "Building"
+      ],
+      [
+       "10-Year UST notes",
+       "Asset managers",
+       "Long",
+       "97th",
+       "Unwinding"
+      ],
+      [
+       "2-Year UST notes",
+       "Leveraged funds",
+       "Short",
+       "100th",
+       "Unwinding"
+      ]
+     ]
+    },
+    {
+     "type": "callout",
+     "tone": "info",
+     "title": "How to read this",
+     "text": "Positioning is disclosed exposure, not intent or a forecast. Hedge-fund 13F consensus covers 29 of 30 cohort managers for 2026-06-30 and lags by up to 45 days [S7]."
+    }
+   ]
+  },
+  {
+   "kicker": "Signal detail [S3]",
+   "title": "What supports risk and what detracts",
+   "layout": "two",
+   "left": [
+    {
+     "type": "table",
+     "title": "Detracting (stress)",
+     "columns": [
+      "Signal",
+      "Driver",
+      "z"
+     ],
+     "align": [
+      "l",
+      "l",
+      "r"
+     ],
+     "rows": [
+      [
+       "Gradient Term Premium Proxy",
+       "Rates",
+       "+2.48"
+      ],
+      [
+       "10-Year TIPS real yield",
+       "Rates",
+       "+2.91"
+      ],
+      [
+       "5-Year Treasury yield",
+       "Rates",
+       "+2.76"
+      ],
+      [
+       "Private markets carrying-mark pressure",
+       "Growth",
+       "+2.18"
+      ],
+      [
+       "Private markets alt-manager pressure",
+       "Risk appetite",
+       "+2.04"
+      ]
+     ]
+    }
+   ],
+   "right": [
+    {
+     "type": "table",
+     "title": "Supportive (risk-on)",
+     "columns": [
+      "Signal",
+      "Driver",
+      "z"
+     ],
+     "align": [
+      "l",
+      "l",
+      "r"
+     ],
+     "rows": [
+      [
+       "Gradient High Yield Proxy",
+       "Credit",
+       "−1.28"
+      ],
+      [
+       "Commodity Cycle Composite",
+       "Inflation",
+       "+1.36"
+      ],
+      [
+       "Gold Conditions Proxy",
+       "Inflation",
+       "−3.65"
+      ],
+      [
+       "Livestock Proxy",
+       "Inflation",
+       "−3.83"
+      ]
+     ],
+     "note": "z-scores as reported for each signal's own basis [S3]."
+    }
+   ],
+   "takeaway": "Stress is concentrated in real yields and private-markets marks; credit spreads remain supportive."
+  },
+  {
+   "kicker": "The other side [S1]",
+   "title": "What would confirm or break the thesis by CPI on 2026-10-14",
+   "layout": "two",
+   "left": [
+    {
+     "type": "callout",
+     "tone": "info",
+     "title": "The rival view (The Read)",
+     "text": "“The Gulf premium already lives in crude and has been fading … A domestic refinery or distillate-inventory squeeze could explain the margin spike just as well.” [S1]"
+    },
+    {
+     "type": "bullets",
+     "items": [
+      "No post-report reading of tanker transits, war-risk premia or Brent backwardation yet separates the two explanations [S1]."
+     ]
+    }
+   ],
+   "right": [
+    {
+     "type": "table",
+     "title": "Levels The Read is watching",
+     "columns": [
+      "Gulf diesel crack vs Brent",
+      "Reading"
+     ],
+     "align": [
+      "l",
+      "l"
+     ],
+     "rows": [
+      [
+       "$102/bbl or higher by 2026-10-14",
+       "Refined products carry the Gulf premium"
+      ],
+      [
+       "$78/bbl or lower by 2026-10-14",
+       "Spike transitory; favours crude-or-fading view"
+      ]
+     ],
+     "note": "Levels from The Read's monitoring unit [S1]; current level not restated here because it appears only in prose."
+    }
+   ],
+   "takeaway": "Treat the diesel thesis as a hypothesis with explicit tests, not a call."
+  },
+  {
+   "kicker": "Calendar · next 30 days [S4]",
+   "title": "A crowded window: CPI, FOMC, ECB and BOJ inside two weeks",
+   "layout": "full",
+   "blocks": [
+    {
+     "type": "table",
+     "columns": [
+      "Date",
+      "Event",
+      "Importance",
+      "What to watch"
+     ],
+     "align": [
+      "n",
+      "l",
+      "l",
+      "l"
+     ],
+     "rows": [
+      [
+       "2026-10-05",
+       "U.S. ISM Services PMI",
+       {
+        "chip": "High",
+        "status": "watch"
+       },
+       "Sub-50 activity with rising prices would break the cooling path"
+      ],
+      [
+       "2026-10-14",
+       "U.S. CPI",
+       {
+        "chip": "High",
+        "status": "watch"
+       },
+       "Breadth of core: services re-acceleration lifts front-end yields"
+      ],
+      [
+       "2026-10-15",
+       "U.S. retail sales; PPI",
+       {
+        "chip": "High",
+        "status": "watch"
+       },
+       "Control group = real consumption; PPI margins = pass-through"
+      ],
+      [
+       "2026-10-28",
+       "FOMC decision",
+       {
+        "chip": "High",
+        "status": "watch"
+       },
+       "Projections and press conference set the front-end path"
+      ],
+      [
+       "2026-10-29",
+       "U.S. GDP; PCE; ECB decision",
+       {
+        "chip": "High",
+        "status": "watch"
+       },
+       "Core PCE vs spending; ECB persistence vs growth"
+      ],
+      [
+       "2026-10-30",
+       "BOJ decision",
+       {
+        "chip": "High",
+        "status": "watch"
+       },
+       "Earlier hike signal lifts JGB yields and the yen"
+      ],
+      [
+       "2026-10-31",
+       "China NBS PMIs",
+       {
+        "chip": "Medium",
+        "status": "medium"
+       },
+       "New orders below 50 would pressure commodities"
+      ]
+     ],
+     "note": "Scheduled dates are known calendar events, not forecasts; 14 events in the window, 12 retrieved [S4]."
+    }
+   ],
+   "takeaway": "The thesis test (CPI, 2026-10-14) lands two weeks before the FOMC."
+  },
+  {
+   "kicker": "Long-run assumptions · Q3-2026 policy v2.1 [S5]",
+   "title": "10-year assumptions: equities ~4–6% over cash, bonds ≈ cash",
+   "layout": "wide",
+   "left": [
+    {
+     "type": "bars",
+     "title": "Expected excess return over USD cash, 10 years, arithmetic",
+     "items": [
+      {
+       "label": "Global Small Cap DM",
+       "value": 5.87,
+       "display": "5.9% · vol 19.5%"
+      },
+      {
+       "label": "Global Value DM",
+       "value": 5.2,
+       "display": "5.2% · vol 16.6%"
+      },
+      {
+       "label": "Global Public Equity EM",
+       "value": 4.98,
+       "display": "5.0% · vol 18.4%"
+      },
+      {
+       "label": "Global Public Equity DM",
+       "value": 4.69,
+       "display": "4.7% · vol 15.2%"
+      },
+      {
+       "label": "Global Large Cap DM",
+       "value": 4.5,
+       "display": "4.5% · vol 15.8%"
+      },
+      {
+       "label": "Global Growth DM",
+       "value": 4.2,
+       "display": "4.2% · vol 20.5%"
+      },
+      {
+       "label": "Convertibles",
+       "value": 3.61,
+       "display": "3.6% · vol 10.5%"
+      },
+      {
+       "label": "Global Aggregate Bonds",
+       "value": 0.06,
+       "display": "0.1% · vol 5.8%"
+      },
+      {
+       "label": "Global Government Bonds",
+       "value": 0.05,
+       "display": "0.1% · vol 6.9%"
+      }
+     ],
+     "all_accent": true
+    }
+   ],
+   "right": [
+    {
+     "type": "kv",
+     "rows": [
+      [
+       "Risk-free rate",
+       "3.81% (3-month T-bill, 2026-10-01; fresh)",
+       "S5"
+      ],
+      [
+       "Base currency",
+       "USD, unhedged",
+       "S5"
+      ],
+      [
+       "Horizon / basis",
+       "10 years · excess over local cash · arithmetic",
+       "S5"
+      ],
+      [
+       "Quality receipt",
+       "Unvalidated",
+       "S5"
+      ]
+     ]
+    },
+    {
+     "type": "callout",
+     "tone": "watch",
+     "text": "Bond excess returns near zero rest on a policy value shared by both bond factors; Gradient flags these rows and raw kurtosis below 3 for review [S5]. Use for context, not comparison."
+    }
+   ],
+   "takeaway": "House assumptions favour equity risk premia; the fixed-income rows need methodology review before use in sizing."
+  },
+  {
+   "kicker": "For discussion [S1]",
+   "title": "Questions for the committee",
+   "layout": "full",
+   "blocks": [
+    {
+     "type": "questions",
+     "items": [
+      {
+       "q": "How did real yields and credit spreads reprice around jumbo issuance and the FOMC run-up — and what does that imply for risk appetite?",
+       "why": "Rates are the dominant pressure in the Gradient signal; credit has not confirmed it."
+      },
+      {
+       "q": "How likely is escalation to disrupt Gulf crude flows, and where are we exposed if it does?",
+       "why": "The Read's thesis depends on whether the premium moves from diesel into crude."
+      },
+      {
+       "q": "What must the 2026-10-28 FOMC resolve about long-end real yields for the risk-off lean to hold?",
+       "why": "10-year TIPS real yield is a +2.9 z-score detractor."
+      },
+      {
+       "q": "How would the Fed weigh a diesel squeeze against rising real yields?",
+       "why": "Determines whether energy is an inflation or a growth risk for the portfolio."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "kicker": "Sources and method",
+   "title": "Sources, data quality and limits",
+   "layout": "full",
+   "blocks": [
+    {
+     "type": "table",
+     "columns": [
+      "Tag",
+      "Source",
+      "As of",
+      "Validation",
+      "Notes"
+     ],
+     "align": [
+      "n",
+      "l",
+      "n",
+      "l",
+      "l"
+     ],
+     "rows": [
+      [
+       "S1",
+       "The Read (get_the_read, AM)",
+       "2026-10-02",
+       {
+        "chip": "passed",
+        "status": "passed"
+       },
+       "Coverage partial: analysis and chart history unavailable"
+      ],
+      [
+       "S2",
+       "Rate indicators (get_macro_conditions)",
+       "2026-10-02",
+       {
+        "chip": "passed",
+        "status": "passed"
+       },
+       "FRED via Gradient; 8 series"
+      ],
+      [
+       "S3",
+       "Gradient signal and GRIP (get_macro_signals)",
+       "2026-10-02",
+       {
+        "chip": "passed",
+        "status": "passed"
+       },
+       "GRIP degraded; regime-state view unavailable (500)"
+      ],
+      [
+       "S4",
+       "Scheduled events (get_macro_calendar)",
+       "2026-10-04",
+       {
+        "chip": "passed",
+        "status": "passed"
+       },
+       "12 of 14 events retrieved"
+      ],
+      [
+       "S5",
+       "CMA baseline (get_capital_market_assumptions)",
+       "2026-10-04",
+       {
+        "chip": "advisory",
+        "status": "advisory"
+       },
+       "Quality receipt unvalidated; 15 quality flags"
+      ]
+     ]
+    },
+    {
+     "type": "text",
+     "text": "Numbers come only from structured fields; The Read's prose is quoted, not mined for figures. Signals, percentiles and GRIP describe historical or modeled context, not forecasts. CMAs are Gradient house assumptions, not realized performance. Not investment advice."
+    }
+   ]
+  }
  ]
 }

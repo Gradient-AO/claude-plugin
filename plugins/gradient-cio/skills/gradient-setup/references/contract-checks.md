@@ -7,10 +7,15 @@ The probes are defined in `contracts.json` (tool, arguments, required response p
   the user gives; if the roster is empty use `search_managers` for any well-known adviser.
 - `<first roster parent_firm_id>`: `funds[0].parent_firm_id` from `get_diligence_roster_funds`.
 - `<last business day>`: the most recent weekday before today (YYYY-MM-DD).
+- `<first portfolio_id>`: `portfolios[0].portfolio_id` from the `portfolio_list` probe (the illustrative
+  portfolio when the organization has no Portfolio Analytics; that is expected).
+- `<test ticker>`: a ticker the user names, else any large, liquid US-listed issuer. It is only a probe
+  subject; never present it as a view on the security.
 
-**Standard set (default, 6 reads):** orgs, roster, odd_profile, monitor_coverage, the_read, calendar.
+**Standard set (default, 7 reads):** orgs, roster, odd_profile, monitor_coverage, the_read, calendar, portfolio_list.
 **Full set:** standard plus attention, findings, events, conditions, gradient_signal, regime_state,
-cma_baseline, watchlist.
+cma_baseline, watchlist, portfolio_tree, portfolio_returns, portfolio_series, adv_13f_consistency, screen,
+cftc_positioning, hf_crowding, regional_facts, equity_fundamentals, equity_risk_findings.
 
 Skip a probe and mark it **not run** when its tool is not entitled. An empty roster is not a failure: mark
 roster-dependent probes not run and say so.
@@ -45,3 +50,18 @@ Re-check these on every full run. When one stops reproducing, say so in the repo
 | get_manager_diligence_findings (empty) | Validator flags "empty primary list has no explicit reason" although `absence_reason` is set | Report `absence_reason` ("no open findings") |
 | get_gradient_capabilities | About 60 KB response | Parse the saved file with Python |
 | get_return_series | `series_id` must be a UUID | Resolve the series ID first; do not pass tickers |
+| get_portfolio_historical_returns | 500 `backend_unavailable` / `mcp_analytics_tool_error` on every section (illustrative portfolio) | gradient-portfolio-review computes returns from `get_return_series` with `scripts/review_calcs.py` |
+| get_portfolio_structure `ownership_weights` | `response_contract_invalid` | Use `allocation_tree` actual weights |
+| get_benchmarks with `asset_class` filter | `multi_asset` gives `response_contract_invalid`; `equity` gives 0 rows | Use the unfiltered catalog |
+| get_cross_domain_research `portfolio_13f_lookthrough`, `roster_macro_exposure` | 403 `entitlement_required` without the portfolio module, even for the illustrative portfolio | Expected without Portfolio Analytics; mark "not licensed" |
+| get_cross_domain_research `adv_13f_consistency`, `holdings_issuer_risk` | Reject `crd_number`; need `firm_id`. Often `partial` with `crd_cik_legal_entity_unconfirmed` | Pass `firm_id`; report the identity caveat; no inference from the ratio |
+| get_market_positioning `hedge_fund_crowding` | Rejects `category` (`tool_input_invalid`) | Omit `category` |
+| get_market_positioning `equity_signals` | 422 `semantic_validation_failed` (`equity_signal_stale_contributors`) | Skip; say "equity signals unavailable" |
+| get_regional_research `facts` with 2+ `metrics` | 500 `response_contract_invalid` (`fallback_failures`) | One metric per call (several regions are fine) |
+| get_regional_research `capital_markets` | 502 `response_contract_invalid` | Skip |
+| get_return_series on the illustrative portfolio | Labelled `data_scope.kind: live` | Treat as illustrative (use `list_portfolios` `record_kind`) |
+| run_strategy_lab_relative_return | Rejects `envelope` and `fields` (`mcp_tool_parameters_invalid`) | Omit both |
+| get_public_equity_fundamentals / filing_evidence | A company name in `symbol` gives 409 `subject_not_found`, no candidates | Ask the user for the ticker or CIK |
+| get_public_equity_fundamentals `peer_comparison` | `status: missing`, no ranks, when fiscal year-ends differ | Show peer metrics without ranks; say why |
+| screen_managers | `affirmative_disclosure_count` counts every "yes" on Form ADV, not disciplinary events; no provenance envelope | Never call it "disclosures"; check Item 11 in the ODD profile |
+| get_multi_manager_13f_overlap | Often `partial` (`right_cik_missing`), `weighted_overlap_pct: null` | Report overlap as unavailable for that pair |

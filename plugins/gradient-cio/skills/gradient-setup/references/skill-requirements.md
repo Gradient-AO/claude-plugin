@@ -14,6 +14,9 @@ Modules (from `list_organizations.licensed_modules` and `capabilities`): `firmFu
 | gradient-manager-monitor | Weekly monitoring digest PDF | get_diligence_roster_funds, get_manager_diligence_attention_queue, get_manager_monitor_evidence | get_manager_diligence_findings, get_firm_fund_events, get_research_watchlist_changes | firmFundDiligence |
 | gradient-macro-brief | Macro briefing deck PDF | get_the_read, get_macro_conditions, get_macro_calendar | get_macro_signals, get_capital_market_assumptions | macroDesk, research (signals: gradientSignals) |
 | gradient-ic-memo | IC memo PDF | list_portfolios, get_portfolio_exposure, run_strategy_lab_expected_statistics, get_capital_market_assumptions | run_strategy_lab_simulation, run_strategy_lab_relative_return, run_strategy_lab_factor_loads, run_strategy_lab_rebalance, run_strategy_lab_private_markets_pme, get_cma_consensus_check, macro tools, diligence tools | portfolio, strategyLab, research |
+| gradient-portfolio-review | Portfolio review PDF | list_portfolios, get_portfolio_structure, get_portfolio_exposure, and get_portfolio_historical_returns or get_return_series | get_benchmarks, get_cross_domain_research (portfolio_13f_lookthrough, roster_macro_exposure), get_the_read, get_capital_market_assumptions, run_strategy_lab_relative_return | portfolio (strategyLab optional) |
+| gradient-manager-compare | Manager comparison PDF | search_managers, get_manager_odd_profile | screen_managers, get_diligence_roster_funds, get_firm_13f_portfolio_review, get_multi_manager_13f_overlap, get_cross_domain_research, get_firm_fund_events, get_manager_diligence_findings, update_watchlist, update_manager_monitoring | firmFundDiligence (overlap: research) |
+| gradient-equity-note | Equity research note PDF | get_public_equity_fundamentals, get_public_equity_filing_evidence | get_market_positioning, get_cross_domain_research (holdings_issuer_risk), get_diligence_roster_funds, get_research_context, get_research_watchlist_changes, update_watchlist | research (positioning: gradientSignals) |
 | gradient-gips-manager-diligence | GIPS review PDF | none (works from documents) | get_manager_odd_profile, get_manager_diligence_brief, get_firm_entity_facts, list_diligence_documents, get_ddq_reconciliation_history | firmFundDiligence (optional) |
 | gradient-gips-report-review | GIPS review PDF | none (documents) | — | — |
 | gradient-gips-asset-owner-review | GIPS review PDF | none (documents) | — | — |
@@ -23,7 +26,9 @@ Modules (from `list_organizations.licensed_modules` and `capabilities`): `firmFu
 
 Core skills (any one **Not licensed** or blocked makes the overall signal `not_ready` only if the client
 licensed the module it needs): gradient-odd-report, gradient-ddq-reconcile, gradient-manager-monitor,
-gradient-macro-brief, gradient-ic-memo.
+gradient-macro-brief, gradient-ic-memo, gradient-portfolio-review, gradient-manager-compare, gradient-equity-note.
+
+gradient-portfolio-review without `portfolio` can still review Gradient's illustrative portfolio: rate it **Partial**.
 
 The IC memo without `portfolio` and `strategyLab` can still be written from user-supplied holdings and CMAs;
 rate it **Partial** in that case and say so.

@@ -62,7 +62,7 @@
              ["S5", "Firm and fund events — Ridgeview Example Advisors", "get_firm_fund_events (subject)", "2026-10-04", {"chip": "passed", "status": "passed"}],
              ["S6", "Research watchlist changes", "get_research_watchlist_changes", "2026-10-04", {"chip": "passed", "status": "passed"}]],
     "note": "S4 validation: advisory 'empty primary list has no explicit reason' although the response states absence_reason no_open_findings (known issue)."},
-   {"type": "bullets", "items": ["Window: 2026-09-28 to 2026-10-04. Severity: high = tier-1 alert, new red flag, overdue high finding or overdue review; medium = material change since review, tier-2 alert, open medium finding, review due within 30 days; low = everything else.", "Organization: Gradient (org_3Fu4c4pgShBu5sJsBYFT60Rabqv). Data scope: user-authorized live.", "Form ADV is adviser-reported and not verified by the SEC. This digest is a monitoring aid, not investment, legal or compliance advice."]}
+   {"type": "bullets", "items": ["Window: 2026-09-28 to 2026-10-04. Severity: high = tier-1 alert, new red flag, overdue high finding or overdue review; medium = material change since review, tier-2 alert, open medium finding, review due within 30 days; low = everything else.", "Organization: Gradient (org_TEST000000000000000000000). Data scope: user-authorized live.", "Form ADV is adviser-reported and not verified by the SEC. This digest is a monitoring aid, not investment, legal or compliance advice."]}
   ]}
  ]
 }

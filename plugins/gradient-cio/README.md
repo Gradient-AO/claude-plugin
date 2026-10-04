@@ -14,14 +14,19 @@ status chips, source tags, sources appendix).
 | gradient-manager-monitor | Weekly monitoring digest across the Diligence Roster; can run as a scheduled task |
 | gradient-macro-brief | Investment-committee macro briefing deck (16:9 PDF) from The Read, signals, calendar and CMAs |
 | gradient-ic-memo | Investment committee memo (16 sections plus appendices) with IPS status and recommendation |
+| gradient-portfolio-review | Quarterly or annual total-portfolio review: returns vs benchmark, allocation vs policy ranges, exposure, 13F look-through, risk |
+| gradient-manager-compare | Screen or compare 2–5 candidate managers for a mandate (Form ADV, service providers, 13F overlap, flags) with next steps |
+| gradient-equity-note | Sourced research note on one US-listed issuer: fundamentals and changes, risk factors, earnings release, crowding, roster holders (not investment advice) |
 | gradient-gips-manager-diligence | GIPS diligence review of a manager, with a paste-ready memo section |
 | gradient-gips-report-review | Line-by-line review of a GIPS Composite / Pooled Fund Report or advertisement |
 | gradient-gips-asset-owner-review | Review of a pension, endowment or foundation GIPS Asset Owner Report |
 | gradient-gips-policies-gap-check | Gap check of a GIPS policies and procedures manual |
 | gradient-gips-standards | GIPS reference; answers questions with a GIPS briefing note PDF and holds the shared GIPS checklists |
 
-The skills work together: the ODD report and GIPS reviews feed the IC memo, and the ODD report uses the DDQ
-reconciliation workflow when a DDQ is supplied.
+The skills work together: manager comparison leads into the ODD report; the ODD report and GIPS reviews feed the
+IC memo; the ODD report uses the DDQ reconciliation workflow when a DDQ is supplied; the portfolio review hands
+rebalance decisions to the IC memo. The monitoring digest and ODD report can log reviews, update findings and
+start monitoring in GradientCIO — always as a preview first, and only after you confirm.
 
 ## Requirements
 

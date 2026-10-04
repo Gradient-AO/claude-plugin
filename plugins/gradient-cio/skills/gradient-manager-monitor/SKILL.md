@@ -97,7 +97,30 @@ python <this skill's directory>/scripts/gradient_report.py digest.json "<Org> - 
 Then follow "Check and deliver" in `references/report-style.md`. Chat summary: signal, the top item, and the
 number of subjects needing action.
 
-## 5. Make it weekly (on request)
+## 5. Follow-up actions (only when the user asks)
+
+After delivering the digest, offer — do not perform — the follow-ups the evidence supports, one line each:
+"Log a review for <firm>", "Mark finding <title> resolved / in review / waived", "Start (or change) ADV
+monitoring for <manager>". Each write tool previews first; never skip the preview:
+
+| Action | Tool | Key arguments |
+|---|---|---|
+| Log a completed review (resets the review clock) | `log_diligence_review` | `firm_id`, `reviewed_at`, `notes` (what was reviewed, cite the digest), `evidence_limit_acknowledged: true`, `idempotency_key` |
+| Change a finding's status or assignee | `update_diligence_finding` | `finding_id`, `if_version` (from the finding), `status` or `assignee_user_id`/`due_at` (separate calls), `note`, `idempotency_key` |
+| Subscribe, update or unsubscribe ADV alerts | `update_manager_monitoring` | `action`, `crd_number` (and `firm_id`), `max_tier`, `email_enabled`, `key_person_watchlist`, `idempotency_key` |
+
+Steps for every write:
+1. Call with `dry_run: true` (the default). Show the user the preview in plain words (what changes, for whom).
+2. Only after the user explicitly confirms that specific change, repeat the identical call with `dry_run: false`
+   and the same `idempotency_key` (use `<tool>-<subject>-<YYYYMMDD>`).
+3. Report the receipt ID. `log_diligence_review` is not idempotent — never repeat a committed call.
+4. A version conflict on `update_diligence_finding` means someone changed it: re-read the finding, show the
+   current state and ask again.
+
+Batch confirmations are fine ("log reviews for these three firms") but list every item in the preview first.
+Scheduled runs never write (see below).
+
+## 6. Make it weekly (on request)
 
 If the user wants it every week, create a scheduled task (confirm day, time and time zone first; default
 Monday 07:45 in their time zone). Use this prompt, filled in:
