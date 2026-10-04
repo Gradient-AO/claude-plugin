@@ -76,7 +76,7 @@ it and re-render.
 ## Client branding
 
 Reports can carry the client's name and logo with "Powered by GradientCIO" (colours and fonts never change).
-The renderer reads `branding.json` at the plugin root, or a file given with `--brand`, or `GRADIENT_BRANDING`:
+The renderer reads `branding.json` at the plugin root, or a file given with `--brand`:
 `{"client_name": "...", "client_logo": "assets/client-logo.png", "confidentiality": "...", "powered_by": true}`.
 When `client_name` is set the cover shows the client logo or name, the running header shows the client name, and
 the default confidentiality line becomes "Confidential — prepared for <client>". For a one-off branded report,
