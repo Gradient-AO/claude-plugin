@@ -1,24 +1,56 @@
 # Contract checks and known issues
 
-The probes are defined in `contracts.json` (tool, arguments, required response paths). Every probe except
-`orgs` must also return `provenance.as_of` and `validation.status`. Replace placeholders before calling:
+The probes are defined in `contracts.json` (tool, arguments, required response paths, value assertions and
+dependencies). Every probe uses the standard `provenance.as_of` and `validation.status` envelope unless it
+sets `"envelope": false`.
 
-- `<first roster firm CRD>`: `resolved_subject.crd_number` from an ODD profile call by `firm_id`, or the CRD
-  the user gives; if the roster is empty use `search_managers` for any well-known adviser.
-- `<first roster parent_firm_id>`: `funds[0].parent_firm_id` from `get_diligence_roster_funds`.
+Resolve every chained placeholder from a saved dependency response. Placeholders have the exact form
+`<probe_id:path>`, and every referenced probe is listed in `depends_on`. Save responses as
+`<probe_id>.json`, then use:
+
+```
+python <this skill's directory>/scripts/check_contract.py --resolve-args \
+  <this skill's directory>/references/contracts.json <probe_id> <responses_dir>
+```
+
+The only manual placeholders are:
+
 - `<last business day>`: the most recent weekday before today (YYYY-MM-DD).
-- `<first portfolio_id>`: `portfolios[0].portfolio_id` from the `portfolio_list` probe (the illustrative
-  portfolio when the organization has no Portfolio Analytics; that is expected).
 - `<test ticker>`: a ticker the user names, else any large, liquid US-listed issuer. It is only a probe
   subject; never present it as a view on the security.
 
-**Standard set (default, 7 reads):** orgs, roster, odd_profile, monitor_coverage, the_read, calendar, portfolio_list.
-**Full set:** standard plus attention, findings, events, conditions, gradient_signal, regime_state,
-cma_baseline, watchlist, portfolio_tree, portfolio_returns, portfolio_series, adv_13f_consistency, screen,
-cftc_positioning, hf_crowding, regional_facts, equity_fundamentals, equity_risk_findings.
+**Standard set (default, 7 reads):** orgs, roster, odd_profile, monitor_coverage, the_read, calendar,
+portfolio_list.
+
+**Full read set (34 reads including standard):** standard plus capabilities_summary, attention, findings,
+events, events_roster, conditions, credit_spreads, gradient_signal, regime_state, cma_baseline, watchlist,
+portfolio_tree, portfolio_exposure, portfolio_ownership, portfolio_returns, portfolio_series,
+strategy_session, strategy_expected_statistics, strategy_relative_return, adv_13f_consistency,
+search_managers, screen, cftc_positioning, hf_crowding, regional_facts, equity_fundamentals and
+equity_risk_findings.
+
+**Writes set (3 dry-run previews):** write_create_finding, write_watchlist_manager and write_roster. Every
+call must retain `dry_run: true`; require `committed: false` and a non-null `receipt_id`. Never substitute
+`dry_run: false`, and never follow a preview receipt with a commit during a contract self-test.
+
+**DDQ save-preview set (2 calls):** ddq_reconcile_persisted, then ddq_save_preview. The first call uses
+`persist: true` with inline quote-backed text because the current reconciliation contract only returns a
+saveable `run_id` for a persisted, subject-bound document. It creates an immutable reconciliation test run.
+The chained save call is still a dry-run preview and must return `outcome: "preview"`, `dry_run: true` and
+`committed: false`.
+
+The complete matrix is 39 calls. Run the standard or full read set without write confirmation. Run the
+writes set only as previews. Before the DDQ save-preview set, tell the user that its reconciliation call
+persists an immutable test workpaper.
 
 Skip a probe and mark it **not run** when its tool is not entitled. An empty roster is not a failure: mark
-roster-dependent probes not run and say so.
+all roster-dependent probes not run and say so.
+
+For `portfolio_exposure` and `portfolio_ownership`, determine scope from
+`portfolio_list.portfolios[0].record_kind`: `example` means illustrative and `user` means a licensed live
+portfolio. Do not require `provenance.data_scope.kind` to equal `illustrative`; live portfolio results are
+valid. Report a mismatch only when the returned portfolio identity or record kind conflicts with
+`portfolio_list`.
 
 Results:
 
@@ -35,20 +67,11 @@ Re-check these on every full run. When one stops reproducing, say so in the repo
 
 | Tool / view | Symptom | Workaround used by the skills |
 |---|---|---|
-| get_the_read without `asOfDate` | 502 | Always pass `asOfDate` (last business day; step back up to 3 days if unpublished) |
 | get_the_read `visuals` | Empty: "governed chart history unavailable" | Charts from structured fields (bars/tables) instead of time series |
-| get_macro_signals `regime_state` | 500 (retryable) | Retry once; else use `gradient_signal` regime and drivers |
-| get_macro_signals `grip_index` | 422 `grip_request_value_as_of` | Use GRIP from `gradient_signal` → `sources.grip.current` |
-| get_firm_fund_events roster timeline | 400: `view` only accepts `subject` | Call per firm/fund with `firm_id` / `fund_id` |
 | get_firm_fund_events | Empty, `event_publication_not_ready` | Report "event publication not ready" — never "no events" |
-| get_macro_conditions | `credit_spreads` rejects `limit`; `indicators` rejects `lookbackDays` | Omit those arguments |
 | reconcile_manager_ddq_claims with only `crd_number` | 409 | Pass `firm_id` |
 | batch_reconcile_manager_ddq_claims | 502 | Reconcile one subject per call |
-| save_ddq_reconciliation | Unusable: reconcile returns `run_id: null` | Do not save; keep the PDF as the record |
-| get_cma_consensus_check | 500 | Present Gradient CMAs alone, labelled house assumptions |
 | get_capital_market_assumptions | `quality_receipt.status` unvalidated; bond excess returns ≈ 0 with shared policy values; raw kurtosis < 3 flags | Disclose; no comparative claims; caveat fixed-income rows |
-| get_manager_diligence_findings (empty) | Validator flags "empty primary list has no explicit reason" although `absence_reason` is set | Report `absence_reason` ("no open findings") |
-| get_gradient_capabilities | About 60 KB response | Parse the saved file with Python |
 | get_return_series | `series_id` must be a UUID | Resolve the series ID first; do not pass tickers |
 | get_portfolio_historical_returns | 500 `backend_unavailable` / `mcp_analytics_tool_error` on every section (illustrative portfolio) | gradient-portfolio-review computes returns from `get_return_series` with `scripts/review_calcs.py` |
 | get_portfolio_structure `ownership_weights` | `response_contract_invalid` | Use `allocation_tree` actual weights |

@@ -20,10 +20,17 @@ def main():
     a = ap.parse_args()
     for old in (ROOT / "assets").glob("client-logo.*"):
         old.unlink()
-    b = {"client_name": "", "client_logo": "", "confidentiality": "", "powered_by": True}
+    b = {
+        "brand": "gradient",
+        "client_name": "",
+        "client_logo": "",
+        "confidentiality": "",
+        "powered_by": True,
+    }
     if not a.reset:
         if not a.client:
             ap.error("--client is required (or use --reset)")
+        b["brand"] = "client"
         b["client_name"] = a.client
         if a.logo:
             src = pathlib.Path(a.logo)

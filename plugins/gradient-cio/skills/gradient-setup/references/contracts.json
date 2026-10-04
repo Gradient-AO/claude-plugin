@@ -1,31 +1,737 @@
 {
   "version": "2026-10-04",
-  "envelope": ["provenance.as_of", "validation.status"],
+  "envelope": [
+    "provenance.as_of",
+    "validation.status"
+  ],
   "probes": [
-    {"id": "orgs", "set": "standard", "tool": "list_organizations", "args": {}, "required": ["organizations[0].id", "organizations[0].licensed_modules"], "envelope": false},
-    {"id": "roster", "set": "standard", "tool": "get_diligence_roster_funds", "args": {}, "required": ["funds", "capacity.effective_limit", "capacity.used"]},
-    {"id": "odd_profile", "set": "standard", "tool": "get_manager_odd_profile", "args": {"crd_number": "<first roster firm CRD>"}, "required": ["profile", "resolved_subject"]},
-    {"id": "monitor_coverage", "set": "standard", "tool": "get_manager_monitor_evidence", "args": {"mode": "coverage"}, "required": ["status", "coverage.adv_freshness.status", "coverage.monitored_total"]},
-    {"id": "the_read", "set": "standard", "tool": "get_the_read", "args": {"asOfDate": "<last business day>"}, "required": ["overview.headline", "publication.resolved_as_of_date", "coverage.status"]},
-    {"id": "calendar", "set": "standard", "tool": "get_macro_calendar", "args": {"view": "scheduled_events", "windowDays": 30, "limit": 5}, "required": ["events", "events[0].eventDate"]},
-    {"id": "attention", "set": "full", "tool": "get_manager_diligence_attention_queue", "args": {"view": "changes_since_review", "limit": 10}, "required": ["status", "items", "total_count"]},
-    {"id": "findings", "set": "full", "tool": "get_manager_diligence_findings", "args": {"view": "open", "firm_id": "<first roster parent_firm_id>"}, "required": ["status", "findings", "finding_count"]},
-    {"id": "events", "set": "full", "tool": "get_firm_fund_events", "args": {"firm_id": "<first roster parent_firm_id>", "per_page": 5}, "required": ["events", "metadata.evidence_state"]},
-    {"id": "conditions", "set": "full", "tool": "get_macro_conditions", "args": {"view": "indicators", "theme": "rates", "limit": 5}, "required": ["indicators", "indicators[0].latest.value"]},
-    {"id": "gradient_signal", "set": "full", "tool": "get_macro_signals", "args": {"view": "gradient_signal"}, "required": ["signal.composite_score", "signal.driver_scores"]},
-    {"id": "regime_state", "set": "full", "tool": "get_macro_signals", "args": {"view": "regime_state", "regions": ["NA"], "history_limit": 6}, "required": []},
-    {"id": "cma_baseline", "set": "full", "tool": "get_capital_market_assumptions", "args": {"view": "baseline", "per_page": 5}, "required": ["items", "risk_free_rate.freshness_status", "quality_receipt.status", "comparability.horizon_years"]},
-    {"id": "watchlist", "set": "full", "tool": "get_research_watchlist_changes", "args": {"limit": 5}, "required": ["status", "observations"]},
-    {"id": "portfolio_list", "set": "standard", "tool": "list_portfolios", "args": {}, "required": ["portfolios[0].portfolio_id", "portfolios[0].record_kind", "portfolios[0].base_currency"]},
-    {"id": "portfolio_tree", "set": "full", "tool": "get_portfolio_structure", "args": {"view": "allocation_tree", "portfolio_id": "<first portfolio_id>", "max_depth": 2}, "required": ["nodes[0].target_weight", "nodes[0].actual_weight", "coverage.status"]},
-    {"id": "portfolio_returns", "set": "full", "tool": "get_portfolio_historical_returns", "args": {"portfolio_id": "<first portfolio_id>", "sections": ["standard_periods"]}, "required": ["standard_periods"]},
-    {"id": "portfolio_series", "set": "full", "tool": "get_return_series", "args": {"series_kind": "portfolio", "series_id": "<first portfolio_id>", "trailing_months": 3}, "required": ["availability.status", "points[0].return"]},
-    {"id": "adv_13f_consistency", "set": "full", "tool": "get_cross_domain_research", "args": {"view": "adv_13f_consistency", "firm_id": "<first roster parent_firm_id>"}, "required": ["status", "rows[0].values.flags", "rows[0].values.latest_13f_age_days"]},
-    {"id": "screen", "set": "full", "tool": "screen_managers", "args": {"min_raum": 1000000000, "limit": 3}, "required": ["advisers", "advisers[0].crd_number", "has_more"], "envelope": false},
-    {"id": "cftc_positioning", "set": "full", "tool": "get_market_positioning", "args": {"view": "cftc", "marketGroup": "all", "historyWeeks": 4}, "required": ["report_date", "flags", "flags[0].percentile"]},
-    {"id": "hf_crowding", "set": "full", "tool": "get_market_positioning", "args": {"view": "hedge_fund_crowding", "limit": 5}, "required": ["consensus", "publishable_period", "staleness_days"]},
-    {"id": "regional_facts", "set": "full", "tool": "get_regional_research", "args": {"view": "facts", "regions": ["north_america"], "metrics": ["real_gdp_growth_rate"]}, "required": ["status", "regions[0].aggregates[0].value"]},
-    {"id": "equity_fundamentals", "set": "full", "tool": "get_public_equity_fundamentals", "args": {"view": "fundamentals", "symbol": "<test ticker>"}, "required": ["resolved_subject.cik", "facts.revenue.value"]},
-    {"id": "equity_risk_findings", "set": "full", "tool": "get_public_equity_filing_evidence", "args": {"view": "risk_findings", "symbol": "<test ticker>"}, "required": ["findings", "findings[0].accession_number"]}
+    {
+      "id": "orgs",
+      "set": "standard",
+      "tool": "list_organizations",
+      "args": {},
+      "required": [
+        "organizations[0].id",
+        "organizations[0].licensed_modules"
+      ],
+      "envelope": false
+    },
+    {
+      "id": "capabilities_summary",
+      "set": "full",
+      "tool": "get_gradient_capabilities",
+      "depends_on": [
+        "orgs"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "detail": "summary"
+      },
+      "required": [
+        "service",
+        "version",
+        "detail",
+        "capabilities",
+        "tools",
+        "coverage"
+      ],
+      "equals": {
+        "detail": "summary"
+      },
+      "envelope": false
+    },
+    {
+      "id": "roster",
+      "set": "standard",
+      "tool": "get_diligence_roster_funds",
+      "args": {},
+      "required": [
+        "funds",
+        "capacity.effective_limit",
+        "capacity.used"
+      ]
+    },
+    {
+      "id": "odd_profile",
+      "set": "standard",
+      "tool": "get_manager_odd_profile",
+      "depends_on": [
+        "roster"
+      ],
+      "args": {
+        "firm_id": "<roster:funds[0].parent_firm_id>"
+      },
+      "required": [
+        "profile",
+        "resolved_subject"
+      ]
+    },
+    {
+      "id": "monitor_coverage",
+      "set": "standard",
+      "tool": "get_manager_monitor_evidence",
+      "args": {
+        "mode": "coverage"
+      },
+      "required": [
+        "status",
+        "coverage.adv_freshness.status",
+        "coverage.monitored_total"
+      ]
+    },
+    {
+      "id": "the_read",
+      "set": "standard",
+      "tool": "get_the_read",
+      "args": {
+        "asOfDate": "<last business day>"
+      },
+      "required": [
+        "overview.headline",
+        "publication.resolved_as_of_date",
+        "coverage.status"
+      ]
+    },
+    {
+      "id": "calendar",
+      "set": "standard",
+      "tool": "get_macro_calendar",
+      "args": {
+        "view": "scheduled_events",
+        "windowDays": 30,
+        "limit": 5
+      },
+      "required": [
+        "events",
+        "events[0].eventDate"
+      ]
+    },
+    {
+      "id": "portfolio_list",
+      "set": "standard",
+      "tool": "list_portfolios",
+      "depends_on": [
+        "orgs"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>"
+      },
+      "required": [
+        "portfolios[0].portfolio_id",
+        "portfolios[0].record_kind",
+        "portfolios[0].base_currency"
+      ]
+    },
+    {
+      "id": "attention",
+      "set": "full",
+      "tool": "get_manager_diligence_attention_queue",
+      "args": {
+        "view": "changes_since_review",
+        "limit": 10
+      },
+      "required": [
+        "status",
+        "items",
+        "total_count"
+      ]
+    },
+    {
+      "id": "findings",
+      "set": "full",
+      "tool": "get_manager_diligence_findings",
+      "depends_on": [
+        "roster"
+      ],
+      "args": {
+        "view": "open",
+        "firm_id": "<roster:funds[0].parent_firm_id>"
+      },
+      "required": [
+        "status",
+        "findings",
+        "finding_count"
+      ]
+    },
+    {
+      "id": "events",
+      "set": "full",
+      "tool": "get_firm_fund_events",
+      "depends_on": [
+        "roster"
+      ],
+      "args": {
+        "firm_id": "<roster:funds[0].parent_firm_id>",
+        "per_page": 5
+      },
+      "required": [
+        "events",
+        "metadata.page",
+        "metadata.per_page",
+        "metadata.has_more"
+      ]
+    },
+    {
+      "id": "events_roster",
+      "set": "full",
+      "tool": "get_firm_fund_events",
+      "args": {
+        "view": "organization_roster_timeline",
+        "include_event_type_counts": true,
+        "per_page": 12
+      },
+      "required": [
+        "events",
+        "metadata.view",
+        "metadata.next_cursor",
+        "metadata.per_manager_counts",
+        "metadata.source_coverage.status"
+      ]
+    },
+    {
+      "id": "conditions",
+      "set": "full",
+      "tool": "get_macro_conditions",
+      "args": {
+        "view": "indicators",
+        "theme": "rates",
+        "limit": 5
+      },
+      "required": [
+        "indicators",
+        "indicators[0].latest.value"
+      ]
+    },
+    {
+      "id": "credit_spreads",
+      "set": "full",
+      "tool": "get_macro_conditions",
+      "args": {
+        "view": "credit_spreads",
+        "lookbackDays": 120
+      },
+      "required": [
+        "latest",
+        "spreads",
+        "spreadRows"
+      ]
+    },
+    {
+      "id": "gradient_signal",
+      "set": "full",
+      "tool": "get_macro_signals",
+      "args": {
+        "view": "gradient_signal"
+      },
+      "required": [
+        "signal.composite_score",
+        "signal.driver_scores"
+      ]
+    },
+    {
+      "id": "regime_state",
+      "set": "full",
+      "tool": "get_macro_signals",
+      "args": {
+        "view": "regime_state",
+        "regions": [
+          "NA"
+        ],
+        "history_limit": 6
+      },
+      "required": []
+    },
+    {
+      "id": "cma_baseline",
+      "set": "full",
+      "tool": "get_capital_market_assumptions",
+      "args": {
+        "view": "baseline",
+        "per_page": 5
+      },
+      "required": [
+        "items",
+        "risk_free_rate.freshness_status",
+        "quality_receipt.status",
+        "comparability.horizon_years"
+      ]
+    },
+    {
+      "id": "watchlist",
+      "set": "full",
+      "tool": "get_research_watchlist_changes",
+      "args": {
+        "limit": 5
+      },
+      "required": [
+        "status",
+        "observations"
+      ]
+    },
+    {
+      "id": "portfolio_tree",
+      "set": "full",
+      "tool": "get_portfolio_structure",
+      "depends_on": [
+        "orgs",
+        "portfolio_list"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "view": "allocation_tree",
+        "portfolio_id": "<portfolio_list:portfolios[0].portfolio_id>",
+        "max_depth": 2
+      },
+      "required": [
+        "nodes[0].target_weight",
+        "nodes[0].actual_weight",
+        "coverage.status"
+      ]
+    },
+    {
+      "id": "portfolio_exposure",
+      "set": "full",
+      "tool": "get_portfolio_exposure",
+      "depends_on": [
+        "orgs",
+        "portfolio_list"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "portfolio_id": "<portfolio_list:portfolios[0].portfolio_id>",
+        "limit": 50
+      },
+      "required": [
+        "portfolio.portfolio_id",
+        "portfolio.base_currency",
+        "exposures",
+        "totals.nav_base",
+        "has_more",
+        "methodology"
+      ]
+    },
+    {
+      "id": "portfolio_ownership",
+      "set": "full",
+      "tool": "get_portfolio_structure",
+      "depends_on": [
+        "orgs",
+        "portfolio_list"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "view": "ownership_weights",
+        "portfolio_id": "<portfolio_list:portfolios[0].portfolio_id>"
+      },
+      "required": [
+        "view",
+        "portfolio.portfolio_id",
+        "portfolio.record_kind",
+        "selection.selection_basis",
+        "ownership_weights",
+        "by_owner",
+        "owner_count",
+        "coverage.status"
+      ]
+    },
+    {
+      "id": "portfolio_returns",
+      "set": "full",
+      "tool": "get_portfolio_historical_returns",
+      "depends_on": [
+        "orgs",
+        "portfolio_list"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "portfolio_id": "<portfolio_list:portfolios[0].portfolio_id>",
+        "sections": [
+          "standard_periods"
+        ]
+      },
+      "required": [
+        "standard_periods"
+      ]
+    },
+    {
+      "id": "portfolio_series",
+      "set": "full",
+      "tool": "get_return_series",
+      "depends_on": [
+        "orgs",
+        "portfolio_list"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "series_kind": "portfolio",
+        "series_id": "<portfolio_list:portfolios[0].portfolio_id>",
+        "trailing_months": 3
+      },
+      "required": [
+        "availability.status",
+        "points[0].return"
+      ]
+    },
+    {
+      "id": "strategy_session",
+      "set": "full",
+      "tool": "build_strategy_lab_session",
+      "depends_on": [
+        "orgs",
+        "portfolio_list"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "domain": "expected-statistics",
+        "portfolio_id": "<portfolio_list:portfolios[0].portfolio_id>"
+      },
+      "required": [
+        "status",
+        "domain",
+        "strategy_lab_session",
+        "coverage.status",
+        "source_provenance.portfolio_id"
+      ],
+      "non_null": [
+        "strategy_lab_session"
+      ],
+      "equals": {
+        "domain": "expected-statistics"
+      }
+    },
+    {
+      "id": "strategy_expected_statistics",
+      "set": "full",
+      "tool": "run_strategy_lab_expected_statistics",
+      "depends_on": [
+        "strategy_session"
+      ],
+      "args": {
+        "strategy_lab_session": "<strategy_session:strategy_lab_session>"
+      },
+      "required": [
+        "domain",
+        "rows",
+        "covariance.method"
+      ],
+      "equals": {
+        "domain": "expected-statistics"
+      }
+    },
+    {
+      "id": "strategy_relative_return",
+      "set": "full",
+      "tool": "run_strategy_lab_relative_return",
+      "args": {
+        "strategy_lab_session": {
+          "domain": "relative-return"
+        }
+      },
+      "required": [
+        "domain",
+        "tracking_error",
+        "information_ratio"
+      ],
+      "equals": {
+        "domain": "relative-return"
+      }
+    },
+    {
+      "id": "adv_13f_consistency",
+      "set": "full",
+      "tool": "get_cross_domain_research",
+      "depends_on": [
+        "roster"
+      ],
+      "args": {
+        "view": "adv_13f_consistency",
+        "firm_id": "<roster:funds[0].parent_firm_id>"
+      },
+      "required": [
+        "status",
+        "rows[0].values.flags",
+        "rows[0].values.latest_13f_age_days"
+      ]
+    },
+    {
+      "id": "search_managers",
+      "set": "full",
+      "tool": "search_managers",
+      "depends_on": [
+        "orgs"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "query": "Bridgewater",
+        "limit": 3
+      },
+      "required": [
+        "advisers",
+        "has_more",
+        "report_date"
+      ]
+    },
+    {
+      "id": "screen",
+      "set": "full",
+      "tool": "screen_managers",
+      "depends_on": [
+        "orgs"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "min_raum": 1000000000,
+        "limit": 3
+      },
+      "required": [
+        "advisers",
+        "advisers[0].crd_number",
+        "has_more"
+      ],
+      "envelope": false
+    },
+    {
+      "id": "cftc_positioning",
+      "set": "full",
+      "tool": "get_market_positioning",
+      "args": {
+        "view": "cftc",
+        "marketGroup": "all",
+        "historyWeeks": 4
+      },
+      "required": [
+        "report_date",
+        "flags",
+        "flags[0].percentile"
+      ]
+    },
+    {
+      "id": "hf_crowding",
+      "set": "full",
+      "tool": "get_market_positioning",
+      "args": {
+        "view": "hedge_fund_crowding",
+        "limit": 5
+      },
+      "required": [
+        "consensus",
+        "publishable_period",
+        "staleness_days"
+      ]
+    },
+    {
+      "id": "regional_facts",
+      "set": "full",
+      "tool": "get_regional_research",
+      "args": {
+        "view": "facts",
+        "regions": [
+          "north_america"
+        ],
+        "metrics": [
+          "real_gdp_growth_rate"
+        ]
+      },
+      "required": [
+        "status",
+        "regions[0].aggregates[0].value"
+      ]
+    },
+    {
+      "id": "equity_fundamentals",
+      "set": "full",
+      "tool": "get_public_equity_fundamentals",
+      "args": {
+        "view": "fundamentals",
+        "symbol": "<test ticker>"
+      },
+      "required": [
+        "resolved_subject.cik",
+        "facts.revenue.value"
+      ]
+    },
+    {
+      "id": "equity_risk_findings",
+      "set": "full",
+      "tool": "get_public_equity_filing_evidence",
+      "args": {
+        "view": "risk_findings",
+        "symbol": "<test ticker>"
+      },
+      "required": [
+        "findings",
+        "findings[0].accession_number"
+      ]
+    },
+    {
+      "id": "write_create_finding",
+      "set": "writes",
+      "tool": "create_diligence_finding",
+      "depends_on": [
+        "orgs",
+        "roster"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "dry_run": true,
+        "idempotency_key": "gradient-contract-create-finding-v1",
+        "firm_id": "<roster:funds[0].parent_firm_id>",
+        "finding_code": "contract-self-test:dry-run-v1",
+        "title": "Gradient contract self-test preview",
+        "summary": "Dry-run contract verification; do not persist this finding.",
+        "severity": "low"
+      },
+      "required": [
+        "action",
+        "outcome",
+        "receipt_id"
+      ],
+      "non_null": [
+        "receipt_id"
+      ],
+      "equals": {
+        "dry_run": true,
+        "committed": false
+      },
+      "envelope": false
+    },
+    {
+      "id": "write_watchlist_manager",
+      "set": "writes",
+      "tool": "update_watchlist",
+      "depends_on": [
+        "orgs",
+        "odd_profile"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "dry_run": true,
+        "idempotency_key": "gradient-contract-watchlist-manager-v1",
+        "action": "add",
+        "item": {
+          "id": "contract-probe-manager-adv",
+          "kind": "manager",
+          "label": "Gradient contract probe manager",
+          "reference": "<odd_profile:resolved_subject.crd_number>",
+          "adv_crd": "<odd_profile:resolved_subject.crd_number>"
+        }
+      },
+      "required": [
+        "action",
+        "outcome",
+        "receipt_id"
+      ],
+      "non_null": [
+        "receipt_id"
+      ],
+      "equals": {
+        "dry_run": true,
+        "committed": false
+      },
+      "envelope": false
+    },
+    {
+      "id": "write_roster",
+      "set": "writes",
+      "tool": "update_diligence_roster",
+      "depends_on": [
+        "orgs",
+        "roster"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "dry_run": true,
+        "idempotency_key": "gradient-contract-roster-remove-v1",
+        "action": "remove",
+        "membership_id": "<roster:funds[0].membership_id>",
+        "reason": "Gradient contract self-test preview only"
+      },
+      "required": [
+        "action",
+        "outcome",
+        "receipt_id"
+      ],
+      "non_null": [
+        "receipt_id"
+      ],
+      "equals": {
+        "dry_run": true,
+        "committed": false
+      },
+      "envelope": false
+    },
+    {
+      "id": "ddq_reconcile_persisted",
+      "set": "ddq-save-preview",
+      "tool": "reconcile_manager_ddq_claims",
+      "depends_on": [
+        "orgs",
+        "roster"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "firm_id": "<roster:funds[0].parent_firm_id>",
+        "document_text": "Employees: 42",
+        "persist": true,
+        "claim_set_scope": "selected_claims",
+        "file": {
+          "file_name": "gradient-contract-self-test-ddq.txt",
+          "file_sha256": "cf40cc19e499714219db4a3e5af2cf15e1f7f67db3671702dd7b79ce774f6b4e"
+        },
+        "claims": [
+          {
+            "field": "employees",
+            "claim_status": "asserted",
+            "raw_value": "42",
+            "quote": "Employees: 42",
+            "source_locator": {
+              "start": 0,
+              "end": 13,
+              "page": 1
+            },
+            "asserted_as_of": "2026-10-04",
+            "extraction_reason_codes": []
+          }
+        ]
+      },
+      "required": [
+        "result_type",
+        "run_id",
+        "persistence.status",
+        "subject.firm_id",
+        "rows",
+        "verdict_counts"
+      ],
+      "non_null": [
+        "run_id"
+      ]
+    },
+    {
+      "id": "ddq_save_preview",
+      "set": "ddq-save-preview",
+      "tool": "save_ddq_reconciliation",
+      "depends_on": [
+        "orgs",
+        "ddq_reconcile_persisted"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "reconciliation_id": "<ddq_reconcile_persisted:run_id>",
+        "dry_run": true,
+        "idempotency_key": "gradient-contract-save-ddq-preview-v1"
+      },
+      "required": [
+        "reconciliation_id",
+        "outcome",
+        "persistence.status",
+        "reviewer_note_recorded"
+      ],
+      "equals": {
+        "outcome": "preview",
+        "dry_run": true,
+        "committed": false
+      },
+      "envelope": false
+    }
   ]
 }
