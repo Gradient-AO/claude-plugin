@@ -1,0 +1,68 @@
+{
+ "meta": {
+  "eyebrow": "Manager Monitoring Digest",
+  "header_label": "Monitoring Digest",
+  "title": "Gradient",
+  "subtitle": "Week of 2026-09-28 – 2026-10-04 · Diligence Roster",
+  "running_head": "Gradient · week to 2026-10-04",
+  "data_as_of": "2026-10-01 (Form ADV); queue 2026-10-04",
+  "signal": {"level": "review", "label": "1 item to review"},
+  "signal_title": "This week",
+  "completeness": {"used": 2, "expected": 2, "state": "complete"},
+  "meter_title": "Subjects fully covered",
+  "cover_facts": [["Roster funds", "1 of 3 slots"], ["Managers", "1"], ["New alerts", "0"], ["Changes since review", "1"], ["Open findings", "0"], ["ADV data as of", "2026-10-01"]]
+ },
+ "executive": {
+  "bottom_line": "One item needs attention: Ridgeview Example Advisors filed a new Form ADV snapshot dated 2026-10-01, two days after its last review on 2026-09-29 [S2]. The monitor processed that filing and raised no alerts in any category [S3], and there are no open findings [S4]. Review the new filing and decide whether an ODD refresh is needed; Global Macro Fund II has no new activity. The firm and fund event feed is not yet published, so absence of events is not evidence of none [S5].",
+  "tiles": [
+   {"label": "New alerts", "value": "0", "sub": "ADV run 2026-10-01 [S3]", "tone": "good"},
+   {"label": "Changes since review", "value": "1", "sub": "New ADV snapshot [S2]", "tone": "watch"},
+   {"label": "Open findings", "value": "0", "sub": "No open findings [S4]", "tone": "good"},
+   {"label": "Reviews due ≤30d", "value": "0", "sub": "Next due 2027-09-29 [S1]", "tone": "good"}
+  ]
+ },
+ "sections": [
+  {"id": "executive", "title": "This week", "kicker": "What needs attention across the Diligence Roster", "blocks": [
+   {"type": "table", "title": "Needs attention", "columns": ["Subject", "Reason", "Severity", "Source date", "Action"],
+    "align": ["l", "l", "l", "n", "l"],
+    "rows": [["Ridgeview Example Advisors (firm)", "Material change: Form ADV snapshot filed after last review [S2]", {"chip": "Medium", "status": "medium"}, "2026-10-01", "Review new ADV filing; consider ODD refresh"]],
+    "note": "No new activity: Ridgeview Global Macro Fund II, Ltd. (fund) — no changes, alerts, findings or concerns since review on 2026-09-29 [S2]."}
+  ]},
+  {"title": "Changes and alerts", "kicker": "Evidence behind each item", "new_page": false, "blocks": [
+   {"type": "kv", "title": "Ridgeview Example Advisors — change since last review", "rows": [
+     ["Change", "Form ADV snapshot dated 2026-10-01", "S2"],
+     ["Rule triggered", "change-since-review-adv_snapshot (medium): occurred after last review 2026-09-29", "S2"],
+     ["Evidence ID", "adv_history:2026-10-01", "S2"],
+     ["Monitor alerts on this filing", "0 alerts; 912 registered-adviser events classified across the market, none for monitored CRDs", "S3"],
+     ["Red-flag concerns", "None (manager ADV: no qualifying red flags)", "S2"],
+     ["Open findings", "None", "S4"]]},
+   {"type": "callout", "tone": "info", "title": "Why this is medium, not high", "text": "A new ADV filing is a change to review, not a finding. The monitor's tier rules found no assets, custody, disclosure, personnel, ownership or service-provider change that meets an alert threshold [S3]. Form ADV is adviser-reported, not SEC-verified."}
+  ]},
+  {"title": "Review calendar", "kicker": "Last and next reviews per roster subject", "new_page": false, "blocks": [
+   {"type": "table", "columns": ["Subject", "Last review", "Next due", "Status"], "align": ["l", "n", "n", "l"],
+    "rows": [["Ridgeview Global Macro Fund II, Ltd.", "2026-09-29", "2027-09-29", {"chip": "Current", "status": "available"}],
+             ["Ridgeview Example Advisors (parent firm)", "2026-09-29", "2027-09-29", {"chip": "Current", "status": "available"}]],
+    "note": "Roster capacity: 1 of 3 fund slots used [S1]."}
+  ]},
+  {"title": "Coverage and freshness", "kicker": "What each source covered this week", "new_page": false, "blocks": [
+   {"type": "coverage", "items": [
+     {"name": "Attention queue", "status": "available", "note": "2 subjects, completeness complete; as of 2026-10-04 [S2]"},
+     {"name": "Monitor alerts", "status": "available", "note": "Registered and exempt ADV runs for 2026-10-01 completed 2026-10-04; aligned [S3]"},
+     {"name": "Form ADV data", "status": "available", "note": "Current: 3 days old, expected report date 2026-10-01 [S3]"},
+     {"name": "Open findings", "status": "available", "note": "No open findings [S4]"},
+     {"name": "Firm and fund events", "status": "unavailable", "note": "Event publication not ready — absence is not evidence [S5]"},
+     {"name": "Research watchlist", "status": "available", "note": "No watchlist items selected [S6]"}]}
+  ]},
+  {"title": "Appendix — Sources and method", "num": "A", "blocks": [
+   {"type": "table", "columns": ["Tag", "Evidence", "Tool / view", "As of", "Validation"], "align": ["n", "l", "l", "n", "l"],
+    "rows": [["S1", "Diligence Roster and capacity", "get_diligence_roster_funds", "2026-10-04", {"chip": "passed", "status": "passed"}],
+             ["S2", "Attention queue, changes since review, red flags", "get_manager_diligence_attention_queue (3 views)", "2026-10-04", {"chip": "passed", "status": "passed"}],
+             ["S3", "Monitor alerts and coverage", "get_manager_monitor_evidence (alerts, coverage)", "2026-10-01", {"chip": "passed", "status": "passed"}],
+             ["S4", "Open findings — Ridgeview Example Advisors", "get_manager_diligence_findings (open)", "2026-10-04", {"chip": "advisory", "status": "advisory"}],
+             ["S5", "Firm and fund events — Ridgeview Example Advisors", "get_firm_fund_events (subject)", "2026-10-04", {"chip": "passed", "status": "passed"}],
+             ["S6", "Research watchlist changes", "get_research_watchlist_changes", "2026-10-04", {"chip": "passed", "status": "passed"}]],
+    "note": "S4 validation: advisory 'empty primary list has no explicit reason' although the response states absence_reason no_open_findings (known issue)."},
+   {"type": "bullets", "items": ["Window: 2026-09-28 to 2026-10-04. Severity: high = tier-1 alert, new red flag, overdue high finding or overdue review; medium = material change since review, tier-2 alert, open medium finding, review due within 30 days; low = everything else.", "Organization: Gradient (org_3Fu4c4pgShBu5sJsBYFT60Rabqv). Data scope: user-authorized live.", "Form ADV is adviser-reported and not verified by the SEC. This digest is a monitoring aid, not investment, legal or compliance advice."]}
+  ]}
+ ]
+}

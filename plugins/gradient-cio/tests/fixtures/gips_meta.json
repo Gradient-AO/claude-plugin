@@ -1,0 +1,6 @@
+{"eyebrow":"GIPS Manager Diligence","header_label":"GIPS Review","subtitle":"Global Value Equity Composite · data through 2025-12-31 · synthetic example",
+ "running_head":"Northfield · GIPS","data_as_of":"2025-12-31","confidentiality":"SYNTHETIC EXAMPLE — layout test",
+ "cover_facts":[["Subject","Northfield Example Capital"],["Document reviewed","GIPS Composite Report"],["Data through","2025-12-31"],["Verifier","Example Verifier LLP"],["Prepared for","Gradient"],["Review date","2026-10-04"]],
+ "signal_title":"Overall assessment","signal":{"level":"follow_ups","label":"Satisfactory with follow-ups"},
+ "completeness":{"used":7,"expected":8,"state":"partial"},"meter_title":"Requirements evidenced",
+ "executive":{"label":"Bottom line","bottom_line":"The firm-wide GIPS claim is correctly worded and verified through 2024 [S1] [S2]. Two Medium findings need answers before approval: composite assets in the DDQ do not match the GIPS Report, and the fee schedule omits the performance fee [S1] [S3]."}}

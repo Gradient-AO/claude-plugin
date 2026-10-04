@@ -1,0 +1,14 @@
+{
+  "name": "gradientcio",
+  "owner": { "name": "GradientCIO", "email": "support@gradientcio.com" },
+  "metadata": { "description": "GradientCIO plugins for institutional allocators." },
+  "plugins": [
+    {
+      "name": "gradient-cio",
+      "source": "./plugins/gradient-cio",
+      "description": "ODD reports, DDQ reconciliation, manager monitoring, macro briefing decks, IC memos and GIPS reviews built on GradientCIO evidence, delivered as branded PDFs.",
+      "version": "1.1.0",
+      "homepage": "https://gradientcio.com"
+    }
+  ]
+}

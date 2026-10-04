@@ -1,0 +1,23 @@
+{
+  "name": "gradient-cio",
+  "version": "1.1.0",
+  "description": "Gradient CIO client skills: operational due diligence reports, DDQ reconciliation, weekly manager monitoring digests, macro briefing decks, investment committee memos and GIPS reviews, built on GradientCIO evidence and delivered as branded PDFs in one consistent house style. Includes the GradientCIO connector and a setup check.",
+  "author": {
+    "name": "GradientCIO"
+  },
+  "homepage": "https://gradientcio.com",
+  "keywords": [
+    "DDQ",
+    "Form ADV",
+    "GIPS",
+    "IC memo",
+    "ODD",
+    "allocators",
+    "briefing deck",
+    "due diligence",
+    "investment committee",
+    "macro",
+    "monitoring",
+    "setup"
+  ]
+}

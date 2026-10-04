@@ -1,0 +1,532 @@
+{
+ "meta": {
+  "eyebrow": "Setup & Readiness",
+  "header_label": "Readiness Check",
+  "title": "Gradient",
+  "subtitle": "GradientCIO connection, access and data readiness",
+  "running_head": "Gradient \u00b7 readiness 2026-10-04",
+  "data_as_of": "2026-10-04",
+  "signal": {
+   "level": "partial",
+   "label": "Ready, with limits"
+  },
+  "signal_title": "Readiness",
+  "completeness": {
+   "used": 13,
+   "expected": 14,
+   "state": "partial"
+  },
+  "meter_title": "Checks passed",
+  "cover_facts": [
+   [
+    "Organization",
+    "Gradient"
+   ],
+   [
+    "Role",
+    "Admin"
+   ],
+   [
+    "Licensed modules",
+    "4 of 7"
+   ],
+   [
+    "Roster funds",
+    "1 of 3 slots"
+   ],
+   [
+    "MCP version",
+    "gradient-mcp 0.7.0"
+   ],
+   [
+    "Checked",
+    "2026-10-04"
+   ]
+  ]
+ },
+ "executive": {
+  "bottom_line": "GradientCIO is connected and healthy for organization Gradient [S1][S2]. Nine of eleven skills are ready; the macro briefing is ready with one view unavailable, and the IC memo needs the Portfolio and Strategy Lab modules for live portfolio data [S2]. 13 of 14 contract checks passed; the one failure (macro regime state, HTTP 500) is a known issue the skills work around [S3].",
+  "tiles": [
+   {
+    "label": "Skills ready",
+    "value": "9",
+    "sub": "of 11",
+    "tone": "good"
+   },
+   {
+    "label": "Partial",
+    "value": "2",
+    "sub": "Macro brief \u00b7 IC memo",
+    "tone": "watch"
+   },
+   {
+    "label": "Not licensed",
+    "value": "2 modules",
+    "sub": "Portfolio \u00b7 Strategy Lab",
+    "tone": "watch"
+   },
+   {
+    "label": "Checks passed",
+    "value": "13 / 14",
+    "sub": "1 known issue",
+    "tone": "good"
+   }
+  ]
+ },
+ "sections": [
+  {
+   "id": "executive",
+   "title": "Summary",
+   "kicker": "Can this organization use the Gradient skills today?",
+   "blocks": [
+    {
+     "type": "callout",
+     "tone": "info",
+     "title": "What to do next",
+     "text": "Nothing is blocking day-to-day use. To write IC memos from live portfolio data, license the Portfolio and Strategy Lab modules; until then the memo can be written from holdings you supply."
+    }
+   ]
+  },
+  {
+   "title": "Skills you can use",
+   "kicker": "Status of each skill for this organization",
+   "new_page": false,
+   "blocks": [
+    {
+     "type": "table",
+     "columns": [
+      "Skill",
+      "Produces",
+      "Status",
+      "Note"
+     ],
+     "align": [
+      "n",
+      "l",
+      "l",
+      "l"
+     ],
+     "rows": [
+      [
+       "gradient-odd-report",
+       "ODD report",
+       {
+        "chip": "Ready",
+        "status": "ready"
+       },
+       "Event feed not yet published; reports say so"
+      ],
+      [
+       "gradient-ddq-reconcile",
+       "DDQ reconciliation",
+       {
+        "chip": "Ready",
+        "status": "ready"
+       },
+       "One subject per call; saving runs not yet available"
+      ],
+      [
+       "gradient-manager-monitor",
+       "Weekly monitoring digest",
+       {
+        "chip": "Ready",
+        "status": "ready"
+       },
+       "1 roster fund monitored"
+      ],
+      [
+       "gradient-macro-brief",
+       "Macro briefing deck",
+       {
+        "chip": "Partial",
+        "status": "partial"
+       },
+       "Regime-state view unavailable; deck uses Gradient signal instead"
+      ],
+      [
+       "gradient-ic-memo",
+       "IC memo",
+       {
+        "chip": "Partial",
+        "status": "partial"
+       },
+       "Portfolio and Strategy Lab not licensed: memo from supplied holdings only"
+      ],
+      [
+       "gradient-gips-* (5 skills)",
+       "GIPS reviews and briefing notes",
+       {
+        "chip": "Ready",
+        "status": "ready"
+       },
+       "Work from documents; Gradient evidence used when available"
+      ],
+      [
+       "gradient-setup",
+       "This report",
+       {
+        "chip": "Ready",
+        "status": "ready"
+       },
+       ""
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Access and data",
+   "kicker": "Organization, modules and data domains",
+   "new_page": false,
+   "blocks": [
+    {
+     "type": "kv",
+     "title": "Organization",
+     "rows": [
+      [
+       "Name",
+       "Gradient",
+       "S1"
+      ],
+      [
+       "Role",
+       "Admin",
+       "S1"
+      ],
+      [
+       "Licensed modules",
+       "Firm & fund diligence, Research, Macro desk, Gradient signals",
+       "S1"
+      ],
+      [
+       "Not licensed",
+       "Portfolio, Strategy Lab, Peer intelligence",
+       "S2"
+      ],
+      [
+       "Tools entitled",
+       "44 of 63",
+       "S2"
+      ],
+      [
+       "Backend",
+       "Ready",
+       "S2"
+      ],
+      [
+       "Roster capacity",
+       "1 of 3 fund slots used",
+       "S4"
+      ]
+     ]
+    },
+    {
+     "type": "coverage",
+     "title": "Data domains",
+     "items": [
+      {
+       "name": "Manager diligence",
+       "status": "available",
+       "note": "Form ADV current to 2026-10-01"
+      },
+      {
+       "name": "Macro research",
+       "status": "partial",
+       "note": "Conditional; The Read published to 2026-10-02"
+      },
+      {
+       "name": "Capital market assumptions",
+       "status": "partial",
+       "note": "Conditional; quality receipt unvalidated"
+      },
+      {
+       "name": "Market data",
+       "status": "partial",
+       "note": "Conditional"
+      },
+      {
+       "name": "Public equity",
+       "status": "partial",
+       "note": "Conditional"
+      },
+      {
+       "name": "Strategy Lab",
+       "status": "partial",
+       "note": "Conditional; not licensed"
+      },
+      {
+       "name": "Peer intelligence",
+       "status": "unavailable",
+       "note": "Not licensed"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Contract checks",
+   "kicker": "Full self-test: 14 probes against the live connector",
+   "blocks": [
+    {
+     "type": "table",
+     "columns": [
+      "Probe",
+      "Tool",
+      "Result",
+      "As of",
+      "Note"
+     ],
+     "align": [
+      "n",
+      "l",
+      "l",
+      "n",
+      "l"
+     ],
+     "rows": [
+      [
+       "orgs",
+       "list_organizations",
+       {
+        "chip": "Pass",
+        "status": "passed"
+       },
+       "2026-10-04",
+       ""
+      ],
+      [
+       "roster",
+       "get_diligence_roster_funds",
+       {
+        "chip": "Pass",
+        "status": "passed"
+       },
+       "2026-10-04",
+       ""
+      ],
+      [
+       "odd_profile",
+       "get_manager_odd_profile",
+       {
+        "chip": "Pass",
+        "status": "passed"
+       },
+       "2026-10-04",
+       "CRD 999901"
+      ],
+      [
+       "monitor_coverage",
+       "get_manager_monitor_evidence",
+       {
+        "chip": "Pass",
+        "status": "passed"
+       },
+       "2026-10-01",
+       "ADV freshness current"
+      ],
+      [
+       "the_read",
+       "get_the_read",
+       {
+        "chip": "Pass",
+        "status": "passed"
+       },
+       "2026-10-02",
+       "Coverage partial: no chart history"
+      ],
+      [
+       "calendar",
+       "get_macro_calendar",
+       {
+        "chip": "Pass",
+        "status": "passed"
+       },
+       "2026-10-04",
+       ""
+      ],
+      [
+       "attention",
+       "get_manager_diligence_attention_queue",
+       {
+        "chip": "Pass",
+        "status": "passed"
+       },
+       "2026-10-04",
+       ""
+      ],
+      [
+       "findings",
+       "get_manager_diligence_findings",
+       {
+        "chip": "Pass",
+        "status": "passed"
+       },
+       "2026-10-04",
+       "Validator advisory on empty list (known)"
+      ],
+      [
+       "events",
+       "get_firm_fund_events",
+       {
+        "chip": "Pass",
+        "status": "passed"
+       },
+       "2026-10-04",
+       "Publication not ready (known)"
+      ],
+      [
+       "conditions",
+       "get_macro_conditions",
+       {
+        "chip": "Pass",
+        "status": "passed"
+       },
+       "2026-10-02",
+       ""
+      ],
+      [
+       "gradient_signal",
+       "get_macro_signals",
+       {
+        "chip": "Pass",
+        "status": "passed"
+       },
+       "2026-10-02",
+       "GRIP degraded: 1 stale input"
+      ],
+      [
+       "regime_state",
+       "get_macro_signals",
+       {
+        "chip": "Known issue",
+        "status": "watch"
+       },
+       "\u2014",
+       "HTTP 500 MCP_TOOL_EXECUTION_FAILED; retried once"
+      ],
+      [
+       "cma_baseline",
+       "get_capital_market_assumptions",
+       {
+        "chip": "Pass",
+        "status": "passed"
+       },
+       "2026-10-04",
+       "Risk-free fresh; receipt unvalidated (known)"
+      ],
+      [
+       "watchlist",
+       "get_research_watchlist_changes",
+       {
+        "chip": "Pass",
+        "status": "passed"
+       },
+       "2026-10-04",
+       "No items selected"
+      ]
+     ]
+    },
+    {
+     "type": "findings",
+     "items": [],
+     "empty_title": "No new failures",
+     "empty_text": "Every failure matched the known-issues list. Since the last list: the CMA baseline now returns a fresh risk-free rate (previously HTTP 422)."
+    }
+   ],
+   "new_page": false
+  },
+  {
+   "title": "Try next",
+   "kicker": "Prompts that work for this organization today",
+   "new_page": false,
+   "blocks": [
+    {
+     "type": "questions",
+     "items": [
+      {
+       "q": "Run an ODD report on Ridgeview Global Macro Fund II.",
+       "why": "Your one roster fund; a new Form ADV was filed after its last review."
+      },
+      {
+       "q": "Give me this week's manager monitoring digest, and schedule it for Mondays.",
+       "why": "Keeps the roster under watch without manual checks."
+      },
+      {
+       "q": "Build the macro briefing deck for Thursday's committee.",
+       "why": "Uses The Read, rates, Gradient signal, calendar and CMAs."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Appendix \u2014 Sources",
+   "num": "A",
+   "blocks": [
+    {
+     "type": "table",
+     "columns": [
+      "Tag",
+      "Evidence",
+      "Tool",
+      "As of",
+      "Validation"
+     ],
+     "align": [
+      "n",
+      "l",
+      "l",
+      "n",
+      "l"
+     ],
+     "rows": [
+      [
+       "S1",
+       "Organizations and modules",
+       "list_organizations",
+       "2026-10-04",
+       {
+        "chip": "n/a",
+        "status": "n/a"
+       }
+      ],
+      [
+       "S2",
+       "Capabilities, entitlement, coverage",
+       "get_gradient_capabilities",
+       "2026-10-04",
+       {
+        "chip": "n/a",
+        "status": "n/a"
+       }
+      ],
+      [
+       "S3",
+       "Contract probes (14)",
+       "see table in section 04",
+       "2026-10-04",
+       {
+        "chip": "passed",
+        "status": "passed"
+       }
+      ],
+      [
+       "S4",
+       "Diligence Roster",
+       "get_diligence_roster_funds",
+       "2026-10-04",
+       {
+        "chip": "passed",
+        "status": "passed"
+       }
+      ]
+     ]
+    },
+    {
+     "type": "text",
+     "text": "Readiness reflects entitlement, OAuth scope, backend health and data readiness reported by GradientCIO at the time of the check. Tool availability does not guarantee that data is published for every subject."
+    }
+   ]
+  }
+ ]
+}
