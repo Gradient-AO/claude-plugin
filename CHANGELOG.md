@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.0
+- Expanded the setup self-test to cover illustrative portfolio reads, Strategy Lab, roster events, organization-scoped manager discovery, compact capability discovery, dry-run write previews and persisted DDQ save previews.
+- Contract checks now support non-null and exact-value assertions plus dependency-based argument chaining between probes.
+- Removed resolved MCP workarounds and clarified illustrative evaluation access.
+- Made GradientCIO the explicit default report brand while preserving optional client branding.
+
 ## 1.2.3
 - The PDF renderer makes no network requests: the Inter font (OFL-1.1) now ships in `assets/fonts/` and is embedded in each report, instead of being downloaded from Google Fonts. Reports look the same and render offline.
 - Test fixtures: removed a leftover real assets-under-management figure.

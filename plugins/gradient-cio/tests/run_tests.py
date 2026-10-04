@@ -18,7 +18,10 @@ import json, pathlib, re, shutil, subprocess, sys, tempfile
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 FIX = ROOT / "tests" / "fixtures"
 RENDER = ROOT / "shared" / "gradient_report.py"
+CONTRACT_CHECKER = ROOT / "skills" / "gradient-setup" / "scripts" / "check_contract.py"
+CONTRACTS = ROOT / "skills" / "gradient-setup" / "references" / "contracts.json"
 STALE = re.compile(r"(?<!gradient-)\bgips-(compliance|standards|manager-diligence|report-review|asset-owner-review|policies-gap-check)\b|gradient-capabilities")
+CHAINED_PLACEHOLDER = re.compile(r"^<([a-z0-9_]+):([^>]+)>$")
 
 # name, args (relative to fixtures; OUT = output pdf), min pages, max pages, must-contain text
 CASES = [
@@ -85,6 +88,172 @@ def static(allow_branded):
         check(r.returncode == 0, "renderer compiles on Python 3.11")
     b = json.loads((ROOT / "branding.json").read_text(encoding="utf-8"))
     check(allow_branded or not b.get("client_name"), "branding.json is unbranded (use --allow-branded for a client build)")
+    check(b.get("brand") == "gradient", "branding.json declares Gradient as the default brand")
+    branded = json.loads((FIX / "branding-test.json").read_text(encoding="utf-8"))
+    check(branded.get("brand") == "client", "client branding fixture declares the client brand")
+    contract_manifest()
+    contract_checker()
+
+def contract_manifest():
+    contracts = json.loads(CONTRACTS.read_text(encoding="utf-8"))
+    probes = contracts["probes"]
+    probe_ids = [probe["id"] for probe in probes]
+    known_ids = set(probe_ids)
+    check(len(probe_ids) == len(known_ids), "contract probe IDs are unique")
+    counts = {
+        name: sum(probe.get("set") == name for probe in probes)
+        for name in ("standard", "full", "writes", "ddq-save-preview")
+    }
+    check(
+        counts == {"standard": 7, "full": 27, "writes": 3, "ddq-save-preview": 2},
+        f"contract probe sets have expected counts ({counts})",
+    )
+
+    def placeholders(value):
+        if isinstance(value, dict):
+            return {
+                item
+                for child in value.values()
+                for item in placeholders(child)
+            }
+        if isinstance(value, list):
+            return {item for child in value for item in placeholders(child)}
+        match = CHAINED_PLACEHOLDER.fullmatch(value) if isinstance(value, str) else None
+        return {match.group(1)} if match else set()
+
+    dependency_errors = []
+    for index, probe in enumerate(probes):
+        declared = probe.get("depends_on", [])
+        used = placeholders(probe["args"])
+        if not isinstance(declared, list):
+            dependency_errors.append(f"{probe['id']}: depends_on is not a list")
+            continue
+        unknown = set(declared) - known_ids
+        later = {
+            dependency
+            for dependency in declared
+            if dependency in known_ids and probe_ids.index(dependency) >= index
+        }
+        if unknown:
+            dependency_errors.append(f"{probe['id']}: unknown {sorted(unknown)}")
+        if later:
+            dependency_errors.append(f"{probe['id']}: non-prior {sorted(later)}")
+        if used != set(declared):
+            dependency_errors.append(
+                f"{probe['id']}: placeholders {sorted(used)} != dependencies {sorted(declared)}"
+            )
+    check(not dependency_errors, "contract dependencies and placeholders are valid" + (f": {dependency_errors}" if dependency_errors else ""))
+
+    write_probes = [probe for probe in probes if probe.get("set") == "writes"]
+    expected_write_tools = {
+        "create_diligence_finding",
+        "update_watchlist",
+        "update_diligence_roster",
+    }
+    check(
+        {probe["tool"] for probe in write_probes} == expected_write_tools,
+        "writes set contains the three expected tools",
+    )
+    check(
+        all(
+            probe["args"].get("dry_run") is True
+            and probe.get("equals", {}).get("dry_run") is True
+            and probe.get("equals", {}).get("committed") is False
+            and "receipt_id" in probe.get("non_null", [])
+            for probe in write_probes
+        ),
+        "write probes are dry-run previews with non-null receipts",
+    )
+    check(
+        not any(
+            isinstance(probe.get("args"), dict)
+            and probe["args"].get("dry_run") is False
+            for probe in probes
+        ),
+        "no contract probe requests a write commit",
+    )
+
+    by_id = {probe["id"]: probe for probe in probes}
+    relative_args = by_id["strategy_relative_return"]["args"]
+    check(
+        "envelope" not in relative_args and "fields" not in relative_args,
+        "relative-return probe omits envelope and fields",
+    )
+    check(
+        "limit" not in by_id["credit_spreads"]["args"],
+        "credit-spreads probe omits unsupported limit",
+    )
+    check(
+        by_id["screen"]["args"].get("organization_id") == "<orgs:organizations[0].id>",
+        "screen probe uses chained organization ID",
+    )
+    check(
+        by_id["capabilities_summary"]["args"].get("detail") == "summary",
+        "capabilities probe requests summary detail",
+    )
+    check(
+        by_id["ddq_save_preview"]["args"].get("reconciliation_id")
+        == "<ddq_reconcile_persisted:run_id>"
+        and by_id["ddq_save_preview"].get("equals", {}).get("outcome") == "preview",
+        "DDQ save preview chains persisted run ID",
+    )
+
+def contract_checker():
+    with tempfile.TemporaryDirectory() as directory:
+        temp = pathlib.Path(directory)
+        contracts = {
+            "envelope": [],
+            "probes": [
+                {"id": "source", "args": {}, "required": ["run_id"]},
+                {
+                    "id": "preview",
+                    "set": "writes",
+                    "depends_on": ["source"],
+                    "args": {"reconciliation_id": "<source:run_id>"},
+                    "required": ["receipt_id"],
+                    "non_null": ["receipt_id"],
+                    "equals": {"dry_run": True, "committed": False},
+                },
+            ],
+        }
+        contract_path = temp / "contracts.json"
+        contract_path.write_text(json.dumps(contracts), encoding="utf-8")
+        (temp / "source.json").write_text(
+            json.dumps({"run_id": "11111111-1111-4111-8111-111111111111"}),
+            encoding="utf-8",
+        )
+        pass_path = temp / "pass.json"
+        pass_path.write_text(
+            json.dumps({"receipt_id": "receipt", "dry_run": True, "committed": False}),
+            encoding="utf-8",
+        )
+        null_path = temp / "null.json"
+        null_path.write_text(
+            json.dumps({"receipt_id": None, "dry_run": True, "committed": False}),
+            encoding="utf-8",
+        )
+        unequal_path = temp / "unequal.json"
+        unequal_path.write_text(
+            json.dumps({"receipt_id": "receipt", "dry_run": False, "committed": True}),
+            encoding="utf-8",
+        )
+        def run(*args):
+            return subprocess.run(
+                [sys.executable, str(CONTRACT_CHECKER), *map(str, args)],
+                capture_output=True, text=True, encoding="utf-8", errors="replace",
+            )
+        passed = run(contract_path, "preview", pass_path)
+        null = run(contract_path, "preview", null_path)
+        unequal = run(contract_path, "preview", unequal_path)
+        resolved = run("--resolve-args", contract_path, "preview", temp)
+        check(passed.returncode == 0 and "PASS preview" in passed.stdout, "contract checker accepts matching values")
+        check(null.returncode == 1 and "null receipt_id" in null.stdout, "contract checker rejects null values")
+        check(unequal.returncode == 1 and "expected True" in unequal.stdout, "contract checker rejects unequal values")
+        check(
+            resolved.returncode == 0
+            and json.loads(resolved.stdout)["reconciliation_id"] == "11111111-1111-4111-8111-111111111111",
+            "contract checker resolves chained probe arguments",
+        )
 
 def render(keep):
     print("Render checks")

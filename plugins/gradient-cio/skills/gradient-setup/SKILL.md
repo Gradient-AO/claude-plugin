@@ -23,23 +23,31 @@ three prompts the user can try next. Keep the language plain: the reader may not
 
 ## 2. Access and data readiness
 
-1. Call `get_gradient_capabilities` with the `organization_id`. The response is large (about 60 KB) and is
-   usually saved to a file — parse it with Python, never by eye:
+1. Call `get_gradient_capabilities` with the `organization_id` and `detail: "summary"`:
    - `capabilities` (module flags), `backend_readiness`, `version`;
    - per tool: `entitled`, `available`, `scoped`, `healthy`, `data_ready`, `availability_reason`,
      `missing_oauth_scopes`;
    - `coverage[]`: domain, status (`available`, `conditional`, `unavailable`), `as_of`.
+   Request `detail: "full"` only when diagnosing per-backend readiness.
 2. Map tools to skills with `references/skill-requirements.md`. A skill is **ready** when every required tool is
    entitled, available and healthy; **partial** when only optional tools are missing or a required tool has a
    known issue with a workaround; **not available** when a required tool is not entitled (name the module the
-   client would need to license).
+   client would need to license). When `entitled` is false but `available` is true with
+   `access_mode: "illustrative"`, report **Evaluation (illustrative data)**, not Ready or Not licensed.
 3. Call `get_diligence_roster_funds`: roster size, capacity used and available, and reviews due within 30 days.
 
 ## 3. Contract self-test
 
-Run the probes in `references/contract-checks.md`. The **standard** set is 6 quick reads (default). Run the
-**full** set when the user asks for a health check or self-test, or after a plugin update. For each probe,
-record pass, fail (with error code and HTTP status) or not run (not entitled), and the response `as_of`.
+Run the probes in `references/contract-checks.md`. The **standard** set is 7 quick reads (default). The
+**full read** set is 34 reads (the 7 standard plus 27 full probes); run it when the user asks for a health
+check or self-test, or after a plugin update. The separate **writes** set is 3 dry-run previews and must
+never commit. The **DDQ save-preview** set is 2 calls: it intentionally persists one immutable
+reconciliation test run so that the chained save can be tested with `dry_run: true`; disclose that
+persistence before running it. The complete matrix is 39 calls.
+
+For each probe, record pass, fail (with error code and HTTP status) or not run (not entitled), and the
+response `as_of`. Resolve `depends_on` arguments with `check_contract.py --resolve-args`; do not manually
+copy or invent chained IDs.
 
 For a saved response file you can check required paths with
 `python <this skill's directory>/scripts/check_contract.py <this skill's directory>/references/contracts.json <probe_id> <response.json>`.
@@ -50,8 +58,8 @@ code, HTTP status and request ID so the user can send it to Gradient support.
 
 ## 4. Branding
 
-Check the plugin's `branding.json` (plugin root). If `client_name` is empty, reports carry Gradient branding.
-Say how to brand reports: an administrator sets the client name and logo before distributing the plugin
+Check the plugin's `branding.json` (plugin root). `brand: "gradient"` is the explicit default and renders
+the GradientCIO mark. Say how to apply client branding: an administrator sets the client name and logo before distributing the plugin
 (`python tools/set_branding.py` at the plugin root); for one report, give a name and logo in the conversation
 and the skill renders with `--brand`.
 
