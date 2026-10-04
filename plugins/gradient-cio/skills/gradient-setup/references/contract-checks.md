@@ -19,29 +19,30 @@ The only manual placeholders are:
 - `<test ticker>`: a ticker the user names, else any large, liquid US-listed issuer. It is only a probe
   subject; never present it as a view on the security.
 
-**Standard set (default, 7 reads):** orgs, roster, odd_profile, monitor_coverage, the_read, calendar,
-portfolio_list.
+**Standard set (default, 8 reads):** orgs, roster, odd_profile, monitor_coverage, the_read, calendar,
+portfolio_list, chart_catalog.
 
-**Full read set (34 reads including standard):** standard plus capabilities_summary, attention, findings,
+**Full read set (37 reads including standard):** standard plus capabilities_summary, attention, findings,
 events, events_roster, conditions, credit_spreads, gradient_signal, regime_state, cma_baseline, watchlist,
 portfolio_tree, portfolio_exposure, portfolio_ownership, portfolio_returns, portfolio_series,
-strategy_session, strategy_expected_statistics, strategy_relative_return, adv_13f_consistency,
+chart_availability, chart_pack, strategy_session, strategy_expected_statistics, strategy_relative_return, adv_13f_consistency,
 search_managers, screen, cftc_positioning, hf_crowding, regional_facts, equity_fundamentals and
 equity_risk_findings.
 
 **Writes set (3 dry-run previews):** write_create_finding, write_watchlist_manager and write_roster. Every
 call must retain `dry_run: true`; require `committed: false` and a non-null `receipt_id`. Never substitute
-`dry_run: false`, and never follow a preview receipt with a commit during a contract self-test.
+`dry_run: false`, and never follow a preview receipt with a commit during a contract self-test. The roster
+probe exercises add with a canonical fund ID from the roster response; do not substitute its parent firm ID.
 
-**DDQ save-preview set (2 calls):** ddq_reconcile_persisted, then ddq_save_preview. The first call uses
-`persist: true` with inline quote-backed text because the current reconciliation contract only returns a
-saveable `run_id` for a persisted, subject-bound document. It creates an immutable reconciliation test run.
-The chained save call is still a dry-run preview and must return `outcome: "preview"`, `dry_run: true` and
-`committed: false`.
+**DDQ save-preview set (3 calls):** ddq_extract_persisted, ddq_reconcile_persisted, then ddq_save_preview.
+The first call persists fictional inline text as a ready subject-bound document and must return a non-null
+`document_id`. The reconciliation reuses that stored document and persists an immutable test run. The chained
+save call is still a dry-run preview and must return `outcome: "preview"`, `dry_run: true` and `committed:
+false`.
 
-The complete matrix is 39 calls. Run the standard or full read set without write confirmation. Run the
+The complete matrix is 43 calls. Run the standard or full read set without write confirmation. Run the
 writes set only as previews. Before the DDQ save-preview set, tell the user that its reconciliation call
-persists an immutable test workpaper.
+persists a test document and immutable test workpaper.
 
 Skip a probe and mark it **not run** when its tool is not entitled. An empty roster is not a failure: mark
 all roster-dependent probes not run and say so.

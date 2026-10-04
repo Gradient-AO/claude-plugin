@@ -19,6 +19,10 @@
    {"type": "findings", "items": [{"severity": "high", "title": "Finding", "detail": "Detail"}]},
    {"type": "questions", "items": [{"q": "Question?", "why": "Why"}]},
    {"type": "two_col", "left": [{"type": "text", "text": "Left"}], "right": [{"type": "text", "text": "Right"}]},
+   {"type": "chart", "chart": {"chart_id": "test-bars", "title": "Synthetic chart bars", "status": "ok", "currency": "USD", "columns": [{"key": "label", "title": "Label", "format": "text", "decimals": null}, {"key": "value", "title": "Value", "format": "percentage", "decimals": 1}], "rows": [["Alpha", 0.25], ["Beta", 0.4]], "truncated": false, "render_hint": {"block": "bars", "x": "label", "y": ["value"]}}},
+   {"type": "chart", "chart": {"chart_id": "test-line", "title": "Synthetic chart line", "status": "ok", "currency": "USD", "columns": [{"key": "date", "title": "Date", "format": "date", "decimals": null}, {"key": "value", "title": "Value", "format": "number", "decimals": 1}], "rows": [["2026-01-31", 1.0], ["2026-02-28", 1.5]], "truncated": false, "render_hint": {"block": "line", "x": "date", "y": ["value"]}}},
+   {"type": "chart", "chart": {"chart_id": "test-table", "title": "Synthetic chart table", "status": "ok", "currency": "USD", "columns": [{"key": "label", "title": "Label", "format": "text", "decimals": null}, {"key": "value", "title": "Value", "format": "currency", "decimals": 0}], "rows": [["Alpha", 125000], ["Beta", 95000]], "truncated": true, "render_hint": {"block": "table", "x": null, "y": []}}},
+   {"type": "chart", "chart": {"chart_id": "test-unavailable", "title": "Synthetic unavailable chart", "status": "requirements_not_met", "error": "Synthetic TEST requirement is unavailable", "currency": null, "columns": [], "rows": [], "truncated": false, "render_hint": {"block": "table", "x": null, "y": []}}},
    {"type": "markdown", "text": "### Heading\n\n| Name | Status |\n|---|---|\n| X | Compliant |\n\n> Illustrative note"}]}
  ]
 }

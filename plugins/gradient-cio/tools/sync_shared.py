@@ -9,7 +9,8 @@ import hashlib, pathlib, shutil, sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 FILES = {"shared/gradient_report.py": "scripts/gradient_report.py",
-         "shared/report-style.md": "references/report-style.md"}
+         "shared/report-style.md": "references/report-style.md",
+         "shared/chart-data.md": "references/chart-data.md"}
 
 def digest(p):
     return hashlib.sha256(p.read_bytes()).hexdigest()[:12]

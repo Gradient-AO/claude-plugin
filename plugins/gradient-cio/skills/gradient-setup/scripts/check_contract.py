@@ -62,11 +62,88 @@ def placeholder_dependencies(value):
     match = PLACEHOLDER.fullmatch(value) if isinstance(value, str) else None
     return {match.group(1)} if match else set()
 
+def validate_manifest(contracts, public_tools=None):
+    probes = contracts.get("probes")
+    if not isinstance(probes, list):
+        return ["probes is not a list"]
+    errors = []
+    probe_ids = [
+        probe.get("id")
+        for probe in probes
+        if isinstance(probe, dict)
+    ]
+    if len(probe_ids) != len(probes) or any(
+        not isinstance(probe_id, str) or not probe_id
+        for probe_id in probe_ids
+    ):
+        return ["every probe must have a non-empty string id"]
+    if len(probe_ids) != len(set(probe_ids)):
+        errors.append("probe ids are not unique")
+    known_ids = set(probe_ids)
+    allowed_tools = set(public_tools) if public_tools is not None else None
+    for index, probe in enumerate(probes):
+        probe_id = probe["id"]
+        declared = probe.get("depends_on", [])
+        if not isinstance(declared, list):
+            errors.append(f"{probe_id}: depends_on is not a list")
+            continue
+        unknown = set(declared) - known_ids
+        later = {
+            dependency
+            for dependency in declared
+            if dependency in known_ids
+            and probe_ids.index(dependency) >= index
+        }
+        used = placeholder_dependencies(probe.get("args", {}))
+        if unknown:
+            errors.append(f"{probe_id}: unknown {sorted(unknown)}")
+        if later:
+            errors.append(f"{probe_id}: non-prior {sorted(later)}")
+        undeclared = used - set(declared)
+        if undeclared:
+            errors.append(
+                f"{probe_id}: placeholders reference undeclared "
+                f"dependencies {sorted(undeclared)}"
+            )
+        tool_name = probe.get("tool")
+        if allowed_tools is not None and tool_name not in allowed_tools:
+            errors.append(f"{probe_id}: unknown public tool {tool_name!r}")
+    return errors
+
+def load_and_validate_catalog(contracts_path):
+    catalog_path = contracts_path.parent / "public-tools.json"
+    if not catalog_path.is_file():
+        return None, [f"missing generated public-tool catalog {catalog_path}"]
+    catalog = load(catalog_path)
+    if (
+        not isinstance(catalog, dict)
+        or catalog.get("generated") is not True
+        or not isinstance(catalog.get("tools"), list)
+    ):
+        return None, ["public-tools.json is not a generated tool catalog"]
+    tools = catalog["tools"]
+    if (
+        any(not isinstance(tool, str) or not tool for tool in tools)
+        or len(tools) != len(set(tools))
+        or tools != sorted(tools)
+    ):
+        return None, ["public-tools.json tools must be unique sorted strings"]
+    return tools, []
+
 def resolve_args(argv):
     import pathlib
     if len(argv) != 5:
         raise SystemExit(__doc__)
-    contracts = load(argv[2]); probe_id = argv[3]
+    contracts_path = pathlib.Path(argv[2])
+    contracts = load(contracts_path); probe_id = argv[3]
+    public_tools, catalog_errors = load_and_validate_catalog(contracts_path)
+    manifest_errors = catalog_errors + validate_manifest(
+        contracts,
+        public_tools,
+    )
+    if manifest_errors:
+        print(f"FAIL manifest: {'; '.join(manifest_errors)}")
+        return 1
     probe = probe_by_id(contracts, probe_id)
     if not probe:
         raise SystemExit(f"unknown probe {probe_id}")
@@ -94,7 +171,14 @@ def main():
         raise SystemExit(resolve_args(sys.argv))
     if len(sys.argv) != 4:
         raise SystemExit(__doc__)
-    c = json.load(open(sys.argv[1], encoding="utf-8")); pid = sys.argv[2]; resp = load(sys.argv[3])
+    import pathlib
+    contracts_path = pathlib.Path(sys.argv[1])
+    c = load(contracts_path); pid = sys.argv[2]; resp = load(sys.argv[3])
+    public_tools, catalog_errors = load_and_validate_catalog(contracts_path)
+    manifest_errors = catalog_errors + validate_manifest(c, public_tools)
+    if manifest_errors:
+        print(f"FAIL manifest: {'; '.join(manifest_errors)}")
+        sys.exit(1)
     probe = probe_by_id(c, pid)
     if not probe:
         raise SystemExit(f"unknown probe {pid}")

@@ -166,6 +166,72 @@ def b_table(b):
     note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
     return f'{title}<table class="grid"><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>{note}'
 
+def _chart_format(column, value, currency=None):
+    if value is None:
+        return "—"
+    fmt = column.get("format", "text")
+    decimals = column.get("decimals")
+    decimals = decimals if isinstance(decimals, int) else 2
+    if not isinstance(value, (int, float)):
+        return str(value)
+    if fmt == "percentage":
+        return f"{value * 100:.{decimals}f}%"
+    if fmt == "currency":
+        return f"{currency + ' ' if currency else ''}{value:,.{decimals}f}"
+    if fmt in ("number", "decimal"):
+        return f"{value:,.{decimals}f}"
+    return str(value)
+
+def _chart_plot_value(column, value):
+    """Convert stored values to the display scale used by chart axes."""
+    return value * 100 if column.get("format") == "percentage" else value
+
+def b_chart(b):
+    """Render the generic wire-format chart block returned by get_chart_data."""
+    c = b["chart"]
+    if c.get("status") != "ok" or not c.get("rows"):
+        reason = c.get("error") or c.get("status") or "unavailable"
+        return b_callout({"tone": "info", "title": c.get("title", "Chart"), "text": reason})
+    columns = c.get("columns") or []
+    keys = [column.get("key") for column in columns]
+    hint = c.get("render_hint") or {}
+    block = hint.get("block", "table")
+    x_key = hint.get("x")
+    y_keys = hint.get("y") or []
+    if block == "line" and x_key in keys:
+        xi = keys.index(x_key)
+        y_columns = [(keys.index(y_key), columns[keys.index(y_key)])
+                     for y_key in y_keys if y_key in keys]
+        units = {("number" if column.get("format") in ("number", "decimal")
+                  else column.get("format")) for _, column in y_columns}
+        series = []
+        if len(units) == 1:
+            for yi, column in y_columns:
+                points = [[row[xi], _chart_plot_value(column, row[yi])]
+                          for row in c["rows"]
+                          if len(row) > max(xi, yi)
+                          and row[xi] is not None
+                          and isinstance(row[yi], (int, float))]
+                if points:
+                    series.append({"name": column["title"], "points": points})
+        if series and y_columns:
+            first_column = y_columns[0][1]
+            suffix = "%" if first_column.get("format") == "percentage" else ""
+            return b_line({"title": c.get("title"), "series": series, "y_suffix": suffix,
+                           "decimals": first_column.get("decimals") or 1})
+    if block == "bars" and x_key in keys and y_keys and y_keys[0] in keys:
+        xi, yi = keys.index(x_key), keys.index(y_keys[0])
+        items = [{"label": row[xi], "value": row[yi],
+                  "display": _chart_format(columns[yi], row[yi], c.get("currency"))}
+                 for row in c["rows"] if len(row) > max(xi, yi) and isinstance(row[yi], (int, float))]
+        if items and all(item["value"] >= 0 for item in items):
+            return b_bars({"title": c.get("title"), "items": items})
+    return b_table({"title": c.get("title"),
+                    "columns": [column.get("title", column.get("key", "")) for column in columns],
+                    "rows": [[_chart_format(column, value, c.get("currency"))
+                              for column, value in zip(columns, row)] for row in c["rows"]],
+                    "note": "Truncated output" if c.get("truncated") else ""})
+
 def b_tiles(b, dark=False):
     out = []
     for t in b["tiles"]:
@@ -411,7 +477,7 @@ def b_markdown(b):
 BLOCKS = {"text": b_text, "bullets": b_bullets, "kv": b_kv, "table": b_table, "tiles": b_tiles,
           "bars": b_bars, "percentiles": b_percentiles, "callout": b_callout, "coverage": b_coverage,
           "findings": b_findings, "questions": b_questions, "two_col": b_two_col, "pagebreak": b_pagebreak,
-          "markdown": b_markdown, "line": b_line, "statement": b_statement}
+          "markdown": b_markdown, "line": b_line, "statement": b_statement, "chart": b_chart}
 
 def render_blocks(blocks):
     out = []

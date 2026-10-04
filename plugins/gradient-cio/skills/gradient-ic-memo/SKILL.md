@@ -20,6 +20,7 @@ the structure and the rules. Never fill a number from memory or general knowledg
 |---|---|
 | `references/memo-template.md` | Always — the exact memo structure. Follow it verbatim. |
 | `references/data-map.md` | Always — which Gradient tool feeds each section, and the fallback when data is missing. |
+| `references/chart-data.md` | Always — dashboard chart discovery, basis rules and generic report block. |
 | `references/ips-schema.md` | When an IPS is supplied or needed — how to capture IPS constraints as structured input. |
 | `references/calculations.md` | Before computing anything — the only formulas allowed, rounding and status thresholds. |
 | `references/writing-standards.md` | Before drafting prose — IC memo best practices and banned phrasing. |
@@ -55,6 +56,10 @@ Follow `references/data-map.md` section by section. Key rules:
 - If the user has more than one organization, confirm which before calling org-scoped tools. Call
   `list_assumption_sets` and state the organization and selected assumption set in the memo header.
 - Use `envelope: "compact"` where offered.
+- Use `get_chart_data` after portfolio selection: check availability, then request one relevant pack at a time.
+  Expected-statistics charts complement Strategy Lab outputs; they do not replace what-if analysis. Preserve
+  `basis` and `context.fingerprint`, skip unavailable charts with their reason, and never compare different
+  bases as though they were the same scenario.
 - For every result, record a **source row**: tool, key parameters, `provenance.as_of`,
   `provenance.data_scope.label`, `validation.status`, and `payload_digest` if present. These rows become the
   Appendix A source table and the `[S#]` tags in the text.
@@ -128,6 +133,9 @@ Determinism rules (summary — the template is authoritative):
 3. Render: `python scripts/gradient_report.py --md <file.md> --meta meta.json "<Portfolio> - IC Memo.pdf"`.
    The markdown headings become the numbered sections, status words in status columns become chips, and
    appendices start on a new page. Check every page (`pdftoppm -r 60 -png`) and fix layout before delivering.
+   When including chart-pack output, build the equivalent JSON sections with the validated section markdown
+   in `markdown` blocks and each returned chart item unchanged in a `{"type":"chart","chart":<item>}` block,
+   then use JSON block mode. Do not hand-map chart IDs or rows.
 4. Deliver the PDF (save to `/mnt/user-data/outputs/`, and to the connected folder if there is one). Offer an
    editable Claude Doc copy built from the same markdown when the committee secretary needs to edit it.
 5. In the reply, give a three-line summary (recommendation, IPS status, number of open items) and the
