@@ -35,6 +35,7 @@ Rules that matter here:
 | File | Read when |
 |---|---|
 | `references/data-map.md` | Always — exact tool arguments, response fields, fallbacks and known failures. |
+| `references/chart-data.md` | Always — chart discovery order, basis rules and generic report block. |
 | `scripts/review_calcs.py` | When the tool does not return standard periods, calendar years or risk metrics but monthly points exist. Run it; do not hand-compute. |
 | `references/report-style.md` | Before rendering — shared style, block types, meta fields, "Check and deliver". |
 | `scripts/gradient_report.py` | Renders the JSON blocks into the branded PDF. Never restyle. |
@@ -64,10 +65,15 @@ Follow `references/data-map.md`. Call in this order (parallel where independent)
 record a source row for each: tool, key arguments, `provenance.as_of`, `provenance.data_scope.label`,
 `validation.status`, `provenance.reproducibility.payload_digest`.
 
+For chart packs, follow `references/chart-data.md`: check availability first, request one pack at a time, and
+save `context.fingerprint`, `basis`, and unavailable reasons. Embed each usable returned item unchanged as
+`{"type":"chart","chart":<item>}`. The shared renderer owns its line/bar/table mapping.
+
 | Evidence | Call | Required |
 |---|---|---|
 | Capabilities | `get_gradient_capabilities` | Yes |
 | Portfolio record | `list_portfolios` | Yes |
+| Dashboard chart packs | `get_chart_data` availability, then one relevant `analysis_type` at a time | Optional |
 | Allocation tree | `get_portfolio_structure` `view: allocation_tree` | Yes |
 | Returns | `get_portfolio_historical_returns` `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative, cumulative_growth]`, `end_date` = period end | Yes (or fallback) |
 | Monthly points (fallback) | `get_portfolio_historical_returns` `sections: [points]`, else `get_return_series` `series_kind: portfolio`, `series_id: <portfolio_id>` | When summary sections fail |

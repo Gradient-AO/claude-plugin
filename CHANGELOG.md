@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.4.0
+- Added governed dashboard chart-data discovery and report guidance for portfolio reviews and IC memos.
+- Added one generic `chart` report block that renders returned line, bar, or table hints without chart-specific mappings, scales percentage axes correctly, and falls back to a table for mixed units.
+- Expanded setup checks to validate the chart catalog, portfolio availability, and one chart pack.
+
+## 1.3.1
+- The setup self-test now verifies that `extract_ddq_claims` returns a stored document ID before reusing that document for persisted reconciliation.
+- The roster write preview now exercises add with a canonical fund ID instead of relying on firm-level enrollment behavior.
+- Connector probes are checked against a generated public-tool catalog, with dependency validation centralized in the runtime contract checker.
+- Static release checks now validate the generated catalog on every checker path and reject unknown tool names in skill requirements.
+
 ## 1.3.0
 - Expanded the setup self-test to cover illustrative portfolio reads, Strategy Lab, roster events, organization-scoped manager discovery, compact capability discovery, dry-run write previews and persisted DDQ save previews.
 - Contract checks now support non-null and exact-value assertions plus dependency-based argument chaining between probes.

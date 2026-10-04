@@ -53,6 +53,8 @@ Executive band: `executive.bottom_line` (3–5 sentences with source tags), opti
 `two_col {left:[blocks], right:[blocks]}` · `markdown {text}` · `pagebreak {}` ·
 `line {title?, series:[{name, points:[[date, value]]}], y_suffix?, decimals?, ref?:{value,label}, height?, note?}`
 (time series only from returned series, never invented) · `statement {text, sub?, tone?}` (one large message).
+`chart {chart:<one chart item returned by get_chart_data>}` renders from `render_hint`: line, bars, or a
+formatted table fallback. Pass the returned chart object unchanged; do not remap chart IDs in a skill.
 
 Sections: `{"id"?, "title", "kicker"?, "num"?, "new_page"? (default true in JSON mode), "blocks": [...]}`.
 The section with `id: "executive"` gets the executive band.

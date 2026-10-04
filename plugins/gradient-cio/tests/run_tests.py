@@ -13,15 +13,35 @@ overflow, branding appears only when requested.
 Live GradientCIO contract checks are run by the gradient-setup skill (full self-test), because they
 need the user's connector; see skills/gradient-setup/references/contract-checks.md.
 """
-import json, pathlib, re, shutil, subprocess, sys, tempfile
+import importlib.util, json, pathlib, re, shutil, subprocess, sys, tempfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 FIX = ROOT / "tests" / "fixtures"
 RENDER = ROOT / "shared" / "gradient_report.py"
 CONTRACT_CHECKER = ROOT / "skills" / "gradient-setup" / "scripts" / "check_contract.py"
 CONTRACTS = ROOT / "skills" / "gradient-setup" / "references" / "contracts.json"
+PUBLIC_TOOLS = ROOT / "skills" / "gradient-setup" / "references" / "public-tools.json"
+SKILL_REQUIREMENTS = ROOT / "skills" / "gradient-setup" / "references" / "skill-requirements.md"
 STALE = re.compile(r"(?<!gradient-)\bgips-(compliance|standards|manager-diligence|report-review|asset-owner-review|policies-gap-check)\b|gradient-capabilities")
-CHAINED_PLACEHOLDER = re.compile(r"^<([a-z0-9_]+):([^>]+)>$")
+
+_contract_checker_spec = importlib.util.spec_from_file_location(
+    "gradient_contract_checker",
+    CONTRACT_CHECKER,
+)
+if _contract_checker_spec is None or _contract_checker_spec.loader is None:
+    raise RuntimeError("Unable to load the Gradient contract checker")
+_contract_checker_module = importlib.util.module_from_spec(_contract_checker_spec)
+_contract_checker_spec.loader.exec_module(_contract_checker_module)
+validate_contract_manifest = _contract_checker_module.validate_manifest
+
+_renderer_spec = importlib.util.spec_from_file_location(
+    "gradient_report_renderer",
+    RENDER,
+)
+if _renderer_spec is None or _renderer_spec.loader is None:
+    raise RuntimeError("Unable to load the Gradient report renderer")
+_renderer_module = importlib.util.module_from_spec(_renderer_spec)
+_renderer_spec.loader.exec_module(_renderer_module)
 
 # name, args (relative to fixtures; OUT = output pdf), min pages, max pages, must-contain text
 CASES = [
@@ -91,8 +111,56 @@ def static(allow_branded):
     check(b.get("brand") == "gradient", "branding.json declares Gradient as the default brand")
     branded = json.loads((FIX / "branding-test.json").read_text(encoding="utf-8"))
     check(branded.get("brand") == "client", "client branding fixture declares the client brand")
+    chart_renderer()
     contract_manifest()
     contract_checker()
+
+def chart_renderer():
+    percentage_column = {
+        "key": "ratio",
+        "title": "Ratio",
+        "format": "percentage",
+        "decimals": 1,
+    }
+    check(
+        _renderer_module._chart_plot_value(percentage_column, 0.25) == 25,
+        "chart renderer scales percentage axes to display units",
+    )
+    percentage_line = _renderer_module.b_chart({"chart": {
+        "title": "Percentage line",
+        "status": "ok",
+        "columns": [
+            {"key": "period", "title": "Period", "format": "date", "decimals": None},
+            percentage_column,
+        ],
+        "rows": [["2026-01-31", 0.25], ["2026-02-28", 0.4]],
+        "render_hint": {"block": "line", "x": "period", "y": ["ratio"]},
+    }})
+    check(
+        "<svg" in percentage_line and "%" in percentage_line,
+        "chart renderer keeps same-unit percentage series as a line",
+    )
+    mixed_line = _renderer_module.b_chart({"chart": {
+        "title": "Mixed units",
+        "status": "ok",
+        "currency": "USD",
+        "columns": [
+            {"key": "period", "title": "Period", "format": "date", "decimals": None},
+            percentage_column,
+            {"key": "nav", "title": "NAV", "format": "currency", "decimals": 0},
+        ],
+        "rows": [["2026-01-31", 0.25, 1_000_000]],
+        "truncated": False,
+        "render_hint": {
+            "block": "line",
+            "x": "period",
+            "y": ["ratio", "nav"],
+        },
+    }})
+    check(
+        "<table" in mixed_line and "<svg" not in mixed_line,
+        "chart renderer falls back to a table for mixed-unit lines",
+    )
 
 def contract_manifest():
     contracts = json.loads(CONTRACTS.read_text(encoding="utf-8"))
@@ -105,44 +173,38 @@ def contract_manifest():
         for name in ("standard", "full", "writes", "ddq-save-preview")
     }
     check(
-        counts == {"standard": 7, "full": 27, "writes": 3, "ddq-save-preview": 2},
+        counts == {"standard": 8, "full": 29, "writes": 3, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
     )
 
-    def placeholders(value):
-        if isinstance(value, dict):
-            return {
-                item
-                for child in value.values()
-                for item in placeholders(child)
-            }
-        if isinstance(value, list):
-            return {item for child in value for item in placeholders(child)}
-        match = CHAINED_PLACEHOLDER.fullmatch(value) if isinstance(value, str) else None
-        return {match.group(1)} if match else set()
-
-    dependency_errors = []
-    for index, probe in enumerate(probes):
-        declared = probe.get("depends_on", [])
-        used = placeholders(probe["args"])
-        if not isinstance(declared, list):
-            dependency_errors.append(f"{probe['id']}: depends_on is not a list")
-            continue
-        unknown = set(declared) - known_ids
-        later = {
-            dependency
-            for dependency in declared
-            if dependency in known_ids and probe_ids.index(dependency) >= index
-        }
-        if unknown:
-            dependency_errors.append(f"{probe['id']}: unknown {sorted(unknown)}")
-        if later:
-            dependency_errors.append(f"{probe['id']}: non-prior {sorted(later)}")
-        if used != set(declared):
-            dependency_errors.append(
-                f"{probe['id']}: placeholders {sorted(used)} != dependencies {sorted(declared)}"
-            )
-    check(not dependency_errors, "contract dependencies and placeholders are valid" + (f": {dependency_errors}" if dependency_errors else ""))
+    public_tool_catalog = json.loads(PUBLIC_TOOLS.read_text(encoding="utf-8"))
+    public_tools = public_tool_catalog["tools"]
+    check(
+        public_tool_catalog.get("generated") is True
+        and public_tools == sorted(set(public_tools)),
+        "public-tool catalog is generated, sorted, and unique",
+    )
+    manifest_errors = validate_contract_manifest(contracts, public_tools)
+    check(
+        not manifest_errors,
+        "contract dependencies, placeholders, and public tools are valid"
+        + (f": {manifest_errors}" if manifest_errors else ""),
+    )
+    requirement_tokens = set(re.findall(
+        r"\b(?:get|list|run|analyze|compare|create|extract|log|preview|reconcile|"
+        r"save|screen|search|update|upload|batch)_[a-z0-9_]+\b",
+        SKILL_REQUIREMENTS.read_text(encoding="utf-8"),
+    ))
+    unknown_requirement_tools = requirement_tokens - set(public_tools)
+    check(
+        not unknown_requirement_tools,
+        "skill requirement tool names exist in the generated catalog"
+        + (
+            f": {sorted(unknown_requirement_tools)}"
+            if unknown_requirement_tools
+            else ""
+        ),
+    )
 
     write_probes = [probe for probe in probes if probe.get("set") == "writes"]
     expected_write_tools = {
@@ -192,10 +254,23 @@ def contract_manifest():
         "capabilities probe requests summary detail",
     )
     check(
+        by_id["write_roster"]["args"].get("action") == "add"
+        and by_id["write_roster"]["args"].get("subject_id")
+        == "<roster:funds[0].fund_id>",
+        "roster write probe exercises add with a canonical fund ID",
+    )
+    check(
         by_id["ddq_save_preview"]["args"].get("reconciliation_id")
         == "<ddq_reconcile_persisted:run_id>"
         and by_id["ddq_save_preview"].get("equals", {}).get("outcome") == "preview",
         "DDQ save preview chains persisted run ID",
+    )
+    check(
+        by_id["ddq_extract_persisted"]["args"].get("persist") is True
+        and "document_id" in by_id["ddq_extract_persisted"].get("non_null", [])
+        and by_id["ddq_reconcile_persisted"]["args"].get("document_id")
+        == "<ddq_extract_persisted:document_id>",
+        "DDQ extraction persists a document and reconciliation reuses it",
     )
 
 def contract_checker():
@@ -204,9 +279,15 @@ def contract_checker():
         contracts = {
             "envelope": [],
             "probes": [
-                {"id": "source", "args": {}, "required": ["run_id"]},
+                {
+                    "id": "source",
+                    "tool": "source_tool",
+                    "args": {},
+                    "required": ["run_id"],
+                },
                 {
                     "id": "preview",
+                    "tool": "preview_tool",
                     "set": "writes",
                     "depends_on": ["source"],
                     "args": {"reconciliation_id": "<source:run_id>"},
@@ -218,6 +299,13 @@ def contract_checker():
         }
         contract_path = temp / "contracts.json"
         contract_path.write_text(json.dumps(contracts), encoding="utf-8")
+        (temp / "public-tools.json").write_text(
+            json.dumps({
+                "generated": True,
+                "tools": ["preview_tool", "source_tool"],
+            }),
+            encoding="utf-8",
+        )
         (temp / "source.json").write_text(
             json.dumps({"run_id": "11111111-1111-4111-8111-111111111111"}),
             encoding="utf-8",

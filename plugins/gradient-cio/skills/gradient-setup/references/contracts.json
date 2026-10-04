@@ -123,6 +123,75 @@
       ]
     },
     {
+      "id": "chart_catalog",
+      "set": "standard",
+      "tool": "get_chart_data",
+      "depends_on": [
+        "orgs"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>"
+      },
+      "required": [
+        "kind",
+        "packs[0].analysis_type",
+        "packs[0].charts[0].chart_id"
+      ],
+      "equals": {
+        "kind": "catalog"
+      },
+      "envelope": false
+    },
+    {
+      "id": "chart_availability",
+      "set": "full",
+      "tool": "get_chart_data",
+      "depends_on": [
+        "orgs",
+        "portfolio_list"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "portfolio_id": "<portfolio_list:portfolios[0].portfolio_id>"
+      },
+      "required": [
+        "kind",
+        "portfolio.id",
+        "context.fingerprint",
+        "packs[0].available_chart_ids"
+      ],
+      "equals": {
+        "kind": "availability"
+      },
+      "envelope": false
+    },
+    {
+      "id": "chart_pack",
+      "set": "full",
+      "tool": "get_chart_data",
+      "depends_on": [
+        "orgs",
+        "portfolio_list",
+        "chart_availability"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "portfolio_id": "<portfolio_list:portfolios[0].portfolio_id>",
+        "analysis_type": "allocations"
+      },
+      "required": [
+        "kind",
+        "context.fingerprint",
+        "charts[0].chart_id",
+        "charts[0].basis",
+        "charts[0].render_hint.block"
+      ],
+      "equals": {
+        "kind": "data"
+      },
+      "envelope": false
+    },
+    {
       "id": "attention",
       "set": "full",
       "tool": "get_manager_diligence_attention_queue",
@@ -641,10 +710,9 @@
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
         "dry_run": true,
-        "idempotency_key": "gradient-contract-roster-remove-v1",
-        "action": "remove",
-        "membership_id": "<roster:funds[0].membership_id>",
-        "reason": "Gradient contract self-test preview only"
+        "idempotency_key": "gradient-contract-roster-add-v1",
+        "action": "add",
+        "subject_id": "<roster:funds[0].fund_id>"
       },
       "required": [
         "action",
@@ -661,9 +729,9 @@
       "envelope": false
     },
     {
-      "id": "ddq_reconcile_persisted",
+      "id": "ddq_extract_persisted",
       "set": "ddq-save-preview",
-      "tool": "reconcile_manager_ddq_claims",
+      "tool": "extract_ddq_claims",
       "depends_on": [
         "orgs",
         "roster"
@@ -671,28 +739,40 @@
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
         "firm_id": "<roster:funds[0].parent_firm_id>",
+        "subject_scope": "firm",
         "document_text": "Employees: 42",
+        "file_name": "gradient-contract-self-test-ddq.txt",
         "persist": true,
-        "claim_set_scope": "selected_claims",
-        "file": {
-          "file_name": "gradient-contract-self-test-ddq.txt",
-          "file_sha256": "cf40cc19e499714219db4a3e5af2cf15e1f7f67db3671702dd7b79ce774f6b4e"
-        },
-        "claims": [
-          {
-            "field": "employees",
-            "claim_status": "asserted",
-            "raw_value": "42",
-            "quote": "Employees: 42",
-            "source_locator": {
-              "start": 0,
-              "end": 13,
-              "page": 1
-            },
-            "asserted_as_of": "2026-10-04",
-            "extraction_reason_codes": []
-          }
-        ]
+        "questionnaire_format": "unknown"
+      },
+      "required": [
+        "document_id",
+        "claim_set_scope",
+        "file.file_sha256",
+        "claims"
+      ],
+      "non_null": [
+        "document_id"
+      ],
+      "envelope": false
+    },
+    {
+      "id": "ddq_reconcile_persisted",
+      "set": "ddq-save-preview",
+      "tool": "reconcile_manager_ddq_claims",
+      "depends_on": [
+        "ddq_extract_persisted",
+        "orgs",
+        "roster"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "firm_id": "<roster:funds[0].parent_firm_id>",
+        "document_id": "<ddq_extract_persisted:document_id>",
+        "persist": true,
+        "claim_set_scope": "<ddq_extract_persisted:claim_set_scope>",
+        "file": "<ddq_extract_persisted:file>",
+        "claims": "<ddq_extract_persisted:claims>"
       },
       "required": [
         "result_type",
