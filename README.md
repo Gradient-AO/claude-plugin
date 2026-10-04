@@ -33,4 +33,6 @@ See [plugins/gradient-cio/README.md](plugins/gradient-cio/README.md) and [CHANGE
 
 Apache-2.0 (see [LICENSE](LICENSE) and [NOTICE](NOTICE)). The license does not cover the GradientCIO name, logo or report design.
 
+Privacy: [GradientCIO Privacy Policy](https://www.gradientcio.com/home/privacy)
+
 Questions: support@gradientcio.com

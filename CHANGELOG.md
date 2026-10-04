@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.2
+- Privacy policy link added (`privacyPolicyUrl`: https://www.gradientcio.com/home/privacy) and linked from the README.
+
 ## 1.2.1
 - Licensed under Apache-2.0 (LICENSE and NOTICE at the repository root; `license` set in plugin.json).
 - Plugin icon added (`.claude-plugin/icon.png`).
