@@ -174,7 +174,7 @@
       "envelope": false
     },
     {
-      "id": "chart_pack",
+      "id": "portfolio_expected_statistics",
       "set": "full",
       "tool": "get_chart_data",
       "depends_on": [
@@ -185,7 +185,7 @@
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
         "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
-        "analysis_type": "allocations"
+        "analysis_type": "expected-statistics"
       },
       "required": [
         "kind",
@@ -284,14 +284,17 @@
       "set": "full",
       "tool": "get_macro_conditions",
       "args": {
-        "view": "credit_spreads",
-        "lookbackDays": 120
+        "view": "credit_spreads"
       },
       "required": [
         "latest",
         "spreads",
         "spreadRows"
-      ]
+      ],
+      "equals": {
+        "expectedSeriesCount": 10,
+        "coveredSeriesCount": 10
+      }
     },
     {
       "id": "gradient_signal",
@@ -316,7 +319,9 @@
         ],
         "history_limit": 6
       },
-      "required": []
+      "required": [
+        "status"
+      ]
     },
     {
       "id": "cma_baseline",
@@ -450,41 +455,58 @@
       ]
     },
     {
-      "id": "strategy_session",
-      "set": "full",
-      "tool": "build_strategy_lab_session",
-      "depends_on": [
-        "orgs",
-        "sample_portfolio"
-      ],
-      "args": {
-        "organization_id": "<orgs:organizations[0].id>",
-        "domain": "expected-statistics",
-        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>"
-      },
-      "required": [
-        "status",
-        "domain",
-        "strategy_lab_session",
-        "coverage.status",
-        "source_provenance.portfolio_id"
-      ],
-      "non_null": [
-        "strategy_lab_session"
-      ],
-      "equals": {
-        "domain": "expected-statistics"
-      }
-    },
-    {
       "id": "strategy_expected_statistics",
       "set": "full",
       "tool": "run_strategy_lab_expected_statistics",
-      "depends_on": [
-        "strategy_session"
-      ],
       "args": {
-        "strategy_lab_session": "<strategy_session:strategy_lab_session>"
+        "strategy_lab_session": {
+          "domain": "expected-statistics",
+          "panelId": "gradient-contract-return-series",
+          "form": {
+            "selectedSeriesIds": [
+              "gradient-contract-series-a",
+              "gradient-contract-series-b"
+            ],
+            "selectedRecords": [
+              {
+                "id": "gradient-contract-series-a",
+                "label": "Contract Series A",
+                "monthlyReturns": [
+                  0.01,
+                  -0.005,
+                  0.012,
+                  0.004,
+                  -0.008,
+                  0.015,
+                  0.006,
+                  0.009,
+                  -0.003,
+                  0.011,
+                  0.002,
+                  0.007
+                ]
+              },
+              {
+                "id": "gradient-contract-series-b",
+                "label": "Contract Series B",
+                "monthlyReturns": [
+                  0.004,
+                  0.002,
+                  -0.003,
+                  0.006,
+                  0.005,
+                  0.001,
+                  0.007,
+                  -0.002,
+                  0.003,
+                  0.004,
+                  0.002,
+                  0.005
+                ]
+              }
+            ]
+          }
+        }
       },
       "required": [
         "domain",
@@ -493,6 +515,68 @@
       ],
       "equals": {
         "domain": "expected-statistics"
+      }
+    },
+    {
+      "id": "strategy_diversification",
+      "set": "full",
+      "tool": "run_strategy_lab_diversification",
+      "args": {
+        "strategy_lab_session": {
+          "domain": "manager-compare",
+          "panelId": "gradient-contract-return-series",
+          "form": {
+            "selectedSeriesIds": [
+              "gradient-contract-series-a",
+              "gradient-contract-series-b"
+            ],
+            "selectedRecords": [
+              {
+                "id": "gradient-contract-series-a",
+                "label": "Contract Series A",
+                "monthlyReturns": [
+                  0.01,
+                  -0.005,
+                  0.012,
+                  0.004,
+                  -0.008,
+                  0.015,
+                  0.006,
+                  0.009,
+                  -0.003,
+                  0.011,
+                  0.002,
+                  0.007
+                ]
+              },
+              {
+                "id": "gradient-contract-series-b",
+                "label": "Contract Series B",
+                "monthlyReturns": [
+                  0.004,
+                  0.002,
+                  -0.003,
+                  0.006,
+                  0.005,
+                  0.001,
+                  0.007,
+                  -0.002,
+                  0.003,
+                  0.004,
+                  0.002,
+                  0.005
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "domain",
+        "correlation_summary.average_pairwise_correlation"
+      ],
+      "equals": {
+        "domain": "diversification"
       }
     },
     {

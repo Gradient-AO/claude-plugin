@@ -24,6 +24,9 @@ CONTRACT_CHECKS = ROOT / "skills" / "gradient-setup" / "references" / "contract-
 PUBLIC_TOOLS = ROOT / "skills" / "gradient-setup" / "references" / "public-tools.json"
 SKILL_REQUIREMENTS = ROOT / "skills" / "gradient-setup" / "references" / "skill-requirements.md"
 MACRO_BRIEF_SKILL = ROOT / "skills" / "gradient-macro-brief" / "SKILL.md"
+IC_MEMO_SKILL = ROOT / "skills" / "gradient-ic-memo" / "SKILL.md"
+PORTFOLIO_REVIEW_SKILL = ROOT / "skills" / "gradient-portfolio-review" / "SKILL.md"
+SETUP_SKILL = ROOT / "skills" / "gradient-setup" / "SKILL.md"
 STALE = re.compile(r"(?<!gradient-)\bgips-(compliance|standards|manager-diligence|report-review|asset-owner-review|policies-gap-check)\b|gradient-capabilities")
 
 _contract_checker_spec = importlib.util.spec_from_file_location(
@@ -294,9 +297,38 @@ def contract_manifest():
         "known-issues table omits resolved portfolio failures",
     )
     check(
-        "does not make `get_the_read.asOfDate` required" in macro_guidance
-        and "`get_the_read` with no arguments" in macro_guidance,
-        "macro brief treats The Read asOfDate as optional",
+        "`get_the_read.asOfDate` is a historical-publication cutoff" in macro_guidance
+        and "Omit it for the current brief" in macro_guidance,
+        "macro brief distinguishes publication cutoff from meeting date",
+    )
+    check(
+        "`status: unavailable` with `unavailable_reason`" in macro_guidance,
+        "macro brief treats unavailable regime state as a valid evidence gap",
+    )
+    scope_reference = "`references/portfolio-strategy-scope.md`"
+    check(
+        all(
+            scope_reference in path.read_text(encoding="utf-8")
+            for path in (IC_MEMO_SKILL, PORTFOLIO_REVIEW_SKILL, SETUP_SKILL)
+        ),
+        "skills using Portfolio Analytics or Strategy Lab link the shared scope note",
+    )
+    portfolio_probe = by_id["portfolio_expected_statistics"]
+    strategy_probe = by_id["strategy_expected_statistics"]
+    check(
+        portfolio_probe["tool"] == "get_chart_data"
+        and portfolio_probe["args"].get("portfolio_id")
+        == "<sample_portfolio:portfolios[0].portfolio_id>"
+        and portfolio_probe["args"].get("analysis_type") == "expected-statistics",
+        "Portfolio Analytics probe uses the canonical illustrative portfolio",
+    )
+    check(
+        "depends_on" not in strategy_probe
+        and "portfolio_id" not in strategy_probe["args"]
+        and len(
+            strategy_probe["args"]["strategy_lab_session"]["form"]["selectedRecords"],
+        ) >= 1,
+        "Strategy Lab probe uses inline return series without a portfolio ID",
     )
     relative_args = by_id["strategy_relative_return"]["args"]
     check(
@@ -304,8 +336,12 @@ def contract_manifest():
         "relative-return probe omits envelope and fields",
     )
     check(
-        "limit" not in by_id["credit_spreads"]["args"],
-        "credit-spreads probe omits unsupported limit",
+        by_id["credit_spreads"]["args"] == {"view": "credit_spreads"},
+        "credit-spreads probe passes only its view",
+    )
+    check(
+        "status" in by_id["regime_state"].get("required", []),
+        "regime-state probe requires an explicit status",
     )
     check(
         by_id["screen"]["args"].get("organization_id") == "<orgs:organizations[0].id>",

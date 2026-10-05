@@ -7,7 +7,7 @@
       "name": "gradient-cio",
       "source": "./plugins/gradient-cio",
       "description": "ODD reports, DDQ reconciliation, manager monitoring and comparison, portfolio reviews, equity research notes, macro briefing decks, IC memos and GIPS reviews built on GradientCIO evidence, delivered as branded PDFs.",
-      "version": "1.4.3",
+      "version": "1.4.4",
       "homepage": "https://gradientcio.com"
     }
   ]

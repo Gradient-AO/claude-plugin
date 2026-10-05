@@ -64,9 +64,9 @@ Any constraint whose current value or limit is unavailable, or that cannot be te
 - Selection `S_i = wb_i × (rp_i − rb_i)`
 - Interaction `I_i = (wp_i − wb_i) × (rp_i − rb_i)`
 - Check: `Σ (A_i + S_i + I_i) = Rp − Rb`. Show any difference as a `Residual` row.
-- Do not infer multi-period attribution from `run_strategy_lab_relative_return`; it provides
-  benchmark-relative risk metrics, not linked Brinson effects. Do not link single-period results locally; if
-  only single-period inputs exist, present the latest period and say so.
+- Do not infer portfolio attribution from `run_strategy_lab_relative_return`; it describes selected Strategy
+  Lab return series, not the saved portfolio, and does not provide linked Brinson effects. Do not link
+  single-period results locally; if only single-period inputs exist, present the latest period and say so.
 
 ### Liquidity tiers
 Assign each holding to a tier by its redemption frequency plus notice period plus any lock-up remaining:
@@ -97,7 +97,8 @@ Gated or suspended holdings go to T4 regardless of terms; footnote them.
 
 ### Allocation-implied expected return (fallback only)
 `Σ w_i × (excess_i + rf)` using the CMA baseline effective channel and the same release's risk-free rate.
-Used only when `run_strategy_lab_expected_statistics` is unavailable. Never compute volatility or CVaR locally.
+Used only when the Portfolio Analytics expected-statistics pack is unavailable. Never compute volatility or
+CVaR locally.
 
 ### Concentration
 - Largest single manager = max manager exposure / NAV.

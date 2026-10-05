@@ -128,7 +128,7 @@ liquidity, concentration, leverage, prohibited/restricted, ESG/other. Rows come 
 
 ```
 **Reconciliation:** Sum of effects = <x> bps vs total active return <y> bps; residual <z> bps [Calc C#].
-**Method:** <Strategy Lab method name, or "Brinson-Fachler (local calculation)">.
+**Method:** <governed attribution source method, or "Brinson-Fachler (local calculation)">.
 ```
 
 **5.3 Top contributors and detractors** {five each, sorted by contribution; ties by name}

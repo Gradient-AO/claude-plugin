@@ -19,8 +19,8 @@ The only manual placeholder is:
   subject; never present it as a view on the security.
 
 The standard `get_the_read` probe intentionally sends no arguments and verifies
-that `publication.requested_as_of_date` is null. This exercises the current
-latest-publication contract rather than a historical-date workaround.
+that `publication.requested_as_of_date` is null. `asOfDate` is a historical-publication cutoff, not a meeting
+or report date; the default probe therefore exercises the current latest-publication contract.
 
 **Standard set (default, 8 reads):** orgs, roster, odd_profile, monitor_coverage, the_read, calendar,
 sample_portfolio, chart_catalog. The sample probe verifies that `list_portfolios`
@@ -29,7 +29,8 @@ returns Gradient's canonical example first.
 **Full read set (38 reads including standard):** standard plus capabilities_summary, attention, findings,
 events, events_roster, conditions, credit_spreads, gradient_signal, regime_state, cma_baseline, watchlist,
 portfolio_tree, portfolio_exposure, portfolio_ownership, portfolio_returns, portfolio_series,
-chart_availability, chart_pack, strategy_session, strategy_expected_statistics, strategy_relative_return, adv_13f_consistency,
+chart_availability, portfolio_expected_statistics, strategy_expected_statistics, strategy_diversification,
+strategy_relative_return, adv_13f_consistency,
 multi_manager_13f_overlap, search_managers, screen, cftc_positioning, hf_crowding, regional_facts, equity_fundamentals and
 equity_risk_findings.
 
@@ -60,6 +61,11 @@ For `portfolio_exposure` and `portfolio_ownership`, determine scope from
 mismatch when a dependent response does not identify that same canonical
 portfolio or labels it as live data.
 
+The Portfolio Analytics probe `portfolio_expected_statistics` uses the canonical illustrative
+`portfolio_id`. The Strategy Lab probes instead carry fictional inline return series in
+`strategy_lab_session`; they do not depend on `sample_portfolio` and must not receive its ID. Report the two
+module results separately.
+
 Results:
 
 - **Pass**: the call succeeded and every required path is present (empty lists count as present).
@@ -72,6 +78,8 @@ Results:
 
 Re-check these on every full run. When one stops reproducing, say so in the report ("resolved since
 2026-10-05") so the maintainer can remove it from this table.
+
+No known issue permits a Portfolio Analytics ID to be reused as Strategy Lab input.
 
 | Tool / view | Symptom | Workaround used by the skills |
 |---|---|---|

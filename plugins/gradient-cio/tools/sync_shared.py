@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Copy the canonical shared files into every skill so each skill is self-contained.
 
-Run after any change to shared/gradient_report.py or shared/report-style.md:
+Run after any change to a file listed in FILES:
     python tools/sync_shared.py          # sync
     python tools/sync_shared.py --check  # exit 1 if any copy differs (use before packaging)
 """
@@ -10,7 +10,8 @@ import hashlib, pathlib, shutil, sys
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 FILES = {"shared/gradient_report.py": "scripts/gradient_report.py",
          "shared/report-style.md": "references/report-style.md",
-         "shared/chart-data.md": "references/chart-data.md"}
+         "shared/chart-data.md": "references/chart-data.md",
+         "shared/portfolio-strategy-scope.md": "references/portfolio-strategy-scope.md"}
 
 def digest(p):
     return hashlib.sha256(p.read_bytes()).hexdigest()[:12]

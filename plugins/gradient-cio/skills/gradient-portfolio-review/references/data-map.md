@@ -2,12 +2,13 @@
 
 Load each GradientCIO tool with tool search first and use the parameter names from the loaded schema. Pass
 `organization_id` on every call. Use `envelope: "compact"` (the default). Record a source row per call.
+Read `portfolio-strategy-scope.md` first; every saved-portfolio call in this map is Portfolio Analytics.
 
 ## Calls, arguments and the fields used
 
 | Tool | Arguments | Fields used |
 |---|---|---|
-| `get_gradient_capabilities` | `organization_id` | `capabilities.portfolio`, `capabilities.strategyLab`; per `tools[]`: `name`, `available`, `access_mode` (`live` / `illustrative`), `backend_tool_readiness[].{backend_tool_name, available, availability_reason}` |
+| `get_gradient_capabilities` | `organization_id` | `capabilities.portfolio`; per Portfolio Analytics tool in `tools[]`: `name`, `available`, `access_mode` (`live` / `illustrative`), `backend_tool_readiness[].{backend_tool_name, available, availability_reason}` |
 | `list_portfolios` | `organization_id` | `portfolios[].{portfolio_id, portfolio_name, base_currency, record_kind (user / example), canonical_default}`, `provenance.data_scope.{kind, label}` |
 | `get_portfolio_structure` | `view: allocation_tree`, `portfolio_id`, `max_depth` 3, `node_limit` 100 | `portfolio.record_kind`, `nodes[].{allocation_id, parent_id, allocation_name, asset_classification, depth, is_leaf, target_weight, actual_weight, lower_limit, upper_limit}`, `coverage.{status, returned_count, truncated, missing_reasons}` |
 | `get_portfolio_structure` | `view: ownership_weights`, `portfolio_id` | `by_owner[].weights[]` (optional) |
@@ -19,7 +20,6 @@ Load each GradientCIO tool with tool search first and use the parameter names fr
 | `get_cross_domain_research` | `view: roster_macro_exposure`, `portfolio_id` (required) | As returned; optional context only |
 | `get_the_read` | `visuals: none` | `overview.headline`, `publication.{resolved_as_of_date, freshness, fallback_applied, fallback_reason}`, `coverage.status`; numbers only from `read.facts`, never from prose |
 | `get_capital_market_assumptions` | `view: baseline`, `collection: primary_factors`, `base_currency` = portfolio currency, `per_page` 10 | The assumption set, horizon, return basis and per-class expected return; state all four |
-| `run_strategy_lab_relative_return` | per its schema; do **not** pass `envelope` or `fields` | Only if `strategyLab` is licensed |
 
 Amounts in exposure are strings in base currency units (e.g. `"58484093"`); convert to $M with 1 dp.
 Return points are decimal fractions; show percentages to 1 dp.
@@ -44,7 +44,6 @@ mostly proxies). Without one, report absolute returns only and say "No benchmark
 | `get_benchmarks` with `asset_class: multi_asset` → `response_contract_invalid`; other `asset_class` values (e.g. `equity`) return an empty list with an advisory "empty primary list has no explicit reason" | Look up by `benchmark_id`, or page the catalog without filters |
 | `get_cross_domain_research` `portfolio_13f_lookthrough` / `roster_macro_exposure` → `entitlement_required` (`ANALYST_PORTFOLIO_CAPABILITY_REQUIRED`, 403) without the portfolio module, even for the illustrative portfolio | Coverage "Not licensed"; look-through section is one callout. Do not retry |
 | `roster_macro_exposure` without `portfolio_id` → `tool_input_invalid` | Always pass `portfolio_id` |
-| `run_strategy_lab_relative_return` with `envelope` or `fields` → `backend_request_rejected` (`mcp_tool_parameters_invalid`) | Omit both |
 | `allocation_tree` child `target_weight` and limits are within-parent shares; `actual_weight` is a total-portfolio share | Convert child targets (parent × child) before comparing |
 | `get_portfolio_exposure` rows with null `market_value_base`, `nav_base` and `as_of_date` (unfunded commitments) | Show as "no current value"; never count as zero NAV |
 

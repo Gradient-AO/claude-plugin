@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.4
+- Separated Portfolio Analytics saved-portfolio evidence from Strategy Lab return-series analysis across the IC memo, portfolio review and setup guidance.
+- Re-mapped IC memo sections and its worked example to Portfolio Analytics sources; Strategy Lab is now an optional, separately reported supplement.
+- Added independent Portfolio Analytics and Strategy Lab contract probes, standardized illustrative labels, clarified The Read's historical cutoff, and removed optional selectors from credit-spread calls.
+- The setup contract check now requires complete coverage of all 10 governed credit-spread input series and an explicit regime-state status; unavailable regimes are treated as valid evidence gaps when accompanied by `unavailable_reason`.
+- Re-synced the bundled shared skill files for the 2026-10-05 MCP contract refresh.
+
 ## 1.4.3
 - Removed resolved `get_the_read` failures from the known-issues table and made the latest-publication contract explicit.
 - Clarified that macro briefs do not require `asOfDate` unless the user requests a historical edition.

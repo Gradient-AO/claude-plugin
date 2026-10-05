@@ -1,6 +1,6 @@
 ---
 name: gradient-ic-memo
-description: Write a deterministic, fully sourced investment committee (IC) memo for a portfolio, total fund, allocation change, rebalance, or manager hire/fire, using GradientCIO data (portfolio exposure, benchmark-relative Strategy Lab metrics, factor loads, expected statistics, simulations, CMAs, liquidity, manager diligence) and the gradient-gips-* skills. Delivers a branded PDF memo in the Gradient house style. Use this skill whenever the user asks for an IC memo, investment committee memo, board memo, investment memo, committee paper, allocation recommendation, rebalance proposal, a portfolio review that ends in a decision or vote, IPS compliance review, or a client or trustee memo about a portfolio — even if they don't say "IC memo". Also use it when another skill (such as gradient-gips-manager-diligence) hands over a section "for the investment memo". For a periodic performance report with no decision requested, use gradient-portfolio-review instead.
+description: Write a deterministic, fully sourced investment committee (IC) memo for a portfolio, total fund, allocation change, rebalance, or manager hire/fire, using GradientCIO Portfolio Analytics, CMAs, liquidity and manager-diligence evidence, with optional Strategy Lab analysis of separately selected return series, plus the gradient-gips-* skills. Delivers a branded PDF memo in the Gradient house style. Use this skill whenever the user asks for an IC memo, investment committee memo, board memo, investment memo, committee paper, allocation recommendation, rebalance proposal, a portfolio review that ends in a decision or vote, IPS compliance review, or a client or trustee memo about a portfolio — even if they don't say "IC memo". Also use it when another skill (such as gradient-gips-manager-diligence) hands over a section "for the investment memo". For a periodic performance report with no decision requested, use gradient-portfolio-review instead.
 metadata:
   version: "0.1.0"
 ---
@@ -20,6 +20,7 @@ the structure and the rules. Never fill a number from memory or general knowledg
 |---|---|
 | `references/memo-template.md` | Always — the exact memo structure. Follow it verbatim. |
 | `references/data-map.md` | Always — which Gradient tool feeds each section, and the fallback when data is missing. |
+| `references/portfolio-strategy-scope.md` | Always — hard boundary between saved-portfolio evidence and Strategy Lab return-series analysis. |
 | `references/chart-data.md` | Always — dashboard chart discovery, basis rules and generic report block. |
 | `references/ips-schema.md` | When an IPS is supplied or needed — how to capture IPS constraints as structured input. |
 | `references/calculations.md` | Before computing anything — the only formulas allowed, rounding and status thresholds. |
@@ -55,12 +56,15 @@ Follow `references/data-map.md` section by section. Key rules:
   loaded schema, never guessed ones.
 - If the user has more than one organization, confirm which before calling org-scoped tools. Call
   `list_assumption_sets` and state the organization and selected assumption set in the memo header.
+- Read `references/portfolio-strategy-scope.md` before selecting tools. Portfolio questions use Portfolio
+  Analytics. Strategy Lab is optional and uses separately selected return series or a matching active
+  `strategy_lab_session`; never pass a Portfolio Analytics `portfolio_id` to a Strategy Lab tool.
 - Use `envelope: "compact"` and optional `fields` only on research-read tools whose loaded schema offers
   them. Do not pass either parameter to `build_strategy_lab_session` or any `run_strategy_lab_*` tool.
 - Use `get_chart_data` after portfolio selection: check availability, then request one relevant pack at a time.
-  Expected-statistics charts complement Strategy Lab outputs; they do not replace what-if analysis. Preserve
-  `basis` and `context.fingerprint`, skip unavailable charts with their reason, and never compare different
-  bases as though they were the same scenario.
+  Portfolio expected-statistics and commitments packs are the primary forward-looking evidence for the saved
+  portfolio. Preserve `basis` and `context.fingerprint`, skip unavailable charts with their reason, and never
+  compare different bases as though they were the same scenario.
 - For every result, record a **source row**: tool, key parameters, `provenance.as_of`,
   `provenance.data_scope.label`, `validation.status`, and `payload_digest` if present. These rows become the
   Appendix A source table and the `[S#]` tags in the text.
@@ -95,9 +99,10 @@ python scripts/memo_calcs.py liquidity --input liquidity.json           # liquid
 python scripts/memo_calcs.py brinson  --input attribution_inputs.json   # when governed weights and returns are available
 ```
 
-Prefer Strategy Lab outputs for benchmark-relative risk metrics. Strategy Lab relative return does not provide
-Brinson decomposition; calculate attribution only from governed weights and returns, and tag the result
-`[Calc C#]` with the formula listed in Appendix B.
+Use Portfolio Analytics historical returns for portfolio and benchmark-relative metrics. Strategy Lab
+relative return applies only to selected lab return series and does not provide Brinson decomposition;
+calculate portfolio attribution only from governed portfolio/benchmark weights and returns, and tag the
+result `[Calc C#]` with the formula listed in Appendix B.
 
 ### Step 5 — Draft the memo
 
@@ -145,11 +150,13 @@ Determinism rules (summary — the template is authoritative):
 
 ### Step 7 — Save the scenario (only when the user asks)
 
-For an Allocation Change or Rebalance memo, offer to save the proposed scenario to Strategy Lab so the
-committee can revisit it: `save_strategy_lab_scenario` (`domain` rebalance/optimization/simulation/relative,
-`name` "<Portfolio> - <memo type> <meeting date>", the `form` and basket used in Section 13). Call with
-`dry_run: true` first, show the preview, then repeat with `dry_run: false` and `confirmation_receipt_id` set to
-the preview receipt only after the user confirms. Unavailable on illustrative access: say so instead.
+For an Allocation Change or Rebalance memo, offer to save a proposed scenario only when Section 13 used a
+real Strategy Lab return-series basket or matching active lab session. Use `save_strategy_lab_scenario`
+(`domain` rebalance/optimization/simulation/relative, `name` "<subject> - <memo type> <meeting date>", and
+the lab `form` and basket used in Section 13). Never convert a saved portfolio ID into a Strategy Lab
+scenario. Call with `dry_run: true` first, show the preview, then repeat with `dry_run: false` and
+`confirmation_receipt_id` set to the preview receipt only after the user confirms. Unavailable on
+illustrative access: say so instead.
 
 ## Related skills
 

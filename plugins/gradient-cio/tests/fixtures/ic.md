@@ -1,4 +1,4 @@
-# Investment Committee Memo — Rebalance: Gradient Global Growth III
+# Investment Committee Memo — Rebalance: Gradient Global Growth III (Illustrative, Gradient Maintained)
 
 > **ILLUSTRATIVE DATA** — Figures marked [S#] with scope "Illustrative, Gradient Maintained" describe a
 > Gradient-maintained example portfolio, not the organization's actual holdings.
@@ -6,7 +6,7 @@
 | Field | Value |
 |---|---|
 | Memo type | Rebalance |
-| Portfolio | Gradient Global Growth III (example-portfolio-id) |
+| Portfolio | Gradient Global Growth III (example-portfolio-id; Illustrative, Gradient Maintained) |
 | Organization | Example Foundation |
 | Prepared for | Investment Committee |
 | Meeting date | 2026-10-15 |
@@ -283,17 +283,17 @@ Not assessed — no GIPS Asset Owner Report provided.
 
 | Ref | Source | Parameters | As of | Data scope | Validation | Digest |
 |---|---|---|---|---|---|---|
-| S1 | get_portfolio_exposure | portfolio_id=example | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
-| S2 | run_strategy_lab_relative_return | period=1Y | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
-| S3 | run_strategy_lab_expected_statistics | current, proposed, policy | 2026-09-11 | Illustrative, Gradient Maintained | passed | n/a |
-| S4 | get_cma_consensus_check | mode=allocation | 2026-06-30 | User-Authorized Live | passed | n/a |
+| S1 | get_portfolio_exposure; get_portfolio_structure | portfolio_id=example; views=allocation_tree,ownership_weights | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
+| S2 | get_portfolio_historical_returns | portfolio_id=example; sections=standard_periods,benchmark_relative | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
+| S3 | get_chart_data | portfolio_id=example; analysis_type=expected-statistics | 2026-09-11 | Illustrative, Gradient Maintained | passed | n/a |
+| S4 | get_cma_consensus_check | mode=allocation | 2026-06-30 | Mixed — Illustrative, Gradient Maintained + User-Authorized Live | passed | n/a |
 | S5 | get_manager_diligence_findings | view=exposure_weighted | 2026-10-02 | Illustrative, Gradient Maintained | advisory | n/a |
-| S6 | run_strategy_lab_factor_loads | portfolio_id=example | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
+| S6 | get_chart_data | portfolio_id=example; analysis_type=allocations | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
 | S7 | get_macro_signals | view=gradient_signal (sources.grip) | 2026-10-01 | User-Authorized Live | passed | n/a |
-| S8 | run_strategy_lab_simulation | scenarios=default | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
-| S9 | run_strategy_lab_private_markets_pme | portfolio_id=example | 2026-06-30 | Illustrative, Gradient Maintained | passed | n/a |
+| S8 | Illustrative scenario assumptions | 2008 historical; 5th percentile | 2026-09-30 | Illustrative, Gradient Maintained | not applicable | n/a |
+| S9 | get_chart_data | portfolio_id=example; analysis_type=commitments | 2026-06-30 | Illustrative, Gradient Maintained | passed | n/a |
 | S10 | get_macro_conditions; get_the_read; get_macro_calendar | theme=inflation; am edition; 30 days | 2026-10-02 | User-Authorized Live | passed | n/a |
-| S11 | run_strategy_lab_rebalance | target weights per 13.1 | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
+| S11 | Illustrative rebalance proposal | target weights and implementation estimate per Section 13.1 | 2026-09-30 | Illustrative, Gradient Maintained | not applicable | n/a |
 
 ## Appendix B — Calculations
 
@@ -308,7 +308,7 @@ Not assessed — no GIPS Asset Owner Report provided.
 
 - Expected returns and risk are forward-looking assumptions from Gradient ICAPM Global Baseline Q3 2026, not forecasts or guarantees. Actual results will differ.
 - Performance is shown net of manager fees. Periods over one year are annualized.
-- Attribution method: Brinson-Fachler (local calculation). Factor model: Strategy Lab factor loads.
+- Attribution method: Brinson-Fachler (local calculation). Factor model: Portfolio Analytics factor/currency exposure.
 - Private-markets valuations may lag by 3 months; values as of 2026-06-30.
 - Data sources and retrieval dates are listed in Appendix A. Sections using illustrative data are marked; they do not describe the organization's holdings.
 - GIPS assessments are diligence reviews against the 2020 GIPS standards, not verifications or legal opinions.
