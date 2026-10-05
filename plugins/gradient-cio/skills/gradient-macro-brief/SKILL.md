@@ -30,7 +30,7 @@ Pick the as-of date: the last business day (or the user's meeting date minus one
 
 | Evidence | Call | Notes |
 |---|---|---|
-| The Read | `get_the_read` with `asOfDate` (required — omitting it fails) | If unpublished, step back one day, up to 3. Keep headline, governing thesis, read units, facts, market highlights, follow-ups, reading list, coverage |
+| The Read | `get_the_read`; omit `asOfDate` for the latest publication, or pass an ISO date only when historical evidence is required | Record `publication.resolved_as_of_date`, `fallback_applied`, and `fallback_reason`. If an explicitly requested historical edition is unavailable, step back one business day, up to 3 attempts. Keep headline, governing thesis, read units, facts, market highlights, follow-ups, reading list, coverage |
 | Rates | `get_macro_conditions` `view: indicators`, `theme: rates`, `limit: 8` | Levels, 1m/3m change, 1y/5y percentile |
 | Inflation, growth | same, `theme: inflation` and `theme: growth` | Optional; use when The Read is about them |
 | Credit | `get_macro_conditions` `view: credit_spreads` (no `limit`) | |

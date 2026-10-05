@@ -173,7 +173,7 @@ def contract_manifest():
         for name in ("standard", "full", "writes", "ddq-save-preview")
     }
     check(
-        counts == {"standard": 8, "full": 29, "writes": 3, "ddq-save-preview": 3},
+        counts == {"standard": 8, "full": 30, "writes": 3, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
     )
 
@@ -254,10 +254,19 @@ def contract_manifest():
         "capabilities probe requests summary detail",
     )
     check(
+        {"capabilities", "entitlements"}
+        <= set(by_id["capabilities_summary"].get("required", [])),
+        "capabilities probe distinguishes effective access from entitlements",
+    )
+    check(
         by_id["write_roster"]["args"].get("action") == "add"
         and by_id["write_roster"]["args"].get("subject_id")
         == "<roster:funds[0].fund_id>",
         "roster write probe exercises add with a canonical fund ID",
+    )
+    check(
+        bool(by_id["write_roster"]["args"].get("reason")),
+        "roster write probe exercises add-preview rationale",
     )
     check(
         by_id["ddq_save_preview"]["args"].get("reconciliation_id")

@@ -83,7 +83,7 @@ save `context.fingerprint`, `basis`, and unavailable reasons. Embed each usable 
 | Look-through | `get_cross_domain_research` `view: portfolio_13f_lookthrough`, `portfolio_id`, `top_n_managers` 10, `limit` 20 | Optional (needs `portfolio`) |
 | Macro exposure | `get_cross_domain_research` `view: roster_macro_exposure`, `portfolio_id` | Optional (needs `portfolio`) |
 | Outlook | `get_the_read` (`visuals: none`); `get_capital_market_assumptions` `view: baseline` | Optional, only if asked or for an annual review |
-| Attribution | `run_strategy_lab_relative_return` | Optional, only if `strategyLab` is licensed |
+| Benchmark-relative risk | `run_strategy_lab_relative_return` | Optional, only if `strategyLab` is licensed; do not describe its output as Brinson attribution |
 
 If a call fails, record the error code and request ID in coverage, retry at most once (only when
 `retryable: true`), use the fallback, and keep going. An `entitlement_required` error is "Not licensed", not
@@ -133,7 +133,7 @@ else `watch` if any row is Watch or the portfolio trails its benchmark over both
 watch". For the illustrative portfolio add "· illustrative" to the label.
 
 **Completeness**: sources used / expected over: portfolio record, allocation tree, returns, benchmark,
-exposure, look-through, outlook (if requested), attribution (if licensed). `state` = `partial` when any
+exposure, look-through, outlook (if requested), benchmark-relative risk (if licensed). `state` = `partial` when any
 required source is missing or the portfolio module is not licensed; `meter_title` "Evidence completeness".
 
 ## 4. Build the report
@@ -156,7 +156,8 @@ Sections:
    committee" saying whether anything needs a decision and offering gradient-ic-memo.
 2. **Performance** — `table` standard periods: Period (mark "ann."), Portfolio, Benchmark, Excess (pp),
    Coverage (chip); `table` calendar years with partial-year labels as returned; `line` growth of 100
-   (portfolio and benchmark, from returned points only); attribution table only if Strategy Lab returned it.
+   (portfolio and benchmark, from returned points only). Do not treat Strategy Lab relative-return metrics as
+   Brinson attribution; include an attribution table only from a governed attribution source.
 3. **Allocation** — `table` asset class vs policy: Asset class, Target, Actual, Active (pp), Range (align `n`),
    Status (chip); sub-allocation table if the tree has depth-1 nodes (targets converted, `[Calc C5]`);
    `bars` market value by exposure classification with $M and % of total.

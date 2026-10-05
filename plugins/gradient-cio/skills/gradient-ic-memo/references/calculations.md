@@ -64,8 +64,9 @@ Any constraint whose current value or limit is unavailable, or that cannot be te
 - Selection `S_i = wb_i × (rp_i − rb_i)`
 - Interaction `I_i = (wp_i − wb_i) × (rp_i − rb_i)`
 - Check: `Σ (A_i + S_i + I_i) = Rp − Rb`. Show any difference as a `Residual` row.
-- Multi-period: use Strategy Lab's linked attribution. Do not link single-period results locally; if only
-  single-period inputs exist, present the latest period and say so.
+- Do not infer multi-period attribution from `run_strategy_lab_relative_return`; it provides
+  benchmark-relative risk metrics, not linked Brinson effects. Do not link single-period results locally; if
+  only single-period inputs exist, present the latest period and say so.
 
 ### Liquidity tiers
 Assign each holding to a tier by its redemption frequency plus notice period plus any lock-up remaining:

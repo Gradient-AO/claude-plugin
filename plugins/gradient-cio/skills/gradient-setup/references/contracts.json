@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-04",
+  "version": "2026-10-05",
   "envelope": [
     "provenance.as_of",
     "validation.status"
@@ -32,6 +32,7 @@
         "version",
         "detail",
         "capabilities",
+        "entitlements",
         "tools",
         "coverage"
       ],
@@ -83,9 +84,7 @@
       "id": "the_read",
       "set": "standard",
       "tool": "get_the_read",
-      "args": {
-        "asOfDate": "<last business day>"
-      },
+      "args": {},
       "required": [
         "overview.headline",
         "publication.resolved_as_of_date",
@@ -541,6 +540,24 @@
       ]
     },
     {
+      "id": "multi_manager_13f_overlap",
+      "set": "full",
+      "tool": "get_multi_manager_13f_overlap",
+      "args": {
+        "firm_ids": [
+          "d7e6f8c1-3e4f-5a6b-7c8d-9e0f12345678",
+          "3e4f5a6b-7c8d-9e0f-1a2b-3c4d5e6f7a8b"
+        ]
+      },
+      "required": [
+        "status",
+        "managers[0].firm_id",
+        "managers[1].firm_id",
+        "pairwise[0].status",
+        "pairwise[0].weighted_overlap_pct"
+      ]
+    },
+    {
       "id": "screen",
       "set": "full",
       "tool": "screen_managers",
@@ -712,7 +729,8 @@
         "dry_run": true,
         "idempotency_key": "gradient-contract-roster-add-v1",
         "action": "add",
-        "subject_id": "<roster:funds[0].fund_id>"
+        "subject_id": "<roster:funds[0].fund_id>",
+        "reason": "Gradient contract self-test add preview"
       },
       "required": [
         "action",

@@ -1,6 +1,6 @@
 ---
 name: gradient-ic-memo
-description: Write a deterministic, fully sourced investment committee (IC) memo for a portfolio, total fund, allocation change, rebalance, or manager hire/fire, using GradientCIO data (portfolio exposure, Strategy Lab attribution, factor loads, expected statistics, simulations, CMAs, liquidity, manager diligence) and the gradient-gips-* skills. Delivers a branded PDF memo in the Gradient house style. Use this skill whenever the user asks for an IC memo, investment committee memo, board memo, investment memo, committee paper, allocation recommendation, rebalance proposal, a portfolio review that ends in a decision or vote, IPS compliance review, or a client or trustee memo about a portfolio — even if they don't say "IC memo". Also use it when another skill (such as gradient-gips-manager-diligence) hands over a section "for the investment memo". For a periodic performance report with no decision requested, use gradient-portfolio-review instead.
+description: Write a deterministic, fully sourced investment committee (IC) memo for a portfolio, total fund, allocation change, rebalance, or manager hire/fire, using GradientCIO data (portfolio exposure, benchmark-relative Strategy Lab metrics, factor loads, expected statistics, simulations, CMAs, liquidity, manager diligence) and the gradient-gips-* skills. Delivers a branded PDF memo in the Gradient house style. Use this skill whenever the user asks for an IC memo, investment committee memo, board memo, investment memo, committee paper, allocation recommendation, rebalance proposal, a portfolio review that ends in a decision or vote, IPS compliance review, or a client or trustee memo about a portfolio — even if they don't say "IC memo". Also use it when another skill (such as gradient-gips-manager-diligence) hands over a section "for the investment memo". For a periodic performance report with no decision requested, use gradient-portfolio-review instead.
 metadata:
   version: "0.1.0"
 ---
@@ -55,7 +55,8 @@ Follow `references/data-map.md` section by section. Key rules:
   loaded schema, never guessed ones.
 - If the user has more than one organization, confirm which before calling org-scoped tools. Call
   `list_assumption_sets` and state the organization and selected assumption set in the memo header.
-- Use `envelope: "compact"` where offered.
+- Use `envelope: "compact"` and optional `fields` only on research-read tools whose loaded schema offers
+  them. Do not pass either parameter to `build_strategy_lab_session` or any `run_strategy_lab_*` tool.
 - Use `get_chart_data` after portfolio selection: check availability, then request one relevant pack at a time.
   Expected-statistics charts complement Strategy Lab outputs; they do not replace what-if analysis. Preserve
   `basis` and `context.fingerprint`, skip unavailable charts with their reason, and never compare different
@@ -91,11 +92,12 @@ Use `scripts/memo_calcs.py` for every derived number (see `references/calculatio
 ```bash
 python scripts/memo_calcs.py ips      --input ips_and_allocation.json   # IPS compliance table
 python scripts/memo_calcs.py liquidity --input liquidity.json           # liquidity tiers and coverage
-python scripts/memo_calcs.py brinson  --input attribution_inputs.json   # only if no attribution from Strategy Lab
+python scripts/memo_calcs.py brinson  --input attribution_inputs.json   # when governed weights and returns are available
 ```
 
-Prefer Strategy Lab outputs over local calculation. Calculate locally only when Gradient returns the inputs
-but not the derived figure, and tag the result `[Calc C#]` with the formula listed in Appendix B.
+Prefer Strategy Lab outputs for benchmark-relative risk metrics. Strategy Lab relative return does not provide
+Brinson decomposition; calculate attribution only from governed weights and returns, and tag the result
+`[Calc C#]` with the formula listed in Appendix B.
 
 ### Step 5 — Draft the memo
 
