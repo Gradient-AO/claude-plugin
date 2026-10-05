@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.4.2
+- Setup checks now distinguish effective MCP capabilities from commercial entitlements.
+- The roster add preview verifies that an optional rationale is accepted.
+- The 13F overlap probe uses two verified, holdings-ready catalog firms.
+- Removed resolved event-publication and 13F-identity workarounds from the known-issues table.
+
+## 1.4.1
+- The setup contract probe now reads the latest published brief instead of passing the failing historical `asOfDate` option.
+- Macro briefs now treat `asOfDate` as optional and record the publication date resolved by the connector.
+- IC memo consensus checks use inline portfolio allocations for illustrative portfolios and reserve `portfolio_id` for stored licensed portfolios.
+- IC memo and portfolio-review guidance no longer mislabels Strategy Lab relative-return metrics as Brinson attribution.
+- Strategy Lab guidance excludes unsupported `envelope` and `fields` parameters, and chart-data guidance carries the selected organization when offered.
+
 ## 1.4.0
 - Added governed dashboard chart-data discovery and report guidance for portfolio reviews and IC memos.
 - Added one generic `chart` report block that renders returned line, bar, or table hints without chart-specific mappings, scales percentage axes correctly, and falls back to a table for mixed units.

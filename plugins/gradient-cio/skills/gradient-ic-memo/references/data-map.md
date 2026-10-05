@@ -20,14 +20,14 @@ field path in Appendix A's "Parameters" column.
 |---|---|---|---|
 | 3 | NAV, unfunded, holdings, allocation | `get_portfolio_exposure`; policy hierarchy and weights from `get_portfolio_structure` (`view: allocation_tree`, then `ownership_weights`) | User-supplied holdings file; else Not available |
 | 4 | IPS compliance | IPS (user document, see ips-schema.md) + Section 3, 6, 7, 9 values → `memo_calcs.py ips` | Not assessed — IPS not provided |
-| 5.1 | Returns vs benchmark | Realized: `get_portfolio_historical_returns` (`sections: standard_periods, calendar_years, risk_metrics, benchmark_relative`; keep partial-period labels and coverage states). Modeled: `run_strategy_lab_relative_return` | User performance report; else Not available |
-| 5.2 | Attribution | `run_strategy_lab_relative_return` (attribution output) | `memo_calcs.py brinson` from weights and returns if Gradient returns them; else Not available |
-| 5.3 | Contributors / detractors | `run_strategy_lab_relative_return` | Not available |
+| 5.1 | Returns vs benchmark | Realized: `get_portfolio_historical_returns` (`sections: standard_periods, calendar_years, risk_metrics, benchmark_relative`; keep partial-period labels and coverage states). Modeled benchmark-relative risk metrics: `run_strategy_lab_relative_return` | User performance report; else Not available |
+| 5.2 | Attribution | `memo_calcs.py brinson` from governed portfolio/benchmark weights and returns when available. `run_strategy_lab_relative_return` does **not** provide Brinson allocation, selection, or interaction effects | User attribution report; else Not available |
+| 5.3 | Contributors / detractors | Governed holding or asset-class contribution data from a user report | Not available |
 | 6.1 | Factor exposures | `run_strategy_lab_factor_loads` | Not available |
 | 6.2 | Concentration, diversification | `run_strategy_lab_diversification` + `get_portfolio_exposure`; issuer look-through across managers from `get_cross_domain_research` `view: portfolio_13f_lookthrough` (an estimate from lagged, long-only 13F weights — label it so) | Concentration rows from exposure only; diversification ratio Not available |
 | 7.1 | Expected return, vol, Sharpe, drawdown, CVaR | `run_strategy_lab_expected_statistics` (current and policy) | `get_capital_market_assumptions` (baseline) × weights via memo_calcs only for expected return; risk rows Not available |
 | 7.1 | Probability of meeting objective | `run_strategy_lab_simulation` | Not available |
-| 7.2 | Consensus check | `get_cma_consensus_check` (mode `allocation`, with `portfolio_id`, `target_return` = IPS objective) | mode `asset_class` for held classes |
+| 7.2 | Consensus check | `get_cma_consensus_check` (mode `allocation`, with an inline canonical allocation derived from `get_portfolio_exposure`, `target_return` = IPS objective); use `portfolio_id` only for a stored licensed portfolio | mode `asset_class` for held classes |
 | 7.3 | Regime overlay | `get_macro_signals` (view `gradient_signal` → `sources.grip.current`; `grip_index` currently fails, see gradient-setup known issues); `get_capital_market_assumptions` (regime view) | Regime row Not available |
 | 8 | Stress tests, scenarios | `run_strategy_lab_simulation`; `run_strategy_lab_date_window_robustness` | Not available |
 | 9 | Liquidity tiers, unfunded, pacing | `get_portfolio_exposure` (liquidity terms, commitments); `run_strategy_lab_private_markets_pme` for private-markets context → `memo_calcs.py liquidity` | User liquidity schedule; else Not available |

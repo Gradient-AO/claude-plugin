@@ -13,26 +13,30 @@ python <this skill's directory>/scripts/check_contract.py --resolve-args \
   <this skill's directory>/references/contracts.json <probe_id> <responses_dir>
 ```
 
-The only manual placeholders are:
+The only manual placeholder is:
 
-- `<last business day>`: the most recent weekday before today (YYYY-MM-DD).
 - `<test ticker>`: a ticker the user names, else any large, liquid US-listed issuer. It is only a probe
   subject; never present it as a view on the security.
+
+The standard `get_the_read` probe intentionally omits `asOfDate` and reads the
+latest published brief. Pass `asOfDate` only when the user explicitly requests
+a historical edition.
 
 **Standard set (default, 8 reads):** orgs, roster, odd_profile, monitor_coverage, the_read, calendar,
 portfolio_list, chart_catalog.
 
-**Full read set (37 reads including standard):** standard plus capabilities_summary, attention, findings,
+**Full read set (38 reads including standard):** standard plus capabilities_summary, attention, findings,
 events, events_roster, conditions, credit_spreads, gradient_signal, regime_state, cma_baseline, watchlist,
 portfolio_tree, portfolio_exposure, portfolio_ownership, portfolio_returns, portfolio_series,
 chart_availability, chart_pack, strategy_session, strategy_expected_statistics, strategy_relative_return, adv_13f_consistency,
-search_managers, screen, cftc_positioning, hf_crowding, regional_facts, equity_fundamentals and
+multi_manager_13f_overlap, search_managers, screen, cftc_positioning, hf_crowding, regional_facts, equity_fundamentals and
 equity_risk_findings.
 
 **Writes set (3 dry-run previews):** write_create_finding, write_watchlist_manager and write_roster. Every
 call must retain `dry_run: true`; require `committed: false` and a non-null `receipt_id`. Never substitute
 `dry_run: false`, and never follow a preview receipt with a commit during a contract self-test. The roster
 probe exercises add with a canonical fund ID from the roster response; do not substitute its parent firm ID.
+It also sends a non-empty `reason` to verify add-preview rationale support.
 
 **DDQ save-preview set (3 calls):** ddq_extract_persisted, ddq_reconcile_persisted, then ddq_save_preview.
 The first call persists fictional inline text as a ready subject-bound document and must return a non-null
@@ -40,7 +44,7 @@ The first call persists fictional inline text as a ready subject-bound document 
 save call is still a dry-run preview and must return `outcome: "preview"`, `dry_run: true` and `committed:
 false`.
 
-The complete matrix is 43 calls. Run the standard or full read set without write confirmation. Run the
+The complete matrix is 44 calls. Run the standard or full read set without write confirmation. Run the
 writes set only as previews. Before the DDQ save-preview set, tell the user that its reconciliation call
 persists a test document and immutable test workpaper.
 
@@ -61,15 +65,15 @@ Results:
 - Note `validation.status` = `failed` separately: the call worked, but Gradient's own checks raised advisories.
   These are disclosures, not outages.
 
-## Known issues (as of 2026-10-04)
+## Known issues (as of 2026-10-05)
 
 Re-check these on every full run. When one stops reproducing, say so in the report ("resolved since
-2026-10-04") so the maintainer can remove it from this table.
+2026-10-05") so the maintainer can remove it from this table.
 
 | Tool / view | Symptom | Workaround used by the skills |
 |---|---|---|
+| get_the_read with `asOfDate` | 500 for historical-date requests | Omit `asOfDate` and use the latest published brief unless the user explicitly requires a historical edition |
 | get_the_read `visuals` | Empty: "governed chart history unavailable" | Charts from structured fields (bars/tables) instead of time series |
-| get_firm_fund_events | Empty, `event_publication_not_ready` | Report "event publication not ready" — never "no events" |
 | reconcile_manager_ddq_claims with only `crd_number` | 409 | Pass `firm_id` |
 | batch_reconcile_manager_ddq_claims | 502 | Reconcile one subject per call |
 | get_capital_market_assumptions | `quality_receipt.status` unvalidated; bond excess returns ≈ 0 with shared policy values; raw kurtosis < 3 flags | Disclose; no comparative claims; caveat fixed-income rows |
@@ -88,4 +92,3 @@ Re-check these on every full run. When one stops reproducing, say so in the repo
 | get_public_equity_fundamentals / filing_evidence | A company name in `symbol` gives 409 `subject_not_found`, no candidates | Ask the user for the ticker or CIK |
 | get_public_equity_fundamentals `peer_comparison` | `status: missing`, no ranks, when fiscal year-ends differ | Show peer metrics without ranks; say why |
 | screen_managers | `affirmative_disclosure_count` counts every "yes" on Form ADV, not disciplinary events; no provenance envelope | Never call it "disclosures"; check Item 11 in the ODD profile |
-| get_multi_manager_13f_overlap | Often `partial` (`right_cik_missing`), `weighted_overlap_pct: null` | Report overlap as unavailable for that pair |
