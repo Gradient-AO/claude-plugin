@@ -87,9 +87,13 @@
       "args": {},
       "required": [
         "overview.headline",
+        "publication.requested_as_of_date",
         "publication.resolved_as_of_date",
         "coverage.status"
-      ]
+      ],
+      "equals": {
+        "publication.requested_as_of_date": null
+      }
     },
     {
       "id": "calendar",
@@ -106,7 +110,7 @@
       ]
     },
     {
-      "id": "portfolio_list",
+      "id": "sample_portfolio",
       "set": "standard",
       "tool": "list_portfolios",
       "depends_on": [
@@ -118,8 +122,13 @@
       "required": [
         "portfolios[0].portfolio_id",
         "portfolios[0].record_kind",
-        "portfolios[0].base_currency"
-      ]
+        "portfolios[0].base_currency",
+        "portfolios[0].canonical_default"
+      ],
+      "equals": {
+        "portfolios[0].record_kind": "example",
+        "portfolios[0].canonical_default": true
+      }
     },
     {
       "id": "chart_catalog",
@@ -147,11 +156,11 @@
       "tool": "get_chart_data",
       "depends_on": [
         "orgs",
-        "portfolio_list"
+        "sample_portfolio"
       ],
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
-        "portfolio_id": "<portfolio_list:portfolios[0].portfolio_id>"
+        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>"
       },
       "required": [
         "kind",
@@ -170,12 +179,12 @@
       "tool": "get_chart_data",
       "depends_on": [
         "orgs",
-        "portfolio_list",
+        "sample_portfolio",
         "chart_availability"
       ],
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
-        "portfolio_id": "<portfolio_list:portfolios[0].portfolio_id>",
+        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
         "analysis_type": "allocations"
       },
       "required": [
@@ -342,12 +351,12 @@
       "tool": "get_portfolio_structure",
       "depends_on": [
         "orgs",
-        "portfolio_list"
+        "sample_portfolio"
       ],
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
         "view": "allocation_tree",
-        "portfolio_id": "<portfolio_list:portfolios[0].portfolio_id>",
+        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
         "max_depth": 2
       },
       "required": [
@@ -362,11 +371,11 @@
       "tool": "get_portfolio_exposure",
       "depends_on": [
         "orgs",
-        "portfolio_list"
+        "sample_portfolio"
       ],
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
-        "portfolio_id": "<portfolio_list:portfolios[0].portfolio_id>",
+        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
         "limit": 50
       },
       "required": [
@@ -384,12 +393,12 @@
       "tool": "get_portfolio_structure",
       "depends_on": [
         "orgs",
-        "portfolio_list"
+        "sample_portfolio"
       ],
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
         "view": "ownership_weights",
-        "portfolio_id": "<portfolio_list:portfolios[0].portfolio_id>"
+        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>"
       },
       "required": [
         "view",
@@ -408,11 +417,11 @@
       "tool": "get_portfolio_historical_returns",
       "depends_on": [
         "orgs",
-        "portfolio_list"
+        "sample_portfolio"
       ],
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
-        "portfolio_id": "<portfolio_list:portfolios[0].portfolio_id>",
+        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
         "sections": [
           "standard_periods"
         ]
@@ -427,12 +436,12 @@
       "tool": "get_return_series",
       "depends_on": [
         "orgs",
-        "portfolio_list"
+        "sample_portfolio"
       ],
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
         "series_kind": "portfolio",
-        "series_id": "<portfolio_list:portfolios[0].portfolio_id>",
+        "series_id": "<sample_portfolio:portfolios[0].portfolio_id>",
         "trailing_months": 3
       },
       "required": [
@@ -446,12 +455,12 @@
       "tool": "build_strategy_lab_session",
       "depends_on": [
         "orgs",
-        "portfolio_list"
+        "sample_portfolio"
       ],
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
         "domain": "expected-statistics",
-        "portfolio_id": "<portfolio_list:portfolios[0].portfolio_id>"
+        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>"
       },
       "required": [
         "status",
@@ -743,6 +752,69 @@
       "equals": {
         "dry_run": true,
         "committed": false
+      },
+      "envelope": false
+    },
+    {
+      "id": "write_batch_preview",
+      "set": "writes",
+      "tool": "preview_diligence_changes",
+      "depends_on": [
+        "orgs",
+        "roster"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "items": [
+          {
+            "item_id": "finding-create",
+            "action": "create_diligence_finding",
+            "parameters": {
+              "dry_run": true,
+              "idempotency_key": "gradient-contract-batch-finding-v1",
+              "firm_id": "<roster:funds[0].parent_firm_id>",
+              "finding_code": "contract-self-test:batch-preview-v1",
+              "title": "Gradient batch contract preview",
+              "summary": "Batch dry-run verification; do not persist this finding.",
+              "severity": "low"
+            }
+          },
+          {
+            "item_id": "roster-add",
+            "action": "update_diligence_roster",
+            "parameters": {
+              "dry_run": true,
+              "idempotency_key": "gradient-contract-batch-roster-v1",
+              "action": "add",
+              "subject_id": "<roster:funds[0].fund_id>",
+              "reason": "Gradient batch contract self-test preview"
+            }
+          }
+        ]
+      },
+      "required": [
+        "commit_mode",
+        "item_count",
+        "previewed",
+        "failed",
+        "items[0].preview.outcome",
+        "items[1].preview.outcome"
+      ],
+      "non_null": [
+        "items[0].receipt_id",
+        "items[1].receipt_id"
+      ],
+      "equals": {
+        "dry_run": true,
+        "committed": false,
+        "commit_mode": "individual_existing_action_only",
+        "item_count": 2,
+        "previewed": 2,
+        "failed": 0,
+        "items[0].preview.dry_run": true,
+        "items[0].preview.committed": false,
+        "items[1].preview.dry_run": true,
+        "items[1].preview.committed": false
       },
       "envelope": false
     },

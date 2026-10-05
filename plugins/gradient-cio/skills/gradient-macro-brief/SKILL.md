@@ -26,11 +26,13 @@ Evidence rules (from GradientCIO):
 
 ## 1. Collect
 
-Pick the as-of date: the last business day (or the user's meeting date minus one business day).
+Use the latest published evidence by default. The meeting date controls report
+framing; it does not make `get_the_read.asOfDate` required. Pass `asOfDate` only
+when the user explicitly asks for a historical edition.
 
 | Evidence | Call | Notes |
 |---|---|---|
-| The Read | `get_the_read`; omit `asOfDate` for the latest publication, or pass an ISO date only when historical evidence is required | Record `publication.resolved_as_of_date`, `fallback_applied`, and `fallback_reason`. If an explicitly requested historical edition is unavailable, step back one business day, up to 3 attempts. Keep headline, governing thesis, read units, facts, market highlights, follow-ups, reading list, coverage |
+| The Read | `get_the_read` with no arguments for the latest publication; add an ISO `asOfDate` only for an explicitly requested historical edition | Record `publication.requested_as_of_date`, `resolved_as_of_date`, `fallback_applied`, and `fallback_reason`. Keep headline, governing thesis, read units, facts, market highlights, follow-ups, reading list, coverage |
 | Rates | `get_macro_conditions` `view: indicators`, `theme: rates`, `limit: 8` | Levels, 1m/3m change, 1y/5y percentile |
 | Inflation, growth | same, `theme: inflation` and `theme: growth` | Optional; use when The Read is about them |
 | Credit | `get_macro_conditions` `view: credit_spreads` (no `limit`) | |
@@ -40,7 +42,7 @@ Pick the as-of date: the last business day (or the user's meeting date minus one
 | CMAs | `get_capital_market_assumptions` `view: baseline`, `per_page: 10` (page 1–2) | Primary factors; risk-free rate and freshness |
 | Futures positioning | `get_market_positioning` `view: cftc`, `marketGroup: all`, `historyWeeks: 52` | Use `flags` (crowded rows, ranked by `crowdingScore`): market, trader category, side, percentile (156-week window), `directionOfTravel`, `report_date`. The payload is large (`cross_section`, `history`); read `flags` only |
 | Hedge-fund crowding | `get_market_positioning` `view: hedge_fund_crowding` (no `category` — rejected) | `consensus`, `building`, `unwinding` from the 13F cohort; quote `coverage_statement` (cohort size, period) |
-| Regional backdrop | `get_regional_research` `view: facts`, up to 3 `regions`, **one metric per call** (e.g. `real_gdp_growth_rate`, then `inflation_rate_consumer_prices`) | Optional; only for regions The Read discusses. Annual World Bank data: give `latest_year`. Several metrics in one call, and `view: capital_markets`, currently fail (see gradient-setup known issues) |
+| Regional backdrop | `get_regional_research` `view: facts`, up to 3 `regions` and the relevant `metrics` | Optional; only for regions The Read discusses. Annual World Bank data: give `latest_year`. `view: capital_markets` currently fails (see gradient-setup known issues) |
 
 Record for each call: as-of, validation status, coverage/degradation reasons, payload digest. If The Read or the
 calendar is unavailable, stop and tell the user — the deck needs both. Other gaps: build the deck and say what

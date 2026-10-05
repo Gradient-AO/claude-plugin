@@ -20,8 +20,7 @@ Rules that matter here:
   `record_kind: example` (or any result with `provenance.data_scope.kind: illustrative`) is Gradient's
   illustrative portfolio. Title it "Gradient illustrative portfolio: <name>", put "Illustrative — not your
   holdings" in `confidentiality`, the subtitle and an amber callout in the summary, and never write "your
-  portfolio", "you hold" or "the fund returned" about it. Keep the label from `list_portfolios` even when a
-  later call reports a different scope (see Known issues).
+  portfolio", "you hold" or "the fund returned" about it.
 - **Absence is not evidence.** An unavailable section, a missing benchmark or an entitlement block is reported
   as "Not available — <reason>", never as zero, "none" or "in line".
 - **Every number has a tag**: `[S#]` for a Gradient result, `[Calc C#]` for a calculation listed in the

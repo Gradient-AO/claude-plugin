@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.3
+- Removed resolved `get_the_read` failures from the known-issues table and made the latest-publication contract explicit.
+- Clarified that macro briefs do not require `asOfDate` unless the user requests a historical edition.
+- Added explicit contract coverage for the canonical sample portfolio and batched dry-run diligence previews.
+
 ## 1.4.2
 - Setup checks now distinguish effective MCP capabilities from commercial entitlements.
 - The roster add preview verifies that an optional rationale is accepted.

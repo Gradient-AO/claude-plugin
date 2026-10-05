@@ -20,8 +20,10 @@ FIX = ROOT / "tests" / "fixtures"
 RENDER = ROOT / "shared" / "gradient_report.py"
 CONTRACT_CHECKER = ROOT / "skills" / "gradient-setup" / "scripts" / "check_contract.py"
 CONTRACTS = ROOT / "skills" / "gradient-setup" / "references" / "contracts.json"
+CONTRACT_CHECKS = ROOT / "skills" / "gradient-setup" / "references" / "contract-checks.md"
 PUBLIC_TOOLS = ROOT / "skills" / "gradient-setup" / "references" / "public-tools.json"
 SKILL_REQUIREMENTS = ROOT / "skills" / "gradient-setup" / "references" / "skill-requirements.md"
+MACRO_BRIEF_SKILL = ROOT / "skills" / "gradient-macro-brief" / "SKILL.md"
 STALE = re.compile(r"(?<!gradient-)\bgips-(compliance|standards|manager-diligence|report-review|asset-owner-review|policies-gap-check)\b|gradient-capabilities")
 
 _contract_checker_spec = importlib.util.spec_from_file_location(
@@ -173,7 +175,7 @@ def contract_manifest():
         for name in ("standard", "full", "writes", "ddq-save-preview")
     }
     check(
-        counts == {"standard": 8, "full": 30, "writes": 3, "ddq-save-preview": 3},
+        counts == {"standard": 8, "full": 30, "writes": 4, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
     )
 
@@ -209,22 +211,27 @@ def contract_manifest():
     write_probes = [probe for probe in probes if probe.get("set") == "writes"]
     expected_write_tools = {
         "create_diligence_finding",
+        "preview_diligence_changes",
         "update_watchlist",
         "update_diligence_roster",
     }
     check(
         {probe["tool"] for probe in write_probes} == expected_write_tools,
-        "writes set contains the three expected tools",
+        "writes set contains singular and batch-preview tools",
     )
+    singular_write_probes = [
+        probe for probe in write_probes
+        if probe["tool"] != "preview_diligence_changes"
+    ]
     check(
         all(
             probe["args"].get("dry_run") is True
             and probe.get("equals", {}).get("dry_run") is True
             and probe.get("equals", {}).get("committed") is False
             and "receipt_id" in probe.get("non_null", [])
-            for probe in write_probes
+            for probe in singular_write_probes
         ),
-        "write probes are dry-run previews with non-null receipts",
+        "singular write probes are dry-run previews with non-null receipts",
     )
     check(
         not any(
@@ -236,6 +243,61 @@ def contract_manifest():
     )
 
     by_id = {probe["id"]: probe for probe in probes}
+    the_read = by_id["the_read"]
+    check(
+        the_read["args"] == {}
+        and the_read.get("equals", {}).get(
+            "publication.requested_as_of_date",
+            "missing",
+        ) is None,
+        "The Read probe uses the latest-publication contract",
+    )
+    sample_portfolio = by_id["sample_portfolio"]
+    check(
+        sample_portfolio["tool"] == "list_portfolios"
+        and sample_portfolio.get("equals", {}).get(
+            "portfolios[0].record_kind",
+        ) == "example"
+        and sample_portfolio.get("equals", {}).get(
+            "portfolios[0].canonical_default",
+        ) is True,
+        "sample-portfolio probe verifies the canonical example",
+    )
+    batch_preview = by_id["write_batch_preview"]
+    batch_items = batch_preview["args"].get("items", [])
+    check(
+        len(batch_items) == 2
+        and all(
+            item.get("parameters", {}).get("dry_run") is True
+            for item in batch_items
+        )
+        and batch_preview.get("equals", {}).get("dry_run") is True
+        and batch_preview.get("equals", {}).get("committed") is False
+        and batch_preview.get("equals", {}).get("previewed") == 2
+        and {
+            "items[0].receipt_id",
+            "items[1].receipt_id",
+        } <= set(batch_preview.get("non_null", [])),
+        "batch write probe previews two changes without committing",
+    )
+    contract_guidance = CONTRACT_CHECKS.read_text(encoding="utf-8")
+    macro_guidance = MACRO_BRIEF_SKILL.read_text(encoding="utf-8")
+    check(
+        "| get_the_read" not in contract_guidance
+        and "get_the_read with `asOfDate`" not in contract_guidance,
+        "known-issues table omits resolved The Read failures",
+    )
+    check(
+        "get_portfolio_historical_returns | 500" not in contract_guidance
+        and "ownership_weights` | `response_contract_invalid" not in contract_guidance
+        and "data_scope.kind: live" not in contract_guidance,
+        "known-issues table omits resolved portfolio failures",
+    )
+    check(
+        "does not make `get_the_read.asOfDate` required" in macro_guidance
+        and "`get_the_read` with no arguments" in macro_guidance,
+        "macro brief treats The Read asOfDate as optional",
+    )
     relative_args = by_id["strategy_relative_return"]["args"]
     check(
         "envelope" not in relative_args and "fields" not in relative_args,
