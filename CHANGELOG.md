@@ -2,6 +2,7 @@
 
 ## 1.6.2
 - Removed angle-bracket placeholders from the equity-note skill description so claude.ai shows it in full.
+- Removed `privacyPolicyUrl` from `plugin.json`; claude.ai ignores it and the privacy policy stays linked from the README.
 
 ## 1.6.1
 - Added a shared module-scope contract separating Portfolio Analytics portfolio IDs from Strategy Lab return-series sessions and demo data.
