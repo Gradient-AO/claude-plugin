@@ -2,7 +2,7 @@
 
 Load each GradientCIO tool with tool search first and use the parameter names from the loaded schema. Pass
 `organization_id` on every call. Use `envelope: "compact"` (the default). Record a source row per call.
-Read `portfolio-strategy-scope.md` first; every saved-portfolio call in this map is Portfolio Analytics.
+Read `module-scope.md` first; every saved-portfolio call in this map is Portfolio Analytics.
 
 ## Calls, arguments and the fields used
 

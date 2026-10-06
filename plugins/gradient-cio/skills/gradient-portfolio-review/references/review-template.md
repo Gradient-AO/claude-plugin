@@ -30,7 +30,8 @@ Use JSON block mode. Set:
 
 - Root `review_mode`: `comprehensive`.
 - `meta.eyebrow` and `meta.header_label`: `Comprehensive Portfolio Review`.
-- `meta.title`: portfolio name. Append `— Illustrative, Gradient Maintained` when required.
+- `meta.title`: portfolio name. Append
+  `— Illustrative, Gradient Maintained — demo data, not the client's holdings or managers` when required.
 - `meta.subtitle`: `<Quarterly|Annual|On-demand> comprehensive review · period to <date> · prepared for <audience>`.
 - `meta.running_head`: `<short portfolio name> · period to <date>`.
 - `meta.cover_facts`: Period end, Base currency, Total NAV, Policy benchmark, Review mode

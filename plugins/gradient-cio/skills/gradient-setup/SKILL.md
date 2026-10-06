@@ -12,7 +12,7 @@ fails because the connector is missing, unauthorized or returning errors. Also u
 The deliverable is a short branded PDF, **"Gradient Readiness Report"**, plus a three-line chat summary and two or
 three prompts the user can try next. Keep the language plain: the reader may not be technical.
 
-Read `references/portfolio-strategy-scope.md` before checking Portfolio Analytics or Strategy Lab. Test and
+Read `references/module-scope.md` before checking Portfolio Analytics or Strategy Lab. Test and
 report them as separate modules; never use the canonical illustrative portfolio ID as Strategy Lab input.
 
 ## 1. Connection
@@ -49,17 +49,19 @@ report them as separate modules; never use the canonical illustrative portfolio 
    entitled, available and healthy; **partial** when only optional tools are missing or a required tool has a
    known issue with a workaround; **not available** when a required tool is not entitled (name the module the
    client would need to license). When `entitled` is false but `available` is true with
-   `access_mode: "illustrative"`, report **Evaluation — Illustrative, Gradient Maintained**, not Ready or Not licensed.
+   `access_mode: "illustrative"`, report
+   **Evaluation — Illustrative, Gradient Maintained — demo data, not the client's holdings or managers**,
+   not Ready or Not licensed.
 4. Call `get_diligence_roster_funds`: roster size, capacity used and available, and reviews due within 30 days.
 
 ## 3. Contract self-test
 
 Run the probes in `references/contract-checks.md`. The **standard** set is 8 quick reads (default). The
-**full read** set is 44 reads (the 8 standard plus 36 full probes); run it when the user asks for a health
+**full read** set is 47 reads (the 8 standard plus 39 full probes); run it when the user asks for a health
 check or self-test, or after a plugin update. The separate **writes** set is 4 dry-run previews, including
 one batch-preview contract, and must never commit. The **DDQ save-preview** set is 3 calls: it intentionally persists one fictional test
 document and one immutable reconciliation test run so that document identity and the chained save can be
-tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 51 calls.
+tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 54 calls.
 
 For each probe, record pass, fail (with error code and HTTP status) or not run (not entitled), and the
 response `as_of`. Resolve `depends_on` arguments with `check_contract.py --resolve-args`; do not manually
@@ -102,7 +104,8 @@ Sections (keep to 4–5 pages):
    Checks passed.
 2. **Skills you can use** — table: Skill, What it produces, Status (chip: Ready / Partial / Not licensed),
    Note (what is missing or the workaround). For the IC memo, show Portfolio Analytics core readiness and
-   `Strategy Lab supplement: <Ready / Not licensed (optional) / Unavailable (optional)>` separately.
+   `Strategy Lab supplement: <Ready / Not licensed (optional) / Unavailable (optional)>` separately. A
+   missing Strategy Lab supplement makes the combined IC memo status Partial, not Not licensed.
 3. **Access and data** — `coverage` block for the data domains (status and as-of); kv block for organization,
    role, licensed modules, roster capacity, and the available chart packs for the first portfolio from
    `chart_availability`.

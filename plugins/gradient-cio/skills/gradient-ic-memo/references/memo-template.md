@@ -16,8 +16,8 @@ Contents: Header · 1 Recommendation · 2 Executive Summary · 3 Portfolio Snaps
 # Investment Committee Memo — <Memo type>: <Portfolio name>
 
 {If any source has data_scope.kind = illustrative, insert this line verbatim, else omit:}
-> **ILLUSTRATIVE DATA** — Figures marked [S#] with scope "Illustrative, Gradient Maintained" describe a
-> Gradient-maintained example portfolio, not the organization's actual holdings.
+> **ILLUSTRATIVE DATA** — Figures marked [S#] use the scope
+> "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers."
 
 | Field | Value |
 |---|---|

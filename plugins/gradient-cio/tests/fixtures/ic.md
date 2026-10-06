@@ -1,12 +1,12 @@
-# Investment Committee Memo — Rebalance: Gradient Global Growth III (Illustrative, Gradient Maintained)
+# Investment Committee Memo — Rebalance: Gradient Global Growth III (Illustrative, Gradient Maintained — demo data, not the client's holdings or managers)
 
-> **ILLUSTRATIVE DATA** — Figures marked [S#] with scope "Illustrative, Gradient Maintained" describe a
-> Gradient-maintained example portfolio, not the organization's actual holdings.
+> **ILLUSTRATIVE DATA** — Figures marked [S#] use the scope
+> "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers."
 
 | Field | Value |
 |---|---|
 | Memo type | Rebalance |
-| Portfolio | Gradient Global Growth III (example-portfolio-id; Illustrative, Gradient Maintained) |
+| Portfolio | Gradient Global Growth III (example-portfolio-id; Illustrative, Gradient Maintained — demo data, not the client's holdings or managers) |
 | Organization | Example Foundation |
 | Prepared for | Investment Committee |
 | Meeting date | 2026-10-15 |
@@ -275,17 +275,17 @@ Not assessed — no GIPS Asset Owner Report provided.
 
 | Ref | Source | Parameters | As of | Data scope | Validation | Digest |
 |---|---|---|---|---|---|---|
-| S1 | get_portfolio_exposure; get_portfolio_structure; check_portfolio_policy | portfolio_id=example; governed policy and exposure views | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
-| S2 | get_portfolio_historical_returns; get_portfolio_attribution | portfolio_id=example; policy benchmark; performance available; attribution unavailable (`no_weight_cohorts`) | 2026-09-30 | Illustrative, Gradient Maintained | partial | n/a |
-| S3 | get_chart_data | portfolio_id=example; analysis_type=expected-statistics | 2026-09-11 | Illustrative, Gradient Maintained | passed | n/a |
-| S4 | get_cma_consensus_check | mode=allocation | 2026-06-30 | Mixed — Illustrative, Gradient Maintained + User-Authorized Live | passed | n/a |
-| S5 | get_manager_diligence_findings | view=exposure_weighted | 2026-10-02 | Illustrative, Gradient Maintained | advisory | n/a |
-| S6 | get_chart_data | portfolio_id=example; analysis_type=allocations | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
+| S1 | get_portfolio_exposure; get_portfolio_structure; check_portfolio_policy | portfolio_id=example; governed policy and exposure views | 2026-09-30 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | passed | n/a |
+| S2 | get_portfolio_historical_returns; get_portfolio_attribution | portfolio_id=example; policy benchmark; performance available; attribution unavailable (`no_weight_cohorts`) | 2026-09-30 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | partial | n/a |
+| S3 | get_chart_data | portfolio_id=example; analysis_type=expected-statistics | 2026-09-11 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | passed | n/a |
+| S4 | get_cma_consensus_check | mode=allocation | 2026-06-30 | Mixed — Illustrative, Gradient Maintained — demo data, not the client's holdings or managers + User-Authorized Live | passed | n/a |
+| S5 | get_manager_diligence_findings | view=exposure_weighted | 2026-10-02 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | advisory | n/a |
+| S6 | get_chart_data | portfolio_id=example; analysis_type=allocations | 2026-09-30 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | passed | n/a |
 | S7 | get_macro_signals | view=gradient_signal (sources.grip) | 2026-10-01 | User-Authorized Live | passed | n/a |
-| S8 | Illustrative scenario assumptions | 2008 historical; 5th percentile | 2026-09-30 | Illustrative, Gradient Maintained | not applicable | n/a |
-| S9 | get_chart_data | portfolio_id=example; analysis_type=commitments | 2026-06-30 | Illustrative, Gradient Maintained | passed | n/a |
+| S8 | Illustrative scenario assumptions | 2008 historical; 5th percentile | 2026-09-30 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | not applicable | n/a |
+| S9 | get_chart_data | portfolio_id=example; analysis_type=commitments | 2026-06-30 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | passed | n/a |
 | S10 | get_macro_conditions; get_the_read; get_macro_calendar | theme=inflation; am edition; 30 days | 2026-10-02 | User-Authorized Live | passed | n/a |
-| S11 | Server-returned illustrative proposed-case analysis | target weights and implementation estimate per Section 13.1 | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
+| S11 | Server-returned illustrative proposed-case analysis | target weights and implementation estimate per Section 13.1 | 2026-09-30 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | passed | n/a |
 
 ## Appendix B — Server Metric Methods
 

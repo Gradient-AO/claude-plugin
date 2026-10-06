@@ -2,7 +2,7 @@
   "schema_version": "gradient-ic-example-evidence/v1",
   "data_scope": {
     "kind": "illustrative",
-    "label": "Illustrative, Gradient Maintained"
+    "label": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
   },
   "responses": {
     "check_portfolio_policy": {

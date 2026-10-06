@@ -72,8 +72,8 @@ contract returns a result explicitly named and governed as attribution.
 
 ## Illustrative and incomplete data
 
-For illustrative evidence, use **Illustrative, Gradient Maintained — not the organization's actual holdings**
-on the cover and at first use. Refer to `the illustrative portfolio`, never `your portfolio`.
+For illustrative evidence, use **Illustrative, Gradient Maintained — demo data, not the client's holdings or
+managers** on the cover and at first use. Refer to `the illustrative portfolio`, never `your portfolio`.
 
 For unavailable evidence, write `Not available — <reason>`. For degraded evidence, state what is covered and
 what is not. Do not fill gaps from memory, general market knowledge or local calculations.

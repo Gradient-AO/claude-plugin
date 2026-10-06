@@ -4,7 +4,7 @@ This repo is a **public** Claude plugin marketplace. Clients install from it dir
 
 ## Layout
 - `.claude-plugin/marketplace.json` — marketplace `gradientcio`; lists each plugin with its `version`.
-- `plugins/gradient-cio/` — the plugin. `.claude-plugin/plugin.json` (name, version), `.mcp.json` (GradientCIO connector URL, no credentials), `skills/<name>/SKILL.md`, `shared/` (canonical copies of `gradient_report.py`, `report-style.md`, `chart-data.md`, and `portfolio-strategy-scope.md`), `tools/`, `tests/`.
+- `plugins/gradient-cio/` — the plugin. `.claude-plugin/plugin.json` (name, version), `.mcp.json` (GradientCIO connector URL, no credentials), `skills/<name>/SKILL.md`, `shared/` (canonical copies of `gradient_report.py`, `report-style.md`, `chart-data.md`, and `module-scope.md`), `tools/`, `tests/`.
 - `CHANGELOG.md`, `README.md` (client install instructions).
 
 ## Rules

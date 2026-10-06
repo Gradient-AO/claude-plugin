@@ -1,11 +1,13 @@
 {
-  "version": "2026-10-05",
+  "version": "2026-10-06",
   "minimum_connector_contract": {
     "minimum_service_version": "0.8.0",
     "compatibility_epoch": 1,
     "required_tools": [
       "batch_reconcile_manager_ddq_claims",
+      "build_strategy_lab_session",
       "check_portfolio_policy",
+      "get_benchmarks",
       "get_diligence_roster_funds",
       "get_gradient_capabilities",
       "get_manager_diligence_brief",
@@ -16,15 +18,22 @@
       "get_portfolio_structure",
       "get_public_equity_filing_evidence",
       "get_public_equity_fundamentals",
+      "get_return_series",
       "list_organizations",
       "list_portfolios",
       "reconcile_manager_ddq_claims",
+      "run_strategy_lab_expected_statistics",
       "search_managers"
     ],
     "required_response_field_paths": {
       "batch_reconcile_manager_ddq_claims": [
         "result_type",
         "items[0].data.rows[0].numeric_gap.formula_id"
+      ],
+      "build_strategy_lab_session": [
+        "status",
+        "strategy_lab_session",
+        "coverage.status"
       ],
       "check_portfolio_policy": [
         "overall_status",
@@ -40,6 +49,11 @@
         "semantics.risk_limit_status_rule",
         "liquidity.coverage.status",
         "concentration.coverage.status"
+      ],
+      "get_benchmarks": [
+        "benchmarks",
+        "demo_set.demo_set_id",
+        "demo_set.manager_fund_series[0].series_id"
       ],
       "get_diligence_roster_funds": [
         "funds",
@@ -88,6 +102,11 @@
         "leverage_metric.formula_id",
         "leverage_metric.formula_version"
       ],
+      "get_return_series": [
+        "availability.status",
+        "coverage.selected_point_count",
+        "points[0].return"
+      ],
       "list_organizations": [
         "organizations[0].id",
         "organizations[0].licensed_modules"
@@ -99,6 +118,11 @@
       "reconcile_manager_ddq_claims": [
         "rows[0].numeric_gap.formula_id",
         "rows[0].numeric_gap.formula_version"
+      ],
+      "run_strategy_lab_expected_statistics": [
+        "domain",
+        "rows",
+        "covariance.method"
       ],
       "search_managers": [
         "advisers",
@@ -117,6 +141,10 @@
       "portfolio_policy",
       "portfolio_returns",
       "portfolio_attribution",
+      "strategy_benchmarks",
+      "strategy_return_series",
+      "strategy_session_build",
+      "strategy_expected_statistics",
       "search_managers",
       "equity_fundamentals",
       "equity_risk_findings",
@@ -814,58 +842,82 @@
       ]
     },
     {
+      "id": "strategy_benchmarks",
+      "set": "full",
+      "tool": "get_benchmarks",
+      "args": {
+        "view": "catalog",
+        "limit": 25
+      },
+      "required": [
+        "benchmarks",
+        "demo_set.demo_set_id",
+        "demo_set.manager_fund_series[0].series_id",
+        "demo_set.benchmark_series[0].series_id"
+      ],
+      "equals": {
+        "demo_set.demo_set_id": "strategy_lab_core"
+      }
+    },
+    {
+      "id": "strategy_return_series",
+      "set": "full",
+      "tool": "get_return_series",
+      "depends_on": [
+        "strategy_benchmarks"
+      ],
+      "args": {
+        "series_kind": "commitment",
+        "series_id": "<strategy_benchmarks:demo_set.manager_fund_series[0].series_id>",
+        "trailing_months": 36
+      },
+      "required": [
+        "series.series_id",
+        "series.record_kind",
+        "availability.status",
+        "coverage.selected_point_count",
+        "points[0].return"
+      ],
+      "equals": {
+        "series.record_kind": "example",
+        "availability.status": "available"
+      }
+    },
+    {
+      "id": "strategy_session_build",
+      "set": "full",
+      "tool": "build_strategy_lab_session",
+      "depends_on": [
+        "strategy_benchmarks",
+        "strategy_return_series"
+      ],
+      "args": {
+        "domain": "expected-statistics",
+        "demo_set_id": "strategy_lab_core"
+      },
+      "required": [
+        "status",
+        "domain",
+        "strategy_lab_session",
+        "coverage.status",
+        "source_provenance.synthetic_data"
+      ],
+      "equals": {
+        "status": "available",
+        "domain": "expected-statistics",
+        "coverage.status": "available",
+        "source_provenance.synthetic_data": true
+      }
+    },
+    {
       "id": "strategy_expected_statistics",
       "set": "full",
       "tool": "run_strategy_lab_expected_statistics",
+      "depends_on": [
+        "strategy_session_build"
+      ],
       "args": {
-        "strategy_lab_session": {
-          "domain": "expected-statistics",
-          "panelId": "gradient-contract-return-series",
-          "form": {
-            "selectedSeriesIds": [
-              "gradient-contract-series-a",
-              "gradient-contract-series-b"
-            ],
-            "selectedRecords": [
-              {
-                "id": "gradient-contract-series-a",
-                "label": "Contract Series A",
-                "monthlyReturns": [
-                  0.01,
-                  -0.005,
-                  0.012,
-                  0.004,
-                  -0.008,
-                  0.015,
-                  0.006,
-                  0.009,
-                  -0.003,
-                  0.011,
-                  0.002,
-                  0.007
-                ]
-              },
-              {
-                "id": "gradient-contract-series-b",
-                "label": "Contract Series B",
-                "monthlyReturns": [
-                  0.004,
-                  0.002,
-                  -0.003,
-                  0.006,
-                  0.005,
-                  0.001,
-                  0.007,
-                  -0.002,
-                  0.003,
-                  0.004,
-                  0.002,
-                  0.005
-                ]
-              }
-            ]
-          }
-        }
+        "strategy_lab_session": "<strategy_session_build:strategy_lab_session>"
       },
       "required": [
         "domain",
