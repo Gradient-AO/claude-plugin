@@ -4,5 +4,5 @@
  "running_head":"IC Memo · Global Growth III rebalance","data_as_of":"2026-09-30",
  "confidentiality":"DRAFT — for committee review · Illustrative data",
  "cover_facts":[["Memo type","Rebalance"],["Meeting date","2026-10-15"],["Data as of","2026-09-30"],["Base currency","USD"],["Assumption set","ICAPM Q3 2026"],["Status","Draft"]],
- "signal_title":"IPS status","signal":{"level":"breach","label":"3 breaches · 2 watch"},
+ "signal_title":"IPS status","signal":{"level":"breach","label":"2 breaches · 1 watch · 3 not assessed"},
  "executive":{"label":"Recommendation","bottom_line":"Reduce public equity by 400 bps to 48.0% and add 400 bps to cash (200 bps) and fixed income (200 bps) to cure two IPS band breaches [S1]. The Committee is asked to approve the rebalance in Section 13.1, executed over 30 days."}}

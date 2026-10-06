@@ -8,7 +8,7 @@ Contents: Header · 1 Recommendation · 2 Executive Summary · 3 Portfolio Snaps
 5 Performance & Attribution · 6 Factor Exposures & Concentration · 7 Expected Return & Risk ·
 8 Stress Tests & Scenarios · 9 Liquidity · 10 Manager & Operational Diligence · 11 Performance Integrity & GIPS ·
 12 Market Context · 13 Proposed Changes & Impact · 14 Risks & Mitigants · 15 Open Items & Conditions ·
-16 Approvals · Appendix A Sources · Appendix B Calculations · Appendix C Methodology & Disclosures
+16 Approvals · Appendix A Sources · Appendix B Server Metric Methods · Appendix C Methodology & Disclosures
 
 ---
 

@@ -1150,8 +1150,8 @@
       ],
       [
        "S3",
-       "Monthly portfolio returns",
-       "get_portfolio_historical_returns (points)",
+       "Portfolio returns and risk metrics",
+       "get_portfolio_historical_returns (standard_periods, calendar_years, risk_metrics, benchmark_relative, cumulative_growth, points)",
        "2026-07-31",
        {
         "chip": "passed",
@@ -1212,11 +1212,11 @@
     },
     {
      "type": "table",
-     "title": "Calculations",
+     "title": "Server Metric Methods",
      "columns": [
-      "Tag",
-      "Calculation",
-      "Inputs"
+      "Source",
+      "Metric",
+      "Server method / basis"
      ],
      "align": [
       "n",
@@ -1225,24 +1225,24 @@
      ],
      "rows": [
       [
-       "C1",
-       "Server-returned geometrically linked period returns; annualized only when the returned period semantics permit; excess and benchmark values preserved from get_portfolio_historical_returns",
-       "S3, S4 monthly points"
+       "S3",
+       "Returns and benchmark-relative performance",
+       "get_portfolio_historical_returns; preserve returned period labels, annualization, benchmark values, excess values and coverage"
       ],
       [
-       "C2",
-       "Volatility = stdev(monthly) × √12; max drawdown on month-end growth; beta, tracking error, information ratio on common months",
-       "S3, S4 monthly points"
+       "S3",
+       "Risk metrics",
+       "get_portfolio_historical_returns.risk_metrics; preserve returned volatility, drawdown, beta, tracking error, information ratio, dates, units and basis"
       ],
       [
-       "C3",
-       "Asset-class market value = sum of market_value_base and nav_base by asset class; share = value ÷ total",
-       "S5 rows"
+       "S5",
+       "Asset-class exposure",
+       "get_portfolio_exposure; preserve server aggregate totals, shares, coverage and truncation"
       ],
       [
-       "C4",
-       "Policy-mix expected return = Σ target weight × asset-class expected return",
-       "S2 targets, S8 baseline"
+       "S2",
+       "Policy weights",
+       "get_portfolio_structure; preserve returned total-portfolio weight basis and coverage without multiplying hierarchy weights"
       ]
      ]
     },

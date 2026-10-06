@@ -1,6 +1,6 @@
 ---
 name: gradient-portfolio-review
-description: "Quarterly, annual or on-demand total-portfolio performance and allocation review for a board or investment committee, from GradientCIO data: returns versus benchmark (standard periods, calendar years, growth chart), allocation versus policy targets and ranges, exposure, 13F look-through concentration, realized risk and an optional outlook, delivered as a branded PDF. Use when the user asks for a portfolio review, quarterly review, annual review, performance review, board performance report, total fund review, 'how did the portfolio do', 'are we within policy ranges' or a committee pack on the portfolio. For a decision memo (rebalance, hire, allocation change) use gradient-ic-memo."
+description: "Quarterly, annual or on-demand total-portfolio monitoring review for a board or investment committee, from GradientCIO data. Produces either a 5–8 page brief or a 15–20 page comprehensive review with sourced Claude analysis and considerations covering historical returns and attribution, allocation and policy, exposures and concentration, realized risk, projected return and risk decomposition, liquidity and optional outlook. Use for portfolio reviews, performance reviews, board reports, total fund reviews and committee packs. For a decision or recommendation use gradient-ic-memo."
 ---
 
 # Portfolio review
@@ -9,11 +9,16 @@ Use when the user asks for a "portfolio review", "quarterly review", "annual rev
 "board performance report", "how did the portfolio do this quarter", "are we within our policy ranges", or a
 recurring committee pack on the portfolio.
 
-The deliverable is a 5–8 page branded PDF, **"<Portfolio> - Portfolio Review <YYYY-MM-DD>.pdf"** (date = the
-performance period end). It is a **monitoring report**, not a decision memo: it says how the portfolio did,
-where it sits against policy and what to watch. If the committee needs to decide something (a rebalance, a
-manager change, a policy change), offer to hand over to **gradient-ic-memo** at the end; do not recommend
-trades in this report.
+The deliverable is a branded PDF, **"<Portfolio> - Portfolio Review <YYYY-MM-DD>.pdf"** (date = the performance
+period end), in one of two modes:
+
+- **Brief** (default): 5–8 pages for routine monitoring.
+- **Comprehensive**: 15–20 pages when the user asks for a detailed, full, comprehensive, board-book or
+  15–20 page review.
+
+Both are **monitoring reports**, not decision memos: they explain how the portfolio did, where it sits against
+policy, what the evidence implies and what merits discussion. They do not recommend trades, allocation
+changes, manager actions or votes. If a decision is needed, offer **gradient-ic-memo** at the end.
 
 Rules that matter here:
 - **Illustrative is never "your portfolio".** `list_portfolios` returns `record_kind`. A record with
@@ -36,8 +41,11 @@ Rules that matter here:
 | `references/data-map.md` | Always — exact tool arguments, response fields, fallbacks and known failures. |
 | `references/portfolio-strategy-scope.md` | Always — Portfolio Analytics is the only module used for saved-portfolio analysis. |
 | `references/chart-data.md` | Always — chart discovery order, basis rules and generic report block. |
+| `references/review-template.md` | Comprehensive mode — exact section order, block schemas and page budget. |
+| `references/writing-standards.md` | Before drafting — sourced analysis, considerations and prohibited recommendations. |
 | `references/report-style.md` | Before rendering — shared style, block types, meta fields, "Check and deliver". |
 | `scripts/gradient_report.py` | Renders the JSON blocks into the branded PDF. Never restyle. |
+| `scripts/validate_review.py` | Comprehensive mode — validates structure, source tags and analysis boundaries. |
 
 ## 1. Scope (ask at most one question)
 
@@ -57,6 +65,9 @@ Rules that matter here:
    quarter-end on or before it; annual: the latest year-end). State it in the subtitle. Never use a month
    that has not ended.
 5. **Audience**: board, IC, trustees or staff — tone only, never structure.
+6. **Review mode**: infer `comprehensive` from detailed, full, deep-dive, board-book, comprehensive or a
+   requested 15–20 page length. Otherwise use `brief`. State the selected mode; do not spend the one allowed
+   question on mode unless the user explicitly offers conflicting requirements.
 
 ## 2. Collect
 
@@ -72,17 +83,18 @@ save `context.fingerprint`, `basis`, and unavailable reasons. Embed each usable 
 |---|---|---|
 | Capabilities | `get_gradient_capabilities` | Yes |
 | Portfolio record | `list_portfolios` | Yes |
-| Dashboard chart packs | `get_chart_data` availability, then one relevant `analysis_type` at a time | Optional |
+| Dashboard chart packs | `get_chart_data` availability, then one relevant `analysis_type` at a time | Comprehensive: allocations, expected-statistics and commitments; brief: optional |
 | Allocation tree | `get_portfolio_structure` `view: allocation_tree` | Yes |
 | Returns | `get_portfolio_historical_returns` `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative, cumulative_growth, points]`, `end_date` = period end | Yes |
 | Benchmark | the benchmark named in `benchmark_relative`; else ask the user which benchmark; then `get_benchmarks` `benchmark_id` for its name and classes, and `get_return_series` `series_kind: benchmark` for monthly points | Optional (performance is reported without relative rows if absent) |
 | Policy | `check_portfolio_policy` | Yes |
-| Attribution | `get_portfolio_attribution` with `benchmark_role: policy`, `parent_allocation_id: root`, month-end start/end and all sections | Optional; use typed unavailability as returned |
+| Attribution | `get_portfolio_attribution` with `benchmark_role: policy`, `parent_allocation_id: root`, month-end start/end and all sections | Comprehensive: always call and preserve typed unavailability; brief: optional |
 | Holdings exposure | `get_portfolio_exposure` (page with `next_cursor` until `has_more: false`) | Yes |
 | Ownership weights | `get_portfolio_structure` `view: ownership_weights` | Optional |
 | Look-through | `get_cross_domain_research` `view: portfolio_13f_lookthrough`, `portfolio_id`, `top_n_managers` 10, `limit` 20 | Optional (needs `portfolio`) |
 | Macro exposure | `get_cross_domain_research` `view: roster_macro_exposure`, `portfolio_id` | Optional (needs `portfolio`) |
-| Outlook | `get_the_read` (`visuals: none`); `get_capital_market_assumptions` `view: baseline` | Optional, only if asked or for an annual review |
+| Outlook | `get_the_read` (`visuals: none`); `get_capital_market_assumptions` `view: baseline` | Optional, only if asked, comprehensive or annual |
+| Strategy Lab supplement | Matching `strategy_lab_session` only: simulation, expected statistics, diversification and factor loads | Optional in comprehensive mode; selected-series sandbox only |
 
 If a call fails, record the error code and request ID in coverage, retry at most once (only when
 `retryable: true`), use the fallback, and keep going. An `entitlement_required` error is "Not licensed", not
@@ -100,6 +112,11 @@ unavailable, report its typed reason and do not recompute it from monthly points
 fields for every depth. Do not multiply parent and child targets. Use `check_portfolio_policy.allocation_bands`
 for governed status, active weight, limits and headroom. Preserve `compliant`, `watch`, `breach` and
 `not_assessed` exactly; do not recreate the thresholds in the report.
+When policy risk rows are `not_assessed`, show historical-return risk metrics only as separate observations.
+Do not compare them with persisted policy thresholds or infer compliance unless `check_portfolio_policy`
+returns the status.
+When risk rows are assessed, preserve `risk_limits.observation_basis` and the returned magnitude comparison
+rule so the review states the governed horizon, effective date, frequency, return basis and currency.
 
 **Exposure.** Use `get_portfolio_exposure.aggregates_by_asset_classification` for governed value totals,
 shares, coverage and truncation. The server chooses market value for marketable assets and NAV for drawdown
@@ -112,6 +129,20 @@ those fields.
 Always add the caveat callout: 13F is lagged (up to 45 days after quarter end), long-only US-listed equity,
 no shorts, cash, non-US listings or private holdings, and USD values are not FX-converted against NAV.
 
+**Historical attribution.** Use only `get_portfolio_attribution`. Preserve realized Brinson-Fachler effects,
+symmetric-Carino linking, residual, diagnostics, period, basis, currency and formula version. Strategy Lab
+relative return and factor outputs are not attribution and never fill an unavailable attribution section.
+
+**Projected return and risk decomposition.** In comprehensive mode use returned `expected-statistics`,
+`allocations` and `commitments` chart items unchanged. Name the assumption set, regime, horizon, currency,
+basis and `context.fingerprint`. Strategy Lab results may appear only when a matching selected-return-series
+session exists; label them **Selected-series sandbox — not saved-portfolio analytics**. Never use the heading
+"simulated attribution": no public saved-portfolio simulated-attribution contract exists.
+
+**Analysis and considerations.** Follow `references/writing-standards.md`. Each point contains a sourced
+observation, why it matters, uncertainty and a neutral consideration for discussion. Do not prescribe an
+action. If the analysis raises a possible decision, offer an IC memo outside the report.
+
 **Signal** (`meta.signal.level`, `signal_title` "Portfolio status"): `breach` if any policy row is Breach;
 else `watch` if any row is Watch or the portfolio trails its benchmark over both 1Y and 3Y; else
 `satisfactory`; `insufficient` if returns and allocation are both unavailable. Label: e.g. "1 asset class on
@@ -123,7 +154,11 @@ the portfolio module is not licensed; `meter_title` "Evidence completeness".
 
 ## 4. Build the report
 
-JSON block mode (`references/report-style.md`). Meta: `eyebrow` "Portfolio Review", `header_label`
+Use JSON block mode (`references/report-style.md`).
+
+### Brief mode
+
+Meta: `eyebrow` "Portfolio Review", `header_label`
 "Portfolio Review", `title` the portfolio name (illustrative: "<name> — Illustrative, Gradient Maintained"),
 `subtitle` "<Quarterly|Annual> review · period to <date> · prepared for <audience>", `running_head`
 "<short name> · period to <date>", `data_as_of` with each source date, `cover_facts`: Period end, Base
@@ -160,6 +195,22 @@ Sections:
    metric methods and formula versions, the signal and status rules above, and the disclaimer: "monitoring aid,
    not investment, legal or compliance advice; past performance does not predict future returns; Form 13F is
    manager-reported and lagged".
+
+### Comprehensive mode
+
+Read and follow `references/review-template.md` exactly. Keep all sections in the defined order, including
+Historical Attribution, Realized Risk and Decomposition, Projected Return and Risk Decomposition, Liquidity
+and Commitments, and Analysis and Considerations. A missing source becomes a typed unavailable block; it does
+not remove the section. Target 15–20 pages when evidence supports the full report, but never add filler or
+repeat evidence to reach the target.
+
+Before rendering, run:
+
+```
+python <this skill's directory>/scripts/validate_review.py review.json
+```
+
+Fix every error and re-run until it passes.
 
 Render:
 
