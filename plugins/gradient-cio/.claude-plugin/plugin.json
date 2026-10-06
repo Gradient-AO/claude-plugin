@@ -1,13 +1,12 @@
 {
   "name": "gradient-cio",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "Gradient CIO client skills: operational due diligence reports, DDQ reconciliation, weekly manager monitoring digests, manager comparisons, portfolio reviews, equity research notes, macro briefing decks, investment committee memos and GIPS reviews, built on GradientCIO evidence and delivered as branded PDFs in one consistent house style. Includes the GradientCIO connector and a setup check.",
   "author": {
     "name": "GradientCIO"
   },
   "homepage": "https://gradientcio.com",
   "license": "Apache-2.0",
-  "privacyPolicyUrl": "https://www.gradientcio.com/home/privacy",
   "keywords": [
     "DDQ",
     "Form ADV",
