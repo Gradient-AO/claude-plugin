@@ -15,8 +15,8 @@ The deliverable is a branded PDF report: every checkable DDQ statement is marked
 2. Find the firm: `get_diligence_roster_funds` first (gives canonical `fund_id` and `parent_firm_id`), else `search_managers` with the name or CRD. Confirm the CRD with the user if more than one adviser matches.
 3. Resolve canonical IDs to pass to reconciliation:
    - Firm claims: use `firm_id`. Do NOT pass only `crd_number` — reconciliation currently fails to resolve a bare CRD.
-   - Fund claims: use the catalog `fund_id` (from the roster or `get_gradient_coverage` view `manager_subject`). Funds that exist only in Schedule D (resolution returns a `pfid:` candidate with `canonical_id: null`) currently cannot be reconciled — see the fallback in step 3.
-4. Pull `get_manager_odd_profile` with the CRD. Keep `private_funds` (auditor, administrator, custodian, prime broker, GAV, minimum, owners per PFID) for the fallback and for context.
+   - Fund claims: use the catalog `fund_id` (from the roster or `get_gradient_coverage` view `manager_subject`). If resolution returns a `pfid:` candidate with `canonical_id: null`, report governed reconciliation as unavailable for that fund; do not compare or calculate locally.
+4. Pull `get_manager_odd_profile` with the CRD for contextual filed evidence only. Do not use it to recreate reconciliation verdicts or numeric gaps.
 
 ## 2. Transcribe claims (you do this, not the extractor)
 
@@ -67,10 +67,9 @@ Read each row's `verdict`, `reason_codes`, `filed.raw_value`, `filed.report_date
 
 Timing: ADV reflects the adviser's last filing (`filing_date`), which can predate the DDQ by months. When a numeric gap could be timing (AUM drift, headcount growth), say so and lower severity; counts of funds, providers and disciplinary history are rarely timing.
 
-`batch_reconcile_manager_ddq_claims` exists for 2–5 managers at once but currently returns a contract error; use per-subject calls.
+For 2–5 managers, `batch_reconcile_manager_ddq_claims` may be used when all subjects are canonical. Preserve each subject result and its typed coverage or unavailable reason.
 
-### Fallback for non-catalog funds
-If a fund can't be resolved to a catalog `fund_id`, compare its claims yourself against the matching `private_funds` row from `get_manager_odd_profile` (match by fund name/PFID). Present these rows in a separate table labeled "Analyst comparison — not a governed verdict", with the same columns, and tell the user Gradient could not run the governed check for that fund.
+If a fund cannot be resolved to a catalog `fund_id`, list its claims as not assessed with reason `canonical_fund_id_unavailable`. Do not synthesize a verdict, numeric gap, or replacement reconciliation from `get_manager_odd_profile`.
 
 ## 4. Report — branded PDF (default deliverable)
 
@@ -87,12 +86,12 @@ Follow-up questions are concrete and neutral, quote both sides with dates, and a
 
 ### Report structure (sections in this order)
 
-1. **Executive summary** (`id: "executive"`): exec band and 4 tiles render from `executive` (Contradicted, Needs review, Consistent, Not checkable). Then a `two_col` of 3+3 bullets (the discrepancies first) and a `coverage` block: firm claims, each fund's claims (`available` = governed, `partial` = analyst fallback), unanswered applicable fields (`not_assessed`), workpaper saved (`not_run` while `run_id` is null).
+1. **Executive summary** (`id: "executive"`): exec band and 4 tiles render from `executive` (Contradicted, Needs review, Consistent, Not checkable). Then a `two_col` of 3+3 bullets (the discrepancies first) and a `coverage` block: firm claims, each fund's governed status, unanswered applicable fields (`not_assessed`), workpaper saved (`not_run` while `run_id` is null).
 2. **Discrepancies & follow-up questions**: a `findings` block (one item per contradicted / material needs-review row, severity high|medium|low, detail quotes both sides with dates and tags), then `questions` (one per finding, with a `why` line).
 3. **Firm reconciliation (governed)**: `table` with columns Item · DDQ says (quote, line/page) · Filed (value, ADV item, tag) · Verdict (chip) · Note. Note the comparator version under the table.
-4. **Fund reconciliation: <fund>** (one section per fund): same table. If the fund used the analyst fallback, start with a `callout` (tone `watch`) titled "Analyst comparison — not a governed verdict" explaining why.
+4. **Fund reconciliation: <fund>** (one section per fund): same table when governed reconciliation is available. Otherwise use an unavailable callout with the typed reason and show no inferred verdicts.
 5. **Out of scope** (optional, `new_page: false` if short): DDQ topics not checkable against filings (key people, valuation, cyber, AML…), as bullets.
-6. **Appendix — sources & method**: Sources table (Tag, Evidence, Tool, As of, Validation chip, first 8 chars of digest; include each call's `reproducibility_digest` and the DDQ file sha256 as its own row), Calculations table (C#), a Verdicts `kv` legend, ADV report and filing dates used, and a disclaimer `callout` (ADV is adviser-reported; DDQ values are manager assertions).
+6. **Appendix — sources & method**: Sources table (Tag, Evidence, Tool, As of, Validation chip, first 8 chars of digest; include each call's `reproducibility_digest` and the DDQ file sha256 as its own row), server metric methods table, a Verdicts `kv` legend, ADV report and filing dates used, and a disclaimer `callout` (ADV is adviser-reported; DDQ values are manager assertions).
 
 ### Cover and signal
 
@@ -107,15 +106,16 @@ Follow-up questions are concrete and neutral, quote both sides with dates, and a
 
 Verdict chips: `{"chip": "corroborated"|"consistent"|"contradicted"|"needs review"|"unverifiable", "status": "<same, underscores ok>"}` → lime / coral / amber / slate. Other statuses: available, partial, not_assessed, not_run, passed, failed.
 
-Block types (full reference in `references/report-style.md`): `text {text}` · `bullets {items}` · `kv {title?, rows:[[k, v, srcTag?]]}` · `table {title?, columns, rows, align? (l|r|c|n=nowrap), note?}` · `tiles {tiles:[{label, value, sub, tone: good|watch|bad}]}` · `callout {tone: good|watch|bad|info, title?, text}` · `coverage {title?, items:[{name, status, note}]}` · `findings {items:[{severity, title, detail}], empty_title, empty_text}` · `questions {items:[{q, why}]}` · `two_col {left, right}` · `bars {title?, items:[{label, value, display}], max?, narrow?}` · `percentiles {title?, items:[{label, percentile, value_display}], threshold}` · `pagebreak {}`. Text supports `**bold**`, `` `code` `` and `[S#]` / `[Calc C#]` tags. Every section starts on a new page; set `"new_page": false` to continue on the same page.
+Block types (full reference in `references/report-style.md`): `text {text}` · `bullets {items}` · `kv {title?, rows:[[k, v, srcTag?]]}` · `table {title?, columns, rows, align? (l|r|c|n=nowrap), note?}` · `tiles {tiles:[{label, value, sub, tone: good|watch|bad}]}` · `callout {tone: good|watch|bad|info, title?, text}` · `coverage {title?, items:[{name, status, note}]}` · `findings {items:[{severity, title, detail}], empty_title, empty_text}` · `questions {items:[{q, why}]}` · `two_col {left, right}` · `bars {title?, items:[{label, value, display}], max?, narrow?}` · `percentiles {title?, items:[{label, percentile, value_display}], threshold}` · `pagebreak {}`. Text supports `**bold**`, `` `code` `` and `[S#]` evidence tags. Every section starts on a new page; set `"new_page": false` to continue on the same page.
 
-Every filed value carries a tag and its ADV item or Schedule D reference; every DDQ value carries its line or page. Compute gaps (absolute and %) in Python and list them as `C#`. Money in $B/$M with 1–2 decimals; ISO dates. No adjectives the data can't support.
+Every filed value carries a tag and its ADV item or Schedule D reference; every DDQ value carries its line or page. Use each reconciliation row's server-returned `numeric_gap` for absolute and percentage gaps; do not derive them locally. Money in $B/$M with 1–2 decimals; ISO dates. No adjectives the data can't support.
 
 ### Render, check, deliver
 
 1. Run `python <this skill's directory>/scripts/gradient_report.py report.json "<Subject> - DDQ Reconciliation.pdf"`. Requirements and troubleshooting are in `references/report-style.md`. Never write a separate renderer or change the styling.
 2. Rasterize with `pdftoppm -r 60 -png` and look at every page. Fix overflow tails, wrapped dates or chips (align `n`), then re-render. Typical length: 5–7 pages.
-3. Spot-check every table value against the saved reconciliation JSON and recompute each `C#`.
+3. Spot-check every table value against the saved reconciliation JSON and preserve each numeric comparison's
+   formula version, unit, basis and unavailable reason.
 4. Save to `/mnt/user-data/outputs/` (and the connected folder if one exists). Reply with the 3-line summary and the file; don't repeat the report in chat.
 5. If the user wants an editable version too, also create a Claude Doc with the same sections.
 
@@ -148,28 +148,27 @@ A `report.json` skeleton is in the appendix of this skill; copy its shape.
  "executive": {"bottom_line": "Of 20 checkable DDQ answers, **13 are consistent**, **4 are contradicted** and **3 need review** [S1, S2]. …",
   "tiles": [{"label":"Contradicted","value":"4","sub":"2 firm · 2 fund","tone":"bad"},
             {"label":"Needs review","value":"3","sub":"Partial provider lists","tone":"watch"},
-            {"label":"Consistent","value":"13","sub":"6 governed · 7 analyst","tone":"good"},
+            {"label":"Consistent","value":"13","sub":"Governed reconciliation [S1]","tone":"good"},
             {"label":"Not checkable","value":"0","sub":"Of transcribed fields","tone":""}]},
  "sections": [
   {"id": "executive", "title": "Executive summary", "kicker": "What the manager told us vs. what it filed with the SEC",
    "blocks": [{"type":"two_col","left":[{"type":"bullets","items":["…"]}],"right":[{"type":"bullets","items":["…"]}]},
               {"type":"coverage","title":"Check coverage","items":[{"name":"Firm claims (8)","status":"available","note":"Governed reconciliation [S1]"},
-                {"name":"Fund claims (12)","status":"partial","note":"Analyst comparison; governed check unavailable"},
+                {"name":"Fund claims (12)","status":"available","note":"Governed reconciliation [S2]"},
                 {"name":"Workpaper saved","status":"not_run","note":"No run ID returned; this report is the record"}]}]},
   {"id": "discrepancies", "title": "Discrepancies & follow-up questions", "kicker": "Ranked by severity",
    "blocks": [{"type":"findings","items":[{"severity":"high","title":"Administrator does not match Schedule D","detail":"DDQ 2.6: Example Fund Administration … Schedule D 7.B.1 (report 2026-10-01): Example Trust Company [S2]."}],"empty_title":"No discrepancies","empty_text":"All checkable answers reconcile."},
               {"type":"questions","items":[{"q":"Your DDQ names … Who is the current administrator, and when did any change take effect?","why":"Contradicted, high severity [S2]"}]}]},
   {"id": "firm", "title": "Firm reconciliation (governed)", "kicker": "Gradient verdicts against Form ADV Part 1A, report <date>",
    "blocks": [{"type":"table","columns":["Item","DDQ says (quote, line)","Filed","Verdict","Note"],"align":["n","l","l","n","l"],
-     "rows":[["Employees","1,240 — “The firm employs 1,240 people…” (L22)","1,135 (Item 5.A) [S1]",{"chip":"contradicted","status":"contradicted"},"+105 (+9.3%) [Calc C1]"]],
+     "rows":[["Employees","1,240 — “The firm employs 1,240 people…” (L22)","1,135 (Item 5.A) [S1]",{"chip":"contradicted","status":"contradicted"},"+105 (+9.3%), returned by `numeric_gap` [S1]"]],
      "note":"Verdicts and tolerances are Gradient's governed comparator. DDQ values are the manager's assertions; Form ADV is adviser-reported, not SEC-verified."}]},
   {"id": "fund", "title": "Fund reconciliation: <Fund>", "kicker": "Against Schedule D 7.B.1 (PFID …)",
-   "blocks": [{"type":"callout","tone":"watch","title":"Analyst comparison — not a governed verdict","text":"Only when the fallback was used: say why."},
-              {"type":"table","columns":["Item","DDQ says (line)","Filed (Schedule D)","Verdict","Note"],"align":["n","l","l","n","l"],"rows":[]}]},
+   "blocks": [{"type":"table","columns":["Item","DDQ says (line)","Filed (Schedule D)","Verdict","Note"],"align":["n","l","l","n","l"],"rows":[]}]},
   {"id": "appendix", "title": "Appendix — sources & method",
    "blocks": [{"type":"table","title":"Sources","columns":["Tag","Evidence","Tool","As of","Validation","Digest"],"align":["n","l","l","n","n","n"],
                "rows":[["S1","Firm DDQ reconciliation","reconcile_manager_ddq_claims","2026-10-01",{"chip":"passed","status":"passed"},"7c89a13a"],["S3","DDQ file (sha256)","—","<DDQ date>","—","1b448613"]]},
-              {"type":"table","title":"Calculations","columns":["Tag","Calculation","Result"],"align":["n","l","r"],"rows":[["C1","(1,240 − 1,135) ÷ 1,135","+9.3%"]]},
+              {"type":"table","title":"Server metric methods","columns":["Evidence","Formula version","Basis"],"align":["n","l","l"],"rows":[["S1","ddq-claim-filed-numeric-gap v1","claim minus filed; percentage relative to absolute filed value"]]},
               {"type":"kv","title":"Verdicts","rows":[["Consistent / corroborated","Exact, legal-suffix or within-tolerance match"],["Contradicted","Mismatch beyond tolerance"],["Needs review","Partial overlap, e.g. subset of filed providers"],["Unverifiable","No filed value"]]},
               {"type":"callout","tone":"info","title":"Disclaimer","text":"Filed values are Form ADV data reported by the adviser and normalized by Gradient; they are not SEC verification. DDQ values are the manager's assertions. Not investment advice."}]}]}
 ```

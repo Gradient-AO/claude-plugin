@@ -6,8 +6,8 @@ the Section 4 summary knows what is being asked, why, and what could go wrong.
 ## Principles
 
 1. **Bottom line up front.** The recommendation and the vote requested come before any analysis.
-2. **One claim, one source.** Every factual sentence carries a `[S#]` or `[Calc C#]` tag. If a claim has no
-   source, delete it.
+2. **One claim, one source.** Every factual sentence carries an `[S#]` evidence tag. If a claim has no
+   server result or user-document source, delete it.
 3. **Facts before judgment.** In each section, show the data first (tables), then at most three sentences of
    interpretation labeled as such where helpful ("Interpretation:").
 4. **Show the downside.** Every recommendation names its key risks, the worst stress-test result, and the

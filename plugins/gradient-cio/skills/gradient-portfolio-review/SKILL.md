@@ -17,15 +17,14 @@ trades in this report.
 
 Rules that matter here:
 - **Illustrative is never "your portfolio".** `list_portfolios` returns `record_kind`. A record with
-  `record_kind: example` (or any result with `provenance.data_scope.kind: illustrative`) is Gradient's
-  illustrative portfolio. Title it "Gradient illustrative portfolio: <name>", put "Illustrative — not your
-  holdings" in `confidentiality`, the subtitle and an amber callout in the summary, and never write "your
-  portfolio", "you hold" or "the fund returned" about it. Keep the label from `list_portfolios` even when a
-  later call reports a different scope (see Known issues).
+  `record_kind: example` (or any result with `provenance.data_scope.kind: illustrative`) is labeled
+  **Illustrative, Gradient Maintained**. Put "Illustrative, Gradient Maintained — not the organization's
+  actual holdings" in `confidentiality`, the title/subtitle and an amber callout in the summary, and never
+  write "your portfolio", "you hold" or "the fund returned" about it.
 - **Absence is not evidence.** An unavailable section, a missing benchmark or an entitlement block is reported
   as "Not available — <reason>", never as zero, "none" or "in line".
-- **Every number has a tag**: `[S#]` for a Gradient result, `[Calc C#]` for a calculation listed in the
-  appendix. Never fill a figure from memory or general knowledge.
+- **Every number has an `[S#]` evidence tag.** Never derive a report value locally or fill a figure from
+  memory or general knowledge. Scaling and rounding for display are allowed.
 - **Preserve what the tools say**: partial-period labels, coverage states, missing reasons, display units and
   as-of dates. Do not annualize a period shorter than 12 months; do not relabel a partial year as a full one.
 - No adjectives the data cannot support ("strong", "robust"); past performance is not a forecast.
@@ -35,22 +34,22 @@ Rules that matter here:
 | File | Read when |
 |---|---|
 | `references/data-map.md` | Always — exact tool arguments, response fields, fallbacks and known failures. |
+| `references/portfolio-strategy-scope.md` | Always — Portfolio Analytics is the only module used for saved-portfolio analysis. |
 | `references/chart-data.md` | Always — chart discovery order, basis rules and generic report block. |
-| `scripts/review_calcs.py` | When the tool does not return standard periods, calendar years or risk metrics but monthly points exist. Run it; do not hand-compute. |
 | `references/report-style.md` | Before rendering — shared style, block types, meta fields, "Check and deliver". |
 | `scripts/gradient_report.py` | Renders the JSON blocks into the branded PDF. Never restyle. |
 
 ## 1. Scope (ask at most one question)
 
 1. **Organization**: `list_organizations`; ask if more than one and none named.
-2. **Capabilities**: `get_gradient_capabilities` once. Read `capabilities.portfolio`, `capabilities.strategyLab`,
-   and for each tool in `tools[]` its `available`, `access_mode` (`live` or `illustrative`) and
+2. **Capabilities**: `get_gradient_capabilities` once. Read `capabilities.portfolio`,
+   and for each Portfolio Analytics tool in `tools[]` its `available`, `access_mode` (`live` or `illustrative`) and
    `backend_tool_readiness[].availability_reason` (e.g. `portfolio_entitlement_required` on the
    `join_portfolio_13f_lookthrough` backend). This decides the path:
    - **Portfolio licensed** (`portfolio: true`): the user's portfolios plus the example record.
    - **Not licensed** (`portfolio: false`, portfolio tools `access_mode: illustrative`): only Gradient's
-     illustrative portfolio is available. Tell the user in one line, offer to continue with the illustrative
-     portfolio as a demonstration, and mark the report Partial. Do not ask for an upload as a substitute
+     illustrative portfolio is available. Tell the user in one line, offer to continue with the
+     **Illustrative, Gradient Maintained** portfolio, and mark the report Partial. Do not ask for an upload as a substitute
      unless the user offers one; a user file is tagged as a user document, never as Gradient data.
 3. **Portfolio**: `list_portfolios` → `portfolio_id`, `portfolio_name`, `base_currency`, `record_kind`,
    `canonical_default`. Match the user's name; if several user records and none named, ask once.
@@ -75,15 +74,15 @@ save `context.fingerprint`, `basis`, and unavailable reasons. Embed each usable 
 | Portfolio record | `list_portfolios` | Yes |
 | Dashboard chart packs | `get_chart_data` availability, then one relevant `analysis_type` at a time | Optional |
 | Allocation tree | `get_portfolio_structure` `view: allocation_tree` | Yes |
-| Returns | `get_portfolio_historical_returns` `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative, cumulative_growth]`, `end_date` = period end | Yes (or fallback) |
-| Monthly points (fallback) | `get_portfolio_historical_returns` `sections: [points]`, else `get_return_series` `series_kind: portfolio`, `series_id: <portfolio_id>` | When summary sections fail |
+| Returns | `get_portfolio_historical_returns` `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative, cumulative_growth, points]`, `end_date` = period end | Yes |
 | Benchmark | the benchmark named in `benchmark_relative`; else ask the user which benchmark; then `get_benchmarks` `benchmark_id` for its name and classes, and `get_return_series` `series_kind: benchmark` for monthly points | Optional (performance is reported without relative rows if absent) |
+| Policy | `check_portfolio_policy` | Yes |
+| Attribution | `get_portfolio_attribution` with `benchmark_role: policy`, `parent_allocation_id: root`, month-end start/end and all sections | Optional; use typed unavailability as returned |
 | Holdings exposure | `get_portfolio_exposure` (page with `next_cursor` until `has_more: false`) | Yes |
 | Ownership weights | `get_portfolio_structure` `view: ownership_weights` | Optional |
 | Look-through | `get_cross_domain_research` `view: portfolio_13f_lookthrough`, `portfolio_id`, `top_n_managers` 10, `limit` 20 | Optional (needs `portfolio`) |
 | Macro exposure | `get_cross_domain_research` `view: roster_macro_exposure`, `portfolio_id` | Optional (needs `portfolio`) |
 | Outlook | `get_the_read` (`visuals: none`); `get_capital_market_assumptions` `view: baseline` | Optional, only if asked or for an annual review |
-| Benchmark-relative risk | `run_strategy_lab_relative_return` | Optional, only if `strategyLab` is licensed; do not describe its output as Brinson attribution |
 
 If a call fails, record the error code and request ID in coverage, retry at most once (only when
 `retryable: true`), use the fallback, and keep going. An `entitlement_required` error is "Not licensed", not
@@ -91,34 +90,20 @@ an outage — do not retry it.
 
 ## 3. Assess
 
-**Performance.** Use the tool's `standard_periods` and `calendar_years` as returned. If they are unavailable
-but monthly points exist, run:
+**Performance.** Use `standard_periods`, `calendar_years`, `risk_metrics`, `benchmark_relative`,
+`cumulative_growth` and `points` exactly as returned by `get_portfolio_historical_returns`. Preserve each
+period's benchmark return, excess return, coverage and annualization status; preserve drawdown peak, trough
+and recovery, monthly extremes, positive-month count, beta and benchmark volatility. If a section is
+unavailable, report its typed reason and do not recompute it from monthly points.
 
-```
-python <this skill's directory>/scripts/review_calcs.py --input series.json --output calcs.json
-```
+**Allocation.** From `allocation_tree.nodes[]`: use the returned total-portfolio target and policy status
+fields for every depth. Do not multiply parent and child targets. Use `check_portfolio_policy.allocation_bands`
+for governed status, active weight, limits and headroom. Preserve `compliant`, `watch`, `breach` and
+`not_assessed` exactly; do not recreate the thresholds in the report.
 
-with `{"as_of": "<period end>", "portfolio": [points], "benchmark": [points], "benchmark_name": "..."}`. The
-script drops points after `as_of` (benchmark series can include a month that has not ended), links returns
-geometrically, annualizes only periods over 12 months, refuses periods with gaps, labels partial calendar
-years, and computes volatility, maximum drawdown (peak, trough, recovery), beta, tracking error and
-information ratio on common months. Tag its outputs `[Calc C1]` (returns) and `[Calc C2]` (risk). Its `line`
-output is the growth-of-100 chart block.
-
-**Allocation.** From `allocation_tree.nodes[]`: `depth 0` nodes are asset classes. `actual_weight` is a share
-of **total portfolio**; `target_weight`, `lower_limit` and `upper_limit` of a child node (`depth ≥ 1`) are
-shares **of its parent** (children's targets sum to 1 within each parent). For the policy table use depth-0
-nodes as returned. For sub-allocations, convert the target to total-portfolio terms (parent target × child
-target, `[Calc C5]`) before comparing with `actual_weight`; never compare a within-parent target with a
-total-portfolio actual. Status per row:
-- **Breach**: actual outside `[lower_limit, upper_limit]`.
-- **Watch**: |actual − target| ≥ 3.0pp, or within 2.0pp of a limit.
-- **Within range**: otherwise. No limits returned → "Not assessed — no range".
-
-**Exposure.** `get_portfolio_exposure.exposures[]` has `asset_classification`, `market_value_base`
-(marketable), `nav_base` (drawdown funds), `commitment_amount`, `unfunded_base`, `as_of_date`. Value = market
-value or NAV (they never both apply; never add unfunded). Aggregate by `asset_classification` (`[Calc C3]`)
-and show rows with null value and null as-of separately as "no current value". Exposure classifications
+**Exposure.** Use `get_portfolio_exposure.aggregates_by_asset_classification` for governed value totals,
+shares, coverage and truncation. The server chooses market value for marketable assets and NAV for drawdown
+funds and never adds unfunded commitments. Show uncovered rows as "no current value". Exposure classifications
 (e.g. `public_equity`, `hedge_fund`, `alternatives`) do not map one-to-one to tree names — show them as
 returned, do not merge them into the policy table. Show geography or sector only if the response carries
 those fields.
@@ -133,13 +118,13 @@ else `watch` if any row is Watch or the portfolio trails its benchmark over both
 watch". For the illustrative portfolio add "· illustrative" to the label.
 
 **Completeness**: sources used / expected over: portfolio record, allocation tree, returns, benchmark,
-exposure, look-through, outlook (if requested), benchmark-relative risk (if licensed). `state` = `partial` when any
-required source is missing or the portfolio module is not licensed; `meter_title` "Evidence completeness".
+exposure, look-through and outlook (if requested). `state` = `partial` when any required source is missing or
+the portfolio module is not licensed; `meter_title` "Evidence completeness".
 
 ## 4. Build the report
 
 JSON block mode (`references/report-style.md`). Meta: `eyebrow` "Portfolio Review", `header_label`
-"Portfolio Review", `title` the portfolio name (illustrative: "Gradient illustrative portfolio: <name>"),
+"Portfolio Review", `title` the portfolio name (illustrative: "<name> — Illustrative, Gradient Maintained"),
 `subtitle` "<Quarterly|Annual> review · period to <date> · prepared for <audience>", `running_head`
 "<short name> · period to <date>", `data_as_of` with each source date, `cover_facts`: Period end, Base
 currency, Total NAV, Benchmark, Inception (first month of history), Data scope (`data_scope.label`).
@@ -156,22 +141,23 @@ Sections:
    committee" saying whether anything needs a decision and offering gradient-ic-memo.
 2. **Performance** — `table` standard periods: Period (mark "ann."), Portfolio, Benchmark, Excess (pp),
    Coverage (chip); `table` calendar years with partial-year labels as returned; `line` growth of 100
-   (portfolio and benchmark, from returned points only). Do not treat Strategy Lab relative-return metrics as
-   Brinson attribution; include an attribution table only from a governed attribution source.
+   (portfolio and benchmark, from returned points only). Include an attribution table only from a governed
+   portfolio attribution source.
 3. **Allocation** — `table` asset class vs policy: Asset class, Target, Actual, Active (pp), Range (align `n`),
-   Status (chip); sub-allocation table if the tree has depth-1 nodes (targets converted, `[Calc C5]`);
+   Status (chip); sub-allocation table if the tree has depth-1 nodes, using returned total-portfolio targets;
    `bars` market value by exposure classification with $M and % of total.
 4. **Look-through concentration** (`new_page: false`) — `table` top issuers + the caveat callout; if not
    licensed or unavailable, one `callout` saying so (no table).
 5. **Risk** (`new_page: false`) — `kv`: volatility, maximum drawdown with dates, best and worst month,
    positive months, beta, tracking error, information ratio (each with its tag).
-6. **Outlook** (optional, `new_page: false`) — one short paragraph: The Read headline and date, CMA expected
-   return for the policy mix (`[Calc C4]` = Σ target × expected return, name the assumption set and
-   currency). Say "assumptions, not forecasts". Omit the section if not requested.
+6. **Outlook** (optional, `new_page: false`) — one short paragraph: The Read headline and date plus
+   `check_portfolio_policy.return_objective.assessment.observed` when its evidence basis is the governed
+   root-allocation weighted expected return. Preserve the returned assumption basis and currency. Say
+   "assumptions, not forecasts". Omit the expected return when unavailable; never weight CMA rows locally.
 7. **Coverage** (`new_page: false`) — `coverage` block: every source with status (`available`, `degraded`,
    `unavailable`, `not licensed`) and a note (as-of, rows, error code and request ID on failure).
-8. **Appendix A — Sources and method** — tag table (Tag, Evidence, Tool / view, As of, Validation), a
-   Calculations table (C1–C5 as used), the signal and status rules above, and the disclaimer: "monitoring aid,
+8. **Appendix A — Sources and method** — tag table (Tag, Evidence, Tool / view, As of, Validation), server
+   metric methods and formula versions, the signal and status rules above, and the disclaimer: "monitoring aid,
    not investment, legal or compliance advice; past performance does not predict future returns; Form 13F is
    manager-reported and lagged".
 
@@ -181,8 +167,8 @@ Render:
 python <this skill's directory>/scripts/gradient_report.py review.json "<Portfolio> - Portfolio Review <YYYY-MM-DD>.pdf"
 ```
 
-Then follow "Check and deliver" in `references/report-style.md`: look at every page, recompute every `C#`,
-check every figure against the saved results. Chat summary (three lines): status signal, the top item (e.g.
+Then follow "Check and deliver" in `references/report-style.md`: look at every page, reconcile every returned
+metric within its stated tolerance, and check every figure against the saved results. Chat summary (three lines): status signal, the top item (e.g.
 "Alternatives 1.4pp below the upper limit"), and the number of items to watch — plus the file.
 
 ## 5. Hand-off and repeat runs

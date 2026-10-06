@@ -1,4 +1,4 @@
-# Investment Committee Memo — Rebalance: Gradient Global Growth III
+# Investment Committee Memo — Rebalance: Gradient Global Growth III (Illustrative, Gradient Maintained)
 
 > **ILLUSTRATIVE DATA** — Figures marked [S#] with scope "Illustrative, Gradient Maintained" describe a
 > Gradient-maintained example portfolio, not the organization's actual holdings.
@@ -6,7 +6,7 @@
 | Field | Value |
 |---|---|
 | Memo type | Rebalance |
-| Portfolio | Gradient Global Growth III (example-portfolio-id) |
+| Portfolio | Gradient Global Growth III (example-portfolio-id; Illustrative, Gradient Maintained) |
 | Organization | Example Foundation |
 | Prepared for | Investment Committee |
 | Meeting date | 2026-10-15 |
@@ -23,13 +23,13 @@
 **Decision requested:** The Committee is asked to approve the rebalance in Section 13.1, executed over 30 days.
 
 **Rationale (three points, most important first):**
-1. Fixed income (19.0%) and cash (1.0%) are below their IPS minimums [S1] [Calc C1].
+1. Fixed income (19.0%) and cash (1.0%) are below their IPS minimums [S1].
 2. Cash at 1.0% leaves no operating buffer for 12-month calls of USD 180.0m [S1] [S9].
 3. The change lowers expected volatility by 60 bps with a 15 bps reduction in expected return [S3].
 
 **Key risks (three points, most material first):**
 1. Expected max drawdown (38.0%) exceeds the 35.0% IPS limit before and after the change [S3].
-2. Expected return remains 28 bps below the CPI + 4.5% objective [S3] [Calc C1].
+2. Expected return remains 28 bps below the CPI + 4.5% objective [S1] [S3].
 3. Gradient's real estate assumption is 499 bps above consensus [S4].
 
 **Conditions to approval:**
@@ -39,9 +39,9 @@
 
 - **Positioning:** Public equity is 700 bps overweight and fixed income 600 bps underweight versus policy [S1].
 - **IPS:** 6 constraints Compliant, 2 Watch, 3 Breach, 1 Not assessed. Breaches: fixed income band, cash band, max drawdown.
-- **Performance:** 1Y return 6.9% versus 6.4% for the policy benchmark (+49 bps), led by public equity selection (+27 bps) [S2] [Calc C3].
+- **Performance:** 1Y return 6.9% versus 6.4% for the policy benchmark (+49 bps), led by public equity selection (+27 bps) [S2].
 - **Outlook:** Expected return 6.7% versus a 7.0% objective, volatility 13.1%, 44.0% probability of meeting the objective [S3].
-- **Liquidity & diligence:** Stress coverage 2.61 on the liquidity model; zero High diligence findings [Calc C2] [S5].
+- **Liquidity & diligence:** Stress coverage 2.61 on the liquidity model; zero High diligence findings [S1] [S5] [S9].
 
 ## 3. Portfolio Snapshot
 
@@ -106,8 +106,8 @@
 | real_estate | −4 bps | +5 bps | 0 bps | +1 bps |
 | Total | +32 bps | +13 bps | +5 bps | +49 bps |
 
-**Reconciliation:** Sum of effects = +49 bps vs total active return +49 bps; residual 0 bps [Calc C3].
-**Method:** Brinson-Fachler (local calculation).
+**Reconciliation:** Sum of effects = +49 bps vs total active return +49 bps; residual 0 bps [S2].
+**Method:** Realized Brinson-Fachler with separately reported interaction and symmetric-Carino linking [S2].
 
 **5.3 Top contributors and detractors**
 
@@ -132,7 +132,7 @@
 | Largest single manager (% NAV) | 8.5% | 10.0% | Compliant | [S1] |
 | Top 5 managers (% NAV) | 34.0% | n/a | Not assessed | [S1] |
 | Largest single holding look-through (% NAV) | n/a | n/a | Not assessed | Not available — no look-through data |
-| Effective number of positions | 14.20 | n/a | n/a | [Calc C4] |
+| Effective number of positions | 14.20 | n/a | n/a | [S6] |
 | Diversification ratio | 1.32 | n/a | n/a | [S6] |
 | Equity beta to global equities | 0.78 | n/a | Not assessed | [S6] |
 
@@ -182,21 +182,21 @@
 
 | Tier | Definition | % NAV | Amount (USD m) | Source |
 |---|---|---|---|---|
-| T1 | Daily to weekly | 44.6% | 1505.0 | [Calc C2] |
-| T2 | Monthly to quarterly | 11.9% | 400.0 | [Calc C2] |
-| T3 | Semi-annual to 2 years | 11.9% | 400.0 | [Calc C2] |
-| T4 | Over 2 years / locked / private | 31.7% | 1070.0 | [Calc C2] |
+| T1 | Daily to weekly | 44.6% | 1505.0 | [S1] |
+| T2 | Monthly to quarterly | 11.9% | 400.0 | [S1] |
+| T3 | Semi-annual to 2 years | 11.9% | 400.0 | [S1] |
+| T4 | Over 2 years / locked / private | 31.7% | 1070.0 | [S1] |
 | Total | | 100.0% | 3375.0 | |
 
 **9.2 Coverage**
 
 | Metric | Base case | Stress case | IPS minimum | Status | Source |
 |---|---|---|---|---|---|
-| T1 liquidity (% NAV) | 44.6% | 42.4% | 15.0% | Compliant | [Calc C2] |
+| T1 liquidity (% NAV) | 44.6% | 42.4% | 15.0% | Compliant | [S1] [S11] |
 | Unfunded commitments (USD m) | 420.0 | 420.0 | n/a | n/a | [S1] |
 | 12-month spending / distributions (USD m) | 150.0 | 150.0 | n/a | n/a | [S1] |
-| Liquidity coverage ratio | 5.77 | 2.61 | 1.50 | Compliant | [Calc C2] |
-| Private markets % NAV (incl. unfunded) | 36.1% | 36.1% | 40.0% | Watch | [Calc C2] |
+| Liquidity coverage ratio | 5.77 | 2.61 | 1.50 | Compliant | [S1] [S11] |
+| Private markets % NAV (incl. unfunded) | 36.1% | 36.1% | 40.0% | Watch | [S1] |
 
 - HF B placed in T4 (gated).
 
@@ -244,9 +244,9 @@ Not assessed — no GIPS Asset Owner Report provided.
 | Expected return | 6.7% | 6.6% | −15 bps | [S3] |
 | Expected volatility | 13.1% | 12.5% | −60 bps | [S3] |
 | Sharpe ratio | 0.22 | 0.22 | 0.00 | [S3] |
-| T1 liquidity (% NAV) | 44.6% | 46.6% | +200 bps | [Calc C2] |
-| Liquidity coverage ratio | 2.61 | 2.70 | 0.09 | [Calc C2] |
-| IPS breaches | 3 | 1 | −2 | [Calc C1] |
+| T1 liquidity (% NAV) | 44.6% | 46.6% | +200 bps | [S11] |
+| Liquidity coverage ratio | 2.61 | 2.70 | 0.09 | [S11] |
+| IPS breaches | 3 | 1 | −2 | [S11] |
 | Estimated transaction cost (bps) | n/a | 3 bps | +3 bps | [S11] |
 
 **Implementation:** Sell the index fund in two tranches over 30 days; buy core bonds and Treasury bills [S11].
@@ -283,32 +283,32 @@ Not assessed — no GIPS Asset Owner Report provided.
 
 | Ref | Source | Parameters | As of | Data scope | Validation | Digest |
 |---|---|---|---|---|---|---|
-| S1 | get_portfolio_exposure | portfolio_id=example | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
-| S2 | run_strategy_lab_relative_return | period=1Y | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
-| S3 | run_strategy_lab_expected_statistics | current, proposed, policy | 2026-09-11 | Illustrative, Gradient Maintained | passed | n/a |
-| S4 | get_cma_consensus_check | mode=allocation | 2026-06-30 | User-Authorized Live | passed | n/a |
+| S1 | get_portfolio_exposure; get_portfolio_structure; check_portfolio_policy | portfolio_id=example; governed policy and exposure views | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
+| S2 | get_portfolio_historical_returns; get_portfolio_attribution | portfolio_id=example; policy benchmark; realized performance and attribution | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
+| S3 | get_chart_data | portfolio_id=example; analysis_type=expected-statistics | 2026-09-11 | Illustrative, Gradient Maintained | passed | n/a |
+| S4 | get_cma_consensus_check | mode=allocation | 2026-06-30 | Mixed — Illustrative, Gradient Maintained + User-Authorized Live | passed | n/a |
 | S5 | get_manager_diligence_findings | view=exposure_weighted | 2026-10-02 | Illustrative, Gradient Maintained | advisory | n/a |
-| S6 | run_strategy_lab_factor_loads | portfolio_id=example | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
+| S6 | get_chart_data | portfolio_id=example; analysis_type=allocations | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
 | S7 | get_macro_signals | view=gradient_signal (sources.grip) | 2026-10-01 | User-Authorized Live | passed | n/a |
-| S8 | run_strategy_lab_simulation | scenarios=default | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
-| S9 | run_strategy_lab_private_markets_pme | portfolio_id=example | 2026-06-30 | Illustrative, Gradient Maintained | passed | n/a |
+| S8 | Illustrative scenario assumptions | 2008 historical; 5th percentile | 2026-09-30 | Illustrative, Gradient Maintained | not applicable | n/a |
+| S9 | get_chart_data | portfolio_id=example; analysis_type=commitments | 2026-06-30 | Illustrative, Gradient Maintained | passed | n/a |
 | S10 | get_macro_conditions; get_the_read; get_macro_calendar | theme=inflation; am edition; 30 days | 2026-10-02 | User-Authorized Live | passed | n/a |
-| S11 | run_strategy_lab_rebalance | target weights per 13.1 | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
+| S11 | Server-returned illustrative proposed-case analysis | target weights and implementation estimate per Section 13.1 | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
 
-## Appendix B — Calculations
+## Appendix B — Server Metric Methods
 
-| Ref | Quantity | Formula | Inputs | Result |
+| Source | Quantity | Method / formula ID | Version | Basis and tolerance |
 |---|---|---|---|---|
-| C1 | IPS status and active weights | references/calculations.md status rules; (current − target) × 10,000 | S1, S3, IPS | Section 4 table |
-| C2 | Liquidity tiers and coverage | (T1+T2)/(12m calls + spending); stress per calculations.md | S1, S8, S9 | 5.77 base, 2.61 stress |
-| C3 | Brinson-Fachler attribution | A=(wp−wb)(rb−Rb); S=wb(rp−rb); I=(wp−wb)(rp−rb) | S2 | +49 bps |
-| C4 | Effective number of managers | 1 / Σ w² | S1 | 14.20 |
+| S1 | IPS status, active weights, liquidity and concentration | check_portfolio_policy | 2026-10-05.v1 | Governed inputs only; preserve returned thresholds and coverage |
+| S2 | Realized attribution | realized_brinson_fachler / symmetric_carino | 2026-10-05.v1 | Monthly total return in portfolio currency; residual within returned tolerance |
+| S6 | Effective number of positions | Portfolio Analytics allocations metric | as returned | Preserve chart-pack basis and fingerprint |
+| S11 | Proposed-case impacts | Portfolio Analytics proposed-case analysis | as returned | Same basis as current case |
 
 ## Appendix C — Methodology & Disclosures
 
 - Expected returns and risk are forward-looking assumptions from Gradient ICAPM Global Baseline Q3 2026, not forecasts or guarantees. Actual results will differ.
 - Performance is shown net of manager fees. Periods over one year are annualized.
-- Attribution method: Brinson-Fachler (local calculation). Factor model: Strategy Lab factor loads.
+- Attribution method: server-returned realized Brinson-Fachler with symmetric-Carino linking. Factor model: Portfolio Analytics factor/currency exposure.
 - Private-markets valuations may lag by 3 months; values as of 2026-06-30.
 - Data sources and retrieval dates are listed in Appendix A. Sections using illustrative data are marked; they do not describe the organization's holdings.
 - GIPS assessments are diligence reviews against the 2020 GIPS standards, not verifications or legal opinions.

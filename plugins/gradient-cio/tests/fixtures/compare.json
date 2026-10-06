@@ -40,7 +40,7 @@
      ["Registration", "Registered", "Registered", "Registered"],
      ["State", "ST", "ST", "ST"],
      ["RAUM", "$12.40B [S1]", "$4.85B [S2]", "$1.92B [S3]"],
-     ["Discretionary share", "100.0% [Calc C1]", "96.2% [Calc C1]", "100.0% [Calc C1]"],
+     ["Discretionary share", "100.0% [S1]", "96.2% [S2]", "100.0% [S3]"],
      ["Clients / main type", "41 / pooled vehicles", "28 / pooled vehicles", "12 / pension plans"],
      ["Employees", "212", "64", "19"],
      ["Private funds / gross assets", "11 / $10.86B", "9 / $4.10B", "3 / $1.15B"],
@@ -87,8 +87,8 @@
    {"type": "table", "columns": ["Manager", "ADV RAUM", "13F total", "13F / RAUM", "13F age", "Identity", "Flags"],
     "align": ["l", "r", "r", "r", "n", "l", "l"],
     "rows": [
-     ["Ridgeview (TEST)", "$12.40B", "$3.21B", "25.9% [Calc C2]", "96 days", "Unconfirmed", "13F subset of RAUM [S8]"],
-     ["Harbor (TEST)", "$4.85B", "$1.07B", "22.1% [Calc C2]", "96 days", "Unconfirmed", "13F subset of RAUM [S11]"],
+     ["Ridgeview (TEST)", "$12.40B", "$3.21B", "25.9% [S8]", "96 days", "Unconfirmed", "13F subset of RAUM [S8]"],
+     ["Harbor (TEST)", "$4.85B", "$1.07B", "22.1% [S11]", "96 days", "Unconfirmed", "13F subset of RAUM [S11]"],
      ["Northfield (TEST)", "$1.92B", "n/a", "n/a", "n/a", "n/a", "Not in catalog"]]},
    {"type": "callout", "tone": "info", "title": "Events", "text": "No published events are available for Ridgeview or Harbor because event publication is not ready [S10]. Absence is not evidence of no events."}
   ]},

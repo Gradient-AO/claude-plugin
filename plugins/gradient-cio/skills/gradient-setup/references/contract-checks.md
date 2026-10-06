@@ -4,6 +4,11 @@ The probes are defined in `contracts.json` (tool, arguments, required response p
 dependencies). Every probe uses the standard `provenance.as_of` and `validation.status` envelope unless it
 sets `"envelope": false`.
 
+The same file's top-level `minimum_connector_contract` is the machine-readable cutover gate. Validate it
+against the saved `get_gradient_capabilities` summary before running any probe. A service version below
+0.8.0, a compatibility epoch other than 1, or a missing required tool is a connector failure: stop, report
+`not_ready`, and do not use local-calculation fallbacks.
+
 Resolve every chained placeholder from a saved dependency response. Placeholders have the exact form
 `<probe_id:path>`, and every referenced probe is listed in `depends_on`. Save responses as
 `<probe_id>.json`, then use:
@@ -18,25 +23,39 @@ The only manual placeholder is:
 - `<test ticker>`: a ticker the user names, else any large, liquid US-listed issuer. It is only a probe
   subject; never present it as a view on the security.
 
-The standard `get_the_read` probe intentionally omits `asOfDate` and reads the
-latest published brief. Pass `asOfDate` only when the user explicitly requests
-a historical edition.
+The standard `get_the_read` probe intentionally sends no arguments and verifies
+that `publication.requested_as_of_date` is null. `asOfDate` is a historical-publication cutoff, not a meeting
+or report date; the default probe therefore exercises the current latest-publication contract.
 
 **Standard set (default, 8 reads):** orgs, roster, odd_profile, monitor_coverage, the_read, calendar,
-portfolio_list, chart_catalog.
+sample_portfolio, chart_catalog. The sample probe verifies that `list_portfolios`
+returns Gradient's canonical example first.
 
-**Full read set (38 reads including standard):** standard plus capabilities_summary, attention, findings,
-events, events_roster, conditions, credit_spreads, gradient_signal, regime_state, cma_baseline, watchlist,
-portfolio_tree, portfolio_exposure, portfolio_ownership, portfolio_returns, portfolio_series,
-chart_availability, chart_pack, strategy_session, strategy_expected_statistics, strategy_relative_return, adv_13f_consistency,
-multi_manager_13f_overlap, search_managers, screen, cftc_positioning, hf_crowding, regional_facts, equity_fundamentals and
-equity_risk_findings.
+**Full read set (44 reads including standard):** standard plus capabilities_summary, manager_diligence_brief,
+attention, findings, events, events_roster, conditions, credit_spreads, gradient_signal, regime_state, cma_baseline, watchlist,
+portfolio_tree, portfolio_exposure, portfolio_policy, portfolio_ownership, portfolio_returns,
+portfolio_attribution, portfolio_series,
+chart_availability, portfolio_expected_statistics, strategy_expected_statistics, strategy_diversification,
+strategy_relative_return, adv_13f_consistency,
+multi_manager_13f_overlap, search_managers, screen, cftc_positioning, hf_crowding, regional_facts,
+regional_capital_markets, equity_fundamentals, equity_risk_findings, ddq_numeric_gap and batch_ddq_preview.
 
-**Writes set (3 dry-run previews):** write_create_finding, write_watchlist_manager and write_roster. Every
+The portfolio policy probe verifies governed-only semantics and the 2% watch boundary. The expanded returns
+probe requests all six sections, checks the zero risk-free-rate contract approximately, and reconciles the
+risk-metric month count to selected points. Attribution verifies the bounded Brinson-Fachler surface and its
+typed unavailable result while persisted segment-return basis, frequency, classification and currency
+semantics remain unproven; no numeric attribution may be inferred from defaults. Equity fundamentals requires
+the complete leverage contract, including formula identity and period basis. DDQ probes require server-returned
+numeric-gap formula metadata; the batch probe is read-only and must complete both items.
+
+**Writes set (4 dry-run previews):** write_create_finding, write_watchlist_manager, write_roster and
+write_batch_preview. Every
 call must retain `dry_run: true`; require `committed: false` and a non-null `receipt_id`. Never substitute
 `dry_run: false`, and never follow a preview receipt with a commit during a contract self-test. The roster
 probe exercises add with a canonical fund ID from the roster response; do not substitute its parent firm ID.
-It also sends a non-empty `reason` to verify add-preview rationale support.
+It also sends a non-empty `reason` to verify add-preview rationale support. The batch probe verifies two
+isolated previews and must return `commit_mode: "individual_existing_action_only"`; do not execute its
+returned commit instructions.
 
 **DDQ save-preview set (3 calls):** ddq_extract_persisted, ddq_reconcile_persisted, then ddq_save_preview.
 The first call persists fictional inline text as a ready subject-bound document and must return a non-null
@@ -44,7 +63,7 @@ The first call persists fictional inline text as a ready subject-bound document 
 save call is still a dry-run preview and must return `outcome: "preview"`, `dry_run: true` and `committed:
 false`.
 
-The complete matrix is 44 calls. Run the standard or full read set without write confirmation. Run the
+The complete matrix is 51 calls. Run the standard or full read set without write confirmation. Run the
 writes set only as previews. Before the DDQ save-preview set, tell the user that its reconciliation call
 persists a test document and immutable test workpaper.
 
@@ -52,10 +71,14 @@ Skip a probe and mark it **not run** when its tool is not entitled. An empty ros
 all roster-dependent probes not run and say so.
 
 For `portfolio_exposure` and `portfolio_ownership`, determine scope from
-`portfolio_list.portfolios[0].record_kind`: `example` means illustrative and `user` means a licensed live
-portfolio. Do not require `provenance.data_scope.kind` to equal `illustrative`; live portfolio results are
-valid. Report a mismatch only when the returned portfolio identity or record kind conflicts with
-`portfolio_list`.
+`sample_portfolio.portfolios[0].record_kind`, which must be `example`. Report a
+mismatch when a dependent response does not identify that same canonical
+portfolio or labels it as live data.
+
+The Portfolio Analytics probe `portfolio_expected_statistics` uses the canonical illustrative
+`portfolio_id`. The Strategy Lab probes instead carry fictional inline return series in
+`strategy_lab_session`; they do not depend on `sample_portfolio` and must not receive its ID. Report the two
+module results separately.
 
 Results:
 
@@ -65,30 +88,17 @@ Results:
 - Note `validation.status` = `failed` separately: the call worked, but Gradient's own checks raised advisories.
   These are disclosures, not outages.
 
-## Known issues (as of 2026-10-05)
+## Known issues (revalidated 2026-10-05)
 
 Re-check these on every full run. When one stops reproducing, say so in the report ("resolved since
 2026-10-05") so the maintainer can remove it from this table.
 
-| Tool / view | Symptom | Workaround used by the skills |
-|---|---|---|
-| get_the_read with `asOfDate` | 500 for historical-date requests | Omit `asOfDate` and use the latest published brief unless the user explicitly requires a historical edition |
-| get_the_read `visuals` | Empty: "governed chart history unavailable" | Charts from structured fields (bars/tables) instead of time series |
-| reconcile_manager_ddq_claims with only `crd_number` | 409 | Pass `firm_id` |
-| batch_reconcile_manager_ddq_claims | 502 | Reconcile one subject per call |
-| get_capital_market_assumptions | `quality_receipt.status` unvalidated; bond excess returns ≈ 0 with shared policy values; raw kurtosis < 3 flags | Disclose; no comparative claims; caveat fixed-income rows |
-| get_return_series | `series_id` must be a UUID | Resolve the series ID first; do not pass tickers |
-| get_portfolio_historical_returns | 500 `backend_unavailable` / `mcp_analytics_tool_error` on every section (illustrative portfolio) | gradient-portfolio-review computes returns from `get_return_series` with `scripts/review_calcs.py` |
-| get_portfolio_structure `ownership_weights` | `response_contract_invalid` | Use `allocation_tree` actual weights |
-| get_benchmarks with `asset_class` filter | `multi_asset` gives `response_contract_invalid`; `equity` gives 0 rows | Use the unfiltered catalog |
-| get_cross_domain_research `portfolio_13f_lookthrough`, `roster_macro_exposure` | 403 `entitlement_required` without the portfolio module, even for the illustrative portfolio | Expected without Portfolio Analytics; mark "not licensed" |
-| get_cross_domain_research `adv_13f_consistency`, `holdings_issuer_risk` | Reject `crd_number`; need `firm_id`. Often `partial` with `crd_cik_legal_entity_unconfirmed` | Pass `firm_id`; report the identity caveat; no inference from the ratio |
-| get_market_positioning `hedge_fund_crowding` | Rejects `category` (`tool_input_invalid`) | Omit `category` |
-| get_market_positioning `equity_signals` | 422 `semantic_validation_failed` (`equity_signal_stale_contributors`) | Skip; say "equity signals unavailable" |
-| get_regional_research `facts` with 2+ `metrics` | 500 `response_contract_invalid` (`fallback_failures`) | One metric per call (several regions are fine) |
-| get_regional_research `capital_markets` | 502 `response_contract_invalid` | Skip |
-| get_return_series on the illustrative portfolio | Labelled `data_scope.kind: live` | Treat as illustrative (use `list_portfolios` `record_kind`) |
-| run_strategy_lab_relative_return | Rejects `envelope` and `fields` (`mcp_tool_parameters_invalid`) | Omit both |
-| get_public_equity_fundamentals / filing_evidence | A company name in `symbol` gives 409 `subject_not_found`, no candidates | Ask the user for the ticker or CIK |
-| get_public_equity_fundamentals `peer_comparison` | `status: missing`, no ranks, when fiscal year-ends differ | Show peer metrics without ranks; say why |
-| screen_managers | `affirmative_disclosure_count` counts every "yes" on Form ADV, not disciplinary events; no provenance envelope | Never call it "disclosures"; check Item 11 in the ODD profile |
+No known issue permits a Portfolio Analytics ID to be reused as Strategy Lab input.
+
+| Tool / view | Classification | Ticket, owner, review | Symptom and current workaround | Removal criterion |
+|---|---|---|---|---|
+| get_capital_market_assumptions | Non-blocking data quality | [#1499](https://github.com/Gradient-AO/gradientcio/issues/1499), `@shbryx`, 2026-11-02 | `quality_receipt.status` may be unvalidated; bond excess returns can be ≈ 0 with shared policy values; raw kurtosis below 3 is flagged. Disclose, make no comparative claims and caveat fixed-income rows. | Validated receipt and explicit return/kurtosis semantics; full production probe passes twice. |
+| get_benchmarks with `asset_class` filter | Non-blocking data quality | [#1500](https://github.com/Gradient-AO/gradientcio/issues/1500), `@shbryx`, 2026-11-02 | `multi_asset` can give `response_contract_invalid`; `equity` can give 0 rows. Use the unfiltered catalog. | Supported filters are documented and contract-valid; representative filtered probes pass twice. |
+| get_cross_domain_research `adv_13f_consistency`, `holdings_issuer_risk` | Non-blocking data quality | [#1501](https://github.com/Gradient-AO/gradientcio/issues/1501), `@shbryx`, 2026-11-02 | Often `partial` with `crd_cik_legal_entity_unconfirmed`. Report the identity caveat and make no inference from the ratio. | Governed linkage meets the service threshold or returns stable typed unavailability; probes pass twice. |
+| get_market_positioning `equity_signals` | Non-blocking data quality | [#1502](https://github.com/Gradient-AO/gradientcio/issues/1502), `@shbryx`, 2026-11-02 | Can return 422 `semantic_validation_failed` (`equity_signal_stale_contributors`). Omit sector context and disclose unavailability. | Contributors satisfy freshness policy or return stable typed unavailability; probe passes twice. |
+| screen_managers | Non-blocking semantic/provenance gap | [#1498](https://github.com/Gradient-AO/gradientcio/issues/1498), `@shbryx`, 2026-11-02 | `affirmative_disclosure_count` counts every Form ADV "yes", not disciplinary events, and has no provenance envelope. Use Item 11 from the ODD profile for disciplinary claims. | Field semantics are narrowed or renamed compatibly, provenance is present and production probes pass twice. |

@@ -1,7 +1,8 @@
 # Gradient chart data
 
-Use `get_chart_data` for read-only dashboard-derived views of a saved portfolio. It complements
-`get_portfolio_exposure`, which returns raw holdings, and does not replace Strategy Lab tools for what-if inputs.
+Use `get_chart_data` for read-only Portfolio Analytics views of a saved portfolio. It complements
+`get_portfolio_exposure`, which returns raw holdings. Strategy Lab is a separate return-series sandbox: never
+pass this portfolio ID to a Strategy Lab tool or treat a Strategy Lab result as this portfolio's analytics.
 
 1. Read capabilities and confirm `get_chart_data` is available.
 2. Call `get_chart_data` without a portfolio to browse the three packs and stable chart IDs.

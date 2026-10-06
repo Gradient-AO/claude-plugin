@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.5.0
+- Moved portfolio policy, realized attribution, historical performance, exposure rollups, equity leverage and DDQ numeric gaps to versioned Gradient MCP evidence contracts.
+- Removed local report-calculation scripts and fallbacks; reports now cite server-returned values, methodology identities, coverage and typed unavailable reasons.
+- Added minimum connector readiness checks for service version 0.8.0, compatibility epoch 1 and the required tool/field/probe surface.
+- Expanded manager-diligence evidence probing, fixed batch DDQ and regional-research contract coverage, and classified remaining connector limitations with owned review tickets.
+- Slimmed connector discovery metadata while preserving runtime validation and a measured 20%-below-protocol response budget.
+
+## 1.4.4
+- Separated Portfolio Analytics saved-portfolio evidence from Strategy Lab return-series analysis across the IC memo, portfolio review and setup guidance.
+- Re-mapped IC memo sections and its worked example to Portfolio Analytics sources; Strategy Lab is now an optional, separately reported supplement.
+- Added independent Portfolio Analytics and Strategy Lab contract probes, standardized illustrative labels, clarified The Read's historical cutoff, and removed optional selectors from credit-spread calls.
+- The setup contract check now requires complete coverage of all 10 governed credit-spread input series and an explicit regime-state status; unavailable regimes are treated as valid evidence gaps when accompanied by `unavailable_reason`.
+- Re-synced the bundled shared skill files for the 2026-10-05 MCP contract refresh.
+
+## 1.4.3
+- Removed resolved `get_the_read` failures from the known-issues table and made the latest-publication contract explicit.
+- Clarified that macro briefs do not require `asOfDate` unless the user requests a historical edition.
+- Added explicit contract coverage for the canonical sample portfolio and batched dry-run diligence previews.
+
 ## 1.4.2
 - Setup checks now distinguish effective MCP capabilities from commercial entitlements.
 - The roster add preview verifies that an optional rationale is accepted.

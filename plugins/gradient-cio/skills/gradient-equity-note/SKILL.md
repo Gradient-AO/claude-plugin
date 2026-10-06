@@ -65,6 +65,8 @@ accession numbers it relies on.
   net_margin, operating_cash_flow}[]` (newest first, `calculation_basis`); `capital_allocation_trajectories`;
   `moat_scorecard[]` (`signal_id`, `value`, `interpretation_direction`, `counter_signal`) — report as
   Gradient-computed metrics, never as a moat verdict; `price` (`value`, `date`, `stale`, `age_days`);
+  `leverage_metric` (`status`, `metric`, `value`, `units`, `period_basis`, `formula_id`, `formula_version`,
+  `source_facts`, `missing_reason`, `missing_inputs`);
   `valuation` and `valuation_context[]` (`window_years`, `percentile_rank`, `minimum`, `median`, `maximum`,
   `observation_count`); `metric_applicability.excluded_metrics`; `missing_inputs`, `optional_missing_inputs`.
 - **change_report:** `ranked_changes[]` (`family`, `title`, `summary`, `direction`, `comparison`,
@@ -134,15 +136,14 @@ accession numbers it relies on.
 
 - **Tiles (4):** revenue growth (latest annual `comparisons` row, `percent_change`), operating margin (latest
   `fundamental_trajectories.operating_margin`, with the prior-year value in `sub`), leverage, and latest filing
-  (form and filing date from call 5). **Leverage** = net debt / EBITDA `[Calc]` = (`debt_current` +
-  `debt_noncurrent` − `cash`) ÷ (annual `operating_income` + `depreciation_amortization`), only when the debt
-  and cash facts share one period end and the EBITDA inputs share the latest fiscal year; otherwise
-  total liabilities / equity from `change_report.filing_changes` `[Calc]`, labelled as such. State the formula
-  in the appendix. Never compute a ratio from mismatched periods.
+  (form and filing date from call 5). Use `leverage_metric` exactly as returned: label its `metric`, preserve
+  `period_basis`, `formula_id`, `formula_version` and source facts, and cite the result `[S#]`. If its status is
+  unavailable, show "Not available — <missing_reason>"; never derive a fallback ratio locally.
 - **Review flags signal** (deterministic; describes filed evidence, not the stock; rubric in the appendix):
   - `elevated`: latest annual operating income or operating cash flow below zero, a prior-period fact revised
-    or amended, net debt / EBITDA ≥ 3.0x, or a returned `one_time_item` or ranked change the filing itself
-    describes as impairment, restatement or going concern.
+    or amended, a returned `leverage_metric` with `metric: net_debt_to_ebitda` and `value` ≥ 3.0x, or a
+    returned `one_time_item` or ranked change the filing itself describes as impairment, restatement or going
+    concern.
   - `watch`: annual revenue down year over year, operating margin down ≥ 2.0 percentage points, capital
     expenditures up ≥ 50% with free cash flow margin down, `disclosure_sources` showing added or removed risk
     passages, or issuer held by ≥ 50% of the crowding cohort (`holderSharePct`).
@@ -196,7 +197,7 @@ Sections, in this order (keep each section even when its data is missing, and sh
    `matched` / `not found`), then a callout that this is firm-level 13F. If no roster or no CUSIP: one callout
    and `new_page: false`.
 8. **Appendix — sources and method**: sources `table` (Tag, Evidence, Tool / view, As of, Validation chip,
-   Digest, Accession); calculations `C#` with formula and inputs; the review-flags rubric; method notes
+   Digest, Accession); server-returned metric IDs, versions, bases and source facts; the review-flags rubric; method notes
    (SIC sector mapping is not GICS; Gradient-derived metrics follow `metric_contracts`); and the disclaimer:
 
    > This note summarizes public SEC filings and Gradient-normalized data as of the dates shown. It is not
@@ -205,7 +206,8 @@ Sections, in this order (keep each section even when its data is missing, and sh
    > incomplete. Verify against the source filings before relying on any figure.
 
 Blocks and chips are listed in `references/report-style.md`. Use `align: "n"` for dates, accessions and
-digests. Compute every derived figure with Python and list it as `C#`.
+digests. Every reported metric must come from cited Gradient or source-document evidence. Preserve
+server-returned metric identity, version, basis and source facts; do not derive a fallback locally.
 
 ## Step 5 — Render, check, deliver
 

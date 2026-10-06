@@ -141,13 +141,17 @@ the fund is not presented through a composite. Optional for broad distribution f
 
 ---
 
-## Quick math checks to run on any report
+## Numeric disclosure checks for any report
 
 - Count the annual periods: ≥5 (or since inception), and growing toward 10.
-- Composite assets ≤ total firm assets in every year; composite share of firm assets plausible.
-- Number of portfolios versus composite assets: implied average account size reasonable and stable.
+- Composite assets and total firm assets are both disclosed for every required year.
+- Number of portfolios and composite assets are both disclosed where required.
 - Dispersion and portfolio count shown whenever there are 6+ portfolios.
 - 3-year standard deviation present for every year-end after 36 months of history.
 - Report updated within 12 months of the latest year-end (1.A.12/1.A.16).
 - Benchmark and composite in the same currency; benchmark is a total-return index.
-- Gross minus net spread consistent with the disclosed fee schedule.
+- Gross and net return bases and the fee schedule are disclosed consistently.
+
+Quote disclosed values and relationships. Do not derive implied account sizes, asset shares, fee spreads,
+performance or multiples locally. If a governed calculation is unavailable, mark the arithmetic relationship
+`Not assessed — governed calculation unavailable`.

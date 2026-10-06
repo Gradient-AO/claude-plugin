@@ -46,30 +46,30 @@
   "meter_title": "Evidence completeness"
  },
  "executive": {
-  "bottom_line": "The portfolio returned 11.5% over the year to 2026-07-31, 0.2pp behind its policy benchmark [S3][S4][Calc C1], and 3.1% a year since inception, 0.6pp ahead [Calc C1]. Alternatives are 23.6% of NAV against a 20.0% target, 1.4pp below the 25% upper limit, so they are on watch [S2]. Annualized volatility was 8.7% against 10.3% for the benchmark, and the deepest drawdown (-13.1%, 2022-01 to 2023-10) was recovered by 2025-04 [Calc C2]. Form 13F look-through puts the five largest public-equity issuers at 6.7% of NAV, from lagged long-only filings [S6].",
+  "bottom_line": "The portfolio returned 11.5% over the year to 2026-07-31, 0.2pp behind its policy benchmark [S3][S4], and 3.1% a year since inception, 0.6pp ahead [S3][S4]. Alternatives are 23.6% of NAV against a 20.0% target, 1.4pp below the 25% upper limit, so they are on watch [S2]. Annualized volatility was 8.7% against 10.3% for the benchmark, and the deepest drawdown (-13.1%, 2022-01 to 2023-10) was recovered by 2025-04 [S3][S4]. Form 13F look-through puts the five largest public-equity issuers at 6.7% of NAV, from lagged long-only filings [S6].",
   "tiles": [
    {
     "label": "Trailing 1Y",
     "value": "11.5%",
-    "sub": "Benchmark 11.7% [Calc C1]",
+    "sub": "Benchmark 11.7% [S3][S4]",
     "tone": "watch"
    },
    {
     "label": "Since inception (ann.)",
     "value": "3.1%",
-    "sub": "+0.6pp vs benchmark [Calc C1]",
+    "sub": "+0.6pp vs benchmark [S3][S4]",
     "tone": "good"
    },
    {
     "label": "Volatility (ann.)",
     "value": "8.7%",
-    "sub": "Benchmark 10.3% [Calc C2]",
+    "sub": "Benchmark 10.3% [S3][S4]",
     "tone": "good"
    },
    {
     "label": "Max drawdown",
     "value": "-13.1%",
-    "sub": "2022-01 to 2023-10, recovered [Calc C2]",
+    "sub": "2022-01 to 2023-10, recovered [S3][S4]",
     "tone": "watch"
    }
   ]
@@ -96,7 +96,7 @@
      "rows": [
       [
        "Performance",
-       "1Y −0.2pp, 3Y −0.9pp a year, since inception +0.6pp a year vs benchmark [Calc C1]",
+       "1Y −0.2pp, 3Y −0.9pp a year, since inception +0.6pp a year vs benchmark [S3][S4]",
        {
         "chip": "Watch",
         "status": "watch"
@@ -112,7 +112,7 @@
       ],
       [
        "Risk",
-       "Volatility 8.7% vs 10.3% benchmark; beta 0.83; tracking error 2.6% [Calc C2]",
+       "Volatility 8.7% vs 10.3% benchmark; beta 0.83; tracking error 2.6% [S3][S4]",
        {
         "chip": "Within range",
         "status": "available"
@@ -229,7 +229,7 @@
        }
       ]
      ],
-     "note": "Calculated from monthly points [Calc C1]. Periods over 12 months are annualized; excess is arithmetic, in percentage points. 10Y: the series starts 2021-08 [S3]."
+     "note": "Returned by get_portfolio_historical_returns [S3][S4]. Periods over 12 months are annualized only as labelled; excess is in percentage points. 10Y: the series starts 2021-08 [S3]."
     },
     {
      "type": "table",
@@ -310,7 +310,7 @@
        }
       ]
      ],
-     "note": "Partial years are cumulative for the months shown and are not annualized [S3][Calc C1]."
+     "note": "Partial years are cumulative for the months shown and are not annualized [S3]."
     },
     {
      "type": "line",
@@ -816,7 +816,7 @@
        ]
       }
      ],
-     "note": "Month-end growth of 100 from 2021-07-31 to 2026-07-31 for the portfolio and its policy benchmark, linked from returned monthly points [S3][S4][Calc C1]."
+     "note": "Month-end growth of 100 from 2021-07-31 to 2026-07-31 for the portfolio and its policy benchmark, returned by the historical-return contract [S3][S4]."
     }
    ]
   },
@@ -932,7 +932,7 @@
        "display": "$35.0M · 2.8%"
       }
      ],
-     "note": "Market value plus drawdown NAV across 42 commitments, $1,250.0M; $142.0M of unfunded commitments is not included [S5][Calc C3]."
+     "note": "Server aggregate across 42 commitments, $1,250.0M; $142.0M of unfunded commitments is not included [S5]."
     }
    ]
   },
@@ -1008,37 +1008,37 @@
       [
        "Annualized volatility",
        "8.7% (benchmark 10.3%)",
-       "Calc C2"
+       "S3/S4"
       ],
       [
        "Maximum drawdown",
        "-13.1%: peak 2022-01, trough 2023-10, recovered 2025-04",
-       "Calc C2"
+       "S3/S4"
       ],
       [
        "Best / worst month",
        "4.7% / -5.5%",
-       "Calc C2"
+       "S3/S4"
       ],
       [
        "Positive months",
        "35 of 60",
-       "Calc C2"
+       "S3/S4"
       ],
       [
        "Beta to benchmark",
        "0.83",
-       "Calc C2"
+       "S3/S4"
       ],
       [
        "Tracking error",
        "2.6%",
-       "Calc C2"
+       "S3/S4"
       ],
       [
        "Information ratio",
        "0.24",
-       "Calc C2"
+       "S3/S4"
       ]
      ]
     }
@@ -1051,7 +1051,7 @@
    "blocks": [
     {
      "type": "text",
-     "text": "House macro view (TEST): policy rates are expected to hold [S7]. The TEST assumption set puts the policy mix's expected return at 6.4% a year over 10 years [S8][Calc C4]. These are assumptions, not forecasts of this portfolio's return."
+     "text": "House macro view (TEST): policy rates are expected to hold [S7]. The governed policy check returns a 6.4% expected return over 10 years for the TEST assumption set [S8]. These are assumptions, not forecasts of this portfolio's return."
     }
    ]
   },
@@ -1076,7 +1076,7 @@
       {
        "name": "Historical returns",
        "status": "degraded",
-       "note": "Summary sections unavailable; computed from 60 monthly points [S3][Calc C1]"
+       "note": "Summary section unavailable; raw points are charted without local metric computation [S3]"
       },
       {
        "name": "Benchmark",
@@ -1226,7 +1226,7 @@
      "rows": [
       [
        "C1",
-       "Geometrically linked period returns; annualized (1+R)^(12/n) − 1 for n > 12 months; excess = portfolio − benchmark (scripts/review_calcs.py)",
+       "Server-returned geometrically linked period returns; annualized only when the returned period semantics permit; excess and benchmark values preserved from get_portfolio_historical_returns",
        "S3, S4 monthly points"
       ],
       [

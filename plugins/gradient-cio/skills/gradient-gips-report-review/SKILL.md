@@ -34,11 +34,12 @@ composite/fund return (gross and/or net), benchmark return, number of portfolios
 firm assets, dispersion, 3-year standard deviation (composite and benchmark). For MWR reports, capture SI-MWR,
 benchmark SI-MWR, committed capital, paid-in capital, distributions and multiples.
 
-## Step 3 — Check required numbers and math
+## Step 3 — Check required numeric disclosures
 
-Apply the required-numbers table for the section, then the "Quick math checks". Use a short script for
-arithmetic checks when more than a few years are involved (for example, composite assets ≤ firm assets, implied
-average account size, gross–net spread versus the fee schedule, TVPI ≈ DPI + RVPI).
+Apply the required-numbers table and the "Numeric disclosure checks." Quote the report's disclosed values and
+relationships; do not calculate implied account sizes, fee spreads, performance, multiples or other report
+values locally. If a relationship is not explicitly disclosed or returned by a governed Gradient contract,
+mark that check `Not assessed — governed calculation unavailable` rather than estimating it.
 
 ## Step 4 — Check required disclosures
 
