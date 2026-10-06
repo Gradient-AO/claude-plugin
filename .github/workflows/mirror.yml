@@ -1,8 +1,7 @@
 name: mirror
 # Mirrors main and release tags to the private repo that Claude's
-# organization marketplace syncs from. Needs secret MIRROR_TOKEN: a
-# fine-grained token scoped to Gradient-AO/gradient-cio-marketplace only,
-# with Contents and Workflows set to read and write.
+# organization marketplace syncs from. Uses secret MIRROR_DEPLOY_KEY, the
+# private half of a write deploy key on Gradient-AO/gradient-cio-marketplace.
 on:
   push:
     branches: [main]
@@ -18,21 +17,16 @@ jobs:
     if: github.repository == 'Gradient-AO/claude-plugin'
     runs-on: ubuntu-24.04
     steps:
-      - name: Check token
-        id: token
-        env: { MIRROR_TOKEN: "${{ secrets.MIRROR_TOKEN }}" }
-        run: |
-          if [ -z "$MIRROR_TOKEN" ]; then
-            echo "::warning::MIRROR_TOKEN is not set; skipping mirror"
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          fi
       - uses: actions/checkout@v5
-        if: steps.token.outputs.skip != 'true'
         with: { fetch-depth: 0, persist-credentials: false }
-      - name: Push main and tags
-        if: steps.token.outputs.skip != 'true'
-        env: { MIRROR_TOKEN: "${{ secrets.MIRROR_TOKEN }}" }
+      - name: Push main and tags to private mirror
+        env: { MIRROR_DEPLOY_KEY: "${{ secrets.MIRROR_DEPLOY_KEY }}" }
         run: |
+          mkdir -p ~/.ssh
+          echo "$MIRROR_DEPLOY_KEY" > ~/.ssh/mirror_key
+          chmod 600 ~/.ssh/mirror_key
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/mirror_key -o IdentitiesOnly=yes"
           git fetch --tags --force origin
-          git push --force "https://x-access-token:${MIRROR_TOKEN}@github.com/Gradient-AO/gradient-cio-marketplace.git" \
+          git push --force git@github.com:Gradient-AO/gradient-cio-marketplace.git \
             "refs/remotes/origin/main:refs/heads/main" "refs/tags/v*:refs/tags/v*"
