@@ -1,9 +1,10 @@
 # IPS Schema
 
-Extract the Investment Policy Statement into this JSON before running `memo_calcs.py ips`. Copy limits exactly
-as written in the IPS; record the IPS section reference for each so Section 4's Source column can cite it
-(`IPS §x.y`). Omit a block entirely if the IPS does not address it — do not create defaults. Each block that
-is present produces one or more rows in Section 4, in the order shown.
+Use this shape only to organize quoted Investment Policy Statement evidence. Copy limits exactly as written
+and record the IPS section reference for each so Section 4's Source column can cite it (`IPS §x.y`). Omit a
+block entirely if the IPS does not address it — do not create defaults. Do not calculate compliance from this
+local extraction. Governed statuses come from `check_portfolio_policy`; when the document differs from or is
+not represented in the governed profile, disclose the difference and mark the affected row Not assessed.
 
 ```json
 {

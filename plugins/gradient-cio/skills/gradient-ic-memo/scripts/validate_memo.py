@@ -7,7 +7,7 @@ Checks
   3. Status cells in Sections 3, 4, 6.2, 7.1, 9.2 use only allowed status words.
   4. Rating cells in Section 14 use only High / Medium / Low; timing in Section 15 uses allowed values.
   5. Every [S#] cited in the body has a row in Appendix A, and every Appendix A row is cited.
-  6. Every [Calc C#] cited has a row in Appendix B.
+  6. No stale local-calculation tags remain; Appendix B documents server metric methods.
   7. Executive summary has exactly five bullets with the fixed labels.
   8. Banned phrases from writing-standards.md are absent.
   9. Illustrative banner present if any Appendix A row has illustrative scope.
@@ -36,7 +36,7 @@ REQUIRED = [
     r"^## 15\. Open Items & Conditions$",
     r"^## 16\. Approvals$",
     r"^## Appendix A — Sources$",
-    r"^## Appendix B — Calculations$",
+    r"^## Appendix B — Server Metric Methods$",
     r"^## Appendix C — Methodology & Disclosures$",
 ]
 STATUS = {"Compliant", "Watch", "Breach", "Not assessed", "n/a", ""}
@@ -126,9 +126,8 @@ def main(path):
         if v not in TIMING:
             errors.append(f"Invalid timing '{v}' in Section 15")
 
-    # 5/6. source tags
+    # 5/6. source tags and local-calculation prohibition
     appA = "\n".join(section_text(lines, r"^## Appendix A"))
-    appB = "\n".join(section_text(lines, r"^## Appendix B"))
     body_main = text.split("## Appendix A")[0]
     cited_s = set(re.findall(r"\[S(\d+)\]", body_main))
     listed_s = set(re.findall(r"^\|\s*S(\d+)\s*\|", appA, re.M))
@@ -136,10 +135,8 @@ def main(path):
         errors.append(f"[S{s}] cited but missing from Appendix A")
     for s in sorted(listed_s - cited_s, key=int):
         errors.append(f"S{s} listed in Appendix A but never cited")
-    cited_c = set(re.findall(r"\[Calc C(\d+)\]", body_main))
-    listed_c = set(re.findall(r"^\|\s*C(\d+)\s*\|", appB, re.M))
-    for c in sorted(cited_c - listed_c, key=int):
-        errors.append(f"[Calc C{c}] cited but missing from Appendix B")
+    if re.search(r"\[Calc(?:\s+C(?:\d+|#))?\]", text):
+        errors.append("Local calculation tags are not allowed; cite server or document evidence with [S#]")
 
     # 7. executive summary
     ex = [l for l in section_text(lines, r"^## 2\.") if l.strip().startswith("- ")]

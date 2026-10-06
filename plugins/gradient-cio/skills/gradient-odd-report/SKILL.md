@@ -109,7 +109,7 @@ Then call:
 
 | # | Call | Feeds |
 |---|---|---|
-| 1 | `get_manager_diligence_brief` with `fund_id` or `firm_id` and all 7 `sections` | Completeness basis, governed red flags, questions and changes, every section's `validation_status` and `payload_digest` |
+| 1 | `get_manager_diligence_brief` with `fund_id` or `firm_id` and all 9 `sections` | Server-derived evidence signals (`red_flags`, `changes_since_review`, `manager_questions`, `trigger_rows`), synthesis basis, differentiated analytics, and every section's `status`, `validation_status` and `payload_digest` |
 | 2 | `get_firm_13f_portfolio_review` `mode: snapshot` on the **parent firm_id** (the brief marks 13F not_applicable at fund level). Retry once on `backend_timeout`; if it fails again, use `mode: snapshot` with no `quarters`. | Holdings section |
 | 3 | `get_manager_diligence_findings` `view: open` for the firm (and the fund) | Findings |
 | 4 | `get_firm_fund_events` for the firm, `include_event_type_counts: true` | Events |
@@ -122,6 +122,10 @@ Rules:
   **every** section and **every** returned row. Never write "not shown" for rows that are in the payload.
   The ADV data lives at `.sections.manager_adv.data` (`profile` for the adviser-reported data, `analytics`
   for Gradient cohort analytics).
+- Treat `.synthesis` and `.differentiated_analytics` as server-derived evidence signals. Preserve their
+  thresholds, evidence paths, source vintages, availability and completeness basis. They are not report-ready
+  prose or an ODD conclusion: this plugin applies the rubric below, reaches the conclusion and writes all
+  narrative.
 - The direct `get_manager_odd_profile` call can fail with `response_contract_invalid`. If it does, use the
   brief's `manager_adv` section. Don't loop on retries.
 - For every result, record a source row: tag `S#`, evidence label, tool, `as_of`, `validation.status`, the
@@ -161,19 +165,21 @@ Rules:
   `crd_cik_legal_entity_unconfirmed` means Gradient could not confirm the CRD and the 13F CIK are the same
   legal entity: say so in the section and do not draw inferences from the ratio. A 13F older than ~135 days
   is stale; say so.
-- **ODD evidence signal** (deterministic; put the rubric in the appendix):
+- **ODD evidence signal** (plugin conclusion from the server-derived evidence signals; put the deterministic
+  rubric in the appendix):
   - `elevated`: any Item 11 disclosure, high-severity finding or tier-1 alert, or 2+ cohort metrics ≥75th
     percentile.
   - `watch`: one metric ≥75th percentile, a medium finding or tier-2 alert, or an ownership or control change
     since the last review.
   - `clear` (label: "No flags identified"): none of the above.
   - `insufficient`: the ADV profile is unavailable or fails a blocking check.
-- **Completeness:** used = available sections out of the 7 the brief expects (count firm-level 13F as
-  available if call 2 succeeded). State is `complete` when 7/7 and `degraded` otherwise. A "No flags
-  identified" signal with degraded completeness must say plainly that it is not a clean bill of health.
-- **Follow-up questions:** use the brief's governed `manager_questions` first. Add analyst questions only for
-  concrete evidence gaps or conflict items, and say they are analyst-generated. Each question gets a one-line
-  "why" with a source tag.
+- **Completeness:** start from `synthesis.basis`; used = available sections out of the 9 requested sections
+  (count firm-level 13F as available if call 2 succeeded). State is `complete` when 9/9 and `degraded`
+  otherwise. A "No flags identified" signal with degraded completeness must say plainly that it is not a
+  clean bill of health.
+- **Follow-up questions:** use the brief's server-derived governed `manager_questions` as evidence first, but
+  write the report wording in this plugin. Add analyst questions only for concrete evidence gaps or conflict
+  items, and say they are analyst-generated. Each question gets a one-line "why" with a source tag.
 
 ## Step 4 — Write report.json
 
@@ -181,7 +187,7 @@ Standard sections, in this order and with these titles (keep a section even if i
 the gap in it):
 
 1. **Executive summary** (`id: "executive"`) — the exec band and tiles render automatically from
-   `executive`. Add a `two_col` of 3+3 bullets and a `coverage` block listing all 7 sections. Keep notes to one
+   `executive`. Add a `two_col` of 3+3 bullets and a `coverage` block listing all 9 sections. Keep notes to one
    line so it fits on one page.
 2. **Firm profile & ownership** — identity `kv` plus a `narrow` client-type `bars` chart in a `two_col`, then
    an owners table.
@@ -195,13 +201,13 @@ the gap in it):
    small `kv` "ADV vs 13F consistency" (ADV RAUM, 13F total, ratio, 13F period and age, identity check, flags).
 7. **Monitoring, findings & DDQ** — two `kv`s, a `findings` block, and the DDQ status.
 8. **Follow-up questions & open items** — `questions`, then an open-items table with status chips.
-9. **Appendix — sources & method** — a sources table, calculations next to the rubric, and the disclaimer
+9. **Appendix — sources & method** — a sources table, server metric methods next to the rubric, and the disclaimer
    text.
 
-Writing rules: lead with the finding; give an exact number, a unit and a source tag (`[S#]`, `[Calc C#]`) on
-every figure; use ISO dates; show currency in $B or $M with 1–2 decimals; show percentages to 1 dp. Don't use
-"robust", "best-in-class" or other adjectives Gradient data can't support. Compute derived figures with Python,
-not by hand, and list each one as `C#` in the appendix.
+Writing rules: lead with the finding; give an exact number, a unit and an `[S#]` evidence tag on every figure;
+use ISO dates; show currency in $B or $M with 1–2 decimals; show percentages to 1 dp. Don't use "robust",
+"best-in-class" or other adjectives Gradient data can't support. Scaling and rounding for display are allowed;
+do not derive report values locally.
 
 **Block types** (each object has `type`):
 `text {text}` · `bullets {items}` · `kv {title?, rows:[[k, v, srcTag?]]}` ·
@@ -226,7 +232,7 @@ Top level:
   "confidentiality": "Confidential — prepared for <org> internal investment use",
   "cover_facts": [["Adviser CRD","…"],["SEC file no.","…"],["Regulatory AUM","…"],["Form ADV report date","…"],["Prepared for","<org>"],["Report date","…"]],
   "signal": {"level": "clear|watch|elevated|insufficient", "label": "<optional override>"},
-  "completeness": {"used": 5, "expected": 7, "state": "degraded"}},
+  "completeness": {"used": 7, "expected": 9, "state": "degraded"}},
  "executive": {"bottom_line": "<3–5 sentences with tags>", "tiles": [ 4 tiles ]},
  "sections": [ {"id": "executive", "title": "Executive summary", "kicker": "…", "blocks": [ … ]}, … ]}
 ```
@@ -241,7 +247,8 @@ Every section starts on a new page; set `"new_page": false` on a section to cont
 2. Rasterize with `pdftoppm -r 60 -png` and look at every page. Fix any page holding only a short tail of
    overflow (shorten notes or bullets, or set `new_page: false`), any squashed chart in a column (set
    `narrow: true`), and any wrapped dates or digests (align `n`). Re-render.
-3. Fact-check: recompute each `[Calc]` figure, and spot-check every table value against the saved JSON.
+3. Fact-check: reconcile each server-returned numeric comparison within its stated tolerance, and spot-check
+   every table value against the saved JSON.
 4. Save the PDF under `/mnt/user-data/outputs/`. If a folder is connected, also write it there. In chat, give a
    three-line summary (signal and completeness, the top concern, the number of open items) and the file. Don't
    repeat the report in chat. For several reports (Step 1C), use the closing table instead of a three-line

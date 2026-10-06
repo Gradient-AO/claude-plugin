@@ -23,9 +23,8 @@ the structure and the rules. Never fill a number from memory or general knowledg
 | `references/portfolio-strategy-scope.md` | Always — hard boundary between saved-portfolio evidence and Strategy Lab return-series analysis. |
 | `references/chart-data.md` | Always — dashboard chart discovery, basis rules and generic report block. |
 | `references/ips-schema.md` | When an IPS is supplied or needed — how to capture IPS constraints as structured input. |
-| `references/calculations.md` | Before computing anything — the only formulas allowed, rounding and status thresholds. |
+| `references/calculations.md` | Before drafting figures — display formats and the server-owned metric methods to preserve. |
 | `references/writing-standards.md` | Before drafting prose — IC memo best practices and banned phrasing. |
-| `scripts/memo_calcs.py` | For IPS checks, liquidity tiers, Brinson attribution and formatting. Run it; do not hand-compute. |
 | `scripts/validate_memo.py` | After drafting — confirms every section is present, in order, with no unresolved placeholders. |
 | `assets/example-memo.md` | When unsure how a section should look — a complete worked example that passes validation. |
 | `references/report-style.md` | Before rendering — the shared Gradient report style, `meta` fields and delivery rules. |
@@ -89,20 +88,16 @@ The memo always contains Section 11, *Performance Integrity & GIPS*.
 - If the gradient-gips-* skills are not installed, write `Not assessed — Gradient GIPS skills unavailable`
   and add the GIPS review to Section 15.
 
-### Step 4 — Calculate
+### Step 4 — Use governed server metrics
 
-Use `scripts/memo_calcs.py` for every derived number (see `references/calculations.md`). Typical run:
+Call `check_portfolio_policy` for allocation bands, return objective, risk limits, liquidity and concentration.
+Call `get_portfolio_attribution` for realized Brinson-Fachler effects and symmetric-Carino linking. Use
+`get_portfolio_historical_returns` for portfolio, benchmark-relative and risk metrics. Preserve each tool's
+methodology, formula version, basis, period, currency, coverage and missing reasons. If a governed result is
+unavailable, report it as unavailable; do not derive a fallback from returned inputs or user documents.
 
-```bash
-python scripts/memo_calcs.py ips      --input ips_and_allocation.json   # IPS compliance table
-python scripts/memo_calcs.py liquidity --input liquidity.json           # liquidity tiers and coverage
-python scripts/memo_calcs.py brinson  --input attribution_inputs.json   # when governed weights and returns are available
-```
-
-Use Portfolio Analytics historical returns for portfolio and benchmark-relative metrics. Strategy Lab
-relative return applies only to selected lab return series and does not provide Brinson decomposition;
-calculate portfolio attribution only from governed portfolio/benchmark weights and returns, and tag the
-result `[Calc C#]` with the formula listed in Appendix B.
+Strategy Lab relative return applies only to selected lab return series and does not provide saved-portfolio
+Brinson decomposition.
 
 ### Step 5 — Draft the memo
 
@@ -114,7 +109,8 @@ Determinism rules (summary — the template is authoritative):
 3. Missing data → `Not available — <reason>` in place of the value; the row stays.
 4. Number formats follow `references/calculations.md` (percentages 1 dp, active weights and spreads in bps,
    currency in millions with 1 dp, ISO dates).
-5. Every number in the text or a table carries a source tag: `[S#]` (Gradient / document) or `[Calc C#]`.
+5. Every number in the text or a table carries an `[S#]` tag for the Gradient result or user document that
+   supplied it. Scaling and rounding for display are allowed; deriving report values locally is not.
 6. Status words are only those defined in the template (for example `Compliant`, `Watch`, `Breach`,
    `Not assessed`). No synonyms.
 

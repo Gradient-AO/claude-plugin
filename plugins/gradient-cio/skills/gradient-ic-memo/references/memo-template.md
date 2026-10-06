@@ -92,7 +92,8 @@ Exactly five bullets, in this order, one to two sentences each:
 ## 4. IPS Compliance
 
 {One row per constraint in the IPS, in IPS-schema order: allocation bands, return objective, risk limits,
-liquidity, concentration, leverage, prohibited/restricted, ESG/other. Rows come from memo_calcs.py ips.}
+liquidity, concentration, leverage, prohibited/restricted, ESG/other. Governed rows come from
+`check_portfolio_policy`; keep unsupported document-only constraints Not assessed.}
 
 ```
 | # | Constraint | IPS requirement | Current | Status | Source |
@@ -127,8 +128,8 @@ liquidity, concentration, leverage, prohibited/restricted, ESG/other. Rows come 
 ```
 
 ```
-**Reconciliation:** Sum of effects = <x> bps vs total active return <y> bps; residual <z> bps [Calc C#].
-**Method:** <governed attribution source method, or "Brinson-Fachler (local calculation)">.
+**Reconciliation:** Sum of effects = <x> bps vs total active return <y> bps; residual <z> bps [S#].
+**Method:** <server-returned attribution method, linking method, period/basis/currency and formula version>.
 ```
 
 **5.3 Top contributors and detractors** {five each, sorted by contribution; ties by name}
@@ -357,10 +358,10 @@ being hired), unchanged, ordered: total fund first, then managers by exposure de
 |---|---|---|---|---|---|---|
 ```
 
-## Appendix B — Calculations
+## Appendix B — Server Metric Methods
 
 ```
-| Ref | Quantity | Formula | Inputs | Result |
+| Source | Quantity | Method / formula ID | Version | Basis and tolerance |
 |---|---|---|---|---|
 ```
 

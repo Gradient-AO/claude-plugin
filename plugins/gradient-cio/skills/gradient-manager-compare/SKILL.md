@@ -223,12 +223,14 @@ Sections (titles fixed; keep a section even when its data is missing and show th
    the optional actions in Step 6 (watchlist, ADV monitoring) as offers, not done.
 8. **Appendix A — Sources and method** (`num: "A"`) — sources table (Tag, Evidence, Tool / view, As of,
    Validation, Digest), the screen arguments and their limits (no strategy filter; name-only search), the flag
-   rules and signal rubric above, calculations `C#` (computed with Python), and the disclaimer: not investment,
+   rules and server-returned metric methods, and the disclaimer: not investment,
    legal or compliance advice; no manager is ranked or recommended; Form ADV is adviser-reported; Form 13F is
    lagged long-only reportable exposure; percentiles are Gradient cohort positioning, not a quality ranking.
 
-Writing rules: lead with the finding; every figure carries a unit, a date and a tag (`[S#]`, `[Calc C#]`); ISO
-dates; $B/$M with 1–2 decimals; percentages to 1 dp. No "strong", "robust", "best-in-class", "top-tier".
+Writing rules: lead with the finding; every figure carries a unit, a date and an `[S#]` evidence tag; ISO
+dates; $B/$M with 1–2 decimals; percentages to 1 dp. Use `discretionary_raum_share` and
+`thirteen_f_total_to_adv_raum_ratio` exactly as returned; do not derive ratios locally. No "strong",
+"robust", "best-in-class", "top-tier".
 
 Render:
 

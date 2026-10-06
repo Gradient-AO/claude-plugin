@@ -126,12 +126,12 @@ def esc(s):
     return html.escape("" if s is None else str(s))
 
 def rich(s):
-    """Escape, then **bold**, `code`, and [S#]/[Calc C#] source tags."""
+    """Escape, then **bold**, `code`, and [S#] evidence tags."""
     t = esc(s)
     t = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", t)
     t = re.sub(r"`(.+?)`", r"<code>\1</code>", t)
     t = re.sub(r"(?<![*\w])\*(?!\s)([^*]+?)\*(?!\w)", r"<i>\1</i>", t)
-    t = re.sub(r"\[((?:S|Calc C)\d+(?:,\s*(?:S|Calc C)\d+)*)\]", r'<span class="src">\1</span>', t)
+    t = re.sub(r"\[(S\d+(?:,\s*S\d+)*)\]", r'<span class="src">\1</span>', t)
     return t
 
 def chip(text, status):
@@ -871,8 +871,21 @@ def main():
         br.close()
     if shutil.which("pdfunite"):
         subprocess.run(["pdfunite", p1, p2, out], check=True)
-    else:
+    elif shutil.which("qpdf"):
         subprocess.run(["qpdf", "--empty", "--pages", p1, p2, "--", out], check=True)
+    else:
+        try:
+            from pypdf import PdfReader, PdfWriter
+        except ImportError as error:
+            raise RuntimeError(
+                "PDF merge requires pdfunite, qpdf, or the pypdf package"
+            ) from error
+        writer = PdfWriter()
+        for source in (p1, p2):
+            for page in PdfReader(source).pages:
+                writer.add_page(page)
+        with open(out, "wb") as output:
+            writer.write(output)
     print(f"Wrote {out}")
 
 if __name__ == "__main__":

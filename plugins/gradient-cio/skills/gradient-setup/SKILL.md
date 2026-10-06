@@ -28,25 +28,38 @@ report them as separate modules; never use the canonical illustrative portfolio 
 
 1. Call `get_gradient_capabilities` with the `organization_id` and `detail: "summary"`:
    - `capabilities` (module flags), `backend_readiness`, `version`;
+   - `contract_identity.compatibility_epoch`;
    - per tool: `entitled`, `available`, `scoped`, `healthy`, `data_ready`, `availability_reason`,
      `missing_oauth_scopes`;
    - `coverage[]`: domain, status (`available`, `conditional`, `unavailable`), `as_of`.
    Request `detail: "full"` only when diagnosing per-backend readiness.
-2. Map tools to skills with `references/skill-requirements.md`. A skill is **ready** when every required tool is
+2. Save the summary response, then validate the machine-readable `minimum_connector_contract` in
+   `references/contracts.json`:
+
+   ```
+   python <this skill's directory>/scripts/check_contract.py --validate-connector \
+     <this skill's directory>/references/contracts.json <capabilities-response.json>
+   ```
+
+   This requires service version 0.8.0 or newer, compatibility epoch 1, and every required public tool.
+   On failure, stop before skill or probe execution, mark the connector `not_ready`, quote the validator
+   failure, and tell the user to update or reconnect GradientCIO. Do not replace missing connector
+   calculations with local calculations.
+3. Map tools to skills with `references/skill-requirements.md`. A skill is **ready** when every required tool is
    entitled, available and healthy; **partial** when only optional tools are missing or a required tool has a
    known issue with a workaround; **not available** when a required tool is not entitled (name the module the
    client would need to license). When `entitled` is false but `available` is true with
    `access_mode: "illustrative"`, report **Evaluation — Illustrative, Gradient Maintained**, not Ready or Not licensed.
-3. Call `get_diligence_roster_funds`: roster size, capacity used and available, and reviews due within 30 days.
+4. Call `get_diligence_roster_funds`: roster size, capacity used and available, and reviews due within 30 days.
 
 ## 3. Contract self-test
 
 Run the probes in `references/contract-checks.md`. The **standard** set is 8 quick reads (default). The
-**full read** set is 38 reads (the 8 standard plus 30 full probes); run it when the user asks for a health
+**full read** set is 44 reads (the 8 standard plus 36 full probes); run it when the user asks for a health
 check or self-test, or after a plugin update. The separate **writes** set is 4 dry-run previews, including
 one batch-preview contract, and must never commit. The **DDQ save-preview** set is 3 calls: it intentionally persists one fictional test
 document and one immutable reconciliation test run so that document identity and the chained save can be
-tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 45 calls.
+tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 51 calls.
 
 For each probe, record pass, fail (with error code and HTTP status) or not run (not entitled), and the
 response `as_of`. Resolve `depends_on` arguments with `check_contract.py --resolve-args`; do not manually

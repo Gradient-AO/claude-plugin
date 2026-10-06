@@ -1,5 +1,122 @@
 {
   "version": "2026-10-05",
+  "minimum_connector_contract": {
+    "minimum_service_version": "0.8.0",
+    "compatibility_epoch": 1,
+    "required_tools": [
+      "batch_reconcile_manager_ddq_claims",
+      "check_portfolio_policy",
+      "get_diligence_roster_funds",
+      "get_gradient_capabilities",
+      "get_manager_diligence_brief",
+      "get_manager_odd_profile",
+      "get_portfolio_attribution",
+      "get_portfolio_exposure",
+      "get_portfolio_historical_returns",
+      "get_portfolio_structure",
+      "get_public_equity_filing_evidence",
+      "get_public_equity_fundamentals",
+      "list_organizations",
+      "list_portfolios",
+      "reconcile_manager_ddq_claims",
+      "search_managers"
+    ],
+    "required_response_field_paths": {
+      "batch_reconcile_manager_ddq_claims": [
+        "result_type",
+        "items[0].data.rows[0].numeric_gap.formula_id"
+      ],
+      "check_portfolio_policy": [
+        "overall_status",
+        "allocation_bands.coverage.status",
+        "return_objective.coverage.status",
+        "risk_limits.coverage.status",
+        "liquidity.coverage.status",
+        "concentration.coverage.status"
+      ],
+      "get_diligence_roster_funds": [
+        "funds",
+        "capacity.effective_limit"
+      ],
+      "get_gradient_capabilities": [
+        "version",
+        "contract_identity.compatibility_epoch",
+        "tools"
+      ],
+      "get_manager_diligence_brief": [
+        "brief_version",
+        "sections.manager_adv.status",
+        "synthesis.basis.state"
+      ],
+      "get_manager_odd_profile": [
+        "profile",
+        "resolved_subject"
+      ],
+      "get_portfolio_attribution": [
+        "coverage.status",
+        "coverage.missing_reason_codes[0]",
+        "method.linking",
+        "summary"
+      ],
+      "get_portfolio_exposure": [
+        "portfolio.portfolio_id",
+        "exposures",
+        "totals.nav_base"
+      ],
+      "get_portfolio_historical_returns": [
+        "coverage.status",
+        "risk_metrics.annualized_volatility",
+        "benchmark_relative.portfolio"
+      ],
+      "get_portfolio_structure": [
+        "nodes[0].target_weight",
+        "coverage.status"
+      ],
+      "get_public_equity_filing_evidence": [
+        "findings",
+        "findings[0].accession_number"
+      ],
+      "get_public_equity_fundamentals": [
+        "resolved_subject.cik",
+        "leverage_metric.formula_id",
+        "leverage_metric.formula_version"
+      ],
+      "list_organizations": [
+        "organizations[0].id",
+        "organizations[0].licensed_modules"
+      ],
+      "list_portfolios": [
+        "portfolios[0].portfolio_id",
+        "portfolios[0].canonical_default"
+      ],
+      "reconcile_manager_ddq_claims": [
+        "rows[0].numeric_gap.formula_id",
+        "rows[0].numeric_gap.formula_version"
+      ],
+      "search_managers": [
+        "advisers",
+        "report_date"
+      ]
+    },
+    "required_probe_ids": [
+      "orgs",
+      "capabilities_summary",
+      "roster",
+      "odd_profile",
+      "manager_diligence_brief",
+      "sample_portfolio",
+      "portfolio_tree",
+      "portfolio_exposure",
+      "portfolio_policy",
+      "portfolio_returns",
+      "portfolio_attribution",
+      "search_managers",
+      "equity_fundamentals",
+      "equity_risk_findings",
+      "ddq_numeric_gap",
+      "batch_ddq_preview"
+    ]
+  },
   "envelope": [
     "provenance.as_of",
     "validation.status"
@@ -30,6 +147,7 @@
       "required": [
         "service",
         "version",
+        "contract_identity.compatibility_epoch",
         "detail",
         "capabilities",
         "entitlements",
@@ -66,6 +184,94 @@
         "profile",
         "resolved_subject"
       ]
+    },
+    {
+      "id": "manager_diligence_brief",
+      "set": "full",
+      "tool": "get_manager_diligence_brief",
+      "depends_on": [
+        "roster"
+      ],
+      "args": {
+        "firm_id": "<roster:funds[0].parent_firm_id>",
+        "sections": [
+          "manager_adv",
+          "firm_fund_events",
+          "entity_facts",
+          "manager_monitor_evidence",
+          "firm_13f",
+          "open_findings",
+          "ddq_history",
+          "service_providers",
+          "enforcement_candidates"
+        ]
+      },
+      "required": [
+        "brief_version",
+        "status",
+        "section_order",
+        "sections.manager_adv.status",
+        "sections.manager_adv.validation_status",
+        "sections.manager_adv.payload_digest",
+        "sections.firm_fund_events.status",
+        "sections.firm_fund_events.validation_status",
+        "sections.firm_fund_events.payload_digest",
+        "sections.entity_facts.status",
+        "sections.entity_facts.validation_status",
+        "sections.entity_facts.payload_digest",
+        "sections.manager_monitor_evidence.status",
+        "sections.manager_monitor_evidence.validation_status",
+        "sections.manager_monitor_evidence.payload_digest",
+        "sections.firm_13f.status",
+        "sections.firm_13f.validation_status",
+        "sections.firm_13f.payload_digest",
+        "sections.open_findings.status",
+        "sections.open_findings.validation_status",
+        "sections.open_findings.payload_digest",
+        "sections.ddq_history.status",
+        "sections.ddq_history.validation_status",
+        "sections.ddq_history.payload_digest",
+        "sections.service_providers.status",
+        "sections.service_providers.validation_status",
+        "sections.service_providers.payload_digest",
+        "sections.enforcement_candidates.status",
+        "sections.enforcement_candidates.validation_status",
+        "sections.enforcement_candidates.payload_digest",
+        "differentiated_analytics.projection_version",
+        "differentiated_analytics.status",
+        "differentiated_analytics.ddq_longitudinal",
+        "differentiated_analytics.odd_document_assessments",
+        "differentiated_analytics.odd_document_extractions",
+        "synthesis.red_flags",
+        "synthesis.changes_since_review",
+        "synthesis.manager_questions",
+        "synthesis.trigger_rows",
+        "synthesis.basis.expected_sections",
+        "synthesis.basis.used_sections",
+        "synthesis.basis.unavailable_sections",
+        "synthesis.basis.not_applicable_sections",
+        "synthesis.basis.latest_review_at",
+        "synthesis.basis.state",
+        "synthesis.basis.reasons",
+        "synthesis.basis.degraded",
+        "synthesis.basis.completeness",
+        "synthesis.basis.used_section_count",
+        "synthesis.basis.expected_section_count"
+      ],
+      "equals": {
+        "brief_version": "manager-diligence-brief-v2",
+        "section_order": [
+          "manager_adv",
+          "firm_fund_events",
+          "entity_facts",
+          "manager_monitor_evidence",
+          "firm_13f",
+          "open_findings",
+          "ddq_history",
+          "service_providers",
+          "enforcement_candidates"
+        ]
+      }
     },
     {
       "id": "monitor_coverage",
@@ -393,6 +599,43 @@
       ]
     },
     {
+      "id": "portfolio_policy",
+      "set": "full",
+      "tool": "check_portfolio_policy",
+      "depends_on": [
+        "sample_portfolio"
+      ],
+      "args": {
+        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>"
+      },
+      "required": [
+        "portfolio.portfolio_id",
+        "portfolio.record_kind",
+        "overall_status",
+        "policy_provenance.basis",
+        "allocation_bands.coverage.status",
+        "return_objective.coverage.status",
+        "risk_limits.coverage.status",
+        "liquidity.coverage.status",
+        "concentration.coverage.status",
+        "semantics.raw_decimal_values",
+        "semantics.allocation_band_watch_boundary_decimal",
+        "methodology"
+      ],
+      "equals": {
+        "portfolio.record_kind": "example",
+        "policy_provenance.basis": "governed_inputs_only",
+        "semantics.raw_decimal_values": true
+      },
+      "approx": {
+        "semantics.allocation_band_watch_boundary_decimal": {
+          "expected": 0.02,
+          "absolute_tolerance": 1e-12,
+          "unit": "decimal_fraction"
+        }
+      }
+    },
+    {
       "id": "portfolio_ownership",
       "set": "full",
       "tool": "get_portfolio_structure",
@@ -428,12 +671,106 @@
         "organization_id": "<orgs:organizations[0].id>",
         "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
         "sections": [
-          "standard_periods"
+          "points",
+          "cumulative_growth",
+          "standard_periods",
+          "calendar_years",
+          "risk_metrics",
+          "benchmark_relative"
         ]
       },
       "required": [
-        "standard_periods"
+        "portfolio.portfolio_id",
+        "portfolio.record_kind",
+        "coverage.status",
+        "coverage.selected_point_count",
+        "coverage.sections.standard_periods.status",
+        "coverage.sections.risk_metrics.status",
+        "coverage.sections.benchmark_relative.status",
+        "display.return_unit",
+        "display.risk_free_rate",
+        "points",
+        "cumulative_growth",
+        "standard_periods",
+        "calendar_years",
+        "risk_metrics.month_count",
+        "risk_metrics.annualized_volatility",
+        "risk_metrics.sharpe_ratio",
+        "risk_metrics.sortino_ratio",
+        "risk_metrics.max_drawdown",
+        "risk_metrics.var_95",
+        "risk_metrics.cvar_95",
+        "benchmark_relative.portfolio"
+      ],
+      "equals": {
+        "portfolio.record_kind": "example",
+        "display.return_unit": "decimal_fraction"
+      },
+      "approx": {
+        "display.risk_free_rate": {
+          "expected": 0,
+          "absolute_tolerance": 1e-12,
+          "unit": "decimal_fraction"
+        }
+      },
+      "reconciles": [
+        {
+          "left": "risk_metrics.month_count",
+          "right": "coverage.selected_point_count",
+          "absolute_tolerance": 0,
+          "unit": "count"
+        }
       ]
+    },
+    {
+      "id": "portfolio_attribution",
+      "set": "full",
+      "tool": "get_portfolio_attribution",
+      "depends_on": [
+        "sample_portfolio"
+      ],
+      "args": {
+        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
+        "benchmark_role": "policy",
+        "parent_allocation_id": "root",
+        "start_date": "2025-09-30",
+        "end_date": "2026-09-30",
+        "sections": [
+          "summary",
+          "segments",
+          "diagnostics"
+        ]
+      },
+      "required": [
+        "portfolio.portfolio_id",
+        "portfolio.record_kind",
+        "coverage.status",
+        "method.name",
+        "method.model",
+        "method.interaction",
+        "method.linking",
+        "period.observed_period_count",
+        "basis.effect_unit",
+        "currency.calculation_currency",
+        "coverage.missing_reason_codes[0]",
+        "summary",
+        "residual",
+        "segments",
+        "diagnostics"
+      ],
+      "equals": {
+        "portfolio.record_kind": "example",
+        "coverage.status": "unavailable",
+        "method.name": "realized_brinson_fachler",
+        "method.model": "brinson_fachler",
+        "method.interaction": "reported_separately",
+        "method.linking": "symmetric_carino",
+        "basis.effect_unit": "decimal_fraction",
+        "summary": null,
+        "residual": null,
+        "segments": null,
+        "diagnostics": null
+      }
     },
     {
       "id": "portfolio_series",
@@ -717,6 +1054,46 @@
       ]
     },
     {
+      "id": "regional_capital_markets",
+      "set": "full",
+      "tool": "get_regional_research",
+      "args": {
+        "view": "capital_markets",
+        "regions": [
+          "north_america"
+        ],
+        "metrics": [
+          "listed_market_cap"
+        ]
+      },
+      "required": [
+        "status",
+        "requested_regions",
+        "requested_metrics",
+        "country_count",
+        "regions[0].region",
+        "regions[0].country_count",
+        "regions[0].aggregates[0].metric_id",
+        "regions[0].aggregates[0].value",
+        "regions[0].aggregates[0].unit",
+        "regions[0].aggregates[0].coverage_status",
+        "failed_indicator_count",
+        "source.publisher",
+        "source.dataset",
+        "degraded",
+        "degraded_reasons"
+      ],
+      "equals": {
+        "requested_regions": [
+          "north_america"
+        ],
+        "requested_metrics": [
+          "listed_market_cap"
+        ],
+        "regions[0].aggregates[0].metric_id": "listed_market_cap"
+      }
+    },
+    {
       "id": "equity_fundamentals",
       "set": "full",
       "tool": "get_public_equity_fundamentals",
@@ -726,7 +1103,21 @@
       },
       "required": [
         "resolved_subject.cik",
-        "facts.revenue.value"
+        "facts.revenue.value",
+        "leverage_metric.status",
+        "leverage_metric.metric",
+        "leverage_metric.value",
+        "leverage_metric.numerator",
+        "leverage_metric.denominator",
+        "leverage_metric.formula_id",
+        "leverage_metric.formula_version",
+        "leverage_metric.formula",
+        "leverage_metric.units",
+        "leverage_metric.period_basis",
+        "leverage_metric.source_facts",
+        "leverage_metric.provenance",
+        "leverage_metric.missing_reason",
+        "leverage_metric.missing_inputs"
       ]
     },
     {
@@ -741,6 +1132,151 @@
         "findings",
         "findings[0].accession_number"
       ]
+    },
+    {
+      "id": "ddq_numeric_gap",
+      "set": "full",
+      "tool": "reconcile_manager_ddq_claims",
+      "depends_on": [
+        "roster"
+      ],
+      "args": {
+        "firm_id": "<roster:funds[0].parent_firm_id>",
+        "subject_scope": "firm",
+        "claim_set_scope": "selected_claims",
+        "file": {
+          "file_name": "gradient-contract-numeric-gap.txt",
+          "file_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "claims": [
+          {
+            "field": "employees",
+            "claim_status": "asserted",
+            "raw_value": "42",
+            "quote": "Employees: 42",
+            "source_locator": {
+              "start": 0,
+              "end": 13,
+              "page": 1
+            },
+            "asserted_as_of": "2026-09-30",
+            "extraction_reason_codes": []
+          }
+        ]
+      },
+      "required": [
+        "result_type",
+        "rows[0].field",
+        "rows[0].claim.raw_value",
+        "rows[0].filed.raw_value",
+        "rows[0].numeric_gap.availability",
+        "rows[0].numeric_gap.signed_absolute_delta",
+        "rows[0].numeric_gap.signed_percentage_delta",
+        "rows[0].numeric_gap.absolute_delta_unit",
+        "rows[0].numeric_gap.percentage_delta_unit",
+        "rows[0].numeric_gap.absolute_delta_basis",
+        "rows[0].numeric_gap.percentage_delta_basis",
+        "rows[0].numeric_gap.formula_id",
+        "rows[0].numeric_gap.formula_version",
+        "rows[0].numeric_gap.missing_reason",
+        "verdict_counts"
+      ],
+      "equals": {
+        "result_type": "ddq_reconciliation",
+        "rows[0].field": "employees",
+        "rows[0].numeric_gap.formula_id": "ddq-claim-filed-numeric-gap",
+        "rows[0].numeric_gap.formula_version": "v1"
+      }
+    },
+    {
+      "id": "batch_ddq_preview",
+      "set": "full",
+      "tool": "batch_reconcile_manager_ddq_claims",
+      "depends_on": [
+        "roster"
+      ],
+      "args": {
+        "persist": false,
+        "items": [
+          {
+            "item_id": "numeric-gap-a",
+            "subject_scope": "firm",
+            "firm_id": "<roster:funds[0].parent_firm_id>",
+            "claim_set_scope": "selected_claims",
+            "file": {
+              "file_name": "gradient-contract-batch-a.txt",
+              "file_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "claims": [
+              {
+                "field": "employees",
+                "claim_status": "asserted",
+                "raw_value": "42",
+                "quote": "Employees: 42",
+                "source_locator": {
+                  "start": 0,
+                  "end": 13,
+                  "page": 1
+                },
+                "asserted_as_of": "2026-09-30",
+                "extraction_reason_codes": []
+              }
+            ]
+          },
+          {
+            "item_id": "numeric-gap-b",
+            "subject_scope": "firm",
+            "firm_id": "<roster:funds[0].parent_firm_id>",
+            "claim_set_scope": "selected_claims",
+            "file": {
+              "file_name": "gradient-contract-batch-b.txt",
+              "file_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "claims": [
+              {
+                "field": "employees",
+                "claim_status": "asserted",
+                "raw_value": "43",
+                "quote": "Employees: 43",
+                "source_locator": {
+                  "start": 0,
+                  "end": 13,
+                  "page": 1
+                },
+                "asserted_as_of": "2026-09-30",
+                "extraction_reason_codes": []
+              }
+            ]
+          }
+        ]
+      },
+      "required": [
+        "result_type",
+        "mode",
+        "read_only",
+        "requested_count",
+        "completed_count",
+        "unavailable_count",
+        "failed_count",
+        "items[0].status",
+        "items[0].data.rows[0].numeric_gap.formula_id",
+        "items[1].status",
+        "items[1].data.rows[0].numeric_gap.formula_id",
+        "source_statement"
+      ],
+      "equals": {
+        "result_type": "batch_ddq_reconciliation",
+        "mode": "preview",
+        "read_only": true,
+        "requested_count": 2,
+        "completed_count": 2,
+        "unavailable_count": 0,
+        "failed_count": 0,
+        "items[0].status": "completed",
+        "items[0].data.rows[0].numeric_gap.formula_id": "ddq-claim-filed-numeric-gap",
+        "items[1].status": "completed",
+        "items[1].data.rows[0].numeric_gap.formula_id": "ddq-claim-filed-numeric-gap"
+      }
     },
     {
       "id": "write_create_finding",

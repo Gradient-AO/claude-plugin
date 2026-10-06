@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.5.0
+- Moved portfolio policy, realized attribution, historical performance, exposure rollups, equity leverage and DDQ numeric gaps to versioned Gradient MCP evidence contracts.
+- Removed local report-calculation scripts and fallbacks; reports now cite server-returned values, methodology identities, coverage and typed unavailable reasons.
+- Added minimum connector readiness checks for service version 0.8.0, compatibility epoch 1 and the required tool/field/probe surface.
+- Expanded manager-diligence evidence probing, fixed batch DDQ and regional-research contract coverage, and classified remaining connector limitations with owned review tickets.
+- Slimmed connector discovery metadata while preserving runtime validation and a measured 20%-below-protocol response budget.
+
 ## 1.4.4
 - Separated Portfolio Analytics saved-portfolio evidence from Strategy Lab return-series analysis across the IC memo, portfolio review and setup guidance.
 - Re-mapped IC memo sections and its worked example to Portfolio Analytics sources; Strategy Lab is now an optional, separately reported supplement.

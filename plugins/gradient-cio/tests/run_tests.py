@@ -22,9 +22,14 @@ CONTRACT_CHECKER = ROOT / "skills" / "gradient-setup" / "scripts" / "check_contr
 CONTRACTS = ROOT / "skills" / "gradient-setup" / "references" / "contracts.json"
 CONTRACT_CHECKS = ROOT / "skills" / "gradient-setup" / "references" / "contract-checks.md"
 PUBLIC_TOOLS = ROOT / "skills" / "gradient-setup" / "references" / "public-tools.json"
+SHARED_REPORT_STYLE = ROOT / "shared" / "report-style.md"
 SKILL_REQUIREMENTS = ROOT / "skills" / "gradient-setup" / "references" / "skill-requirements.md"
 MACRO_BRIEF_SKILL = ROOT / "skills" / "gradient-macro-brief" / "SKILL.md"
 IC_MEMO_SKILL = ROOT / "skills" / "gradient-ic-memo" / "SKILL.md"
+IC_MEMO_DATA_MAP = ROOT / "skills" / "gradient-ic-memo" / "references" / "data-map.md"
+IC_MEMO_VALIDATOR = ROOT / "skills" / "gradient-ic-memo" / "scripts" / "validate_memo.py"
+ODD_REPORT_SKILL = ROOT / "skills" / "gradient-odd-report" / "SKILL.md"
+GIPS_MANAGER_DILIGENCE_SKILL = ROOT / "skills" / "gradient-gips-manager-diligence" / "SKILL.md"
 PORTFOLIO_REVIEW_SKILL = ROOT / "skills" / "gradient-portfolio-review" / "SKILL.md"
 SETUP_SKILL = ROOT / "skills" / "gradient-setup" / "SKILL.md"
 STALE = re.compile(r"(?<!gradient-)\bgips-(compliance|standards|manager-diligence|report-review|asset-owner-review|policies-gap-check)\b|gradient-capabilities")
@@ -116,9 +121,96 @@ def static(allow_branded):
     check(b.get("brand") == "gradient", "branding.json declares Gradient as the default brand")
     branded = json.loads((FIX / "branding-test.json").read_text(encoding="utf-8"))
     check(branded.get("brand") == "client", "client branding fixture declares the client brand")
+    connector_cutover()
     chart_renderer()
     contract_manifest()
     contract_checker()
+
+def connector_cutover():
+    removed_scripts = [
+        ROOT / "skills" / "gradient-ic-memo" / "scripts" / "memo_calcs.py",
+        ROOT / "skills" / "gradient-portfolio-review" / "scripts" / "review_calcs.py",
+    ]
+    check(
+        all(not path.exists() for path in removed_scripts),
+        "removed local-calculation scripts do not exist",
+    )
+    stale_script_references = []
+    for root in (ROOT / "skills", FIX):
+        for path in root.rglob("*"):
+            if (
+                path.is_file()
+                and path.suffix in (".md", ".json")
+                and re.search(
+                    r"\b(?:memo_calcs|review_calcs)\.py\b",
+                    path.read_text(encoding="utf-8", errors="ignore"),
+                )
+            ):
+                stale_script_references.append(str(path.relative_to(ROOT)))
+    check(
+        not stale_script_references,
+        "skills, references, and fixtures do not reference removed calculators"
+        + (
+            f": {stale_script_references}"
+            if stale_script_references
+            else ""
+        ),
+    )
+    migrated_paths = [
+        path
+        for root in (ROOT / "skills", FIX)
+        for path in root.rglob("*")
+        if path.is_file() and path.suffix in (".md", ".json")
+    ] + [SHARED_REPORT_STYLE]
+    stale_calc_tags = [
+        str(path.relative_to(ROOT))
+        for path in migrated_paths
+        if re.search(
+            r"\[Calc(?:\s+C(?:\d+|#))?\]",
+            path.read_text(encoding="utf-8", errors="ignore"),
+        )
+    ]
+    check(
+        not stale_calc_tags,
+        "skills, shared guidance, and fixtures contain no local-calculation tags"
+        + (f": {stale_calc_tags}" if stale_calc_tags else ""),
+    )
+    stale_math_guidance = []
+    stale_guidance_patterns = (
+        r"recompute each `C#`",
+        r"compute every derived figure",
+        r"use a short script for arithmetic checks",
+    )
+    for path in migrated_paths:
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        if any(re.search(pattern, text, re.I) for pattern in stale_guidance_patterns):
+            stale_math_guidance.append(str(path.relative_to(ROOT)))
+    check(
+        not stale_math_guidance,
+        "canonical and skill guidance contains no local-math instructions"
+        + (f": {stale_math_guidance}" if stale_math_guidance else ""),
+    )
+    renderer_text = RENDER.read_text(encoding="utf-8")
+    check(
+        "Calc C" not in renderer_text,
+        "shared renderer recognizes evidence tags only",
+    )
+    validated = subprocess.run(
+        [sys.executable, str(IC_MEMO_VALIDATOR), str(FIX / "ic.md")],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    check(
+        validated.returncode == 0,
+        "canonical IC fixture passes validate_memo.py"
+        + (
+            f": {(validated.stderr or validated.stdout).strip()}"
+            if validated.returncode != 0
+            else ""
+        ),
+    )
 
 def chart_renderer():
     percentage_column = {
@@ -178,7 +270,7 @@ def contract_manifest():
         for name in ("standard", "full", "writes", "ddq-save-preview")
     }
     check(
-        counts == {"standard": 8, "full": 30, "writes": 4, "ddq-save-preview": 3},
+        counts == {"standard": 8, "full": 36, "writes": 4, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
     )
 
@@ -186,14 +278,57 @@ def contract_manifest():
     public_tools = public_tool_catalog["tools"]
     check(
         public_tool_catalog.get("generated") is True
+        and public_tool_catalog.get("source")
+        == "@gradientcio/contracts canonical MCP tool catalog"
+        and len(public_tools) == 67
         and public_tools == sorted(set(public_tools)),
-        "public-tool catalog is generated, sorted, and unique",
+        "public-tool catalog has generated 67-tool canonical parity",
     )
     manifest_errors = validate_contract_manifest(contracts, public_tools)
     check(
         not manifest_errors,
         "contract dependencies, placeholders, and public tools are valid"
         + (f": {manifest_errors}" if manifest_errors else ""),
+    )
+    minimum = contracts.get("minimum_connector_contract", {})
+    expected_minimum_tools = {
+        "batch_reconcile_manager_ddq_claims",
+        "check_portfolio_policy",
+        "get_diligence_roster_funds",
+        "get_gradient_capabilities",
+        "get_manager_diligence_brief",
+        "get_manager_odd_profile",
+        "get_portfolio_attribution",
+        "get_portfolio_exposure",
+        "get_portfolio_historical_returns",
+        "get_portfolio_structure",
+        "get_public_equity_filing_evidence",
+        "get_public_equity_fundamentals",
+        "list_organizations",
+        "list_portfolios",
+        "reconcile_manager_ddq_claims",
+        "search_managers",
+    }
+    minimum_probe_ids = set(minimum.get("required_probe_ids", []))
+    check(
+        minimum.get("minimum_service_version") == "0.8.0"
+        and minimum.get("compatibility_epoch") == 1
+        and set(minimum.get("required_tools", [])) == expected_minimum_tools,
+        "minimum connector contract pins service, epoch, and required tools",
+    )
+    check(
+        {
+            "portfolio_policy",
+            "portfolio_attribution",
+            "portfolio_returns",
+            "equity_fundamentals",
+            "ddq_numeric_gap",
+            "batch_ddq_preview",
+            "manager_diligence_brief",
+        } <= minimum_probe_ids
+        and set(minimum.get("required_response_field_paths", {}))
+        == expected_minimum_tools,
+        "minimum connector contract owns response paths and required probes",
     )
     requirement_tokens = set(re.findall(
         r"\b(?:get|list|run|analyze|compare|create|extract|log|preview|reconcile|"
@@ -246,6 +381,64 @@ def contract_manifest():
     )
 
     by_id = {probe["id"]: probe for probe in probes}
+    diligence_sections = [
+        "manager_adv",
+        "firm_fund_events",
+        "entity_facts",
+        "manager_monitor_evidence",
+        "firm_13f",
+        "open_findings",
+        "ddq_history",
+        "service_providers",
+        "enforcement_candidates",
+    ]
+    diligence_brief = by_id["manager_diligence_brief"]
+    diligence_required = set(diligence_brief.get("required", []))
+    section_contract_paths = {
+        f"sections.{section}.{field}"
+        for section in diligence_sections
+        for field in ("status", "validation_status", "payload_digest")
+    }
+    evidence_contract_paths = {
+        "brief_version",
+        "status",
+        "section_order",
+        "differentiated_analytics.projection_version",
+        "differentiated_analytics.status",
+        "differentiated_analytics.ddq_longitudinal",
+        "differentiated_analytics.odd_document_assessments",
+        "differentiated_analytics.odd_document_extractions",
+        "synthesis.red_flags",
+        "synthesis.changes_since_review",
+        "synthesis.manager_questions",
+        "synthesis.trigger_rows",
+        "synthesis.basis.expected_sections",
+        "synthesis.basis.used_sections",
+        "synthesis.basis.unavailable_sections",
+        "synthesis.basis.not_applicable_sections",
+        "synthesis.basis.latest_review_at",
+        "synthesis.basis.state",
+        "synthesis.basis.reasons",
+        "synthesis.basis.degraded",
+        "synthesis.basis.completeness",
+        "synthesis.basis.used_section_count",
+        "synthesis.basis.expected_section_count",
+    }
+    check(
+        diligence_brief.get("depends_on") == ["roster"]
+        and diligence_brief["args"].get("firm_id")
+        == "<roster:funds[0].parent_firm_id>"
+        and diligence_brief["args"].get("sections") == diligence_sections,
+        "manager-diligence brief probe chains the canonical roster firm",
+    )
+    check(
+        section_contract_paths | evidence_contract_paths <= diligence_required
+        and diligence_brief.get("equals", {}).get("brief_version")
+        == "manager-diligence-brief-v2"
+        and diligence_brief.get("equals", {}).get("section_order")
+        == diligence_sections,
+        "manager-diligence brief probe covers section and evidence contracts",
+    )
     the_read = by_id["the_read"]
     check(
         the_read["args"] == {}
@@ -265,6 +458,95 @@ def contract_manifest():
             "portfolios[0].canonical_default",
         ) is True,
         "sample-portfolio probe verifies the canonical example",
+    )
+    policy_probe = by_id["portfolio_policy"]
+    check(
+        policy_probe["tool"] == "check_portfolio_policy"
+        and policy_probe["args"].get("portfolio_id")
+        == "<sample_portfolio:portfolios[0].portfolio_id>"
+        and policy_probe.get("approx", {}).get(
+            "semantics.allocation_band_watch_boundary_decimal",
+        ) == {
+            "expected": 0.02,
+            "absolute_tolerance": 1e-12,
+            "unit": "decimal_fraction",
+        },
+        "portfolio-policy probe verifies governed numeric semantics",
+    )
+    returns_probe = by_id["portfolio_returns"]
+    check(
+        returns_probe["args"].get("sections") == [
+            "points",
+            "cumulative_growth",
+            "standard_periods",
+            "calendar_years",
+            "risk_metrics",
+            "benchmark_relative",
+        ]
+        and returns_probe.get("approx", {}).get(
+            "display.risk_free_rate",
+        ) == {
+            "expected": 0,
+            "absolute_tolerance": 1e-12,
+            "unit": "decimal_fraction",
+        }
+        and returns_probe.get("reconciles") == [{
+            "left": "risk_metrics.month_count",
+            "right": "coverage.selected_point_count",
+            "absolute_tolerance": 0,
+            "unit": "count",
+        }],
+        "historical-return probe covers all sections and numeric reconciliation",
+    )
+    attribution_probe = by_id["portfolio_attribution"]
+    check(
+        attribution_probe["tool"] == "get_portfolio_attribution"
+        and attribution_probe["args"].get("benchmark_role") == "policy"
+        and attribution_probe.get("equals", {}).get("method.linking")
+        == "symmetric_carino"
+        and attribution_probe.get("equals", {}).get("coverage.status")
+        == "unavailable"
+        and attribution_probe.get("equals", {}).get("summary") is None
+        and "coverage.missing_reason_codes[0]"
+        in attribution_probe.get("required", [])
+        and not attribution_probe.get("reconciles"),
+        "portfolio-attribution probe enforces typed unavailability until basis is proven",
+    )
+    regional_probe = by_id["regional_capital_markets"]
+    check(
+        regional_probe["args"] == {
+            "view": "capital_markets",
+            "regions": ["north_america"],
+            "metrics": ["listed_market_cap"],
+        }
+        and "regions[0].aggregates[0].coverage_status"
+        in regional_probe.get("required", []),
+        "regional capital-markets probe verifies reporting coverage",
+    )
+    equity_probe = by_id["equity_fundamentals"]
+    check(
+        {
+            "leverage_metric.status",
+            "leverage_metric.value",
+            "leverage_metric.formula_id",
+            "leverage_metric.formula_version",
+            "leverage_metric.period_basis",
+            "leverage_metric.source_facts",
+        } <= set(equity_probe.get("required", [])),
+        "equity-fundamentals probe requires the leverage contract",
+    )
+    ddq_gap_probe = by_id["ddq_numeric_gap"]
+    batch_ddq_probe = by_id["batch_ddq_preview"]
+    check(
+        ddq_gap_probe["tool"] == "reconcile_manager_ddq_claims"
+        and ddq_gap_probe.get("equals", {}).get(
+            "rows[0].numeric_gap.formula_id",
+        ) == "ddq-claim-filed-numeric-gap"
+        and batch_ddq_probe["tool"] == "batch_reconcile_manager_ddq_claims"
+        and batch_ddq_probe["args"].get("persist") is False
+        and batch_ddq_probe.get("equals", {}).get("read_only") is True
+        and batch_ddq_probe.get("equals", {}).get("completed_count") == 2,
+        "DDQ probes cover numeric gaps and read-only batch reconciliation",
     )
     batch_preview = by_id["write_batch_preview"]
     batch_items = batch_preview["args"].get("items", [])
@@ -379,12 +661,44 @@ def contract_manifest():
         == "<ddq_extract_persisted:document_id>",
         "DDQ extraction persists a document and reconciliation reuses it",
     )
+    odd_requirements = next(
+        line
+        for line in SKILL_REQUIREMENTS.read_text(encoding="utf-8").splitlines()
+        if line.startswith("| gradient-odd-report ")
+    )
+    check(
+        "| get_diligence_roster_funds, get_manager_diligence_brief |"
+        in odd_requirements,
+        "ODD readiness requires the composite diligence brief",
+    )
+    evidence_wording = [
+        ODD_REPORT_SKILL.read_text(encoding="utf-8"),
+        GIPS_MANAGER_DILIGENCE_SKILL.read_text(encoding="utf-8"),
+        IC_MEMO_DATA_MAP.read_text(encoding="utf-8"),
+    ]
+    check(
+        all("server-derived evidence signals" in text for text in evidence_wording)
+        and "They are not report-ready" in evidence_wording[0]
+        and "do not use them as a GIPS" in evidence_wording[1]
+        and "not an IC" in evidence_wording[2],
+        "diligence skills keep server evidence separate from plugin conclusions",
+    )
 
 def contract_checker():
     with tempfile.TemporaryDirectory() as directory:
         temp = pathlib.Path(directory)
         contracts = {
             "envelope": [],
+            "minimum_connector_contract": {
+                "minimum_service_version": "0.8.0",
+                "compatibility_epoch": 1,
+                "required_tools": ["preview_tool", "source_tool"],
+                "required_response_field_paths": {
+                    "preview_tool": ["receipt_id"],
+                    "source_tool": ["run_id"],
+                },
+                "required_probe_ids": ["source", "preview"],
+            },
             "probes": [
                 {
                     "id": "source",
@@ -432,6 +746,18 @@ def contract_checker():
             json.dumps({"receipt_id": "receipt", "dry_run": False, "committed": True}),
             encoding="utf-8",
         )
+        capabilities_path = temp / "capabilities.json"
+        capabilities_path.write_text(json.dumps({
+            "version": "0.8.0",
+            "contract_identity": {"compatibility_epoch": 1},
+            "tools": [{"name": "preview_tool"}, {"name": "source_tool"}],
+        }), encoding="utf-8")
+        old_capabilities_path = temp / "old-capabilities.json"
+        old_capabilities_path.write_text(json.dumps({
+            "version": "0.7.9",
+            "contract_identity": {"compatibility_epoch": 1},
+            "tools": [{"name": "preview_tool"}, {"name": "source_tool"}],
+        }), encoding="utf-8")
         def run(*args):
             return subprocess.run(
                 [sys.executable, str(CONTRACT_CHECKER), *map(str, args)],
@@ -441,6 +767,16 @@ def contract_checker():
         null = run(contract_path, "preview", null_path)
         unequal = run(contract_path, "preview", unequal_path)
         resolved = run("--resolve-args", contract_path, "preview", temp)
+        connector_ready = run(
+            "--validate-connector",
+            contract_path,
+            capabilities_path,
+        )
+        connector_old = run(
+            "--validate-connector",
+            contract_path,
+            old_capabilities_path,
+        )
         check(passed.returncode == 0 and "PASS preview" in passed.stdout, "contract checker accepts matching values")
         check(null.returncode == 1 and "null receipt_id" in null.stdout, "contract checker rejects null values")
         check(unequal.returncode == 1 and "expected True" in unequal.stdout, "contract checker rejects unequal values")
@@ -449,27 +785,54 @@ def contract_checker():
             and json.loads(resolved.stdout)["reconciliation_id"] == "11111111-1111-4111-8111-111111111111",
             "contract checker resolves chained probe arguments",
         )
+        check(
+            connector_ready.returncode == 0
+            and "PASS connector" in connector_ready.stdout,
+            "connector checker accepts the minimum compatible service",
+        )
+        check(
+            connector_old.returncode == 1
+            and "below required 0.8.0" in connector_old.stdout,
+            "connector checker rejects an older service",
+        )
 
 def render(keep):
     print("Render checks")
     out = ROOT / "tests" / "out" if keep else pathlib.Path(tempfile.mkdtemp())
     out.mkdir(parents=True, exist_ok=True)
+    external_pdf_tools = shutil.which("pdfinfo") and shutil.which("pdftotext")
     for name, args, lo, hi, must in CASES:
         pdf = out / f"{name}.pdf"
         argv = [str(pdf) if a == "OUT" else (str(FIX / a) if (FIX / a).exists() else a) for a in args]
         r = subprocess.run([sys.executable, str(RENDER)] + argv, capture_output=True, text=True, encoding="utf-8", errors="replace", cwd=FIX)
         if r.returncode != 0:
             check(False, f"{name}: render exit {r.returncode}: {(r.stderr or r.stdout).strip()[-300:]}"); continue
-        info = subprocess.run(["pdfinfo", str(pdf)], capture_output=True, text=True, encoding="utf-8", errors="replace").stdout
-        pages = int(re.search(r"Pages:\s+(\d+)", info).group(1))
+        if external_pdf_tools:
+            info = subprocess.run(["pdfinfo", str(pdf)], capture_output=True, text=True, encoding="utf-8", errors="replace").stdout
+            pages = int(re.search(r"Pages:\s+(\d+)", info).group(1))
+            text = subprocess.run(["pdftotext", "-layout", str(pdf), "-"], capture_output=True, text=True, encoding="utf-8", errors="replace").stdout
+            size = re.search(r"Page size:\s+([\d.]+) x ([\d.]+)", info)
+            page_width = float(size.group(1)) if size else None
+            page_height = float(size.group(2)) if size else None
+        else:
+            from pypdf import PdfReader
+            reader = PdfReader(pdf)
+            pages = len(reader.pages)
+            text = "\n".join(page.extract_text() or "" for page in reader.pages)
+            page_width = float(reader.pages[0].mediabox.width) if reader.pages else None
+            page_height = float(reader.pages[0].mediabox.height) if reader.pages else None
         check(lo <= pages <= hi, f"{name}: {pages} pages (expected {lo}–{hi})")
-        text = subprocess.run(["pdftotext", "-layout", str(pdf), "-"], capture_output=True, text=True, encoding="utf-8", errors="replace").stdout
         norm = lambda t: re.sub(r"\s+", "", t).upper()   # tolerate CSS uppercase and letter-spacing
         missing = [m for m in must if norm(m) not in norm(text)]
         check(not missing, f"{name}: contains {must}" + (f" — missing {missing}" if missing else ""))
         if name == "deck":
-            size = re.search(r"Page size:\s+([\d.]+) x ([\d.]+)", info)
-            check(size and abs(float(size.group(1)) - 960) < 2 and abs(float(size.group(2)) - 540) < 2, "deck: 16:9 page size")
+            check(
+                page_width is not None
+                and page_height is not None
+                and abs(page_width - 960) < 2
+                and abs(page_height - 540) < 2,
+                "deck: 16:9 page size",
+            )
         if name in ("odd", "digest", "portfolio", "compare", "equity"):
             check("Powered by" not in text, f"{name}: no client branding by default")
     print(f"PDFs in {out}")

@@ -25,6 +25,10 @@ available and `advertising-and-marketing-rule.md` when marketing materials are i
    - `search_managers` or `get_diligence_roster_funds` to resolve the manager and fund IDs.
    - `get_manager_odd_profile` and `get_manager_diligence_brief` for the firm profile, GIPS status, verifier and
      service providers if recorded.
+   - In the brief, treat `synthesis` and `differentiated_analytics` as server-derived evidence signals. Preserve
+     their evidence paths, thresholds, source vintages and completeness basis, but do not use them as a GIPS
+     conclusion or copy them as report prose. This skill performs the GIPS tests, reaches the assessment and
+     writes the narrative.
    - `list_diligence_documents` to find the DDQ, GIPS Report, verification letter and pitchbook on file.
    - Read the DDQ for its GIPS answers (compliance claim, verifier, verification periods, composite
      definitions, errors) and quote them exactly. For the ADV-checkable DDQ fields (AUM, auditor, administrator,

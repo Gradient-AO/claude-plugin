@@ -42,7 +42,7 @@ explicitly asks for the latest edition on or before a historical date.
 | CMAs | `get_capital_market_assumptions` `view: baseline`, `per_page: 10` (page 1–2) | Primary factors; risk-free rate and freshness |
 | Futures positioning | `get_market_positioning` `view: cftc`, `marketGroup: all`, `historyWeeks: 52` | Use `flags` (crowded rows, ranked by `crowdingScore`): market, trader category, side, percentile (156-week window), `directionOfTravel`, `report_date`. The payload is large (`cross_section`, `history`); read `flags` only |
 | Hedge-fund crowding | `get_market_positioning` `view: hedge_fund_crowding` (no `category` — rejected) | `consensus`, `building`, `unwinding` from the 13F cohort; quote `coverage_statement` (cohort size, period) |
-| Regional backdrop | `get_regional_research` `view: facts`, up to 3 `regions` and the relevant `metrics` | Optional; only for regions The Read discusses. Annual World Bank data: give `latest_year`. `view: capital_markets` currently fails (see gradient-setup known issues) |
+| Regional backdrop | `get_regional_research` `view: facts` or `view: capital_markets`, up to 3 `regions` and the relevant `metrics` | Optional; only for regions The Read discusses. Preserve annual World Bank observation years, reporting-subset coverage and signed flow semantics. |
 
 Record for each call: as-of, validation status, coverage/degradation reasons, payload digest. If The Read or the
 calendar is unavailable, stop and tell the user — the deck needs both. Other gaps: build the deck and say what

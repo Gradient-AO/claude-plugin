@@ -91,7 +91,7 @@ write a branding file in the working directory (logo path relative to it) and pa
   new page. Sections otherwise flow on from each other.
 - Supported: `###`/`####` headings, paragraphs, `-` and `1.` lists, pipe tables, `>` blockquotes (rendered as
   callouts; amber when they say illustrative, draft, warning or not available), code fences, `**bold**`,
-  `` `code` ``, and `[S#]` / `[Calc C#]` tags.
+  `` `code` ``, and `[S#]` evidence tags.
 - In table columns whose header contains Status, Rating, Severity, Verdict, Assessment, Decision or Result,
   status words (Compliant, Watch, Breach, Met, Partially met, Not met, Not found, N/A, High, Medium, Low…)
   become coloured chips automatically.
@@ -100,22 +100,25 @@ write a branding file in the working directory (logo path relative to it) and pa
 
 ## Writing rules (all reports)
 
-- Lead with the finding. Every figure carries a unit, a date where relevant, and a source tag: `[S#]` for a
-  Gradient result or user document, `[Calc C#]` for a calculation listed in the appendix.
+- Lead with the finding. Every figure carries a unit, a date where relevant, and an `[S#]` tag for the
+  Gradient result or user document that supplied it. Skills may scale and round values for display but must
+  not derive report values locally.
 - ISO dates; currency in $B/$M (or the report's currency) with 1–2 decimals; percentages to 1 dp; spreads in bps.
 - Absence is not evidence: an empty or unavailable result is reported as such, never as "none occurred".
 - No adjectives the data cannot support ("robust", "best-in-class", "strong").
 - Label illustrative data exactly **Illustrative, Gradient Maintained** on the cover (`confidentiality`), in
   the banner, in the first affected section, and in every affected source row. State that it is not the
   organization's actual holdings. Do not call it demo, sample, test, or client data in a report.
-- Every report ends with an appendix: sources (tag, evidence, tool, as-of, validation, digest), calculations,
-  method, and a disclaimer (not investment, legal or compliance advice; Form ADV is adviser-reported).
+- Every report ends with an appendix: sources (tag, evidence, tool, as-of, validation, digest), server metric
+  methods (formula identity/version, basis, units and coverage where returned), and a disclaimer (not
+  investment, legal or compliance advice; Form ADV is adviser-reported).
 
 ## Check and deliver
 
 1. Rasterize with `pdftoppm -r 60 -png <file>.pdf page` and look at every page. Fix a page holding only a short
    overflow tail, squashed charts (`narrow: true`), wrapped dates or IDs (align `n`). Re-render.
-2. Spot-check every number against the saved tool results and recompute each `C#`.
+2. Spot-check every number against the saved tool or document evidence. Preserve returned formula identity,
+   version, basis, units, coverage and unavailable reasons; do not recompute report values locally.
 3. File name: `<Subject> - <Report type>.pdf` (e.g. "Example Manager - ODD Report.pdf").
    Save to `/mnt/user-data/outputs/`; if a folder is connected, also write it there.
 4. If a GradientCIO call fails, check the known-issues table in the gradient-setup skill

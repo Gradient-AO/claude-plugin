@@ -23,8 +23,8 @@ Rules that matter here:
   write "your portfolio", "you hold" or "the fund returned" about it.
 - **Absence is not evidence.** An unavailable section, a missing benchmark or an entitlement block is reported
   as "Not available — <reason>", never as zero, "none" or "in line".
-- **Every number has a tag**: `[S#]` for a Gradient result, `[Calc C#]` for a calculation listed in the
-  appendix. Never fill a figure from memory or general knowledge.
+- **Every number has an `[S#]` evidence tag.** Never derive a report value locally or fill a figure from
+  memory or general knowledge. Scaling and rounding for display are allowed.
 - **Preserve what the tools say**: partial-period labels, coverage states, missing reasons, display units and
   as-of dates. Do not annualize a period shorter than 12 months; do not relabel a partial year as a full one.
 - No adjectives the data cannot support ("strong", "robust"); past performance is not a forecast.
@@ -36,7 +36,6 @@ Rules that matter here:
 | `references/data-map.md` | Always — exact tool arguments, response fields, fallbacks and known failures. |
 | `references/portfolio-strategy-scope.md` | Always — Portfolio Analytics is the only module used for saved-portfolio analysis. |
 | `references/chart-data.md` | Always — chart discovery order, basis rules and generic report block. |
-| `scripts/review_calcs.py` | When the tool does not return standard periods, calendar years or risk metrics but monthly points exist. Run it; do not hand-compute. |
 | `references/report-style.md` | Before rendering — shared style, block types, meta fields, "Check and deliver". |
 | `scripts/gradient_report.py` | Renders the JSON blocks into the branded PDF. Never restyle. |
 
@@ -75,9 +74,10 @@ save `context.fingerprint`, `basis`, and unavailable reasons. Embed each usable 
 | Portfolio record | `list_portfolios` | Yes |
 | Dashboard chart packs | `get_chart_data` availability, then one relevant `analysis_type` at a time | Optional |
 | Allocation tree | `get_portfolio_structure` `view: allocation_tree` | Yes |
-| Returns | `get_portfolio_historical_returns` `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative, cumulative_growth]`, `end_date` = period end | Yes (or fallback) |
-| Monthly points (fallback) | `get_portfolio_historical_returns` `sections: [points]`, else `get_return_series` `series_kind: portfolio`, `series_id: <portfolio_id>` | When summary sections fail |
+| Returns | `get_portfolio_historical_returns` `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative, cumulative_growth, points]`, `end_date` = period end | Yes |
 | Benchmark | the benchmark named in `benchmark_relative`; else ask the user which benchmark; then `get_benchmarks` `benchmark_id` for its name and classes, and `get_return_series` `series_kind: benchmark` for monthly points | Optional (performance is reported without relative rows if absent) |
+| Policy | `check_portfolio_policy` | Yes |
+| Attribution | `get_portfolio_attribution` with `benchmark_role: policy`, `parent_allocation_id: root`, month-end start/end and all sections | Optional; use typed unavailability as returned |
 | Holdings exposure | `get_portfolio_exposure` (page with `next_cursor` until `has_more: false`) | Yes |
 | Ownership weights | `get_portfolio_structure` `view: ownership_weights` | Optional |
 | Look-through | `get_cross_domain_research` `view: portfolio_13f_lookthrough`, `portfolio_id`, `top_n_managers` 10, `limit` 20 | Optional (needs `portfolio`) |
@@ -90,34 +90,20 @@ an outage — do not retry it.
 
 ## 3. Assess
 
-**Performance.** Use the tool's `standard_periods` and `calendar_years` as returned. If they are unavailable
-but monthly points exist, run:
+**Performance.** Use `standard_periods`, `calendar_years`, `risk_metrics`, `benchmark_relative`,
+`cumulative_growth` and `points` exactly as returned by `get_portfolio_historical_returns`. Preserve each
+period's benchmark return, excess return, coverage and annualization status; preserve drawdown peak, trough
+and recovery, monthly extremes, positive-month count, beta and benchmark volatility. If a section is
+unavailable, report its typed reason and do not recompute it from monthly points.
 
-```
-python <this skill's directory>/scripts/review_calcs.py --input series.json --output calcs.json
-```
+**Allocation.** From `allocation_tree.nodes[]`: use the returned total-portfolio target and policy status
+fields for every depth. Do not multiply parent and child targets. Use `check_portfolio_policy.allocation_bands`
+for governed status, active weight, limits and headroom. Preserve `compliant`, `watch`, `breach` and
+`not_assessed` exactly; do not recreate the thresholds in the report.
 
-with `{"as_of": "<period end>", "portfolio": [points], "benchmark": [points], "benchmark_name": "..."}`. The
-script drops points after `as_of` (benchmark series can include a month that has not ended), links returns
-geometrically, annualizes only periods over 12 months, refuses periods with gaps, labels partial calendar
-years, and computes volatility, maximum drawdown (peak, trough, recovery), beta, tracking error and
-information ratio on common months. Tag its outputs `[Calc C1]` (returns) and `[Calc C2]` (risk). Its `line`
-output is the growth-of-100 chart block.
-
-**Allocation.** From `allocation_tree.nodes[]`: `depth 0` nodes are asset classes. `actual_weight` is a share
-of **total portfolio**; `target_weight`, `lower_limit` and `upper_limit` of a child node (`depth ≥ 1`) are
-shares **of its parent** (children's targets sum to 1 within each parent). For the policy table use depth-0
-nodes as returned. For sub-allocations, convert the target to total-portfolio terms (parent target × child
-target, `[Calc C5]`) before comparing with `actual_weight`; never compare a within-parent target with a
-total-portfolio actual. Status per row:
-- **Breach**: actual outside `[lower_limit, upper_limit]`.
-- **Watch**: |actual − target| ≥ 3.0pp, or within 2.0pp of a limit.
-- **Within range**: otherwise. No limits returned → "Not assessed — no range".
-
-**Exposure.** `get_portfolio_exposure.exposures[]` has `asset_classification`, `market_value_base`
-(marketable), `nav_base` (drawdown funds), `commitment_amount`, `unfunded_base`, `as_of_date`. Value = market
-value or NAV (they never both apply; never add unfunded). Aggregate by `asset_classification` (`[Calc C3]`)
-and show rows with null value and null as-of separately as "no current value". Exposure classifications
+**Exposure.** Use `get_portfolio_exposure.aggregates_by_asset_classification` for governed value totals,
+shares, coverage and truncation. The server chooses market value for marketable assets and NAV for drawdown
+funds and never adds unfunded commitments. Show uncovered rows as "no current value". Exposure classifications
 (e.g. `public_equity`, `hedge_fund`, `alternatives`) do not map one-to-one to tree names — show them as
 returned, do not merge them into the policy table. Show geography or sector only if the response carries
 those fields.
@@ -158,19 +144,20 @@ Sections:
    (portfolio and benchmark, from returned points only). Include an attribution table only from a governed
    portfolio attribution source.
 3. **Allocation** — `table` asset class vs policy: Asset class, Target, Actual, Active (pp), Range (align `n`),
-   Status (chip); sub-allocation table if the tree has depth-1 nodes (targets converted, `[Calc C5]`);
+   Status (chip); sub-allocation table if the tree has depth-1 nodes, using returned total-portfolio targets;
    `bars` market value by exposure classification with $M and % of total.
 4. **Look-through concentration** (`new_page: false`) — `table` top issuers + the caveat callout; if not
    licensed or unavailable, one `callout` saying so (no table).
 5. **Risk** (`new_page: false`) — `kv`: volatility, maximum drawdown with dates, best and worst month,
    positive months, beta, tracking error, information ratio (each with its tag).
-6. **Outlook** (optional, `new_page: false`) — one short paragraph: The Read headline and date, CMA expected
-   return for the policy mix (`[Calc C4]` = Σ target × expected return, name the assumption set and
-   currency). Say "assumptions, not forecasts". Omit the section if not requested.
+6. **Outlook** (optional, `new_page: false`) — one short paragraph: The Read headline and date plus
+   `check_portfolio_policy.return_objective.assessment.observed` when its evidence basis is the governed
+   root-allocation weighted expected return. Preserve the returned assumption basis and currency. Say
+   "assumptions, not forecasts". Omit the expected return when unavailable; never weight CMA rows locally.
 7. **Coverage** (`new_page: false`) — `coverage` block: every source with status (`available`, `degraded`,
    `unavailable`, `not licensed`) and a note (as-of, rows, error code and request ID on failure).
-8. **Appendix A — Sources and method** — tag table (Tag, Evidence, Tool / view, As of, Validation), a
-   Calculations table (C1–C5 as used), the signal and status rules above, and the disclaimer: "monitoring aid,
+8. **Appendix A — Sources and method** — tag table (Tag, Evidence, Tool / view, As of, Validation), server
+   metric methods and formula versions, the signal and status rules above, and the disclaimer: "monitoring aid,
    not investment, legal or compliance advice; past performance does not predict future returns; Form 13F is
    manager-reported and lagged".
 
@@ -180,8 +167,8 @@ Render:
 python <this skill's directory>/scripts/gradient_report.py review.json "<Portfolio> - Portfolio Review <YYYY-MM-DD>.pdf"
 ```
 
-Then follow "Check and deliver" in `references/report-style.md`: look at every page, recompute every `C#`,
-check every figure against the saved results. Chat summary (three lines): status signal, the top item (e.g.
+Then follow "Check and deliver" in `references/report-style.md`: look at every page, reconcile every returned
+metric within its stated tolerance, and check every figure against the saved results. Chat summary (three lines): status signal, the top item (e.g.
 "Alternatives 1.4pp below the upper limit"), and the number of items to watch — plus the file.
 
 ## 5. Hand-off and repeat runs

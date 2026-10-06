@@ -8,7 +8,7 @@
  "executive": {"bottom_line": "Example Industrial reported FY2025 revenue of $12.40B, up 6.2% year over year, with operating margin of 14.8% versus 16.1% a year earlier [S1]. Capital expenditures rose 58.0% to $1.32B while free cash flow margin fell to 5.1% [S1][S2], and the latest 10-Q added 3 risk-factor passages [S3]. 18 of 29 cohort hedge funds held the stock at 2026-06-30 [S9]. Sector signal context was unavailable, so completeness is degraded.",
   "tiles": [{"label": "Revenue growth", "value": "+6.2%", "sub": "FY2025 vs FY2024, 10-K [S1]", "tone": "good"},
             {"label": "Operating margin", "value": "14.8%", "sub": "16.1% prior year [S1]", "tone": "watch"},
-            {"label": "Net debt / EBITDA", "value": "1.9x", "sub": "FY2025 [Calc C1]", "tone": "good"},
+            {"label": "Net debt / EBITDA", "value": "1.9x", "sub": "FY2025 [S1]", "tone": "good"},
             {"label": "Latest filing", "value": "10-Q", "sub": "Filed 2026-08-05 [S5]", "tone": "good"}]},
  "sections": [
   {"id": "executive", "title": "Executive summary", "kicker": "Render test with fictional data — not a real issuer", "blocks": [
@@ -32,7 +32,7 @@
      "note": "All values as first filed; no revisions or amendments flagged [S1]."},
     {"type": "two_col",
      "left": [{"type": "bars", "title": "Operating margin by fiscal year", "narrow": true, "items": [{"label": "FY2022", "value": 15.2, "display": "15.2%"}, {"label": "FY2023", "value": 15.9, "display": "15.9%"}, {"label": "FY2024", "value": 16.1, "display": "16.1%"}, {"label": "FY2025", "value": 14.8, "display": "14.8%"}]}],
-     "right": [{"type": "kv", "title": "Cash and capital allocation (FY2025)", "rows": [["Free cash flow margin", "5.1%", "S1"], ["Earnings cash conversion", "1.24x", "S1"], ["Dividends", "$0.31B", "S1"], ["Repurchases", "$0.22B", "S2"], ["Liabilities / equity", "1.42x", "Calc C2"]]}]},
+     "right": [{"type": "kv", "title": "Cash and capital allocation (FY2025)", "rows": [["Free cash flow margin", "5.1%", "S1"], ["Earnings cash conversion", "1.24x", "S1"], ["Dividends", "$0.31B", "S1"], ["Repurchases", "$0.22B", "S2"], ["Liabilities / equity", "1.42x", "S2"]]}]},
     {"type": "table", "title": "Latest 10-Q vs prior 10-Q", "columns": ["Form", "Current filed", "Prior filed", "Passages added", "Passages removed"], "align": ["l", "n", "n", "r", "r"], "rows": [["10-Q", "2026-08-05", "2026-05-06", "3", "0"]], "note": "Counts of disclosure passages from the filing diff [S3]."}]},
   {"title": "Peers", "kicker": "User-selected peers; period-aligned metrics only", "new_page": false, "blocks": [
     {"type": "table", "columns": ["Metric", "EXIC", "PEER1", "PEER2", "Peer median", "EXIC rank"], "align": ["l", "r", "r", "r", "r", "c"],
