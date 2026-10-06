@@ -28,7 +28,7 @@
 3. The change lowers expected volatility by 60 bps with a 15 bps reduction in expected return [S3].
 
 **Key risks (three points, most material first):**
-1. Expected max drawdown (38.0%) exceeds the 35.0% IPS limit before and after the change [S3].
+1. Risk-limit compliance is not assessed because the persisted thresholds do not specify a governed observation horizon and return basis [S1].
 2. Expected return remains 28 bps below the CPI + 4.5% objective [S1] [S3].
 3. Gradient's real estate assumption is 499 bps above consensus [S4].
 
@@ -38,8 +38,8 @@
 ## 2. Executive Summary
 
 - **Positioning:** Public equity is 700 bps overweight and fixed income 600 bps underweight versus policy [S1].
-- **IPS:** 6 constraints Compliant, 2 Watch, 3 Breach, 1 Not assessed. Breaches: fixed income band, cash band, max drawdown.
-- **Performance:** 1Y return 6.9% versus 6.4% for the policy benchmark (+49 bps), led by public equity selection (+27 bps) [S2].
+- **IPS:** 6 constraints Compliant, 1 Watch, 2 Breach, 3 Not assessed. Breaches: fixed income band and cash band.
+- **Performance:** 1Y return 6.9% versus 6.4% for the policy benchmark (+49 bps). Governed attribution is unavailable for the selected period [S2].
 - **Outlook:** Expected return 6.7% versus a 7.0% objective, volatility 13.1%, 44.0% probability of meeting the objective [S3].
 - **Liquidity & diligence:** Stress coverage 2.61 on the liquidity model; zero High diligence findings [S1] [S5] [S9].
 
@@ -72,15 +72,15 @@
 | 4 | Allocation — real_estate | 5.0%–12.0% | 11.0% | Compliant | IPS §4.1 |
 | 5 | Allocation — cash | 2.0%–8.0% | 1.0% | Breach | IPS §4.1 |
 | 6 | Return objective | CPI + 4.5% | 6.7% | Watch | IPS §3.1 |
-| 7 | Expected volatility | ≤ 14.0% | 13.1% | Watch | IPS §3.2 |
-| 8 | Expected max drawdown | ≤ 35.0% | 38.0% | Breach | IPS §3.2 |
+| 7 | Expected volatility | ≤ 14.0% | Not available — observation basis unaligned | Not assessed | IPS §3.2 |
+| 8 | Expected max drawdown | ≤ 35.0% | Not available — observation basis unaligned | Not assessed | IPS §3.2 |
 | 9 | T1 liquidity (% NAV) | ≥ 15.0% | 21.0% | Compliant | IPS §5.1 |
 | 10 | Liquidity coverage ratio | ≥ 1.50 | 2.61 | Compliant | IPS §5.3 |
 | 11 | Largest single manager (% NAV) | ≤ 10.0% | 8.5% | Compliant | IPS §6.1 |
 | 12 | No direct tobacco holdings | prohibited | n/a | Not assessed | IPS §7.1 |
 
-**Summary:** 6 Compliant, 2 Watch, 3 Breach, 1 Not assessed.
-**Breaches and required actions:** Fixed income and cash bands — cured by the Section 13 rebalance. Max drawdown — not cured; see Section 14, item 1.
+**Summary:** 6 Compliant, 1 Watch, 2 Breach, 3 Not assessed.
+**Breaches and required actions:** Fixed income and cash bands — cured by the Section 13 rebalance.
 
 ## 5. Performance & Attribution
 
@@ -97,17 +97,8 @@
 
 **5.2 Attribution — 1Y**
 
-| Asset class | Allocation (bps) | Selection (bps) | Interaction (bps) | Total (bps) |
-|---|---|---|---|---|
-| public_equity | +13 bps | +27 bps | +4 bps | +44 bps |
-| private_equity | +3 bps | −12 bps | −2 bps | −11 bps |
-| fixed_income | +13 bps | −8 bps | +2 bps | +8 bps |
-| cash | +7 bps | 0 bps | 0 bps | +7 bps |
-| real_estate | −4 bps | +5 bps | 0 bps | +1 bps |
-| Total | +32 bps | +13 bps | +5 bps | +49 bps |
-
-**Reconciliation:** Sum of effects = +49 bps vs total active return +49 bps; residual 0 bps [S2].
-**Method:** Realized Brinson-Fachler with separately reported interaction and symmetric-Carino linking [S2].
+Not available — `get_portfolio_attribution` returned `coverage.status: unavailable` with
+`no_weight_cohorts`; no local attribution was derived [S2].
 
 **5.3 Top contributors and detractors**
 
@@ -246,7 +237,7 @@ Not assessed — no GIPS Asset Owner Report provided.
 | Sharpe ratio | 0.22 | 0.22 | 0.00 | [S3] |
 | T1 liquidity (% NAV) | 44.6% | 46.6% | +200 bps | [S11] |
 | Liquidity coverage ratio | 2.61 | 2.70 | 0.09 | [S11] |
-| IPS breaches | 3 | 1 | −2 | [S11] |
+| IPS breaches | 2 | 0 | −2 | [S11] |
 | Estimated transaction cost (bps) | n/a | 3 bps | +3 bps | [S11] |
 
 **Implementation:** Sell the index fund in two tranches over 30 days; buy core bonds and Treasury bills [S11].
@@ -256,7 +247,7 @@ Not assessed — no GIPS Asset Owner Report provided.
 
 | # | Risk | Rating | Evidence | Mitigant | Owner |
 |---|---|---|---|---|---|
-| 1 | Max drawdown above IPS limit after the change | High | 36.5% vs 35.0% [S3] | Review drawdown limit or add a tail-risk overlay at the next meeting | CIO |
+| 1 | Risk-limit compliance not assessed | Medium | Persisted thresholds lack a governed observation horizon and return basis [S1] | Approve an observation basis before evaluating volatility, drawdown or CVaR compliance | CIO |
 | 2 | Real estate CMA well above consensus | Medium | +499 bps gap [S4] | Run Section 7 with consensus real estate assumption before the next review | Analyst |
 | 3 | Return objective shortfall | Low | −28 bps [S3] | Revisit spending policy at the annual review | Committee |
 
@@ -268,6 +259,7 @@ Not assessed — no GIPS Asset Owner Report provided.
 | 2 | Provide look-through holdings | Not available | Next review | Operations |
 | 3 | Obtain Manager A verification report | GIPS follow-up | Within 30 days | Analyst |
 | 4 | Provide GIPS Asset Owner Report | Not provided | Next review | Operations |
+| 5 | Define the governed policy-risk observation horizon and return basis | Risk rows are not assessed without aligned observations | Next review | CIO |
 
 ## 16. Approvals
 
@@ -284,7 +276,7 @@ Not assessed — no GIPS Asset Owner Report provided.
 | Ref | Source | Parameters | As of | Data scope | Validation | Digest |
 |---|---|---|---|---|---|---|
 | S1 | get_portfolio_exposure; get_portfolio_structure; check_portfolio_policy | portfolio_id=example; governed policy and exposure views | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
-| S2 | get_portfolio_historical_returns; get_portfolio_attribution | portfolio_id=example; policy benchmark; realized performance and attribution | 2026-09-30 | Illustrative, Gradient Maintained | passed | n/a |
+| S2 | get_portfolio_historical_returns; get_portfolio_attribution | portfolio_id=example; policy benchmark; performance available; attribution unavailable (`no_weight_cohorts`) | 2026-09-30 | Illustrative, Gradient Maintained | partial | n/a |
 | S3 | get_chart_data | portfolio_id=example; analysis_type=expected-statistics | 2026-09-11 | Illustrative, Gradient Maintained | passed | n/a |
 | S4 | get_cma_consensus_check | mode=allocation | 2026-06-30 | Mixed — Illustrative, Gradient Maintained + User-Authorized Live | passed | n/a |
 | S5 | get_manager_diligence_findings | view=exposure_weighted | 2026-10-02 | Illustrative, Gradient Maintained | advisory | n/a |
@@ -300,7 +292,8 @@ Not assessed — no GIPS Asset Owner Report provided.
 | Source | Quantity | Method / formula ID | Version | Basis and tolerance |
 |---|---|---|---|---|
 | S1 | IPS status, active weights, liquidity and concentration | check_portfolio_policy | 2026-10-05.v1 | Governed inputs only; preserve returned thresholds and coverage |
-| S2 | Realized attribution | realized_brinson_fachler / symmetric_carino | 2026-10-05.v1 | Monthly total return in portfolio currency; residual within returned tolerance |
+| S2 | Realized returns and risk | get_portfolio_historical_returns | as returned | Preserve period labels, annualization, benchmark basis, units and coverage |
+| S2 | Realized attribution | Not available | n/a | `no_weight_cohorts`; no formula or result asserted |
 | S6 | Effective number of positions | Portfolio Analytics allocations metric | as returned | Preserve chart-pack basis and fingerprint |
 | S11 | Proposed-case impacts | Portfolio Analytics proposed-case analysis | as returned | Same basis as current case |
 
@@ -308,7 +301,7 @@ Not assessed — no GIPS Asset Owner Report provided.
 
 - Expected returns and risk are forward-looking assumptions from Gradient ICAPM Global Baseline Q3 2026, not forecasts or guarantees. Actual results will differ.
 - Performance is shown net of manager fees. Periods over one year are annualized.
-- Attribution method: server-returned realized Brinson-Fachler with symmetric-Carino linking. Factor model: Portfolio Analytics factor/currency exposure.
+- Attribution is unavailable for this example because no governed segment-weight cohort was returned; no local fallback is used. Factor model: Portfolio Analytics factor/currency exposure.
 - Private-markets valuations may lag by 3 months; values as of 2026-06-30.
 - Data sources and retrieval dates are listed in Appendix A. Sections using illustrative data are marked; they do not describe the organization's holdings.
 - GIPS assessments are diligence reviews against the 2020 GIPS standards, not verifications or legal opinions.

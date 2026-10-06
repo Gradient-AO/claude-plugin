@@ -23,7 +23,7 @@ sign, never parentheses. Missing → `n/a` inside numeric tables,
 
 | Report area | Source | Preserve |
 |---|---|---|
-| IPS status, active weight, expected-return objective, liquidity and concentration | `check_portfolio_policy` | Status vocabulary, provenance, raw decimal values, thresholds, headroom, coverage and missing reasons |
+| IPS status, active weight, expected-return objective, risk limits, liquidity and concentration | `check_portfolio_policy` | Status vocabulary, provenance, raw decimal values, thresholds, headroom, risk observation basis, comparison rule, coverage and missing reasons |
 | Realized attribution | `get_portfolio_attribution` | Brinson-Fachler allocation/selection/interaction, symmetric-Carino linking, residual tolerance, period/basis/currency metadata |
 | Realized returns and risk | `get_portfolio_historical_returns` | Period labels, benchmark and excess returns, annualization, future-period exclusion, drawdown dates, beta, volatility and coverage |
 | Allocation hierarchy | `get_portfolio_structure` | Total-portfolio target basis and coverage; never multiply hierarchy weights locally |
