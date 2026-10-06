@@ -30,5 +30,20 @@ sign, never parentheses. Missing → `n/a` inside numeric tables,
 | Exposure mix | `get_portfolio_exposure` | Server aggregate basis, total, share, coverage and truncation; never add unfunded to NAV |
 | Forward-looking analytics | Portfolio Analytics chart packs | Scenario, assumption set, currency, horizon and returned metric basis |
 
-When a server method is unavailable, keep the row and report `Not available — <reason>`. A user-supplied
+## Local Brinson fallback
+
+Prefer `get_portfolio_attribution`. Use local Brinson only when that tool is unavailable and saved evidence
+contains complete, aligned portfolio weights (`wP`), benchmark weights (`wB`), portfolio segment returns
+(`rP`), benchmark segment returns (`rB`), and total benchmark return (`RB`) for the same single period:
+
+- Allocation: `(wP - wB) × (rB - RB)`
+- Selection: `wB × (rP - rB)`
+- Interaction: `(wP - wB) × (rP - rB)`
+
+Reconcile effects to active return within the displayed rounding tolerance. Label every result
+`Local Brinson fallback`; preserve input source tags, period, currency, classification, and return basis.
+Do not invent missing cohorts or multi-period linking coefficients, and do not label the fallback
+server-validated or symmetric-Carino linked.
+
+For all other server methods, keep an unavailable row as `Not available — <reason>`. A user-supplied
 calculation may be quoted as document evidence but is not relabeled as a Gradient metric.

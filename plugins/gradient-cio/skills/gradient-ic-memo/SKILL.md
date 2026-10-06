@@ -20,7 +20,7 @@ the structure and the rules. Never fill a number from memory or general knowledg
 |---|---|
 | `references/memo-template.md` | Always — the exact memo structure. Follow it verbatim. |
 | `references/data-map.md` | Always — which Gradient tool feeds each section, and the fallback when data is missing. |
-| `references/portfolio-strategy-scope.md` | Always — hard boundary between saved-portfolio evidence and Strategy Lab return-series analysis. |
+| `references/module-scope.md` | Always — hard boundary between saved-portfolio evidence and Strategy Lab return-series analysis. |
 | `references/chart-data.md` | Always — dashboard chart discovery, basis rules and generic report block. |
 | `references/ips-schema.md` | When an IPS is supplied or needed — how to capture IPS constraints as structured input. |
 | `references/calculations.md` | Before drafting figures — display formats and the server-owned metric methods to preserve. |
@@ -55,7 +55,7 @@ Follow `references/data-map.md` section by section. Key rules:
   loaded schema, never guessed ones.
 - If the user has more than one organization, confirm which before calling org-scoped tools. Call
   `list_assumption_sets` and state the organization and selected assumption set in the memo header.
-- Read `references/portfolio-strategy-scope.md` before selecting tools. Portfolio questions use Portfolio
+- Read `references/module-scope.md` before selecting tools. Portfolio questions use Portfolio
   Analytics. Strategy Lab is optional and uses separately selected return series or a matching active
   `strategy_lab_session`; never pass a Portfolio Analytics `portfolio_id` to a Strategy Lab tool.
 - Use `envelope: "compact"` and optional `fields` only on research-read tools whose loaded schema offers
@@ -91,10 +91,13 @@ The memo always contains Section 11, *Performance Integrity & GIPS*.
 ### Step 4 — Use governed server metrics
 
 Call `check_portfolio_policy` for allocation bands, return objective, risk limits, liquidity and concentration.
-Call `get_portfolio_attribution` for realized Brinson-Fachler effects and symmetric-Carino linking. Use
-`get_portfolio_historical_returns` for portfolio, benchmark-relative and risk metrics. Preserve each tool's
-methodology, formula version, basis, period, currency, coverage and missing reasons. If a governed result is
-unavailable, report it as unavailable; do not derive a fallback from returned inputs or user documents.
+Prefer `get_portfolio_attribution` for realized Brinson-Fachler effects and symmetric-Carino linking. Local
+Brinson is the attribution fallback only when complete, same-period portfolio weights, benchmark weights,
+portfolio segment returns, and benchmark segment returns are available from saved evidence. Label it
+`Local Brinson fallback`, cite every input, and do not claim server validation or symmetric-Carino linking.
+Use `get_portfolio_historical_returns` for portfolio, benchmark-relative and risk metrics. Preserve each
+tool's methodology, formula version, basis, period, currency, coverage and missing reasons. Other governed
+results remain unavailable when their server method is unavailable.
 When policy risk rows are `not_assessed`, historical-return risk metrics remain separate observations: do not
 compare them with persisted thresholds or infer compliance unless `check_portfolio_policy` returns the status.
 When risk rows are assessed, preserve `risk_limits.observation_basis` and the returned magnitude comparison

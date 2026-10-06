@@ -23,10 +23,12 @@ CONTRACTS = ROOT / "skills" / "gradient-setup" / "references" / "contracts.json"
 CONTRACT_CHECKS = ROOT / "skills" / "gradient-setup" / "references" / "contract-checks.md"
 PUBLIC_TOOLS = ROOT / "skills" / "gradient-setup" / "references" / "public-tools.json"
 SHARED_REPORT_STYLE = ROOT / "shared" / "report-style.md"
+SHARED_MODULE_SCOPE = ROOT / "shared" / "module-scope.md"
 SKILL_REQUIREMENTS = ROOT / "skills" / "gradient-setup" / "references" / "skill-requirements.md"
 MACRO_BRIEF_SKILL = ROOT / "skills" / "gradient-macro-brief" / "SKILL.md"
 IC_MEMO_SKILL = ROOT / "skills" / "gradient-ic-memo" / "SKILL.md"
 IC_MEMO_DATA_MAP = ROOT / "skills" / "gradient-ic-memo" / "references" / "data-map.md"
+IC_MEMO_CALCULATIONS = ROOT / "skills" / "gradient-ic-memo" / "references" / "calculations.md"
 IC_MEMO_VALIDATOR = ROOT / "skills" / "gradient-ic-memo" / "scripts" / "validate_memo.py"
 IC_MEMO_EVIDENCE = FIX / "ic_evidence.json"
 IC_MEMO_EXAMPLE = ROOT / "skills" / "gradient-ic-memo" / "assets" / "example-memo.md"
@@ -378,7 +380,7 @@ def contract_manifest():
         for name in ("standard", "full", "writes", "ddq-save-preview")
     }
     check(
-        counts == {"standard": 8, "full": 36, "writes": 4, "ddq-save-preview": 3},
+        counts == {"standard": 8, "full": 39, "writes": 4, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
     )
 
@@ -401,7 +403,9 @@ def contract_manifest():
     minimum = contracts.get("minimum_connector_contract", {})
     expected_minimum_tools = {
         "batch_reconcile_manager_ddq_claims",
+        "build_strategy_lab_session",
         "check_portfolio_policy",
+        "get_benchmarks",
         "get_diligence_roster_funds",
         "get_gradient_capabilities",
         "get_manager_diligence_brief",
@@ -412,9 +416,11 @@ def contract_manifest():
         "get_portfolio_structure",
         "get_public_equity_filing_evidence",
         "get_public_equity_fundamentals",
+        "get_return_series",
         "list_organizations",
         "list_portfolios",
         "reconcile_manager_ddq_claims",
+        "run_strategy_lab_expected_statistics",
         "search_managers",
     }
     minimum_probe_ids = set(minimum.get("required_probe_ids", []))
@@ -429,6 +435,10 @@ def contract_manifest():
             "portfolio_policy",
             "portfolio_attribution",
             "portfolio_returns",
+            "strategy_benchmarks",
+            "strategy_return_series",
+            "strategy_session_build",
+            "strategy_expected_statistics",
             "equity_fundamentals",
             "ddq_numeric_gap",
             "batch_ddq_preview",
@@ -711,38 +721,106 @@ def contract_manifest():
         "known-issues table omits resolved portfolio failures",
     )
     check(
-        "`get_the_read.asOfDate` is a historical-publication cutoff" in macro_guidance
+        "`get_the_read.asOfDate` is optional" in macro_guidance
         and "Omit it for the current brief" in macro_guidance,
-        "macro brief distinguishes publication cutoff from meeting date",
+        "macro brief treats asOfDate as optional for a specific edition",
     )
     check(
         "`status: unavailable` with `unavailable_reason`" in macro_guidance,
         "macro brief treats unavailable regime state as a valid evidence gap",
     )
-    scope_reference = "`references/portfolio-strategy-scope.md`"
+    scope_reference = "`references/module-scope.md`"
+    scope_guidance = SHARED_MODULE_SCOPE.read_text(encoding="utf-8")
+    module_skill_paths = [
+        path / "SKILL.md"
+        for path in (ROOT / "skills").iterdir()
+        if (path / "SKILL.md").exists()
+        and (
+            "Portfolio Analytics" in (path / "SKILL.md").read_text(encoding="utf-8")
+            or "Strategy Lab" in (path / "SKILL.md").read_text(encoding="utf-8")
+        )
+    ]
     check(
         all(
             scope_reference in path.read_text(encoding="utf-8")
-            for path in (IC_MEMO_SKILL, PORTFOLIO_REVIEW_SKILL, SETUP_SKILL)
+            for path in module_skill_paths
         ),
         "skills using Portfolio Analytics or Strategy Lab link the shared scope note",
     )
-    portfolio_probe = by_id["portfolio_expected_statistics"]
-    strategy_probe = by_id["strategy_expected_statistics"]
     check(
-        portfolio_probe["tool"] == "get_chart_data"
-        and portfolio_probe["args"].get("portfolio_id")
-        == "<sample_portfolio:portfolios[0].portfolio_id>"
-        and portfolio_probe["args"].get("analysis_type") == "expected-statistics",
-        "Portfolio Analytics probe uses the canonical illustrative portfolio",
+        "return_series_ids` plus a `benchmark_id" in scope_guidance
+        and "Never pass a Portfolio Analytics" in scope_guidance,
+        "module scope separates portfolio IDs from Strategy Lab series",
+    )
+    illustrative_label = (
+        "Illustrative, Gradient Maintained — demo data, "
+        "not the client's holdings or managers"
+    )
+    skill_paths = sorted(
+        path
+        for path in (ROOT / "skills").iterdir()
+        if (path / "SKILL.md").exists()
+    )
+    normalized_report_style = re.sub(
+        r"\s+",
+        " ",
+        SHARED_REPORT_STYLE.read_text(encoding="utf-8"),
     )
     check(
-        "depends_on" not in strategy_probe
+        illustrative_label in scope_guidance
+        and illustrative_label in normalized_report_style
+        and all(
+            illustrative_label
+            in re.sub(
+                r"\s+",
+                " ",
+                (skill / "references" / "report-style.md").read_text(encoding="utf-8"),
+            )
+            for skill in skill_paths
+        ),
+        "all report skills define the standard illustrative label",
+    )
+    check(
+        all(
+            '{"view": "credit_spreads"}'
+            in (skill / "references" / "report-style.md").read_text(encoding="utf-8")
+            for skill in skill_paths
+        ),
+        "all skills omit optional credit-spread fields while MD-1 is open",
+    )
+    portfolio_probe_ids = {
+        "sample_portfolio",
+        "portfolio_exposure",
+        "portfolio_tree",
+        "portfolio_returns",
+        "portfolio_expected_statistics",
+        "portfolio_policy",
+    }
+    check(
+        portfolio_probe_ids <= set(by_id)
+        and by_id["portfolio_expected_statistics"]["tool"] == "get_chart_data"
+        and by_id["portfolio_expected_statistics"]["args"].get("portfolio_id")
+        == "<sample_portfolio:portfolios[0].portfolio_id>"
+        and by_id["portfolio_expected_statistics"]["args"].get("analysis_type")
+        == "expected-statistics",
+        "Portfolio Analytics probes cover the illustrative portfolio surface",
+    )
+    strategy_probe_ids = {
+        "strategy_benchmarks",
+        "strategy_return_series",
+        "strategy_session_build",
+        "strategy_expected_statistics",
+    }
+    strategy_probe = by_id["strategy_expected_statistics"]
+    check(
+        strategy_probe_ids <= set(by_id)
+        and by_id["strategy_session_build"]["args"].get("demo_set_id")
+        == "strategy_lab_core"
+        and strategy_probe.get("depends_on") == ["strategy_session_build"]
         and "portfolio_id" not in strategy_probe["args"]
-        and len(
-            strategy_probe["args"]["strategy_lab_session"]["form"]["selectedRecords"],
-        ) >= 1,
-        "Strategy Lab probe uses inline return series without a portfolio ID",
+        and strategy_probe["args"].get("strategy_lab_session")
+        == "<strategy_session_build:strategy_lab_session>",
+        "Strategy Lab probes cover catalog, series, session build and compute",
     )
     relative_args = by_id["strategy_relative_return"]["args"]
     check(
@@ -752,6 +830,54 @@ def contract_manifest():
     check(
         by_id["credit_spreads"]["args"] == {"view": "credit_spreads"},
         "credit-spreads probe passes only its view",
+    )
+    check(
+        all(issue_id in contract_guidance for issue_id in (
+            "SL-1",
+            "PA-1",
+            "PA-2",
+            "PA-3",
+            "MD-1",
+            "PL-1",
+        ))
+        and "CMA receipt unvalidated" not in contract_guidance,
+        "known-issues table contains the current issue set",
+    )
+    check(
+        all(resolved_issue not in contract_guidance for resolved_issue in (
+            "Read 502",
+            "regime_state 500",
+            "grip_index 422",
+            "roster timeline 400",
+            "events not ready",
+            "CMA consensus 500",
+            "CMA receipt unvalidated",
+            "empty-findings validator",
+        )),
+        "known-issues table omits the resolved issue set",
+    )
+    check(
+        "Local Brinson fallback" in IC_MEMO_SKILL.read_text(encoding="utf-8")
+        and "Local Brinson fallback" in IC_MEMO_CALCULATIONS.read_text(encoding="utf-8")
+        and "`check_portfolio_policy`" in IC_MEMO_SKILL.read_text(encoding="utf-8"),
+        "IC memo prefers governed attribution and policy tools with a labeled fallback",
+    )
+    requirement_guidance = SKILL_REQUIREMENTS.read_text(encoding="utf-8")
+    check(
+        "gradient-ic-memo — Portfolio Analytics core" in requirement_guidance
+        and "gradient-ic-memo — Strategy Lab supplement" in requirement_guidance
+        and "missing makes the memo Partial" in requirement_guidance,
+        "IC memo readiness is split by module with optional Strategy Lab",
+    )
+    example_sources = "\n".join(
+        line
+        for line in IC_MEMO_EXAMPLE.read_text(encoding="utf-8").splitlines()
+        if re.match(r"\| S(?:2|3|6|8|9|11) \|", line)
+    )
+    check(
+        "Strategy Lab" not in example_sources
+        and "run_strategy_lab_" not in example_sources,
+        "IC memo example does not send the portfolio ID to Strategy Lab",
     )
     check(
         "status" in by_id["regime_state"].get("required", []),

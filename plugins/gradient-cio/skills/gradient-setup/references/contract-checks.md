@@ -31,11 +31,12 @@ or report date; the default probe therefore exercises the current latest-publica
 sample_portfolio, chart_catalog. The sample probe verifies that `list_portfolios`
 returns Gradient's canonical example first.
 
-**Full read set (44 reads including standard):** standard plus capabilities_summary, manager_diligence_brief,
+**Full read set (47 reads including standard):** standard plus capabilities_summary, manager_diligence_brief,
 attention, findings, events, events_roster, conditions, credit_spreads, gradient_signal, regime_state, cma_baseline, watchlist,
 portfolio_tree, portfolio_exposure, portfolio_policy, portfolio_ownership, portfolio_returns,
 portfolio_attribution, portfolio_series,
-chart_availability, portfolio_expected_statistics, strategy_expected_statistics, strategy_diversification,
+chart_availability, portfolio_expected_statistics, strategy_benchmarks, strategy_return_series,
+strategy_session_build, strategy_expected_statistics, strategy_diversification,
 strategy_relative_return, adv_13f_consistency,
 multi_manager_13f_overlap, search_managers, screen, cftc_positioning, hf_crowding, regional_facts,
 regional_capital_markets, equity_fundamentals, equity_risk_findings, ddq_numeric_gap and batch_ddq_preview.
@@ -63,7 +64,7 @@ The first call persists fictional inline text as a ready subject-bound document 
 save call is still a dry-run preview and must return `outcome: "preview"`, `dry_run: true` and `committed:
 false`.
 
-The complete matrix is 51 calls. Run the standard or full read set without write confirmation. Run the
+The complete matrix is 54 calls. Run the standard or full read set without write confirmation. Run the
 writes set only as previews. Before the DDQ save-preview set, tell the user that its reconciliation call
 persists a test document and immutable test workpaper.
 
@@ -75,10 +76,15 @@ For `portfolio_exposure` and `portfolio_ownership`, determine scope from
 mismatch when a dependent response does not identify that same canonical
 portfolio or labels it as live data.
 
-The Portfolio Analytics probe `portfolio_expected_statistics` uses the canonical illustrative
-`portfolio_id`. The Strategy Lab probes instead carry fictional inline return series in
-`strategy_lab_session`; they do not depend on `sample_portfolio` and must not receive its ID. Report the two
-module results separately.
+The Portfolio Analytics probes cover list, exposure, structure, history, one expected-statistics chart pack,
+and policy checking against the canonical illustrative `portfolio_id`. Strategy Lab separately covers the
+named demo benchmark catalog, one manager/fund return series, server session build, and one compute tool.
+Strategy Lab never receives `portfolio_id`. Report the two module results separately.
+
+For a non-entitled organization, successful Portfolio Analytics and Strategy Lab probes are expected to
+report illustrative access, not live client access. Confirm `record_kind: example`, `access_mode:
+illustrative`, or `provenance.data_scope.kind: illustrative` where the response exposes it. Label those
+results **Illustrative, Gradient Maintained — demo data, not the client's holdings or managers**.
 
 Results:
 
@@ -88,16 +94,21 @@ Results:
 - Note `validation.status` = `failed` separately: the call worked, but Gradient's own checks raised advisories.
   These are disclosures, not outages.
 
-## Known issues (revalidated 2026-10-05)
+## Known issues (revalidated 2026-10-06)
 
 Re-check these on every full run. When one stops reproducing, say so in the report ("resolved since
-2026-10-05") so the maintainer can remove it from this table.
+2026-10-06") so the maintainer can remove it from this table.
 
 No known issue permits a Portfolio Analytics ID to be reused as Strategy Lab input.
 
 | Tool / view | Classification | Ticket, owner, review | Symptom and current workaround | Removal criterion |
 |---|---|---|---|---|
-| get_capital_market_assumptions | Non-blocking data quality | [#1499](https://github.com/Gradient-AO/gradientcio/issues/1499), `@shbryx`, 2026-11-02 | `quality_receipt.status` may be unvalidated; bond excess returns can be ≈ 0 with shared policy values; raw kurtosis below 3 is flagged. Disclose, make no comparative claims and caveat fixed-income rows. | Validated receipt and explicit return/kurtosis semantics; full production probe passes twice. |
+| `get_benchmarks`, `build_strategy_lab_session` | Blocking Strategy Lab demo readiness | SL-1 · Gradient MCP · 2026-10-20 | The published connector may omit `strategy_lab_core` or fail to build its default demo session. Mark the Strategy Lab supplement unavailable; never substitute the portfolio example ID. | Named demo set, series history and session build pass the full production probe twice. |
+| `get_portfolio_attribution` | Non-blocking Portfolio Analytics data gap | PA-1 · Gradient MCP · 2026-10-20 | The illustrative portfolio may return `unavailable`, `no_weight_cohorts`, or zero covered periods. Keep attribution unavailable; use local Brinson only when the IC memo has complete aligned fallback inputs. | Summary, segments and diagnostics are available for at least 36 monthly periods in two production probes. |
+| `check_portfolio_policy` risk limits | Non-blocking Portfolio Analytics governance gap | PA-2 · Gradient MCP · 2026-10-20 | Volatility, drawdown and CVaR may be `not_assessed` with `risk_observation_missing`. Preserve the status and show historical risk only as a separate observation. | Governed monthly total-return basis is returned and all three risk rows are assessed twice. |
+| `get_chart_data` portfolio packs | Non-blocking Portfolio Analytics coverage gap | PA-3 · Gradient MCP · 2026-10-20 | Illustrative expected-statistics or allocation packs may be partial. Honor availability and missing reasons; do not replace a portfolio chart with Strategy Lab output. | Required illustrative chart pack passes twice with a stable basis and fingerprint. |
+| `get_macro_conditions` `credit_spreads` | Non-blocking input-contract defect | MD-1 · Gradient MCP · 2026-10-20 | Optional fields can cause request validation failure. Pass only `{"view":"credit_spreads"}`. | The published schema accepts documented optional selectors and representative probes pass twice. |
+| Installed plugin version | Release distribution | PL-1 · Plugin · 2026-10-20 | An installed copy can remain at `v0001` dated 2026-10-04 after the marketplace is updated. Run `/plugin marketplace update gradientcio`, then verify the plugin manifest version and this table. | Fresh installs and updates resolve to the current marketplace version in two client checks. |
 | get_benchmarks with `asset_class` filter | Non-blocking data quality | [#1500](https://github.com/Gradient-AO/gradientcio/issues/1500), `@shbryx`, 2026-11-02 | `multi_asset` can give `response_contract_invalid`; `equity` can give 0 rows. Use the unfiltered catalog. | Supported filters are documented and contract-valid; representative filtered probes pass twice. |
 | get_cross_domain_research `adv_13f_consistency`, `holdings_issuer_risk` | Non-blocking data quality | [#1501](https://github.com/Gradient-AO/gradientcio/issues/1501), `@shbryx`, 2026-11-02 | Often `partial` with `crd_cik_legal_entity_unconfirmed`. Report the identity caveat and make no inference from the ratio. | Governed linkage meets the service threshold or returns stable typed unavailability; probes pass twice. |
 | get_market_positioning `equity_signals` | Non-blocking data quality | [#1502](https://github.com/Gradient-AO/gradientcio/issues/1502), `@shbryx`, 2026-11-02 | Can return 422 `semantic_validation_failed` (`equity_signal_stale_contributors`). Omit sector context and disclose unavailability. | Contributors satisfy freshness policy or return stable typed unavailability; probe passes twice. |

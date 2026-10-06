@@ -23,8 +23,8 @@ changes, manager actions or votes. If a decision is needed, offer **gradient-ic-
 Rules that matter here:
 - **Illustrative is never "your portfolio".** `list_portfolios` returns `record_kind`. A record with
   `record_kind: example` (or any result with `provenance.data_scope.kind: illustrative`) is labeled
-  **Illustrative, Gradient Maintained**. Put "Illustrative, Gradient Maintained — not the organization's
-  actual holdings" in `confidentiality`, the title/subtitle and an amber callout in the summary, and never
+  **Illustrative, Gradient Maintained — demo data, not the client's holdings or managers**. Put that exact
+  label in `confidentiality`, the title/subtitle and an amber callout in the summary, and never
   write "your portfolio", "you hold" or "the fund returned" about it.
 - **Absence is not evidence.** An unavailable section, a missing benchmark or an entitlement block is reported
   as "Not available — <reason>", never as zero, "none" or "in line".
@@ -39,7 +39,7 @@ Rules that matter here:
 | File | Read when |
 |---|---|
 | `references/data-map.md` | Always — exact tool arguments, response fields, fallbacks and known failures. |
-| `references/portfolio-strategy-scope.md` | Always — Portfolio Analytics is the only module used for saved-portfolio analysis. |
+| `references/module-scope.md` | Always — Portfolio Analytics is the only module used for saved-portfolio analysis. |
 | `references/chart-data.md` | Always — chart discovery order, basis rules and generic report block. |
 | `references/review-template.md` | Comprehensive mode — exact section order, block schemas and page budget. |
 | `references/writing-standards.md` | Before drafting — sourced analysis, considerations and prohibited recommendations. |
@@ -57,7 +57,7 @@ Rules that matter here:
    - **Portfolio licensed** (`portfolio: true`): the user's portfolios plus the example record.
    - **Not licensed** (`portfolio: false`, portfolio tools `access_mode: illustrative`): only Gradient's
      illustrative portfolio is available. Tell the user in one line, offer to continue with the
-     **Illustrative, Gradient Maintained** portfolio, and mark the report Partial. Do not ask for an upload as a substitute
+     **Illustrative, Gradient Maintained — demo data, not the client's holdings or managers** portfolio, and mark the report Partial. Do not ask for an upload as a substitute
      unless the user offers one; a user file is tagged as a user document, never as Gradient data.
 3. **Portfolio**: `list_portfolios` → `portfolio_id`, `portfolio_name`, `base_currency`, `record_kind`,
    `canonical_default`. Match the user's name; if several user records and none named, ask once.
@@ -159,7 +159,7 @@ Use JSON block mode (`references/report-style.md`).
 ### Brief mode
 
 Meta: `eyebrow` "Portfolio Review", `header_label`
-"Portfolio Review", `title` the portfolio name (illustrative: "<name> — Illustrative, Gradient Maintained"),
+"Portfolio Review", `title` the portfolio name (illustrative: "<name> — Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"),
 `subtitle` "<Quarterly|Annual> review · period to <date> · prepared for <audience>", `running_head`
 "<short name> · period to <date>", `data_as_of` with each source date, `cover_facts`: Period end, Base
 currency, Total NAV, Benchmark, Inception (first month of history), Data scope (`data_scope.label`).

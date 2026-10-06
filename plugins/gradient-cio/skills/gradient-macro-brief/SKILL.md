@@ -26,9 +26,10 @@ Evidence rules (from GradientCIO):
 
 ## 1. Collect
 
-Use the latest published evidence by default. `get_the_read.asOfDate` is a historical-publication cutoff,
-not the committee meeting date or report date. Omit it for the current brief; pass it only when the user
-explicitly asks for the latest edition on or before a historical date.
+Use the latest published evidence by default. `get_the_read.asOfDate` is optional and is a
+historical-publication cutoff, not the committee meeting date or report date. Omit it for the current brief;
+pass it for a specific edition only when the user explicitly asks for the latest edition on or before a
+historical date.
 
 | Evidence | Call | Notes |
 |---|---|---|

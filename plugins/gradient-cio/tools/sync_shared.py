@@ -11,7 +11,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 FILES = {"shared/gradient_report.py": "scripts/gradient_report.py",
          "shared/report-style.md": "references/report-style.md",
          "shared/chart-data.md": "references/chart-data.md",
-         "shared/portfolio-strategy-scope.md": "references/portfolio-strategy-scope.md"}
+         "shared/module-scope.md": "references/module-scope.md"}
 
 def digest(p):
     return hashlib.sha256(p.read_bytes()).hexdigest()[:12]

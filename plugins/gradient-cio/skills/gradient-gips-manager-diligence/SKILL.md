@@ -40,7 +40,8 @@ available and `advertising-and-marketing-rule.md` when marketing materials are i
      definition.
    - Follow the connector's rules: check `validation.status` before using a value, keep `provenance.as_of` and
      the source reference with every Gradient figure, preserve `provenance.data_scope`, and never present data
-     marked "Illustrative, Gradient Maintained" as the user's actual data.
+     marked "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers" as the
+     user's actual data.
 3. **Documents:** read any files the user attached or pointed to (GIPS Report, verification report, DDQ,
    pitchbook, factsheet, Form ADV excerpt).
 4. If neither source has a GIPS Report or verification report, continue with what is available and list the

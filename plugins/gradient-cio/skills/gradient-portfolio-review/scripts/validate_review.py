@@ -171,12 +171,16 @@ def validate(path: Path) -> list[str]:
 
     if re.search(r"\billustrative\b", all_text, re.IGNORECASE):
         confidentiality = str(meta.get("confidentiality", ""))
-        if "Illustrative, Gradient Maintained" not in confidentiality:
+        illustrative_label = (
+            "Illustrative, Gradient Maintained — demo data, "
+            "not the client's holdings or managers"
+        )
+        if illustrative_label not in confidentiality:
             errors.append(
-                "Illustrative evidence requires 'Illustrative, Gradient Maintained' in confidentiality"
+                f"Illustrative evidence requires '{illustrative_label}' in confidentiality"
             )
-        if "not the organization's actual holdings" not in all_text:
-            errors.append("Illustrative report must state it is not the organization's actual holdings")
+        if illustrative_label not in all_text:
+            errors.append("Illustrative report must use the standard demo-data label")
 
     return errors
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.1
+- Added a shared module-scope contract separating Portfolio Analytics portfolio IDs from Strategy Lab return-series sessions and demo data.
+- Expanded setup probes across Portfolio Analytics and the Strategy Lab demo catalog, return series, session builder and compute path.
+- Split IC memo readiness by module, made Strategy Lab optional with Partial status, and documented governed attribution and policy tools plus the local Brinson fallback.
+- Standardized illustrative labeling, refreshed known issues, kept `asOfDate` optional, and restricted credit-spread calls while MD-1 remains open.
+
 ## 1.6.0
 - Added a selectable comprehensive portfolio-review mode that targets 15–20 pages while retaining the existing 5–8 page brief.
 - Added deterministic sections for historical returns and Brinson attribution, allocation and policy, exposures and concentration, realized risk, projected return and risk decomposition, liquidity, evidence coverage, and sourced analysis and considerations.

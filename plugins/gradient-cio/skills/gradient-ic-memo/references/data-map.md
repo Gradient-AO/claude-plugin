@@ -2,12 +2,14 @@
 
 Call tools in the order below (it front-loads identifiers that later calls need). Load each with `tool_search`
 first and use the parameter names from the loaded schema. Record a source row for every call (see SKILL.md
-Step 2). Read `portfolio-strategy-scope.md` first.
+Step 2). Read `module-scope.md` first.
 
-Portfolio Analytics is authoritative for every saved-portfolio row below. Strategy Lab is an optional,
-separate analysis of user-selected return series or a matching active `strategy_lab_session`. Never pass the
-portfolio ID returned by `list_portfolios` to `build_strategy_lab_session` or a `run_strategy_lab_*` tool.
-When Strategy Lab evidence is used, label the series and date coverage and do not present it as the portfolio.
+Portfolio questions go to Portfolio Analytics: `list_portfolios`, `get_portfolio_exposure`,
+`get_portfolio_structure`, `get_portfolio_historical_returns`, `get_chart_data`,
+`get_portfolio_attribution`, and `check_portfolio_policy`. Strategy Lab rows are optional and run on selected
+return series (`return_series_ids` plus `benchmark_id`) or a matching active `strategy_lab_session`; they
+never receive `portfolio_id`. Label the series and date coverage and do not present lab results as the
+portfolio.
 
 ## 0. Context (header)
 
@@ -60,7 +62,7 @@ When Strategy Lab evidence is used, label the series and date coverage and do no
 - `Complete` — every primary tool returned with validation passed or advisory-only.
 - `Degraded — <n> sections affected` — count sections containing any Not available or a blocking validation.
 - `Illustrative` — any primary source has `data_scope.kind = illustrative` (takes precedence). Report the
-  exact scope label `Illustrative, Gradient Maintained`.
+  exact scope label `Illustrative, Gradient Maintained — demo data, not the client's holdings or managers`.
 
 ## Never
 
