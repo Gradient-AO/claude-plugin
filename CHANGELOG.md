@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.6.2
+- Removed angle-bracket placeholders from the equity-note skill description so claude.ai shows it in full.
+
 ## 1.6.1
 - Added a shared module-scope contract separating Portfolio Analytics portfolio IDs from Strategy Lab return-series sessions and demo data.
 - Expanded setup probes across Portfolio Analytics and the Strategy Lab demo catalog, return series, session builder and compute path.
