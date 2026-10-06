@@ -24,7 +24,7 @@ When Strategy Lab evidence is used, label the series and date coverage and do no
 | § | Content | Primary tool (view / mode) | Fallback if unavailable |
 |---|---|---|---|
 | 3 | NAV, unfunded, holdings, allocation | Portfolio Analytics: `get_portfolio_exposure`; policy hierarchy and weights from `get_portfolio_structure` (`view: allocation_tree`, then `ownership_weights`) | User-supplied holdings file; else Not available |
-| 4 | IPS compliance | `check_portfolio_policy` governed allocation bands, return objective, risk limits, liquidity and concentration | Not assessed — governed policy or observation unavailable |
+| 4 | IPS compliance | `check_portfolio_policy` governed allocation bands, return objective, risk limits with observation basis, liquidity and concentration | Not assessed — governed policy or observation unavailable |
 | 5.1 | Returns vs benchmark | Portfolio Analytics: `get_portfolio_historical_returns` (`sections: standard_periods, calendar_years, risk_metrics, benchmark_relative`; keep partial-period labels and coverage states) | User performance report; else Not available |
 | 5.2 | Attribution | `get_portfolio_attribution` for the governed saved portfolio and policy benchmark | User attribution report quoted as a document; else Not available |
 | 5.3 | Contributors / detractors | Governed holding or asset-class contribution data from a user report | Not available |

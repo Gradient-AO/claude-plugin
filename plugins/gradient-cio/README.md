@@ -14,7 +14,7 @@ status chips, source tags, sources appendix).
 | gradient-manager-monitor | Weekly monitoring digest across the Diligence Roster; can run as a scheduled task |
 | gradient-macro-brief | Investment-committee macro briefing deck (16:9 PDF) from The Read, signals, calendar and CMAs |
 | gradient-ic-memo | Investment committee memo (16 sections plus appendices) with IPS status and recommendation |
-| gradient-portfolio-review | Quarterly or annual total-portfolio review: returns vs benchmark, allocation vs policy ranges, exposure, 13F look-through, risk |
+| gradient-portfolio-review | Quarterly or annual total-portfolio review: 5–8 page brief or 15–20 page comprehensive analysis of returns, attribution, policy, exposures, risk decomposition and liquidity |
 | gradient-manager-compare | Screen or compare 2–5 candidate managers for a mandate (Form ADV, service providers, 13F overlap, flags) with next steps |
 | gradient-equity-note | Sourced research note on one US-listed issuer: fundamentals and changes, risk factors, earnings release, crowding, roster holders (not investment advice) |
 | gradient-gips-manager-diligence | GIPS diligence review of a manager, with a paste-ready memo section |

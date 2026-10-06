@@ -95,6 +95,10 @@ Call `get_portfolio_attribution` for realized Brinson-Fachler effects and symmet
 `get_portfolio_historical_returns` for portfolio, benchmark-relative and risk metrics. Preserve each tool's
 methodology, formula version, basis, period, currency, coverage and missing reasons. If a governed result is
 unavailable, report it as unavailable; do not derive a fallback from returned inputs or user documents.
+When policy risk rows are `not_assessed`, historical-return risk metrics remain separate observations: do not
+compare them with persisted thresholds or infer compliance unless `check_portfolio_policy` returns the status.
+When risk rows are assessed, preserve `risk_limits.observation_basis` and the returned magnitude comparison
+rule so the report states the governed horizon, effective date, frequency, return basis and currency.
 
 Strategy Lab relative return applies only to selected lab return series and does not provide saved-portfolio
 Brinson decomposition.

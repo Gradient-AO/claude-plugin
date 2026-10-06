@@ -126,7 +126,7 @@
      ["S10", "Firm events", "get_firm_fund_events", "2026-10-04", {"chip": "passed", "status": "passed"}, "d0e1f2a3"],
      ["S11", "ADV–13F consistency — Harbor", "get_cross_domain_research", "2026-10-01", {"chip": "passed", "status": "passed"}, "e1f2a3b4"]]},
    {"type": "two_col", "left": [
-     {"type": "kv", "title": "Calculations", "rows": [["C1", "Discretionary RAUM ÷ RAUM"], ["C2", "Latest 13F total ÷ ADV RAUM"]]}],
+     {"type": "kv", "title": "Server Metric Methods", "rows": [["Discretionary share", "Use discretionary_raum_share exactly as returned by get_manager_odd_profile [S1][S2][S3]"], ["13F / ADV RAUM", "Use thirteen_f_total_to_adv_raum_ratio exactly as returned by get_cross_domain_research [S8][S11]"]]}],
     "right": [
      {"type": "kv", "title": "Signal rubric", "rows": [["Elevated", "Any High flag"], ["Review", "Any Medium flag"], ["Clear", "No flags identified"], ["Insufficient", "<2 usable ADV profiles"]]}]},
    {"type": "callout", "tone": "info", "title": "Disclaimer", "text": "Not investment, legal or compliance advice. No manager is ranked or recommended. Form ADV is adviser-reported, not SEC-verified. Form 13F is lagged, long-only reportable exposure. Percentiles are Gradient cohort positioning, not a quality ranking. All names and figures in this render test are fictional."}

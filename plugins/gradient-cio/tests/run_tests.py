@@ -28,9 +28,14 @@ MACRO_BRIEF_SKILL = ROOT / "skills" / "gradient-macro-brief" / "SKILL.md"
 IC_MEMO_SKILL = ROOT / "skills" / "gradient-ic-memo" / "SKILL.md"
 IC_MEMO_DATA_MAP = ROOT / "skills" / "gradient-ic-memo" / "references" / "data-map.md"
 IC_MEMO_VALIDATOR = ROOT / "skills" / "gradient-ic-memo" / "scripts" / "validate_memo.py"
+IC_MEMO_EVIDENCE = FIX / "ic_evidence.json"
+IC_MEMO_EXAMPLE = ROOT / "skills" / "gradient-ic-memo" / "assets" / "example-memo.md"
 ODD_REPORT_SKILL = ROOT / "skills" / "gradient-odd-report" / "SKILL.md"
 GIPS_MANAGER_DILIGENCE_SKILL = ROOT / "skills" / "gradient-gips-manager-diligence" / "SKILL.md"
 PORTFOLIO_REVIEW_SKILL = ROOT / "skills" / "gradient-portfolio-review" / "SKILL.md"
+PORTFOLIO_REVIEW_VALIDATOR = (
+    ROOT / "skills" / "gradient-portfolio-review" / "scripts" / "validate_review.py"
+)
 SETUP_SKILL = ROOT / "skills" / "gradient-setup" / "SKILL.md"
 STALE = re.compile(r"(?<!gradient-)\bgips-(compliance|standards|manager-diligence|report-review|asset-owner-review|policies-gap-check)\b|gradient-capabilities")
 
@@ -66,6 +71,7 @@ CASES = [
     ("deck",     ["--deck", "deck.json", "OUT"],                     11, 11, ["Macro Briefing", "Takeaway"]),
     ("branded",  ["--brand", "branding-test.json", "blocks.json", "OUT"], 2, 4, ["Northwind Pension Plan (TEST)", "Powered by GradientCIO.com"]),
     ("portfolio", ["portfolio.json", "OUT"],                         5, 8,  ["Portfolio Review", "Standard periods to", "Growth of 100", "Look-through concentration"]),
+    ("portfolio_comprehensive", ["portfolio-comprehensive.json", "OUT"], 15, 20, ["Comprehensive Portfolio Review", "Historical Attribution", "Projected Return and Risk Decomposition", "Analysis and Considerations"]),
     ("compare",  ["compare.json", "OUT"],                            5, 9,  ["Manager Comparison", "Side-by-side comparison", "Form 13F overlap"]),
     ("equity",   ["equity.json", "OUT"],                             5, 8,  ["Equity Research Note", "Review flags", "not a recommendation"]),
 ]
@@ -175,6 +181,28 @@ def connector_cutover():
         "skills, shared guidance, and fixtures contain no local-calculation tags"
         + (f": {stale_calc_tags}" if stale_calc_tags else ""),
     )
+    fixture_boundary_violations = []
+    fixture_paths = [
+        path
+        for path in FIX.rglob("*")
+        if path.is_file() and path.suffix in (".md", ".json")
+    ]
+    for path in fixture_paths:
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        if (
+            re.search(r'"title"\s*:\s*"Calculations"', text)
+            or re.search(r'(?<![A-Za-z0-9])C\d+(?![A-Za-z0-9])', text)
+        ):
+            fixture_boundary_violations.append(str(path.relative_to(ROOT)))
+    check(
+        not fixture_boundary_violations,
+        "report fixtures use server metric methods instead of C# calculation appendices"
+        + (
+            f": {fixture_boundary_violations}"
+            if fixture_boundary_violations
+            else ""
+        ),
+    )
     stale_math_guidance = []
     stale_guidance_patterns = (
         r"recompute each `C#`",
@@ -208,6 +236,86 @@ def connector_cutover():
         + (
             f": {(validated.stderr or validated.stdout).strip()}"
             if validated.returncode != 0
+            else ""
+        ),
+    )
+    memo_text = (FIX / "ic.md").read_text(encoding="utf-8")
+    example_memo_text = IC_MEMO_EXAMPLE.read_text(encoding="utf-8")
+    memo_meta = json.loads((FIX / "ic_meta.json").read_text(encoding="utf-8"))
+    memo_evidence = json.loads(IC_MEMO_EVIDENCE.read_text(encoding="utf-8"))
+    evidence_responses = memo_evidence["responses"]
+    historical = evidence_responses["get_portfolio_historical_returns"]
+    trailing_one_year = next(
+        row
+        for row in historical["standard_periods"]
+        if row["period"] == "trailing_1y"
+    )
+    performance_text = (
+        f"1Y return {trailing_one_year['annualized_return'] * 100:.1f}% "
+        f"versus {trailing_one_year['policy_benchmark_return'] * 100:.1f}% "
+        "for the policy benchmark "
+        f"(+{trailing_one_year['arithmetic_excess_return'] * 10_000:.0f} bps)"
+    )
+    attribution = evidence_responses["get_portfolio_attribution"]
+    policy = evidence_responses["check_portfolio_policy"]
+    check(
+        all(
+            performance_text in text
+            for text in (memo_text, example_memo_text)
+        )
+        and attribution["coverage"] == {
+            "status": "unavailable",
+            "missing_reason_codes": ["no_weight_cohorts"],
+        }
+        and all(
+            attribution[field] is None
+            for field in ("summary", "residual", "segments", "diagnostics")
+        )
+        and all(
+            "`no_weight_cohorts`; no local attribution was derived" in text
+            for text in (memo_text, example_memo_text)
+        ),
+        "canonical IC fixture matches saved return and attribution evidence",
+    )
+    check(
+        policy["risk_limits"]["observation_basis"] == {
+            "configuration_status": "unavailable",
+            "source_tool": "get_portfolio_historical_returns",
+            "volatility_basis": "annualized_from_monthly_sample",
+            "drawdown_basis": "maximum_compounded_peak_to_trough_magnitude",
+            "cvar_basis": "monthly_return_expected_shortfall_95_magnitude",
+        }
+        and policy["risk_limits"]["coverage"] == {
+            "status": "unavailable",
+            "missing_reason_codes": ["risk_observation_missing"],
+        }
+        and policy["semantics"]["risk_limit_status_rule"]
+        == "breach_if_observed_magnitude_exceeds_threshold"
+        and all(
+            "Risk-limit compliance is not assessed" in text
+            for text in (memo_text, example_memo_text)
+        )
+        and memo_meta.get("signal", {}).get("label")
+        == "2 breaches · 1 watch · 3 not assessed",
+        "canonical IC fixture matches saved policy-risk evidence",
+    )
+    validated_review = subprocess.run(
+        [
+            sys.executable,
+            str(PORTFOLIO_REVIEW_VALIDATOR),
+            str(FIX / "portfolio-comprehensive.json"),
+        ],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    check(
+        validated_review.returncode == 0,
+        "comprehensive portfolio fixture passes validate_review.py"
+        + (
+            f": {(validated_review.stderr or validated_review.stdout).strip()}"
+            if validated_review.returncode != 0
             else ""
         ),
     )
@@ -470,7 +578,31 @@ def contract_manifest():
             "expected": 0.02,
             "absolute_tolerance": 1e-12,
             "unit": "decimal_fraction",
-        },
+        }
+        and policy_probe.get("equals", {}).get(
+            "risk_limits.coverage.status",
+        ) == "unavailable"
+        and policy_probe.get("equals", {}).get(
+            "risk_limits.coverage.missing_reason_codes[0]",
+        ) == "risk_observation_missing"
+        and policy_probe.get("equals", {}).get(
+            "risk_limits.observation_basis.configuration_status",
+        ) == "unavailable"
+        and policy_probe.get("equals", {}).get(
+            "risk_limits.observation_basis.source_tool",
+        ) == "get_portfolio_historical_returns"
+        and policy_probe.get("equals", {}).get(
+            "risk_limits.observation_basis.volatility_basis",
+        ) == "annualized_from_monthly_sample"
+        and policy_probe.get("equals", {}).get(
+            "risk_limits.observation_basis.drawdown_basis",
+        ) == "maximum_compounded_peak_to_trough_magnitude"
+        and policy_probe.get("equals", {}).get(
+            "risk_limits.observation_basis.cvar_basis",
+        ) == "monthly_return_expected_shortfall_95_magnitude"
+        and policy_probe.get("equals", {}).get(
+            "semantics.risk_limit_status_rule",
+        ) == "breach_if_observed_magnitude_exceeds_threshold",
         "portfolio-policy probe verifies governed numeric semantics",
     )
     returns_probe = by_id["portfolio_returns"]

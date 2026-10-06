@@ -10,14 +10,16 @@ Read `portfolio-strategy-scope.md` first; every saved-portfolio call in this map
 |---|---|---|
 | `get_gradient_capabilities` | `organization_id` | `capabilities.portfolio`; per Portfolio Analytics tool in `tools[]`: `name`, `available`, `access_mode` (`live` / `illustrative`), `backend_tool_readiness[].{backend_tool_name, available, availability_reason}` |
 | `list_portfolios` | `organization_id` | `portfolios[].{portfolio_id, portfolio_name, base_currency, record_kind (user / example), canonical_default}`, `provenance.data_scope.{kind, label}` |
+| `list_assumption_sets` | `organization_id`; select the active/default set using returned fields | Assumption-set identity, release/version, horizon and currency needed by forward chart context; preserve the returned selection basis |
 | `get_portfolio_structure` | `view: allocation_tree`, `portfolio_id`, `max_depth` 3, `node_limit` 100 | `portfolio.record_kind`, `nodes[].{allocation_id, parent_id, allocation_name, asset_classification, depth, is_leaf, target_weight, target_weight_total_portfolio, target_weight_total_portfolio_basis, target_weight_total_portfolio_coverage, actual_weight, lower_limit, upper_limit, allocation_policy}`, `coverage.{status, returned_count, truncated, missing_reasons}` |
 | `get_portfolio_structure` | `view: ownership_weights`, `portfolio_id` | `by_owner[].weights[]` (optional) |
 | `get_portfolio_historical_returns` | `portfolio_id`, `end_date` = period end, `sections` (≤ 6 of `points`, `cumulative_growth`, `standard_periods`, `calendar_years`, `risk_metrics`, `benchmark_relative`); optional `start_date` / `trailing_months` | Each section as returned, with its coverage state, partial-period label, missing reason, display unit and `record_kind` |
-| `check_portfolio_policy` | `portfolio_id` | Governed-only `overall_status`; allocation bands; return objective; risk limits; liquidity buckets; concentration; coverage, methodology and provenance |
-| `get_portfolio_attribution` | `portfolio_id`, `benchmark_role: policy`, `parent_allocation_id: root`, month-end `start_date` / `end_date`, all sections | Coverage and typed missing reasons; Brinson-Fachler allocation, selection and interaction; symmetric-Carino linked summary; residual and diagnostics; period, basis and currency metadata |
+| `check_portfolio_policy` | `portfolio_id` | Governed-only `overall_status`; `allocation_bands`; `return_objective`; `risk_limits.{observation_basis, rows, coverage}`; `liquidity.{buckets, locked_share, unfunded_commitment_ratio, coverage}`; `concentration.groups`; comparison semantics, methodology and provenance |
+| `get_portfolio_attribution` | `portfolio_id`, `benchmark_role: policy`, `parent_allocation_id: root`, month-end `start_date` / `end_date`, `sections: [summary, segments, diagnostics]` | Coverage and typed missing reasons; realized Brinson-Fachler allocation, selection and interaction; symmetric-Carino linked summary; segment effects; residual and diagnostics; period, basis, currency, formula version and tolerance |
 | `get_return_series` | `series_kind: portfolio` or `benchmark`, `series_id` (portfolio or benchmark UUID), `trailing_months` / `start_date` / `end_date` | `series.{name, record_kind}`, `availability.{status, reason}`, `coverage.{source_point_count, source_start_date, source_end_date, selected_*}`, `display.return_unit` (`decimal_fraction`), `points[].{period_date, return}` |
 | `get_benchmarks` | `view: catalog`, `benchmark_id` (preferred) or `limit` + `cursor` | `benchmarks[].{benchmark_id, name, record_kind, asset_class, geo_class, sector_class, base_currency}`, `total_count`, `next_cursor` |
 | `get_portfolio_exposure` | `portfolio_id`, `limit` 100, `cursor` = `next_cursor` until `has_more` is false | `as_of_date`, `exposures[].{commitment_name, manager_name, fund_name, asset_classification, currency, as_of_date, market_value_base, nav_base, commitment_amount, unfunded_base}`, `aggregates_by_asset_classification` (filter-wide, independent of page cursor), `methodology` |
+| `get_chart_data` | Catalog without portfolio; availability with `portfolio_id`; data one `analysis_type` at a time. For forward packs pass only context fields offered by the loaded schema, including returned/selected regime, horizon and assumption-set IDs. | `charts[].{chart_id, status, basis, columns, rows, metrics, render_hint, truncated}`, unavailable reasons, `context.fingerprint`; packs: `allocations`, `expected-statistics`, `commitments` |
 | `get_cross_domain_research` | `view: portfolio_13f_lookthrough`, `portfolio_id`, `top_n_managers` 10, `limit` 20, optional `as_of_date`, `base_currency` | Issuer rows with join basis, source dates, coverage and missing reasons as returned |
 | `get_cross_domain_research` | `view: roster_macro_exposure`, `portfolio_id` (required) | As returned; optional context only |
 | `get_the_read` | `visuals: none` | `overview.headline`, `publication.{resolved_as_of_date, freshness, fallback_applied, fallback_reason}`, `coverage.status`; numbers only from `read.facts`, never from prose |
@@ -25,6 +27,53 @@ Read `portfolio-strategy-scope.md` first; every saved-portfolio call in this map
 
 Amounts in exposure are strings in base currency units (e.g. `"58484093"`); convert to $M with 1 dp.
 Return points are decimal fractions; show percentages to 1 dp.
+
+## Comprehensive mode collection
+
+Keep the saved-portfolio and selected-series lanes separate.
+
+### Portfolio Analytics lane
+
+Collect these sections even when their result is typed unavailable:
+
+1. Historical returns: all six `get_portfolio_historical_returns` sections.
+2. Historical attribution: `get_portfolio_attribution` summary, segments and diagnostics. This is the only
+   source for the report's Historical Attribution section.
+3. Policy: allocation bands, return objective, risk limits, liquidity and concentration from
+   `check_portfolio_policy`.
+4. Exposure: every page of `get_portfolio_exposure`, plus filter-wide server aggregates.
+5. Dashboard packs: call `get_chart_data` catalog, availability and then one pack per call:
+   - `allocations`: weights, marginal contribution to risk, risk contribution, factor exposure and currency
+     exposure where returned.
+   - `expected-statistics`: projected return/risk views under the selected assumption set, horizon and regime.
+   - `commitments`: cash flow, pacing and liquidity scorecards.
+
+Pass returned chart items unchanged to the renderer. Never hand-map chart IDs, derive chart rows or compare
+charts with different `basis` or `context.fingerprint` values as though they share assumptions.
+
+### Strategy Lab supplement
+
+Use only when the current context contains a matching `strategy_lab_session` or the user has selected return
+series for Strategy Lab. Load the tool schema before each call and preserve its result contract:
+
+| Need | Tool | Fields used |
+|---|---|---|
+| Simulated return and tail risk | `run_strategy_lab_simulation` | `mean_return`, `volatility`, `sharpe_ratio`, `max_drawdown`, `var_95`, `cvar_95`, terminal distribution, path count, horizon and stress basis |
+| Forward series statistics | `run_strategy_lab_expected_statistics` | returned expected-statistics rows, covariance and cross-sectional statistics |
+| Series risk contribution | `run_strategy_lab_diversification` | returned correlation matrix, concentration snapshots and `risk_contribution_rows` |
+| Series factor decomposition | `run_strategy_lab_factor_loads` | returned factor summaries, alpha, residual volatility and model fit |
+
+Label every result **Selected-series sandbox — not saved-portfolio analytics**. Do not pass a Portfolio
+Analytics `portfolio_id` to these tools. Do not substitute `run_strategy_lab_relative_return` for Brinson
+attribution. If no matching session exists, report `Not available — no Strategy Lab return series selected`
+without downgrading the Portfolio Analytics core.
+
+### Unsupported forward analyses
+
+There is no public saved-portfolio simulated-attribution contract and no dedicated saved-portfolio Monte
+Carlo/stress tool. Use the heading **Projected Return and Risk Decomposition**, not `Simulated Attribution`.
+If a user explicitly requests saved-portfolio simulated attribution, report
+`Not available — no governed saved-portfolio simulated-attribution result` rather than synthesizing one.
 
 ## Returns availability
 

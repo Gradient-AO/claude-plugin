@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.6.0
+- Added a selectable comprehensive portfolio-review mode that targets 15–20 pages while retaining the existing 5–8 page brief.
+- Added deterministic sections for historical returns and Brinson attribution, allocation and policy, exposures and concentration, realized risk, projected return and risk decomposition, liquidity, evidence coverage, and sourced analysis and considerations.
+- Kept portfolio reviews non-prescriptive: Claude identifies observations, implications, uncertainty and discussion considerations, while decisions remain in the IC memo workflow.
+- Added a comprehensive review template, writing standards, JSON validator and fictional 15-page render fixture with page-count and content regression checks.
+- Clarified the boundary between saved-portfolio analytics and optional Strategy Lab selected-series simulations; forward decomposition is never mislabeled as attribution.
+- Bound IC memo examples and setup probes to saved MCP evidence states, risk-observation methods, and typed attribution unavailability.
+
 ## 1.5.0
 - Moved portfolio policy, realized attribution, historical performance, exposure rollups, equity leverage and DDQ numeric gaps to versioned Gradient MCP evidence contracts.
 - Removed local report-calculation scripts and fallbacks; reports now cite server-returned values, methodology identities, coverage and typed unavailable reasons.

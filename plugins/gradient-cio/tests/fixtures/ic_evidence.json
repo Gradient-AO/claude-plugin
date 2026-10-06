@@ -1,0 +1,64 @@
+{
+  "schema_version": "gradient-ic-example-evidence/v1",
+  "data_scope": {
+    "kind": "illustrative",
+    "label": "Illustrative, Gradient Maintained"
+  },
+  "responses": {
+    "check_portfolio_policy": {
+      "risk_limits": {
+        "status": "not_assessed",
+        "observation_basis": {
+          "configuration_status": "unavailable",
+          "source_tool": "get_portfolio_historical_returns",
+          "volatility_basis": "annualized_from_monthly_sample",
+          "drawdown_basis": "maximum_compounded_peak_to_trough_magnitude",
+          "cvar_basis": "monthly_return_expected_shortfall_95_magnitude"
+        },
+        "coverage": {
+          "status": "unavailable",
+          "missing_reason_codes": [
+            "risk_observation_missing"
+          ]
+        }
+      },
+      "semantics": {
+        "risk_limit_status_rule": "breach_if_observed_magnitude_exceeds_threshold"
+      }
+    },
+    "get_portfolio_historical_returns": {
+      "coverage": {
+        "status": "available"
+      },
+      "display": {
+        "return_unit": "decimal_fraction"
+      },
+      "standard_periods": [
+        {
+          "period": "trailing_1y",
+          "annualized_return": 0.069,
+          "policy_benchmark_return": 0.064,
+          "arithmetic_excess_return": 0.0049
+        }
+      ]
+    },
+    "get_portfolio_attribution": {
+      "method": {
+        "name": "realized_brinson_fachler",
+        "model": "brinson_fachler",
+        "interaction": "reported_separately",
+        "linking": "symmetric_carino"
+      },
+      "coverage": {
+        "status": "unavailable",
+        "missing_reason_codes": [
+          "no_weight_cohorts"
+        ]
+      },
+      "summary": null,
+      "residual": null,
+      "segments": null,
+      "diagnostics": null
+    }
+  }
+}
