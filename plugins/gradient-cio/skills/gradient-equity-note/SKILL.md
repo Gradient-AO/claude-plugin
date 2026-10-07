@@ -1,6 +1,6 @@
 ---
 name: gradient-equity-note
-description: "Write a sourced public-equity research note on one US-listed issuer (optionally against 2–8 peers) from GradientCIO SEC fundamentals, filing changes, risk factors, earnings releases, hedge-fund crowding and roster holdings, delivered as a branded PDF. Use for 'equity note on <ticker>', 'look at this manager's top holding', 'research note on our concentrated position', 'what changed in <ticker>'s last filing' or 'who on our roster holds <ticker>'."
+description: "Write a sourced public-equity research note on one US-listed issuer (optionally against 2–8 peers) from GradientCIO SEC fundamentals, filing changes, risk factors, earnings releases, hedge-fund crowding and roster holdings, delivered as a branded PDF. Use for 'equity note on a ticker', 'look at this manager's top holding', 'research note on our concentrated position', 'what changed in a ticker's last filing' or 'who on our roster holds this ticker'."
 ---
 
 # Gradient Equity Research Note
