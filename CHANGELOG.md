@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.6.3
+- Clarified compact capability, validation and portfolio-exposure semantics.
+- Added guidance for deterministic DDQ aliases and the complete fund checklist.
+- Documented explicitly illustrative synthetic 13F evidence for canonical demo managers.
+
+## 1.6.2
+- Refreshed setup checks for current The Read, regime-state, event, entity-fact and CMA-consensus contracts.
+- Added server-built sample sessions for Strategy Lab compute probes and a non-persistent DDQ upload preview.
+- Updated the canonical example portfolio attribution probe for available linked Brinson-Fachler evidence.
+- Clarified that `portfolio_id` remains a compatibility-only Strategy Lab builder field and that the public package intentionally leaves client branding unset.
+
 ## 1.6.1
 - Added a shared module-scope contract separating Portfolio Analytics portfolio IDs from Strategy Lab return-series sessions and demo data.
 - Expanded setup probes across Portfolio Analytics and the Strategy Lab demo catalog, return series, session builder and compute path.

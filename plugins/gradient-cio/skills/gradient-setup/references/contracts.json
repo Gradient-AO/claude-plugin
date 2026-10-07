@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-06",
+  "version": "2026-10-07",
   "minimum_connector_contract": {
     "minimum_service_version": "0.8.0",
     "compatibility_epoch": 1,
@@ -8,7 +8,9 @@
       "build_strategy_lab_session",
       "check_portfolio_policy",
       "get_benchmarks",
+      "get_cma_consensus_check",
       "get_diligence_roster_funds",
+      "get_firm_entity_facts",
       "get_gradient_capabilities",
       "get_manager_diligence_brief",
       "get_manager_odd_profile",
@@ -23,7 +25,10 @@
       "list_portfolios",
       "reconcile_manager_ddq_claims",
       "run_strategy_lab_expected_statistics",
-      "search_managers"
+      "run_strategy_lab_diversification",
+      "run_strategy_lab_relative_return",
+      "search_managers",
+      "upload_ddq_document"
     ],
     "required_response_field_paths": {
       "batch_reconcile_manager_ddq_claims": [
@@ -55,9 +60,21 @@
         "demo_set.demo_set_id",
         "demo_set.manager_fund_series[0].series_id"
       ],
+      "get_cma_consensus_check": [
+        "mode",
+        "positioning",
+        "raw_cited_figures",
+        "warnings"
+      ],
       "get_diligence_roster_funds": [
         "funds",
         "capacity.effective_limit"
+      ],
+      "get_firm_entity_facts": [
+        "mode",
+        "status",
+        "subject_key",
+        "facts"
       ],
       "get_gradient_capabilities": [
         "version",
@@ -75,9 +92,10 @@
       ],
       "get_portfolio_attribution": [
         "coverage.status",
-        "coverage.missing_reason_codes[0]",
         "method.linking",
-        "summary"
+        "summary.total_attribution",
+        "residual.within_tolerance",
+        "segments[0].total_effect"
       ],
       "get_portfolio_exposure": [
         "portfolio.portfolio_id",
@@ -124,9 +142,27 @@
         "rows",
         "covariance.method"
       ],
+      "run_strategy_lab_diversification": [
+        "domain",
+        "correlation_summary.average_pairwise_correlation"
+      ],
+      "run_strategy_lab_relative_return": [
+        "domain",
+        "tracking_error",
+        "information_ratio"
+      ],
       "search_managers": [
         "advisers",
         "report_date"
+      ],
+      "upload_ddq_document": [
+        "document_id",
+        "status",
+        "dry_run",
+        "subject.id",
+        "file.content_sha256",
+        "would_create.source",
+        "request_fingerprint_sha256"
       ]
     },
     "required_probe_ids": [
@@ -135,21 +171,26 @@
       "roster",
       "odd_profile",
       "manager_diligence_brief",
+      "entity_facts",
       "sample_portfolio",
       "portfolio_tree",
       "portfolio_exposure",
       "portfolio_policy",
       "portfolio_returns",
       "portfolio_attribution",
+      "cma_consensus",
       "strategy_benchmarks",
       "strategy_return_series",
       "strategy_session_build",
       "strategy_expected_statistics",
+      "strategy_diversification",
+      "strategy_relative_return",
       "search_managers",
       "equity_fundamentals",
       "equity_risk_findings",
       "ddq_numeric_gap",
-      "batch_ddq_preview"
+      "batch_ddq_preview",
+      "write_upload_ddq"
     ]
   },
   "envelope": [
@@ -479,6 +520,7 @@
         "roster"
       ],
       "args": {
+        "view": "subject",
         "firm_id": "<roster:funds[0].parent_firm_id>",
         "per_page": 5
       },
@@ -488,6 +530,31 @@
         "metadata.per_page",
         "metadata.has_more"
       ]
+    },
+    {
+      "id": "entity_facts",
+      "set": "full",
+      "tool": "get_firm_entity_facts",
+      "depends_on": [
+        "odd_profile"
+      ],
+      "args": {
+        "mode": "snapshot",
+        "firm_name": "<odd_profile:resolved_subject.name>"
+      },
+      "required": [
+        "mode",
+        "status",
+        "subject_key",
+        "facts",
+        "facts_truncated",
+        "source_scopes",
+        "comparability.benchmark_eligible_count",
+        "comparability.benchmark_excluded_count"
+      ],
+      "equals": {
+        "mode": "snapshot"
+      }
     },
     {
       "id": "events_roster",
@@ -578,6 +645,32 @@
         "quality_receipt.status",
         "comparability.horizon_years"
       ]
+    },
+    {
+      "id": "cma_consensus",
+      "set": "full",
+      "tool": "get_cma_consensus_check",
+      "args": {
+        "mode": "asset_class",
+        "asset_classes": [
+          "public_equity"
+        ]
+      },
+      "required": [
+        "mode",
+        "positioning",
+        "dispersion_ranking",
+        "revisions",
+        "anchor_divergence",
+        "portfolio",
+        "raw_cited_figures",
+        "warnings",
+        "attributions"
+      ],
+      "equals": {
+        "mode": "asset_class",
+        "portfolio": null
+      }
     },
     {
       "id": "watchlist",
@@ -802,24 +895,20 @@
         "period.observed_period_count",
         "basis.effect_unit",
         "currency.calculation_currency",
-        "coverage.missing_reason_codes[0]",
-        "summary",
-        "residual",
-        "segments",
+        "summary.total_attribution",
+        "residual.within_tolerance",
+        "segments[0].total_effect",
         "diagnostics"
       ],
       "equals": {
         "portfolio.record_kind": "example",
-        "coverage.status": "unavailable",
+        "coverage.status": "available",
         "method.name": "realized_brinson_fachler",
         "method.model": "brinson_fachler",
         "method.interaction": "reported_separately",
         "method.linking": "symmetric_carino",
         "basis.effect_unit": "decimal_fraction",
-        "summary": null,
-        "residual": null,
-        "segments": null,
-        "diagnostics": null
+        "residual.within_tolerance": true
       }
     },
     {
@@ -929,58 +1018,41 @@
       }
     },
     {
+      "id": "strategy_diversification_session_build",
+      "set": "full",
+      "tool": "build_strategy_lab_session",
+      "depends_on": [
+        "strategy_benchmarks"
+      ],
+      "args": {
+        "domain": "diversification",
+        "demo_set_id": "strategy_lab_core"
+      },
+      "required": [
+        "status",
+        "domain",
+        "strategy_lab_session",
+        "strategy_lab_session.domain",
+        "coverage.status",
+        "source_provenance.synthetic_data"
+      ],
+      "equals": {
+        "status": "available",
+        "domain": "diversification",
+        "strategy_lab_session.domain": "manager-compare",
+        "coverage.status": "available",
+        "source_provenance.synthetic_data": true
+      }
+    },
+    {
       "id": "strategy_diversification",
       "set": "full",
       "tool": "run_strategy_lab_diversification",
+      "depends_on": [
+        "strategy_diversification_session_build"
+      ],
       "args": {
-        "strategy_lab_session": {
-          "domain": "manager-compare",
-          "panelId": "gradient-contract-return-series",
-          "form": {
-            "selectedSeriesIds": [
-              "gradient-contract-series-a",
-              "gradient-contract-series-b"
-            ],
-            "selectedRecords": [
-              {
-                "id": "gradient-contract-series-a",
-                "label": "Contract Series A",
-                "monthlyReturns": [
-                  0.01,
-                  -0.005,
-                  0.012,
-                  0.004,
-                  -0.008,
-                  0.015,
-                  0.006,
-                  0.009,
-                  -0.003,
-                  0.011,
-                  0.002,
-                  0.007
-                ]
-              },
-              {
-                "id": "gradient-contract-series-b",
-                "label": "Contract Series B",
-                "monthlyReturns": [
-                  0.004,
-                  0.002,
-                  -0.003,
-                  0.006,
-                  0.005,
-                  0.001,
-                  0.007,
-                  -0.002,
-                  0.003,
-                  0.004,
-                  0.002,
-                  0.005
-                ]
-              }
-            ]
-          }
-        }
+        "strategy_lab_session": "<strategy_diversification_session_build:strategy_lab_session>"
       },
       "required": [
         "domain",
@@ -991,13 +1063,42 @@
       }
     },
     {
+      "id": "strategy_relative_return_session_build",
+      "set": "full",
+      "tool": "build_strategy_lab_session",
+      "depends_on": [
+        "strategy_benchmarks"
+      ],
+      "args": {
+        "domain": "relative-return",
+        "demo_set_id": "strategy_lab_core",
+        "benchmark_id": "<strategy_benchmarks:demo_set.benchmark_series[0].series_id>"
+      },
+      "required": [
+        "status",
+        "domain",
+        "strategy_lab_session",
+        "strategy_lab_session.domain",
+        "coverage.status",
+        "source_provenance.synthetic_data"
+      ],
+      "equals": {
+        "status": "available",
+        "domain": "relative-return",
+        "strategy_lab_session.domain": "relative-return",
+        "coverage.status": "available",
+        "source_provenance.synthetic_data": true
+      }
+    },
+    {
       "id": "strategy_relative_return",
       "set": "full",
       "tool": "run_strategy_lab_relative_return",
+      "depends_on": [
+        "strategy_relative_return_session_build"
+      ],
       "args": {
-        "strategy_lab_session": {
-          "domain": "relative-return"
-        }
+        "strategy_lab_session": "<strategy_relative_return_session_build:strategy_lab_session>"
       },
       "required": [
         "domain",
@@ -1509,6 +1610,60 @@
         "items[0].preview.committed": false,
         "items[1].preview.dry_run": true,
         "items[1].preview.committed": false
+      },
+      "envelope": false
+    },
+    {
+      "id": "write_upload_ddq",
+      "set": "writes",
+      "tool": "upload_ddq_document",
+      "depends_on": [
+        "orgs",
+        "roster"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "firm_id": "<roster:funds[0].parent_firm_id>",
+        "filename": "gradient-contract-upload-preview.txt",
+        "document_text": "Employees: 42",
+        "idempotency_key": "gradient-contract-upload-ddq-v1",
+        "dry_run": true
+      },
+      "required": [
+        "document_id",
+        "status",
+        "dry_run",
+        "idempotency_key",
+        "subject.kind",
+        "subject.id",
+        "file.filename",
+        "file.source_kind",
+        "file.size_bytes",
+        "file.content_sha256",
+        "would_create.asset_kind",
+        "would_create.visibility",
+        "would_create.source",
+        "would_create.initial_status",
+        "would_create.enqueue_extraction",
+        "request_fingerprint_sha256"
+      ],
+      "non_null": [
+        "subject.id",
+        "file.content_sha256",
+        "request_fingerprint_sha256"
+      ],
+      "equals": {
+        "document_id": null,
+        "status": "preview",
+        "dry_run": true,
+        "subject.kind": "firm",
+        "file.filename": "gradient-contract-upload-preview.txt",
+        "file.source_kind": "document_text",
+        "would_create.asset_kind": "document",
+        "would_create.visibility": "organization",
+        "would_create.source": "mcp_ddq_upload",
+        "would_create.initial_status": "ready",
+        "would_create.enqueue_extraction": false
       },
       "envelope": false
     },

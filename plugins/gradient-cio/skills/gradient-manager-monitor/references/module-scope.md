@@ -20,9 +20,11 @@ does not analyze a saved portfolio merely because a Portfolio Analytics `portfol
 
 Build Strategy Lab work from selected `return_series_ids` plus a `benchmark_id`, or use the named
 `strategy_lab_core` demo set when illustrative analysis is appropriate. Pass the resulting
-`strategy_lab_session` to one `run_strategy_lab_*` compute tool at a time. Never pass a Portfolio Analytics
-`portfolio_id` to Strategy Lab, and never describe Strategy Lab results as portfolio holdings, policy
-compliance, or realized portfolio performance. Preserve series labels, identifiers, and date coverage.
+`strategy_lab_session` unchanged to the matching `run_strategy_lab_*` compute tool. Discovery may expose
+`portfolio_id` on the session-builder schema as a compatibility field, but the return-series builder rejects
+it; pass `demo_set_id` or `return_series_ids` instead. Never describe Strategy Lab results as portfolio
+holdings, policy compliance, or realized portfolio performance. Preserve series labels, identifiers, and
+date coverage.
 
 If no matching Strategy Lab session or return series exists, keep Strategy Lab analysis optional and write
 `Not available — no Strategy Lab return series selected` where the report template requires a row.
