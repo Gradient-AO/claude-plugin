@@ -27,12 +27,15 @@ report them as separate modules; never use the canonical illustrative portfolio 
 ## 2. Access and data readiness
 
 1. Call `get_gradient_capabilities` with the `organization_id` and `detail: "summary"`:
-   - `capabilities` (module flags), `backend_readiness`, `version`;
+   - `entitlements` = commercial licenses; `capabilities` = effective feature usability, including bounded
+     illustrative access; each tool's `available` = the final invocation decision;
+   - `backend_readiness`, `version`;
    - `contract_identity.compatibility_epoch`;
    - per tool: `entitled`, `available`, `scoped`, `healthy`, `data_ready`, `availability_reason`,
      `missing_oauth_scopes`;
    - `coverage[]`: domain, status (`available`, `conditional`, `unavailable`), `as_of`.
-   Request `detail: "full"` only when diagnosing per-backend readiness.
+   Summary intentionally omits chart packs and per-backend readiness. Request `detail: "full"` only when
+   diagnosing those details.
 2. Save the summary response, then validate the machine-readable `minimum_connector_contract` in
    `references/contracts.json`:
 
@@ -57,11 +60,11 @@ report them as separate modules; never use the canonical illustrative portfolio 
 ## 3. Contract self-test
 
 Run the probes in `references/contract-checks.md`. The **standard** set is 8 quick reads (default). The
-**full read** set is 47 reads (the 8 standard plus 39 full probes); run it when the user asks for a health
-check or self-test, or after a plugin update. The separate **writes** set is 4 dry-run previews, including
-one batch-preview contract, and must never commit. The **DDQ save-preview** set is 3 calls: it intentionally persists one fictional test
+**full read** set is 51 reads (the 8 standard plus 43 full probes); run it when the user asks for a health
+check or self-test, or after a plugin update. The separate **writes** set is 5 dry-run previews, including
+one batch-preview contract and one DDQ upload preview, and must never commit. The **DDQ save-preview** set is 3 calls: it intentionally persists one fictional test
 document and one immutable reconciliation test run so that document identity and the chained save can be
-tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 54 calls.
+tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 59 calls.
 
 For each probe, record pass, fail (with error code and HTTP status) or not run (not entitled), and the
 response `as_of`. Resolve `depends_on` arguments with `check_contract.py --resolve-args`; do not manually
@@ -77,7 +80,9 @@ code, HTTP status and request ID so the user can send it to Gradient support.
 ## 4. Branding
 
 Check the plugin's `branding.json` (plugin root). `brand: "gradient"` is the explicit default and renders
-the GradientCIO mark. Say how to apply client branding: an administrator sets the client name and logo before distributing the plugin
+the GradientCIO mark. An empty `client_name` is intentional in the public marketplace package; it prevents a
+client identity from shipping to every installer and is not an unbranded-report failure. Say how to apply
+client branding: an administrator sets the client name and logo before distributing a private client build
 (`python tools/set_branding.py` at the plugin root); for one report, give a name and logo in the conversation
 and the skill renders with `--brand`.
 

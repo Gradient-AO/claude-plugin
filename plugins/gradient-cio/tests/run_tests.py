@@ -125,7 +125,11 @@ def static(allow_branded):
         r = subprocess.run([py311, "-m", "py_compile", str(RENDER)], capture_output=True, text=True, encoding="utf-8", errors="replace")
         check(r.returncode == 0, "renderer compiles on Python 3.11")
     b = json.loads((ROOT / "branding.json").read_text(encoding="utf-8"))
-    check(allow_branded or not b.get("client_name"), "branding.json is unbranded (use --allow-branded for a client build)")
+    check(
+        allow_branded or not b.get("client_name"),
+        "public branding.json keeps the client override empty "
+        "(use --allow-branded for a private client build)",
+    )
     check(b.get("brand") == "gradient", "branding.json declares Gradient as the default brand")
     branded = json.loads((FIX / "branding-test.json").read_text(encoding="utf-8"))
     check(branded.get("brand") == "client", "client branding fixture declares the client brand")
@@ -380,7 +384,7 @@ def contract_manifest():
         for name in ("standard", "full", "writes", "ddq-save-preview")
     }
     check(
-        counts == {"standard": 8, "full": 39, "writes": 4, "ddq-save-preview": 3},
+        counts == {"standard": 8, "full": 43, "writes": 5, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
     )
 
@@ -406,7 +410,9 @@ def contract_manifest():
         "build_strategy_lab_session",
         "check_portfolio_policy",
         "get_benchmarks",
+        "get_cma_consensus_check",
         "get_diligence_roster_funds",
+        "get_firm_entity_facts",
         "get_gradient_capabilities",
         "get_manager_diligence_brief",
         "get_manager_odd_profile",
@@ -421,7 +427,10 @@ def contract_manifest():
         "list_portfolios",
         "reconcile_manager_ddq_claims",
         "run_strategy_lab_expected_statistics",
+        "run_strategy_lab_diversification",
+        "run_strategy_lab_relative_return",
         "search_managers",
+        "upload_ddq_document",
     }
     minimum_probe_ids = set(minimum.get("required_probe_ids", []))
     check(
@@ -435,14 +444,19 @@ def contract_manifest():
             "portfolio_policy",
             "portfolio_attribution",
             "portfolio_returns",
+            "entity_facts",
+            "cma_consensus",
             "strategy_benchmarks",
             "strategy_return_series",
             "strategy_session_build",
             "strategy_expected_statistics",
+            "strategy_diversification",
+            "strategy_relative_return",
             "equity_fundamentals",
             "ddq_numeric_gap",
             "batch_ddq_preview",
             "manager_diligence_brief",
+            "write_upload_ddq",
         } <= minimum_probe_ids
         and set(minimum.get("required_response_field_paths", {}))
         == expected_minimum_tools,
@@ -470,6 +484,7 @@ def contract_manifest():
         "preview_diligence_changes",
         "update_watchlist",
         "update_diligence_roster",
+        "upload_ddq_document",
     }
     check(
         {probe["tool"] for probe in write_probes} == expected_write_tools,
@@ -477,7 +492,10 @@ def contract_manifest():
     )
     singular_write_probes = [
         probe for probe in write_probes
-        if probe["tool"] != "preview_diligence_changes"
+        if probe["tool"] not in {
+            "preview_diligence_changes",
+            "upload_ddq_document",
+        }
     ]
     check(
         all(
@@ -488,6 +506,20 @@ def contract_manifest():
             for probe in singular_write_probes
         ),
         "singular write probes are dry-run previews with non-null receipts",
+    )
+    upload_preview = next(
+        probe for probe in write_probes
+        if probe["tool"] == "upload_ddq_document"
+    )
+    check(
+        upload_preview["args"].get("dry_run") is True
+        and upload_preview.get("equals", {}).get("status") == "preview"
+        and upload_preview.get("equals", {}).get("document_id") is None
+        and upload_preview.get("equals", {}).get("would_create.source")
+        == "mcp_ddq_upload"
+        and "request_fingerprint_sha256"
+        in upload_preview.get("non_null", []),
+        "DDQ upload probe is a non-persistent dry-run preview",
     )
     check(
         not any(
@@ -647,12 +679,16 @@ def contract_manifest():
         and attribution_probe.get("equals", {}).get("method.linking")
         == "symmetric_carino"
         and attribution_probe.get("equals", {}).get("coverage.status")
-        == "unavailable"
-        and attribution_probe.get("equals", {}).get("summary") is None
-        and "coverage.missing_reason_codes[0]"
+        == "available"
+        and attribution_probe.get("equals", {}).get(
+            "residual.within_tolerance",
+        ) is True
+        and "summary.total_attribution"
+        in attribution_probe.get("required", [])
+        and "segments[0].total_effect"
         in attribution_probe.get("required", [])
         and not attribution_probe.get("reconciles"),
-        "portfolio-attribution probe enforces typed unavailability until basis is proven",
+        "portfolio-attribution probe verifies available linked example data",
     )
     regional_probe = by_id["regional_capital_markets"]
     check(
@@ -749,8 +785,9 @@ def contract_manifest():
     )
     check(
         "return_series_ids` plus a `benchmark_id" in scope_guidance
-        and "Never pass a Portfolio Analytics" in scope_guidance,
-        "module scope separates portfolio IDs from Strategy Lab series",
+        and "compatibility field" in scope_guidance
+        and "builder rejects" in scope_guidance,
+        "module scope explains the Strategy Lab portfolio-ID compatibility field",
     )
     illustrative_label = (
         "Illustrative, Gradient Maintained — demo data, "
@@ -793,6 +830,7 @@ def contract_manifest():
         "portfolio_exposure",
         "portfolio_tree",
         "portfolio_returns",
+        "portfolio_attribution",
         "portfolio_expected_statistics",
         "portfolio_policy",
     }
@@ -810,6 +848,10 @@ def contract_manifest():
         "strategy_return_series",
         "strategy_session_build",
         "strategy_expected_statistics",
+        "strategy_diversification_session_build",
+        "strategy_diversification",
+        "strategy_relative_return_session_build",
+        "strategy_relative_return",
     }
     strategy_probe = by_id["strategy_expected_statistics"]
     check(
@@ -820,7 +862,29 @@ def contract_manifest():
         and "portfolio_id" not in strategy_probe["args"]
         and strategy_probe["args"].get("strategy_lab_session")
         == "<strategy_session_build:strategy_lab_session>",
-        "Strategy Lab probes cover catalog, series, session build and compute",
+        "Strategy Lab expected-statistics probe uses a server-built sample session",
+    )
+    check(
+        by_id["strategy_diversification"]["args"].get("strategy_lab_session")
+        == (
+            "<strategy_diversification_session_build:"
+            "strategy_lab_session>"
+        )
+        and by_id["strategy_relative_return"]["args"].get(
+            "strategy_lab_session",
+        ) == (
+            "<strategy_relative_return_session_build:"
+            "strategy_lab_session>"
+        )
+        and by_id["strategy_diversification_session_build"].get(
+            "equals",
+            {},
+        ).get("strategy_lab_session.domain") == "manager-compare"
+        and "portfolio_id"
+        not in by_id["strategy_diversification_session_build"]["args"]
+        and "portfolio_id"
+        not in by_id["strategy_relative_return_session_build"]["args"],
+        "Strategy Lab compute probes use matching server-built sample sessions",
     )
     relative_args = by_id["strategy_relative_return"]["args"]
     check(
@@ -833,8 +897,6 @@ def contract_manifest():
     )
     check(
         all(issue_id in contract_guidance for issue_id in (
-            "SL-1",
-            "PA-1",
             "PA-2",
             "PA-3",
             "MD-1",
@@ -842,6 +904,19 @@ def contract_manifest():
         ))
         and "CMA receipt unvalidated" not in contract_guidance,
         "known-issues table contains the current issue set",
+    )
+    check(
+        by_id["events"]["args"].get("view") == "subject"
+        and by_id["events_roster"]["args"].get("view")
+        == "organization_roster_timeline"
+        and by_id["entity_facts"]["args"].get("mode") == "snapshot"
+        and by_id["entity_facts"]["args"].get("firm_name")
+        == "<odd_profile:resolved_subject.name>"
+        and by_id["cma_consensus"]["args"] == {
+            "mode": "asset_class",
+            "asset_classes": ["public_equity"],
+        },
+        "current event, entity-fact and CMA-consensus contracts are probed",
     )
     check(
         all(resolved_issue not in contract_guidance for resolved_issue in (

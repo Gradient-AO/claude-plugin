@@ -18,9 +18,13 @@ The deliverable is a branded PDF report: every checkable DDQ statement is marked
    - Fund claims: use the catalog `fund_id` (from the roster or `get_gradient_coverage` view `manager_subject`). If resolution returns a `pfid:` candidate with `canonical_id: null`, report governed reconciliation as unavailable for that fund; do not compare or calculate locally.
 4. Pull `get_manager_odd_profile` with the CRD for contextual filed evidence only. Do not use it to recreate reconciliation verdicts or numeric gaps.
 
-## 2. Transcribe claims (you do this, not the extractor)
+## 2. Extract and transcribe claims
 
-`extract_ddq_claims` only matches explicit `Label: value` lines (e.g. `Employees: 1,240`). Real DDQs are narrative, so it usually returns everything as `not_found`. Run it once; keep anything it finds; transcribe the rest yourself.
+`extract_ddq_claims` deterministically matches explicit `Label: value` lines, including reviewed shorthand
+such as `Auditor`, `Administrator`, `Custodian`, `Prime broker`, `GAV` and `RAUM`. Firm scope returns the
+8 firm checklist fields; fund scope returns the complete 21-field firm-plus-fund checklist used by
+reconciliation. Alias matches carry `reviewed_alias_match`. Narrative prose still requires
+`transcribed_claims`: run extraction once, keep its quote-backed matches, and transcribe the rest.
 
 Work from one canonical text of the DDQ:
 - Text/Markdown: the file as-is. PDF/DOCX/XLSX: extract text (pdf/docx/xlsx skills or `pdftotext`, `python-docx`, `openpyxl`) and save it; note page, sheet and cell for each answer.
