@@ -116,8 +116,7 @@
         "coverage.status"
       ],
       "get_public_equity_filing_evidence": [
-        "findings",
-        "findings[0].accession_number"
+        "findings"
       ],
       "get_public_equity_fundamentals": [
         "resolved_subject.cik",
@@ -1315,8 +1314,7 @@
         "symbol": "<test ticker>"
       },
       "required": [
-        "findings",
-        "findings[0].accession_number"
+        "findings"
       ]
     },
     {
