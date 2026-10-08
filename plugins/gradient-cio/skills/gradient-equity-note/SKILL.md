@@ -112,7 +112,8 @@ accession numbers it relies on.
 - **Absence is not evidence.** An issuer missing from the crowding panels means "not among the top
   `limit` rows of this cohort", not "not held". An unmatched roster firm means "not found in the returned rows
   of its <period> 13F", not "does not own". Empty `guidance_changes` means none were extracted, not that
-  guidance was unchanged. A force with `evidence_basis: missing` means no matching sentence was retrieved.
+  guidance was unchanged. Empty `findings` is a valid result: report the returned `message` as the reason and
+  do not require a first finding. A force with `evidence_basis: missing` means no matching sentence was retrieved.
 - **Validation.** A blocking failed check means the value is not used: mark it "Not available — validation
   failed (<check id>)". Advisory failures (for example `generic_status_reason_coherence` on a `missing` peer
   result) can be used but are shown as "Advisory fail" in coverage and the appendix.

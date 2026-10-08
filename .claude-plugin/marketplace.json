@@ -7,7 +7,7 @@
       "name": "gradient-cio",
       "source": "./plugins/gradient-cio",
       "description": "Portfolio construction and historical/ex ante attribution reports, plus ODD, manager research, portfolio reviews, macro briefings, IC memos and GIPS reviews built on GradientCIO evidence and delivered as branded PDFs.",
-      "version": "2.2.0",
+      "version": "2.2.1",
       "homepage": "https://gradientcio.com"
     }
   ]

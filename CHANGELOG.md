@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.1
+- Fixed the equity risk-findings readiness probe so a valid empty findings result no longer degrades the equity-note skill.
+- Clarified that equity notes report the connector's reason when no risk findings were extracted.
+
 ## 2.2.0
 - Added a portfolio-attribution report skill for any saved portfolio, with a fixed 10–14 page historical and governed ex ante Brinson-Fachler analysis.
 - Added the governed `get_portfolio_ex_ante_attribution` connector contract to setup readiness and full self-test coverage.
