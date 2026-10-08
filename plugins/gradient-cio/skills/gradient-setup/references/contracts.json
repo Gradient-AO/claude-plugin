@@ -1,11 +1,10 @@
 {
-  "version": "2026-10-07",
+  "version": "2026-10-08",
   "minimum_connector_contract": {
-    "minimum_service_version": "0.8.0",
-    "compatibility_epoch": 1,
+    "minimum_service_version": "0.9.0",
+    "compatibility_epoch": 2,
     "required_tools": [
       "batch_reconcile_manager_ddq_claims",
-      "build_strategy_lab_session",
       "check_portfolio_policy",
       "get_benchmarks",
       "get_cma_consensus_check",
@@ -15,6 +14,7 @@
       "get_manager_diligence_brief",
       "get_manager_odd_profile",
       "get_portfolio_attribution",
+      "get_portfolio_ex_ante_attribution",
       "get_portfolio_exposure",
       "get_portfolio_historical_returns",
       "get_portfolio_structure",
@@ -25,7 +25,6 @@
       "list_portfolios",
       "reconcile_manager_ddq_claims",
       "run_strategy_lab_expected_statistics",
-      "run_strategy_lab_diversification",
       "run_strategy_lab_relative_return",
       "search_managers",
       "upload_ddq_document"
@@ -34,11 +33,6 @@
       "batch_reconcile_manager_ddq_claims": [
         "result_type",
         "items[0].data.rows[0].numeric_gap.formula_id"
-      ],
-      "build_strategy_lab_session": [
-        "status",
-        "strategy_lab_session",
-        "coverage.status"
       ],
       "check_portfolio_policy": [
         "overall_status",
@@ -97,6 +91,16 @@
         "residual.within_tolerance",
         "segments[0].total_effect"
       ],
+      "get_portfolio_ex_ante_attribution": [
+        "coverage.status",
+        "method.formula_version",
+        "horizon.horizon_years",
+        "basis.portfolio_weight_basis",
+        "assumptions.portfolio_return_source",
+        "summary.total_attribution",
+        "residual.within_tolerance",
+        "segments[0].total_effect"
+      ],
       "get_portfolio_exposure": [
         "portfolio.portfolio_id",
         "exposures",
@@ -142,10 +146,6 @@
         "rows",
         "covariance.method"
       ],
-      "run_strategy_lab_diversification": [
-        "domain",
-        "correlation_summary.average_pairwise_correlation"
-      ],
       "run_strategy_lab_relative_return": [
         "domain",
         "tracking_error",
@@ -178,12 +178,11 @@
       "portfolio_policy",
       "portfolio_returns",
       "portfolio_attribution",
+      "portfolio_ex_ante_attribution",
       "cma_consensus",
       "strategy_benchmarks",
       "strategy_return_series",
-      "strategy_session_build",
       "strategy_expected_statistics",
-      "strategy_diversification",
       "strategy_relative_return",
       "search_managers",
       "equity_fundamentals",
@@ -473,6 +472,60 @@
         "kind",
         "context.fingerprint",
         "charts[0].chart_id",
+        "charts[0].basis",
+        "charts[0].render_hint.block"
+      ],
+      "equals": {
+        "kind": "data"
+      },
+      "envelope": false
+    },
+    {
+      "id": "portfolio_allocations",
+      "set": "full",
+      "tool": "get_chart_data",
+      "depends_on": [
+        "orgs",
+        "sample_portfolio",
+        "chart_availability"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
+        "analysis_type": "allocations"
+      },
+      "required": [
+        "kind",
+        "context.fingerprint",
+        "charts[0].chart_id",
+        "charts[0].status",
+        "charts[0].basis",
+        "charts[0].render_hint.block"
+      ],
+      "equals": {
+        "kind": "data"
+      },
+      "envelope": false
+    },
+    {
+      "id": "portfolio_commitments",
+      "set": "full",
+      "tool": "get_chart_data",
+      "depends_on": [
+        "orgs",
+        "sample_portfolio",
+        "chart_availability"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
+        "analysis_type": "commitments"
+      },
+      "required": [
+        "kind",
+        "context.fingerprint",
+        "charts[0].chart_id",
+        "charts[0].status",
         "charts[0].basis",
         "charts[0].render_hint.block"
       ],
@@ -912,6 +965,57 @@
       }
     },
     {
+      "id": "portfolio_ex_ante_attribution",
+      "set": "full",
+      "tool": "get_portfolio_ex_ante_attribution",
+      "depends_on": [
+        "sample_portfolio"
+      ],
+      "args": {
+        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
+        "benchmark_role": "policy",
+        "parent_allocation_id": "root",
+        "sections": [
+          "summary",
+          "segments",
+          "diagnostics"
+        ]
+      },
+      "required": [
+        "portfolio.portfolio_id",
+        "portfolio.record_kind",
+        "coverage.status",
+        "method.name",
+        "method.model",
+        "method.interaction",
+        "method.linking",
+        "method.formula_version",
+        "horizon.horizon_years",
+        "basis.portfolio_weight_basis",
+        "basis.benchmark_weight_basis",
+        "basis.return_basis",
+        "currency.calculation_currency",
+        "assumptions.portfolio_return_source",
+        "assumptions.benchmark_return_source",
+        "summary.total_attribution",
+        "residual.within_tolerance",
+        "segments[0].total_effect",
+        "diagnostics"
+      ],
+      "equals": {
+        "portfolio.record_kind": "example",
+        "coverage.status": "available",
+        "method.name": "ex_ante_brinson_fachler",
+        "method.model": "brinson_fachler",
+        "method.interaction": "reported_separately",
+        "method.linking": "none_single_period",
+        "method.formula_version": "1.0.0",
+        "horizon.horizon_years": 1,
+        "basis.return_basis": "annualized_expected_return",
+        "residual.within_tolerance": true
+      }
+    },
+    {
       "id": "portfolio_series",
       "set": "full",
       "tool": "get_return_series",
@@ -973,40 +1077,17 @@
       }
     },
     {
-      "id": "strategy_session_build",
+      "id": "strategy_expected_statistics",
       "set": "full",
-      "tool": "build_strategy_lab_session",
+      "tool": "run_strategy_lab_expected_statistics",
       "depends_on": [
         "strategy_benchmarks",
         "strategy_return_series"
       ],
       "args": {
-        "domain": "expected-statistics",
-        "demo_set_id": "strategy_lab_core"
-      },
-      "required": [
-        "status",
-        "domain",
-        "strategy_lab_session",
-        "coverage.status",
-        "source_provenance.synthetic_data"
-      ],
-      "equals": {
-        "status": "available",
-        "domain": "expected-statistics",
-        "coverage.status": "available",
-        "source_provenance.synthetic_data": true
-      }
-    },
-    {
-      "id": "strategy_expected_statistics",
-      "set": "full",
-      "tool": "run_strategy_lab_expected_statistics",
-      "depends_on": [
-        "strategy_session_build"
-      ],
-      "args": {
-        "strategy_lab_session": "<strategy_session_build:strategy_lab_session>"
+        "return_series_ids": [
+          "<strategy_benchmarks:demo_set.manager_fund_series[0].series_id>"
+        ]
       },
       "required": [
         "domain",
@@ -1018,87 +1099,17 @@
       }
     },
     {
-      "id": "strategy_diversification_session_build",
-      "set": "full",
-      "tool": "build_strategy_lab_session",
-      "depends_on": [
-        "strategy_benchmarks"
-      ],
-      "args": {
-        "domain": "diversification",
-        "demo_set_id": "strategy_lab_core"
-      },
-      "required": [
-        "status",
-        "domain",
-        "strategy_lab_session",
-        "strategy_lab_session.domain",
-        "coverage.status",
-        "source_provenance.synthetic_data"
-      ],
-      "equals": {
-        "status": "available",
-        "domain": "diversification",
-        "strategy_lab_session.domain": "manager-compare",
-        "coverage.status": "available",
-        "source_provenance.synthetic_data": true
-      }
-    },
-    {
-      "id": "strategy_diversification",
-      "set": "full",
-      "tool": "run_strategy_lab_diversification",
-      "depends_on": [
-        "strategy_diversification_session_build"
-      ],
-      "args": {
-        "strategy_lab_session": "<strategy_diversification_session_build:strategy_lab_session>"
-      },
-      "required": [
-        "domain",
-        "correlation_summary.average_pairwise_correlation"
-      ],
-      "equals": {
-        "domain": "diversification"
-      }
-    },
-    {
-      "id": "strategy_relative_return_session_build",
-      "set": "full",
-      "tool": "build_strategy_lab_session",
-      "depends_on": [
-        "strategy_benchmarks"
-      ],
-      "args": {
-        "domain": "relative-return",
-        "demo_set_id": "strategy_lab_core",
-        "benchmark_id": "<strategy_benchmarks:demo_set.benchmark_series[0].series_id>"
-      },
-      "required": [
-        "status",
-        "domain",
-        "strategy_lab_session",
-        "strategy_lab_session.domain",
-        "coverage.status",
-        "source_provenance.synthetic_data"
-      ],
-      "equals": {
-        "status": "available",
-        "domain": "relative-return",
-        "strategy_lab_session.domain": "relative-return",
-        "coverage.status": "available",
-        "source_provenance.synthetic_data": true
-      }
-    },
-    {
       "id": "strategy_relative_return",
       "set": "full",
       "tool": "run_strategy_lab_relative_return",
       "depends_on": [
-        "strategy_relative_return_session_build"
+        "strategy_benchmarks"
       ],
       "args": {
-        "strategy_lab_session": "<strategy_relative_return_session_build:strategy_lab_session>"
+        "return_series_ids": [
+          "<strategy_benchmarks:demo_set.manager_fund_series[0].series_id>"
+        ],
+        "benchmark_id": "<strategy_benchmarks:demo_set.benchmark_series[0].series_id>"
       },
       "required": [
         "domain",

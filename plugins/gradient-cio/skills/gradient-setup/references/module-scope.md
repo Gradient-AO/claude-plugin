@@ -7,24 +7,26 @@ Keep these modules separate in tool calls, analysis, sources, and report languag
 Portfolio Analytics answers questions about a saved portfolio or Gradient's canonical illustrative portfolio.
 It discovers a portfolio with `list_portfolios`, then uses its `portfolio_id` with
 `get_portfolio_exposure`, `get_portfolio_structure`, `get_portfolio_historical_returns`, `get_chart_data`,
-`get_portfolio_attribution`, and `check_portfolio_policy`.
+`get_portfolio_attribution`, `get_portfolio_ex_ante_attribution`, and `check_portfolio_policy`.
 
 Use Portfolio Analytics for holdings, allocation versus policy, realized portfolio performance, portfolio
 factor and currency exposure, expected-statistics chart packs, commitments, pacing, liquidity, and other
 portfolio-level questions. A Portfolio Analytics ID is not a Strategy Lab return-series ID.
+Historical attribution uses governed realized monthly evidence. Governed ex ante attribution uses current
+saved-portfolio cohort weights and persisted expected returns. Strategy Lab outputs do not substitute for
+either contract.
 
 ## Strategy Lab
 
 Strategy Lab is a standalone sandbox for saved or imported return series and the active lab panel state. It
 does not analyze a saved portfolio merely because a Portfolio Analytics `portfolio_id` is available.
 
-Build Strategy Lab work from selected `return_series_ids` plus a `benchmark_id`, or use the named
-`strategy_lab_core` demo set when illustrative analysis is appropriate. Pass the resulting
-`strategy_lab_session` unchanged to the matching `run_strategy_lab_*` compute tool. Discovery may expose
-`portfolio_id` on the session-builder schema as a compatibility field, but the return-series builder rejects
-it; pass `demo_set_id` or `return_series_ids` instead. Never describe Strategy Lab results as portfolio
-holdings, policy compliance, or realized portfolio performance. Preserve series labels, identifiers, and
-date coverage.
+Call selected-series Strategy Lab tools with `return_series_ids` plus a `benchmark_id` where required; the
+connector builds the canonical session. For illustrative analysis, discover the named `strategy_lab_core`
+demo set and pass its return-series IDs directly. Never pass a Portfolio Analytics `portfolio_id`, and do not
+call the session builder before selected-series compute tools. Never describe Strategy Lab results as
+portfolio holdings, policy compliance, or realized portfolio performance. Preserve series labels,
+identifiers, and date coverage.
 
 If no matching Strategy Lab session or return series exists, keep Strategy Lab analysis optional and write
 `Not available — no Strategy Lab return series selected` where the report template requires a row.

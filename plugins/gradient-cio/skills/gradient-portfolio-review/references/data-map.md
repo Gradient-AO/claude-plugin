@@ -53,19 +53,20 @@ charts with different `basis` or `context.fingerprint` values as though they sha
 
 ### Strategy Lab supplement
 
-Use only when the current context contains a matching `strategy_lab_session` or the user has selected return
-series for Strategy Lab. Load the tool schema before each call and preserve its result contract:
+Use only when the user has selected return series for Strategy Lab. Pass their IDs through
+`return_series_ids`; the connector builds the session. Load the tool schema before each call and preserve its
+result contract:
 
 | Need | Tool | Fields used |
 |---|---|---|
 | Simulated return and tail risk | `run_strategy_lab_simulation` | `mean_return`, `volatility`, `sharpe_ratio`, `max_drawdown`, `var_95`, `cvar_95`, terminal distribution, path count, horizon and stress basis |
 | Forward series statistics | `run_strategy_lab_expected_statistics` | returned expected-statistics rows, covariance and cross-sectional statistics |
-| Series risk contribution | `run_strategy_lab_diversification` | returned correlation matrix, concentration snapshots and `risk_contribution_rows` |
-| Series factor decomposition | `run_strategy_lab_factor_loads` | returned factor summaries, alpha, residual volatility and model fit |
+| Benchmark-relative diagnostics | `run_strategy_lab_relative_return` | active return, tracking error, information ratio and benchmark-relative evidence |
+| Date-window robustness | `run_strategy_lab_date_window_robustness` | window-level return, volatility, drawdown and reliability evidence |
 
 Label every result **Selected-series sandbox — not saved-portfolio analytics**. Do not pass a Portfolio
 Analytics `portfolio_id` to these tools. Do not substitute `run_strategy_lab_relative_return` for Brinson
-attribution. If no matching session exists, report `Not available — no Strategy Lab return series selected`
+attribution. If no return series are selected, report `Not available — no Strategy Lab return series selected`
 without downgrading the Portfolio Analytics core.
 
 ### Unsupported forward analyses

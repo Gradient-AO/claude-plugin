@@ -15,6 +15,12 @@ status chips, source tags, sources appendix).
 | gradient-macro-brief | Investment-committee macro briefing deck (16:9 PDF) from The Read, signals, calendar and CMAs |
 | gradient-ic-memo | Investment committee memo (16 sections plus appendices) with IPS status and recommendation |
 | gradient-portfolio-review | Quarterly or annual total-portfolio review: 5–8 page brief or 15–20 page comprehensive analysis of returns, attribution, policy, exposures, risk decomposition and liquidity |
+| gradient-portfolio-attribution-report | 10–14 page focused historical and governed ex ante Brinson-Fachler attribution analysis for any saved portfolio |
+| gradient-private-markets-portfolio-construction | 10–14 page IC decision pack for private-markets target structure, commitments, pacing, liquidity and implementation |
+| gradient-fixed-income-portfolio-construction | 10–14 page IC decision pack for fixed-income benchmark structure, rates and credit context, risk, liquidity and implementation |
+| gradient-global-public-equity-portfolio-construction | 10–14 page IC decision pack for global-equity manager structure, factor and concentration analysis, scenarios and implementation |
+| gradient-marketable-alternatives-portfolio-construction | 10–14 page IC decision pack for hedge-fund strategy and manager structure, factor evidence, liquidity terms and implementation |
+| gradient-real-assets-portfolio-construction | 10–14 page IC decision pack for broad real-assets sub-segments, marketable/drawdown structure, inflation context, liquidity and implementation |
 | gradient-manager-compare | Screen or compare 2–5 candidate managers for a mandate (Form ADV, service providers, 13F overlap, flags) with next steps |
 | gradient-equity-note | Sourced research note on one US-listed issuer: fundamentals and changes, risk factors, earnings release, crowding, roster holders (not investment advice) |
 | gradient-gips-manager-diligence | GIPS diligence review of a manager, with a paste-ready memo section |
@@ -23,10 +29,13 @@ status chips, source tags, sources appendix).
 | gradient-gips-policies-gap-check | Gap check of a GIPS policies and procedures manual |
 | gradient-gips-standards | GIPS reference; answers questions with a GIPS briefing note PDF and holds the shared GIPS checklists |
 
-The skills work together: manager comparison leads into the ODD report; the ODD report and GIPS reviews feed the
-IC memo; the ODD report uses the DDQ reconciliation workflow when a DDQ is supplied; the portfolio review hands
-rebalance decisions to the IC memo. The monitoring digest and ODD report can log reviews, update findings and
-start monitoring in GradientCIO — always as a preview first, and only after you confirm.
+The skills work together: the asset-class construction skills select an existing portfolio and produce
+read-only decision packs; manager comparison, ODD and GIPS reviews supply implementation evidence; the IC memo
+provides the formal 16-section vote format; and the portfolio review monitors the approved portfolio. The
+portfolio attribution report provides a focused realized-versus-expected effect analysis without prescribing
+portfolio changes. The
+monitoring digest and ODD report can log reviews, update findings and start monitoring in GradientCIO —
+always as a preview first, and only after you confirm.
 
 ## Requirements
 

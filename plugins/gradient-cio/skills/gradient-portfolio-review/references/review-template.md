@@ -124,8 +124,8 @@ Use JSON block mode. Set:
 - Embed unchanged returned `expected-statistics` and relevant `allocations` chart items.
 - `table` **Forward assumptions and decomposition** with columns `Measure`, `Portfolio`, `Policy / reference`,
   `Basis`, `Source` only when the server returns equivalent tabular evidence.
-- Optional `table` **Strategy Lab sandbox** with returned simulation, expected-statistics, diversification or
-  factor-load results only when a matching selected-return-series session exists.
+- Optional `table` **Strategy Lab sandbox** with returned simulation, expected-statistics, relative-return,
+  or date-window robustness results only when `return_series_ids` were selected.
 - Label Strategy Lab content `Selected-series sandbox — not saved-portfolio analytics`.
 - Never title this section or any block `Simulated attribution`. No public saved-portfolio simulated
   attribution contract exists.

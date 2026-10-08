@@ -35,9 +35,70 @@ IC_MEMO_EXAMPLE = ROOT / "skills" / "gradient-ic-memo" / "assets" / "example-mem
 ODD_REPORT_SKILL = ROOT / "skills" / "gradient-odd-report" / "SKILL.md"
 GIPS_MANAGER_DILIGENCE_SKILL = ROOT / "skills" / "gradient-gips-manager-diligence" / "SKILL.md"
 PORTFOLIO_REVIEW_SKILL = ROOT / "skills" / "gradient-portfolio-review" / "SKILL.md"
+PORTFOLIO_REVIEW_TEMPLATE = (
+    ROOT
+    / "skills"
+    / "gradient-portfolio-review"
+    / "references"
+    / "review-template.md"
+)
 PORTFOLIO_REVIEW_VALIDATOR = (
     ROOT / "skills" / "gradient-portfolio-review" / "scripts" / "validate_review.py"
 )
+PORTFOLIO_ATTRIBUTION_VALIDATOR = (
+    ROOT
+    / "skills"
+    / "gradient-portfolio-attribution-report"
+    / "scripts"
+    / "validate_attribution.py"
+)
+CONSTRUCTION_VALIDATORS = [
+    (
+        "private-markets construction",
+        ROOT
+        / "skills"
+        / "gradient-private-markets-portfolio-construction"
+        / "scripts"
+        / "validate_construction.py",
+        FIX / "construction-private-markets.json",
+    ),
+    (
+        "fixed-income construction",
+        ROOT
+        / "skills"
+        / "gradient-fixed-income-portfolio-construction"
+        / "scripts"
+        / "validate_construction.py",
+        FIX / "construction-fixed-income.json",
+    ),
+    (
+        "global-public-equity construction",
+        ROOT
+        / "skills"
+        / "gradient-global-public-equity-portfolio-construction"
+        / "scripts"
+        / "validate_construction.py",
+        FIX / "construction-global-public-equity.json",
+    ),
+    (
+        "marketable-alternatives construction",
+        ROOT
+        / "skills"
+        / "gradient-marketable-alternatives-portfolio-construction"
+        / "scripts"
+        / "validate_construction.py",
+        FIX / "portfolio-construction-marketable-alternatives.json",
+    ),
+    (
+        "real-assets construction",
+        ROOT
+        / "skills"
+        / "gradient-real-assets-portfolio-construction"
+        / "scripts"
+        / "validate_construction.py",
+        FIX / "portfolio-construction-real-assets.json",
+    ),
+]
 SETUP_SKILL = ROOT / "skills" / "gradient-setup" / "SKILL.md"
 STALE = re.compile(r"(?<!gradient-)\bgips-(compliance|standards|manager-diligence|report-review|asset-owner-review|policies-gap-check)\b|gradient-capabilities")
 
@@ -74,6 +135,12 @@ CASES = [
     ("branded",  ["--brand", "branding-test.json", "blocks.json", "OUT"], 2, 4, ["Northwind Pension Plan (TEST)", "Powered by GradientCIO.com"]),
     ("portfolio", ["portfolio.json", "OUT"],                         5, 8,  ["Portfolio Review", "Standard periods to", "Growth of 100", "Look-through concentration"]),
     ("portfolio_comprehensive", ["portfolio-comprehensive.json", "OUT"], 15, 20, ["Comprehensive Portfolio Review", "Historical Attribution", "Projected Return and Risk Decomposition", "Analysis and Considerations"]),
+    ("portfolio_attribution_report", ["portfolio-attribution-report.json", "OUT"], 10, 14, ["Portfolio Attribution Report", "Historical Attribution", "Governed Ex Ante Attribution", "Analysis and Considerations"]),
+    ("construction_private_markets", ["construction-private-markets.json", "OUT"], 10, 14, ["Private Markets Portfolio Construction", "Commitments, Pacing and Cash Flow", "Committee action requested"]),
+    ("construction_fixed_income", ["construction-fixed-income.json", "OUT"], 10, 14, ["Fixed Income Portfolio Construction", "Rates and Credit Context", "Committee action requested"]),
+    ("construction_global_public_equity", ["construction-global-public-equity.json", "OUT"], 10, 14, ["Global Public Equity Portfolio Construction", "Factor Exposures and Concentration", "Committee action requested"]),
+    ("construction_marketable_alternatives", ["portfolio-construction-marketable-alternatives.json", "OUT"], 10, 14, ["Marketable Alternatives Portfolio Construction", "Liquidity, Redemption and Operational Terms", "Committee action requested"]),
+    ("construction_real_assets", ["portfolio-construction-real-assets.json", "OUT"], 10, 14, ["Real Assets Portfolio Construction", "Commitments, Liquidity and Valuation", "Committee action requested"]),
     ("compare",  ["compare.json", "OUT"],                            5, 9,  ["Manager Comparison", "Side-by-side comparison", "Form 13F overlap"]),
     ("equity",   ["equity.json", "OUT"],                             5, 8,  ["Equity Research Note", "Review flags", "not a recommendation"]),
 ]
@@ -325,6 +392,133 @@ def connector_cutover():
             else ""
         ),
     )
+    validated_attribution = subprocess.run(
+        [
+            sys.executable,
+            str(PORTFOLIO_ATTRIBUTION_VALIDATOR),
+            str(FIX / "portfolio-attribution-report.json"),
+        ],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    check(
+        validated_attribution.returncode == 0,
+        "portfolio attribution fixture passes validate_attribution.py"
+        + (
+            f": {(validated_attribution.stderr or validated_attribution.stdout).strip()}"
+            if validated_attribution.returncode != 0
+            else ""
+        ),
+    )
+    attribution_fixture = json.loads(
+        (FIX / "portfolio-attribution-report.json").read_text(encoding="utf-8")
+    )
+    with tempfile.TemporaryDirectory() as attribution_tmp:
+        tmp_dir = pathlib.Path(attribution_tmp)
+        unavailable = json.loads(json.dumps(attribution_fixture))
+        unavailable_section = next(
+            section
+            for section in unavailable["sections"]
+            if section["title"] == "Governed Ex Ante Attribution"
+        )
+        unavailable_section["blocks"] = [
+            {
+                "type": "callout",
+                "tone": "warning",
+                "title": "Not available",
+                "text": (
+                    "Not available — missing_portfolio_expected_return [S5]."
+                ),
+            }
+        ]
+        unavailable_path = tmp_dir / "attribution-unavailable.json"
+        unavailable_path.write_text(
+            json.dumps(unavailable),
+            encoding="utf-8",
+        )
+        unavailable_result = subprocess.run(
+            [
+                sys.executable,
+                str(PORTFOLIO_ATTRIBUTION_VALIDATOR),
+                str(unavailable_path),
+            ],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        check(
+            unavailable_result.returncode == 0,
+            "attribution validator accepts a typed-unavailable ex ante section",
+        )
+
+        illustrative = json.loads(json.dumps(attribution_fixture))
+        illustrative_label = (
+            "Illustrative, Gradient Maintained — demo data, "
+            "not the client's holdings or managers"
+        )
+        illustrative["meta"]["title"] += f" — {illustrative_label}"
+        illustrative["meta"]["confidentiality"] = illustrative_label
+        illustrative_path = tmp_dir / "attribution-illustrative.json"
+        illustrative_path.write_text(
+            json.dumps(illustrative),
+            encoding="utf-8",
+        )
+        illustrative_result = subprocess.run(
+            [
+                sys.executable,
+                str(PORTFOLIO_ATTRIBUTION_VALIDATOR),
+                str(illustrative_path),
+            ],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        check(
+            illustrative_result.returncode == 0,
+            "attribution validator accepts the standard illustrative label",
+        )
+
+        illustrative["meta"]["confidentiality"] = "Illustrative"
+        illustrative_path.write_text(
+            json.dumps(illustrative),
+            encoding="utf-8",
+        )
+        missing_label_result = subprocess.run(
+            [
+                sys.executable,
+                str(PORTFOLIO_ATTRIBUTION_VALIDATOR),
+                str(illustrative_path),
+            ],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        check(
+            missing_label_result.returncode != 0,
+            "attribution validator rejects incomplete illustrative labeling",
+        )
+    for label, validator, fixture in CONSTRUCTION_VALIDATORS:
+        validated_construction = subprocess.run(
+            [sys.executable, str(validator), str(fixture)],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        check(
+            validated_construction.returncode == 0,
+            f"{label} fixture passes validate_construction.py"
+            + (
+                f": {(validated_construction.stderr or validated_construction.stdout).strip()}"
+                if validated_construction.returncode != 0
+                else ""
+            ),
+        )
 
 def chart_renderer():
     percentage_column = {
@@ -384,7 +578,7 @@ def contract_manifest():
         for name in ("standard", "full", "writes", "ddq-save-preview")
     }
     check(
-        counts == {"standard": 8, "full": 43, "writes": 5, "ddq-save-preview": 3},
+        counts == {"standard": 8, "full": 42, "writes": 5, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
     )
 
@@ -394,9 +588,9 @@ def contract_manifest():
         public_tool_catalog.get("generated") is True
         and public_tool_catalog.get("source")
         == "@gradientcio/contracts canonical MCP tool catalog"
-        and len(public_tools) == 67
+        and len(public_tools) == 64
         and public_tools == sorted(set(public_tools)),
-        "public-tool catalog has generated 67-tool canonical parity",
+        "public-tool catalog has generated 64-tool canonical parity",
     )
     manifest_errors = validate_contract_manifest(contracts, public_tools)
     check(
@@ -407,7 +601,6 @@ def contract_manifest():
     minimum = contracts.get("minimum_connector_contract", {})
     expected_minimum_tools = {
         "batch_reconcile_manager_ddq_claims",
-        "build_strategy_lab_session",
         "check_portfolio_policy",
         "get_benchmarks",
         "get_cma_consensus_check",
@@ -417,6 +610,7 @@ def contract_manifest():
         "get_manager_diligence_brief",
         "get_manager_odd_profile",
         "get_portfolio_attribution",
+        "get_portfolio_ex_ante_attribution",
         "get_portfolio_exposure",
         "get_portfolio_historical_returns",
         "get_portfolio_structure",
@@ -427,15 +621,14 @@ def contract_manifest():
         "list_portfolios",
         "reconcile_manager_ddq_claims",
         "run_strategy_lab_expected_statistics",
-        "run_strategy_lab_diversification",
         "run_strategy_lab_relative_return",
         "search_managers",
         "upload_ddq_document",
     }
     minimum_probe_ids = set(minimum.get("required_probe_ids", []))
     check(
-        minimum.get("minimum_service_version") == "0.8.0"
-        and minimum.get("compatibility_epoch") == 1
+        minimum.get("minimum_service_version") == "0.9.0"
+        and minimum.get("compatibility_epoch") == 2
         and set(minimum.get("required_tools", [])) == expected_minimum_tools,
         "minimum connector contract pins service, epoch, and required tools",
     )
@@ -443,14 +636,13 @@ def contract_manifest():
         {
             "portfolio_policy",
             "portfolio_attribution",
+            "portfolio_ex_ante_attribution",
             "portfolio_returns",
             "entity_facts",
             "cma_consensus",
             "strategy_benchmarks",
             "strategy_return_series",
-            "strategy_session_build",
             "strategy_expected_statistics",
-            "strategy_diversification",
             "strategy_relative_return",
             "equity_fundamentals",
             "ddq_numeric_gap",
@@ -690,6 +882,30 @@ def contract_manifest():
         and not attribution_probe.get("reconciles"),
         "portfolio-attribution probe verifies available linked example data",
     )
+    ex_ante_attribution_probe = by_id["portfolio_ex_ante_attribution"]
+    check(
+        ex_ante_attribution_probe["tool"]
+        == "get_portfolio_ex_ante_attribution"
+        and ex_ante_attribution_probe["args"].get("benchmark_role")
+        == "policy"
+        and ex_ante_attribution_probe.get("equals", {}).get(
+            "method.linking"
+        )
+        == "none_single_period"
+        and ex_ante_attribution_probe.get("equals", {}).get(
+            "coverage.status"
+        )
+        == "available"
+        and ex_ante_attribution_probe.get("equals", {}).get(
+            "residual.within_tolerance"
+        )
+        is True
+        and "assumptions.portfolio_return_source"
+        in ex_ante_attribution_probe.get("required", [])
+        and "segments[0].total_effect"
+        in ex_ante_attribution_probe.get("required", []),
+        "portfolio ex ante attribution probe verifies governed expected data",
+    )
     regional_probe = by_id["regional_capital_markets"]
     check(
         regional_probe["args"] == {
@@ -767,6 +983,7 @@ def contract_manifest():
     )
     scope_reference = "`references/module-scope.md`"
     scope_guidance = SHARED_MODULE_SCOPE.read_text(encoding="utf-8")
+    normalized_scope_guidance = re.sub(r"\s+", " ", scope_guidance)
     module_skill_paths = [
         path / "SKILL.md"
         for path in (ROOT / "skills").iterdir()
@@ -784,10 +1001,39 @@ def contract_manifest():
         "skills using Portfolio Analytics or Strategy Lab link the shared scope note",
     )
     check(
-        "return_series_ids` plus a `benchmark_id" in scope_guidance
-        and "compatibility field" in scope_guidance
-        and "builder rejects" in scope_guidance,
-        "module scope explains the Strategy Lab portfolio-ID compatibility field",
+        "return_series_ids` plus a `benchmark_id" in normalized_scope_guidance
+        and "connector builds the canonical session"
+        in normalized_scope_guidance
+        and "do not call the session builder" in normalized_scope_guidance
+        and "`strategy_lab_session`" not in scope_guidance
+        and "`build_strategy_lab_session`" not in scope_guidance,
+        "module scope directs selected-series tools through implicit sessions",
+    )
+    portfolio_review_guidance = PORTFOLIO_REVIEW_SKILL.read_text(
+        encoding="utf-8",
+    )
+    portfolio_review_template = PORTFOLIO_REVIEW_TEMPLATE.read_text(
+        encoding="utf-8",
+    )
+    ic_memo_guidance = IC_MEMO_SKILL.read_text(encoding="utf-8")
+    ic_memo_data_map = IC_MEMO_DATA_MAP.read_text(encoding="utf-8")
+    check(
+        "diversification and factor loads" not in portfolio_review_guidance
+        and "run_strategy_lab_relative_return" in portfolio_review_guidance
+        and "run_strategy_lab_date_window_robustness"
+        in portfolio_review_guidance
+        and "diversification" not in portfolio_review_template
+        and "factor-load" not in portfolio_review_template
+        and "relative-return" in portfolio_review_template
+        and "date-window robustness" in portfolio_review_template,
+        "portfolio review lists only supported Strategy Lab supplements",
+    )
+    check(
+        "`strategy_lab_session`" not in ic_memo_guidance
+        and "`build_strategy_lab_session`" not in ic_memo_guidance
+        and "`strategy_lab_session`" not in ic_memo_data_map
+        and "`return_series_ids`" in ic_memo_data_map,
+        "IC memo uses implicit selected-series Strategy Lab sessions",
     )
     illustrative_label = (
         "Illustrative, Gradient Maintained — demo data, "
@@ -831,6 +1077,9 @@ def contract_manifest():
         "portfolio_tree",
         "portfolio_returns",
         "portfolio_attribution",
+        "portfolio_ex_ante_attribution",
+        "portfolio_allocations",
+        "portfolio_commitments",
         "portfolio_expected_statistics",
         "portfolio_policy",
     }
@@ -843,50 +1092,43 @@ def contract_manifest():
         == "expected-statistics",
         "Portfolio Analytics probes cover the illustrative portfolio surface",
     )
+    check(
+        by_id["portfolio_allocations"]["tool"] == "get_chart_data"
+        and by_id["portfolio_allocations"]["args"].get("analysis_type")
+        == "allocations"
+        and by_id["portfolio_commitments"]["tool"] == "get_chart_data"
+        and by_id["portfolio_commitments"]["args"].get("analysis_type")
+        == "commitments",
+        "Portfolio Analytics probes cover all construction chart packs",
+    )
     strategy_probe_ids = {
         "strategy_benchmarks",
         "strategy_return_series",
-        "strategy_session_build",
         "strategy_expected_statistics",
-        "strategy_diversification_session_build",
-        "strategy_diversification",
-        "strategy_relative_return_session_build",
         "strategy_relative_return",
     }
     strategy_probe = by_id["strategy_expected_statistics"]
     check(
         strategy_probe_ids <= set(by_id)
-        and by_id["strategy_session_build"]["args"].get("demo_set_id")
-        == "strategy_lab_core"
-        and strategy_probe.get("depends_on") == ["strategy_session_build"]
+        and strategy_probe.get("depends_on")
+        == ["strategy_benchmarks", "strategy_return_series"]
         and "portfolio_id" not in strategy_probe["args"]
-        and strategy_probe["args"].get("strategy_lab_session")
-        == "<strategy_session_build:strategy_lab_session>",
-        "Strategy Lab expected-statistics probe uses a server-built sample session",
-    )
-    check(
-        by_id["strategy_diversification"]["args"].get("strategy_lab_session")
-        == (
-            "<strategy_diversification_session_build:"
-            "strategy_lab_session>"
-        )
-        and by_id["strategy_relative_return"]["args"].get(
-            "strategy_lab_session",
-        ) == (
-            "<strategy_relative_return_session_build:"
-            "strategy_lab_session>"
-        )
-        and by_id["strategy_diversification_session_build"].get(
-            "equals",
-            {},
-        ).get("strategy_lab_session.domain") == "manager-compare"
-        and "portfolio_id"
-        not in by_id["strategy_diversification_session_build"]["args"]
-        and "portfolio_id"
-        not in by_id["strategy_relative_return_session_build"]["args"],
-        "Strategy Lab compute probes use matching server-built sample sessions",
+        and "strategy_lab_session" not in strategy_probe["args"]
+        and strategy_probe["args"].get("return_series_ids") == [
+            "<strategy_benchmarks:demo_set.manager_fund_series[0].series_id>"
+        ],
+        "Strategy Lab expected-statistics probe uses implicit selected-series sessions",
     )
     relative_args = by_id["strategy_relative_return"]["args"]
+    check(
+        "strategy_lab_session" not in relative_args
+        and relative_args.get("return_series_ids") == [
+            "<strategy_benchmarks:demo_set.manager_fund_series[0].series_id>"
+        ]
+        and relative_args.get("benchmark_id")
+        == "<strategy_benchmarks:demo_set.benchmark_series[0].series_id>",
+        "Strategy Lab relative-return probe uses an implicit selected-series session",
+    )
     check(
         "envelope" not in relative_args and "fields" not in relative_args,
         "relative-return probe omits envelope and fields",
@@ -1023,8 +1265,8 @@ def contract_checker():
         contracts = {
             "envelope": [],
             "minimum_connector_contract": {
-                "minimum_service_version": "0.8.0",
-                "compatibility_epoch": 1,
+                "minimum_service_version": "0.9.0",
+                "compatibility_epoch": 2,
                 "required_tools": ["preview_tool", "source_tool"],
                 "required_response_field_paths": {
                     "preview_tool": ["receipt_id"],
@@ -1081,14 +1323,14 @@ def contract_checker():
         )
         capabilities_path = temp / "capabilities.json"
         capabilities_path.write_text(json.dumps({
-            "version": "0.8.0",
-            "contract_identity": {"compatibility_epoch": 1},
+            "version": "0.9.0",
+            "contract_identity": {"compatibility_epoch": 2},
             "tools": [{"name": "preview_tool"}, {"name": "source_tool"}],
         }), encoding="utf-8")
         old_capabilities_path = temp / "old-capabilities.json"
         old_capabilities_path.write_text(json.dumps({
-            "version": "0.7.9",
-            "contract_identity": {"compatibility_epoch": 1},
+            "version": "0.8.9",
+            "contract_identity": {"compatibility_epoch": 2},
             "tools": [{"name": "preview_tool"}, {"name": "source_tool"}],
         }), encoding="utf-8")
         def run(*args):
@@ -1125,7 +1367,7 @@ def contract_checker():
         )
         check(
             connector_old.returncode == 1
-            and "below required 0.8.0" in connector_old.stdout,
+            and "below required 0.9.0" in connector_old.stdout,
             "connector checker rejects an older service",
         )
 
@@ -1166,7 +1408,19 @@ def render(keep):
                 and abs(page_height - 540) < 2,
                 "deck: 16:9 page size",
             )
-        if name in ("odd", "digest", "portfolio", "compare", "equity"):
+        if name in (
+            "odd",
+            "digest",
+            "portfolio",
+            "construction_private_markets",
+            "construction_fixed_income",
+            "construction_global_public_equity",
+            "construction_marketable_alternatives",
+            "construction_real_assets",
+            "portfolio_attribution_report",
+            "compare",
+            "equity",
+        ):
             check("Powered by" not in text, f"{name}: no client branding by default")
     print(f"PDFs in {out}")
 

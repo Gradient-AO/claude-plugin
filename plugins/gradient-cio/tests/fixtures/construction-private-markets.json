@@ -1,0 +1,147 @@
+{
+  "construction_mode": "private_markets",
+  "meta": {
+    "eyebrow": "Private Markets Portfolio Construction",
+    "header_label": "Private Markets Portfolio Construction",
+    "title": "Northstar Private Markets Program (TEST)",
+    "subtitle": "Decision pack · prepared for the Investment Committee (TEST)",
+    "running_head": "Northstar Private Markets Program (TEST)",
+    "data_as_of": "2026-06-30",
+    "confidentiality": "TEST DATA — fictional portfolio for rendering tests only",
+    "cover_facts": [["As of", "2026-06-30"], ["Base currency", "USD"], ["Total NAV", "$1,000.0M"], ["Private-markets NAV", "$230.0M"], ["Unfunded commitments", "$92.0M"], ["Data scope", "Fictional TEST data"]],
+    "signal_title": "Private-markets program status",
+    "signal": {"level": "watch", "label": "Pacing and concentration on watch"},
+    "completeness": {"used": 8, "expected": 9, "state": "partial"},
+    "meter_title": "Evidence completeness"
+  },
+  "executive": {
+    "label": "Recommendation",
+    "bottom_line": "We recommend a two-year $80.0M commitment program that shifts new commitments toward infrastructure and secondary private equity while keeping private-markets exposure inside the 15.0%–30.0% policy range [S3][S6]. Committee action requested: approve the program ceiling and first-year pacing, subject to manager diligence and quarterly liquidity tests [S3][S7].",
+    "tiles": [
+      {"label": "Private-markets weight", "value": "23.0%", "sub": "Policy range 15.0%–30.0% [S3]", "tone": "good"},
+      {"label": "Unfunded commitments", "value": "$92.0M", "sub": "9.2% of NAV [S4]", "tone": "watch"},
+      {"label": "Liquid coverage", "value": "4.8x", "sub": "Governed base case [S3]", "tone": "good"},
+      {"label": "Policy status", "value": "Watch", "sub": "Manager concentration [S3]", "tone": "watch"}
+    ]
+  },
+  "sections": [
+    {
+      "id": "executive",
+      "title": "Executive Decision",
+      "kicker": "Recommendation and committee action",
+      "blocks": [
+        {"type": "callout", "tone": "accent", "title": "Recommendation and action requested", "text": "We recommend a two-year $80.0M commitment program. Committee action requested: approve a $45.0M first-year ceiling and require completed diligence before each commitment [S3][S6][S7]."},
+        {"type": "table", "title": "Decision summary", "columns": ["Decision element", "Proposed action", "Evidence", "Status"], "rows": [["Program size", "$80.0M over two years", "[S6]", {"chip": "Proposed", "status": "watch"}], ["First-year ceiling", "$45.0M", "[S6]", {"chip": "Proposed", "status": "watch"}], ["Policy fit", "Remain within 15.0%–30.0%", "[S3]", {"chip": "Compliant", "status": "compliant"}]]},
+        {"type": "callout", "tone": "watch", "title": "Conditions and limits", "text": "Each manager requires completed operational and GIPS diligence; quarterly pacing proceeds only while governed liquidity coverage remains at or above the returned policy threshold [S3][S7]."}
+      ]
+    },
+    {
+      "title": "Mandate and Construction Objective",
+      "kicker": "Policy and program constraints",
+      "blocks": [
+        {"type": "kv", "rows": [["Portfolio", "Northstar Total Fund (TEST)", "S2"], ["Objective", "Diversified private-markets program", "S7"], ["Horizon", "10 years", "S5"], ["Target range", "15.0%–30.0% of total NAV", "S3"], ["Base currency", "USD", "S2"], ["Data scope", "Fictional TEST data [S1]", "S1"]]},
+        {"type": "table", "title": "Governed framework", "columns": ["Area", "Objective or limit", "Observed", "Status", "Source"], "rows": [["Private markets", "15.0%–30.0%", "23.0%", {"chip": "Compliant", "status": "compliant"}, "[S3]"], ["Single manager", "At or below 12.0%", "11.4%", {"chip": "Watch", "status": "watch"}, "[S3][S4]"], ["Unfunded ratio", "At or below 12.0%", "9.2%", {"chip": "Compliant", "status": "compliant"}, "[S3]"]]}
+      ]
+    },
+    {
+      "title": "Current Private Markets Portfolio",
+      "kicker": "NAV, commitments and valuation dates",
+      "blocks": [
+        {"type": "table", "title": "Current program snapshot", "columns": ["Strategy", "NAV", "Unfunded", "Commitment", "% NAV", "Valuation date"], "rows": [["Private equity", "$120.0M", "$42.0M", "$210.0M", "12.0%", "2026-03-31 [S4]"], ["Private credit", "$70.0M", "$30.0M", "$125.0M", "7.0%", "2026-03-31 [S4]"], ["Infrastructure", "$40.0M", "$20.0M", "$75.0M", "4.0%", "2026-03-31 [S4]"]]},
+        {"type": "chart", "chart": {"chart_id": "test-private-allocation", "title": "Private-markets NAV by strategy (TEST)", "status": "ok", "currency": "USD", "columns": [{"key": "strategy", "title": "Strategy", "format": "text", "decimals": null}, {"key": "nav", "title": "NAV", "format": "currency", "decimals": 0}], "rows": [["Private equity", 120000000], ["Private credit", 70000000], ["Infrastructure", 40000000]], "truncated": false, "render_hint": {"block": "bars", "x": "strategy", "y": ["nav"]}}},
+        {"type": "text", "text": "All reported private-market NAVs are dated 2026-03-31 and therefore lag the report date; unfunded amounts are shown separately and are not included in NAV [S4]."}
+      ]
+    },
+    {
+      "title": "Historical Performance and Attribution",
+      "kicker": "Returned portfolio evidence; sleeve gaps remain explicit",
+      "blocks": [
+        {"type": "table", "title": "Standard periods", "columns": ["Period", "Portfolio / sleeve", "Benchmark", "Excess", "Coverage"], "rows": [["1Y total portfolio", "7.2%", "7.6%", "-0.4pp", "Complete [S8]"], ["3Y total portfolio (ann.)", "6.8%", "6.5%", "+0.3pp", "Complete [S8]"], ["Private-markets sleeve", "Not available — sleeve return not returned", "Not available", "Not available", "Unavailable [S8]"]]},
+        {"type": "table", "title": "Attribution effects", "columns": ["Effect", "Contribution", "Source"], "rows": [["Private-assets total effect", "+0.12pp", "[S8]"], ["Total active return", "-0.20pp", "[S8]"], ["Residual", "0.00pp", "[S8]"]]},
+        {"type": "kv", "title": "Method", "rows": [["Method", "Brinson-Fachler", "S8"], ["Linking", "Symmetric Carino", "S8"], ["Basis", "Net, monthly linked", "S8"], ["Tolerance", "1 bp; reconciled", "S8"]]}
+      ]
+    },
+    {
+      "title": "Target Portfolio Structure",
+      "kicker": "Proposed long-run program",
+      "blocks": [
+        {"type": "table", "title": "Current versus target", "columns": ["Segment", "Current", "Target", "Change", "Range / constraint", "Rationale"], "rows": [["Private equity", "12.0%", "11.0%", "-1.0pp", "8.0%–16.0%", "Use slower new pacing [S3][S6]"], ["Private credit", "7.0%", "7.0%", "0.0pp", "4.0%–10.0%", "Maintain income role [S5][S7]"], ["Infrastructure", "4.0%", "6.0%", "+2.0pp", "3.0%–8.0%", "Direct new commitments here [S5][S6]"], ["Secondaries", "0.0%", "1.0%", "+1.0pp", "At or below 3.0%", "Add vintage diversification [S6][S7]"]]},
+        {"type": "text", "text": "Targets are a committee proposal from the fictional mandate and returned policy headroom; they are not changes saved to GradientCIO [S3][S7]."}
+      ]
+    },
+    {
+      "title": "Forward Return and Risk",
+      "kicker": "Assumptions, not forecasts",
+      "blocks": [
+        {"type": "kv", "rows": [["Assumption set", "2026 Strategic CMA (TEST)", "S5"], ["Regime", "Baseline", "S5"], ["Horizon", "10 years", "S5"], ["Currency", "USD", "S5"], ["Context fingerprint", "test-pm-forward-2026", "S5"]]},
+        {"type": "chart", "chart": {"chart_id": "test-pm-forward", "title": "Private-market forward assumptions (TEST)", "status": "ok", "currency": "USD", "columns": [{"key": "segment", "title": "Segment", "format": "text", "decimals": null}, {"key": "return", "title": "Expected return", "format": "percentage", "decimals": 1}, {"key": "volatility", "title": "Expected volatility", "format": "percentage", "decimals": 1}], "rows": [["Private equity", 0.096, 0.185], ["Private credit", 0.071, 0.092], ["Infrastructure", 0.078, 0.118]], "truncated": false, "render_hint": {"block": "table", "x": "segment", "y": []}}},
+        {"type": "text", "text": "The figures are long-horizon assumptions under the selected context, not forecasts or guarantees [S5]."}
+      ]
+    },
+    {
+      "title": "Commitments, Pacing and Cash Flow",
+      "kicker": "Returned portfolio commitment schedule",
+      "blocks": [
+        {"type": "chart", "chart": {"chart_id": "test-pm-pacing", "title": "Projected calls and distributions (TEST)", "status": "ok", "currency": "USD", "columns": [{"key": "period", "title": "Period", "format": "text", "decimals": null}, {"key": "calls", "title": "Calls", "format": "currency", "decimals": 0}, {"key": "distributions", "title": "Distributions", "format": "currency", "decimals": 0}], "rows": [["2026 H2", 26000000, 14000000], ["2027 H1", 22000000, 16000000], ["2027 H2", 18000000, 19000000], ["2028 H1", 15000000, 20000000]], "truncated": false, "render_hint": {"block": "table", "x": "period", "y": []}}},
+        {"type": "table", "title": "Near-term pacing", "columns": ["Period", "Calls", "Distributions", "Net cash flow", "Basis", "Source"], "rows": [["2026 H2", "$26.0M", "$14.0M", "-$12.0M", "Returned projection", "[S6]"], ["2027 H1", "$22.0M", "$16.0M", "-$6.0M", "Returned projection", "[S6]"], ["2027 H2", "$18.0M", "$19.0M", "+$1.0M", "Returned projection", "[S6]"]]}
+      ]
+    },
+    {
+      "title": "Liquidity and Denominator Risk",
+      "kicker": "Funding capacity under supported cases",
+      "blocks": [
+        {"type": "table", "title": "Liquidity profile", "columns": ["Bucket", "% NAV", "Amount", "Requirement", "Status"], "rows": [["Daily to quarterly", "44.0%", "$440.0M", "At least 25.0%", {"chip": "Compliant", "status": "compliant"}], ["Over two years / locked", "23.0%", "$230.0M", "At or below 30.0%", {"chip": "Compliant", "status": "compliant"}]]},
+        {"type": "kv", "rows": [["Liquid assets", "$440.0M", "S3"], ["Unfunded commitments", "$92.0M", "S4"], ["Base coverage", "4.8x", "S3"], ["Near-term projected calls", "$48.0M", "S6"]]},
+        {"type": "table", "title": "Supported scenarios", "columns": ["Scenario", "Liquid resources", "Funding need", "Coverage", "Status"], "rows": [["Governed base case", "$440.0M", "$92.0M", "4.8x", {"chip": "Compliant", "status": "compliant"}], ["Denominator stress", "Not available — no governed stress result", "Not available", "Not available", {"chip": "Not assessed", "status": "not_assessed"}]]}
+      ]
+    },
+    {
+      "title": "Diversification and Manager Diligence",
+      "kicker": "Concentration and pre-commitment conditions",
+      "blocks": [
+        {"type": "table", "title": "Diversification", "columns": ["Axis", "Largest exposure", "Share", "Limit", "Status"], "rows": [["Manager", "Example Private Manager A (TEST)", "11.4%", "12.0%", {"chip": "Watch", "status": "watch"}], ["Strategy", "Private equity", "52.2% of private NAV", "Not assessed", {"chip": "Not assessed", "status": "not_assessed"}]]},
+        {"type": "table", "title": "Manager evidence", "columns": ["Manager / fund", "Exposure", "Diligence status", "Open findings", "Next step"], "rows": [["Example Private Manager A (TEST)", "$114.0M", "Current [S7]", "1 Medium [S7]", "Close valuation-control follow-up"], ["Proposed infrastructure manager", "Not funded", "Not assessed [S7]", "Not assessed", "Run manager comparison and ODD"]]}
+      ]
+    },
+    {
+      "title": "Proposed Program and Implementation",
+      "kicker": "Phased commitments with decision gates",
+      "blocks": [
+        {"type": "table", "title": "Commitment program", "columns": ["Period", "Segment", "Proposed amount", "Funding source", "Condition", "Source"], "rows": [["2026 H2", "Infrastructure", "$25.0M", "Distributions and liquid reserve", "Complete ODD", "[S6][S7]"], ["2027 H1", "Private credit", "$20.0M", "Distributions", "Coverage remains compliant", "[S3][S6]"], ["2027 H2", "Secondaries", "$20.0M", "Distributions and cash", "Committee checkpoint", "[S3][S6]"], ["2028 H1", "Reserve", "$15.0M", "To be determined", "Evidence refresh", "[S6]"]]},
+        {"type": "table", "title": "Alternatives considered", "columns": ["Alternative", "Benefit", "Cost / risk", "Reason not selected"], "rows": [["No new commitments", "Maximum liquidity", "Target exposure declines", "Does not address program objective [S3][S6]"], ["Front-load commitments", "Faster target progress", "Higher near-term calls", "Coverage sensitivity [S3][S6]"]]},
+        {"type": "bullets", "items": ["Phase each commitment after diligence clearance [S7].", "Refresh pacing and policy liquidity quarterly [S3][S6].", "Return to committee if manager concentration reaches its governed limit [S3]."]}
+      ]
+    },
+    {
+      "title": "Risks, Open Items and Approvals",
+      "kicker": "Conditions that govern implementation",
+      "blocks": [
+        {"type": "table", "title": "Decision risks", "columns": ["Priority", "Risk", "Evidence", "Mitigation / condition", "Owner"], "rows": [["High", "Valuation and denominator lag", "Q1 valuations [S4]", "Quarterly headroom test", "Investment staff"], ["Medium", "Manager concentration", "11.4% vs 12.0% [S3][S4]", "Cap follow-on commitments", "CIO"], ["Medium", "Near-term net calls", "$18.0M through 2027 H1 [S6]", "Maintain liquidity gate", "Treasury"]]},
+        {"type": "table", "title": "Open items and approvals", "columns": ["Timing", "Item", "Required evidence", "Owner", "Status"], "rows": [["Before approval", "Confirm first manager", "Comparison and ODD", "Private markets team", "Open [S7]"], ["Within 30 days", "Document pacing limits", "Final program schedule", "CIO", "Open [S6]"], ["Next review", "Refresh valuations", "2026 Q2 NAVs", "Operations", "Open [S4]"]]}
+      ]
+    },
+    {
+      "title": "Coverage",
+      "new_page": false,
+      "blocks": [
+        {"type": "coverage", "items": [{"name": "Portfolio and allocation", "status": "available", "note": "Fictional TEST data [S2]"}, {"name": "Policy", "status": "available", "note": "Allocation, liquidity and concentration [S3]"}, {"name": "Exposure", "status": "available", "note": "NAV, commitments and unfunded [S4]"}, {"name": "Forward assumptions", "status": "available", "note": "2026 Strategic CMA (TEST) [S5]"}, {"name": "Commitments charts", "status": "available", "note": "Returned pacing projection [S6]"}, {"name": "Manager diligence", "status": "degraded", "note": "Proposed manager not assessed [S7]"}, {"name": "Returns and attribution", "status": "degraded", "note": "No sleeve-specific return [S8]"}]}
+      ]
+    },
+    {
+      "title": "Appendix A — Sources",
+      "num": "A",
+      "blocks": [
+        {"type": "table", "columns": ["Tag", "Evidence", "Tool / view", "Key parameters", "As of", "Data scope", "Validation", "Digest"], "rows": [["S1", "Organization and capabilities", "list_organizations; get_gradient_capabilities", "organization=test", "2026-06-30", "Fictional TEST data", "passed", "pm-s1"], ["S2", "Portfolio and allocation", "list_portfolios; get_portfolio_structure", "allocation_tree", "2026-06-30", "Fictional TEST data", "passed", "pm-s2"], ["S3", "Policy assessment", "check_portfolio_policy", "portfolio=test", "2026-06-30", "Fictional TEST data", "passed", "pm-s3"], ["S4", "Private-market exposure", "get_portfolio_exposure", "all pages", "2026-03-31", "Fictional TEST data", "passed", "pm-s4"], ["S5", "Forward assumptions", "get_chart_data; get_capital_market_assumptions", "expected-statistics", "2026-06-15", "Fictional TEST data", "passed", "pm-s5"], ["S6", "Commitments and pacing", "get_chart_data", "commitments", "2026-06-30", "Fictional TEST data", "passed", "pm-s6"], ["S7", "Manager evidence and mandate", "User document; diligence evidence", "fictional", "2026-06-30", "Fictional TEST data", "advisory", "pm-s7"], ["S8", "Returns and attribution", "get_portfolio_historical_returns; get_portfolio_attribution", "all sections", "2026-06-30", "Fictional TEST data", "degraded", "pm-s8"]]}
+      ]
+    },
+    {
+      "title": "Appendix B — Server Metric Methods and Disclosures",
+      "num": "B",
+      "new_page": false,
+      "blocks": [
+        {"type": "table", "title": "Server Metric Methods", "columns": ["Source", "Quantity", "Method / formula", "Version", "Basis / units / tolerance"], "rows": [["S3", "Policy status", "Governed portfolio assessment", "portfolio-policy-v1", "Returned status"], ["S4", "Exposure", "Server exposure aggregation", "portfolio-exposure-v1", "USD; unfunded separate"], ["S5", "Forward statistics", "Expected-statistics charts", "chart-contract-v1", "10-year assumptions"], ["S6", "Commitment pacing", "Returned commitments pack", "chart-contract-v1", "Projected cash flows"]]},
+        {"type": "bullets", "items": ["Private-market valuations may lag the report date [S4].", "Forward values are assumptions, not forecasts or guarantees [S5].", "Portfolio Analytics and Strategy Lab are separate analytical scopes.", "This AI-assisted construction analysis is not investment, legal or compliance advice."]}
+      ]
+    }
+  ]
+}

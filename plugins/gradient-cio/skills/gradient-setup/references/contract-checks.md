@@ -6,7 +6,7 @@ sets `"envelope": false`.
 
 The same file's top-level `minimum_connector_contract` is the machine-readable cutover gate. Validate it
 against the saved `get_gradient_capabilities` summary before running any probe. A service version below
-0.8.0, a compatibility epoch other than 1, or a missing required tool is a connector failure: stop, report
+0.9.0, a compatibility epoch other than 2, or a missing required tool is a connector failure: stop, report
 `not_ready`, and do not use local-calculation fallbacks.
 
 Resolve every chained placeholder from a saved dependency response. Placeholders have the exact form
@@ -31,15 +31,14 @@ or report date; the default probe therefore exercises the current latest-publica
 sample_portfolio, chart_catalog. The sample probe verifies that `list_portfolios`
 returns Gradient's canonical example first.
 
-**Full read set (51 reads including standard):** standard plus capabilities_summary, manager_diligence_brief,
+**Full read set (49 reads including standard):** standard plus capabilities_summary, manager_diligence_brief,
 attention, findings, events, events_roster, entity_facts, conditions, credit_spreads, gradient_signal, regime_state,
 cma_baseline, cma_consensus, watchlist,
 portfolio_tree, portfolio_exposure, portfolio_policy, portfolio_ownership, portfolio_returns,
 portfolio_attribution, portfolio_series,
-chart_availability, portfolio_expected_statistics, strategy_benchmarks, strategy_return_series,
-strategy_session_build, strategy_expected_statistics, strategy_diversification_session_build, strategy_diversification,
-strategy_relative_return_session_build,
-strategy_relative_return, adv_13f_consistency,
+chart_availability, portfolio_expected_statistics, portfolio_allocations, portfolio_commitments,
+strategy_benchmarks, strategy_return_series,
+strategy_expected_statistics, strategy_relative_return, adv_13f_consistency,
 multi_manager_13f_overlap, search_managers, screen, cftc_positioning, hf_crowding, regional_facts,
 regional_capital_markets, equity_fundamentals, equity_risk_findings, ddq_numeric_gap and batch_ddq_preview.
 
@@ -68,7 +67,7 @@ The first call persists fictional inline text as a ready subject-bound document 
 save call is still a dry-run preview and must return `outcome: "preview"`, `dry_run: true` and `committed:
 false`.
 
-The complete matrix is 59 calls. Run the standard or full read set without write confirmation. Run the
+The complete matrix is 58 calls. Run the standard or full read set without write confirmation. Run the
 writes set only as previews. Before the DDQ save-preview set, tell the user that its reconciliation call
 persists a test document and immutable test workpaper.
 
@@ -80,13 +79,13 @@ For `portfolio_exposure` and `portfolio_ownership`, determine scope from
 mismatch when a dependent response does not identify that same canonical
 portfolio or labels it as live data.
 
-The Portfolio Analytics probes cover list, exposure, structure, history, attribution, one expected-statistics
-chart pack, and policy checking against the canonical illustrative `portfolio_id`. Strategy Lab separately
-covers the named demo benchmark catalog, one manager/fund return series, server-built sample sessions, and
-expected-statistics, diversification and relative-return compute tools. Pass each returned
-`strategy_lab_session` unchanged to its matching compute tool. The discovery schema exposes `portfolio_id`
-as a compatibility field, but the return-series session builder rejects it; use `demo_set_id` or
-`return_series_ids`. Report the two module results separately.
+The Portfolio Analytics probes cover list, exposure, structure, historical and governed ex ante attribution, allocations,
+expected-statistics and commitments chart packs, and policy checking against the canonical illustrative
+`portfolio_id`. Strategy Lab separately
+covers the named demo benchmark catalog, one manager/fund return series, and expected-statistics and
+relative-return compute tools. Pass `return_series_ids` directly; the connector builds the matching session.
+The discovery schema exposes `portfolio_id` as a compatibility field, but selected-series tools reject it.
+Report the two module results separately.
 
 For a non-entitled organization, successful Portfolio Analytics and Strategy Lab probes are expected to
 report illustrative access, not live client access. Confirm `record_kind: example`, `access_mode:
@@ -98,15 +97,19 @@ Results:
 - **Pass**: the call succeeded and every required path is present (empty lists count as present).
 - **Fail**: an error, or a required path is missing. Quote `error.code`, `http_status` and `request_id`.
 - **Known issue**: a failure listed below. Report it as "known issue — workaround in skill", not as a new fault.
-- Note `validation.status` = `failed` separately: the call worked, but Gradient's own checks raised advisories.
-  These are disclosures, not outages.
+- `validation.status` = `failed` means a blocking check failed. Advisory failures remain in detailed checks
+  as disclosures and do not make the overall status failed.
 - Compact envelopes omit passed checks and advisory `not_run` checks. This is intentional; use
   `checks_omitted` for the count and request a full envelope only when auditing validation detail.
 
-## Current contract changes (revalidated 2026-10-07)
+## Current contract changes (revalidated 2026-10-08)
 
 These previously reported failures are resolved or have a typed contract and are no longer known issues:
 
+- `get_portfolio_ex_ante_attribution` provides single-period expected
+  Brinson-Fachler effects from current cohort weights and persisted
+  base-currency expectations, with explicit assumption provenance,
+  reconciliation diagnostics and typed unavailable reasons.
 - `get_the_read` supports `asOfDate` as a historical-publication cutoff; the default probe omits it to test
   the current latest publication, not as a 500 workaround.
 - `get_macro_signals` `regime_state` requires explicit `regions` and may validly return a typed unavailable

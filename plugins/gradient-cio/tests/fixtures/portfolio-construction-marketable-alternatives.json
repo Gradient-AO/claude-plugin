@@ -1,0 +1,143 @@
+{
+  "construction_mode": "marketable_alternatives",
+  "meta": {
+    "eyebrow": "Marketable Alternatives Portfolio Construction",
+    "header_label": "Marketable Alternatives Portfolio Construction",
+    "title": "Northstar Hedge Fund Portfolio (TEST)",
+    "subtitle": "Decision pack · prepared for the Investment Committee (TEST)",
+    "running_head": "Northstar Hedge Fund Portfolio (TEST)",
+    "data_as_of": "2026-06-30",
+    "confidentiality": "TEST DATA — fictional portfolio for rendering tests only",
+    "cover_facts": [["As of", "2026-06-30"], ["Base currency", "USD"], ["Total NAV", "$1,000.0M"], ["Marketable-alternatives weight", "12.0%"], ["Policy benchmark", "Example Absolute Return Index (TEST)"], ["Data scope", "Fictional TEST data"]],
+    "signal_title": "Marketable-alternatives portfolio status",
+    "signal": {"level": "watch", "label": "Liquidity terms require confirmation"},
+    "completeness": {"used": 8, "expected": 9, "state": "partial"},
+    "meter_title": "Evidence completeness"
+  },
+  "executive": {
+    "label": "Recommendation",
+    "bottom_line": "We recommend retaining the 12.0% marketable-alternatives allocation while shifting 2.0 percentage points from equity long/short to macro and relative-value roles [S3][S4]. Committee action requested: approve the target structure and staged manager review, subject to verified redemption terms and completed diligence [S3][S7][S8].",
+    "tiles": [
+      {"label": "Alternatives weight", "value": "12.0%", "sub": "Policy target 12.0% [S3]", "tone": "good"},
+      {"label": "Active weight", "value": "0.0pp", "sub": "Total-fund target [S3]", "tone": "good"},
+      {"label": "Trailing 1Y", "value": "6.4%", "sub": "Benchmark 5.8% [S5]", "tone": "good"},
+      {"label": "Liquid share", "value": "8.0%", "sub": "Monthly or better as % NAV [S3]", "tone": "watch"}
+    ]
+  },
+  "sections": [
+    {
+      "id": "executive",
+      "title": "Executive Decision",
+      "blocks": [
+        {"type": "callout", "tone": "accent", "title": "Recommendation and action requested", "text": "We recommend a 2.0 percentage-point strategy shift within the existing 12.0% allocation. Committee action requested: approve the target mix and authorize manager review, with no funding until redemption and diligence conditions are complete [S3][S4][S7][S8]."},
+        {"type": "table", "title": "Decision summary", "columns": ["Decision element", "Proposed action", "Evidence", "Status"], "rows": [["Total allocation", "Hold at 12.0%", "[S3]", {"chip": "Compliant", "status": "compliant"}], ["Equity long/short", "Reduce from 5.0% to 3.0%", "[S3][S4]", {"chip": "Proposed", "status": "watch"}], ["Macro and relative value", "Increase from 4.0% to 6.0%", "[S3][S4]", {"chip": "Proposed", "status": "watch"}]]},
+        {"type": "callout", "tone": "watch", "title": "Conditions and limits", "text": "Confirm notice periods, gates and side-pocket terms for each affected fund and complete ODD before implementation [S7][S8]."}
+      ]
+    },
+    {
+      "title": "Mandate, Benchmark and Data Basis",
+      "blocks": [
+        {"type": "kv", "rows": [["Portfolio", "Northstar Total Fund (TEST)", "S2"], ["Mandate", "Diversifying hedge-fund portfolio", "S8"], ["Benchmark", "Example Absolute Return Index (TEST)", "S5"], ["Horizon", "5 years", "S6"], ["Return basis", "Net", "S5"], ["Data scope", "Fictional TEST data [S1]", "S1"]]},
+        {"type": "table", "title": "Governed framework", "columns": ["Area", "Objective or limit", "Observed", "Status", "Source"], "rows": [["Marketable alternatives", "8.0%–16.0%", "12.0%", {"chip": "Compliant", "status": "compliant"}, "[S3]"], ["Single manager", "At or below 4.0% of NAV", "4.0%", {"chip": "Watch", "status": "watch"}, "[S3][S4]"], ["Monthly-or-better liquidity", "At least 7.0% of NAV", "8.0%", {"chip": "Compliant", "status": "compliant"}, "[S3]"]]}
+      ]
+    },
+    {
+      "title": "Current Hedge Fund Portfolio",
+      "blocks": [
+        {"type": "table", "title": "Current sleeve", "columns": ["Strategy / manager", "Role", "Value", "% portfolio", "% sleeve", "As of"], "rows": [["Example Alpha Partners (TEST)", "Equity long/short", "$50.0M", "5.0%", "41.7%", "2026-06-30 [S4]"], ["Example Macro Fund (TEST)", "Macro", "$25.0M", "2.5%", "20.8%", "2026-06-30 [S4]"], ["Example Relative Value Fund (TEST)", "Relative value", "$15.0M", "1.5%", "12.5%", "2026-06-30 [S4]"], ["Example Multi-Strategy Fund (TEST)", "Multi-strategy", "$30.0M", "3.0%", "25.0%", "2026-06-30 [S4]"]]},
+        {"type": "chart", "chart": {"chart_id": "test-ma-allocation", "title": "Hedge-fund strategy allocation (TEST)", "status": "ok", "columns": [{"key": "strategy", "title": "Strategy", "format": "text", "decimals": null}, {"key": "weight", "title": "Weight", "format": "percentage", "decimals": 1}], "rows": [["Equity long/short", 0.417], ["Macro", 0.208], ["Relative value", 0.125], ["Multi-strategy", 0.25]], "truncated": false, "render_hint": {"block": "bars", "x": "strategy", "y": ["weight"]}}},
+        {"type": "text", "text": "Strategy and role labels are shown as returned; they do not establish leverage, liquidity or underlying positions [S4]."}
+      ]
+    },
+    {
+      "title": "Target Strategy and Manager Structure",
+      "blocks": [
+        {"type": "table", "title": "Current versus target", "columns": ["Strategy / role", "Current", "Target", "Change", "Range / constraint", "Rationale"], "rows": [["Equity long/short", "5.0%", "3.0%", "-2.0pp", "2.0%–6.0%", "Reduce largest strategy concentration [S3][S4]"], ["Macro", "2.5%", "3.5%", "+1.0pp", "2.0%–5.0%", "Increase diversifying role subject to diligence [S7][S8]"], ["Relative value", "1.5%", "2.5%", "+1.0pp", "1.0%–4.0%", "Broaden strategy mix subject to terms [S7][S8]"], ["Multi-strategy", "3.0%", "3.0%", "0.0pp", "2.0%–4.0%", "Maintain current role [S3][S4]"]]},
+        {"type": "text", "text": "The target is a committee proposal and is not a saved portfolio change [S3][S8]."}
+      ]
+    },
+    {
+      "title": "Historical Performance and Attribution",
+      "blocks": [
+        {"type": "table", "title": "Standard periods", "columns": ["Period", "Portfolio / sleeve", "Benchmark", "Excess", "Coverage"], "rows": [["1Y hedge-fund sleeve", "6.4%", "5.8%", "+0.6pp", "Complete [S5]"], ["3Y hedge-fund sleeve (ann.)", "5.9%", "5.5%", "+0.4pp", "Complete [S5]"], ["5Y hedge-fund sleeve (ann.)", "Not available — sleeve history insufficient", "Not available", "Not available", "Unavailable [S5]"]]},
+        {"type": "table", "title": "Attribution effects", "columns": ["Effect", "Contribution", "Source"], "rows": [["Allocation", "+0.10pp", "[S5]"], ["Selection", "+0.48pp", "[S5]"], ["Interaction", "+0.02pp", "[S5]"], ["Residual", "0.00pp", "[S5]"]]},
+        {"type": "kv", "rows": [["Method", "Brinson-Fachler", "S5"], ["Linking", "Symmetric Carino", "S5"], ["Basis", "Net, monthly linked", "S5"], ["Tolerance", "1 bp; reconciled", "S5"]]}
+      ]
+    },
+    {
+      "title": "Factor, Currency and Concentration Evidence",
+      "blocks": [
+        {"type": "chart", "chart": {"chart_id": "test-ma-factor", "title": "Model-implied factor exposures (TEST)", "status": "ok", "columns": [{"key": "factor", "title": "Factor", "format": "text", "decimals": null}, {"key": "exposure", "title": "Exposure", "format": "number", "decimals": 2}], "rows": [["Equity", 0.31], ["Rates", -0.08], ["Credit", 0.14], ["USD", 0.09]], "truncated": false, "render_hint": {"block": "bars", "x": "factor", "y": ["exposure"]}}},
+        {"type": "table", "title": "Governed concentration", "columns": ["Axis", "Observed", "Limit", "Status", "Source"], "rows": [["Largest manager", "4.0% of NAV", "4.0%", {"chip": "Watch", "status": "watch"}, "[S3][S4]"], ["Largest strategy", "5.0% of NAV", "6.0%", {"chip": "Compliant", "status": "compliant"}, "[S3][S4]"], ["13F equity subset", "Not available — manager identifiers incomplete", "Not assessed", {"chip": "Not assessed", "status": "not_assessed"}, "[S7]"]]},
+        {"type": "callout", "tone": "info", "title": "Look-through limitation", "text": "Any Form 13F evidence is lagged, long-only US-listed equity, excludes shorts, derivatives, cash and non-US listings, and is not a complete hedge-fund exposure view [S7]."}
+      ]
+    },
+    {
+      "title": "Forward Return and Risk",
+      "blocks": [
+        {"type": "kv", "rows": [["Assumption set", "2026 Strategic CMA (TEST)", "S6"], ["Regime", "Baseline", "S6"], ["Horizon", "5 years", "S6"], ["Currency", "USD", "S6"], ["Context fingerprint", "test-ma-forward-2026", "S6"]]},
+        {"type": "chart", "chart": {"chart_id": "test-ma-forward", "title": "Marketable-alternatives forward assumptions (TEST)", "status": "ok", "currency": "USD", "columns": [{"key": "class", "title": "Class", "format": "text", "decimals": null}, {"key": "return", "title": "Expected return", "format": "percentage", "decimals": 1}, {"key": "volatility", "title": "Expected volatility", "format": "percentage", "decimals": 1}], "rows": [["Hedge funds", 0.061, 0.089], ["Absolute return", 0.055, 0.071]], "truncated": false, "render_hint": {"block": "table", "x": "class", "y": []}}},
+        {"type": "text", "text": "These figures are assumptions under the selected context, not forecasts or guarantees [S6]."}
+      ]
+    },
+    {
+      "title": "Liquidity, Redemption and Operational Terms",
+      "blocks": [
+        {"type": "table", "title": "Liquidity profile", "columns": ["Bucket / term", "% NAV", "Amount", "Requirement", "Status"], "rows": [["Monthly or better", "8.0%", "$80.0M", "At least 7.0%", {"chip": "Compliant", "status": "compliant"}], ["Quarterly", "4.0%", "$40.0M", "Monitor", {"chip": "Available", "status": "available"}]]},
+        {"type": "table", "title": "Redemption evidence", "columns": ["Manager / fund", "Frequency", "Notice", "Gate / side pocket", "Source"], "rows": [["Example Alpha Partners (TEST)", "Quarterly", "60 days", "Not available — terms not returned", "[S8]"], ["Example Macro Fund (TEST)", "Monthly", "30 days", "No gate reported", "[S8]"], ["Example Relative Value Fund (TEST)", "Monthly", "45 days", "Not available — terms not returned", "[S8]"], ["Example Multi-Strategy Fund (TEST)", "Quarterly", "90 days", "Not available — terms not returned", "[S8]"]]},
+        {"type": "text", "text": "Redemption frequency and notice are user-document evidence; missing gates, side pockets and leverage remain open items [S8]."}
+      ]
+    },
+    {
+      "title": "Manager Lineup and Diligence",
+      "blocks": [
+        {"type": "table", "title": "Current and proposed roles", "columns": ["Manager", "Strategy / role", "Exposure", "Diligence status", "Proposed action", "Next step"], "rows": [["Example Alpha Partners (TEST)", "Equity long/short", "$50.0M", "Current; 1 Medium finding [S7]", "Redeem $20.0M", "Confirm notice and gate"], ["Example Macro Fund (TEST)", "Macro", "$25.0M", "Current [S7]", "Add $10.0M", "Refresh ODD"], ["Proposed Relative Value Manager (TEST)", "Relative value", "Not funded", "Not assessed [S7]", "Consider $10.0M", "Run comparison and ODD"]]},
+        {"type": "callout", "tone": "watch", "title": "Diligence condition", "text": "No proposed manager may be funded until comparison, operational diligence and performance-integrity review are complete [S7]."}
+      ]
+    },
+    {
+      "title": "Scenarios and Robustness",
+      "blocks": [
+        {"type": "table", "title": "Supported scenarios", "columns": ["Scenario", "Return / loss", "Risk measure", "Basis", "Source"], "rows": [["Baseline assumptions", "5.9% expected return", "8.1% volatility", "Proposed sleeve", "[S6]"], ["Saved-portfolio stress", "Not available — no governed saved-portfolio stress result", "Not available", "Unavailable", "[S8]"]]},
+        {"type": "callout", "tone": "info", "title": "Selected-series sandbox — not saved-portfolio analytics", "text": "Not available — no Strategy Lab return series selected [S8]."}
+      ]
+    },
+    {
+      "title": "Implementation Plan",
+      "blocks": [
+        {"type": "table", "title": "Implementation steps", "columns": ["Phase", "Action", "Size", "Funding source", "Condition", "Owner"], "rows": [["1", "Submit conditional equity long/short redemption", "2.0pp", "Existing sleeve", "Terms confirmed", "Investment staff"], ["2", "Fund macro role", "1.0pp", "Redemption proceeds", "ODD refresh complete", "CIO"], ["3", "Fund relative-value role", "1.0pp", "Redemption proceeds", "Manager approved", "Committee"]]},
+        {"type": "table", "title": "Alternatives considered", "columns": ["Alternative", "Benefit", "Cost / risk", "Reason not selected"], "rows": [["No change", "No transition", "Concentration remains", "Does not address watch item [S3][S4]"], ["Immediate full rebalance", "Faster target alignment", "Terms and costs unavailable", "Conditions incomplete [S7][S8]"]]}
+      ]
+    },
+    {
+      "title": "Risks, Open Items and Approvals",
+      "blocks": [
+        {"type": "table", "title": "Decision risks", "columns": ["Priority", "Risk", "Evidence", "Mitigation / condition", "Owner"], "rows": [["High", "Redemption restrictions", "Gate terms unavailable [S8]", "Verify legal terms before notice", "Operations"], ["Medium", "Manager concentration", "4.0% policy watch [S3][S4]", "Stage redemption", "CIO"], ["Medium", "Proposed manager diligence", "Not assessed [S7]", "Complete comparison and ODD", "Investment staff"]]},
+        {"type": "table", "title": "Open items and approvals", "columns": ["Timing", "Item", "Required evidence", "Owner", "Status"], "rows": [["Before approval", "Confirm redemption terms", "Manager documents", "Operations", "Open [S8]"], ["Before approval", "Select relative-value manager", "Comparison and ODD", "Investment staff", "Open [S7]"], ["Next review", "Refresh attribution", "Governed return period", "Performance team", "Open [S5]"]]}
+      ]
+    },
+    {
+      "title": "Coverage",
+      "new_page": false,
+      "blocks": [
+        {"type": "coverage", "items": [{"name": "Portfolio and allocation", "status": "available", "note": "Fictional TEST data [S2]"}, {"name": "Policy", "status": "available", "note": "Allocation, liquidity and concentration [S3]"}, {"name": "Exposure", "status": "available", "note": "Manager market values [S4]"}, {"name": "Returns and attribution", "status": "degraded", "note": "Five-year sleeve period unavailable [S5]"}, {"name": "Forward assumptions", "status": "available", "note": "2026 CMA [S6]"}, {"name": "Diligence and look-through", "status": "degraded", "note": "Proposed manager and 13F subset incomplete [S7]"}, {"name": "Redemption terms and scenarios", "status": "unavailable", "note": "Gate terms and saved-portfolio stress not returned [S8]"}]}
+      ]
+    },
+    {
+      "title": "Appendix A — Sources",
+      "num": "A",
+      "blocks": [
+        {"type": "table", "columns": ["Tag", "Evidence", "Tool / view", "Key parameters", "As of", "Data scope", "Validation", "Digest"], "rows": [["S1", "Organization and capabilities", "list_organizations; get_gradient_capabilities", "organization=test", "2026-06-30", "Fictional TEST data", "passed", "ma-s1"], ["S2", "Portfolio and allocation", "list_portfolios; get_portfolio_structure", "allocation_tree", "2026-06-30", "Fictional TEST data", "passed", "ma-s2"], ["S3", "Policy assessment", "check_portfolio_policy", "portfolio=test", "2026-06-30", "Fictional TEST data", "passed", "ma-s3"], ["S4", "Hedge-fund exposure", "get_portfolio_exposure", "all pages", "2026-06-30", "Fictional TEST data", "passed", "ma-s4"], ["S5", "Returns and attribution", "get_portfolio_historical_returns; get_portfolio_attribution", "all sections", "2026-06-30", "Fictional TEST data", "degraded", "ma-s5"], ["S6", "Forward assumptions", "get_chart_data; get_capital_market_assumptions", "expected-statistics", "2026-06-15", "Fictional TEST data", "passed", "ma-s6"], ["S7", "Diligence and look-through", "Diligence tools; get_cross_domain_research", "fictional", "2026-06-30", "Fictional TEST data", "degraded", "ma-s7"], ["S8", "Mandate, redemption terms and gaps", "User document; coverage record", "fictional", "2026-06-30", "Fictional TEST data", "advisory", "ma-s8"]]}
+      ]
+    },
+    {
+      "title": "Appendix B — Server Metric Methods and Disclosures",
+      "num": "B",
+      "new_page": false,
+      "blocks": [
+        {"type": "table", "title": "Server Metric Methods", "columns": ["Source", "Quantity", "Method / formula", "Version", "Basis / units / tolerance"], "rows": [["S3", "Policy status", "Governed assessment", "portfolio-policy-v1", "Returned status"], ["S4", "Exposure", "Server exposure aggregation", "portfolio-exposure-v1", "USD market value"], ["S5", "Returns and attribution", "Linked returns; Brinson-Fachler", "portfolio-attribution-v1", "Net; 1 bp tolerance"], ["S6", "Forward statistics", "Expected-statistics chart", "chart-contract-v1", "5-year assumptions"]]},
+        {"type": "bullets", "items": ["Forward values are assumptions, not forecasts or guarantees [S6].", "Form 13F is lagged, long-only and incomplete for hedge funds [S7].", "Redemption, gate and side-pocket terms require source documents [S8].", "Portfolio Analytics and Strategy Lab are separate analytical scopes.", "This AI-assisted construction analysis is not investment, legal or compliance advice."]}
+      ]
+    }
+  ]
+}
