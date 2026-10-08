@@ -1,0 +1,55 @@
+# Data Map — Fixed Income Portfolio Construction
+
+Load every tool schema before calling it. Pass `organization_id` when offered. Read `module-scope.md` first.
+Record tool, key arguments, as-of date, data scope, validation status and payload digest per source.
+
+## Required evidence
+
+| Need | Tool and arguments | Use |
+|---|---|---|
+| Access | `get_gradient_capabilities`; selected organization | Portfolio, research and macro capability state |
+| Portfolio selection | `list_portfolios` | Existing `portfolio_id`, name, currency and record kind |
+| Allocation | `get_portfolio_structure`; `view: allocation_tree`, selected `portfolio_id`, depth 3 | Fixed-income policy nodes, total-portfolio targets, actuals, limits and coverage |
+| Exposure | `get_portfolio_exposure`; selected `portfolio_id`, fixed-income `asset_classification` when supported, page to completion | Returned segment, manager, value basis, value, currency and as-of date |
+| Policy | `check_portfolio_policy`; selected `portfolio_id` | Allocation, return objective, risk, liquidity and concentration status |
+| Returns | `get_portfolio_historical_returns`; all six supported sections | Period returns, benchmark-relative values, risk and coverage |
+| Attribution | `get_portfolio_attribution`; policy benchmark, root allocation, month-end period, all sections | Realized effects, method, linking, residual, diagnostics and unavailable reasons |
+| Benchmark | Benchmark ID returned by portfolio evidence, then `get_benchmarks`; optional `get_return_series` | Name, class, currency and returned benchmark points |
+| Allocation charts | `get_chart_data`; availability, then `analysis_type: allocations` | Weights, risk contribution, factor and currency items where returned |
+| Forward charts | `get_chart_data`; `analysis_type: expected-statistics`, returned context | Forward statistics, basis and fingerprint |
+| Assumptions | `list_assumption_sets`; `get_capital_market_assumptions` with `view: baseline` | Active release, horizon, currency and fixed-income classes |
+| Credit context | `get_macro_conditions` with exactly `{"view": "credit_spreads"}` | Returned spread levels, changes, coverage and as-of dates |
+
+Embed usable chart items unchanged. Preserve basis, fingerprint, display units, truncation and unavailable
+reasons. Do not derive sleeve returns or risk from total-portfolio rows.
+
+## Fixed-income evidence rules
+
+- Keep policy-tree names and exposure classifications separate.
+- Historical attribution comes only from `get_portfolio_attribution`.
+- Policy risk status comes only from `check_portfolio_policy`; historical volatility does not establish
+  compliance when a policy row is `not_assessed`.
+- Report duration, spread duration, yield, convexity, quality and key-rate exposure only when directly
+  returned or cited from a user document.
+- Credit spreads are context, not a performance explanation or forecast.
+- Use basis points for spread and allocation changes only when the source supports the conversion.
+
+## Optional evidence
+
+| Need | Tool | Rule |
+|---|---|---|
+| CMA comparison | `get_cma_consensus_check`; fixed-income classes held | Preserve positioning, coverage and method |
+| Broader context | `get_the_read`; `visuals: none` | Facts only; at most two short paragraphs |
+| Selected-series diagnostics | `run_strategy_lab_expected_statistics`, `run_strategy_lab_relative_return`, `run_strategy_lab_date_window_robustness` | Selected-series sandbox; use `return_series_ids`, never portfolio ID |
+| Manager evidence | Diligence tools through `gradient-manager-compare` / `gradient-odd-report` | Handoff for proposed mandates |
+| User documents | IPS, benchmark specification, holdings analytics, transition plan | Tag as user documents with date and scope |
+
+## Fallbacks
+
+1. Missing benchmark: report absolute portfolio returns and mark relative rows unavailable.
+2. Missing sleeve-specific returns: do not relabel total-portfolio returns as fixed-income returns.
+3. Missing duration or security analytics: show `Not available` and make completion an open item.
+4. Missing scenario evidence: do not invent parallel-shift or spread-widening shocks.
+5. No portfolio entitlement: offer the illustrative portfolio and mark the report Partial.
+
+Retry only a response marked retryable, once. Entitlement failures become `Not licensed`.

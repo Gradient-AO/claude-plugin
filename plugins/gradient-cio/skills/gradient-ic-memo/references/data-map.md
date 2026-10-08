@@ -7,8 +7,8 @@ Step 2). Read `module-scope.md` first.
 Portfolio questions go to Portfolio Analytics: `list_portfolios`, `get_portfolio_exposure`,
 `get_portfolio_structure`, `get_portfolio_historical_returns`, `get_chart_data`,
 `get_portfolio_attribution`, and `check_portfolio_policy`. Strategy Lab rows are optional and run on selected
-return series (`return_series_ids` plus `benchmark_id`) or a matching active `strategy_lab_session`; they
-never receive `portfolio_id`. Label the series and date coverage and do not present lab results as the
+return series (`return_series_ids` plus `benchmark_id` where required); the connector builds the session.
+They never receive `portfolio_id`. Label the series and date coverage and do not present lab results as the
 portfolio.
 
 ## 0. Context (header)
@@ -18,7 +18,7 @@ portfolio.
 | Organization | `list_organizations` | Ask if more than one and the user hasn't chosen. |
 | Assumption set | `list_assumption_sets` | Use the one the user names, else the default; state it in the header. |
 | Portfolio id and name | `list_portfolios` | Match the user's portfolio by name. Record `data_scope`. |
-| Strategy Lab series | Current `strategy_lab_session` or user-supplied return-series selection | Optional. Do not infer from the portfolio ID. |
+| Strategy Lab series | User-supplied `return_series_ids` | Optional. Do not infer from the portfolio ID. |
 | Capabilities | `get_gradient_capabilities` | Only if a later call fails — confirms entitlement versus outage for the Not available reason. |
 
 ## Section → tools

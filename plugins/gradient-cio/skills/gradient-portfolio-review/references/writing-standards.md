@@ -57,8 +57,9 @@ If the evidence raises a possible action, describe the condition and offer a sep
 - **Selected-series sandbox**: Strategy Lab output. It is not saved-portfolio holdings, policy compliance,
   historical performance or Brinson attribution.
 
-Never use `simulated attribution`, `projected attribution` or `forward attribution` unless a future public
-contract returns a result explicitly named and governed as attribution.
+Never use `simulated attribution`, `projected attribution` or `forward attribution` unless a public contract
+returns a result with that exact governed name. The current expected contract is named
+`get_portfolio_ex_ante_attribution`; use `gradient-portfolio-attribution-report` for that focused analysis.
 
 ## Causation and comparison rules
 

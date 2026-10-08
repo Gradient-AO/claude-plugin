@@ -1,0 +1,143 @@
+{
+  "construction_mode": "global_public_equity",
+  "meta": {
+    "eyebrow": "Global Public Equity Portfolio Construction",
+    "header_label": "Global Public Equity Portfolio Construction",
+    "title": "Northstar Global Public Equity Portfolio (TEST)",
+    "subtitle": "Decision pack · prepared for the Investment Committee (TEST)",
+    "running_head": "Northstar Global Public Equity Portfolio (TEST)",
+    "data_as_of": "2026-06-30",
+    "confidentiality": "TEST DATA — fictional portfolio for rendering tests only",
+    "cover_facts": [["As of", "2026-06-30"], ["Base currency", "USD"], ["Total NAV", "$1,000.0M"], ["Public-equity weight", "42.0%"], ["Policy benchmark", "Example Global Equity Index (TEST)"], ["Data scope", "Fictional TEST data"]],
+    "signal_title": "Global public-equity portfolio status",
+    "signal": {"level": "watch", "label": "Manager and issuer concentration on watch"},
+    "completeness": {"used": 9, "expected": 10, "state": "partial"},
+    "meter_title": "Evidence completeness"
+  },
+  "executive": {
+    "label": "Recommendation",
+    "bottom_line": "We recommend retaining the 42.0% total-fund public-equity allocation while moving 4.0 percentage points of the sleeve from concentrated active mandates to a global passive completion mandate [S3][S4][S7]. Committee action requested: approve the target manager structure and phased funding, subject to manager diligence and concentration limits [S3][S8].",
+    "tiles": [
+      {"label": "Public-equity weight", "value": "42.0%", "sub": "Policy target 42.0% [S3]", "tone": "good"},
+      {"label": "Active weight", "value": "0.0pp", "sub": "Total-fund target [S3]", "tone": "good"},
+      {"label": "Trailing 1Y", "value": "10.2%", "sub": "Benchmark 10.8% [S5]", "tone": "watch"},
+      {"label": "Largest issuer", "value": "2.3% NAV", "sub": "Lagged 13F look-through [S7]", "tone": "watch"}
+    ]
+  },
+  "sections": [
+    {
+      "id": "executive",
+      "title": "Executive Decision",
+      "blocks": [
+        {"type": "callout", "tone": "accent", "title": "Recommendation and action requested", "text": "We recommend moving 4.0 percentage points of the equity sleeve from concentrated active mandates to a global passive completion mandate. Committee action requested: approve the target lineup and phased funding [S3][S4][S8]."},
+        {"type": "table", "title": "Decision summary", "columns": ["Decision element", "Proposed action", "Evidence", "Status"], "rows": [["Total equity", "Retain 42.0% of total fund", "[S3]", {"chip": "Compliant", "status": "compliant"}], ["Active core", "Reduce from 57.1% to 47.6% of equity", "[S4][S8]", {"chip": "Proposed", "status": "watch"}], ["Passive completion", "Increase from 28.6% to 38.1%", "[S4][S8]", {"chip": "Proposed", "status": "watch"}]]},
+        {"type": "callout", "tone": "watch", "title": "Conditions and limits", "text": "Complete manager comparison and diligence, confirm transition costs, and preserve governed manager and issuer concentration limits [S3][S7][S8]."}
+      ]
+    },
+    {
+      "title": "Mandate, Benchmark and Data Basis",
+      "blocks": [
+        {"type": "kv", "rows": [["Portfolio", "Northstar Total Fund (TEST)", "S2"], ["Mandate", "Global public-equity growth", "S8"], ["Benchmark", "Example Global Equity Index (TEST)", "S5"], ["Horizon", "10 years", "S6"], ["Return basis", "Net", "S5"], ["Data scope", "Fictional TEST data [S1]", "S1"]]},
+        {"type": "table", "title": "Governed framework", "columns": ["Area", "Objective or limit", "Observed", "Status", "Source"], "rows": [["Public equity", "32.0%–52.0%", "42.0%", {"chip": "Compliant", "status": "compliant"}, "[S3]"], ["Single manager", "At or below 15.0% NAV", "13.0%", {"chip": "Watch", "status": "watch"}, "[S3][S4]"], ["Single issuer look-through", "At or below 3.0% NAV", "2.3%", {"chip": "Watch", "status": "watch"}, "[S3][S7]"]]}
+      ]
+    },
+    {
+      "title": "Current Global Public Equity Portfolio",
+      "blocks": [
+        {"type": "table", "title": "Current sleeve", "columns": ["Manager / exposure", "Role", "Value", "% portfolio", "% equity", "As of"], "rows": [["Example Active Global Manager A (TEST)", "Active core", "$150.0M", "15.0%", "35.7%", "2026-06-30 [S4]"], ["Example Active Global Manager B (TEST)", "Active core", "$90.0M", "9.0%", "21.4%", "2026-06-30 [S4]"], ["Example Global Index Fund (TEST)", "Passive completion", "$120.0M", "12.0%", "28.6%", "2026-06-30 [S4]"], ["Example Emerging Manager (TEST)", "Emerging markets", "$60.0M", "6.0%", "14.3%", "2026-06-30 [S4]"]]},
+        {"type": "chart", "chart": {"chart_id": "test-equity-region", "title": "Public-equity regional exposure (TEST)", "status": "ok", "columns": [{"key": "region", "title": "Region", "format": "text", "decimals": null}, {"key": "weight", "title": "Weight", "format": "percentage", "decimals": 1}], "rows": [["North America", 0.59], ["Europe", 0.20], ["Japan", 0.08], ["Emerging markets", 0.13]], "truncated": false, "render_hint": {"block": "bars", "x": "region", "y": ["weight"]}}},
+        {"type": "text", "text": "Manager roles are from the fictional mandate; regional weights are returned portfolio analytics and retain their stated basis [S4][S8]."}
+      ]
+    },
+    {
+      "title": "Target Portfolio Structure",
+      "blocks": [
+        {"type": "table", "title": "Current versus target", "columns": ["Segment", "Current", "Target", "Change", "Range / constraint", "Rationale"], "rows": [["Active core", "24.0%", "20.0%", "-4.0pp", "15.0%–28.0%", "Reduce manager concentration [S3][S4]"], ["Passive completion", "12.0%", "16.0%", "+4.0pp", "10.0%–20.0%", "Improve benchmark completion [S5][S8]"], ["Emerging markets", "6.0%", "6.0%", "0.0pp", "3.0%–8.0%", "Maintain strategic exposure [S3][S6]"]]},
+        {"type": "text", "text": "The target is a committee proposal and is not a saved portfolio change [S3][S8]."}
+      ]
+    },
+    {
+      "title": "Historical Performance and Attribution",
+      "blocks": [
+        {"type": "table", "title": "Standard periods", "columns": ["Period", "Portfolio / sleeve", "Benchmark", "Excess", "Coverage"], "rows": [["1Y equity sleeve", "10.2%", "10.8%", "-0.6pp", "Complete [S5]"], ["3Y equity sleeve (ann.)", "9.4%", "9.1%", "+0.3pp", "Complete [S5]"], ["5Y equity sleeve (ann.)", "8.1%", "8.4%", "-0.3pp", "Complete [S5]"]]},
+        {"type": "table", "title": "Attribution effects", "columns": ["Effect", "Contribution", "Source"], "rows": [["Allocation", "+0.10pp", "[S5]"], ["Selection", "-0.62pp", "[S5]"], ["Interaction", "-0.06pp", "[S5]"], ["Residual", "-0.02pp", "[S5]"]]},
+        {"type": "kv", "rows": [["Method", "Brinson-Fachler", "S5"], ["Linking", "Symmetric Carino", "S5"], ["Basis", "Net, monthly linked", "S5"], ["Tolerance", "1 bp; degraded residual", "S5"]]}
+      ]
+    },
+    {
+      "title": "Factor Exposures and Concentration",
+      "blocks": [
+        {"type": "chart", "chart": {"chart_id": "test-equity-factor", "title": "Active factor exposure (TEST)", "status": "ok", "columns": [{"key": "factor", "title": "Factor", "format": "text", "decimals": null}, {"key": "exposure", "title": "Active exposure", "format": "number", "decimals": 2}], "rows": [["Value", -0.18], ["Quality", 0.31], ["Momentum", 0.22], ["Size", -0.09]], "truncated": false, "render_hint": {"block": "bars", "x": "factor", "y": ["exposure"]}}},
+        {"type": "table", "title": "Governed concentration", "columns": ["Axis", "Observed", "Limit", "Status", "Source"], "rows": [["Largest manager", "13.0% NAV", "15.0%", {"chip": "Watch", "status": "watch"}, "[S3][S4]"], ["Largest issuer look-through", "2.3% NAV", "3.0%", {"chip": "Watch", "status": "watch"}, "[S3][S7]"], ["North America", "59.0% of equity", "Not assessed", {"chip": "Not assessed", "status": "not_assessed"}, "[S4]"]]},
+        {"type": "callout", "tone": "watch", "title": "Look-through limitation", "text": "The issuer concentration uses lagged Form 13F evidence and does not represent a complete holdings record [S7]."}
+      ]
+    },
+    {
+      "title": "Forward Return and Risk",
+      "blocks": [
+        {"type": "kv", "rows": [["Assumption set", "2026 Strategic CMA (TEST)", "S6"], ["Regime", "Baseline", "S6"], ["Horizon", "10 years", "S6"], ["Currency", "USD", "S6"], ["Context fingerprint", "test-equity-forward-2026", "S6"]]},
+        {"type": "chart", "chart": {"chart_id": "test-equity-forward", "title": "Global equity forward assumptions (TEST)", "status": "ok", "currency": "USD", "columns": [{"key": "measure", "title": "Measure", "format": "text", "decimals": null}, {"key": "current", "title": "Current sleeve", "format": "percentage", "decimals": 1}, {"key": "proposed", "title": "Proposed sleeve", "format": "percentage", "decimals": 1}], "rows": [["Expected return", 0.072, 0.071], ["Expected volatility", 0.168, 0.157], ["Expected max drawdown", -0.285, -0.266]], "truncated": false, "render_hint": {"block": "table", "x": "measure", "y": []}}},
+        {"type": "text", "text": "These figures are assumptions under the selected context, not forecasts or guarantees [S6]."}
+      ]
+    },
+    {
+      "title": "Manager Lineup",
+      "new_page": false,
+      "blocks": [
+        {"type": "table", "title": "Current and proposed roles", "columns": ["Manager", "Role", "Exposure", "Evidence status", "Proposed action", "Next step"], "rows": [["Example Active Global Manager A (TEST)", "Active core", "15.0% NAV", "Current [S8]", "Reduce by 2.5pp", "Review funding schedule"], ["Example Active Global Manager B (TEST)", "Active core", "9.0% NAV", "Current [S8]", "Reduce by 1.5pp", "Complete performance review"], ["Example Global Index Fund (TEST)", "Passive completion", "12.0% NAV", "Current [S8]", "Increase by 4.0pp", "Confirm vehicle terms"]]}
+      ]
+    },
+    {
+      "title": "Issuer-Level Flags",
+      "blocks": [
+        {"type": "table", "title": "Look-through flags", "columns": ["Issuer", "Look-through value", "% NAV", "Managers", "Evidence date", "Flag"], "rows": [["Example Technology Issuer A (TEST)", "$23.0M", "2.3%", "2", "2026-05-15", "Near policy watch level [S7]"], ["Example Consumer Issuer B (TEST)", "$15.0M", "1.5%", "2", "2026-05-15", "Monitor overlap [S7]"]]},
+        {"type": "callout", "tone": "watch", "title": "Form 13F caveat", "text": "Form 13F evidence is lagged by up to 45 days, covers long-only US-listed equity, excludes shorts, cash, non-US listings and private assets, and uses USD filing values that are not FX-converted against NAV [S7]."}
+      ]
+    },
+    {
+      "title": "Scenarios and Robustness",
+      "blocks": [
+        {"type": "table", "title": "Supported scenarios", "columns": ["Scenario", "Return / loss", "Risk measure", "Basis", "Source"], "rows": [["Baseline assumptions", "7.1% expected return", "15.7% volatility", "Proposed sleeve", "[S6]"], ["Alternative regime", "Not available — no comparable returned context", "Not available", "Unavailable", "[S9]"], ["Tracking-error scenario", "Not available — active-risk result not returned", "Not available", "Unavailable", "[S9]"]]},
+        {"type": "callout", "tone": "info", "title": "Selected-series sandbox — not saved-portfolio analytics", "text": "Not available — no Strategy Lab return series selected [S9]."}
+      ]
+    },
+    {
+      "title": "Implementation Plan",
+      "blocks": [
+        {"type": "table", "title": "Implementation steps", "columns": ["Phase", "Action", "Size", "Funding source", "Condition", "Owner"], "rows": [["1", "Fund passive completion", "2.0pp", "Active-manager redemption", "Vehicle and liquidity confirmed", "Investment staff"], ["2", "Complete target shift", "2.0pp", "Active-manager redemption", "Diligence and transition costs complete", "CIO"]]},
+        {"type": "table", "title": "Alternatives considered", "columns": ["Alternative", "Benefit", "Cost / risk", "Reason not selected"], "rows": [["No change", "No turnover", "Concentration persists", "Does not address watch items [S3][S7]"], ["Replace all active core", "Maximum simplification", "Manager and transition risk", "Evidence does not support full replacement [S5][S8]"]]},
+        {"type": "bullets", "items": ["Complete manager comparison and diligence before final funding [S8].", "Confirm transition costs before implementation [S9].", "Refresh governed concentration and attribution after phase one [S3][S5]."]}
+      ]
+    },
+    {
+      "title": "Risks, Open Items and Approvals",
+      "blocks": [
+        {"type": "table", "title": "Decision risks", "columns": ["Priority", "Risk", "Evidence", "Mitigation / condition", "Owner"], "rows": [["High", "13F coverage is incomplete", "Lagged long-only evidence [S7]", "Use as a concentration flag only", "Investment staff"], ["Medium", "Selection shortfall", "-0.62pp [S5]", "Stage funding and monitor attribution", "CIO"], ["Medium", "Transition costs unavailable", "Coverage gap [S9]", "Obtain estimates before phase two", "Operations"]]},
+        {"type": "table", "title": "Open items and approvals", "columns": ["Timing", "Item", "Required evidence", "Owner", "Status"], "rows": [["Before approval", "Confirm passive vehicle", "Terms and liquidity", "Investment staff", "Open [S8]"], ["Within 30 days", "Transition-cost estimate", "Manager / custodian estimate", "Operations", "Open [S9]"], ["Next review", "Refresh look-through", "Latest 13F period", "Research team", "Open [S7]"]]}
+      ]
+    },
+    {
+      "title": "Coverage",
+      "new_page": false,
+      "blocks": [
+        {"type": "coverage", "items": [{"name": "Portfolio and allocation", "status": "available", "note": "Fictional TEST data [S2]"}, {"name": "Policy", "status": "available", "note": "Allocation and concentration [S3]"}, {"name": "Exposure", "status": "available", "note": "Manager and regional rows [S4]"}, {"name": "Returns and attribution", "status": "degraded", "note": "Residual outside tolerance [S5]"}, {"name": "Forward assumptions", "status": "available", "note": "2026 Strategic CMA [S6]"}, {"name": "13F look-through", "status": "degraded", "note": "Lagged and incomplete [S7]"}, {"name": "Manager evidence", "status": "available", "note": "Fictional mandate [S8]"}, {"name": "Scenario and cost evidence", "status": "unavailable", "note": "Not returned [S9]"}]}
+      ]
+    },
+    {
+      "title": "Appendix A — Sources",
+      "num": "A",
+      "blocks": [
+        {"type": "table", "columns": ["Tag", "Evidence", "Tool / view", "Key parameters", "As of", "Data scope", "Validation", "Digest"], "rows": [["S1", "Organization and capabilities", "list_organizations; get_gradient_capabilities", "organization=test", "2026-06-30", "Fictional TEST data", "passed", "eq-s1"], ["S2", "Portfolio and allocation", "list_portfolios; get_portfolio_structure", "allocation_tree", "2026-06-30", "Fictional TEST data", "passed", "eq-s2"], ["S3", "Policy assessment", "check_portfolio_policy", "portfolio=test", "2026-06-30", "Fictional TEST data", "passed", "eq-s3"], ["S4", "Public-equity exposure", "get_portfolio_exposure; get_chart_data", "public_equity; allocations", "2026-06-30", "Fictional TEST data", "passed", "eq-s4"], ["S5", "Returns and attribution", "get_portfolio_historical_returns; get_portfolio_attribution", "all sections", "2026-06-30", "Fictional TEST data", "degraded", "eq-s5"], ["S6", "Forward assumptions", "get_chart_data; get_capital_market_assumptions", "expected-statistics", "2026-06-15", "Fictional TEST data", "passed", "eq-s6"], ["S7", "13F look-through", "get_cross_domain_research", "portfolio_13f_lookthrough", "2026-05-15", "Fictional TEST data", "advisory", "eq-s7"], ["S8", "Manager mandate evidence", "User document", "fictional", "2026-06-30", "Fictional TEST data", "passed", "eq-s8"], ["S9", "Scenario and cost coverage", "Coverage record", "fictional", "2026-06-30", "Fictional TEST data", "advisory", "eq-s9"]]}
+      ]
+    },
+    {
+      "title": "Appendix B — Server Metric Methods and Disclosures",
+      "num": "B",
+      "new_page": false,
+      "blocks": [
+        {"type": "table", "title": "Server Metric Methods", "columns": ["Source", "Quantity", "Method / formula", "Version", "Basis / units / tolerance"], "rows": [["S3", "Policy status", "Governed assessment", "portfolio-policy-v1", "Returned status"], ["S5", "Returns and attribution", "Linked returns; Brinson-Fachler", "portfolio-attribution-v1", "Net; 1 bp tolerance"], ["S6", "Forward statistics", "Expected-statistics chart", "chart-contract-v1", "10-year assumptions"], ["S7", "Issuer look-through", "Portfolio-to-manager 13F join", "cross-domain-v1", "Lagged US-listed long-only"]]},
+        {"type": "bullets", "items": ["Forward values are assumptions, not forecasts or guarantees [S6].", "Form 13F evidence has the stated lag, coverage and FX limitations [S7].", "Portfolio Analytics and Strategy Lab are separate analytical scopes.", "This AI-assisted construction analysis is not investment, legal or compliance advice."]}
+      ]
+    }
+  ]
+}

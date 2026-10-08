@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.2.0
+- Added a portfolio-attribution report skill for any saved portfolio, with a fixed 10–14 page historical and governed ex ante Brinson-Fachler analysis.
+- Added the governed `get_portfolio_ex_ante_attribution` connector contract to setup readiness and full self-test coverage.
+- Added deterministic attribution validation, typed-unavailable and illustrative-label checks, and a fictional 12-page render regression.
+- Kept realized and expected attribution bases explicit and prohibited local effect calculations or unsupported attribution substitutes.
+
+## 2.1.0
+- Added private-markets, fixed-income, global public-equity, marketable-alternatives (hedge-fund) and broad real-assets portfolio-construction skills.
+- Added standalone 10–14 page IC decision-pack templates with asset-class charts, recommendations, implementation steps, risks and approvals.
+- Added deterministic validators, fictional render fixtures and regression coverage for all five reports.
+- Expanded setup readiness and contract probes to cover allocations, expected-statistics and commitments chart packs used by construction reports.
+
+## 2.0.0
+- Updated the connector contract for Gradient MCP 0.9.0 and compatibility epoch 2.
+- Removed four retired Strategy Lab tools and the synthetic-indicators macro-signals view from public skill requirements.
+- Simplified selected-series Strategy Lab calls so the connector builds sessions from return-series IDs.
+- Clarified blocking versus advisory validation and compact capability semantics.
+
 ## 1.6.3
 - Clarified compact capability, validation and portfolio-exposure semantics.
 - Added guidance for deterministic DDQ aliases and the complete fund checklist.

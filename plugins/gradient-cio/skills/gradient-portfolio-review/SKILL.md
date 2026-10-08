@@ -94,7 +94,7 @@ save `context.fingerprint`, `basis`, and unavailable reasons. Embed each usable 
 | Look-through | `get_cross_domain_research` `view: portfolio_13f_lookthrough`, `portfolio_id`, `top_n_managers` 10, `limit` 20 | Optional (needs `portfolio`) |
 | Macro exposure | `get_cross_domain_research` `view: roster_macro_exposure`, `portfolio_id` | Optional (needs `portfolio`) |
 | Outlook | `get_the_read` (`visuals: none`); `get_capital_market_assumptions` `view: baseline` | Optional, only if asked, comprehensive or annual |
-| Strategy Lab supplement | Matching `strategy_lab_session` only: simulation, expected statistics, diversification and factor loads | Optional in comprehensive mode; selected-series sandbox only |
+| Strategy Lab supplement | Selected `return_series_ids`: `run_strategy_lab_simulation`, `run_strategy_lab_expected_statistics`, `run_strategy_lab_relative_return` and `run_strategy_lab_date_window_robustness` | Optional in comprehensive mode; selected-series sandbox only |
 
 If a call fails, record the error code and request ID in coverage, retry at most once (only when
 `retryable: true`), use the fallback, and keep going. An `entitlement_required` error is "Not licensed", not
@@ -224,6 +224,8 @@ metric within its stated tolerance, and check every figure against the saved res
 
 ## 5. Hand-off and repeat runs
 
+- **Focused realized and governed ex ante attribution**: offer
+  `gradient-portfolio-attribution-report`.
 - **Rebalance or decision follows**: offer gradient-ic-memo ("Rebalance" or "Allocation Change" memo type),
   passing the portfolio, period end, the allocation table and the source rows so the memo reuses them.
 - **Quarterly run**: if the user wants it every quarter, offer a scheduled task (confirm timing first; never

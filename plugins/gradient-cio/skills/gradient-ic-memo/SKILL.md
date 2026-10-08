@@ -56,10 +56,10 @@ Follow `references/data-map.md` section by section. Key rules:
 - If the user has more than one organization, confirm which before calling org-scoped tools. Call
   `list_assumption_sets` and state the organization and selected assumption set in the memo header.
 - Read `references/module-scope.md` before selecting tools. Portfolio questions use Portfolio
-  Analytics. Strategy Lab is optional and uses separately selected return series or a matching active
-  `strategy_lab_session`; never pass a Portfolio Analytics `portfolio_id` to a Strategy Lab tool.
+  Analytics. Strategy Lab is optional and uses separately selected `return_series_ids`; the connector
+  builds the session. Never pass a Portfolio Analytics `portfolio_id` to a Strategy Lab tool.
 - Use `envelope: "compact"` and optional `fields` only on research-read tools whose loaded schema offers
-  them. Do not pass either parameter to `build_strategy_lab_session` or any `run_strategy_lab_*` tool.
+  them. Do not pass either parameter to any `run_strategy_lab_*` tool.
 - Use `get_chart_data` after portfolio selection: check availability, then request one relevant pack at a time.
   Portfolio expected-statistics and commitments packs are the primary forward-looking evidence for the saved
   portfolio. Preserve `basis` and `context.fingerprint`, skip unavailable charts with their reason, and never
