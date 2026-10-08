@@ -578,7 +578,7 @@ def contract_manifest():
         for name in ("standard", "full", "writes", "ddq-save-preview")
     }
     check(
-        counts == {"standard": 8, "full": 42, "writes": 5, "ddq-save-preview": 3},
+        counts == {"standard": 8, "full": 48, "writes": 5, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
     )
 
@@ -600,7 +600,9 @@ def contract_manifest():
     )
     minimum = contracts.get("minimum_connector_contract", {})
     expected_minimum_tools = {
+        "analyze_strategy_lab_compare",
         "batch_reconcile_manager_ddq_claims",
+        "build_strategy_lab_session",
         "check_portfolio_policy",
         "get_benchmarks",
         "get_cma_consensus_check",
@@ -620,6 +622,7 @@ def contract_manifest():
         "list_organizations",
         "list_portfolios",
         "reconcile_manager_ddq_claims",
+        "run_strategy_lab_date_window_robustness",
         "run_strategy_lab_expected_statistics",
         "run_strategy_lab_relative_return",
         "search_managers",
@@ -642,8 +645,14 @@ def contract_manifest():
             "cma_consensus",
             "strategy_benchmarks",
             "strategy_return_series",
+            "strategy_expected_statistics_session",
             "strategy_expected_statistics",
+            "strategy_relative_return_session",
             "strategy_relative_return",
+            "strategy_manager_compare_session",
+            "strategy_manager_compare",
+            "strategy_date_windows_session",
+            "strategy_date_windows",
             "equity_fundamentals",
             "ddq_numeric_gap",
             "batch_ddq_preview",
@@ -655,7 +664,7 @@ def contract_manifest():
         "minimum connector contract owns response paths and required probes",
     )
     requirement_tokens = set(re.findall(
-        r"\b(?:get|list|run|analyze|compare|create|extract|log|preview|reconcile|"
+        r"\b(?:get|list|run|analyze|build|compare|create|extract|log|preview|reconcile|"
         r"save|screen|search|update|upload|batch)_[a-z0-9_]+\b",
         SKILL_REQUIREMENTS.read_text(encoding="utf-8"),
     ))
@@ -842,8 +851,6 @@ def contract_manifest():
     returns_probe = by_id["portfolio_returns"]
     check(
         returns_probe["args"].get("sections") == [
-            "points",
-            "cumulative_growth",
             "standard_periods",
             "calendar_years",
             "risk_metrics",
@@ -862,7 +869,7 @@ def contract_manifest():
             "absolute_tolerance": 0,
             "unit": "count",
         }],
-        "historical-return probe covers all sections and numeric reconciliation",
+        "historical-return probe covers bounded summary sections and numeric reconciliation",
     )
     attribution_probe = by_id["portfolio_attribution"]
     check(
@@ -1001,13 +1008,12 @@ def contract_manifest():
         "skills using Portfolio Analytics or Strategy Lab link the shared scope note",
     )
     check(
-        "return_series_ids` plus a `benchmark_id" in normalized_scope_guidance
-        and "connector builds the canonical session"
+        "`build_strategy_lab_session`" in scope_guidance
+        and "pass the returned `strategy_lab_session` object unchanged"
         in normalized_scope_guidance
-        and "do not call the session builder" in normalized_scope_guidance
-        and "`strategy_lab_session`" not in scope_guidance
-        and "`build_strategy_lab_session`" not in scope_guidance,
-        "module scope directs selected-series tools through implicit sessions",
+        and "Never pass a Portfolio Analytics `portfolio_id`"
+        in normalized_scope_guidance,
+        "module scope requires server-built Strategy Lab sessions",
     )
     portfolio_review_guidance = PORTFOLIO_REVIEW_SKILL.read_text(
         encoding="utf-8",
@@ -1029,11 +1035,11 @@ def contract_manifest():
         "portfolio review lists only supported Strategy Lab supplements",
     )
     check(
-        "`strategy_lab_session`" not in ic_memo_guidance
-        and "`build_strategy_lab_session`" not in ic_memo_guidance
-        and "`strategy_lab_session`" not in ic_memo_data_map
+        "`strategy_lab_session`" in ic_memo_guidance
+        and "`build_strategy_lab_session`" in ic_memo_guidance
+        and "`strategy_lab_session`" in ic_memo_data_map
         and "`return_series_ids`" in ic_memo_data_map,
-        "IC memo uses implicit selected-series Strategy Lab sessions",
+        "IC memo uses explicit server-built Strategy Lab sessions",
     )
     illustrative_label = (
         "Illustrative, Gradient Maintained — demo data, "
@@ -1092,6 +1098,72 @@ def contract_manifest():
         == "expected-statistics",
         "Portfolio Analytics probes cover the illustrative portfolio surface",
     )
+    return_args = by_id["portfolio_returns"]["args"]
+    check(
+        return_args.get("fields") == [
+            "portfolio",
+            "filters",
+            "coverage",
+            "display",
+            "standard_periods",
+            "calendar_years",
+            "risk_metrics",
+            "benchmark_relative",
+        ]
+        and return_args.get("limit") == 25,
+        "historical-return probe uses a bounded summary projection",
+    )
+    historical_return_skill_docs = []
+    for skill in (ROOT / "skills").iterdir():
+        skill_file = skill / "SKILL.md"
+        data_map = skill / "references" / "data-map.md"
+        if not skill_file.exists():
+            continue
+        combined = skill_file.read_text(encoding="utf-8")
+        if data_map.exists():
+            combined += "\n" + data_map.read_text(encoding="utf-8")
+        if "get_portfolio_historical_returns" in combined:
+            historical_return_skill_docs.append((skill.name, combined))
+    check(
+        all(
+            "fields" in text
+            and "no_subject_returns" in text
+            and "partial" in text.lower()
+            for _name, text in historical_return_skill_docs
+        ),
+        "historical-return skills project fields and disclose missing or partial coverage",
+    )
+    check(
+        "Do not request all six result sections in one call"
+        in scope_guidance
+        and "`points` and `cumulative_growth` separately"
+        in scope_guidance
+        and "follow `next_cursor`" in scope_guidance,
+        "historical-return skills split large sections and page commitments",
+    )
+    fixed_income_guidance = (
+        ROOT
+        / "skills"
+        / "gradient-fixed-income-portfolio-construction"
+        / "references"
+        / "data-map.md"
+    ).read_text(encoding="utf-8")
+    check(
+        "fixed_income_metrics.{effective_duration, spread_duration, "
+        "yield_to_maturity_decimal, coverage}"
+        in fixed_income_guidance
+        and "Do not relabel yield to maturity as yield to worst"
+        in fixed_income_guidance
+        and "OAS" in fixed_income_guidance,
+        "fixed-income metrics map to real connector fields",
+    )
+    check(
+        "`get_peer_allocation_intelligence`" in portfolio_review_guidance
+        and "`peerIntelligence` is unavailable" in portfolio_review_guidance
+        and "Never treat this optional entitlement as a report failure"
+        in portfolio_review_guidance,
+        "portfolio review skips unlicensed peer context without failing",
+    )
     check(
         by_id["portfolio_allocations"]["tool"] == "get_chart_data"
         and by_id["portfolio_allocations"]["args"].get("analysis_type")
@@ -1104,34 +1176,62 @@ def contract_manifest():
     strategy_probe_ids = {
         "strategy_benchmarks",
         "strategy_return_series",
+        "strategy_expected_statistics_session",
         "strategy_expected_statistics",
+        "strategy_relative_return_session",
         "strategy_relative_return",
+        "strategy_manager_compare_session",
+        "strategy_manager_compare",
+        "strategy_date_windows_session",
+        "strategy_date_windows",
     }
     strategy_probe = by_id["strategy_expected_statistics"]
+    expected_session = by_id["strategy_expected_statistics_session"]
     check(
         strategy_probe_ids <= set(by_id)
         and strategy_probe.get("depends_on")
-        == ["strategy_benchmarks", "strategy_return_series"]
-        and "portfolio_id" not in strategy_probe["args"]
-        and "strategy_lab_session" not in strategy_probe["args"]
-        and strategy_probe["args"].get("return_series_ids") == [
-            "<strategy_benchmarks:demo_set.manager_fund_series[0].series_id>"
-        ],
-        "Strategy Lab expected-statistics probe uses implicit selected-series sessions",
+        == ["strategy_expected_statistics_session"]
+        and strategy_probe["args"].get("strategy_lab_session")
+        == "<strategy_expected_statistics_session:strategy_lab_session>"
+        and expected_session["tool"] == "build_strategy_lab_session"
+        and expected_session["args"] == {
+            "domain": "expected-statistics",
+            "demo_set_id": "strategy_lab_core",
+        },
+        "Strategy Lab expected-statistics probe uses a server-built session",
     )
     relative_args = by_id["strategy_relative_return"]["args"]
+    relative_session = by_id["strategy_relative_return_session"]
     check(
-        "strategy_lab_session" not in relative_args
-        and relative_args.get("return_series_ids") == [
-            "<strategy_benchmarks:demo_set.manager_fund_series[0].series_id>"
-        ]
-        and relative_args.get("benchmark_id")
-        == "<strategy_benchmarks:demo_set.benchmark_series[0].series_id>",
-        "Strategy Lab relative-return probe uses an implicit selected-series session",
+        relative_args.get("strategy_lab_session")
+        == "<strategy_relative_return_session:strategy_lab_session>"
+        and relative_session["tool"] == "build_strategy_lab_session"
+        and relative_session["args"] == {
+            "domain": "relative-return",
+            "demo_set_id": "strategy_lab_core",
+            "benchmark_id":
+                "<strategy_benchmarks:demo_set.benchmark_series[0].series_id>",
+        },
+        "Strategy Lab relative-return probe uses a server-built session",
     )
     check(
         "envelope" not in relative_args and "fields" not in relative_args,
         "relative-return probe omits envelope and fields",
+    )
+    check(
+        by_id["strategy_manager_compare"]["args"].get("strategy_lab_session")
+        == "<strategy_manager_compare_session:strategy_lab_session>"
+        and by_id["strategy_manager_compare_session"]["args"] == {
+            "domain": "manager-compare",
+            "demo_set_id": "strategy_lab_core",
+        }
+        and by_id["strategy_date_windows"]["args"].get("strategy_lab_session")
+        == "<strategy_date_windows_session:strategy_lab_session>"
+        and by_id["strategy_date_windows_session"]["args"] == {
+            "domain": "date-windows",
+            "demo_set_id": "strategy_lab_core",
+        },
+        "IDD Strategy Lab probes use real server-built demo sessions",
     )
     check(
         by_id["credit_spreads"]["args"] == {"view": "credit_spreads"},
@@ -1172,6 +1272,29 @@ def contract_manifest():
             "empty-findings validator",
         )),
         "known-issues table omits the resolved issue set",
+    )
+    removed_tool_pattern = re.compile(
+        r"\b(?:run_strategy_lab_(?:factor_loads|optimization|rebalance|"
+        r"diversification)|synthetic_indicators)\b",
+    )
+    removed_tool_references = []
+    for path in (ROOT / "skills").rglob("*"):
+        if (
+            path.is_file()
+            and path.suffix in {".md", ".json"}
+            and removed_tool_pattern.search(
+                path.read_text(encoding="utf-8", errors="ignore"),
+            )
+        ):
+            removed_tool_references.append(str(path.relative_to(ROOT)))
+    check(
+        not removed_tool_references,
+        "skills and data maps omit removed tool references"
+        + (
+            f": {removed_tool_references}"
+            if removed_tool_references
+            else ""
+        ),
     )
     check(
         "Local Brinson fallback" in IC_MEMO_SKILL.read_text(encoding="utf-8")

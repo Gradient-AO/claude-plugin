@@ -62,8 +62,10 @@ CMA consensus, The Read and selected-series Strategy Lab diagnostics are optiona
 - Historical attribution comes only from `get_portfolio_attribution`. Strategy Lab relative return is not
   attribution.
 - Separate observed historical risk, governed policy status and forward assumptions.
-- Report duration, spread duration, quality, yield, convexity or key-rate exposure only when returned by a
-  Gradient result or supplied in a cited user document. Never derive them from holdings.
+- Use `get_portfolio_exposure.exposures[].fixed_income_metrics` for returned effective duration, spread
+  duration and yield to maturity, preserving coverage counts and methodology. Never relabel yield to
+  maturity as yield to worst. Report yield to worst, OAS, convexity, quality or key-rate exposure only when
+  another Gradient result or a cited user document directly supplies it. Never derive them from holdings.
 - Present rates and credit indicators as context, not forecasts. Do not claim that yields or spreads will
   move in a particular direction.
 - Recommend a target segment structure only when constraints and evidence support it. Transaction costs and

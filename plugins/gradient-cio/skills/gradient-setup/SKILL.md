@@ -60,11 +60,11 @@ report them as separate modules; never use the canonical illustrative portfolio 
 ## 3. Contract self-test
 
 Run the probes in `references/contract-checks.md`. The **standard** set is 8 quick reads (default). The
-**full read** set is 49 reads (the 8 standard plus 41 full probes); run it when the user asks for a health
+**full read** set is 56 reads (the 8 standard plus 48 full probes); run it when the user asks for a health
 check or self-test, or after a plugin update. The separate **writes** set is 5 dry-run previews, including
 one batch-preview contract and one DDQ upload preview, and must never commit. The **DDQ save-preview** set is 3 calls: it intentionally persists one fictional test
 document and one immutable reconciliation test run so that document identity and the chained save can be
-tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 57 calls.
+tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 64 calls.
 
 For each probe, record pass, fail (with error code and HTTP status) or not run (not entitled), and the
 response `as_of`. Resolve `depends_on` arguments with `check_contract.py --resolve-args`; do not manually

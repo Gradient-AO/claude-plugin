@@ -67,7 +67,9 @@ Keep every section title and the order exactly as shown. Missing evidence become
 - `table` **Policy risk**: Metric, Observed, Limit, Status, Coverage.
 - `table` **Liquidity profile**: Bucket, % NAV, Amount, Requirement, Status.
 - Distinguish daily-NAV funds, marketable bonds and illiquid/private credit as returned.
-- Duration, spread duration, yield, quality and key-rate rows remain unavailable unless sourced.
+- Effective duration, spread duration and yield to maturity may use returned
+  `exposures[].fixed_income_metrics`; preserve coverage and methodology. Yield to worst, OAS, quality and
+  key-rate rows remain unavailable unless separately sourced.
 
 ### 9. Scenarios and Robustness
 

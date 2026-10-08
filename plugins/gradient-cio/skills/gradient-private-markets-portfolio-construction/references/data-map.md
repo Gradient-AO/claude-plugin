@@ -13,7 +13,7 @@ and payload digest for every source row.
 | Allocation | `get_portfolio_structure`; `view: allocation_tree`, selected `portfolio_id`, depth 3 | Returned total-portfolio target, actual, limits, policy status and coverage |
 | Exposure | `get_portfolio_exposure`; selected `portfolio_id`, `asset_classification` when supported, page to completion | NAV, commitment, unfunded, value basis, valuation date, manager / fund and server aggregates |
 | Policy | `check_portfolio_policy`; selected `portfolio_id` | Allocation, return objective, risk, liquidity, unfunded and concentration assessments |
-| Returns | `get_portfolio_historical_returns`; all six supported sections, selected period end | Returned periods, risk, benchmark-relative values, points and coverage |
+| Returns | `get_portfolio_historical_returns`; selected period end; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields`, then separate projected calls for `points` and `cumulative_growth` when needed; page commitment rows with `limit` / `next_cursor` | Returned periods, risk, benchmark-relative values, points and coverage |
 | Attribution | `get_portfolio_attribution`; policy benchmark, root allocation, month-end period, all sections | Realized effects, linking, residual, diagnostics and typed unavailability |
 | Chart availability | `get_chart_data`; selected `portfolio_id`, no pack selector | Available chart IDs, unavailable reasons and context |
 | Allocation charts | `get_chart_data`; `analysis_type: allocations` | Returned allocation, risk-contribution, factor and currency items |
@@ -23,6 +23,8 @@ and payload digest for every source row.
 
 Call each chart pack separately and embed each usable `charts[]` item unchanged. Never hand-map chart IDs or
 derive chart rows. Preserve `basis`, `context.fingerprint`, status, truncation and unavailable reason.
+State partial historical-return coverage as a report gap. For `no_subject_returns`, state that the selected
+portfolio has no subject return history and do not substitute benchmark, commitment or Strategy Lab returns.
 
 ## Private-market evidence rules
 
@@ -40,7 +42,7 @@ derive chart rows. Preserve `basis`, `context.fingerprint`, status, truncation a
 | CMA positioning | `get_cma_consensus_check`; `mode: asset_class`, held private-market classes | Preserve returned positioning and coverage |
 | Manager evidence | `get_manager_diligence_brief`, `get_manager_diligence_findings` | Use only for resolved roster managers / funds; separate server evidence from plugin conclusions |
 | Manager shortlist | `search_managers`, `screen_managers` through `gradient-manager-compare` | Handoff rather than duplicating a comparison |
-| Selected-series robustness | Supported `run_strategy_lab_*` tools with selected `return_series_ids` | Optional sandbox only; never pass `portfolio_id` |
+| Selected-series robustness | `build_strategy_lab_session` with selected `return_series_ids`, then a supported `run_strategy_lab_*` tool with the returned session | Optional sandbox only; never pass `portfolio_id` |
 | User documents | IPS, pacing plan, cash-flow forecast or consultant recommendation | Tag as user document with document date and scope |
 
 ## Fallbacks

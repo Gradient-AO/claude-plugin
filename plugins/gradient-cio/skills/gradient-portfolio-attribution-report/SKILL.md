@@ -65,7 +65,9 @@ digest.
 Required:
 - `list_portfolios`
 - `get_portfolio_structure` with `view: allocation_tree`
-- `get_portfolio_historical_returns` for context
+- `get_portfolio_historical_returns` for context, with a `fields` projection
+  containing `portfolio`, `filters`, `coverage`, `display` and only the
+  requested return sections
 - `get_portfolio_attribution` for the selected month-end period
 - `get_portfolio_ex_ante_attribution` for the same portfolio, benchmark role
   and parent cohort
@@ -76,6 +78,9 @@ Optional:
 
 Retry only once when `retryable: true`. Entitlement blocks are `Not licensed`;
 validation failures are `Not available — validation failed (<check id>)`.
+State partial historical-return coverage as a report gap. For
+`no_subject_returns`, state that the selected portfolio has no subject return
+history and do not substitute another series.
 
 ## 3. Assess
 

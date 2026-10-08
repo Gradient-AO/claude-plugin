@@ -12,7 +12,7 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 | Allocation | `get_portfolio_structure`; `view: allocation_tree`, selected `portfolio_id`, depth 3 | Real-assets policy nodes, total-portfolio targets, actuals, limits and coverage |
 | Exposure | `get_portfolio_exposure`; selected `portfolio_id`, returned real-assets classifications when supported, page to completion | Market value or NAV, commitment, unfunded, manager / fund, currency and valuation date |
 | Policy | `check_portfolio_policy`; selected `portfolio_id` | Allocation, return objective, risk, liquidity, unfunded and concentration status |
-| Returns | `get_portfolio_historical_returns`; all six supported sections | Period returns, benchmark-relative values, risk and coverage |
+| Returns | `get_portfolio_historical_returns`; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields`, then separate projected calls for `points` and `cumulative_growth` when needed; page commitment rows with `limit` / `next_cursor` | Period returns, benchmark-relative values, risk and coverage |
 | Attribution | `get_portfolio_attribution`; policy benchmark, relevant policy node when supported, month-end period, all sections | Realized effects, method, linking, residual, diagnostics and unavailable reasons |
 | Allocation charts | `get_chart_data`; availability, then `analysis_type: allocations` | Weights, risk contribution, factor and currency items where returned |
 | Forward charts | `get_chart_data`; `analysis_type: expected-statistics`, returned context | Forward statistics, basis and fingerprint |
@@ -22,6 +22,8 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 Call each applicable chart pack separately and embed usable items unchanged. Preserve basis, fingerprint,
 display units, truncation and unavailable reasons. Do not derive sleeve returns, inflation sensitivity,
 commodity beta or risk from total-portfolio rows.
+State partial historical-return coverage as a report gap. For `no_subject_returns`, state that the selected
+portfolio has no subject return history and do not substitute benchmark, commitment or Strategy Lab returns.
 
 ## Real-assets evidence rules
 
@@ -45,7 +47,7 @@ commodity beta or risk from total-portfolio rows.
 | Commodity positioning | `get_market_positioning`; `view: cftc` | Context only; not a portfolio exposure or expected-return source |
 | Broader context | `get_the_read`; `visuals: none` | Facts only; at most two short paragraphs |
 | Manager evidence | `get_manager_diligence_brief`, `get_manager_diligence_findings` | Use only for resolved roster managers / funds |
-| Selected-series diagnostics | Supported `run_strategy_lab_*` tools with selected `return_series_ids` | Selected-series sandbox; never pass a Portfolio Analytics ID |
+| Selected-series diagnostics | `build_strategy_lab_session` with selected `return_series_ids`, then a supported `run_strategy_lab_*` tool with the returned session | Selected-series sandbox; never pass a Portfolio Analytics ID |
 | User documents | IPS, real-assets taxonomy, commodity mandate, linker benchmark, appraisal or pacing plan | Tag as user documents with date and scope |
 
 ## Fallbacks
