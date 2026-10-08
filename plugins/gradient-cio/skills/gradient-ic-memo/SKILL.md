@@ -56,8 +56,9 @@ Follow `references/data-map.md` section by section. Key rules:
 - If the user has more than one organization, confirm which before calling org-scoped tools. Call
   `list_assumption_sets` and state the organization and selected assumption set in the memo header.
 - Read `references/module-scope.md` before selecting tools. Portfolio questions use Portfolio
-  Analytics. Strategy Lab is optional and uses separately selected `return_series_ids`; the connector
-  builds the session. Never pass a Portfolio Analytics `portfolio_id` to a Strategy Lab tool.
+  Analytics. Strategy Lab is optional and uses a `build_strategy_lab_session` result built from separately
+  selected `return_series_ids`. Pass the returned `strategy_lab_session` unchanged to the compute tool.
+  Never pass a Portfolio Analytics `portfolio_id` to a Strategy Lab tool.
 - Use `envelope: "compact"` and optional `fields` only on research-read tools whose loaded schema offers
   them. Do not pass either parameter to any `run_strategy_lab_*` tool.
 - Use `get_chart_data` after portfolio selection: check availability, then request one relevant pack at a time.
@@ -96,8 +97,11 @@ Brinson is the attribution fallback only when complete, same-period portfolio we
 portfolio segment returns, and benchmark segment returns are available from saved evidence. Label it
 `Local Brinson fallback`, cite every input, and do not claim server validation or symmetric-Carino linking.
 Use `get_portfolio_historical_returns` for portfolio, benchmark-relative and risk metrics. Preserve each
-tool's methodology, formula version, basis, period, currency, coverage and missing reasons. Other governed
-results remain unavailable when their server method is unavailable.
+call's `fields` projection (`portfolio`, `filters`, `coverage`, `display` and only the requested result
+sections) and each tool's methodology, formula version, basis, period, currency, coverage and missing
+reasons. State partial coverage as a report gap. For `no_subject_returns`, state that the selected portfolio
+has no subject return history and do not substitute benchmark, commitment or Strategy Lab returns. Other
+governed results remain unavailable when their server method is unavailable.
 When policy risk rows are `not_assessed`, historical-return risk metrics remain separate observations: do not
 compare them with persisted thresholds or infer compliance unless `check_portfolio_policy` returns the status.
 When risk rows are assessed, preserve `risk_limits.observation_basis` and the returned magnitude comparison
@@ -155,7 +159,7 @@ Determinism rules (summary — the template is authoritative):
 
 For an Allocation Change or Rebalance memo, offer to save a proposed scenario only when Section 13 used a
 real Strategy Lab return-series basket or matching active lab session. Use `save_strategy_lab_scenario`
-(`domain` rebalance/optimization/simulation/relative, `name` "<subject> - <memo type> <meeting date>", and
+(`domain` `simulation` or `relative`, `name` "<subject> - <memo type> <meeting date>", and
 the lab `form` and basket used in Section 13). Never convert a saved portfolio ID into a Strategy Lab
 scenario. Call with `dry_run: true` first, show the preview, then repeat with `dry_run: false` and
 `confirmation_receipt_id` set to the preview receipt only after the user confirms. Unavailable on

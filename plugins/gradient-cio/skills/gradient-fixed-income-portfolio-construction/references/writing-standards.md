@@ -19,8 +19,10 @@
 - Credit spreads, rates and yield-curve facts are context, not forecasts.
 - Do not predict a rate move, spread move, recession or default cycle.
 - Historical attribution comes only from governed portfolio attribution.
-- Report duration, spread duration, yield, convexity, quality and key-rate exposure only when directly
-  sourced.
+- Report effective duration, spread duration and yield to maturity from returned
+  `exposures[].fixed_income_metrics`, preserving coverage and methodology. Do not relabel yield to maturity
+  as yield to worst. Yield to worst, OAS, convexity, quality and key-rate exposure require another direct
+  source.
 - Distinguish daily-NAV funds, marketable securities and illiquid/private credit using returned evidence.
 - Transaction costs, turnover and tax impacts remain unavailable unless sourced.
 

@@ -4,7 +4,9 @@
     "minimum_service_version": "0.9.0",
     "compatibility_epoch": 2,
     "required_tools": [
+      "analyze_strategy_lab_compare",
       "batch_reconcile_manager_ddq_claims",
+      "build_strategy_lab_session",
       "check_portfolio_policy",
       "get_benchmarks",
       "get_cma_consensus_check",
@@ -24,15 +26,27 @@
       "list_organizations",
       "list_portfolios",
       "reconcile_manager_ddq_claims",
+      "run_strategy_lab_date_window_robustness",
       "run_strategy_lab_expected_statistics",
       "run_strategy_lab_relative_return",
       "search_managers",
       "upload_ddq_document"
     ],
     "required_response_field_paths": {
+      "analyze_strategy_lab_compare": [
+        "domain",
+        "ranking_rows"
+      ],
       "batch_reconcile_manager_ddq_claims": [
         "result_type",
         "items[0].data.rows[0].numeric_gap.formula_id"
+      ],
+      "build_strategy_lab_session": [
+        "status",
+        "domain",
+        "strategy_lab_session",
+        "coverage.status",
+        "provenance.builder"
       ],
       "check_portfolio_policy": [
         "overall_status",
@@ -140,6 +154,10 @@
         "rows[0].numeric_gap.formula_id",
         "rows[0].numeric_gap.formula_version"
       ],
+      "run_strategy_lab_date_window_robustness": [
+        "domain",
+        "metric_rows"
+      ],
       "run_strategy_lab_expected_statistics": [
         "domain",
         "rows",
@@ -181,8 +199,14 @@
       "cma_consensus",
       "strategy_benchmarks",
       "strategy_return_series",
+      "strategy_expected_statistics_session",
       "strategy_expected_statistics",
+      "strategy_relative_return_session",
       "strategy_relative_return",
+      "strategy_manager_compare_session",
+      "strategy_manager_compare",
+      "strategy_date_windows_session",
+      "strategy_date_windows",
       "search_managers",
       "equity_fundamentals",
       "equity_risk_findings",
@@ -865,9 +889,18 @@
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
         "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
+        "limit": 25,
         "sections": [
-          "points",
-          "cumulative_growth",
+          "standard_periods",
+          "calendar_years",
+          "risk_metrics",
+          "benchmark_relative"
+        ],
+        "fields": [
+          "portfolio",
+          "filters",
+          "coverage",
+          "display",
           "standard_periods",
           "calendar_years",
           "risk_metrics",
@@ -884,8 +917,6 @@
         "coverage.sections.benchmark_relative.status",
         "display.return_unit",
         "display.risk_free_rate",
-        "points",
-        "cumulative_growth",
         "standard_periods",
         "calendar_years",
         "risk_metrics.month_count",
@@ -1076,17 +1107,42 @@
       }
     },
     {
+      "id": "strategy_expected_statistics_session",
+      "set": "full",
+      "tool": "build_strategy_lab_session",
+      "depends_on": [
+        "strategy_benchmarks"
+      ],
+      "args": {
+        "domain": "expected-statistics",
+        "demo_set_id": "strategy_lab_core"
+      },
+      "required": [
+        "status",
+        "domain",
+        "strategy_lab_session",
+        "coverage.status",
+        "provenance.builder"
+      ],
+      "non_null": [
+        "strategy_lab_session"
+      ],
+      "equals": {
+        "status": "available",
+        "domain": "expected-statistics",
+        "coverage.status": "available",
+        "provenance.builder": "server"
+      }
+    },
+    {
       "id": "strategy_expected_statistics",
       "set": "full",
       "tool": "run_strategy_lab_expected_statistics",
       "depends_on": [
-        "strategy_benchmarks",
-        "strategy_return_series"
+        "strategy_expected_statistics_session"
       ],
       "args": {
-        "return_series_ids": [
-          "<strategy_benchmarks:demo_set.manager_fund_series[0].series_id>"
-        ]
+        "strategy_lab_session": "<strategy_expected_statistics_session:strategy_lab_session>"
       },
       "required": [
         "domain",
@@ -1098,17 +1154,43 @@
       }
     },
     {
-      "id": "strategy_relative_return",
+      "id": "strategy_relative_return_session",
       "set": "full",
-      "tool": "run_strategy_lab_relative_return",
+      "tool": "build_strategy_lab_session",
       "depends_on": [
         "strategy_benchmarks"
       ],
       "args": {
-        "return_series_ids": [
-          "<strategy_benchmarks:demo_set.manager_fund_series[0].series_id>"
-        ],
+        "domain": "relative-return",
+        "demo_set_id": "strategy_lab_core",
         "benchmark_id": "<strategy_benchmarks:demo_set.benchmark_series[0].series_id>"
+      },
+      "required": [
+        "status",
+        "domain",
+        "strategy_lab_session",
+        "coverage.status",
+        "provenance.builder"
+      ],
+      "non_null": [
+        "strategy_lab_session"
+      ],
+      "equals": {
+        "status": "available",
+        "domain": "relative-return",
+        "coverage.status": "available",
+        "provenance.builder": "server"
+      }
+    },
+    {
+      "id": "strategy_relative_return",
+      "set": "full",
+      "tool": "run_strategy_lab_relative_return",
+      "depends_on": [
+        "strategy_relative_return_session"
+      ],
+      "args": {
+        "strategy_lab_session": "<strategy_relative_return_session:strategy_lab_session>"
       },
       "required": [
         "domain",
@@ -1117,6 +1199,98 @@
       ],
       "equals": {
         "domain": "relative-return"
+      }
+    },
+    {
+      "id": "strategy_manager_compare_session",
+      "set": "full",
+      "tool": "build_strategy_lab_session",
+      "depends_on": [
+        "strategy_benchmarks"
+      ],
+      "args": {
+        "domain": "manager-compare",
+        "demo_set_id": "strategy_lab_core"
+      },
+      "required": [
+        "status",
+        "domain",
+        "strategy_lab_session",
+        "coverage.status",
+        "provenance.builder"
+      ],
+      "non_null": [
+        "strategy_lab_session"
+      ],
+      "equals": {
+        "status": "available",
+        "domain": "manager-compare",
+        "coverage.status": "available",
+        "provenance.builder": "server"
+      }
+    },
+    {
+      "id": "strategy_manager_compare",
+      "set": "full",
+      "tool": "analyze_strategy_lab_compare",
+      "depends_on": [
+        "strategy_manager_compare_session"
+      ],
+      "args": {
+        "strategy_lab_session": "<strategy_manager_compare_session:strategy_lab_session>"
+      },
+      "required": [
+        "domain",
+        "ranking_rows"
+      ],
+      "equals": {
+        "domain": "manager-compare"
+      }
+    },
+    {
+      "id": "strategy_date_windows_session",
+      "set": "full",
+      "tool": "build_strategy_lab_session",
+      "depends_on": [
+        "strategy_benchmarks"
+      ],
+      "args": {
+        "domain": "date-windows",
+        "demo_set_id": "strategy_lab_core"
+      },
+      "required": [
+        "status",
+        "domain",
+        "strategy_lab_session",
+        "coverage.status",
+        "provenance.builder"
+      ],
+      "non_null": [
+        "strategy_lab_session"
+      ],
+      "equals": {
+        "status": "available",
+        "domain": "date-windows",
+        "coverage.status": "available",
+        "provenance.builder": "server"
+      }
+    },
+    {
+      "id": "strategy_date_windows",
+      "set": "full",
+      "tool": "run_strategy_lab_date_window_robustness",
+      "depends_on": [
+        "strategy_date_windows_session"
+      ],
+      "args": {
+        "strategy_lab_session": "<strategy_date_windows_session:strategy_lab_session>"
+      },
+      "required": [
+        "domain",
+        "metric_rows"
+      ],
+      "equals": {
+        "domain": "date-window-robustness"
       }
     },
     {

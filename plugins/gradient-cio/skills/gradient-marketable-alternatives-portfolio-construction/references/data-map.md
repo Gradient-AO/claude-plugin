@@ -12,7 +12,7 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 | Allocation | `get_portfolio_structure`; `view: allocation_tree`, selected `portfolio_id`, depth 3 | Hedge-fund policy nodes, total-portfolio targets, actuals, limits and coverage |
 | Exposure | `get_portfolio_exposure`; selected `portfolio_id`, returned hedge-fund or alternatives classification when supported, page to completion | Manager, fund, value basis, value, currency and as-of date |
 | Policy | `check_portfolio_policy`; selected `portfolio_id` | Allocation, return objective, risk, liquidity and concentration status |
-| Returns | `get_portfolio_historical_returns`; all six supported sections | Period returns, benchmark-relative values, risk and coverage |
+| Returns | `get_portfolio_historical_returns`; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields`, then separate projected calls for `points` and `cumulative_growth` when needed; page commitment rows with `limit` / `next_cursor` | Period returns, benchmark-relative values, risk and coverage |
 | Attribution | `get_portfolio_attribution`; policy benchmark, relevant policy node when supported, month-end period, all sections | Realized effects, method, linking, residual, diagnostics and unavailable reasons |
 | Benchmark | Benchmark ID returned by portfolio evidence, then `get_benchmarks`; optional `get_return_series` | Name, class, currency and returned benchmark points |
 | Allocation charts | `get_chart_data`; availability, then `analysis_type: allocations` | Weights, risk contribution, factor and currency items where returned |
@@ -22,6 +22,8 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 Embed usable chart items unchanged. Preserve basis, fingerprint, display units, truncation and unavailable
 reasons. Do not derive sleeve returns, risk, alpha, beta, leverage or liquidity terms from total-portfolio
 rows or manager labels.
+State partial historical-return coverage as a report gap. For `no_subject_returns`, state that the selected
+portfolio has no subject return history and do not substitute benchmark, commitment or Strategy Lab returns.
 
 ## Marketable-alternatives evidence rules
 
@@ -43,7 +45,7 @@ rows or manager labels.
 | Portfolio macro context | `get_cross_domain_research`; `view: roster_macro_exposure`, selected `portfolio_id` | Optional and entitlement-dependent |
 | Equity look-through | `get_cross_domain_research`; `view: portfolio_13f_lookthrough`, selected `portfolio_id` | Optional; long-only US-listed subset with lag, short-book and FX caveats |
 | Manager evidence | `get_manager_diligence_brief`, `get_manager_diligence_findings`, `get_manager_monitor_evidence`, `get_manager_odd_profile` | Use only for resolved roster managers / funds |
-| Selected-series diagnostics | Supported `run_strategy_lab_*` tools with selected `return_series_ids` | Selected-series sandbox; never pass a Portfolio Analytics ID |
+| Selected-series diagnostics | `build_strategy_lab_session` with selected `return_series_ids`, then a supported `run_strategy_lab_*` tool with the returned session | Selected-series sandbox; never pass a Portfolio Analytics ID |
 | User documents | IPS, mandate, liquidity schedule, manager report or transition plan | Tag as user documents with date and scope |
 
 ## Fallbacks

@@ -13,7 +13,7 @@ Read `module-scope.md` first; every saved-portfolio call in this map is Portfoli
 | `list_assumption_sets` | `organization_id`; select the active/default set using returned fields | Assumption-set identity, release/version, horizon and currency needed by forward chart context; preserve the returned selection basis |
 | `get_portfolio_structure` | `view: allocation_tree`, `portfolio_id`, `max_depth` 3, `node_limit` 100 | `portfolio.record_kind`, `nodes[].{allocation_id, parent_id, allocation_name, asset_classification, depth, is_leaf, target_weight, target_weight_total_portfolio, target_weight_total_portfolio_basis, target_weight_total_portfolio_coverage, actual_weight, lower_limit, upper_limit, allocation_policy}`, `coverage.{status, returned_count, truncated, missing_reasons}` |
 | `get_portfolio_structure` | `view: ownership_weights`, `portfolio_id` | `by_owner[].weights[]` (optional) |
-| `get_portfolio_historical_returns` | `portfolio_id`, `end_date` = period end, `sections` (≤ 6 of `points`, `cumulative_growth`, `standard_periods`, `calendar_years`, `risk_metrics`, `benchmark_relative`); optional `start_date` / `trailing_months` | Each section as returned, with its coverage state, partial-period label, missing reason, display unit and `record_kind` |
+| `get_portfolio_historical_returns` | `portfolio_id`, `end_date` = period end; first request `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` and matching `fields`, then separate projected calls for `points` and `cumulative_growth`; use commitment `limit` / `next_cursor` only when detail is needed | Each projected section as returned, with its coverage state, partial-period label, missing reason, display unit and `record_kind` |
 | `check_portfolio_policy` | `portfolio_id` | Governed-only `overall_status`; `allocation_bands`; `return_objective`; `risk_limits.{observation_basis, rows, coverage}`; `liquidity.{buckets, locked_share, unfunded_commitment_ratio, coverage}`; `concentration.groups`; comparison semantics, methodology and provenance |
 | `get_portfolio_attribution` | `portfolio_id`, `benchmark_role: policy`, `parent_allocation_id: root`, month-end `start_date` / `end_date`, `sections: [summary, segments, diagnostics]` | Coverage and typed missing reasons; realized Brinson-Fachler allocation, selection and interaction; symmetric-Carino linked summary; segment effects; residual and diagnostics; period, basis, currency, formula version and tolerance |
 | `get_return_series` | `series_kind: portfolio` or `benchmark`, `series_id` (portfolio or benchmark UUID), `trailing_months` / `start_date` / `end_date` | `series.{name, record_kind}`, `availability.{status, reason}`, `coverage.{source_point_count, source_start_date, source_end_date, selected_*}`, `display.return_unit` (`decimal_fraction`), `points[].{period_date, return}` |
@@ -22,6 +22,7 @@ Read `module-scope.md` first; every saved-portfolio call in this map is Portfoli
 | `get_chart_data` | Catalog without portfolio; availability with `portfolio_id`; data one `analysis_type` at a time. For forward packs pass only context fields offered by the loaded schema, including returned/selected regime, horizon and assumption-set IDs. | `charts[].{chart_id, status, basis, columns, rows, metrics, render_hint, truncated}`, unavailable reasons, `context.fingerprint`; packs: `allocations`, `expected-statistics`, `commitments` |
 | `get_cross_domain_research` | `view: portfolio_13f_lookthrough`, `portfolio_id`, `top_n_managers` 10, `limit` 20, optional `as_of_date`, `base_currency` | Issuer rows with join basis, source dates, coverage and missing reasons as returned |
 | `get_cross_domain_research` | `view: roster_macro_exposure`, `portfolio_id` (required) | As returned; optional context only |
+| `get_peer_allocation_intelligence` | Policy or cohort mode supported by the loaded schema | Optional peer context only; preserve cohort, date, denominator and coverage |
 | `get_the_read` | `visuals: none` | `overview.headline`, `publication.{resolved_as_of_date, freshness, fallback_applied, fallback_reason}`, `coverage.status`; numbers only from `read.facts`, never from prose |
 | `get_capital_market_assumptions` | `view: baseline`, `collection: primary_factors`, `base_currency` = portfolio currency, `per_page` 10 | The assumption set, horizon, return basis and per-class expected return; state all four |
 
@@ -36,7 +37,8 @@ Keep the saved-portfolio and selected-series lanes separate.
 
 Collect these sections even when their result is typed unavailable:
 
-1. Historical returns: all six `get_portfolio_historical_returns` sections.
+1. Historical returns: summary / benchmark-relative sections first, then separate projected `points` and
+   `cumulative_growth` calls when the report needs them.
 2. Historical attribution: `get_portfolio_attribution` summary, segments and diagnostics. This is the only
    source for the report's Historical Attribution section.
 3. Policy: allocation bands, return objective, risk limits, liquidity and concentration from
@@ -53,9 +55,9 @@ charts with different `basis` or `context.fingerprint` values as though they sha
 
 ### Strategy Lab supplement
 
-Use only when the user has selected return series for Strategy Lab. Pass their IDs through
-`return_series_ids`; the connector builds the session. Load the tool schema before each call and preserve its
-result contract:
+Use only when the user has selected return series for Strategy Lab. Build the matching domain session with
+`build_strategy_lab_session`, then pass its `strategy_lab_session` object unchanged to the compute tool. Load
+the tool schema before each call and preserve its result contract:
 
 | Need | Tool | Fields used |
 |---|---|---|
@@ -79,10 +81,17 @@ If a user explicitly requests saved-portfolio simulated attribution, report
 ## Returns availability
 
 1. `get_portfolio_historical_returns` with the summary sections → use as returned.
-2. If a computed section is unavailable, preserve its coverage and reason; points may be charted but are not
+2. If coverage is `partial`, state the gap in the report. If a missing reason is `no_subject_returns`, state
+   that the selected portfolio has no subject return history and do not substitute another return series.
+3. If a computed section is unavailable, preserve its coverage and reason; points may be charted but are not
    a local-calculation fallback.
-3. Nothing → Performance section and the three return tiles say "Not available — <error code>"; the signal
+4. Nothing → Performance section and the three return tiles say "Not available — <error code>"; the signal
    cannot be better than `watch` on returns; completeness `partial`.
+
+Peer allocation is optional. When capabilities report `peerIntelligence` unavailable, do not call or retry
+the peer tool. Omit the peer comparison, record
+`Not licensed — peerIntelligence is not available for this organization` in coverage, and complete the
+review from portfolio evidence.
 
 Benchmark: use the one identified by `benchmark_relative`. If that section is unavailable, ask the user which
 catalog benchmark is the policy benchmark (do not guess from the catalog; there are ~180 system series,

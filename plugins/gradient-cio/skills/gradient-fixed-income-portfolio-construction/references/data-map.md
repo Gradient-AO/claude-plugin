@@ -10,9 +10,9 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 | Access | `get_gradient_capabilities`; selected organization | Portfolio, research and macro capability state |
 | Portfolio selection | `list_portfolios` | Existing `portfolio_id`, name, currency and record kind |
 | Allocation | `get_portfolio_structure`; `view: allocation_tree`, selected `portfolio_id`, depth 3 | Fixed-income policy nodes, total-portfolio targets, actuals, limits and coverage |
-| Exposure | `get_portfolio_exposure`; selected `portfolio_id`, fixed-income `asset_classification` when supported, page to completion | Returned segment, manager, value basis, value, currency and as-of date |
+| Exposure | `get_portfolio_exposure`; selected `portfolio_id`, fixed-income `asset_classification` when supported, page to completion | Returned segment, manager, value basis, value, currency, as-of date and `exposures[].fixed_income_metrics.{effective_duration, spread_duration, yield_to_maturity_decimal, coverage}` |
 | Policy | `check_portfolio_policy`; selected `portfolio_id` | Allocation, return objective, risk, liquidity and concentration status |
-| Returns | `get_portfolio_historical_returns`; all six supported sections | Period returns, benchmark-relative values, risk and coverage |
+| Returns | `get_portfolio_historical_returns`; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields`, then separate projected calls for `points` and `cumulative_growth` when needed; page commitment rows with `limit` / `next_cursor` | Period returns, benchmark-relative values, risk and coverage |
 | Attribution | `get_portfolio_attribution`; policy benchmark, root allocation, month-end period, all sections | Realized effects, method, linking, residual, diagnostics and unavailable reasons |
 | Benchmark | Benchmark ID returned by portfolio evidence, then `get_benchmarks`; optional `get_return_series` | Name, class, currency and returned benchmark points |
 | Allocation charts | `get_chart_data`; availability, then `analysis_type: allocations` | Weights, risk contribution, factor and currency items where returned |
@@ -22,6 +22,8 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 
 Embed usable chart items unchanged. Preserve basis, fingerprint, display units, truncation and unavailable
 reasons. Do not derive sleeve returns or risk from total-portfolio rows.
+State partial historical-return coverage as a report gap. For `no_subject_returns`, state that the selected
+portfolio has no subject return history and do not substitute benchmark, commitment or Strategy Lab returns.
 
 ## Fixed-income evidence rules
 
@@ -29,8 +31,10 @@ reasons. Do not derive sleeve returns or risk from total-portfolio rows.
 - Historical attribution comes only from `get_portfolio_attribution`.
 - Policy risk status comes only from `check_portfolio_policy`; historical volatility does not establish
   compliance when a policy row is `not_assessed`.
-- Report duration, spread duration, yield, convexity, quality and key-rate exposure only when directly
-  returned or cited from a user document.
+- Report effective duration, spread duration and yield to maturity from
+  `get_portfolio_exposure.exposures[].fixed_income_metrics`, preserving its coverage counts and methodology.
+  Do not relabel yield to maturity as yield to worst. Yield to worst, OAS, convexity, quality and key-rate
+  exposure remain `Not available` unless directly returned by another tool or cited from a user document.
 - Credit spreads are context, not a performance explanation or forecast.
 - Use basis points for spread and allocation changes only when the source supports the conversion.
 
@@ -40,7 +44,7 @@ reasons. Do not derive sleeve returns or risk from total-portfolio rows.
 |---|---|---|
 | CMA comparison | `get_cma_consensus_check`; fixed-income classes held | Preserve positioning, coverage and method |
 | Broader context | `get_the_read`; `visuals: none` | Facts only; at most two short paragraphs |
-| Selected-series diagnostics | `run_strategy_lab_expected_statistics`, `run_strategy_lab_relative_return`, `run_strategy_lab_date_window_robustness` | Selected-series sandbox; use `return_series_ids`, never portfolio ID |
+| Selected-series diagnostics | `build_strategy_lab_session` for the selected `return_series_ids`, then `run_strategy_lab_expected_statistics`, `run_strategy_lab_relative_return` or `run_strategy_lab_date_window_robustness` with the returned session | Selected-series sandbox; never use portfolio ID |
 | Manager evidence | Diligence tools through `gradient-manager-compare` / `gradient-odd-report` | Handoff for proposed mandates |
 | User documents | IPS, benchmark specification, holdings analytics, transition plan | Tag as user documents with date and scope |
 

@@ -31,20 +31,24 @@ or report date; the default probe therefore exercises the current latest-publica
 sample_portfolio, chart_catalog. The sample probe verifies that `list_portfolios`
 returns Gradient's canonical example first.
 
-**Full read set (49 reads including standard):** standard plus capabilities_summary, manager_diligence_brief,
+**Full read set (56 reads including standard):** standard plus capabilities_summary, manager_diligence_brief,
 attention, findings, events, events_roster, entity_facts, conditions, credit_spreads, gradient_signal, regime_state,
 cma_baseline, cma_consensus, watchlist,
 portfolio_tree, portfolio_exposure, portfolio_policy, portfolio_ownership, portfolio_returns,
 portfolio_attribution, portfolio_series,
 chart_availability, portfolio_expected_statistics, portfolio_allocations, portfolio_commitments,
-strategy_benchmarks, strategy_return_series,
-strategy_expected_statistics, strategy_relative_return, adv_13f_consistency,
+strategy_benchmarks, strategy_return_series, four Strategy Lab session builders,
+strategy_expected_statistics, strategy_relative_return, strategy_manager_compare, strategy_date_windows,
+adv_13f_consistency,
 multi_manager_13f_overlap, search_managers, screen, cftc_positioning, hf_crowding, regional_facts,
 regional_capital_markets, equity_fundamentals, equity_risk_findings, ddq_numeric_gap and batch_ddq_preview.
 
-The portfolio policy probe verifies governed-only semantics and the 2% watch boundary. The expanded returns
-probe requests all six sections, checks the zero risk-free-rate contract approximately, and reconciles the
-risk-metric month count to selected points. Attribution verifies the bounded Brinson-Fachler surface, persisted
+The portfolio policy probe verifies governed-only semantics and the 2% watch boundary. The returns probe
+requests the summary and benchmark-relative sections through an explicit `fields` projection, caps the
+commitment page at 25, checks the risk-free-rate contract approximately, and reconciles the risk-metric month
+count to selected points. A partial result or
+`no_subject_returns` is a reportable coverage gap, not a reason to substitute another series. Attribution
+verifies the bounded Brinson-Fachler surface, persisted
 monthly segment basis, linked summary, segment effects and zero-residual reconciliation for the canonical
 example; no numeric attribution may be inferred when the tool reports typed unavailability. Equity fundamentals requires
 the complete leverage contract, including formula identity and period basis. DDQ probes require server-returned
@@ -67,7 +71,7 @@ The first call persists fictional inline text as a ready subject-bound document 
 save call is still a dry-run preview and must return `outcome: "preview"`, `dry_run: true` and `committed:
 false`.
 
-The complete matrix is 58 calls. Run the standard or full read set without write confirmation. Run the
+The complete matrix is 64 calls. Run the standard or full read set without write confirmation. Run the
 writes set only as previews. Before the DDQ save-preview set, tell the user that its reconciliation call
 persists a test document and immutable test workpaper.
 
@@ -79,13 +83,13 @@ For `portfolio_exposure` and `portfolio_ownership`, determine scope from
 mismatch when a dependent response does not identify that same canonical
 portfolio or labels it as live data.
 
-The Portfolio Analytics probes cover list, exposure, structure, historical and governed ex ante attribution, allocations,
-expected-statistics and commitments chart packs, and policy checking against the canonical illustrative
-`portfolio_id`. Strategy Lab separately
-covers the named demo benchmark catalog, one manager/fund return series, and expected-statistics and
-relative-return compute tools. Pass `return_series_ids` directly; the connector builds the matching session.
-The discovery schema exposes `portfolio_id` as a compatibility field, but selected-series tools reject it.
-Report the two module results separately.
+The Portfolio Analytics probes cover list, exposure, structure, historical and governed ex ante attribution,
+allocations, expected-statistics and commitments chart packs, and policy checking against the canonical
+illustrative `portfolio_id`. Strategy Lab separately covers the named demo benchmark catalog, one
+manager/fund return series, and the expected-statistics, relative-return, manager-compare and date-window
+IDD compute tools. Each compute probe receives the unchanged `strategy_lab_session` from a successful
+`build_strategy_lab_session` dependency. The discovery schema exposes `portfolio_id` as a compatibility
+field, but selected-series tools reject it. Report the two module results separately.
 
 For a non-entitled organization, successful Portfolio Analytics and Strategy Lab probes are expected to
 report illustrative access, not live client access. Confirm `record_kind: example`, `access_mode:
@@ -102,31 +106,10 @@ Results:
 - Compact envelopes omit passed checks and advisory `not_run` checks. This is intentional; use
   `checks_omitted` for the count and request a full envelope only when auditing validation detail.
 
-## Current contract changes (revalidated 2026-10-08)
+## Known issues (revalidated 2026-10-08)
 
-These previously reported failures are resolved or have a typed contract and are no longer known issues:
-
-- `get_portfolio_ex_ante_attribution` provides single-period expected
-  Brinson-Fachler effects from current cohort weights and persisted
-  base-currency expectations, with explicit assumption provenance,
-  reconciliation diagnostics and typed unavailable reasons.
-- `get_the_read` supports `asOfDate` as a historical-publication cutoff; the default probe omits it to test
-  the current latest publication, not as a 500 workaround.
-- `get_macro_signals` `regime_state` requires explicit `regions` and may validly return a typed unavailable
-  status when no persisted model state exists.
-- `get_firm_fund_events` supports explicit `subject` and `organization_roster_timeline` views; both are probed.
-- `get_firm_entity_facts` uses `mode: "snapshot"` plus one subject selector and is probed independently of
-  the manager-diligence brief.
-- `get_cma_consensus_check` `asset_class` mode no longer has a blanket 500 workaround and is probed directly.
-- CMA baseline validation uses release-wide quality gates rather than page-only repeated values, and allocation
-  consensus evidence is limited to positive-weight asset classes.
-- Canonical demo managers use explicitly illustrative synthetic 13F snapshots. Their provenance is not
-  manager-reported SEC evidence and must retain the illustrative label.
-
-## Known issues (revalidated 2026-10-07)
-
-Re-check these on every full run. When one stops reproducing, say so in the report ("resolved since
-2026-10-07") so the maintainer can remove it from this table.
+This table contains only currently reproducible exceptions. Re-check each one on every full run. When one
+stops reproducing, say so in the report ("resolved since 2026-10-08") so the maintainer can remove it.
 
 No known issue permits a Portfolio Analytics ID to be reused as Strategy Lab input.
 

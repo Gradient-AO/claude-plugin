@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.3.0
+- Kept historical-return evidence inline-readable with section field projections, split detail calls and paged commitment benchmark rows.
+- Required every historical-return skill to disclose `partial` coverage and `no_subject_returns` instead of substituting another series.
+- Expanded setup coverage for sample-portfolio analytics, dry-run diligence writes and session-bound Strategy Lab IDD tools.
+- Replaced the stale setup known-issues history with the currently reproducible issue set and removed retired tool references.
+- Mapped fixed-income duration, spread duration and yield to maturity to the connector's real exposure fields while keeping unsupported yield-to-worst and OAS explicit.
+- Made peer allocation optional in portfolio reviews so missing `peerIntelligence` entitlement is reported without failing the review.
+
 ## 2.2.1
 - Fixed the equity risk-findings readiness probe so a valid empty findings result no longer degrades the equity-note skill.
 - Clarified that equity notes report the connector's reason when no risk findings were extracted.

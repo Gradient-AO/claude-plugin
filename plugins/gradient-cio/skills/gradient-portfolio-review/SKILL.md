@@ -85,7 +85,7 @@ save `context.fingerprint`, `basis`, and unavailable reasons. Embed each usable 
 | Portfolio record | `list_portfolios` | Yes |
 | Dashboard chart packs | `get_chart_data` availability, then one relevant `analysis_type` at a time | Comprehensive: allocations, expected-statistics and commitments; brief: optional |
 | Allocation tree | `get_portfolio_structure` `view: allocation_tree` | Yes |
-| Returns | `get_portfolio_historical_returns` `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative, cumulative_growth, points]`, `end_date` = period end | Yes |
+| Returns | `get_portfolio_historical_returns` with `end_date` = period end: request summary / benchmark-relative sections with matching `fields`, then request `points` and `cumulative_growth` separately; page commitment rows only when needed | Yes |
 | Benchmark | the benchmark named in `benchmark_relative`; else ask the user which benchmark; then `get_benchmarks` `benchmark_id` for its name and classes, and `get_return_series` `series_kind: benchmark` for monthly points | Optional (performance is reported without relative rows if absent) |
 | Policy | `check_portfolio_policy` | Yes |
 | Attribution | `get_portfolio_attribution` with `benchmark_role: policy`, `parent_allocation_id: root`, month-end start/end and all sections | Comprehensive: always call and preserve typed unavailability; brief: optional |
@@ -93,8 +93,9 @@ save `context.fingerprint`, `basis`, and unavailable reasons. Embed each usable 
 | Ownership weights | `get_portfolio_structure` `view: ownership_weights` | Optional |
 | Look-through | `get_cross_domain_research` `view: portfolio_13f_lookthrough`, `portfolio_id`, `top_n_managers` 10, `limit` 20 | Optional (needs `portfolio`) |
 | Macro exposure | `get_cross_domain_research` `view: roster_macro_exposure`, `portfolio_id` | Optional (needs `portfolio`) |
+| Peer allocation | `get_peer_allocation_intelligence`; policy or cohort mode supported by the loaded schema | Optional (needs `peerIntelligence`); skip without failing when unavailable |
 | Outlook | `get_the_read` (`visuals: none`); `get_capital_market_assumptions` `view: baseline` | Optional, only if asked, comprehensive or annual |
-| Strategy Lab supplement | Selected `return_series_ids`: `run_strategy_lab_simulation`, `run_strategy_lab_expected_statistics`, `run_strategy_lab_relative_return` and `run_strategy_lab_date_window_robustness` | Optional in comprehensive mode; selected-series sandbox only |
+| Strategy Lab supplement | Build the matching session from selected `return_series_ids`, then pass it to `run_strategy_lab_simulation`, `run_strategy_lab_expected_statistics`, `run_strategy_lab_relative_return` or `run_strategy_lab_date_window_robustness` | Optional in comprehensive mode; selected-series sandbox only |
 
 If a call fails, record the error code and request ID in coverage, retry at most once (only when
 `retryable: true`), use the fallback, and keep going. An `entitlement_required` error is "Not licensed", not
@@ -107,6 +108,9 @@ an outage — do not retry it.
 period's benchmark return, excess return, coverage and annualization status; preserve drawdown peak, trough
 and recovery, monthly extremes, positive-month count, beta and benchmark volatility. If a section is
 unavailable, report its typed reason and do not recompute it from monthly points.
+If coverage is `partial`, state the coverage gap. If a missing reason is `no_subject_returns`, state that the
+selected portfolio has no subject return history and do not substitute benchmark, commitment or Strategy Lab
+returns.
 
 **Allocation.** From `allocation_tree.nodes[]`: use the returned total-portfolio target and policy status
 fields for every depth. Do not multiply parent and child targets. Use `check_portfolio_policy.allocation_bands`
@@ -117,6 +121,9 @@ Do not compare them with persisted policy thresholds or infer compliance unless 
 returns the status.
 When risk rows are assessed, preserve `risk_limits.observation_basis` and the returned magnitude comparison
 rule so the review states the governed horizon, effective date, frequency, return basis and currency.
+Peer allocation is context only. If `peerIntelligence` is unavailable, omit peer comparisons, add
+`Not licensed — peerIntelligence is not available for this organization` to coverage, and complete the
+review from portfolio evidence. Never treat this optional entitlement as a report failure.
 
 **Exposure.** Use `get_portfolio_exposure.aggregates_by_asset_classification` for governed value totals,
 shares, coverage and truncation. The server chooses market value for marketable assets and NAV for drawdown

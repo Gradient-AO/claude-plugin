@@ -16,17 +16,27 @@ Historical attribution uses governed realized monthly evidence. Governed ex ante
 saved-portfolio cohort weights and persisted expected returns. Strategy Lab outputs do not substitute for
 either contract.
 
+Every `get_portfolio_historical_returns` call must use a `fields` projection containing `portfolio`,
+`filters`, `coverage`, `display`, and only the requested result sections. Preserve every returned section
+coverage state and missing reason. When `coverage.status` is `partial`, state the coverage gap in the report.
+When any missing reason is `no_subject_returns`, state that the selected portfolio has no subject return
+history and do not substitute benchmark, commitment, or Strategy Lab returns.
+Do not request all six result sections in one call. Request summary and benchmark-relative sections together,
+then request `points` and `cumulative_growth` separately when needed. Use the default commitment `limit` of
+25 and follow `next_cursor` only when commitment-level benchmark detail is needed. This keeps each response
+inline-readable while preserving a complete paged export.
+
 ## Strategy Lab
 
 Strategy Lab is a standalone sandbox for saved or imported return series and the active lab panel state. It
 does not analyze a saved portfolio merely because a Portfolio Analytics `portfolio_id` is available.
 
-Call selected-series Strategy Lab tools with `return_series_ids` plus a `benchmark_id` where required; the
-connector builds the canonical session. For illustrative analysis, discover the named `strategy_lab_core`
-demo set and pass its return-series IDs directly. Never pass a Portfolio Analytics `portfolio_id`, and do not
-call the session builder before selected-series compute tools. Never describe Strategy Lab results as
-portfolio holdings, policy compliance, or realized portfolio performance. Preserve series labels,
-identifiers, and date coverage.
+Build a session with `build_strategy_lab_session` before each selected-series Strategy Lab compute call.
+Pass `return_series_ids` plus a `benchmark_id` where the session domain requires it, then pass the returned
+`strategy_lab_session` object unchanged to the compute tool. For illustrative analysis, discover and use the
+named `strategy_lab_core` demo set. Never pass a Portfolio Analytics `portfolio_id`. Never describe Strategy
+Lab results as portfolio holdings, policy compliance, or realized portfolio performance. Preserve series
+labels, identifiers, and date coverage.
 
 If no matching Strategy Lab session or return series exists, keep Strategy Lab analysis optional and write
 `Not available — no Strategy Lab return series selected` where the report template requires a row.
