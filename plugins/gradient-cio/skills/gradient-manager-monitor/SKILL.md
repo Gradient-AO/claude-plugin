@@ -41,8 +41,7 @@ Call these for the organization (parallel where possible; save each result):
 | Events | `get_firm_fund_events` with `firm_id` per parent firm | Fundraising, leadership, regulatory events |
 | Watchlist | `get_research_watchlist_changes` | Changes on the caller's research watchlist |
 
-Use `firm_id` / `fund_id` from the roster. Do not use the roster-timeline view of `get_firm_fund_events` (it is
-rejected; see gradient-setup known issues). If a call fails, record it in coverage and keep going.
+Use `firm_id` / `fund_id` from the roster. If a call fails, record it in coverage and keep going.
 
 **Incremental runs.** `get_manager_monitor_evidence` returns `next_since_cursor`. If a folder is connected,
 read and write `gradient-monitor-state.json` there (`{"org_id", "since_cursor", "last_run"}`) so the next run

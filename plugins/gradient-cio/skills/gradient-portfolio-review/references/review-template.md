@@ -124,8 +124,9 @@ Use JSON block mode. Set:
 
 ### 9. Projected Return and Risk Decomposition
 
-- Name assumption set, CMA release, regime, horizon, currency and chart `context.fingerprint`.
-- Embed unchanged returned `expected-statistics` and relevant `allocations` chart items.
+- Name assumption set, CMA release, regime, horizon, currency and evidence basis.
+- Use governed policy / CMA evidence for saved-portfolio forward assumptions and embed relevant returned
+  `allocations` chart items unchanged.
 - `table` **Forward assumptions and decomposition** with columns `Measure`, `Portfolio`, `Policy / reference`,
   `Basis`, `Source` only when the server returns equivalent tabular evidence.
 - Optional `table` **Strategy Lab sandbox** with returned simulation, expected-statistics, relative-return,

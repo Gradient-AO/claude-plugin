@@ -10,8 +10,10 @@ It discovers a portfolio with `list_portfolios`, then uses its `portfolio_id` wi
 `get_portfolio_attribution`, `get_portfolio_ex_ante_attribution`, and `check_portfolio_policy`.
 
 Use Portfolio Analytics for holdings, allocation versus policy, realized portfolio performance, portfolio
-factor and currency exposure, expected-statistics chart packs, commitments, pacing, liquidity, and other
-portfolio-level questions. A Portfolio Analytics ID is not a Strategy Lab return-series ID.
+factor and currency exposure, allocation and commitment chart packs, governed forward assumptions,
+commitments, pacing, liquidity, and other portfolio-level questions. `get_chart_data` supports only the
+`allocations` and `commitments` analysis types; do not request `expected-statistics`. A Portfolio Analytics ID
+is not a Strategy Lab return-series ID.
 Historical attribution uses governed realized monthly evidence. Governed ex ante attribution uses current
 saved-portfolio cohort weights and persisted expected returns. Strategy Lab outputs do not substitute for
 either contract.
@@ -21,10 +23,27 @@ Every `get_portfolio_historical_returns` call must use a `fields` projection con
 coverage state and missing reason. When `coverage.status` is `partial`, state the coverage gap in the report.
 When any missing reason is `no_subject_returns`, state that the selected portfolio has no subject return
 history and do not substitute benchmark, commitment, or Strategy Lab returns.
+When a commitment comparison reports `not_yet_funded`, state that the commitment has no funded return
+history; do not treat it as a zero return or omit the gap. The canonical illustrative history also contains
+partial calendar years 2016 and 2026: label each from its returned `month_count`, `partial`,
+`coverage_status`, and `missing_reason`, and never present either as a full-year return.
 Do not request all six result sections in one call. Request summary and benchmark-relative sections together,
-then request `points` and `cumulative_growth` separately when needed. Use the default commitment `limit` of
-25 and follow `next_cursor` only when commitment-level benchmark detail is needed. This keeps each response
-inline-readable while preserving a complete paged export.
+then request `points` and `cumulative_growth` separately when needed. Until connector issue P-01 ships, use
+the default commitment `limit` of 25, do not follow `next_cursor`, and disclose
+`benchmark_relative.commitments_truncated` plus the returned commitment count. After P-01 ships and the
+loaded schema supports reliable continuation, follow `next_cursor` only when commitment-level benchmark
+detail is needed.
+
+`get_portfolio_exposure.asset_classification` accepts canonical display names and documented snake_case aliases case-insensitively. Prefer a value published by the loaded schema.
+Use only values returned by the portfolio or the canonical values relevant to the request:
+`public_equity`, `fixed_income`, `private_equity`, `private_credit`, `real_estate`, `infrastructure`,
+`alternatives`, and `cash`. Never pass title-case display labels.
+Until connector issue P-15 ships, any report that combines fixed-income exposure metrics must calculate
+effective duration, spread duration, and yield to maturity as current-NAV-weighted averages of non-null
+`exposures[].fixed_income_metrics` values. Use `market_value_base` for `value_basis: market_value` rows and
+`nav_base` otherwise; exclude missing metrics and non-positive or missing weights, disclose included NAV and
+row count, and never equal-weight rows. After P-15 ships, use the governed aggregate only when its returned
+`weighting_basis` is `current_holding_nav_base`.
 
 ## Strategy Lab
 

@@ -49,7 +49,7 @@ Required evidence:
 - portfolio record, allocation tree, hedge-fund exposure pages and policy result;
 - historical returns and governed attribution, preserving typed unavailable states;
 - benchmark identity and return series when returned;
-- `get_chart_data` availability, then `allocations` and `expected-statistics` one pack at a time;
+- `get_chart_data` availability, then the `allocations` pack;
 - active assumption set and capital-market assumptions for returned `hedge_funds` or `absolute_return`
   classes.
 

@@ -87,9 +87,9 @@ save `context.fingerprint`, `basis`, and unavailable reasons. Embed each usable 
 |---|---|---|
 | Capabilities | `get_gradient_capabilities` | Yes |
 | Portfolio record | `list_portfolios` | Yes |
-| Dashboard chart packs | `get_chart_data` availability, then one relevant `analysis_type` at a time | Comprehensive: allocations, expected-statistics and commitments; brief: optional |
+| Dashboard chart packs | `get_chart_data` availability, then one supported `analysis_type` at a time | Comprehensive: allocations and commitments; brief: optional |
 | Allocation tree | `get_portfolio_structure` `view: allocation_tree` | Yes |
-| Returns | `get_portfolio_historical_returns` with `end_date` = period end: request summary / benchmark-relative sections with matching `fields`, then request `points` and `cumulative_growth` separately; page commitment rows only when needed | Yes |
+| Returns | `get_portfolio_historical_returns` with `end_date` = period end: request summary / benchmark-relative sections with matching `fields`, then request `points` and `cumulative_growth` separately; until P-01 ships, disclose a truncated default commitment page instead of following `next_cursor` | Yes |
 | Benchmark | the benchmark named in `benchmark_relative`; else ask the user which benchmark; then `get_benchmarks` `benchmark_id` for its name and classes, and `get_return_series` `series_kind: benchmark` for monthly points | Optional (performance is reported without relative rows if absent) |
 | Policy | `check_portfolio_policy` | Yes |
 | Attribution | `get_portfolio_attribution` with `benchmark_role: policy`, `parent_allocation_id: root`, month-end start/end and all sections | Comprehensive: always call and preserve typed unavailability; brief: optional |
@@ -115,6 +115,9 @@ unavailable, report its typed reason and do not recompute it from monthly points
 If coverage is `partial`, state the coverage gap. If a missing reason is `no_subject_returns`, state that the
 selected portfolio has no subject return history and do not substitute benchmark, commitment or Strategy Lab
 returns.
+Treat `not_yet_funded` as a reportable commitment gap, not a zero return. For the canonical illustrative
+history, state that 2016 and 2026 are partial calendar years and show their returned month counts; never
+present them as full-year returns.
 
 **Allocation.** From `allocation_tree.nodes[]`: use the returned total-portfolio target and policy status
 fields for every depth. Do not multiply parent and child targets. Use `check_portfolio_policy.allocation_bands`
@@ -133,9 +136,12 @@ callout required by `references/review-template.md`. Never treat this optional e
 **Exposure.** Use `get_portfolio_exposure.aggregates_by_asset_classification` for governed value totals,
 shares, coverage and truncation. The server chooses market value for marketable assets and NAV for drawdown
 funds and never adds unfunded commitments. Show uncovered rows as "no current value". Exposure classifications
-(e.g. `public_equity`, `hedge_fund`, `alternatives`) do not map one-to-one to tree names — show them as
+(e.g. `public_equity`, `fixed_income`, `alternatives`) do not map one-to-one to tree names — show them as
 returned, do not merge them into the policy table. Show geography or sector only if the response carries
 those fields.
+Until P-15 ships, NAV-weight any combined fixed-income duration, spread-duration, or yield-to-maturity
+metric across non-null exposure rows using current exposure value; disclose included NAV and row count and
+never equal-weight rows. Use the governed connector aggregate after P-15.
 
 **Look-through.** Top issuers by look-through NAV across managers, with managers holding and share of NAV.
 Always add the caveat callout: 13F is lagged (up to 45 days after quarter end), long-only US-listed equity,
@@ -145,11 +151,13 @@ no shorts, cash, non-US listings or private holdings, and USD values are not FX-
 symmetric-Carino linking, residual, diagnostics, period, basis, currency and formula version. Strategy Lab
 relative return and factor outputs are not attribution and never fill an unavailable attribution section.
 
-**Projected return and risk decomposition.** In comprehensive mode use returned `expected-statistics`,
-`allocations` and `commitments` chart items unchanged. Name the assumption set, regime, horizon, currency,
-basis and `context.fingerprint`. Strategy Lab results may appear only when a matching selected-return-series
-session exists; label them **Selected-series sandbox — not saved-portfolio analytics**. Never use the heading
-"simulated attribution": no public saved-portfolio simulated-attribution contract exists.
+**Projected return and risk decomposition.** In comprehensive mode use governed
+`check_portfolio_policy.return_objective` and capital-market-assumption evidence for saved-portfolio forward
+assumptions; use returned `allocations` chart items unchanged where relevant. Name the assumption set, regime,
+horizon, currency and basis. Strategy Lab expected-statistics may appear only when a matching
+selected-return-series session exists; label them **Selected-series sandbox — not saved-portfolio
+analytics**. Never use the heading "simulated attribution": no public saved-portfolio
+simulated-attribution contract exists.
 
 **Analysis and considerations.** Follow `references/writing-standards.md`. Each point contains a sourced
 observation, why it matters, uncertainty and a neutral consideration for discussion. Do not prescribe an

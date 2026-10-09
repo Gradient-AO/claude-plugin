@@ -10,17 +10,17 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 | Access | `get_gradient_capabilities`; selected organization | Portfolio and research capability state |
 | Portfolio selection | `list_portfolios` | Existing `portfolio_id`, name, currency and record kind |
 | Allocation | `get_portfolio_structure`; `view: allocation_tree`, selected `portfolio_id`, depth 3 | Public-equity nodes, returned targets, actuals, limits and coverage |
-| Exposure | `get_portfolio_exposure`; selected `portfolio_id`, public-equity `asset_classification` when supported, page to completion | Managers / funds, values, currency, classifications and as-of dates |
+| Exposure | `get_portfolio_exposure`; selected `portfolio_id`, exact lowercase `asset_classification: public_equity`, page to completion | Managers / funds, values, currency, classifications and as-of dates |
 | Policy | `check_portfolio_policy`; selected `portfolio_id` | Allocation, return objective, risk, liquidity and concentration status |
-| Returns | `get_portfolio_historical_returns`; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields`, then separate projected calls for `points` and `cumulative_growth` when needed; page commitment rows with `limit` / `next_cursor` | Period returns, benchmark-relative values, risk and coverage |
+| Returns | `get_portfolio_historical_returns`; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`, then separate projected calls for `points` and `cumulative_growth` when needed; until P-01 ships, keep the default commitment page and disclose truncation rather than following `next_cursor` | Period returns, benchmark-relative values, risk and coverage |
 | Attribution | `get_portfolio_attribution`; policy benchmark, root allocation, month-end period, all sections | Realized effects, method, linking, residual and diagnostics |
 | Benchmark | Benchmark ID returned by portfolio evidence, then `get_benchmarks`; optional `get_return_series` | Name, equity class, currency and returned points |
 | Allocation charts | `get_chart_data`; availability, then `analysis_type: allocations` | Allocation, factor, currency and risk-contribution items where returned |
-| Forward charts | `get_chart_data`; `analysis_type: expected-statistics`, returned context | Forward statistics, basis and fingerprint |
 | Assumptions | `list_assumption_sets`; `get_capital_market_assumptions` with `view: baseline` | Active release, horizon, currency and public-equity classes |
 
 Embed usable chart items unchanged. Preserve basis, fingerprint, units, truncation and unavailable reasons.
-State partial historical-return coverage as a report gap. For `no_subject_returns`, state that the selected
+State partial historical-return coverage as a report gap, including `not_yet_funded` commitments and the
+partial 2016 and 2026 calendar years when returned. For `no_subject_returns`, state that the selected
 portfolio has no subject return history and do not substitute benchmark, commitment or Strategy Lab returns.
 
 ## Public-equity evidence rules

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.3.2
+- Replaced stale setup known issues with the active P-01 commitment-pagination and P-15 fixed-income aggregation limits.
+- Strengthened required setup coverage for the illustrative portfolio, session-bound IDD Strategy Lab tools, and dry-run finding, watchlist, roster and upload writes.
+- Required historical-return reports to project response fields and disclose unfunded commitments, partial 2016 / 2026 years and bounded commitment detail.
+- Documented canonical exposure display names plus case-insensitive snake_case aliases and added the temporary NAV-weighted fixed-income aggregation rule.
+- Aligned chart guidance and setup probes with P-07: `get_chart_data` now exposes only allocations and commitments, while session-bound Strategy Lab expected-statistics remains supported.
+- Expanded regression checks for removed tool, domain and chart references while retaining Strategy Lab simulation, saved scenarios and expected-statistics.
+
 ## 2.3.1
 - Required portfolio reviews to gate peer-allocation calls from capabilities and show a reader-visible skip explanation when Peer Intelligence is not licensed.
 - Added comprehensive-template, fixture and validator coverage for the optional peer-entitlement path.

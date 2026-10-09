@@ -11,19 +11,19 @@ and payload digest for every source row.
 | Access | `get_gradient_capabilities`; selected organization | Portfolio capability, tool availability and live / illustrative mode |
 | Portfolio selection | `list_portfolios` | Existing `portfolio_id`, name, currency, `record_kind`, canonical default |
 | Allocation | `get_portfolio_structure`; `view: allocation_tree`, selected `portfolio_id`, depth 3 | Returned total-portfolio target, actual, limits, policy status and coverage |
-| Exposure | `get_portfolio_exposure`; selected `portfolio_id`, `asset_classification` when supported, page to completion | NAV, commitment, unfunded, value basis, valuation date, manager / fund and server aggregates |
+| Exposure | `get_portfolio_exposure`; selected `portfolio_id`; use exact lowercase filters `private_equity` and `private_credit`, plus `real_estate` or `infrastructure` only when the requested mandate includes them; page each filter to completion | NAV, commitment, unfunded, value basis, valuation date, manager / fund and server aggregates |
 | Policy | `check_portfolio_policy`; selected `portfolio_id` | Allocation, return objective, risk, liquidity, unfunded and concentration assessments |
-| Returns | `get_portfolio_historical_returns`; selected period end; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields`, then separate projected calls for `points` and `cumulative_growth` when needed; page commitment rows with `limit` / `next_cursor` | Returned periods, risk, benchmark-relative values, points and coverage |
+| Returns | `get_portfolio_historical_returns`; selected period end; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`, then separate projected calls for `points` and `cumulative_growth` when needed; until P-01 ships, keep the default commitment page and disclose truncation rather than following `next_cursor` | Returned periods, risk, benchmark-relative values, points and coverage |
 | Attribution | `get_portfolio_attribution`; policy benchmark, root allocation, month-end period, all sections | Realized effects, linking, residual, diagnostics and typed unavailability |
 | Chart availability | `get_chart_data`; selected `portfolio_id`, no pack selector | Available chart IDs, unavailable reasons and context |
 | Allocation charts | `get_chart_data`; `analysis_type: allocations` | Returned allocation, risk-contribution, factor and currency items |
-| Forward charts | `get_chart_data`; `analysis_type: expected-statistics`, returned assumption context | Returned forward statistics, basis and fingerprint |
 | Program charts | `get_chart_data`; `analysis_type: commitments` | Returned cash-flow, pacing, pacing-metric and liquidity-scorecard items |
-| Assumptions | `list_assumption_sets`; `get_capital_market_assumptions` with `view: baseline` | Active assumption identity, release, horizon, currency and private-market classes |
+| Forward assumptions | `list_assumption_sets`; `get_capital_market_assumptions` with `view: baseline`; `check_portfolio_policy.return_objective` when available | Active assumption identity, release, horizon, currency, private-market classes and governed portfolio objective evidence |
 
 Call each chart pack separately and embed each usable `charts[]` item unchanged. Never hand-map chart IDs or
 derive chart rows. Preserve `basis`, `context.fingerprint`, status, truncation and unavailable reason.
-State partial historical-return coverage as a report gap. For `no_subject_returns`, state that the selected
+State partial historical-return coverage as a report gap, including `not_yet_funded` commitments and the
+partial 2016 and 2026 calendar years when returned. For `no_subject_returns`, state that the selected
 portfolio has no subject return history and do not substitute benchmark, commitment or Strategy Lab returns.
 
 ## Private-market evidence rules

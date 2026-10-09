@@ -50,9 +50,9 @@ Keep every section title and the order exactly as shown. Missing evidence become
 
 ### 6. Forward Return and Risk
 
-- `kv` assumption set, release, regime, horizon, currency and chart fingerprint.
-- Embed unchanged expected-statistics charts.
-- `table` **Forward assumptions** only for equivalent returned measures.
+- `kv` assumption set, release, regime, horizon, currency and evidence basis.
+- `table` **Forward assumptions** only for equivalent governed policy / CMA measures.
+- Unsupported saved-portfolio return or risk statistics remain `Not available`; do not derive them from CMA rows.
 - State `Assumptions, not forecasts`.
 
 ### 7. Commitments, Pacing and Cash Flow

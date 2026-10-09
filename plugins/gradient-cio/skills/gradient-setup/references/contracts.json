@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-08",
+  "version": "2026-10-09",
   "minimum_connector_contract": {
     "minimum_service_version": "0.9.0",
     "compatibility_epoch": 2,
@@ -96,7 +96,8 @@
       ],
       "get_manager_odd_profile": [
         "profile",
-        "resolved_subject"
+        "resolved_subject",
+        "resolved_subject.crd_number"
       ],
       "get_portfolio_attribution": [
         "coverage.status",
@@ -117,11 +118,25 @@
       ],
       "get_portfolio_exposure": [
         "portfolio.portfolio_id",
+        "exposures[0].asset_classification",
+        "exposures[0].fixed_income_metrics.weighting_basis",
         "exposures",
-        "totals.nav_base"
+        "totals.nav_base",
+        "aggregates_by_asset_classification.coverage.status",
+        "methodology"
       ],
       "get_portfolio_historical_returns": [
         "coverage.status",
+        "calendar_years[0].year",
+        "calendar_years[0].month_count",
+        "calendar_years[0].partial",
+        "calendar_years[0].coverage_status",
+        "calendar_years[0].missing_reason",
+        "calendar_years[10].year",
+        "calendar_years[10].month_count",
+        "calendar_years[10].partial",
+        "calendar_years[10].coverage_status",
+        "calendar_years[10].missing_reason",
         "risk_metrics.annualized_volatility",
         "benchmark_relative.portfolio"
       ],
@@ -196,6 +211,9 @@
       "portfolio_returns",
       "portfolio_attribution",
       "portfolio_ex_ante_attribution",
+      "chart_availability",
+      "portfolio_allocations",
+      "portfolio_commitments",
       "cma_consensus",
       "strategy_benchmarks",
       "strategy_return_series",
@@ -212,6 +230,9 @@
       "equity_risk_findings",
       "ddq_numeric_gap",
       "batch_ddq_preview",
+      "write_create_finding",
+      "write_watchlist_manager",
+      "write_roster",
       "write_upload_ddq"
     ]
   },
@@ -280,7 +301,8 @@
       },
       "required": [
         "profile",
-        "resolved_subject"
+        "resolved_subject",
+        "resolved_subject.crd_number"
       ]
     },
     {
@@ -474,32 +496,6 @@
       ],
       "equals": {
         "kind": "availability"
-      },
-      "envelope": false
-    },
-    {
-      "id": "portfolio_expected_statistics",
-      "set": "full",
-      "tool": "get_chart_data",
-      "depends_on": [
-        "orgs",
-        "sample_portfolio",
-        "chart_availability"
-      ],
-      "args": {
-        "organization_id": "<orgs:organizations[0].id>",
-        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
-        "analysis_type": "expected-statistics"
-      },
-      "required": [
-        "kind",
-        "context.fingerprint",
-        "charts[0].chart_id",
-        "charts[0].basis",
-        "charts[0].render_hint.block"
-      ],
-      "equals": {
-        "kind": "data"
       },
       "envelope": false
     },
@@ -796,8 +792,11 @@
       "required": [
         "portfolio.portfolio_id",
         "portfolio.base_currency",
+        "exposures[0].asset_classification",
+        "exposures[0].fixed_income_metrics.weighting_basis",
         "exposures",
         "totals.nav_base",
+        "aggregates_by_asset_classification.coverage.status",
         "has_more",
         "methodology"
       ]
@@ -919,6 +918,16 @@
         "display.risk_free_rate",
         "standard_periods",
         "calendar_years",
+        "calendar_years[0].year",
+        "calendar_years[0].month_count",
+        "calendar_years[0].partial",
+        "calendar_years[0].coverage_status",
+        "calendar_years[0].missing_reason",
+        "calendar_years[10].year",
+        "calendar_years[10].month_count",
+        "calendar_years[10].partial",
+        "calendar_years[10].coverage_status",
+        "calendar_years[10].missing_reason",
         "risk_metrics.month_count",
         "risk_metrics.annualized_volatility",
         "risk_metrics.sharpe_ratio",
@@ -930,7 +939,13 @@
       ],
       "equals": {
         "portfolio.record_kind": "example",
-        "display.return_unit": "decimal_fraction"
+        "display.return_unit": "decimal_fraction",
+        "calendar_years[0].year": 2026,
+        "calendar_years[0].partial": true,
+        "calendar_years[0].coverage_status": "partial",
+        "calendar_years[10].year": 2016,
+        "calendar_years[10].partial": true,
+        "calendar_years[10].coverage_status": "partial"
       },
       "approx": {
         "display.risk_free_rate": {

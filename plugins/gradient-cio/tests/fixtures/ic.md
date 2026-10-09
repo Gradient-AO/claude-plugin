@@ -277,7 +277,7 @@ Not assessed — no GIPS Asset Owner Report provided.
 |---|---|---|---|---|---|---|
 | S1 | get_portfolio_exposure; get_portfolio_structure; check_portfolio_policy | portfolio_id=example; governed policy and exposure views | 2026-09-30 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | passed | n/a |
 | S2 | get_portfolio_historical_returns; get_portfolio_attribution | portfolio_id=example; policy benchmark; performance available; attribution unavailable (`no_weight_cohorts`) | 2026-09-30 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | partial | n/a |
-| S3 | get_chart_data | portfolio_id=example; analysis_type=expected-statistics | 2026-09-11 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | passed | n/a |
+| S3 | check_portfolio_policy; user document | return_objective; forward-analysis.pdf | 2026-09-11 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | passed | n/a |
 | S4 | get_cma_consensus_check | mode=allocation | 2026-06-30 | Mixed — Illustrative, Gradient Maintained — demo data, not the client's holdings or managers + User-Authorized Live | passed | n/a |
 | S5 | get_manager_diligence_findings | view=exposure_weighted | 2026-10-02 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | advisory | n/a |
 | S6 | get_chart_data | portfolio_id=example; analysis_type=allocations | 2026-09-30 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | passed | n/a |

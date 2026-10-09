@@ -57,9 +57,9 @@ Keep every section title and the order exactly as shown. Missing evidence become
 
 ### 7. Forward Return and Risk
 
-- `kv` assumption set, release, regime, horizon, currency and chart fingerprint.
-- Embed unchanged expected-statistics charts.
-- `table` **Forward assumptions** for equivalent returned measures only.
+- `kv` assumption set, release, regime, horizon, currency and evidence basis.
+- `table` **Forward assumptions** for equivalent governed policy / CMA measures only.
+- Unsupported saved-portfolio return or risk statistics remain `Not available`; do not derive them from CMA rows.
 - State `Assumptions, not forecasts`.
 
 ### 8. Policy Risk, Liquidity and Tradability
@@ -67,9 +67,10 @@ Keep every section title and the order exactly as shown. Missing evidence become
 - `table` **Policy risk**: Metric, Observed, Limit, Status, Coverage.
 - `table` **Liquidity profile**: Bucket, % NAV, Amount, Requirement, Status.
 - Distinguish daily-NAV funds, marketable bonds and illiquid/private credit as returned.
-- Effective duration, spread duration and yield to maturity may use returned
-  `exposures[].fixed_income_metrics`; preserve coverage and methodology. Yield to worst, OAS, quality and
-  key-rate rows remain unavailable unless separately sourced.
+- Until P-15 ships, effective duration, spread duration and yield to maturity use the documented
+  current-NAV-weighted aggregation of returned `exposures[].fixed_income_metrics`; show included NAV and row
+  counts. After P-15 ships, use the governed connector aggregate. Preserve coverage and methodology. Yield
+  to worst, OAS, quality and key-rate rows remain unavailable unless separately sourced.
 
 ### 9. Scenarios and Robustness
 

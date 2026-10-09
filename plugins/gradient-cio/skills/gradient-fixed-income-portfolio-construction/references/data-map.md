@@ -10,19 +10,19 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 | Access | `get_gradient_capabilities`; selected organization | Portfolio, research and macro capability state |
 | Portfolio selection | `list_portfolios` | Existing `portfolio_id`, name, currency and record kind |
 | Allocation | `get_portfolio_structure`; `view: allocation_tree`, selected `portfolio_id`, depth 3 | Fixed-income policy nodes, total-portfolio targets, actuals, limits and coverage |
-| Exposure | `get_portfolio_exposure`; selected `portfolio_id`, fixed-income `asset_classification` when supported, page to completion | Returned segment, manager, value basis, value, currency, as-of date and `exposures[].fixed_income_metrics.{effective_duration, spread_duration, yield_to_maturity_decimal, coverage}` |
+| Exposure | `get_portfolio_exposure`; selected `portfolio_id`, exact lowercase `asset_classification: fixed_income`, page to completion | Returned segment, manager, value basis, value, currency, as-of date and `exposures[].fixed_income_metrics.{weighting_basis, effective_duration, spread_duration, yield_to_maturity_decimal, coverage}` |
 | Policy | `check_portfolio_policy`; selected `portfolio_id` | Allocation, return objective, risk, liquidity and concentration status |
-| Returns | `get_portfolio_historical_returns`; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields`, then separate projected calls for `points` and `cumulative_growth` when needed; page commitment rows with `limit` / `next_cursor` | Period returns, benchmark-relative values, risk and coverage |
+| Returns | `get_portfolio_historical_returns`; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`, then separate projected calls for `points` and `cumulative_growth` when needed; until P-01 ships, keep the default commitment page and disclose truncation rather than following `next_cursor` | Period returns, benchmark-relative values, risk and coverage |
 | Attribution | `get_portfolio_attribution`; policy benchmark, root allocation, month-end period, all sections | Realized effects, method, linking, residual, diagnostics and unavailable reasons |
 | Benchmark | Benchmark ID returned by portfolio evidence, then `get_benchmarks`; optional `get_return_series` | Name, class, currency and returned benchmark points |
 | Allocation charts | `get_chart_data`; availability, then `analysis_type: allocations` | Weights, risk contribution, factor and currency items where returned |
-| Forward charts | `get_chart_data`; `analysis_type: expected-statistics`, returned context | Forward statistics, basis and fingerprint |
-| Assumptions | `list_assumption_sets`; `get_capital_market_assumptions` with `view: baseline` | Active release, horizon, currency and fixed-income classes |
+| Forward assumptions | `list_assumption_sets`; `get_capital_market_assumptions` with `view: baseline`; `check_portfolio_policy.return_objective` when available | Active release, horizon, currency, fixed-income classes and governed portfolio objective evidence |
 | Credit context | `get_macro_conditions` with exactly `{"view": "credit_spreads"}` | Returned spread levels, changes, coverage and as-of dates |
 
 Embed usable chart items unchanged. Preserve basis, fingerprint, display units, truncation and unavailable
 reasons. Do not derive sleeve returns or risk from total-portfolio rows.
-State partial historical-return coverage as a report gap. For `no_subject_returns`, state that the selected
+State partial historical-return coverage as a report gap, including `not_yet_funded` commitments and the
+partial 2016 and 2026 calendar years when returned. For `no_subject_returns`, state that the selected
 portfolio has no subject return history and do not substitute benchmark, commitment or Strategy Lab returns.
 
 ## Fixed-income evidence rules
@@ -31,9 +31,14 @@ portfolio has no subject return history and do not substitute benchmark, commitm
 - Historical attribution comes only from `get_portfolio_attribution`.
 - Policy risk status comes only from `check_portfolio_policy`; historical volatility does not establish
   compliance when a policy row is `not_assessed`.
-- Report effective duration, spread duration and yield to maturity from
-  `get_portfolio_exposure.exposures[].fixed_income_metrics`, preserving its coverage counts and methodology.
-  Do not relabel yield to maturity as yield to worst. Yield to worst, OAS, convexity, quality and key-rate
+- Until P-15 ships, calculate each sleeve-level effective duration, spread duration and yield to maturity as
+  a current-NAV-weighted average of the non-null `exposures[].fixed_income_metrics` values. For each row use
+  `market_value_base` when `value_basis: market_value`, otherwise `nav_base`; exclude non-positive or missing
+  weights and missing metric values, and disclose the included NAV and row count. Preserve the returned
+  row-level coverage and methodology. Do not equal-weight rows.
+- After P-15 ships, use the connector's governed aggregate only when its returned `weighting_basis` is
+  `current_holding_nav_base`; do not recompute it.
+- Do not relabel yield to maturity as yield to worst. Yield to worst, OAS, convexity, quality and key-rate
   exposure remain `Not available` unless directly returned by another tool or cited from a user document.
 - Credit spreads are context, not a performance explanation or forecast.
 - Use basis points for spread and allocation changes only when the source supports the conversion.

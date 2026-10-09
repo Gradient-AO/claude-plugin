@@ -45,10 +45,11 @@ Follow `references/data-map.md`, save each raw result and build one source row p
 
 Required evidence:
 
-- portfolio record, allocation tree, fixed-income-filtered exposure pages and policy result;
+- portfolio record, allocation tree, exposure pages filtered with exact lowercase
+  `asset_classification: fixed_income`, and policy result;
 - historical returns and governed attribution, preserving typed unavailable states;
 - benchmark identity and return series when returned;
-- `get_chart_data` availability, then `allocations` and `expected-statistics` one pack at a time;
+- `get_chart_data` availability, then the `allocations` pack;
 - active assumption set, capital-market assumptions and `get_macro_conditions` with exactly
   `{"view": "credit_spreads"}`.
 
@@ -62,10 +63,14 @@ CMA consensus, The Read and selected-series Strategy Lab diagnostics are optiona
 - Historical attribution comes only from `get_portfolio_attribution`. Strategy Lab relative return is not
   attribution.
 - Separate observed historical risk, governed policy status and forward assumptions.
-- Use `get_portfolio_exposure.exposures[].fixed_income_metrics` for returned effective duration, spread
-  duration and yield to maturity, preserving coverage counts and methodology. Never relabel yield to
-  maturity as yield to worst. Report yield to worst, OAS, convexity, quality or key-rate exposure only when
-  another Gradient result or a cited user document directly supplies it. Never derive them from holdings.
+- Until P-15 ships, NAV-weight the non-null
+  `get_portfolio_exposure.exposures[].fixed_income_metrics` values across exposure rows using each row's
+  current value (`market_value_base` for marketable rows, otherwise `nav_base`). Exclude missing metrics and
+  non-positive or missing weights, disclose included NAV and row count, and never equal-weight rows. After
+  P-15 ships, use the governed connector aggregate when its `weighting_basis` is
+  `current_holding_nav_base`.
+- Never relabel yield to maturity as yield to worst. Report yield to worst, OAS, convexity, quality or
+  key-rate exposure only when another Gradient result or a cited user document directly supplies it.
 - Present rates and credit indicators as context, not forecasts. Do not claim that yields or spreads will
   move in a particular direction.
 - Recommend a target segment structure only when constraints and evidence support it. Transaction costs and

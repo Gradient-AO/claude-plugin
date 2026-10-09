@@ -102,15 +102,14 @@ write a branding file in the working directory (logo path relative to it) and pa
 
 - Lead with the finding. Every figure carries a unit, a date where relevant, and an `[S#]` tag for the
   Gradient result or user document that supplied it. Skills may scale and round values for display but must
-  not derive report values locally.
+  not derive report values locally, except for an interim compatibility calculation explicitly documented by
+  the active skill (currently the P-15 fixed-income NAV-weighted aggregation).
 - ISO dates; currency in $B/$M (or the report's currency) with 1–2 decimals; percentages to 1 dp; spreads in bps.
 - Absence is not evidence: an empty or unavailable result is reported as such, never as "none occurred".
 - No adjectives the data cannot support ("robust", "best-in-class", "strong").
 - Label illustrative data exactly **Illustrative, Gradient Maintained — demo data, not the client's holdings
   or managers** on the cover (`confidentiality`), in the banner, in the first affected section, and in every
   affected source row.
-- Until known issue MD-1 is resolved, call `get_macro_conditions` credit spreads with only
-  `{"view": "credit_spreads"}`. Do not pass `fields`, `limit`, or any other optional field.
 - Every report ends with an appendix: sources (tag, evidence, tool, as-of, validation, digest), server metric
   methods (formula identity/version, basis, units and coverage where returned), and a disclaimer (not
   investment, legal or compliance advice; Form ADV is adviser-reported).
