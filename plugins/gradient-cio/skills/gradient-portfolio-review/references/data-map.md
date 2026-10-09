@@ -8,7 +8,7 @@ Read `module-scope.md` first; every saved-portfolio call in this map is Portfoli
 
 | Tool | Arguments | Fields used |
 |---|---|---|
-| `get_gradient_capabilities` | `organization_id` | `capabilities.portfolio`; per Portfolio Analytics tool in `tools[]`: `name`, `available`, `access_mode` (`live` / `illustrative`), `backend_tool_readiness[].{backend_tool_name, available, availability_reason}` |
+| `get_gradient_capabilities` | `organization_id` | `capabilities.{portfolio, peerIntelligence}`; per Portfolio Analytics and peer tool in `tools[]`: `name`, `available`, `access_mode` (`live` / `illustrative`), `availability_reason`, `availability_explanation`, `backend_tool_readiness[].{backend_tool_name, available, availability_reason}` |
 | `list_portfolios` | `organization_id` | `portfolios[].{portfolio_id, portfolio_name, base_currency, record_kind (user / example), canonical_default}`, `provenance.data_scope.{kind, label}` |
 | `list_assumption_sets` | `organization_id`; select the active/default set using returned fields | Assumption-set identity, release/version, horizon and currency needed by forward chart context; preserve the returned selection basis |
 | `get_portfolio_structure` | `view: allocation_tree`, `portfolio_id`, `max_depth` 3, `node_limit` 100 | `portfolio.record_kind`, `nodes[].{allocation_id, parent_id, allocation_name, asset_classification, depth, is_leaf, target_weight, target_weight_total_portfolio, target_weight_total_portfolio_basis, target_weight_total_portfolio_coverage, actual_weight, lower_limit, upper_limit, allocation_policy}`, `coverage.{status, returned_count, truncated, missing_reasons}` |
@@ -91,7 +91,9 @@ If a user explicitly requests saved-portfolio simulated attribution, report
 Peer allocation is optional. When capabilities report `peerIntelligence` unavailable, do not call or retry
 the peer tool. Omit the peer comparison, record
 `Not licensed — peerIntelligence is not available for this organization` in coverage, and complete the
-review from portfolio evidence.
+review from portfolio evidence. Add a report-body callout:
+`Not licensed — Peer allocation context was skipped because peerIntelligence is not available for this
+organization. This review uses portfolio evidence only.`
 
 Benchmark: use the one identified by `benchmark_relative`. If that section is unavailable, ask the user which
 catalog benchmark is the policy benchmark (do not guess from the catalog; there are ~180 system series,
@@ -104,6 +106,7 @@ mostly proxies). Without one, report absolute returns only and say "No benchmark
 | Benchmark series can include a `period_date` after today (a month that has not ended) | Use the bounded historical-return sections, which exclude future periods; do not recompute from raw benchmark points |
 | `get_benchmarks` with `asset_class: multi_asset` → `response_contract_invalid`; other `asset_class` values (e.g. `equity`) return an empty list with an advisory "empty primary list has no explicit reason" | Look up by `benchmark_id`, or page the catalog without filters |
 | `get_cross_domain_research` `portfolio_13f_lookthrough` / `roster_macro_exposure` → `entitlement_required` (`ANALYST_PORTFOLIO_CAPABILITY_REQUIRED`, 403) without the portfolio module, even for the illustrative portfolio | Coverage "Not licensed"; look-through section is one callout. Do not retry |
+| `get_peer_allocation_intelligence` → `PEER_INTELLIGENCE_PREMIUM_REQUIRED` / `entitlement_required` | Coverage "Not licensed"; omit peer comparisons, add the required peer-skip callout and complete from portfolio evidence. Do not retry |
 | `roster_macro_exposure` without `portfolio_id` → `tool_input_invalid` | Always pass `portfolio_id` |
 | `allocation_tree` child `target_weight` and limits are within-parent shares; `actual_weight` is a total-portfolio share | Use `target_weight_total_portfolio` and `allocation_policy`; do not convert locally |
 | `get_portfolio_exposure` value channels | `value_basis: market_value` intentionally has `nav_base: null`; `value_basis: nav` intentionally has `market_value_base: null`. When both values and `as_of_date` are null, show "no current value"; never count it as zero NAV |

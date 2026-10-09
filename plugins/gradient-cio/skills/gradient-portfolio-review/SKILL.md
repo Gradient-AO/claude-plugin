@@ -51,14 +51,18 @@ Rules that matter here:
 
 1. **Organization**: `list_organizations`; ask if more than one and none named.
 2. **Capabilities**: `get_gradient_capabilities` once. Read `capabilities.portfolio`,
-   and for each Portfolio Analytics tool in `tools[]` its `available`, `access_mode` (`live` or `illustrative`) and
-   `backend_tool_readiness[].availability_reason` (e.g. `portfolio_entitlement_required` on the
-   `join_portfolio_13f_lookthrough` backend). This decides the path:
+   `capabilities.peerIntelligence`,
+   and for each Portfolio Analytics tool plus `get_peer_allocation_intelligence` in `tools[]` its `available`,
+   `access_mode` (`live` or `illustrative`) and `backend_tool_readiness[].availability_reason` (e.g.
+   `portfolio_entitlement_required` on the `join_portfolio_13f_lookthrough` backend). This decides the path:
    - **Portfolio licensed** (`portfolio: true`): the user's portfolios plus the example record.
    - **Not licensed** (`portfolio: false`, portfolio tools `access_mode: illustrative`): only Gradient's
      illustrative portfolio is available. Tell the user in one line, offer to continue with the
      **Illustrative, Gradient Maintained — demo data, not the client's holdings or managers** portfolio, and mark the report Partial. Do not ask for an upload as a substitute
      unless the user offers one; a user file is tagged as a user document, never as Gradient data.
+   - **Peer Intelligence not licensed** (`peerIntelligence: false` or the peer tool is unavailable for
+     `peer_intelligence_entitlement_required`): do not call the peer tool. Continue from portfolio evidence
+     and carry the required peer-skip explanation into the report body and Coverage.
 3. **Portfolio**: `list_portfolios` → `portfolio_id`, `portfolio_name`, `base_currency`, `record_kind`,
    `canonical_default`. Match the user's name; if several user records and none named, ask once.
 4. **Period**: default = the latest month-end in the returned history (quarterly review: the latest
@@ -123,7 +127,8 @@ When risk rows are assessed, preserve `risk_limits.observation_basis` and the re
 rule so the review states the governed horizon, effective date, frequency, return basis and currency.
 Peer allocation is context only. If `peerIntelligence` is unavailable, omit peer comparisons, add
 `Not licensed — peerIntelligence is not available for this organization` to coverage, and complete the
-review from portfolio evidence. Never treat this optional entitlement as a report failure.
+review from portfolio evidence. In brief mode add a `callout` in Allocation; in comprehensive mode add the
+callout required by `references/review-template.md`. Never treat this optional entitlement as a report failure.
 
 **Exposure.** Use `get_portfolio_exposure.aggregates_by_asset_classification` for governed value totals,
 shares, coverage and truncation. The server chooses market value for marketable assets and NAV for drawdown
@@ -187,7 +192,9 @@ Sections:
    portfolio attribution source.
 3. **Allocation** — `table` asset class vs policy: Asset class, Target, Actual, Active (pp), Range (align `n`),
    Status (chip); sub-allocation table if the tree has depth-1 nodes, using returned total-portfolio targets;
-   `bars` market value by exposure classification with $M and % of total.
+   `bars` market value by exposure classification with $M and % of total. If peer context is not licensed,
+   add one `callout`: `Not licensed — Peer allocation context was skipped because peerIntelligence is not
+   available for this organization. This review uses portfolio evidence only.`
 4. **Look-through concentration** (`new_page: false`) — `table` top issuers + the caveat callout; if not
    licensed or unavailable, one `callout` saying so (no table).
 5. **Risk** (`new_page: false`) — `kv`: volatility, maximum drawdown with dates, best and worst month,

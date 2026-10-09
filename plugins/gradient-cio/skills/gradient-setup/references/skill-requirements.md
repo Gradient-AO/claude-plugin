@@ -50,6 +50,9 @@ gradient-manager-compare, gradient-equity-note.
 gradient-portfolio-review without `portfolio` can still review Gradient's illustrative portfolio: rate it **Partial**.
 Apply the same Partial rating to gradient-portfolio-attribution-report and each portfolio-construction skill when only the illustrative portfolio is
 available; the report must carry the standard illustrative label and cannot describe a client portfolio.
+Missing `peerIntelligence` does not make gradient-portfolio-review Not licensed or Partial by itself. Report
+`Peer allocation context: Not licensed (optional)`, skip the peer tool and complete the review from portfolio
+evidence.
 
 Rate the IC memo's Portfolio Analytics core and Strategy Lab supplement separately. Missing `strategyLab`
 makes the combined memo **Partial**, not Not licensed; report

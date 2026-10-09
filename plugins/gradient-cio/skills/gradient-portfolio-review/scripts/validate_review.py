@@ -156,6 +156,30 @@ def validate(path: Path) -> list[str]:
             if match:
                 errors.append(f"Prescriptive language in analysis: '{match.group(0)}'")
 
+    coverage = section_by_title(sections, "Coverage")
+    peer_not_licensed = False
+    if coverage is not None:
+        for block in coverage.get("blocks", []):
+            if not isinstance(block, dict) or block.get("type") != "coverage":
+                continue
+            peer_not_licensed = any(
+                isinstance(item, dict)
+                and item.get("name") == "Peer allocation intelligence"
+                and item.get("status") == "not licensed"
+                for item in block.get("items", [])
+            )
+    if peer_not_licensed:
+        allocation = section_by_title(sections, "Allocation and Policy Compliance")
+        allocation_text = "\n".join(collect_strings(allocation or {}))
+        required_peer_skip = (
+            "Peer allocation context was skipped because peerIntelligence "
+            "is not available for this organization"
+        )
+        if required_peer_skip not in allocation_text:
+            errors.append(
+                "Unlicensed peer allocation requires the report-body skip callout"
+            )
+
     appendix = section_by_title(sections, "Appendix A — Sources")
     appendix_position = titles.index("Appendix A — Sources") if "Appendix A — Sources" in titles else len(sections)
     body_text = "\n".join(collect_strings(sections[:appendix_position]))

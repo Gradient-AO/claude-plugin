@@ -42,6 +42,13 @@ PORTFOLIO_REVIEW_TEMPLATE = (
     / "references"
     / "review-template.md"
 )
+PORTFOLIO_REVIEW_DATA_MAP = (
+    ROOT
+    / "skills"
+    / "gradient-portfolio-review"
+    / "references"
+    / "data-map.md"
+)
 PORTFOLIO_REVIEW_VALIDATOR = (
     ROOT / "skills" / "gradient-portfolio-review" / "scripts" / "validate_review.py"
 )
@@ -1021,6 +1028,24 @@ def contract_manifest():
     portfolio_review_template = PORTFOLIO_REVIEW_TEMPLATE.read_text(
         encoding="utf-8",
     )
+    portfolio_review_data_map = PORTFOLIO_REVIEW_DATA_MAP.read_text(
+        encoding="utf-8",
+    )
+    normalized_portfolio_review_guidance = re.sub(
+        r"\s+",
+        " ",
+        portfolio_review_guidance,
+    )
+    normalized_portfolio_review_template = re.sub(
+        r"\s+",
+        " ",
+        portfolio_review_template,
+    )
+    normalized_portfolio_review_data_map = re.sub(
+        r"\s+",
+        " ",
+        portfolio_review_data_map,
+    )
     ic_memo_guidance = IC_MEMO_SKILL.read_text(encoding="utf-8")
     ic_memo_data_map = IC_MEMO_DATA_MAP.read_text(encoding="utf-8")
     check(
@@ -1159,10 +1184,24 @@ def contract_manifest():
     )
     check(
         "`get_peer_allocation_intelligence`" in portfolio_review_guidance
+        and "`capabilities.peerIntelligence`" in portfolio_review_guidance
         and "`peerIntelligence` is unavailable" in portfolio_review_guidance
         and "Never treat this optional entitlement as a report failure"
         in portfolio_review_guidance,
-        "portfolio review skips unlicensed peer context without failing",
+        "portfolio review gates unlicensed peer context without failing",
+    )
+    peer_skip_text = (
+        "Peer allocation context was skipped because peerIntelligence "
+        "is not available for this organization"
+    )
+    check(
+        peer_skip_text in normalized_portfolio_review_guidance
+        and peer_skip_text in normalized_portfolio_review_data_map
+        and peer_skip_text in normalized_portfolio_review_template
+        and "Peer allocation intelligence" in portfolio_review_template
+        and "Peer allocation context: Not licensed (optional)"
+        in SKILL_REQUIREMENTS.read_text(encoding="utf-8"),
+        "portfolio review discloses the optional peer-entitlement skip",
     )
     check(
         by_id["portfolio_allocations"]["tool"] == "get_chart_data"

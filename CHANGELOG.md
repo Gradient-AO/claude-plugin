@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.3.1
+- Required portfolio reviews to gate peer-allocation calls from capabilities and show a reader-visible skip explanation when Peer Intelligence is not licensed.
+- Added comprehensive-template, fixture and validator coverage for the optional peer-entitlement path.
+
 ## 2.3.0
 - Kept historical-return evidence inline-readable with section field projections, split detail calls and paged commitment benchmark rows.
 - Required every historical-return skill to disclose `partial` coverage and `no_subject_returns` instead of substituting another series.

@@ -23,7 +23,7 @@
     },
     "completeness": {
       "used": 10,
-      "expected": 11,
+      "expected": 12,
       "state": "partial"
     },
     "meter_title": "Evidence completeness"
@@ -306,6 +306,12 @@
           }
         },
         {
+          "type": "callout",
+          "tone": "info",
+          "title": "Peer allocation context",
+          "text": "Not licensed — Peer allocation context was skipped because peerIntelligence is not available for this organization. This review uses portfolio evidence only."
+        },
+        {
           "type": "text",
           "text": "Interpretation: No allocation band is in breach [S3]. Private Assets has 1.8pp of upper-band headroom, while Real Assets has 1.7pp of lower-band headroom; both are returned as Watch [S3]."
         }
@@ -566,6 +572,7 @@
             {"name": "Capital-market assumptions", "status": "available", "note": "Example 2026 CMA (TEST) [S8]"},
             {"name": "Market context", "status": "available", "note": "As of 2026-06-30 [S9]"},
             {"name": "13F look-through", "status": "degraded", "note": "Long-only US-listed equity; as of 2026-05-15 [S10]"},
+            {"name": "Peer allocation intelligence", "status": "not licensed", "note": "Not licensed — peerIntelligence is not available for this organization"},
             {"name": "Strategy Lab supplement", "status": "unavailable", "note": "No selected return-series session [S7]"}
           ]
         }
