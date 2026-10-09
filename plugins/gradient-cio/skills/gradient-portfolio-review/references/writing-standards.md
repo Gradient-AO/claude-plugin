@@ -52,10 +52,10 @@ If the evidence raises a possible action, describe the condition and offer a sep
 - **Historical return**: returned by `get_portfolio_historical_returns`.
 - **Historical attribution**: realized Brinson-Fachler effects returned by `get_portfolio_attribution`.
 - **Realized risk**: metrics computed by the historical-return contract from observed returns.
-- **Projected return and risk decomposition**: expected-statistics, risk-contribution, factor/currency or
-  simulation outputs with their returned assumption basis.
-- **Selected-series sandbox**: Strategy Lab output. It is not saved-portfolio holdings, policy compliance,
-  historical performance or Brinson attribution.
+- **Projected return and risk decomposition**: governed policy / CMA assumptions, risk-contribution,
+  factor/currency or simulation outputs with their returned assumption basis.
+- **Selected-series sandbox**: Strategy Lab output, including `run_strategy_lab_expected_statistics`. It is
+  not saved-portfolio holdings, policy compliance, historical performance or Brinson attribution.
 
 Never use `simulated attribution`, `projected attribution` or `forward attribution` unless a public contract
 returns a result with that exact governed name. The current expected contract is named

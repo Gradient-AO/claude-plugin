@@ -96,6 +96,10 @@ Use JSON block mode. Set:
   `Headroom`, `Status`.
 - `table` **Sub-allocation versus policy** with the same columns when depth-1 rows exist.
 - One unchanged returned allocation chart when available.
+- Optional peer-allocation context may follow only when `peerIntelligence` is licensed and the tool returns
+  usable evidence. When it is not licensed, include one `callout` in this section:
+  `Not licensed — Peer allocation context was skipped because peerIntelligence is not available for this
+  organization. This review uses portfolio evidence only.`
 - `text` **Interpretation** identifying breaches, watch rows and the smallest returned headroom. Do not propose
   a rebalance.
 
@@ -120,8 +124,9 @@ Use JSON block mode. Set:
 
 ### 9. Projected Return and Risk Decomposition
 
-- Name assumption set, CMA release, regime, horizon, currency and chart `context.fingerprint`.
-- Embed unchanged returned `expected-statistics` and relevant `allocations` chart items.
+- Name assumption set, CMA release, regime, horizon, currency and evidence basis.
+- Use governed policy / CMA evidence for saved-portfolio forward assumptions and embed relevant returned
+  `allocations` chart items unchanged.
 - `table` **Forward assumptions and decomposition** with columns `Measure`, `Portfolio`, `Policy / reference`,
   `Basis`, `Source` only when the server returns equivalent tabular evidence.
 - Optional `table` **Strategy Lab sandbox** with returned simulation, expected-statistics, relative-return,
@@ -153,6 +158,8 @@ Use JSON block mode. Set:
 - `coverage` block with every expected source for comprehensive mode.
 - Status values: `available`, `degraded`, `unavailable`, `not licensed`.
 - Notes include as-of date, returned rows, basis/fingerprint and error code/request ID where applicable.
+- Include **Peer allocation intelligence**. When unlicensed, use status `not licensed` and note
+  `Not licensed — peerIntelligence is not available for this organization`.
 
 ### Appendix A — Sources
 

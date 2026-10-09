@@ -6,7 +6,7 @@ sets `"envelope": false`.
 
 The same file's top-level `minimum_connector_contract` is the machine-readable cutover gate. Validate it
 against the saved `get_gradient_capabilities` summary before running any probe. A service version below
-0.9.0, a compatibility epoch other than 2, or a missing required tool is a connector failure: stop, report
+0.9.0, a compatibility epoch other than 3, or a missing required tool is a connector failure: stop, report
 `not_ready`, and do not use local-calculation fallbacks.
 
 Resolve every chained placeholder from a saved dependency response. Placeholders have the exact form
@@ -31,22 +31,25 @@ or report date; the default probe therefore exercises the current latest-publica
 sample_portfolio, chart_catalog. The sample probe verifies that `list_portfolios`
 returns Gradient's canonical example first.
 
-**Full read set (56 reads including standard):** standard plus capabilities_summary, manager_diligence_brief,
+**Full read set (57 reads including standard):** standard plus capabilities_summary, manager_diligence_brief,
 attention, findings, events, events_roster, entity_facts, conditions, credit_spreads, gradient_signal, regime_state,
-cma_baseline, cma_consensus, watchlist,
+cma_baseline, cma_consensus, cma_consensus_allocation, watchlist,
 portfolio_tree, portfolio_exposure, portfolio_policy, portfolio_ownership, portfolio_returns,
 portfolio_attribution, portfolio_series,
-chart_availability, portfolio_expected_statistics, portfolio_allocations, portfolio_commitments,
+chart_availability, portfolio_allocations, portfolio_commitments,
 strategy_benchmarks, strategy_return_series, four Strategy Lab session builders,
 strategy_expected_statistics, strategy_relative_return, strategy_manager_compare, strategy_date_windows,
 adv_13f_consistency,
 multi_manager_13f_overlap, search_managers, screen, cftc_positioning, hf_crowding, regional_facts,
-regional_capital_markets, equity_fundamentals, equity_risk_findings, ddq_numeric_gap and batch_ddq_preview.
+regional_capital_markets, equity_fundamentals, equity_risk_findings, ddq_extract_fund_aliases,
+ddq_numeric_gap and batch_ddq_preview.
 
 The portfolio policy probe verifies governed-only semantics and the 2% watch boundary. The returns probe
 requests the summary and benchmark-relative sections through an explicit `fields` projection, caps the
 commitment page at 25, checks the risk-free-rate contract approximately, and reconciles the risk-metric month
-count to selected points. A partial result or
+count to selected points. It also verifies the canonical 2026 partial calendar-year row; reports must
+separately disclose both partial years (2016 and 2026) and any `not_yet_funded` commitment comparisons. Until
+P-01 ships, do not follow the commitment `next_cursor`; disclose the bounded page instead. A partial result or
 `no_subject_returns` is a reportable coverage gap, not a reason to substitute another series. Attribution
 verifies the bounded Brinson-Fachler surface, persisted
 monthly segment basis, linked summary, segment effects and zero-residual reconciliation for the canonical
@@ -71,7 +74,7 @@ The first call persists fictional inline text as a ready subject-bound document 
 save call is still a dry-run preview and must return `outcome: "preview"`, `dry_run: true` and `committed:
 false`.
 
-The complete matrix is 64 calls. Run the standard or full read set without write confirmation. Run the
+The complete matrix is 65 calls. Run the standard or full read set without write confirmation. Run the
 writes set only as previews. Before the DDQ save-preview set, tell the user that its reconciliation call
 persists a test document and immutable test workpaper.
 
@@ -82,9 +85,13 @@ For `portfolio_exposure` and `portfolio_ownership`, determine scope from
 `sample_portfolio.portfolios[0].record_kind`, which must be `example`. Report a
 mismatch when a dependent response does not identify that same canonical
 portfolio or labels it as live data.
+For exposure totals, `page_totals` is current-page only and `portfolio_totals` is filtered-portfolio scope;
+require `portfolio_totals.complete` before treating it as exhaustive. Preserve row `null_reasons`. Fixed-income
+portfolio and classification aggregates are current-holding-NAV weighted, and a zero spread duration is a
+valid observation.
 
 The Portfolio Analytics probes cover list, exposure, structure, historical and governed ex ante attribution,
-allocations, expected-statistics and commitments chart packs, and policy checking against the canonical
+the supported allocations and commitments chart packs, and policy checking against the canonical
 illustrative `portfolio_id`. Strategy Lab separately covers the named demo benchmark catalog, one
 manager/fund return series, and the expected-statistics, relative-return, manager-compare and date-window
 IDD compute tools. Each compute probe receives the unchanged `strategy_lab_session` from a successful
@@ -106,20 +113,25 @@ Results:
 - Compact envelopes omit passed checks and advisory `not_run` checks. This is intentional; use
   `checks_omitted` for the count and request a full envelope only when auditing validation detail.
 
-## Known issues (revalidated 2026-10-08)
+## Known issues (revalidated 2026-10-09)
 
 This table contains only currently reproducible exceptions. Re-check each one on every full run. When one
-stops reproducing, say so in the report ("resolved since 2026-10-08") so the maintainer can remove it.
+stops reproducing, say so in the report ("resolved since 2026-10-09") so the maintainer can remove it.
 
 No known issue permits a Portfolio Analytics ID to be reused as Strategy Lab input.
+P-07 is an intentional contract boundary, not a connector fault: `get_chart_data` supports only
+`allocations` and `commitments`. Do not probe `expected-statistics` through that tool. Preserve
+`run_strategy_lab_expected_statistics` for a separately built Strategy Lab session.
 
 | Tool / view | Classification | Ticket, owner, review | Symptom and current workaround | Removal criterion |
 |---|---|---|---|---|
-| `check_portfolio_policy` risk limits | Non-blocking Portfolio Analytics governance gap | PA-2 · Gradient MCP · 2026-10-20 | Volatility, drawdown and CVaR may be `not_assessed` with `risk_observation_missing`. Preserve the status and show historical risk only as a separate observation. | Governed monthly total-return basis is returned and all three risk rows are assessed twice. |
-| `get_chart_data` portfolio packs | Non-blocking Portfolio Analytics coverage gap | PA-3 · Gradient MCP · 2026-10-20 | Illustrative expected-statistics or allocation packs may be partial. Honor availability and missing reasons; do not replace a portfolio chart with Strategy Lab output. | Required illustrative chart pack passes twice with a stable basis and fingerprint. |
-| `get_macro_conditions` `credit_spreads` | Non-blocking input-contract defect | MD-1 · Gradient MCP · 2026-10-20 | Optional fields can cause request validation failure. Pass only `{"view":"credit_spreads"}`. | The published schema accepts documented optional selectors and representative probes pass twice. |
-| Installed plugin version | Release distribution | PL-1 · Plugin · 2026-10-20 | An installed copy can remain at `v0001` dated 2026-10-04 after the marketplace is updated. Run `/plugin marketplace update gradientcio`, then verify the plugin manifest version and this table. | Fresh installs and updates resolve to the current marketplace version in two client checks. |
-| get_benchmarks with `asset_class` filter | Non-blocking data quality | [#1500](https://github.com/Gradient-AO/gradientcio/issues/1500), `@shbryx`, 2026-11-02 | `multi_asset` can give `response_contract_invalid`; `equity` can give 0 rows. Use the unfiltered catalog. | Supported filters are documented and contract-valid; representative filtered probes pass twice. |
-| get_cross_domain_research `adv_13f_consistency`, `holdings_issuer_risk` | Non-blocking data quality | [#1501](https://github.com/Gradient-AO/gradientcio/issues/1501), `@shbryx`, 2026-11-02 | Often `partial` with `crd_cik_legal_entity_unconfirmed`. Report the identity caveat and make no inference from the ratio. | Governed linkage meets the service threshold or returns stable typed unavailability; probes pass twice. |
-| get_market_positioning `equity_signals` | Non-blocking data quality | [#1502](https://github.com/Gradient-AO/gradientcio/issues/1502), `@shbryx`, 2026-11-02 | Can return 422 `semantic_validation_failed` (`equity_signal_stale_contributors`). Omit sector context and disclose unavailability. | Contributors satisfy freshness policy or return stable typed unavailability; probe passes twice. |
-| screen_managers | Non-blocking semantic/provenance gap | [#1498](https://github.com/Gradient-AO/gradientcio/issues/1498), `@shbryx`, 2026-11-02 | `affirmative_disclosure_count` counts every Form ADV "yes", not disciplinary events, and has no provenance envelope. Use Item 11 from the ODD profile for disciplinary claims. | Field semantics are narrowed or renamed compatibly, provenance is present and production probes pass twice. |
+| `get_portfolio_historical_returns` commitment continuation | Non-blocking bounded-response limitation | P-01 · Gradient MCP · pending | `benchmark_relative` may return only the first 25 commitment rows with `commitments_truncated: true`. Do not follow `next_cursor` until P-01 ships; disclose the returned count and omitted detail. Preserve `not_yet_funded` as a gap, not a zero return. | Reliable cursor continuation ships and a multi-page canonical probe completes twice without duplicates or omissions. |
+
+P-12–P-20 are enforced by compatibility-epoch-3 schemas and probes: renamed capability/entitlement fields,
+scoped exposure totals, governed fixed-income aggregates, coherent null reasons, positive-weight CMA examples,
+and fund-scope DDQ aliases. P-21 remains a data-readiness condition rather than a client workaround: report
+GRIP availability reasons and The Read `coverage.unavailable_visuals` instead of inventing missing history.
+
+Decision hold: keep Strategy Lab simulation, saved-scenario and
+`run_strategy_lab_expected_statistics` references until the maintainer explicitly decides their
+public-surface status. They are not classified as removed by this release.

@@ -23,7 +23,7 @@
     },
     "completeness": {
       "used": 10,
-      "expected": 11,
+      "expected": 12,
       "state": "partial"
     },
     "meter_title": "Evidence completeness"
@@ -306,6 +306,12 @@
           }
         },
         {
+          "type": "callout",
+          "tone": "info",
+          "title": "Peer allocation context",
+          "text": "Not licensed — Peer allocation context was skipped because peerIntelligence is not available for this organization. This review uses portfolio evidence only."
+        },
+        {
           "type": "text",
           "text": "Interpretation: No allocation band is in breach [S3]. Private Assets has 1.8pp of upper-band headroom, while Real Assets has 1.7pp of lower-band headroom; both are returned as Watch [S3]."
         }
@@ -424,25 +430,8 @@
             ["Regime", "Baseline", "S8"],
             ["Horizon", "10 years", "S8"],
             ["Currency", "USD", "S8"],
-            ["Context fingerprint", "test-forward-context-2026q2", "S7"]
+            ["Evidence basis", "Governed policy and CMA evidence", "S3,S8"]
           ]
-        },
-        {
-          "type": "chart",
-          "chart": {
-            "chart_id": "test-expected-statistics",
-            "title": "Portfolio expected statistics (TEST)",
-            "status": "ok",
-            "currency": "USD",
-            "columns": [
-              {"key": "metric", "title": "Metric", "format": "text", "decimals": null},
-              {"key": "portfolio", "title": "Portfolio", "format": "percentage", "decimals": 1},
-              {"key": "policy", "title": "Policy", "format": "percentage", "decimals": 1}
-            ],
-            "rows": [["Expected return", 0.062, 0.061], ["Expected volatility", 0.104, 0.101], ["Expected max drawdown", -0.184, -0.179], ["95% CVaR", -0.156, -0.149]],
-            "truncated": false,
-            "render_hint": {"block": "table", "x": "metric", "y": []}
-          }
         },
         {
           "type": "table",
@@ -450,10 +439,10 @@
           "columns": ["Measure", "Portfolio", "Policy / reference", "Basis", "Source"],
           "align": ["l", "r", "r", "l", "n"],
           "rows": [
-            ["Expected return", "6.2%", "6.1%", "10-year nominal", "[S7][S8]"],
-            ["Expected volatility", "10.4%", "10.1%", "Forward covariance", "[S7]"],
-            ["Expected max drawdown", "-18.4%", "-17.9%", "Model assumption", "[S7]"],
-            ["95% CVaR", "-15.6%", "-14.9%", "1-year model assumption", "[S7]"],
+            ["Expected return", "6.2%", "6.1%", "10-year nominal", "[S3][S8]"],
+            ["Expected volatility", "Not available", "Not available", "No governed saved-portfolio statistic", "[S3]"],
+            ["Expected max drawdown", "Not available", "Not available", "No governed saved-portfolio statistic", "[S3]"],
+            ["95% CVaR", "Not available", "Not available", "No governed saved-portfolio statistic", "[S3]"],
             ["Largest risk contribution", "Public Equity 46.0%", "n/a", "Forward assumptions", "[S7]"]
           ]
         },
@@ -461,11 +450,11 @@
           "type": "callout",
           "tone": "info",
           "title": "Selected-series sandbox — not saved-portfolio analytics",
-          "text": "Not available — no Strategy Lab return series selected. The portfolio chart pack remains the only forward analytical basis in this review [S7]."
+          "text": "Not available — no Strategy Lab return series selected. Saved-portfolio forward evidence is limited to governed policy and CMA assumptions [S3][S8]."
         },
         {
           "type": "text",
-          "text": "Interpretation: The returned expected return is 0.7pp above the policy objective, while expected volatility is 1.3pp above realized volatility [S3][S4][S7]. These values use different historical and forward bases and are presented as assumptions, not forecasts [S7][S8]."
+          "text": "Interpretation: The returned expected return is 0.7pp above the policy objective [S3][S8]. Saved-portfolio expected volatility, drawdown and CVaR are unavailable; CMA values are assumptions, not forecasts [S3][S8]."
         }
       ]
     },
@@ -562,10 +551,11 @@
             {"name": "Historical returns", "status": "available", "note": "48 months; net basis [S4]"},
             {"name": "Historical attribution", "status": "degraded", "note": "Residual -2 bps vs 1 bp tolerance [S5]"},
             {"name": "Holdings exposure", "status": "available", "note": "31 commitments; all pages retrieved [S6]"},
-            {"name": "Portfolio chart packs", "status": "available", "note": "allocations, expected-statistics, commitments; fingerprint test-forward-context-2026q2 [S7]"},
+            {"name": "Portfolio chart packs", "status": "available", "note": "allocations and commitments [S7]"},
             {"name": "Capital-market assumptions", "status": "available", "note": "Example 2026 CMA (TEST) [S8]"},
             {"name": "Market context", "status": "available", "note": "As of 2026-06-30 [S9]"},
             {"name": "13F look-through", "status": "degraded", "note": "Long-only US-listed equity; as of 2026-05-15 [S10]"},
+            {"name": "Peer allocation intelligence", "status": "not licensed", "note": "Not licensed — peerIntelligence is not available for this organization"},
             {"name": "Strategy Lab supplement", "status": "unavailable", "note": "No selected return-series session [S7]"}
           ]
         }
@@ -586,7 +576,7 @@
             ["S4", "Historical returns and realized risk", "get_portfolio_historical_returns", "all six sections", "2026-06-30", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s4"],
             ["S5", "Historical attribution", "get_portfolio_attribution", "summary, segments, diagnostics", "2026-06-30", "Fictional TEST data", {"chip": "degraded", "status": "degraded"}, "test-s5"],
             ["S6", "Holdings exposure", "get_portfolio_exposure", "all pages", "2026-06-30", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s6"],
-            ["S7", "Portfolio chart packs", "get_chart_data", "allocations, expected-statistics, commitments", "2026-06-30", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s7"],
+            ["S7", "Portfolio chart packs", "get_chart_data", "allocations, commitments", "2026-06-30", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s7"],
             ["S8", "Capital-market assumptions", "get_capital_market_assumptions", "view=baseline", "2026-06-15", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s8"],
             ["S9", "Market context", "get_the_read", "visuals=none", "2026-06-30", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s9"],
             ["S10", "13F look-through", "get_cross_domain_research", "portfolio_13f_lookthrough", "2026-05-15", "Fictional TEST data", {"chip": "advisory", "status": "advisory"}, "test-s10"]

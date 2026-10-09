@@ -50,8 +50,7 @@ Required evidence:
 
 - portfolio record, allocation tree, full exposure pages and policy result;
 - historical returns and governed attribution, preserving typed unavailable states;
-- `get_chart_data` availability, then `allocations`, `expected-statistics` and `commitments` one pack at a
-  time;
+- `get_chart_data` availability, then `allocations` and `commitments` one pack at a time;
 - active assumption set and baseline capital-market assumptions.
 
 Manager diligence, CMA consensus and selected-series Strategy Lab results are optional. An entitlement block
@@ -65,8 +64,8 @@ is `Not licensed`, not an outage. Retry only once and only when the error says i
   targets or infer a policy status.
 - Lead liquidity analysis with unfunded coverage, near-term calls and denominator sensitivity. State every
   valuation date and lag.
-- Preserve chart `basis`, `context.fingerprint`, assumption set, regime, horizon and currency. Forward
-  values are assumptions, not forecasts.
+- Preserve chart `basis` and `context.fingerprint`; preserve the assumption set, regime, horizon and currency
+  on governed policy / CMA forward evidence. Forward values are assumptions, not forecasts.
 - Keep selected-series Strategy Lab evidence optional and label it
   **Selected-series sandbox — not saved-portfolio analytics**.
 - Recommend a target structure only from user-stated constraints and returned evidence. If the evidence

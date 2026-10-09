@@ -109,8 +109,6 @@ write a branding file in the working directory (logo path relative to it) and pa
 - Label illustrative data exactly **Illustrative, Gradient Maintained — demo data, not the client's holdings
   or managers** on the cover (`confidentiality`), in the banner, in the first affected section, and in every
   affected source row.
-- Until known issue MD-1 is resolved, call `get_macro_conditions` credit spreads with only
-  `{"view": "credit_spreads"}`. Do not pass `fields`, `limit`, or any other optional field.
 - Every report ends with an appendix: sources (tag, evidence, tool, as-of, validation, digest), server metric
   methods (formula identity/version, basis, units and coverage where returned), and a disclaimer (not
   investment, legal or compliance advice; Form ADV is adviser-reported).

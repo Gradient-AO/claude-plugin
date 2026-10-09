@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.3.3
+- Corrected the sample fixed-income exposure probe to use the required lowercase filter and actual `portfolio_totals` response path.
+- Required exact lowercase exposure-classification inputs across shared and portfolio-review guidance.
+- Updated the connector cutover gate and capability guidance for compatibility epoch 3, including effective capabilities, product entitlements and per-tool access modes.
+- Added governed exposure-scope, fixed-income aggregate, null-reason, CMA allocation and fund DDQ alias probes; removed the obsolete P-15 client-side weighting workaround.
+- Added structured The Read visual-unavailability guidance for missing macro history and retained GRIP degradation reasons.
+
+## 2.3.2
+- Replaced stale setup known issues with the active P-01 commitment-pagination and P-15 fixed-income aggregation limits.
+- Strengthened required setup coverage for the illustrative portfolio, session-bound IDD Strategy Lab tools, and dry-run finding, watchlist, roster and upload writes.
+- Required historical-return reports to project response fields and disclose unfunded commitments, partial 2016 / 2026 years and bounded commitment detail.
+- Documented canonical exposure display names plus case-insensitive snake_case aliases and added the temporary NAV-weighted fixed-income aggregation rule.
+- Aligned chart guidance and setup probes with P-07: `get_chart_data` now exposes only allocations and commitments, while session-bound Strategy Lab expected-statistics remains supported.
+- Expanded regression checks for removed tool, domain and chart references while retaining Strategy Lab simulation, saved scenarios and expected-statistics.
+
+## 2.3.1
+- Required portfolio reviews to gate peer-allocation calls from capabilities and show a reader-visible skip explanation when Peer Intelligence is not licensed.
+- Added comprehensive-template, fixture and validator coverage for the optional peer-entitlement path.
+
 ## 2.3.0
 - Kept historical-return evidence inline-readable with section field projections, split detail calls and paged commitment benchmark rows.
 - Required every historical-return skill to disclose `partial` coverage and `no_subject_returns` instead of substituting another series.

@@ -24,6 +24,7 @@ CONTRACT_CHECKS = ROOT / "skills" / "gradient-setup" / "references" / "contract-
 PUBLIC_TOOLS = ROOT / "skills" / "gradient-setup" / "references" / "public-tools.json"
 SHARED_REPORT_STYLE = ROOT / "shared" / "report-style.md"
 SHARED_MODULE_SCOPE = ROOT / "shared" / "module-scope.md"
+SHARED_CHART_DATA = ROOT / "shared" / "chart-data.md"
 SKILL_REQUIREMENTS = ROOT / "skills" / "gradient-setup" / "references" / "skill-requirements.md"
 MACRO_BRIEF_SKILL = ROOT / "skills" / "gradient-macro-brief" / "SKILL.md"
 IC_MEMO_SKILL = ROOT / "skills" / "gradient-ic-memo" / "SKILL.md"
@@ -41,6 +42,13 @@ PORTFOLIO_REVIEW_TEMPLATE = (
     / "gradient-portfolio-review"
     / "references"
     / "review-template.md"
+)
+PORTFOLIO_REVIEW_DATA_MAP = (
+    ROOT
+    / "skills"
+    / "gradient-portfolio-review"
+    / "references"
+    / "data-map.md"
 )
 PORTFOLIO_REVIEW_VALIDATOR = (
     ROOT / "skills" / "gradient-portfolio-review" / "scripts" / "validate_review.py"
@@ -578,7 +586,7 @@ def contract_manifest():
         for name in ("standard", "full", "writes", "ddq-save-preview")
     }
     check(
-        counts == {"standard": 8, "full": 48, "writes": 5, "ddq-save-preview": 3},
+        counts == {"standard": 8, "full": 49, "writes": 5, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
     )
 
@@ -604,6 +612,7 @@ def contract_manifest():
         "batch_reconcile_manager_ddq_claims",
         "build_strategy_lab_session",
         "check_portfolio_policy",
+        "extract_ddq_claims",
         "get_benchmarks",
         "get_cma_consensus_check",
         "get_diligence_roster_funds",
@@ -611,6 +620,7 @@ def contract_manifest():
         "get_gradient_capabilities",
         "get_manager_diligence_brief",
         "get_manager_odd_profile",
+        "get_the_read",
         "get_portfolio_attribution",
         "get_portfolio_ex_ante_attribution",
         "get_portfolio_exposure",
@@ -631,7 +641,7 @@ def contract_manifest():
     minimum_probe_ids = set(minimum.get("required_probe_ids", []))
     check(
         minimum.get("minimum_service_version") == "0.9.0"
-        and minimum.get("compatibility_epoch") == 2
+        and minimum.get("compatibility_epoch") == 3
         and set(minimum.get("required_tools", [])) == expected_minimum_tools,
         "minimum connector contract pins service, epoch, and required tools",
     )
@@ -641,8 +651,12 @@ def contract_manifest():
             "portfolio_attribution",
             "portfolio_ex_ante_attribution",
             "portfolio_returns",
+            "chart_availability",
+            "portfolio_allocations",
+            "portfolio_commitments",
             "entity_facts",
             "cma_consensus",
+            "cma_consensus_allocation",
             "strategy_benchmarks",
             "strategy_return_series",
             "strategy_expected_statistics_session",
@@ -654,9 +668,13 @@ def contract_manifest():
             "strategy_date_windows_session",
             "strategy_date_windows",
             "equity_fundamentals",
+            "ddq_extract_fund_aliases",
             "ddq_numeric_gap",
             "batch_ddq_preview",
             "manager_diligence_brief",
+            "write_create_finding",
+            "write_watchlist_manager",
+            "write_roster",
             "write_upload_ddq",
         } <= minimum_probe_ids
         and set(minimum.get("required_response_field_paths", {}))
@@ -810,6 +828,16 @@ def contract_manifest():
         ) is True,
         "sample-portfolio probe verifies the canonical example",
     )
+    check(
+        "resolved_subject.crd_number"
+        in by_id["odd_profile"].get("required", [])
+        and "resolved_subject.crd_number"
+        in minimum.get("required_response_field_paths", {}).get(
+            "get_manager_odd_profile",
+            [],
+        ),
+        "ODD profile contract guarantees the CRD used by the watchlist preview",
+    )
     policy_probe = by_id["portfolio_policy"]
     check(
         policy_probe["tool"] == "check_portfolio_policy"
@@ -870,6 +898,29 @@ def contract_manifest():
             "unit": "count",
         }],
         "historical-return probe covers bounded summary sections and numeric reconciliation",
+    )
+    check(
+        {
+            "calendar_years[0].year",
+            "calendar_years[0].month_count",
+            "calendar_years[0].partial",
+            "calendar_years[0].coverage_status",
+            "calendar_years[0].missing_reason",
+            "calendar_years[10].year",
+            "calendar_years[10].month_count",
+            "calendar_years[10].partial",
+            "calendar_years[10].coverage_status",
+            "calendar_years[10].missing_reason",
+        } <= set(returns_probe.get("required", []))
+        and returns_probe.get("equals", {}).get("calendar_years[0].year")
+        == 2026
+        and returns_probe.get("equals", {}).get("calendar_years[0].partial")
+        is True
+        and returns_probe.get("equals", {}).get("calendar_years[10].year")
+        == 2016
+        and returns_probe.get("equals", {}).get("calendar_years[10].partial")
+        is True,
+        "historical-return probe verifies the canonical partial 2016 and 2026 calendar years",
     )
     attribution_probe = by_id["portfolio_attribution"]
     check(
@@ -1021,6 +1072,24 @@ def contract_manifest():
     portfolio_review_template = PORTFOLIO_REVIEW_TEMPLATE.read_text(
         encoding="utf-8",
     )
+    portfolio_review_data_map = PORTFOLIO_REVIEW_DATA_MAP.read_text(
+        encoding="utf-8",
+    )
+    normalized_portfolio_review_guidance = re.sub(
+        r"\s+",
+        " ",
+        portfolio_review_guidance,
+    )
+    normalized_portfolio_review_template = re.sub(
+        r"\s+",
+        " ",
+        portfolio_review_template,
+    )
+    normalized_portfolio_review_data_map = re.sub(
+        r"\s+",
+        " ",
+        portfolio_review_data_map,
+    )
     ic_memo_guidance = IC_MEMO_SKILL.read_text(encoding="utf-8")
     ic_memo_data_map = IC_MEMO_DATA_MAP.read_text(encoding="utf-8")
     check(
@@ -1069,14 +1138,6 @@ def contract_manifest():
         ),
         "all report skills define the standard illustrative label",
     )
-    check(
-        all(
-            '{"view": "credit_spreads"}'
-            in (skill / "references" / "report-style.md").read_text(encoding="utf-8")
-            for skill in skill_paths
-        ),
-        "all skills omit optional credit-spread fields while MD-1 is open",
-    )
     portfolio_probe_ids = {
         "sample_portfolio",
         "portfolio_exposure",
@@ -1086,17 +1147,24 @@ def contract_manifest():
         "portfolio_ex_ante_attribution",
         "portfolio_allocations",
         "portfolio_commitments",
-        "portfolio_expected_statistics",
         "portfolio_policy",
     }
     check(
         portfolio_probe_ids <= set(by_id)
-        and by_id["portfolio_expected_statistics"]["tool"] == "get_chart_data"
-        and by_id["portfolio_expected_statistics"]["args"].get("portfolio_id")
-        == "<sample_portfolio:portfolios[0].portfolio_id>"
-        and by_id["portfolio_expected_statistics"]["args"].get("analysis_type")
-        == "expected-statistics",
+        and "portfolio_expected_statistics" not in by_id,
         "Portfolio Analytics probes cover the illustrative portfolio surface",
+    )
+    exposure_probe = by_id["portfolio_exposure"]
+    check(
+        exposure_probe["args"].get("asset_classification") == "fixed_income"
+        and {
+            "exposures[0].asset_classification",
+            "exposures[0].fixed_income_metrics.weighting_basis",
+            "portfolio_totals.market_value_base",
+            "aggregates_by_asset_classification.coverage.status",
+            "methodology",
+        } <= set(exposure_probe.get("required", [])),
+        "portfolio-exposure probe uses lowercase fixed-income filtering and valid response paths",
     )
     return_args = by_id["portfolio_returns"]["args"]
     check(
@@ -1129,17 +1197,24 @@ def contract_manifest():
             "fields" in text
             and "no_subject_returns" in text
             and "partial" in text.lower()
+            and "not_yet_funded" in text
+            and "2016" in text
+            and "2026" in text
+            and "P-01" in text
             for _name, text in historical_return_skill_docs
         ),
-        "historical-return skills project fields and disclose missing or partial coverage",
+        "historical-return skills project fields and disclose each required coverage gap",
     )
     check(
         "Do not request all six result sections in one call"
         in scope_guidance
         and "`points` and `cumulative_growth` separately"
         in scope_guidance
-        and "follow `next_cursor`" in scope_guidance,
-        "historical-return skills split large sections and page commitments",
+        and "Until connector issue P-01 ships" in scope_guidance
+        and "do not follow `next_cursor`" in scope_guidance
+        and "not_yet_funded" in scope_guidance
+        and "partial calendar years 2016 and 2026" in scope_guidance,
+        "historical-return skills project sections and disclose bounded coverage gaps",
     )
     fixed_income_guidance = (
         ROOT
@@ -1149,20 +1224,72 @@ def contract_manifest():
         / "data-map.md"
     ).read_text(encoding="utf-8")
     check(
-        "fixed_income_metrics.{effective_duration, spread_duration, "
+        "asset_classification: fixed_income" in fixed_income_guidance
+        and "fixed_income_metrics.{weighting_basis, effective_duration, spread_duration, "
         "yield_to_maturity_decimal, coverage}"
         in fixed_income_guidance
+        and "portfolio_totals.fixed_income_metrics" in fixed_income_guidance
+        and "aggregates_by_asset_classification" in fixed_income_guidance
+        and "do not recompute or equal-weight rows" in fixed_income_guidance
+        and "spread duration of zero is a valid value" in fixed_income_guidance
         and "Do not relabel yield to maturity as yield to worst"
         in fixed_income_guidance
         and "OAS" in fixed_income_guidance,
-        "fixed-income metrics map to real connector fields",
+        "fixed-income exposure uses lowercase filtering and NAV-weighted metrics",
+    )
+    classification_guidance = {
+        "gradient-private-markets-portfolio-construction":
+            ("private_equity", "private_credit"),
+        "gradient-fixed-income-portfolio-construction": ("fixed_income",),
+        "gradient-global-public-equity-portfolio-construction":
+            ("public_equity",),
+        "gradient-marketable-alternatives-portfolio-construction":
+            ("alternatives",),
+        "gradient-real-assets-portfolio-construction":
+            ("real_estate", "infrastructure"),
+    }
+    check(
+        all(
+            all(
+                value in (
+                    ROOT / "skills" / skill_name / "references" / "data-map.md"
+                ).read_text(encoding="utf-8")
+                for value in values
+            )
+            for skill_name, values in classification_guidance.items()
+        )
+        and "use only the exact lowercase values" in scope_guidance
+        and "Never pass title-case display labels" in scope_guidance
+        and "rely on case-insensitive alias handling" in scope_guidance,
+        "exposure-reading skills require lowercase classification inputs",
+    )
+    check(
+        "`page_totals` covers only the returned page" in scope_guidance
+        and "`portfolio_totals`" in scope_guidance
+        and "zero spread duration is a valid observation" in scope_guidance
+        and "`null_reasons`" in scope_guidance,
+        "exposure-reading skills use governed totals and preserve null reasons",
     )
     check(
         "`get_peer_allocation_intelligence`" in portfolio_review_guidance
+        and "`capabilities.peerIntelligence`" in portfolio_review_guidance
         and "`peerIntelligence` is unavailable" in portfolio_review_guidance
         and "Never treat this optional entitlement as a report failure"
         in portfolio_review_guidance,
-        "portfolio review skips unlicensed peer context without failing",
+        "portfolio review gates unlicensed peer context without failing",
+    )
+    peer_skip_text = (
+        "Peer allocation context was skipped because peerIntelligence "
+        "is not available for this organization"
+    )
+    check(
+        peer_skip_text in normalized_portfolio_review_guidance
+        and peer_skip_text in normalized_portfolio_review_data_map
+        and peer_skip_text in normalized_portfolio_review_template
+        and "Peer allocation intelligence" in portfolio_review_template
+        and "Peer allocation context: Not licensed (optional)"
+        in SKILL_REQUIREMENTS.read_text(encoding="utf-8"),
+        "portfolio review discloses the optional peer-entitlement skip",
     )
     check(
         by_id["portfolio_allocations"]["tool"] == "get_chart_data"
@@ -1171,7 +1298,7 @@ def contract_manifest():
         and by_id["portfolio_commitments"]["tool"] == "get_chart_data"
         and by_id["portfolio_commitments"]["args"].get("analysis_type")
         == "commitments",
-        "Portfolio Analytics probes cover all construction chart packs",
+        "Portfolio Analytics probes cover both supported chart packs",
     )
     strategy_probe_ids = {
         "strategy_benchmarks",
@@ -1238,14 +1365,28 @@ def contract_manifest():
         "credit-spreads probe passes only its view",
     )
     check(
-        all(issue_id in contract_guidance for issue_id in (
+        all(issue_id in contract_guidance for issue_id in ("P-01", "P-07", "P-12", "P-21"))
+        and "`allocations` and `commitments`" in contract_guidance
+        and "`run_strategy_lab_expected_statistics`" in contract_guidance
+        and all(stale_id not in contract_guidance for stale_id in (
             "PA-2",
             "PA-3",
             "MD-1",
             "PL-1",
+            "#1498",
+            "#1500",
+            "#1501",
+            "#1502",
         ))
         and "CMA receipt unvalidated" not in contract_guidance,
         "known-issues table contains the current issue set",
+    )
+    shared_chart_guidance = SHARED_CHART_DATA.read_text(encoding="utf-8")
+    check(
+        "two supported packs" in shared_chart_guidance
+        and "`allocations` and `commitments`" in shared_chart_guidance
+        and "`run_strategy_lab_expected_statistics`" in shared_chart_guidance,
+        "shared chart guidance enforces P-07 while preserving Strategy Lab",
     )
     check(
         by_id["events"]["args"].get("view") == "subject"
@@ -1257,8 +1398,32 @@ def contract_manifest():
         and by_id["cma_consensus"]["args"] == {
             "mode": "asset_class",
             "asset_classes": ["public_equity"],
+        }
+        and by_id["cma_consensus_allocation"]["args"] == {
+            "mode": "allocation",
+            "allocation": {
+                "public_equity": 0.6,
+                "fixed_income": 0.4,
+            },
         },
         "current event, entity-fact and CMA-consensus contracts are probed",
+    )
+    check(
+        by_id["ddq_extract_fund_aliases"]["args"].get("subject_scope")
+        == "fund"
+        and by_id["ddq_extract_fund_aliases"]["equals"].get(
+            "claims[0].field",
+        )
+        == "auditor_name"
+        and by_id["ddq_extract_fund_aliases"]["equals"].get(
+            "claims[4].field",
+        )
+        == "administrator_name"
+        and by_id["ddq_extract_fund_aliases"]["equals"].get(
+            "claims[7].field",
+        )
+        == "custodian_name",
+        "fund DDQ probe covers auditor, administrator and custodian aliases",
     )
     check(
         all(resolved_issue not in contract_guidance for resolved_issue in (
@@ -1275,7 +1440,10 @@ def contract_manifest():
     )
     removed_tool_pattern = re.compile(
         r"\b(?:run_strategy_lab_(?:factor_loads|optimization|rebalance|"
-        r"diversification)|synthetic_indicators)\b",
+        r"diversification)|synthetic_indicators|bar-optimization-current)\b"
+        r"|(?:domain|analysis_type)\s*[:=]\s*[`\"']?"
+        r"(?:factor_loads|optimization|rebalance|diversification)\b"
+        r"|analysis_type\s*[:=]\s*[`\"']?expected-statistics\b",
     )
     removed_tool_references = []
     for path in (ROOT / "skills").rglob("*"):
@@ -1332,7 +1500,7 @@ def contract_manifest():
         "capabilities probe requests summary detail",
     )
     check(
-        {"capabilities", "entitlements"}
+        {"effective_capabilities", "product_entitlements"}
         <= set(by_id["capabilities_summary"].get("required", [])),
         "capabilities probe distinguishes effective access from entitlements",
     )

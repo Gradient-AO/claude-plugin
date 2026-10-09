@@ -49,7 +49,7 @@ Required evidence:
 
 - portfolio record, allocation tree, real-assets exposure pages and policy result;
 - historical returns and governed attribution, preserving typed unavailable states;
-- `get_chart_data` availability, then `allocations` and `expected-statistics` one pack at a time;
+- `get_chart_data` availability, then `allocations`; request `commitments` only when drawdown exposures exist;
 - active assumption set and capital-market assumptions for returned `real_assets`, `real_estate`,
   `infrastructure` and `natural_resources` classes;
 - `commitments` charts only when the selected real-assets sleeve contains closed-end or drawdown exposures.

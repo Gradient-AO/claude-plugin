@@ -49,7 +49,7 @@ Required evidence:
 - portfolio record, allocation tree, public-equity-filtered exposure pages and policy result;
 - historical returns and governed attribution, preserving typed unavailable states;
 - benchmark identity and return series when returned;
-- `get_chart_data` availability, then `allocations` and `expected-statistics` one pack at a time;
+- `get_chart_data` availability, then the `allocations` pack;
 - active assumption set and capital-market assumptions.
 
 Portfolio 13F look-through, manager diligence, CMA consensus, issuer research and selected-series Strategy

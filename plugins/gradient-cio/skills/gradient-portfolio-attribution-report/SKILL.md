@@ -81,6 +81,10 @@ validation failures are `Not available — validation failed (<check id>)`.
 State partial historical-return coverage as a report gap. For
 `no_subject_returns`, state that the selected portfolio has no subject return
 history and do not substitute another series.
+Treat `not_yet_funded` commitments as having no funded return history, not a
+zero return. Identify returned partial 2016 and 2026 calendar years with their
+month counts and do not present either as a full-year return. Until P-01 ships,
+disclose commitment-page truncation instead of following `next_cursor`.
 
 ## 3. Assess
 

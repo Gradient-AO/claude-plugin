@@ -57,10 +57,10 @@ Keep every section title and the order exactly as shown. Missing evidence become
 
 ### 7. Forward Return and Risk
 
-- `kv` assumption set, release, regime, horizon, currency and chart fingerprint.
-- Embed unchanged expected-statistics charts.
-- `table` **Forward assumptions** only for equivalent returned `real_assets`, `real_estate`,
-  `infrastructure` or `natural_resources` measures.
+- `kv` assumption set, release, regime, horizon, currency and evidence basis.
+- `table` **Forward assumptions** only for equivalent governed `real_assets`, `real_estate`,
+  `infrastructure` or `natural_resources` policy / CMA measures.
+- Unsupported saved-portfolio return or risk statistics remain `Not available`; do not derive them from CMA rows.
 - Commodities and inflation-linked rows remain unavailable unless explicitly sourced.
 - State `Assumptions, not forecasts`.
 

@@ -51,14 +51,18 @@ Rules that matter here:
 
 1. **Organization**: `list_organizations`; ask if more than one and none named.
 2. **Capabilities**: `get_gradient_capabilities` once. Read `capabilities.portfolio`,
-   and for each Portfolio Analytics tool in `tools[]` its `available`, `access_mode` (`live` or `illustrative`) and
-   `backend_tool_readiness[].availability_reason` (e.g. `portfolio_entitlement_required` on the
-   `join_portfolio_13f_lookthrough` backend). This decides the path:
+   `capabilities.peerIntelligence`,
+   and for each Portfolio Analytics tool plus `get_peer_allocation_intelligence` in `tools[]` its `available`,
+   `access_mode` (`live` or `illustrative`) and `backend_tool_readiness[].availability_reason` (e.g.
+   `portfolio_entitlement_required` on the `join_portfolio_13f_lookthrough` backend). This decides the path:
    - **Portfolio licensed** (`portfolio: true`): the user's portfolios plus the example record.
    - **Not licensed** (`portfolio: false`, portfolio tools `access_mode: illustrative`): only Gradient's
      illustrative portfolio is available. Tell the user in one line, offer to continue with the
      **Illustrative, Gradient Maintained — demo data, not the client's holdings or managers** portfolio, and mark the report Partial. Do not ask for an upload as a substitute
      unless the user offers one; a user file is tagged as a user document, never as Gradient data.
+   - **Peer Intelligence not licensed** (`peerIntelligence: false` or the peer tool is unavailable for
+     `peer_intelligence_entitlement_required`): do not call the peer tool. Continue from portfolio evidence
+     and carry the required peer-skip explanation into the report body and Coverage.
 3. **Portfolio**: `list_portfolios` → `portfolio_id`, `portfolio_name`, `base_currency`, `record_kind`,
    `canonical_default`. Match the user's name; if several user records and none named, ask once.
 4. **Period**: default = the latest month-end in the returned history (quarterly review: the latest
@@ -83,9 +87,9 @@ save `context.fingerprint`, `basis`, and unavailable reasons. Embed each usable 
 |---|---|---|
 | Capabilities | `get_gradient_capabilities` | Yes |
 | Portfolio record | `list_portfolios` | Yes |
-| Dashboard chart packs | `get_chart_data` availability, then one relevant `analysis_type` at a time | Comprehensive: allocations, expected-statistics and commitments; brief: optional |
+| Dashboard chart packs | `get_chart_data` availability, then one supported `analysis_type` at a time | Comprehensive: allocations and commitments; brief: optional |
 | Allocation tree | `get_portfolio_structure` `view: allocation_tree` | Yes |
-| Returns | `get_portfolio_historical_returns` with `end_date` = period end: request summary / benchmark-relative sections with matching `fields`, then request `points` and `cumulative_growth` separately; page commitment rows only when needed | Yes |
+| Returns | `get_portfolio_historical_returns` with `end_date` = period end: request summary / benchmark-relative sections with matching `fields`, then request `points` and `cumulative_growth` separately; until P-01 ships, disclose a truncated default commitment page instead of following `next_cursor` | Yes |
 | Benchmark | the benchmark named in `benchmark_relative`; else ask the user which benchmark; then `get_benchmarks` `benchmark_id` for its name and classes, and `get_return_series` `series_kind: benchmark` for monthly points | Optional (performance is reported without relative rows if absent) |
 | Policy | `check_portfolio_policy` | Yes |
 | Attribution | `get_portfolio_attribution` with `benchmark_role: policy`, `parent_allocation_id: root`, month-end start/end and all sections | Comprehensive: always call and preserve typed unavailability; brief: optional |
@@ -111,6 +115,9 @@ unavailable, report its typed reason and do not recompute it from monthly points
 If coverage is `partial`, state the coverage gap. If a missing reason is `no_subject_returns`, state that the
 selected portfolio has no subject return history and do not substitute benchmark, commitment or Strategy Lab
 returns.
+Treat `not_yet_funded` as a reportable commitment gap, not a zero return. For the canonical illustrative
+history, state that 2016 and 2026 are partial calendar years and show their returned month counts; never
+present them as full-year returns.
 
 **Allocation.** From `allocation_tree.nodes[]`: use the returned total-portfolio target and policy status
 fields for every depth. Do not multiply parent and child targets. Use `check_portfolio_policy.allocation_bands`
@@ -123,14 +130,18 @@ When risk rows are assessed, preserve `risk_limits.observation_basis` and the re
 rule so the review states the governed horizon, effective date, frequency, return basis and currency.
 Peer allocation is context only. If `peerIntelligence` is unavailable, omit peer comparisons, add
 `Not licensed — peerIntelligence is not available for this organization` to coverage, and complete the
-review from portfolio evidence. Never treat this optional entitlement as a report failure.
+review from portfolio evidence. In brief mode add a `callout` in Allocation; in comprehensive mode add the
+callout required by `references/review-template.md`. Never treat this optional entitlement as a report failure.
 
 **Exposure.** Use `get_portfolio_exposure.aggregates_by_asset_classification` for governed value totals,
 shares, coverage and truncation. The server chooses market value for marketable assets and NAV for drawdown
 funds and never adds unfunded commitments. Show uncovered rows as "no current value". Exposure classifications
-(e.g. `public_equity`, `hedge_fund`, `alternatives`) do not map one-to-one to tree names — show them as
+(e.g. `public_equity`, `fixed_income`, `alternatives`) do not map one-to-one to tree names — show them as
 returned, do not merge them into the policy table. Show geography or sector only if the response carries
 those fields.
+Use governed fixed-income duration, spread-duration, and yield-to-maturity from complete
+`portfolio_totals.fixed_income_metrics` or the Fixed Income classification aggregate. Preserve weighting
+basis and coverage; do not recompute or equal-weight rows.
 
 **Look-through.** Top issuers by look-through NAV across managers, with managers holding and share of NAV.
 Always add the caveat callout: 13F is lagged (up to 45 days after quarter end), long-only US-listed equity,
@@ -140,11 +151,13 @@ no shorts, cash, non-US listings or private holdings, and USD values are not FX-
 symmetric-Carino linking, residual, diagnostics, period, basis, currency and formula version. Strategy Lab
 relative return and factor outputs are not attribution and never fill an unavailable attribution section.
 
-**Projected return and risk decomposition.** In comprehensive mode use returned `expected-statistics`,
-`allocations` and `commitments` chart items unchanged. Name the assumption set, regime, horizon, currency,
-basis and `context.fingerprint`. Strategy Lab results may appear only when a matching selected-return-series
-session exists; label them **Selected-series sandbox — not saved-portfolio analytics**. Never use the heading
-"simulated attribution": no public saved-portfolio simulated-attribution contract exists.
+**Projected return and risk decomposition.** In comprehensive mode use governed
+`check_portfolio_policy.return_objective` and capital-market-assumption evidence for saved-portfolio forward
+assumptions; use returned `allocations` chart items unchanged where relevant. Name the assumption set, regime,
+horizon, currency and basis. Strategy Lab expected-statistics may appear only when a matching
+selected-return-series session exists; label them **Selected-series sandbox — not saved-portfolio
+analytics**. Never use the heading "simulated attribution": no public saved-portfolio
+simulated-attribution contract exists.
 
 **Analysis and considerations.** Follow `references/writing-standards.md`. Each point contains a sourced
 observation, why it matters, uncertainty and a neutral consideration for discussion. Do not prescribe an
@@ -187,7 +200,9 @@ Sections:
    portfolio attribution source.
 3. **Allocation** — `table` asset class vs policy: Asset class, Target, Actual, Active (pp), Range (align `n`),
    Status (chip); sub-allocation table if the tree has depth-1 nodes, using returned total-portfolio targets;
-   `bars` market value by exposure classification with $M and % of total.
+   `bars` market value by exposure classification with $M and % of total. If peer context is not licensed,
+   add one `callout`: `Not licensed — Peer allocation context was skipped because peerIntelligence is not
+   available for this organization. This review uses portfolio evidence only.`
 4. **Look-through concentration** (`new_page: false`) — `table` top issuers + the caveat callout; if not
    licensed or unavailable, one `callout` saying so (no table).
 5. **Risk** (`new_page: false`) — `kv`: volatility, maximum drawdown with dates, best and worst month,

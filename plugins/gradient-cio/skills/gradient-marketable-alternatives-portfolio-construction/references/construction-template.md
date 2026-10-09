@@ -57,9 +57,10 @@ Keep every section title and the order exactly as shown. Missing evidence become
 
 ### 7. Forward Return and Risk
 
-- `kv` assumption set, release, regime, horizon, currency and chart fingerprint.
-- Embed unchanged expected-statistics charts.
-- `table` **Forward assumptions** for equivalent returned `hedge_funds` or `absolute_return` measures only.
+- `kv` assumption set, release, regime, horizon, currency and evidence basis.
+- `table` **Forward assumptions** for equivalent governed `hedge_funds` or `absolute_return` policy / CMA
+  measures only.
+- Unsupported saved-portfolio return or risk statistics remain `Not available`; do not derive them from CMA rows.
 - State `Assumptions, not forecasts`.
 
 ### 8. Liquidity, Redemption and Operational Terms

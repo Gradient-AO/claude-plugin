@@ -62,9 +62,10 @@ Follow `references/data-map.md` section by section. Key rules:
 - Use `envelope: "compact"` and optional `fields` only on research-read tools whose loaded schema offers
   them. Do not pass either parameter to any `run_strategy_lab_*` tool.
 - Use `get_chart_data` after portfolio selection: check availability, then request one relevant pack at a time.
-  Portfolio expected-statistics and commitments packs are the primary forward-looking evidence for the saved
-  portfolio. Preserve `basis` and `context.fingerprint`, skip unavailable charts with their reason, and never
-  compare different bases as though they were the same scenario.
+  Only `allocations` and `commitments` are supported. Preserve `basis` and `context.fingerprint`, skip
+  unavailable charts with their reason, and never compare different bases as though they were the same
+  scenario. Use governed policy and CMA evidence for saved-portfolio forward assumptions; keep
+  `run_strategy_lab_expected_statistics` limited to separately selected Strategy Lab return series.
 - For every result, record a **source row**: tool, key parameters, `provenance.as_of`,
   `provenance.data_scope.label`, `validation.status`, and `payload_digest` if present. These rows become the
   Appendix A source table and the `[S#]` tags in the text.
@@ -102,6 +103,13 @@ sections) and each tool's methodology, formula version, basis, period, currency,
 reasons. State partial coverage as a report gap. For `no_subject_returns`, state that the selected portfolio
 has no subject return history and do not substitute benchmark, commitment or Strategy Lab returns. Other
 governed results remain unavailable when their server method is unavailable.
+State `not_yet_funded` commitment comparisons as having no funded return history, not zero return. Identify
+returned partial 2016 and 2026 calendar years with their month counts. Until P-01 ships, disclose a truncated
+default commitment page rather than following `next_cursor`.
+Page `get_portfolio_exposure` with `limit` / `cursor` and use only exact lowercase classification filters.
+Use fixed-income duration, spread-duration, and yield-to-maturity only from complete governed
+`portfolio_totals.fixed_income_metrics` or the Fixed Income classification aggregate; preserve coverage and
+never recompute or equal-weight rows.
 When policy risk rows are `not_assessed`, historical-return risk metrics remain separate observations: do not
 compare them with persisted thresholds or infer compliance unless `check_portfolio_policy` returns the status.
 When risk rows are assessed, preserve `risk_limits.observation_basis` and the returned magnitude comparison
