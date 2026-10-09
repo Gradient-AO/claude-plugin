@@ -6,7 +6,7 @@ sets `"envelope": false`.
 
 The same file's top-level `minimum_connector_contract` is the machine-readable cutover gate. Validate it
 against the saved `get_gradient_capabilities` summary before running any probe. A service version below
-0.9.0, a compatibility epoch other than 2, or a missing required tool is a connector failure: stop, report
+0.9.0, a compatibility epoch other than 3, or a missing required tool is a connector failure: stop, report
 `not_ready`, and do not use local-calculation fallbacks.
 
 Resolve every chained placeholder from a saved dependency response. Placeholders have the exact form
@@ -31,9 +31,9 @@ or report date; the default probe therefore exercises the current latest-publica
 sample_portfolio, chart_catalog. The sample probe verifies that `list_portfolios`
 returns Gradient's canonical example first.
 
-**Full read set (55 reads including standard):** standard plus capabilities_summary, manager_diligence_brief,
+**Full read set (57 reads including standard):** standard plus capabilities_summary, manager_diligence_brief,
 attention, findings, events, events_roster, entity_facts, conditions, credit_spreads, gradient_signal, regime_state,
-cma_baseline, cma_consensus, watchlist,
+cma_baseline, cma_consensus, cma_consensus_allocation, watchlist,
 portfolio_tree, portfolio_exposure, portfolio_policy, portfolio_ownership, portfolio_returns,
 portfolio_attribution, portfolio_series,
 chart_availability, portfolio_allocations, portfolio_commitments,
@@ -41,7 +41,8 @@ strategy_benchmarks, strategy_return_series, four Strategy Lab session builders,
 strategy_expected_statistics, strategy_relative_return, strategy_manager_compare, strategy_date_windows,
 adv_13f_consistency,
 multi_manager_13f_overlap, search_managers, screen, cftc_positioning, hf_crowding, regional_facts,
-regional_capital_markets, equity_fundamentals, equity_risk_findings, ddq_numeric_gap and batch_ddq_preview.
+regional_capital_markets, equity_fundamentals, equity_risk_findings, ddq_extract_fund_aliases,
+ddq_numeric_gap and batch_ddq_preview.
 
 The portfolio policy probe verifies governed-only semantics and the 2% watch boundary. The returns probe
 requests the summary and benchmark-relative sections through an explicit `fields` projection, caps the
@@ -73,7 +74,7 @@ The first call persists fictional inline text as a ready subject-bound document 
 save call is still a dry-run preview and must return `outcome: "preview"`, `dry_run: true` and `committed:
 false`.
 
-The complete matrix is 63 calls. Run the standard or full read set without write confirmation. Run the
+The complete matrix is 65 calls. Run the standard or full read set without write confirmation. Run the
 writes set only as previews. Before the DDQ save-preview set, tell the user that its reconciliation call
 persists a test document and immutable test workpaper.
 
@@ -84,6 +85,10 @@ For `portfolio_exposure` and `portfolio_ownership`, determine scope from
 `sample_portfolio.portfolios[0].record_kind`, which must be `example`. Report a
 mismatch when a dependent response does not identify that same canonical
 portfolio or labels it as live data.
+For exposure totals, `page_totals` is current-page only and `portfolio_totals` is filtered-portfolio scope;
+require `portfolio_totals.complete` before treating it as exhaustive. Preserve row `null_reasons`. Fixed-income
+portfolio and classification aggregates are current-holding-NAV weighted, and a zero spread duration is a
+valid observation.
 
 The Portfolio Analytics probes cover list, exposure, structure, historical and governed ex ante attribution,
 the supported allocations and commitments chart packs, and policy checking against the canonical
@@ -121,7 +126,11 @@ P-07 is an intentional contract boundary, not a connector fault: `get_chart_data
 | Tool / view | Classification | Ticket, owner, review | Symptom and current workaround | Removal criterion |
 |---|---|---|---|---|
 | `get_portfolio_historical_returns` commitment continuation | Non-blocking bounded-response limitation | P-01 · Gradient MCP · pending | `benchmark_relative` may return only the first 25 commitment rows with `commitments_truncated: true`. Do not follow `next_cursor` until P-01 ships; disclose the returned count and omitted detail. Preserve `not_yet_funded` as a gap, not a zero return. | Reliable cursor continuation ships and a multi-page canonical probe completes twice without duplicates or omissions. |
-| `get_portfolio_exposure` fixed-income sleeve metrics | Non-blocking aggregation limitation | P-15 · Gradient MCP · pending | Use exact lowercase `asset_classification: fixed_income`. Until the governed aggregate ships, NAV-weight non-null row metrics using current exposure value, excluding missing metrics and non-positive or missing weights; disclose included NAV and row count. | The connector returns a governed sleeve aggregate with `weighting_basis: current_holding_nav_base`, coverage and methodology, and it passes twice. |
+
+P-12–P-20 are enforced by compatibility-epoch-3 schemas and probes: renamed capability/entitlement fields,
+scoped exposure totals, governed fixed-income aggregates, coherent null reasons, positive-weight CMA examples,
+and fund-scope DDQ aliases. P-21 remains a data-readiness condition rather than a client workaround: report
+GRIP availability reasons and The Read `coverage.unavailable_visuals` instead of inventing missing history.
 
 Decision hold: keep Strategy Lab simulation, saved-scenario and
 `run_strategy_lab_expected_statistics` references until the maintainer explicitly decides their

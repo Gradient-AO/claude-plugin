@@ -67,10 +67,9 @@ Keep every section title and the order exactly as shown. Missing evidence become
 - `table` **Policy risk**: Metric, Observed, Limit, Status, Coverage.
 - `table` **Liquidity profile**: Bucket, % NAV, Amount, Requirement, Status.
 - Distinguish daily-NAV funds, marketable bonds and illiquid/private credit as returned.
-- Until P-15 ships, effective duration, spread duration and yield to maturity use the documented
-  current-NAV-weighted aggregation of returned `exposures[].fixed_income_metrics`; show included NAV and row
-  counts. After P-15 ships, use the governed connector aggregate. Preserve coverage and methodology. Yield
-  to worst, OAS, quality and key-rate rows remain unavailable unless separately sourced.
+- Effective duration, spread duration and yield to maturity use the governed current-holding-NAV-weighted
+  aggregate from complete `portfolio_totals` or the Fixed Income classification row. Preserve coverage and
+  methodology. Yield to worst, OAS, quality and key-rate rows remain unavailable unless separately sourced.
 
 ### 9. Scenarios and Robustness
 

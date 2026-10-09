@@ -34,16 +34,17 @@ the default commitment `limit` of 25, do not follow `next_cursor`, and disclose
 loaded schema supports reliable continuation, follow `next_cursor` only when commitment-level benchmark
 detail is needed.
 
-`get_portfolio_exposure.asset_classification` accepts canonical display names and documented snake_case aliases case-insensitively. Prefer a value published by the loaded schema.
-Use only values returned by the portfolio or the canonical values relevant to the request:
+For `get_portfolio_exposure.asset_classification` inputs, use only the exact lowercase values relevant to
+the request:
 `public_equity`, `fixed_income`, `private_equity`, `private_credit`, `real_estate`, `infrastructure`,
-`alternatives`, and `cash`. Never pass title-case display labels.
-Until connector issue P-15 ships, any report that combines fixed-income exposure metrics must calculate
-effective duration, spread duration, and yield to maturity as current-NAV-weighted averages of non-null
-`exposures[].fixed_income_metrics` values. Use `market_value_base` for `value_basis: market_value` rows and
-`nav_base` otherwise; exclude missing metrics and non-positive or missing weights, disclose included NAV and
-row count, and never equal-weight rows. After P-15 ships, use the governed aggregate only when its returned
-`weighting_basis` is `current_holding_nav_base`.
+`alternatives`, and `cash`. Never pass title-case display labels or rely on case-insensitive alias handling.
+`page_totals` covers only the returned page. Use `portfolio_totals` for the filtered portfolio and only treat
+it as complete when `complete: true`; classification rows live in `aggregates_by_asset_classification`.
+For fixed-income duration, spread duration, and yield, use the governed `fixed_income_metrics` on
+`portfolio_totals` or the Fixed Income classification row when its `weighting_basis` is
+`current_holding_nav_base`; zero spread duration is a valid observation. Never equal-weight exposure rows.
+For null `as_of_date`, `market_value_base`, or `nav_base`, preserve the matching `null_reasons` value and do
+not infer the missing channel from another field.
 
 ## Strategy Lab
 

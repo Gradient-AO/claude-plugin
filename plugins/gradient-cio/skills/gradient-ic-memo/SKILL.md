@@ -107,8 +107,9 @@ State `not_yet_funded` commitment comparisons as having no funded return history
 returned partial 2016 and 2026 calendar years with their month counts. Until P-01 ships, disclose a truncated
 default commitment page rather than following `next_cursor`.
 Page `get_portfolio_exposure` with `limit` / `cursor` and use only exact lowercase classification filters.
-Until P-15 ships, NAV-weight any combined fixed-income duration, spread-duration, or yield-to-maturity
-metric across non-null exposure rows, disclose included NAV and row count, and never equal-weight rows.
+Use fixed-income duration, spread-duration, and yield-to-maturity only from complete governed
+`portfolio_totals.fixed_income_metrics` or the Fixed Income classification aggregate; preserve coverage and
+never recompute or equal-weight rows.
 When policy risk rows are `not_assessed`, historical-return risk metrics remain separate observations: do not
 compare them with persisted thresholds or infer compliance unless `check_portfolio_policy` returns the status.
 When risk rows are assessed, preserve `risk_limits.observation_basis` and the returned magnitude comparison

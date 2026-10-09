@@ -31,13 +31,9 @@ portfolio has no subject return history and do not substitute benchmark, commitm
 - Historical attribution comes only from `get_portfolio_attribution`.
 - Policy risk status comes only from `check_portfolio_policy`; historical volatility does not establish
   compliance when a policy row is `not_assessed`.
-- Until P-15 ships, calculate each sleeve-level effective duration, spread duration and yield to maturity as
-  a current-NAV-weighted average of the non-null `exposures[].fixed_income_metrics` values. For each row use
-  `market_value_base` when `value_basis: market_value`, otherwise `nav_base`; exclude non-positive or missing
-  weights and missing metric values, and disclose the included NAV and row count. Preserve the returned
-  row-level coverage and methodology. Do not equal-weight rows.
-- After P-15 ships, use the connector's governed aggregate only when its returned `weighting_basis` is
-  `current_holding_nav_base`; do not recompute it.
+- Use `portfolio_totals.fixed_income_metrics` for a complete filtered sleeve, or the Fixed Income row in
+  `aggregates_by_asset_classification`. Require `weighting_basis: current_holding_nav_base`, preserve coverage
+  and methodology, and do not recompute or equal-weight rows. A spread duration of zero is a valid value.
 - Do not relabel yield to maturity as yield to worst. Yield to worst, OAS, convexity, quality and key-rate
   exposure remain `Not available` unless directly returned by another tool or cited from a user document.
 - Credit spreads are context, not a performance explanation or forecast.

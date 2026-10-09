@@ -102,8 +102,7 @@ write a branding file in the working directory (logo path relative to it) and pa
 
 - Lead with the finding. Every figure carries a unit, a date where relevant, and an `[S#]` tag for the
   Gradient result or user document that supplied it. Skills may scale and round values for display but must
-  not derive report values locally, except for an interim compatibility calculation explicitly documented by
-  the active skill (currently the P-15 fixed-income NAV-weighted aggregation).
+  not derive report values locally.
 - ISO dates; currency in $B/$M (or the report's currency) with 1–2 decimals; percentages to 1 dp; spreads in bps.
 - Absence is not evidence: an empty or unavailable result is reported as such, never as "none occurred".
 - No adjectives the data cannot support ("robust", "best-in-class", "strong").

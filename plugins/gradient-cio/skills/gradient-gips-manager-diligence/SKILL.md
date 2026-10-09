@@ -33,7 +33,9 @@ available and `advertising-and-marketing-rule.md` when marketing materials are i
    - Read the DDQ for its GIPS answers (compliance claim, verifier, verification periods, composite
      definitions, errors) and quote them exactly. For the ADV-checkable DDQ fields (AUM, auditor, administrator,
      custodian, disciplinary history), follow `gradient-ddq-reconcile`; `get_ddq_reconciliation_history` shows
-     earlier discrepancies. (`extract_ddq_claims` only reads `Label: value` lines, so transcribe narrative answers.)
+     earlier discrepancies. Use `subject_scope: "fund"` for the 21-field checklist containing auditor,
+     administrator, and custodian. Deterministic aliases handle labeled lines; submit exact quote-backed
+     `transcribed_claims` for narrative answers.
    - `get_manager_diligence_findings` and `get_firm_fund_events` for existing findings and events (verifier
      change, restatements, team departures, acquisitions that affect portability).
    - `get_firm_entity_facts` to confirm the legal entity and registration, for comparison with the GIPS firm

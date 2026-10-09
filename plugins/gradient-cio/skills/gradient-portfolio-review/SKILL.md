@@ -139,9 +139,9 @@ funds and never adds unfunded commitments. Show uncovered rows as "no current va
 (e.g. `public_equity`, `fixed_income`, `alternatives`) do not map one-to-one to tree names — show them as
 returned, do not merge them into the policy table. Show geography or sector only if the response carries
 those fields.
-Until P-15 ships, NAV-weight any combined fixed-income duration, spread-duration, or yield-to-maturity
-metric across non-null exposure rows using current exposure value; disclose included NAV and row count and
-never equal-weight rows. Use the governed connector aggregate after P-15.
+Use governed fixed-income duration, spread-duration, and yield-to-maturity from complete
+`portfolio_totals.fixed_income_metrics` or the Fixed Income classification aggregate. Preserve weighting
+basis and coverage; do not recompute or equal-weight rows.
 
 **Look-through.** Top issuers by look-through NAV across managers, with managers holding and share of NAV.
 Always add the caveat callout: 13F is lagged (up to 45 days after quarter end), long-only US-listed equity,

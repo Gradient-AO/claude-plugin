@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.3.3
+- Corrected the sample fixed-income exposure probe to use the required lowercase filter and actual `portfolio_totals` response path.
+- Required exact lowercase exposure-classification inputs across shared and portfolio-review guidance.
+- Updated the connector cutover gate and capability guidance for compatibility epoch 3, including effective capabilities, product entitlements and per-tool access modes.
+- Added governed exposure-scope, fixed-income aggregate, null-reason, CMA allocation and fund DDQ alias probes; removed the obsolete P-15 client-side weighting workaround.
+- Added structured The Read visual-unavailability guidance for missing macro history and retained GRIP degradation reasons.
+
 ## 2.3.2
 - Replaced stale setup known issues with the active P-01 commitment-pagination and P-15 fixed-income aggregation limits.
 - Strengthened required setup coverage for the illustrative portfolio, session-bound IDD Strategy Lab tools, and dry-run finding, watchlist, roster and upload writes.

@@ -2,12 +2,13 @@
   "version": "2026-10-09",
   "minimum_connector_contract": {
     "minimum_service_version": "0.9.0",
-    "compatibility_epoch": 2,
+    "compatibility_epoch": 3,
     "required_tools": [
       "analyze_strategy_lab_compare",
       "batch_reconcile_manager_ddq_claims",
       "build_strategy_lab_session",
       "check_portfolio_policy",
+      "extract_ddq_claims",
       "get_benchmarks",
       "get_cma_consensus_check",
       "get_diligence_roster_funds",
@@ -15,6 +16,7 @@
       "get_gradient_capabilities",
       "get_manager_diligence_brief",
       "get_manager_odd_profile",
+      "get_the_read",
       "get_portfolio_attribution",
       "get_portfolio_ex_ante_attribution",
       "get_portfolio_exposure",
@@ -63,6 +65,12 @@
         "liquidity.coverage.status",
         "concentration.coverage.status"
       ],
+      "extract_ddq_claims": [
+        "subject_scope",
+        "claim_set_scope",
+        "claims",
+        "extraction_warnings"
+      ],
       "get_benchmarks": [
         "benchmarks",
         "demo_set.demo_set_id",
@@ -87,7 +95,17 @@
       "get_gradient_capabilities": [
         "version",
         "contract_identity.compatibility_epoch",
+        "effective_capabilities.portfolio",
+        "effective_capabilities.strategyLab",
+        "product_entitlements.portfolio",
+        "product_entitlements.strategyLab",
         "tools"
+      ],
+      "get_the_read": [
+        "coverage.status",
+        "coverage.missing_series",
+        "coverage.unavailable_visuals",
+        "coverage.omitted_visual_reasons"
       ],
       "get_manager_diligence_brief": [
         "brief_version",
@@ -120,8 +138,18 @@
         "portfolio.portfolio_id",
         "exposures[0].asset_classification",
         "exposures[0].fixed_income_metrics.weighting_basis",
+        "exposures[0].null_reasons.as_of_date",
+        "exposures[0].null_reasons.market_value_base",
+        "exposures[0].null_reasons.nav_base",
         "exposures",
-        "totals.nav_base",
+        "page_totals.scope",
+        "portfolio_totals.scope",
+        "portfolio_totals.complete",
+        "portfolio_totals.market_value_base",
+        "portfolio_totals.fixed_income_metrics.weighting_basis",
+        "portfolio_totals.fixed_income_metrics.effective_duration",
+        "portfolio_totals.fixed_income_metrics.spread_duration",
+        "portfolio_totals.fixed_income_metrics.yield_to_maturity_decimal",
         "aggregates_by_asset_classification.coverage.status",
         "methodology"
       ],
@@ -202,6 +230,7 @@
       "capabilities_summary",
       "roster",
       "odd_profile",
+      "the_read",
       "manager_diligence_brief",
       "entity_facts",
       "sample_portfolio",
@@ -215,6 +244,7 @@
       "portfolio_allocations",
       "portfolio_commitments",
       "cma_consensus",
+      "cma_consensus_allocation",
       "strategy_benchmarks",
       "strategy_return_series",
       "strategy_expected_statistics_session",
@@ -228,6 +258,7 @@
       "search_managers",
       "equity_fundamentals",
       "equity_risk_findings",
+      "ddq_extract_fund_aliases",
       "ddq_numeric_gap",
       "batch_ddq_preview",
       "write_create_finding",
@@ -268,8 +299,12 @@
         "version",
         "contract_identity.compatibility_epoch",
         "detail",
-        "capabilities",
-        "entitlements",
+        "effective_capabilities",
+        "effective_capabilities.portfolio",
+        "effective_capabilities.strategyLab",
+        "product_entitlements",
+        "product_entitlements.portfolio",
+        "product_entitlements.strategyLab",
         "tools",
         "coverage"
       ],
@@ -415,7 +450,10 @@
         "overview.headline",
         "publication.requested_as_of_date",
         "publication.resolved_as_of_date",
-        "coverage.status"
+        "coverage.status",
+        "coverage.missing_series",
+        "coverage.unavailable_visuals",
+        "coverage.omitted_visual_reasons"
       ],
       "equals": {
         "publication.requested_as_of_date": null
@@ -745,6 +783,30 @@
       }
     },
     {
+      "id": "cma_consensus_allocation",
+      "set": "full",
+      "tool": "get_cma_consensus_check",
+      "args": {
+        "mode": "allocation",
+        "allocation": {
+          "public_equity": 0.6,
+          "fixed_income": 0.4
+        }
+      },
+      "required": [
+        "mode",
+        "resolved_allocation",
+        "portfolio",
+        "portfolio.coverage.positive_weight_asset_class_count",
+        "positioning",
+        "validation.status"
+      ],
+      "equals": {
+        "mode": "allocation",
+        "portfolio.coverage.positive_weight_asset_class_count": 2
+      }
+    },
+    {
       "id": "watchlist",
       "set": "full",
       "tool": "get_research_watchlist_changes",
@@ -787,6 +849,7 @@
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
         "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
+        "asset_classification": "fixed_income",
         "limit": 50
       },
       "required": [
@@ -794,12 +857,28 @@
         "portfolio.base_currency",
         "exposures[0].asset_classification",
         "exposures[0].fixed_income_metrics.weighting_basis",
+        "exposures[0].null_reasons.as_of_date",
+        "exposures[0].null_reasons.market_value_base",
+        "exposures[0].null_reasons.nav_base",
         "exposures",
-        "totals.nav_base",
+        "page_totals.scope",
+        "portfolio_totals.scope",
+        "portfolio_totals.complete",
+        "portfolio_totals.market_value_base",
+        "portfolio_totals.fixed_income_metrics.weighting_basis",
+        "portfolio_totals.fixed_income_metrics.effective_duration",
+        "portfolio_totals.fixed_income_metrics.spread_duration",
+        "portfolio_totals.fixed_income_metrics.yield_to_maturity_decimal",
         "aggregates_by_asset_classification.coverage.status",
         "has_more",
         "methodology"
-      ]
+      ],
+      "equals": {
+        "page_totals.scope": "current_page",
+        "portfolio_totals.scope": "filtered_portfolio",
+        "portfolio_totals.complete": true,
+        "portfolio_totals.fixed_income_metrics.weighting_basis": "current_holding_nav_base"
+      }
     },
     {
       "id": "portfolio_policy",
@@ -1505,6 +1584,40 @@
       "required": [
         "findings"
       ]
+    },
+    {
+      "id": "ddq_extract_fund_aliases",
+      "set": "full",
+      "tool": "extract_ddq_claims",
+      "args": {
+        "document_text": "Auditor: Example Audit LLP\nAdministrator: Example Fund Services\nCustodian: Example Trust",
+        "file_name": "gradient-contract-fund-aliases.txt",
+        "subject_scope": "fund",
+        "questionnaire_format": "unknown"
+      },
+      "required": [
+        "subject_scope",
+        "claim_set_scope",
+        "claims",
+        "claims[0].field",
+        "claims[0].raw_value",
+        "claims[4].field",
+        "claims[4].raw_value",
+        "claims[7].field",
+        "claims[7].raw_value",
+        "extraction_warnings"
+      ],
+      "equals": {
+        "subject_scope": "fund",
+        "claim_set_scope": "complete_checklist",
+        "claims[0].field": "auditor_name",
+        "claims[0].raw_value": "Example Audit LLP",
+        "claims[4].field": "administrator_name",
+        "claims[4].raw_value": "Example Fund Services",
+        "claims[7].field": "custodian_name",
+        "claims[7].raw_value": "Example Trust"
+      },
+      "envelope": false
     },
     {
       "id": "ddq_numeric_gap",

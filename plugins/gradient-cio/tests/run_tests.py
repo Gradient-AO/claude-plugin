@@ -586,7 +586,7 @@ def contract_manifest():
         for name in ("standard", "full", "writes", "ddq-save-preview")
     }
     check(
-        counts == {"standard": 8, "full": 47, "writes": 5, "ddq-save-preview": 3},
+        counts == {"standard": 8, "full": 49, "writes": 5, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
     )
 
@@ -612,6 +612,7 @@ def contract_manifest():
         "batch_reconcile_manager_ddq_claims",
         "build_strategy_lab_session",
         "check_portfolio_policy",
+        "extract_ddq_claims",
         "get_benchmarks",
         "get_cma_consensus_check",
         "get_diligence_roster_funds",
@@ -619,6 +620,7 @@ def contract_manifest():
         "get_gradient_capabilities",
         "get_manager_diligence_brief",
         "get_manager_odd_profile",
+        "get_the_read",
         "get_portfolio_attribution",
         "get_portfolio_ex_ante_attribution",
         "get_portfolio_exposure",
@@ -639,7 +641,7 @@ def contract_manifest():
     minimum_probe_ids = set(minimum.get("required_probe_ids", []))
     check(
         minimum.get("minimum_service_version") == "0.9.0"
-        and minimum.get("compatibility_epoch") == 2
+        and minimum.get("compatibility_epoch") == 3
         and set(minimum.get("required_tools", [])) == expected_minimum_tools,
         "minimum connector contract pins service, epoch, and required tools",
     )
@@ -654,6 +656,7 @@ def contract_manifest():
             "portfolio_commitments",
             "entity_facts",
             "cma_consensus",
+            "cma_consensus_allocation",
             "strategy_benchmarks",
             "strategy_return_series",
             "strategy_expected_statistics_session",
@@ -665,6 +668,7 @@ def contract_manifest():
             "strategy_date_windows_session",
             "strategy_date_windows",
             "equity_fundamentals",
+            "ddq_extract_fund_aliases",
             "ddq_numeric_gap",
             "batch_ddq_preview",
             "manager_diligence_brief",
@@ -1152,13 +1156,15 @@ def contract_manifest():
     )
     exposure_probe = by_id["portfolio_exposure"]
     check(
-        {
+        exposure_probe["args"].get("asset_classification") == "fixed_income"
+        and {
             "exposures[0].asset_classification",
             "exposures[0].fixed_income_metrics.weighting_basis",
+            "portfolio_totals.market_value_base",
             "aggregates_by_asset_classification.coverage.status",
             "methodology",
         } <= set(exposure_probe.get("required", [])),
-        "portfolio-exposure probe covers classifications, weighting, and methodology",
+        "portfolio-exposure probe uses lowercase fixed-income filtering and valid response paths",
     )
     return_args = by_id["portfolio_returns"]["args"]
     check(
@@ -1222,9 +1228,10 @@ def contract_manifest():
         and "fixed_income_metrics.{weighting_basis, effective_duration, spread_duration, "
         "yield_to_maturity_decimal, coverage}"
         in fixed_income_guidance
-        and "Until P-15 ships" in fixed_income_guidance
-        and "current-NAV-weighted average" in fixed_income_guidance
-        and "Do not equal-weight rows" in fixed_income_guidance
+        and "portfolio_totals.fixed_income_metrics" in fixed_income_guidance
+        and "aggregates_by_asset_classification" in fixed_income_guidance
+        and "do not recompute or equal-weight rows" in fixed_income_guidance
+        and "spread duration of zero is a valid value" in fixed_income_guidance
         and "Do not relabel yield to maturity as yield to worst"
         in fixed_income_guidance
         and "OAS" in fixed_income_guidance,
@@ -1251,18 +1258,17 @@ def contract_manifest():
             )
             for skill_name, values in classification_guidance.items()
         )
-        and "documented snake_case aliases case-insensitively" in scope_guidance
-        and "Prefer a value published by the loaded schema" in scope_guidance,
-        "exposure-reading skills prefer canonical values and document aliases",
+        and "use only the exact lowercase values" in scope_guidance
+        and "Never pass title-case display labels" in scope_guidance
+        and "rely on case-insensitive alias handling" in scope_guidance,
+        "exposure-reading skills require lowercase classification inputs",
     )
     check(
-        "Until connector issue P-15 ships" in scope_guidance
-        and "never equal-weight rows" in scope_guidance
-        and "Until P-15 ships" in portfolio_review_guidance
-        and "NAV-weight" in portfolio_review_guidance
-        and "Until P-15 ships" in ic_memo_guidance
-        and "NAV-weight" in ic_memo_guidance,
-        "exposure-reading report skills apply the interim P-15 NAV weighting",
+        "`page_totals` covers only the returned page" in scope_guidance
+        and "`portfolio_totals`" in scope_guidance
+        and "zero spread duration is a valid observation" in scope_guidance
+        and "`null_reasons`" in scope_guidance,
+        "exposure-reading skills use governed totals and preserve null reasons",
     )
     check(
         "`get_peer_allocation_intelligence`" in portfolio_review_guidance
@@ -1359,7 +1365,7 @@ def contract_manifest():
         "credit-spreads probe passes only its view",
     )
     check(
-        all(issue_id in contract_guidance for issue_id in ("P-01", "P-07", "P-15"))
+        all(issue_id in contract_guidance for issue_id in ("P-01", "P-07", "P-12", "P-21"))
         and "`allocations` and `commitments`" in contract_guidance
         and "`run_strategy_lab_expected_statistics`" in contract_guidance
         and all(stale_id not in contract_guidance for stale_id in (
@@ -1392,8 +1398,32 @@ def contract_manifest():
         and by_id["cma_consensus"]["args"] == {
             "mode": "asset_class",
             "asset_classes": ["public_equity"],
+        }
+        and by_id["cma_consensus_allocation"]["args"] == {
+            "mode": "allocation",
+            "allocation": {
+                "public_equity": 0.6,
+                "fixed_income": 0.4,
+            },
         },
         "current event, entity-fact and CMA-consensus contracts are probed",
+    )
+    check(
+        by_id["ddq_extract_fund_aliases"]["args"].get("subject_scope")
+        == "fund"
+        and by_id["ddq_extract_fund_aliases"]["equals"].get(
+            "claims[0].field",
+        )
+        == "auditor_name"
+        and by_id["ddq_extract_fund_aliases"]["equals"].get(
+            "claims[4].field",
+        )
+        == "administrator_name"
+        and by_id["ddq_extract_fund_aliases"]["equals"].get(
+            "claims[7].field",
+        )
+        == "custodian_name",
+        "fund DDQ probe covers auditor, administrator and custodian aliases",
     )
     check(
         all(resolved_issue not in contract_guidance for resolved_issue in (
@@ -1470,7 +1500,7 @@ def contract_manifest():
         "capabilities probe requests summary detail",
     )
     check(
-        {"capabilities", "entitlements"}
+        {"effective_capabilities", "product_entitlements"}
         <= set(by_id["capabilities_summary"].get("required", [])),
         "capabilities probe distinguishes effective access from entitlements",
     )
