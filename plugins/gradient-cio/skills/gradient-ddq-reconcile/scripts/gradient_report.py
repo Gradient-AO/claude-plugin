@@ -911,24 +911,35 @@ def render_blocks(blocks):
 # ---- pages -----------------------------------------------------------------
 # Inter (OFL-1.1) ships with the plugin in assets/fonts/ and is embedded in the page, so rendering makes no
 # network requests. If the files are missing, the CSS falls back to Helvetica Neue / Arial.
-FONT_FILES = (("inter-latin-wght-normal.woff2",
-               "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,"
-               "U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"),
-              ("inter-latin-ext-wght-normal.woff2",
-               "U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1D00-1DBF,U+1E00-1E9F,"
-               "U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF"))
+FONT_FILES = (
+    ("inter-latin-regular.ttf", 400,
+     "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,"
+     "U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"),
+    ("inter-latin-semibold.ttf", 650,
+     "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,"
+     "U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"),
+    ("inter-latin-ext-regular.ttf", 400,
+     "U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1D00-1DBF,U+1E00-1E9F,"
+     "U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF"),
+    ("inter-latin-ext-semibold.ttf", 650,
+     "U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1D00-1DBF,U+1E00-1E9F,"
+     "U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF"),
+)
 
 def font_faces():
     here = os.path.dirname(os.path.abspath(__file__))
     for d in (os.path.join(here, "..", "..", "..", "assets", "fonts"),   # skills/<skill>/scripts -> plugin root
               os.path.join(here, "..", "assets", "fonts")):              # shared/ -> plugin root
         faces = []
-        for name, rng in FONT_FILES:
+        for name, weight, rng in FONT_FILES:
             fp = os.path.join(d, name)
             if os.path.isfile(fp):
                 data = base64.b64encode(open(fp, "rb").read()).decode()
-                faces.append("@font-face{font-family:GradientInter;font-style:normal;font-display:block;font-weight:100 900;"
-                             f"src:url(data:font/woff2;base64,{data}) format('woff2');unicode-range:{rng}}}")
+                faces.append(
+                    "@font-face{font-family:GradientInter;font-style:normal;font-display:block;"
+                    f"font-weight:{weight};src:url(data:font/ttf;base64,{data}) "
+                    f"format('truetype');unicode-range:{rng}}}"
+                )
         if faces:
             return "<style>" + "".join(faces) + "</style>"
     print("warning: Inter font files not found in assets/fonts; using system fonts", file=sys.stderr)
@@ -938,7 +949,7 @@ FONT_LINK = font_faces()
 CSS = f"""
 *{{box-sizing:border-box;margin:0;padding:0}}
 html{{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
-body{{font-family:Inter,GradientInter,'Helvetica Neue',Arial,sans-serif;color:{INK};font-size:9.4pt;line-height:1.5;background:{PAPER}}}
+body{{font-family:GradientInter,Inter,'Helvetica Neue',Arial,sans-serif;color:{INK};font-size:9.4pt;line-height:1.5;background:{PAPER}}}
 b{{font-weight:650}} code{{font-family:'DejaVu Sans Mono',Menlo,monospace;font-size:8pt;background:{WASH};padding:0 3px;border-radius:2px}}
 .src{{display:inline-block;font-size:6.6pt;font-weight:600;color:{LIME_DK};background:#F1FAD6;border-radius:3px;padding:0 4px;line-height:1.5;vertical-align:1px;white-space:nowrap}}
 .sec{{break-before:auto;margin-top:22px}} .sec.first{{break-before:auto;margin-top:0}} .sec.new-page{{break-before:page;margin-top:0}}
@@ -967,8 +978,8 @@ thead{{display:table-header-group}} tr{{break-inside:avoid}}
 .tile .tv{{font-size:17pt;font-weight:780;letter-spacing:-.02em;line-height:1.15;margin-top:3px}}
 .tile .ts{{font-size:7.2pt;color:{INK2};margin-top:1px;line-height:1.35}}
 .tile.dark{{background:{PANEL};color:#F2F5F7}} .tile.dark .tl{{color:#A7B1BC}} .tile.dark .tv{{color:{LIME}}} .tile.dark .ts{{color:#A7B1BC}}
-.chart{{display:block}} .chart .cl{{font-size:10.5px;fill:{INK};font-family:Inter,GradientInter,Arial}} .chart .cv{{font-size:10.5px;font-weight:650;fill:{INK};font-family:Inter,GradientInter,Arial}}
-.chart .ax{{font-size:9px;fill:{MUTED};font-family:Inter,GradientInter,Arial}}
+.chart{{display:block}} .chart .cl{{font-size:10.5px;fill:{INK};font-family:GradientInter,Inter,Arial}} .chart .cv{{font-size:10.5px;font-weight:650;fill:{INK};font-family:GradientInter,Inter,Arial}}
+.chart .ax{{font-size:9px;fill:{MUTED};font-family:GradientInter,Inter,Arial}}
 .callout{{border-left:4px solid var(--c);background:{WASH};padding:10px 13px;border-radius:0 4px 4px 0}}
 .callout .ct{{font-weight:700;margin-bottom:2px}}
 .covwrap{{border-top:1px solid {RULE}}} .cov{{display:grid;grid-template-columns:32% 16% 52%;gap:8px;padding:4px 0;border-bottom:1px solid {RULE};align-items:start}}
@@ -1133,7 +1144,7 @@ def body_html(r):
 
 def header_footer(r):
     m = r["meta"]
-    st = f"font-family:Inter,GradientInter,Arial,sans-serif;font-size:7px;color:{MUTED};width:100%;padding:0 0.75in;display:flex;justify-content:space-between;"
+    st = f"font-family:GradientInter,Inter,Arial,sans-serif;font-size:7px;color:{MUTED};width:100%;padding:0 0.75in;display:flex;justify-content:space-between;"
     who = (f'<b style="color:{INK}">{esc(client_name())}</b>' if client_name()
            else f'<b style="color:{INK}">Gradient</b><b style="color:{LIME_DK}">CIO</b>')
     hdr = (f'<div style="{st}"><span>{who}'
