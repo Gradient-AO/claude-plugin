@@ -114,13 +114,18 @@ Analysis:
 - Identify the largest positive and negative returned effects, whether each
   result reconciles, where allocation versus selection dominates, and which
   assumptions or coverage limitations matter.
+- Use three to six sourced `role: "analysis"` callouts only in Analysis and
+  Considerations. Keep titles to six words and use `Observation:`, `Why it
+  matters:`, `Uncertainty:`, and `What would change the view:` in order.
 - Use neutral considerations for discussion; do not prescribe trades,
   rebalances, manager actions or votes.
 
 ## 4. Build, validate and render
 
 Use JSON block mode and follow `references/attribution-template.md` exactly.
-Tables and bars/waterfalls use returned effect values directly.
+Build polished, evidence-led graphics with readable labels and units. Tables
+and bars/waterfalls use returned effect values directly. Use exactly the four
+ordered executive tiles in the template and source every tile.
 
 Validate:
 
@@ -128,16 +133,19 @@ Validate:
 python <skill>/scripts/validate_attribution.py attribution-report.json
 ```
 
-Fix every error, then render:
+Fix every error and re-run until the validator passes. A failed validator
+blocks delivery. Then render:
 
 ```text
 python <skill>/scripts/gradient_report.py attribution-report.json "<Portfolio> - Portfolio Attribution Report <YYYY-MM-DD>.pdf"
 ```
 
-Follow “Check and deliver” in `references/report-style.md`: inspect every page,
-reconcile each displayed value to its source, verify that historical and ex
-ante labels are unambiguous, and confirm no unsupported attribution claim
-appears.
+Follow “Check and deliver” in `references/report-style.md`: rasterize and
+inspect every page, fix clipping, overflow, orphaned headings and unreadable
+graphics, then re-render. Reconcile each displayed value to its source,
+verify that historical and ex ante labels are unambiguous, and confirm no
+unsupported attribution claim appears. PDF page QA and fact checks must pass
+before delivery.
 
 Reply with three lines: historical attribution conclusion, governed ex ante
 conclusion, and the number of coverage or diagnostic items to monitor, plus

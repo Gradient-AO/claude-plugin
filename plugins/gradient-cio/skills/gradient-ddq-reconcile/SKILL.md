@@ -114,14 +114,25 @@ Block types (full reference in `references/report-style.md`): `text {text}` · `
 
 Every filed value carries a tag and its ADV item or Schedule D reference; every DDQ value carries its line or page. Use each reconciliation row's server-returned `numeric_gap` for absolute and percentage gaps; do not derive them locally. Money in $B/$M with 1–2 decimals; ISO dates. No adjectives the data can't support.
 
+Every analytical or key-judgment callout must contain an `[S#]` tag. Follow-up questions are the only
+recommendation-like content permitted: each must address a contradicted, needs-review or explicitly
+unavailable item already in the report, and its `why` must cite `[S#]`. Do not propose hiring, firing,
+terminating, redeeming from or allocating to a manager. Add one to three `callout` blocks with
+`role: "analysis"` to **Discrepancies & follow-up questions**, stating the observation, diligence
+implication, uncertainty, and which existing question would change the view.
+
 ### Render, check, deliver
 
-1. Run `python <this skill's directory>/scripts/gradient_report.py report.json "<Subject> - DDQ Reconciliation.pdf"`. Requirements and troubleshooting are in `references/report-style.md`. Never write a separate renderer or change the styling.
-2. Rasterize with `pdftoppm -r 60 -png` and look at every page. Fix overflow tails, wrapped dates or chips (align `n`), then re-render. Typical length: 5–7 pages.
-3. Spot-check every table value against the saved reconciliation JSON and preserve each numeric comparison's
+1. Run `python <this skill's directory>/scripts/validate_ddq_report.py report.json`. Fix every error and
+   re-run until it passes. Do not render a report that fails validation.
+2. Run `python <this skill's directory>/scripts/gradient_report.py report.json "<Subject> - DDQ Reconciliation.pdf"`. Requirements and troubleshooting are in `references/report-style.md`. Never write a separate renderer or change the styling.
+3. Rasterize with `pdftoppm -r 60 -png` and look at every page. Fix overflow tails, wrapped dates or chips
+   (align `n`), then re-render and repeat the full page review. Delivery is blocked until no clipping,
+   overflow, orphaned heading or unreadable visual remains. Typical length: 5–7 pages.
+4. Spot-check every table value against the saved reconciliation JSON and preserve each numeric comparison's
    formula version, unit, basis and unavailable reason.
-4. Save to `/mnt/user-data/outputs/` (and the connected folder if one exists). Reply with the 3-line summary and the file; don't repeat the report in chat.
-5. If the user wants an editable version too, also create a Claude Doc with the same sections.
+5. Save to `/mnt/user-data/outputs/` (and the connected folder if one exists). Reply with the 3-line summary and the file; don't repeat the report in chat.
+6. If the user wants an editable version too, also create a Claude Doc with the same sections.
 
 A `report.json` skeleton is in the appendix of this skill; copy its shape.
 

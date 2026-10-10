@@ -20,8 +20,8 @@
     "tiles": [
       {"label": "Public-equity weight", "value": "42.0%", "sub": "Policy target 42.0% [S3]", "tone": "good"},
       {"label": "Active weight", "value": "0.0pp", "sub": "Total-fund target [S3]", "tone": "good"},
-      {"label": "Trailing 1Y", "value": "10.2%", "sub": "Benchmark 10.8% [S5]", "tone": "watch"},
-      {"label": "Largest issuer", "value": "2.3% NAV", "sub": "Lagged 13F look-through [S7]", "tone": "watch"}
+      {"label": "Relative return", "value": "-0.6pp", "sub": "Trailing 1Y versus benchmark [S5]", "tone": "watch"},
+      {"label": "Largest concentration", "value": "2.3% NAV", "sub": "Largest issuer; lagged 13F look-through [S7]", "tone": "watch"}
     ]
   },
   "sections": [
@@ -53,6 +53,7 @@
       "title": "Target Portfolio Structure",
       "blocks": [
         {"type": "table", "title": "Current versus target", "columns": ["Segment", "Current", "Target", "Change", "Range / constraint", "Rationale"], "rows": [["Active core", "24.0%", "20.0%", "-4.0pp", "15.0%–28.0%", "Reduce manager concentration [S3][S4]"], ["Passive completion", "12.0%", "16.0%", "+4.0pp", "10.0%–20.0%", "Improve benchmark completion [S5][S8]"], ["Emerging markets", "6.0%", "6.0%", "0.0pp", "3.0%–8.0%", "Maintain strategic exposure [S3][S6]"]]},
+        {"type": "callout", "role": "analysis", "tone": "info", "title": "Completion role expands", "text": "Observation: The target moves 4.0 percentage points from active core to passive completion [S4][S8]. Why it matters: The change reduces manager concentration while preserving total equity exposure [S3]. Uncertainty: Transition costs are unavailable [S9]. What would change the view: Completed cost or manager evidence that materially weakens the concentration benefit [S8][S9]."},
         {"type": "text", "text": "The target is a committee proposal and is not a saved portfolio change [S3][S8]."}
       ]
     },
@@ -69,6 +70,7 @@
       "blocks": [
         {"type": "chart", "chart": {"chart_id": "test-equity-factor", "title": "Active factor exposure (TEST)", "status": "ok", "columns": [{"key": "factor", "title": "Factor", "format": "text", "decimals": null}, {"key": "exposure", "title": "Active exposure", "format": "number", "decimals": 2}], "rows": [["Value", -0.18], ["Quality", 0.31], ["Momentum", 0.22], ["Size", -0.09]], "truncated": false, "render_hint": {"block": "bars", "x": "factor", "y": ["exposure"]}}},
         {"type": "table", "title": "Governed concentration", "columns": ["Axis", "Observed", "Limit", "Status", "Source"], "rows": [["Largest manager", "13.0% NAV", "15.0%", {"chip": "Watch", "status": "watch"}, "[S3][S4]"], ["Largest issuer look-through", "2.3% NAV", "3.0%", {"chip": "Watch", "status": "watch"}, "[S3][S7]"], ["North America", "59.0% of equity", "Not assessed", {"chip": "Not assessed", "status": "not_assessed"}, "[S4]"]]},
+        {"type": "callout", "role": "analysis", "tone": "info", "title": "Concentration remains near limits", "text": "Observation: The largest manager and issuer look-through remain below but near governed limits [S3][S4][S7]. Why it matters: Completion exposure can reduce reliance on concentrated active mandates. Uncertainty: Issuer evidence is lagged and incomplete [S7]. What would change the view: Fresher look-through or manager data showing materially lower concentration [S4][S7]."},
         {"type": "callout", "tone": "watch", "title": "Look-through limitation", "text": "The issuer concentration uses lagged Form 13F evidence and does not represent a complete holdings record [S7]."}
       ]
     },
@@ -77,6 +79,7 @@
       "blocks": [
         {"type": "kv", "rows": [["Assumption set", "2026 Strategic CMA (TEST)", "S6"], ["Regime", "Baseline", "S6"], ["Horizon", "10 years", "S6"], ["Currency", "USD", "S6"], ["Context fingerprint", "test-equity-forward-2026", "S6"]]},
         {"type": "chart", "chart": {"chart_id": "test-equity-forward", "title": "Global equity forward assumptions (TEST)", "status": "ok", "currency": "USD", "columns": [{"key": "measure", "title": "Measure", "format": "text", "decimals": null}, {"key": "current", "title": "Current sleeve", "format": "percentage", "decimals": 1}, {"key": "proposed", "title": "Proposed sleeve", "format": "percentage", "decimals": 1}], "rows": [["Expected return", 0.072, 0.071], ["Expected volatility", 0.168, 0.157], ["Expected max drawdown", -0.285, -0.266]], "truncated": false, "render_hint": {"block": "table", "x": "measure", "y": []}}},
+        {"type": "callout", "role": "analysis", "tone": "info", "title": "Risk falls modestly", "text": "Observation: The proposed sleeve has slightly lower expected return, volatility and drawdown than the current sleeve [S6]. Why it matters: The completion shift trades little assumed return for lower modeled risk. Uncertainty: These are long-horizon assumptions. What would change the view: A governed context where the proposed sleeve no longer improves risk meaningfully [S6]."},
         {"type": "text", "text": "These figures are assumptions under the selected context, not forecasts or guarantees [S6]."}
       ]
     },

@@ -353,21 +353,24 @@
       "blocks": [
         {
           "type": "callout",
+          "role": "analysis",
           "tone": "warning",
           "title": "Public-equity effect direction",
-          "text": "Observation: public equity is -0.6pp historically and +0.3pp ex ante [S4][S5]. Why it matters: the sign change separates realized experience from current expectations. Uncertainty: the lanes use different periods and weight bases. Consideration for discussion: whether the persisted public-equity expectation still reflects the intended policy basis."
+          "text": "Observation: public equity is -0.6pp historically and +0.3pp ex ante [S4][S5]. Why it matters: the sign change separates realized experience from current expectations. Uncertainty: the lanes use different periods and weight bases. What would change the view: a refreshed persisted public-equity expectation on the intended policy basis."
         },
         {
           "type": "callout",
+          "role": "analysis",
           "tone": "info",
           "title": "Selection concentration",
-          "text": "Observation: historical selection is the largest total negative component [S4]. Why it matters: active return was concentrated in one effect type. Uncertainty: segment attribution does not by itself identify security or manager skill. Consideration for discussion: which underlying evidence would be needed to explain the returned selection effect."
+          "text": "Observation: historical selection is the largest total negative component [S4]. Why it matters: active return was concentrated in one effect type. Uncertainty: segment attribution does not by itself identify security or manager skill. What would change the view: underlying evidence showing whether the returned selection effect is broad or concentrated."
         },
         {
           "type": "callout",
+          "role": "analysis",
           "tone": "info",
           "title": "Assumption lineage",
-          "text": "Observation: the ex ante result has no linked assumption-set or regime identifier [S5]. Why it matters: the persisted inputs cannot be tied to a named release in this report. Uncertainty: input dates may differ by segment. Consideration for discussion: whether assumption lineage needs separate governance review."
+          "text": "Observation: the ex ante result has no linked assumption-set or regime identifier [S5]. Why it matters: the persisted inputs cannot be tied to a named release in this report. Uncertainty: input dates may differ by segment. What would change the view: a named assumption release and regime linked to every segment input."
         }
       ]
     },

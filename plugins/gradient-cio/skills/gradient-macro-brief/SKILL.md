@@ -33,11 +33,11 @@ historical date.
 
 | Evidence | Call | Notes |
 |---|---|---|
-| The Read | `get_the_read` with no arguments for the latest publication; add an ISO `asOfDate` only for an explicitly requested historical edition | Record `publication.requested_as_of_date`, `resolved_as_of_date`, `fallback_applied`, and `fallback_reason`. Keep headline, governing thesis, read units, facts, market highlights, follow-ups, reading list, coverage |
+| The Read | `get_the_read` with no arguments for the latest publication; add an ISO `asOfDate` only for an explicitly requested historical edition | Record `publication.requested_as_of_date`, `resolved_as_of_date`, `fallback_applied`, and `fallback_reason`. Keep headline, governing thesis, read units, facts, market highlights, follow-ups, reading list, and coverage. Preserve `coverage.sections.visuals`, `coverage.unavailable_visuals`, and `coverage.omitted_visual_reasons`; an unavailable visual is a typed evidence gap, not evidence of no change |
 | Rates | `get_macro_conditions` `view: indicators`, `theme: rates`, `limit: 8` | Levels, 1m/3m change, 1y/5y percentile |
 | Inflation, growth | same, `theme: inflation` and `theme: growth` | Optional; use when The Read is about them |
 | Credit | `get_macro_conditions` with only `view: credit_spreads` | Do not pass `fields`, `limit`, or other optional selectors |
-| Gradient signal | `get_macro_signals` `view: gradient_signal` | Composite, regime, driver scores, supportive/detracting signals, GRIP (`sources.grip.current`), degraded sources |
+| Gradient signal | `get_macro_signals` `view: gradient_signal` | Composite, regime, driver scores, supportive/detracting signals, GRIP (`sources.grip.current`), degraded sources. Before using GRIP, check `sources.grip.availability.status` and retain every `availability.reasons`, `indexMetadata.degradationReasons`, and `outlookMetadata.reason`; never turn unavailable history or outlook into zero or an unchanged signal |
 | Regime state | `get_macro_signals` `view: regime_state`, `regions: ["NA","EU"]` | Optional. Treat `status: unavailable` with `unavailable_reason` as a valid evidence gap: omit the regime state and report the reason. Retry once only on HTTP 500 |
 | Calendar | `get_macro_calendar` `view: scheduled_events`, `windowDays: 30`, `limit: 15` | Keep decision rules |
 | CMAs | `get_capital_market_assumptions` `view: baseline`, `per_page: 10` (page 1–2) | Primary factors; risk-free rate and freshness |
@@ -45,9 +45,11 @@ historical date.
 | Hedge-fund crowding | `get_market_positioning` `view: hedge_fund_crowding` (no `category` — rejected) | `consensus`, `building`, `unwinding` from the 13F cohort; quote `coverage_statement` (cohort size, period) |
 | Regional backdrop | `get_regional_research` `view: facts` or `view: capital_markets`, up to 3 `regions` and the relevant `metrics` | Optional; only for regions The Read discusses. Preserve annual World Bank observation years, reporting-subset coverage and signed flow semantics. |
 
-Record for each call: as-of, validation status, coverage/degradation reasons, payload digest. If The Read or the
-calendar is unavailable, stop and tell the user — the deck needs both. Other gaps: build the deck and say what
-is missing on the slide and in the sources slide.
+Record for each call: as-of, validation status, coverage/degradation reasons, payload digest. Retain typed
+GRIP and The Read visual-unavailability reasons verbatim in the source note and affected slide. If The Read or
+the calendar is unavailable, stop and tell the user — the deck needs both. Missing The Read visuals alone do
+not make the publication unavailable: build a non-chart slide and disclose each reason. Other gaps: build the
+deck and say what is missing on the slide and in the sources slide.
 
 ## 2. Storyline
 

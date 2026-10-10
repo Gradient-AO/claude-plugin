@@ -20,7 +20,7 @@
     "tiles": [
       {"label": "Fixed-income weight", "value": "28.0%", "sub": "Policy target 28.0% [S3]", "tone": "good"},
       {"label": "Active weight", "value": "0.0pp", "sub": "Total-fund target [S3]", "tone": "good"},
-      {"label": "Trailing 1Y", "value": "5.1%", "sub": "Benchmark 4.7% [S5]", "tone": "good"},
+      {"label": "Relative return", "value": "+0.4pp", "sub": "Trailing 1Y versus benchmark [S5]", "tone": "good"},
       {"label": "Liquid share", "value": "96.0%", "sub": "Daily to weekly [S3]", "tone": "good"}
     ]
   },
@@ -53,6 +53,7 @@
       "title": "Target Portfolio Structure",
       "blocks": [
         {"type": "table", "title": "Current versus target", "columns": ["Segment", "Current", "Target", "Change", "Range / constraint", "Rationale"], "rows": [["Core government / IG", "14.0%", "17.0%", "+3.0pp", "12.0%–20.0%", "Increase benchmark-aligned ballast [S3][S8]"], ["Core-plus credit", "10.0%", "7.0%", "-3.0pp", "5.0%–12.0%", "Reduce credit concentration [S3][S4][S6]"], ["Global / emerging debt", "4.0%", "4.0%", "0.0pp", "0.0%–6.0%", "Maintain diversified role [S3][S7]"]]},
+        {"type": "callout", "role": "analysis", "tone": "info", "title": "Credit weight moderates", "text": "Observation: The target shifts 3.0 percentage points from core-plus credit to government and investment-grade bonds [S3][S4]. Why it matters: Credit concentration falls while total fixed income stays unchanged. Uncertainty: Security-level duration and costs are unavailable [S8]. What would change the view: Complete analytics showing the shift worsens duration or transition outcomes [S8]."},
         {"type": "text", "text": "The target is a committee proposal and is not a saved portfolio change [S3][S8]."}
       ]
     },
@@ -69,6 +70,7 @@
       "blocks": [
         {"type": "table", "title": "Credit spreads", "columns": ["Market", "Latest", "3-month change", "Coverage", "Source"], "rows": [["US investment grade", "112 bps", "+9 bps", "Complete", "[S6]"], ["US high yield", "365 bps", "+28 bps", "Complete", "[S6]"], ["Emerging hard currency", "318 bps", "+17 bps", "Complete", "[S6]"]]},
         {"type": "chart", "chart": {"chart_id": "test-fi-spreads", "title": "Credit spreads (TEST)", "status": "ok", "columns": [{"key": "market", "title": "Market", "format": "text", "decimals": null}, {"key": "spread", "title": "Spread", "format": "basis_points", "decimals": 0}], "rows": [["US investment grade", 112], ["US high yield", 365], ["Emerging hard currency", 318]], "truncated": false, "render_hint": {"block": "bars", "x": "market", "y": ["spread"]}}},
+        {"type": "callout", "role": "analysis", "tone": "info", "title": "Spread context is cautionary", "text": "Observation: All three returned credit spreads widened over three months [S6]. Why it matters: The context supports caution around concentrated credit exposure. Uncertainty: Market spreads do not identify portfolio attribution or predict direction. What would change the view: Updated spread evidence and governed attribution showing a different concentration tradeoff [S5][S6]."},
         {"type": "text", "text": "Credit spreads are market context only; governed attribution identifies the portfolio's historical effects [S5][S6]."}
       ]
     },
@@ -77,6 +79,7 @@
       "blocks": [
         {"type": "kv", "rows": [["Assumption set", "2026 Strategic CMA (TEST)", "S7"], ["Regime", "Baseline", "S7"], ["Horizon", "5 years", "S7"], ["Currency", "USD", "S7"], ["Context fingerprint", "test-fi-forward-2026", "S7"]]},
         {"type": "chart", "chart": {"chart_id": "test-fi-forward", "title": "Fixed-income forward assumptions (TEST)", "status": "ok", "currency": "USD", "columns": [{"key": "segment", "title": "Segment", "format": "text", "decimals": null}, {"key": "return", "title": "Expected return", "format": "percentage", "decimals": 1}, {"key": "volatility", "title": "Expected volatility", "format": "percentage", "decimals": 1}], "rows": [["Core government / IG", 0.041, 0.052], ["Core-plus credit", 0.058, 0.081], ["Global / emerging debt", 0.064, 0.105]], "truncated": false, "render_hint": {"block": "table", "x": "segment", "y": []}}},
+        {"type": "callout", "role": "analysis", "tone": "info", "title": "Risk rises with return", "text": "Observation: Higher-returning fixed-income segments also carry higher expected volatility [S7]. Why it matters: Reducing core-plus credit gives up some assumed return for lower modeled risk. Uncertainty: The values are assumptions rather than forecasts. What would change the view: A governed assumption refresh that reverses the segment risk-return ordering [S7]."},
         {"type": "text", "text": "These figures are assumptions under the selected context, not forecasts or guarantees [S7]."}
       ]
     },

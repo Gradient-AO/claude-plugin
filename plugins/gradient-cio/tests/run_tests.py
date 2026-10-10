@@ -31,6 +31,7 @@ IC_MEMO_SKILL = ROOT / "skills" / "gradient-ic-memo" / "SKILL.md"
 IC_MEMO_DATA_MAP = ROOT / "skills" / "gradient-ic-memo" / "references" / "data-map.md"
 IC_MEMO_CALCULATIONS = ROOT / "skills" / "gradient-ic-memo" / "references" / "calculations.md"
 IC_MEMO_VALIDATOR = ROOT / "skills" / "gradient-ic-memo" / "scripts" / "validate_memo.py"
+IC_MEMO_COMPOSER = ROOT / "skills" / "gradient-ic-memo" / "scripts" / "compose_memo_json.py"
 IC_MEMO_EVIDENCE = FIX / "ic_evidence.json"
 IC_MEMO_EXAMPLE = ROOT / "skills" / "gradient-ic-memo" / "assets" / "example-memo.md"
 ODD_REPORT_SKILL = ROOT / "skills" / "gradient-odd-report" / "SKILL.md"
@@ -60,6 +61,74 @@ PORTFOLIO_ATTRIBUTION_VALIDATOR = (
     / "scripts"
     / "validate_attribution.py"
 )
+GIPS_REPORT_COMPOSER = (
+    ROOT
+    / "skills"
+    / "gradient-gips-standards"
+    / "scripts"
+    / "compose_gips_report.py"
+)
+GIPS_REPORT_VALIDATOR = (
+    ROOT
+    / "skills"
+    / "gradient-gips-standards"
+    / "scripts"
+    / "validate_gips_report.py"
+)
+GIPS_VARIANTS = [
+    ("manager diligence", "gips", 4, 7, ["GIPS Manager Diligence", "Evidence status"]),
+    ("asset-owner review", "gips-asset-owner-review", 4, 7, ["GIPS Asset Owner Review", "Evidence status"]),
+    ("policies gap check", "gips-policies-gap-check", 4, 7, ["GIPS Policies Gap Check", "Findings by severity"]),
+    ("report review", "gips-report-review", 4, 7, ["GIPS Report Review", "Findings by severity"]),
+]
+ANALYTICAL_REPORT_VALIDATORS = [
+    (
+        "brief portfolio review",
+        PORTFOLIO_REVIEW_VALIDATOR,
+        FIX / "portfolio.json",
+    ),
+    (
+        "ODD report",
+        ROOT / "skills" / "gradient-odd-report" / "scripts" / "validate_odd_report.py",
+        FIX / "odd.json",
+    ),
+    (
+        "DDQ reconciliation",
+        ROOT
+        / "skills"
+        / "gradient-ddq-reconcile"
+        / "scripts"
+        / "validate_ddq_report.py",
+        FIX / "ddq.json",
+    ),
+    (
+        "equity note",
+        ROOT
+        / "skills"
+        / "gradient-equity-note"
+        / "scripts"
+        / "validate_equity_note.py",
+        FIX / "equity.json",
+    ),
+    (
+        "manager comparison",
+        ROOT
+        / "skills"
+        / "gradient-manager-compare"
+        / "scripts"
+        / "validate_manager_compare.py",
+        FIX / "compare.json",
+    ),
+    (
+        "manager monitor",
+        ROOT
+        / "skills"
+        / "gradient-manager-monitor"
+        / "scripts"
+        / "validate_monitor_digest.py",
+        FIX / "digest.json",
+    ),
+]
 CONSTRUCTION_VALIDATORS = [
     (
         "private-markets construction",
@@ -133,8 +202,7 @@ _renderer_spec.loader.exec_module(_renderer_module)
 CASES = [
     ("odd",      ["odd.json", "OUT"],                                3, 6,  ["Operational Due Diligence"]),
     ("ddq",      ["ddq.json", "OUT"],                                3, 8,  ["DDQ Reconciliation"]),
-    ("ic_memo",  ["--md", "ic.md", "--meta", "ic_meta.json", "OUT"], 7, 14, ["Recommendation"]),
-    ("gips",     ["--md", "gips.md", "--meta", "gips_meta.json", "OUT"], 3, 6, ["GIPS"]),
+    ("ic_memo",  ["ic-memo.json", "OUT"],                          14, 18, ["Recommendation", "Key judgment", "Growth of 100"]),
     ("gips_note",["--md", "note.md", "--meta", "note_meta.json", "OUT"], 1, 4, ["GIPS"]),
     ("digest",   ["digest.json", "OUT"],                             3, 5,  ["Manager Monitoring Digest", "Needs attention"]),
     ("setup",    ["setup.json", "OUT"],                              3, 6,  ["Readiness", "Contract checks"]),
@@ -159,6 +227,27 @@ def check(ok, msg):
     print(("  ok   " if ok else "  FAIL ") + msg)
     if not ok:
         fails.append(msg)
+
+def markdown_handoff_bodies(markdown):
+    lines = markdown.replace("\r\n", "\n").split("\n")
+    preamble, order, bodies, current = [], [], {}, None
+    for line in lines:
+        if line.startswith("# ") and current is None:
+            continue
+        if line.startswith("## "):
+            current = line[3:].strip()
+            order.append(current)
+            bodies[current] = []
+        elif current is None:
+            preamble.append(line)
+        else:
+            bodies[current].append(line)
+    if order and "\n".join(preamble).strip():
+        bodies[order[0]] = preamble + [""] + bodies[order[0]]
+    return {
+        heading: "\n".join(bodies[heading]).strip()
+        for heading in order
+    }
 
 def frontmatter(text):
     m = re.match(r"^---\n(.*?)\n---\n", text, re.S)
@@ -320,6 +409,213 @@ def connector_cutover():
             else ""
         ),
     )
+    with tempfile.TemporaryDirectory() as memo_tmp:
+        tmp_dir = pathlib.Path(memo_tmp)
+        composed_path = tmp_dir / "memo.json"
+        composed = subprocess.run(
+            [
+                sys.executable,
+                str(IC_MEMO_COMPOSER),
+                str(FIX / "ic.md"),
+                str(FIX / "ic_visuals.json"),
+                str(FIX / "ic_meta.json"),
+                str(composed_path),
+            ],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        check(
+            composed.returncode == 0
+            and composed_path.exists()
+            and json.loads(composed_path.read_text(encoding="utf-8"))
+            == json.loads((FIX / "ic-memo.json").read_text(encoding="utf-8")),
+            "IC memo composer produces the canonical validated JSON fixture"
+            + (
+                f": {(composed.stderr or composed.stdout).strip()}"
+                if composed.returncode != 0
+                else ""
+            ),
+        )
+
+        base_visuals = json.loads(
+            (FIX / "ic_visuals.json").read_text(encoding="utf-8")
+        )
+        invalid_cases = []
+
+        missing_slot = json.loads(json.dumps(base_visuals))
+        missing_slot["1"]["before"] = []
+        invalid_cases.append(("missing required visual slot", missing_slot))
+
+        bad_tag = json.loads(json.dumps(base_visuals))
+        bad_tag["2"]["analysis"][0]["text"] += " [S999]"
+        invalid_cases.append(("unknown source tag", bad_tag))
+
+        negative_bar = json.loads(json.dumps(base_visuals))
+        negative_bar["3"]["after"][0]["left"][0]["items"][0]["value"] = -52
+        invalid_cases.append(("negative bar value", negative_bar))
+
+        decision_language = json.loads(json.dumps(base_visuals))
+        decision_language["3"]["analysis"][0]["text"] += (
+            " The Committee should approve this change [S1]."
+        )
+        invalid_cases.append(("analysis decision language", decision_language))
+
+        for index, (label, invalid_visuals) in enumerate(invalid_cases):
+            invalid_path = tmp_dir / f"invalid-{index}.json"
+            invalid_path.write_text(json.dumps(invalid_visuals), encoding="utf-8")
+            protected_output = tmp_dir / f"protected-{index}.json"
+            protected_output.write_text('{"sentinel": true}', encoding="utf-8")
+            invalid_result = subprocess.run(
+                [
+                    sys.executable,
+                    str(IC_MEMO_COMPOSER),
+                    str(FIX / "ic.md"),
+                    str(invalid_path),
+                    str(FIX / "ic_meta.json"),
+                    str(protected_output),
+                ],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+            check(
+                invalid_result.returncode == 1
+                and json.loads(protected_output.read_text(encoding="utf-8"))
+                == {"sentinel": True},
+                f"IC memo composer rejects {label} without replacing output",
+            )
+    with tempfile.TemporaryDirectory() as gips_tmp:
+        tmp_dir = pathlib.Path(gips_tmp)
+        for label, prefix, _minimum, _maximum, _must in GIPS_VARIANTS:
+            markdown_path = FIX / f"{prefix}.md"
+            visuals_path = FIX / (
+                "gips_visuals.json"
+                if prefix == "gips"
+                else f"{prefix}-visuals.json"
+            )
+            meta_path = FIX / (
+                "gips_meta.json"
+                if prefix == "gips"
+                else f"{prefix}-meta.json"
+            )
+            composed_path = tmp_dir / f"{prefix}.json"
+            composed = subprocess.run(
+                [
+                    sys.executable,
+                    str(GIPS_REPORT_COMPOSER),
+                    str(markdown_path),
+                    str(visuals_path),
+                    str(meta_path),
+                    str(composed_path),
+                ],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+            composed_document = (
+                json.loads(composed_path.read_text(encoding="utf-8"))
+                if composed.returncode == 0 and composed_path.exists()
+                else {}
+            )
+            check(
+                composed.returncode == 0 and bool(composed_document),
+                f"GIPS {label} source bundle composes"
+                + (
+                    f": {(composed.stderr or composed.stdout).strip()}"
+                    if composed.returncode != 0
+                    else ""
+                ),
+            )
+            validated_gips = subprocess.run(
+                [sys.executable, str(GIPS_REPORT_VALIDATOR), str(composed_path)],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+            check(
+                validated_gips.returncode == 0,
+                f"composed GIPS {label} passes validate_gips_report.py",
+            )
+
+            expected_bodies = markdown_handoff_bodies(
+                markdown_path.read_text(encoding="utf-8")
+            )
+            sections = composed_document.get("sections", [])
+            preserved = len(sections) == len(expected_bodies)
+            for section in sections:
+                markdown_blocks = [
+                    block
+                    for block in section.get("blocks", [])
+                    if block.get("type") == "markdown"
+                ]
+                preserved = (
+                    preserved
+                    and len(markdown_blocks) == 1
+                    and markdown_blocks[0].get("text")
+                    == expected_bodies.get(section.get("source_heading"))
+                )
+            check(
+                preserved,
+                f"GIPS {label} preserves one authoritative markdown handoff per section",
+            )
+            if prefix == "gips":
+                check(
+                    composed_document
+                    == json.loads(
+                        (FIX / "gips-report.json").read_text(encoding="utf-8")
+                    ),
+                    "GIPS manager-diligence composer retains canonical fixture parity",
+                )
+
+        base_visuals = json.loads(
+            (FIX / "gips_visuals.json").read_text(encoding="utf-8")
+        )
+        invalid_cases = []
+
+        missing_analysis = json.loads(json.dumps(base_visuals))
+        missing_analysis["sections"]["1. Summary"]["after"] = []
+        invalid_cases.append(("missing sourced analysis", missing_analysis))
+
+        bad_tag = json.loads(json.dumps(base_visuals))
+        bad_tag["sections"]["1. Summary"]["after"][0]["text"] += " [S999]"
+        invalid_cases.append(("unknown source tag", bad_tag))
+
+        negative_severity = json.loads(json.dumps(base_visuals))
+        negative_severity["sections"]["3. Findings Checklist"]["before"][0][
+            "items"
+        ][0]["value"] = -1
+        invalid_cases.append(("negative severity count", negative_severity))
+
+        for index, (label, invalid_visuals) in enumerate(invalid_cases):
+            invalid_path = tmp_dir / f"gips-invalid-{index}.json"
+            invalid_path.write_text(json.dumps(invalid_visuals), encoding="utf-8")
+            protected_output = tmp_dir / f"gips-protected-{index}.json"
+            protected_output.write_text('{"sentinel": true}', encoding="utf-8")
+            invalid_result = subprocess.run(
+                [
+                    sys.executable,
+                    str(GIPS_REPORT_COMPOSER),
+                    str(FIX / "gips.md"),
+                    str(invalid_path),
+                    str(FIX / "gips_meta.json"),
+                    str(protected_output),
+                ],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+            check(
+                invalid_result.returncode == 1
+                and json.loads(protected_output.read_text(encoding="utf-8"))
+                == {"sentinel": True},
+                f"GIPS composer rejects {label} without replacing output",
+            )
     memo_text = (FIX / "ic.md").read_text(encoding="utf-8")
     example_memo_text = IC_MEMO_EXAMPLE.read_text(encoding="utf-8")
     memo_meta = json.loads((FIX / "ic_meta.json").read_text(encoding="utf-8"))
@@ -400,6 +696,106 @@ def connector_cutover():
             else ""
         ),
     )
+    for label, validator, fixture in ANALYTICAL_REPORT_VALIDATORS:
+        validated_report = subprocess.run(
+            [sys.executable, str(validator), str(fixture)],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        check(
+            validated_report.returncode == 0,
+            f"{label} fixture passes its analytical report validator"
+            + (
+                f": {(validated_report.stderr or validated_report.stdout).strip()}"
+                if validated_report.returncode != 0
+                else ""
+            ),
+        )
+
+    with tempfile.TemporaryDirectory() as report_tmp:
+        tmp_dir = pathlib.Path(report_tmp)
+        equity_fixture = json.loads((FIX / "equity.json").read_text(encoding="utf-8"))
+        fundamentals = next(
+            section
+            for section in equity_fixture["sections"]
+            if section["title"] == "Fundamentals and changes since the last filing"
+        )
+        analysis = next(
+            block
+            for block in fundamentals["blocks"]
+            if block.get("role") == "analysis"
+        )
+        malformed_reports = []
+
+        missing_analysis = json.loads(json.dumps(equity_fixture))
+        missing_fundamentals = next(
+            section
+            for section in missing_analysis["sections"]
+            if section["title"] == "Fundamentals and changes since the last filing"
+        )
+        for block in missing_fundamentals["blocks"]:
+            block.pop("role", None)
+        malformed_reports.append(("missing analysis role", missing_analysis))
+
+        unknown_tag = json.loads(json.dumps(equity_fixture))
+        unknown_fundamentals = next(
+            section
+            for section in unknown_tag["sections"]
+            if section["title"] == "Fundamentals and changes since the last filing"
+        )
+        unknown_analysis = next(
+            block
+            for block in unknown_fundamentals["blocks"]
+            if block.get("role") == "analysis"
+        )
+        unknown_analysis["text"] += " [S999]"
+        malformed_reports.append(("unknown source tag", unknown_tag))
+
+        prohibited_action = json.loads(json.dumps(equity_fixture))
+        prohibited_fundamentals = next(
+            section
+            for section in prohibited_action["sections"]
+            if section["title"] == "Fundamentals and changes since the last filing"
+        )
+        prohibited_analysis = next(
+            block
+            for block in prohibited_fundamentals["blocks"]
+            if block.get("role") == "analysis"
+        )
+        prohibited_analysis["text"] += " We recommend buying the security [S1]."
+        malformed_reports.append(("prohibited investment recommendation", prohibited_action))
+
+        for index, (label, malformed) in enumerate(malformed_reports):
+            malformed_path = tmp_dir / f"equity-invalid-{index}.json"
+            malformed_path.write_text(json.dumps(malformed), encoding="utf-8")
+            rejected = subprocess.run(
+                [
+                    sys.executable,
+                    str(
+                        ROOT
+                        / "skills"
+                        / "gradient-equity-note"
+                        / "scripts"
+                        / "validate_equity_note.py"
+                    ),
+                    str(malformed_path),
+                ],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+            check(
+                rejected.returncode == 1,
+                f"analytical report validator rejects {label}",
+            )
+
+        check(
+            analysis.get("role") == "analysis",
+            "equity fixture retains its sourced analysis block",
+        )
     validated_attribution = subprocess.run(
         [
             sys.executable,
@@ -527,6 +923,168 @@ def connector_cutover():
                 else ""
             ),
         )
+
+    def cloned_fixture(name):
+        return json.loads((FIX / name).read_text(encoding="utf-8"))
+
+    def report_section(document, title):
+        return next(
+            section for section in document["sections"] if section["title"] == title
+        )
+
+    contract_regressions = []
+    construction_validator = CONSTRUCTION_VALIDATORS[0][1]
+
+    missing_tile = cloned_fixture("construction-private-markets.json")
+    missing_tile["executive"]["tiles"].pop()
+    contract_regressions.append(
+        ("construction missing executive tile", construction_validator, missing_tile)
+    )
+
+    missing_role = cloned_fixture("construction-private-markets.json")
+    target_blocks = report_section(
+        missing_role, "Target Portfolio Structure"
+    )["blocks"]
+    next(block for block in target_blocks if block.get("role") == "analysis").pop(
+        "role"
+    )
+    contract_regressions.append(
+        ("construction missing analysis role", construction_validator, missing_role)
+    )
+
+    missing_visual = cloned_fixture("construction-private-markets.json")
+    current_blocks = report_section(
+        missing_visual, "Current Private Markets Portfolio"
+    )["blocks"]
+    current_blocks[:] = [
+        block for block in current_blocks if block.get("type") != "chart"
+    ]
+    contract_regressions.append(
+        (
+            "construction missing required visual without typed unavailable",
+            construction_validator,
+            missing_visual,
+        )
+    )
+
+    changed_action = cloned_fixture("construction-private-markets.json")
+    action_blocks = report_section(
+        changed_action, "Target Portfolio Structure"
+    )["blocks"]
+    next(block for block in action_blocks if block.get("role") == "analysis")[
+        "text"
+    ] += " We recommend a new committee action [S3]."
+    contract_regressions.append(
+        (
+            "construction new recommendation language in analysis",
+            construction_validator,
+            changed_action,
+        )
+    )
+
+    wrong_tile = cloned_fixture("portfolio-attribution-report.json")
+    wrong_tile["executive"]["tiles"][0]["label"] = "Active result"
+    contract_regressions.append(
+        ("attribution wrong executive tile", PORTFOLIO_ATTRIBUTION_VALIDATOR, wrong_tile)
+    )
+
+    attribution_missing_role = cloned_fixture("portfolio-attribution-report.json")
+    attribution_analysis = report_section(
+        attribution_missing_role, "Analysis and Considerations"
+    )["blocks"]
+    attribution_analysis[0].pop("role")
+    contract_regressions.append(
+        (
+            "attribution missing analysis role",
+            PORTFOLIO_ATTRIBUTION_VALIDATOR,
+            attribution_missing_role,
+        )
+    )
+
+    unknown_analysis_tag = cloned_fixture("portfolio-attribution-report.json")
+    report_section(
+        unknown_analysis_tag, "Analysis and Considerations"
+    )["blocks"][0]["text"] += " [S999]"
+    contract_regressions.append(
+        (
+            "attribution unknown analysis source tag",
+            PORTFOLIO_ATTRIBUTION_VALIDATOR,
+            unknown_analysis_tag,
+        )
+    )
+
+    malformed_analysis = cloned_fixture("portfolio-comprehensive.json")
+    malformed_block = report_section(
+        malformed_analysis, "Analysis and Considerations"
+    )["blocks"][0]
+    malformed_block["text"] = malformed_block["text"].replace(
+        "Uncertainty:", "Caveat:"
+    )
+    contract_regressions.append(
+        (
+            "comprehensive review malformed four-part analysis",
+            PORTFOLIO_REVIEW_VALIDATOR,
+            malformed_analysis,
+        )
+    )
+
+    prohibited_recommendation = cloned_fixture("portfolio-comprehensive.json")
+    report_section(
+        prohibited_recommendation, "Analysis and Considerations"
+    )["blocks"][0]["text"] += " We recommend increasing the allocation [S3]."
+    contract_regressions.append(
+        (
+            "comprehensive review prohibited recommendation language",
+            PORTFOLIO_REVIEW_VALIDATOR,
+            prohibited_recommendation,
+        )
+    )
+
+    review_missing_visual = cloned_fixture("portfolio-comprehensive.json")
+    historical_blocks = report_section(
+        review_missing_visual, "Historical Returns"
+    )["blocks"]
+    historical_blocks[:] = [
+        block
+        for block in historical_blocks
+        if block.get("type") not in {"line", "chart"}
+    ]
+    contract_regressions.append(
+        (
+            "comprehensive review missing visual without typed unavailable",
+            PORTFOLIO_REVIEW_VALIDATOR,
+            review_missing_visual,
+        )
+    )
+
+    negative_bar = cloned_fixture("portfolio-comprehensive.json")
+    exposure_blocks = report_section(
+        negative_bar, "Exposures and Concentration"
+    )["blocks"]
+    next(block for block in exposure_blocks if block.get("type") == "bars")[
+        "items"
+    ][0]["value"] = -1
+    contract_regressions.append(
+        (
+            "comprehensive review negative renderer bar",
+            PORTFOLIO_REVIEW_VALIDATOR,
+            negative_bar,
+        )
+    )
+
+    with tempfile.TemporaryDirectory() as contract_tmp:
+        tmp_dir = pathlib.Path(contract_tmp)
+        for index, (label, validator, document) in enumerate(contract_regressions):
+            fixture_path = tmp_dir / f"report-contract-{index}.json"
+            fixture_path.write_text(json.dumps(document), encoding="utf-8")
+            rejected = subprocess.run(
+                [sys.executable, str(validator), str(fixture_path)],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+            check(rejected.returncode == 1, f"validator rejects {label}")
 
 def chart_renderer():
     percentage_column = {
@@ -681,6 +1239,19 @@ def contract_manifest():
         == expected_minimum_tools,
         "minimum connector contract owns response paths and required probes",
     )
+    capability_paths = set(
+        minimum.get("required_response_field_paths", {}).get(
+            "get_gradient_capabilities",
+            [],
+        )
+    )
+    check(
+        {
+            "capability_access_modes.portfolio",
+            "capability_access_modes.strategyLab",
+        } <= capability_paths,
+        "minimum connector contract requires capability access modes",
+    )
     requirement_tokens = set(re.findall(
         r"\b(?:get|list|run|analyze|build|compare|create|extract|log|preview|reconcile|"
         r"save|screen|search|update|upload|batch)_[a-z0-9_]+\b",
@@ -814,8 +1385,24 @@ def contract_manifest():
         and the_read.get("equals", {}).get(
             "publication.requested_as_of_date",
             "missing",
-        ) is None,
-        "The Read probe uses the latest-publication contract",
+        ) is None
+        and {
+            "coverage.sections.visuals.status",
+            "coverage.sections.visuals.missing_fields",
+            "coverage.sections.visuals.degradation_reasons",
+            "coverage.unavailable_visuals",
+            "coverage.omitted_visual_reasons",
+        } <= set(the_read.get("required", [])),
+        "The Read probe uses latest publication and typed visual gaps",
+    )
+    check(
+        {
+            "sources.grip.availability.status",
+            "sources.grip.availability.reasons",
+            "sources.grip.indexMetadata.degradationReasons",
+            "sources.grip.outlookMetadata.reason",
+        } <= set(by_id["gradient_signal"].get("required", [])),
+        "GRIP probe retains typed availability and outlook reasons",
     )
     sample_portfolio = by_id["sample_portfolio"]
     check(
@@ -1039,6 +1626,12 @@ def contract_manifest():
         "`status: unavailable` with `unavailable_reason`" in macro_guidance,
         "macro brief treats unavailable regime state as a valid evidence gap",
     )
+    check(
+        "sources.grip.availability.status" in macro_guidance
+        and "coverage.unavailable_visuals" in macro_guidance
+        and "coverage.omitted_visual_reasons" in macro_guidance,
+        "macro brief retains typed GRIP and The Read visual gaps",
+    )
     scope_reference = "`references/module-scope.md`"
     scope_guidance = SHARED_MODULE_SCOPE.read_text(encoding="utf-8")
     normalized_scope_guidance = re.sub(r"\s+", " ", scope_guidance)
@@ -1065,6 +1658,14 @@ def contract_manifest():
         and "Never pass a Portfolio Analytics `portfolio_id`"
         in normalized_scope_guidance,
         "module scope requires server-built Strategy Lab sessions",
+    )
+    check(
+        "`capability_access_modes`" in scope_guidance
+        and "`not_applicable` means" in scope_guidance
+        and "`not_run` means" in scope_guidance
+        and "`checks_omitted`" in scope_guidance
+        and "`coverage.status` as" in scope_guidance,
+        "shared module guidance distinguishes access, validation, and aggregate status",
     )
     portfolio_review_guidance = PORTFOLIO_REVIEW_SKILL.read_text(
         encoding="utf-8",
@@ -1161,10 +1762,39 @@ def contract_manifest():
             "exposures[0].asset_classification",
             "exposures[0].fixed_income_metrics.weighting_basis",
             "portfolio_totals.market_value_base",
+            "aggregates_by_asset_classification.scope",
+            "aggregates_by_asset_classification.basis",
             "aggregates_by_asset_classification.coverage.status",
+            "aggregates_by_asset_classification.rows[0].fixed_income_metrics.effective_duration",
+            "aggregates_by_asset_classification.rows[0].fixed_income_metrics.spread_duration",
+            "aggregates_by_asset_classification.rows[0].fixed_income_metrics.yield_to_maturity_decimal",
             "methodology",
         } <= set(exposure_probe.get("required", [])),
-        "portfolio-exposure probe uses lowercase fixed-income filtering and valid response paths",
+        "portfolio-exposure probe covers aggregate scope and fixed-income paths",
+    )
+    exposure_equals = exposure_probe.get("equals", {})
+    exposure_reconciliations = {
+        (item.get("left"), item.get("right"))
+        for item in exposure_probe.get("reconciles", [])
+    }
+    check(
+        exposure_equals.get("exposures[0].null_reasons.as_of_date", "missing")
+        is None
+        and exposure_equals.get(
+            "exposures[0].null_reasons.market_value_base",
+            "missing",
+        )
+        is None
+        and exposure_equals.get("exposures[0].null_reasons.nav_base")
+        == "nav_not_applicable_for_marketable"
+        and exposure_equals.get("aggregates_by_asset_classification.scope")
+        == "filtered_portfolio"
+        and exposure_equals.get(
+            "aggregates_by_asset_classification.coverage.status",
+        )
+        == "available"
+        and len(exposure_reconciliations) == 3,
+        "portfolio-exposure probe checks null reasons and aggregate reconciliation",
     )
     return_args = by_id["portfolio_returns"]["args"]
     check(
@@ -1405,7 +2035,15 @@ def contract_manifest():
                 "public_equity": 0.6,
                 "fixed_income": 0.4,
             },
-        },
+        }
+        and by_id["cma_consensus_allocation"]["approx"].get(
+            "resolved_allocation.public_equity",
+            {},
+        ).get("expected") == 0.6
+        and by_id["cma_consensus_allocation"]["approx"].get(
+            "resolved_allocation.fixed_income",
+            {},
+        ).get("expected") == 0.4,
         "current event, entity-fact and CMA-consensus contracts are probed",
     )
     check(
@@ -1422,7 +2060,14 @@ def contract_manifest():
         and by_id["ddq_extract_fund_aliases"]["equals"].get(
             "claims[7].field",
         )
-        == "custodian_name",
+        == "custodian_name"
+        and all(
+            by_id["ddq_extract_fund_aliases"]["equals"].get(
+                f"claims[{index}].extraction_reason_codes[0]",
+            )
+            == "reviewed_alias_match"
+            for index in (0, 4, 7)
+        ),
         "fund DDQ probe covers auditor, administrator and custodian aliases",
     )
     check(
@@ -1500,9 +2145,15 @@ def contract_manifest():
         "capabilities probe requests summary detail",
     )
     check(
-        {"effective_capabilities", "product_entitlements"}
+        {
+            "effective_capabilities",
+            "product_entitlements",
+            "capability_access_modes",
+            "capability_access_modes.portfolio",
+            "capability_access_modes.strategyLab",
+        }
         <= set(by_id["capabilities_summary"].get("required", [])),
-        "capabilities probe distinguishes effective access from entitlements",
+        "capabilities probe distinguishes access modes from entitlements",
     )
     check(
         by_id["write_roster"]["args"].get("action") == "add"
@@ -1616,12 +2267,27 @@ def contract_checker():
         capabilities_path.write_text(json.dumps({
             "version": "0.9.0",
             "contract_identity": {"compatibility_epoch": 2},
+            "product_entitlements": {"portfolio": False},
+            "effective_capabilities": {"portfolio": True},
+            "capability_access_modes": {"portfolio": "illustrative"},
             "tools": [{"name": "preview_tool"}, {"name": "source_tool"}],
         }), encoding="utf-8")
         old_capabilities_path = temp / "old-capabilities.json"
         old_capabilities_path.write_text(json.dumps({
             "version": "0.8.9",
             "contract_identity": {"compatibility_epoch": 2},
+            "product_entitlements": {"portfolio": False},
+            "effective_capabilities": {"portfolio": True},
+            "capability_access_modes": {"portfolio": "illustrative"},
+            "tools": [{"name": "preview_tool"}, {"name": "source_tool"}],
+        }), encoding="utf-8")
+        invalid_modes_path = temp / "invalid-modes.json"
+        invalid_modes_path.write_text(json.dumps({
+            "version": "0.9.0",
+            "contract_identity": {"compatibility_epoch": 2},
+            "product_entitlements": {"portfolio": False},
+            "effective_capabilities": {"portfolio": True},
+            "capability_access_modes": {"portfolio": "demo"},
             "tools": [{"name": "preview_tool"}, {"name": "source_tool"}],
         }), encoding="utf-8")
         def run(*args):
@@ -1643,6 +2309,11 @@ def contract_checker():
             contract_path,
             old_capabilities_path,
         )
+        connector_invalid_modes = run(
+            "--validate-connector",
+            contract_path,
+            invalid_modes_path,
+        )
         check(passed.returncode == 0 and "PASS preview" in passed.stdout, "contract checker accepts matching values")
         check(null.returncode == 1 and "null receipt_id" in null.stdout, "contract checker rejects null values")
         check(unequal.returncode == 1 and "expected True" in unequal.stdout, "contract checker rejects unequal values")
@@ -1660,6 +2331,11 @@ def contract_checker():
             connector_old.returncode == 1
             and "below required 0.9.0" in connector_old.stdout,
             "connector checker rejects an older service",
+        )
+        check(
+            connector_invalid_modes.returncode == 1
+            and "invalid capability_access_modes" in connector_invalid_modes.stdout,
+            "connector checker rejects invalid capability access modes",
         )
 
 def render(keep):
@@ -1713,6 +2389,84 @@ def render(keep):
             "equity",
         ):
             check("Powered by" not in text, f"{name}: no client branding by default")
+
+    for label, prefix, lo, hi, must in GIPS_VARIANTS:
+        markdown_path = FIX / f"{prefix}.md"
+        visuals_path = FIX / (
+            "gips_visuals.json" if prefix == "gips" else f"{prefix}-visuals.json"
+        )
+        meta_path = FIX / (
+            "gips_meta.json" if prefix == "gips" else f"{prefix}-meta.json"
+        )
+        composed_path = out / f"{prefix}-composed.json"
+        pdf = out / f"{prefix}.pdf"
+        composed = subprocess.run(
+            [
+                sys.executable,
+                str(GIPS_REPORT_COMPOSER),
+                str(markdown_path),
+                str(visuals_path),
+                str(meta_path),
+                str(composed_path),
+            ],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        if composed.returncode != 0:
+            check(
+                False,
+                f"GIPS {label}: compose exit {composed.returncode}: "
+                f"{(composed.stderr or composed.stdout).strip()[-300:]}",
+            )
+            continue
+        rendered = subprocess.run(
+            [sys.executable, str(RENDER), str(composed_path), str(pdf)],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        if rendered.returncode != 0:
+            check(
+                False,
+                f"GIPS {label}: render exit {rendered.returncode}: "
+                f"{(rendered.stderr or rendered.stdout).strip()[-300:]}",
+            )
+            continue
+        if external_pdf_tools:
+            info = subprocess.run(
+                ["pdfinfo", str(pdf)],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            ).stdout
+            pages = int(re.search(r"Pages:\s+(\d+)", info).group(1))
+            text = subprocess.run(
+                ["pdftotext", "-layout", str(pdf), "-"],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            ).stdout
+        else:
+            from pypdf import PdfReader
+            reader = PdfReader(pdf)
+            pages = len(reader.pages)
+            text = "\n".join(page.extract_text() or "" for page in reader.pages)
+        check(
+            lo <= pages <= hi,
+            f"GIPS {label}: {pages} pages (expected {lo}–{hi})",
+        )
+        normalized = lambda value: re.sub(r"\s+", "", value).upper()
+        missing = [value for value in must if normalized(value) not in normalized(text)]
+        check(
+            not missing,
+            f"GIPS {label}: contains {must}"
+            + (f" — missing {missing}" if missing else ""),
+        )
     print(f"PDFs in {out}")
 
 def main():

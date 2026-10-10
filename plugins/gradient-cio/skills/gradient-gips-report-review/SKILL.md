@@ -2,7 +2,7 @@
 name: gradient-gips-report-review
 description: "This skill should be used when the user asks to \"review this GIPS Report\", \"check a composite presentation\", \"is this GIPS Composite Report complete\", \"check required GIPS disclosures\", \"review a pooled fund GIPS Report\", \"check this factsheet against the GIPS Advertising Guidelines\", or wants a firm's composite or pooled fund performance presentation (time- or money-weighted) or advertisement checked line by line against the 2020 GIPS standards. Delivers a branded PDF review in the Gradient house style.\n"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # GIPS Report Review
@@ -11,7 +11,8 @@ Check a firm's GIPS Composite Report, GIPS Pooled Fund Report or GIPS Advertisem
 standards for firms, line by line.
 
 Shared references live in `${CLAUDE_PLUGIN_ROOT}/skills/gradient-gips-standards/references/` (fallback:
-`../gradient-gips-standards/references/`). Always load `firms-report-checklist.md` and `output-format.md`.
+`../gradient-gips-standards/references/`). Always load `firms-report-checklist.md`, `output-format.md` and
+`report-layout.md`.
 
 ## Step 1 — Classify the document
 
@@ -58,16 +59,20 @@ applies.
 
 ## Step 6 — Report
 
-Produce the findings checklist and the summary using `output-format.md`, delivered as the branded PDF (see Output). When the review supports a manager
-evaluation, also produce the memo section. When the user is the preparer (reviewing their own firm's report),
-replace the memo section with a prioritized fix list: Not met items first, then Partially met, then
-recommended improvements.
+Produce the authoritative markdown checklist and separate visual layer using `output-format.md` and
+`report-layout.md`, delivered as the branded PDF (see Output). Require evidence-status tiles, evidence
+coverage, findings and severity summaries, sourced analysis, and typed unavailable blocks where expected
+evidence is missing. When the review supports a manager evaluation, also produce the memo section and
+preserve it unchanged. When the user is the preparer (reviewing their own firm's report), replace the memo
+section with a prioritized follow-up list: Not met items first, then Partially met, then Not found. Analysis
+is non-prescriptive and may point only to those existing numbered requests.
 
 State any item resting on a † (to-be-confirmed) reference line as "confirm against the standards" rather than
 a definitive deficiency.
 
 ## Output
 
-Always deliver the review as a branded PDF: follow "Delivery — branded PDF" in
-`gradient-gips-standards/references/output-format.md`, rendering with this skill's
-`scripts/gradient_report.py` (style rules in this skill's `references/report-style.md`).
+Always deliver the review as a branded PDF. Write `review.md`, `visuals.json` and `meta.json`; validate and
+compose them with the shared scripts in `gradient-gips-standards/scripts`, then render `review.json` in JSON
+block mode with this skill's `scripts/gradient_report.py`. Market charts are not required. Follow
+`output-format.md`, `report-layout.md` and this skill's `references/report-style.md`.

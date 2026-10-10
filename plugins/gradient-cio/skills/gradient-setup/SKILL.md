@@ -27,9 +27,11 @@ report them as separate modules; never use the canonical illustrative portfolio 
 ## 2. Access and data readiness
 
 1. Call `get_gradient_capabilities` with the `organization_id` and `detail: "summary"`:
-   - `product_entitlements` = commercial licenses; `effective_capabilities` = effective feature usability,
+   - `product_entitlements` = commercial licenses; `capability_access_modes` = each capability's `live`,
+     `illustrative`, or `unavailable` access basis; `effective_capabilities` = whether that mode is usable,
      including bounded illustrative access; each tool's `access_mode` and `available` are the final invocation
-     basis and decision;
+     basis and decision. Require all three maps and treat a false entitlement plus an `illustrative` capability
+     mode as evaluation access, never as live licensed access;
    - `backend_readiness`, `version`;
    - `contract_identity.compatibility_epoch`;
    - per tool: `entitled`, `available`, `scoped`, `healthy`, `data_ready`, `availability_reason`,
@@ -45,7 +47,8 @@ report them as separate modules; never use the canonical illustrative portfolio 
      <this skill's directory>/references/contracts.json <capabilities-response.json>
    ```
 
-   This requires service version 0.9.0 or newer, compatibility epoch 3, and every required public tool.
+   This requires service version 0.9.0 or newer, compatibility epoch 3, every required public tool, and a
+   coherent `capability_access_modes` map whose modes agree with `effective_capabilities`.
    On failure, stop before skill or probe execution, mark the connector `not_ready`, quote the validator
    failure, and tell the user to update or reconnect GradientCIO. Do not replace missing connector
    calculations with local calculations.

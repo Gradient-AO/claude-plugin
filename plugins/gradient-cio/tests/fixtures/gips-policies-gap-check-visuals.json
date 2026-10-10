@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "executive_tiles": [
+    {"label": "Met", "value": "2", "sub": "Firm and composite governance", "tone": "good"},
+    {"label": "Partially met", "value": "2", "sub": "Errors and portability", "tone": "watch"},
+    {"label": "Not met", "value": "1", "sub": "Current approval evidence", "tone": "bad"},
+    {"label": "Not found", "value": "1", "sub": "Supplemental inventory", "tone": "watch"}
+  ],
+  "sections": {
+    "1. Summary": {
+      "before": [
+        {"type": "coverage", "title": "Evidence status", "items": [
+          {"name": "Policies manual", "status": "available", "note": "Core policies reviewed [S1]"},
+          {"name": "Change log", "status": "degraded", "note": "Current sign-off absent [S2]"}
+        ]}
+      ],
+      "after": [
+        {"type": "callout", "role": "analysis", "tone": "bad", "title": "Approval evidence is stale", "text": "**Observation:** The current policy approval is not evidenced [S2]. **Why it matters:** governance cannot be tied to the current manual. **Uncertainty:** approval may exist outside the supplied log. **What would change the view:** evidence closing follow-up request 2.", "follow_up_refs": [2]}
+      ]
+    },
+    "2. Performance Integrity & GIPS": {"before": [], "after": []},
+    "3. Findings Checklist": {
+      "before": [
+        {"type": "bars", "title": "Findings by severity", "items": [
+          {"label": "High", "value": 1, "display": "1"},
+          {"label": "Medium", "value": 2, "display": "2"},
+          {"label": "Low", "value": 1, "display": "1"}
+        ]}
+      ],
+      "after": [
+        {"type": "findings", "title": "Priority findings", "items": [
+          {"severity": "high", "title": "Approval not evidenced", "detail": "The current manual has no supplied approval record [S2]."},
+          {"severity": "medium", "title": "Error threshold absent", "detail": "The error policy omits materiality thresholds [S1]."},
+          {"severity": "medium", "title": "Portability ownership absent", "detail": "The portability policy does not identify its documentation owner [S1]."},
+          {"severity": "low", "title": "Inventory not found", "detail": "No supplemental-information inventory was supplied [S1][S2]."}
+        ]}
+      ]
+    },
+    "4. Follow-up Requests": {"before": [], "after": []},
+    "Appendix A — Sources": {"before": [], "after": []},
+    "Appendix B — Method & Disclaimer": {"before": [], "after": []}
+  }
+}

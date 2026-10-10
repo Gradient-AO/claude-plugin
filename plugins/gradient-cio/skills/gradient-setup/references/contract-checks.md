@@ -86,9 +86,12 @@ For `portfolio_exposure` and `portfolio_ownership`, determine scope from
 mismatch when a dependent response does not identify that same canonical
 portfolio or labels it as live data.
 For exposure totals, `page_totals` is current-page only and `portfolio_totals` is filtered-portfolio scope;
-require `portfolio_totals.complete` before treating it as exhaustive. Preserve row `null_reasons`. Fixed-income
-portfolio and classification aggregates are current-holding-NAV weighted, and a zero spread duration is a
-valid observation.
+require `portfolio_totals.complete` before treating it as exhaustive. Classification aggregates separately
+declare `scope: filtered_portfolio`; interpret `coverage.status` as `available`, `partial`, or `unavailable`
+and retain every `missing_reasons` value rather than inferring completeness from non-empty rows. Preserve row
+`null_reasons`; a null with a typed reason is intentional and must not be backfilled from another value
+channel. Fixed-income portfolio and classification aggregates are current-holding-NAV weighted, must
+reconcile for the fixed-income-only probe, and a zero spread duration is a valid observation.
 
 The Portfolio Analytics probes cover list, exposure, structure, historical and governed ex ante attribution,
 the supported allocations and commitments chart packs, and policy checking against the canonical
@@ -110,8 +113,12 @@ Results:
 - **Known issue**: a failure listed below. Report it as "known issue — workaround in skill", not as a new fault.
 - `validation.status` = `failed` means a blocking check failed. Advisory failures remain in detailed checks
   as disclosures and do not make the overall status failed.
-- Compact envelopes omit passed checks and advisory `not_run` checks. This is intentional; use
-  `checks_omitted` for the count and request a full envelope only when auditing validation detail.
+- `not_applicable` means the check does not apply to the requested mode or returned evidence; `not_run` means
+  the check was applicable but lacked the requested evidence or could not execute. Neither is a pass, and
+  they must not be collapsed into one status.
+- Compact envelopes omit passed checks, `not_applicable` checks and advisory `not_run` checks. Blocking
+  `not_run` checks remain visible. This is intentional; preserve the `not_applicable`, `not_run` and
+  `checks_omitted` counts, and request a full envelope only when auditing validation detail.
 
 ## Known issues (revalidated 2026-10-09)
 
@@ -127,10 +134,12 @@ P-07 is an intentional contract boundary, not a connector fault: `get_chart_data
 |---|---|---|---|---|
 | `get_portfolio_historical_returns` commitment continuation | Non-blocking bounded-response limitation | P-01 · Gradient MCP · pending | `benchmark_relative` may return only the first 25 commitment rows with `commitments_truncated: true`. Do not follow `next_cursor` until P-01 ships; disclose the returned count and omitted detail. Preserve `not_yet_funded` as a gap, not a zero return. | Reliable cursor continuation ships and a multi-page canonical probe completes twice without duplicates or omissions. |
 
-P-12–P-20 are enforced by compatibility-epoch-3 schemas and probes: renamed capability/entitlement fields,
-scoped exposure totals, governed fixed-income aggregates, coherent null reasons, positive-weight CMA examples,
-and fund-scope DDQ aliases. P-21 remains a data-readiness condition rather than a client workaround: report
-GRIP availability reasons and The Read `coverage.unavailable_visuals` instead of inventing missing history.
+P-12–P-20 are enforced by compatibility-epoch-3 schemas and probes: capability-level
+`capability_access_modes`, renamed entitlement fields, scoped exposure totals and aggregate coverage status,
+governed fixed-income reconciliation, coherent null reasons, positive-weight canonical CMA allocations, and
+fund-scope DDQ aliases carrying `reviewed_alias_match`. P-21 remains a data-readiness condition rather than a
+client workaround: retain GRIP `availability.reasons` and outlook reasons plus The Read visual section status,
+`coverage.unavailable_visuals`, and `coverage.omitted_visual_reasons` instead of inventing missing history.
 
 Decision hold: keep Strategy Lab simulation, saved-scenario and
 `run_strategy_lab_expected_statistics` references until the maintainer explicitly decides their

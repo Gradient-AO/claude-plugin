@@ -39,14 +39,14 @@
     "completeness": {
       "used": 20,
       "expected": 21,
-      "state": "degraded"
+      "state": "partial"
     },
     "header_label": "DDQ Reconciliation",
     "signal_title": "Reconciliation result",
     "meter_title": "Fields assessed"
   },
   "executive": {
-    "bottom_line": "Of 20 checkable DDQ answers, **13 are consistent** with Form ADV and Schedule D, **4 are contradicted** and **3 need review** [S1][S2]. The most serious gap is the **fund administrator**: the DDQ names Example Fund Administration, while Schedule D lists Example Trust Company [S1][S2]. The DDQ also overstates headcount by 105 people and private funds by 3, and understates the fund minimum by $1.67M; these gaps are returned by the governed reconciliation [S1].",
+    "bottom_line": "Of 20 checkable DDQ answers, **13 are consistent** with Form ADV and Schedule D, **4 are contradicted** and **3 need review** [S1][S2]. The most serious gap is the **fund administrator**: the DDQ names Example Fund Administration, while Schedule D lists Example Trust Company [S1][S2]. The DDQ also overstates headcount by 105 people and private funds by 3, and understates the fund minimum by $1.67M; these gaps are returned by the governed reconciliation [S1]. The source DDQ is preserved by digest [S3].",
     "tiles": [
       {
         "label": "Contradicted",
@@ -167,6 +167,13 @@
           ],
           "empty_title": "",
           "empty_text": ""
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Provider conflict",
+          "text": "The administrator names conflict across the DDQ and Schedule D [S2]. This limits reliance on the operating-party record. The effective date of any provider change is unknown; the existing administrator follow-up would resolve the uncertainty."
         },
         {
           "type": "questions",

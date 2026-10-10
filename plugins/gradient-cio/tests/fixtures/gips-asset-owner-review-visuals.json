@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "executive_tiles": [
+    {"label": "Met", "value": "2", "sub": "Return basis and benchmark", "tone": "good"},
+    {"label": "Partially met", "value": "1", "sub": "Benchmark change disclosure", "tone": "watch"},
+    {"label": "Not met", "value": "1", "sub": "Valuation policy evidence", "tone": "bad"},
+    {"label": "Not found", "value": "1", "sub": "Error-correction policy", "tone": "watch"}
+  ],
+  "sections": {
+    "1. Summary": {
+      "before": [
+        {"type": "coverage", "title": "Evidence status", "items": [
+          {"name": "Board report", "status": "available", "note": "Total-fund evidence [S1]"},
+          {"name": "Investment policy", "status": "available", "note": "Benchmark evidence [S2]"},
+          {"name": "Custodian package", "status": "degraded", "note": "Valuation policy absent [S3]"}
+        ]}
+      ],
+      "after": [
+        {"type": "callout", "role": "analysis", "tone": "watch", "title": "Benchmark lineage incomplete", "text": "**Observation:** The benchmark is identified, but its change date is absent [S1, S2]. **Why it matters:** period comparability depends on benchmark lineage. **Uncertainty:** the underlying approval date is not evidenced. **What would change the view:** evidence closing follow-up request 1.", "follow_up_refs": [1]}
+      ]
+    },
+    "2. Performance Integrity & GIPS": {"before": [], "after": []},
+    "3. Findings Checklist": {
+      "before": [
+        {"type": "bars", "title": "Findings by severity", "items": [
+          {"label": "High", "value": 0, "display": "0"},
+          {"label": "Medium", "value": 2, "display": "2"},
+          {"label": "Low", "value": 1, "display": "1"}
+        ]}
+      ],
+      "after": [
+        {"type": "findings", "title": "Priority findings", "items": [
+          {"severity": "medium", "title": "Benchmark date absent", "detail": "The report omits the benchmark-change effective date [S1][S2]."},
+          {"severity": "medium", "title": "Valuation policy absent", "detail": "The reviewed package does not include the valuation policy [S3]."},
+          {"severity": "low", "title": "Error policy not found", "detail": "No error-correction policy was supplied [S2][S3]."}
+        ]}
+      ]
+    },
+    "4. Follow-up Requests": {"before": [], "after": []},
+    "Appendix A — Sources": {"before": [], "after": []},
+    "Appendix B — Method & Disclaimer": {"before": [], "after": []}
+  }
+}

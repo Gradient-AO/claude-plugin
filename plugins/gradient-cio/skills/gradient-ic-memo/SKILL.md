@@ -2,7 +2,7 @@
 name: gradient-ic-memo
 description: Write a deterministic, fully sourced investment committee (IC) memo for a portfolio, total fund, allocation change, rebalance, or manager hire/fire, using GradientCIO Portfolio Analytics, CMAs, liquidity and manager-diligence evidence, with optional Strategy Lab analysis of separately selected return series, plus the gradient-gips-* skills. Delivers a branded PDF memo in the Gradient house style. Use this skill whenever the user asks for an IC memo, investment committee memo, board memo, investment memo, committee paper, allocation recommendation, rebalance proposal, a portfolio review that ends in a decision or vote, IPS compliance review, or a client or trustee memo about a portfolio — even if they don't say "IC memo". Also use it when another skill (such as gradient-gips-manager-diligence) hands over a section "for the investment memo". For a periodic performance report with no decision requested, use gradient-portfolio-review instead.
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Gradient IC Memo
@@ -13,6 +13,11 @@ documented calculation), and **decision-ready** (the recommendation and the vote
 
 The memo is written by Claude from structured data. The GradientCIO MCP supplies the data; this skill supplies
 the structure and the rules. Never fill a number from memory or general knowledge.
+
+The delivered PDF is a **visually polished report in the same house style as the ODD report**: executive band
+with tiles, charts in every analytical section, and sourced **Claude analysis** callouts. The memo text stays
+deterministic (`memo.md`, validated); visuals and analysis are a separate, validated layer (`visuals.json`)
+merged by `scripts/compose_memo_json.py` and rendered in JSON block mode.
 
 ## Files in this skill
 
@@ -28,6 +33,8 @@ the structure and the rules. Never fill a number from memory or general knowledg
 | `scripts/validate_memo.py` | After drafting — confirms every section is present, in order, with no unresolved placeholders. |
 | `assets/example-memo.md` | When unsure how a section should look — a complete worked example that passes validation. |
 | `references/report-style.md` | Before rendering — the shared Gradient report style, `meta` fields and delivery rules. |
+| `references/report-layout.md` | Before Step 5b — required visuals per section, signed-bar convention, Claude analysis rules. |
+| `scripts/compose_memo_json.py` | Merges validated `memo.md` + `visuals.json` + `meta.json` into `memo.json`; validates visuals, analysis and tags. |
 | `scripts/gradient_report.py` | Renders the validated markdown memo into the branded PDF. Run it; never restyle. |
 
 ## Workflow
@@ -66,6 +73,11 @@ Follow `references/data-map.md` section by section. Key rules:
   unavailable charts with their reason, and never compare different bases as though they were the same
   scenario. Use governed policy and CMA evidence for saved-portfolio forward assumptions; keep
   `run_strategy_lab_expected_statistics` limited to separately selected Strategy Lab return series.
+- For Section 5 visuals, make a **second** `get_portfolio_historical_returns` call with
+  `sections: [cumulative_growth, calendar_years]` and `fields: [portfolio, filters, coverage, display,
+  cumulative_growth, calendar_years]`; cite it as its own source row.
+- For Section 9 visuals, request the `commitments` chart items (`commitments-liquidity-scorecard`,
+  `commitments-pacing`, `commitments-cashflow`) and keep each returned item unchanged.
 - For every result, record a **source row**: tool, key parameters, `provenance.as_of`,
   `provenance.data_scope.label`, `validation.status`, and `payload_digest` if present. These rows become the
   Appendix A source table and the `[S#]` tags in the text.
@@ -133,6 +145,18 @@ Determinism rules (summary — the template is authoritative):
 6. Status words are only those defined in the template (for example `Compliant`, `Watch`, `Breach`,
    `Not assessed`). No synonyms.
 
+### Step 5b — Build the visual and analysis layer
+
+Follow `references/report-layout.md` exactly. Write `visuals.json` with, for each section, the required
+`before` / `after` blocks (charts, tiles, findings, coverage) and the Claude `analysis` callouts:
+
+- Visual data comes only from saved Gradient results already cited in `memo.md`; `chart` blocks pass the
+  returned `get_chart_data` item unchanged. Signed quantities use the signed-bar convention.
+- Analysis callouts follow Observation [S#] → Why it matters → Uncertainty → What would change the view
+  (`writing-standards.md`, "Claude analysis"). Section 2 carries 3–5 **Key judgments** that connect findings
+  across sections. Analysis never introduces an action beyond Section 1.
+- Add the four `executive.tiles` defined in `report-layout.md` to `meta.json`.
+
 ### Step 6 — Validate, render and deliver
 
 1. Save the draft as markdown and run `python scripts/validate_memo.py <file.md>`. Fix every error it reports
@@ -152,15 +176,15 @@ Determinism rules (summary — the template is authoritative):
 
    Signal level: `breach` if any IPS row is Breach; else `watch` if any is Watch; else `compliant`;
    `not_assessed` when no IPS was provided. If any data is illustrative, say so in `confidentiality`.
-3. Render: `python scripts/gradient_report.py --md <file.md> --meta meta.json "<Portfolio> - IC Memo.pdf"`.
-   The markdown headings become the numbered sections, status words in status columns become chips, and
-   appendices start on a new page. Check every page (`pdftoppm -r 60 -png`) and fix layout before delivering.
-   When including chart-pack output, build the equivalent JSON sections with the validated section markdown
-   in `markdown` blocks and each returned chart item unchanged in a `{"type":"chart","chart":<item>}` block,
-   then use JSON block mode. Do not hand-map chart IDs or rows.
-4. Deliver the PDF (save to `/mnt/user-data/outputs/`, and to the connected folder if there is one). Offer an
+3. Compose: `python scripts/compose_memo_json.py memo.md visuals.json meta.json memo.json`. Fix every error
+   and re-run until it passes. A failed composition does not write or replace `memo.json`.
+4. Render in JSON block mode: `python scripts/gradient_report.py memo.json "<Portfolio> - IC Memo.pdf"`.
+   Check every page (`pdftoppm -r 60 -png`): no squashed charts (use `narrow: true` inside `two_col`), no page
+   holding only an overflow tail, no wrapped IDs. Fix `visuals.json` and re-compose; never edit `memo.json`.
+   The markdown-only render (`--md`) is a fallback for when visuals cannot be built; say so in the reply.
+5. Deliver the PDF (save to `/mnt/user-data/outputs/`, and to the connected folder if there is one). Offer an
    editable Claude Doc copy built from the same markdown when the committee secretary needs to edit it.
-5. In the reply, give a three-line summary (recommendation, IPS status, number of open items) and the
+6. In the reply, give a three-line summary (recommendation, IPS status, number of open items) and the
    document. Do not repeat the memo in chat.
 
 ### Step 7 — Save the scenario (only when the user asks)
