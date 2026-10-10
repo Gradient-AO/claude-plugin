@@ -15,7 +15,11 @@ The deliverable is a branded report: every checkable DDQ statement is marked cor
 2. Find the firm: `get_diligence_roster_funds` first (gives canonical `fund_id` and `parent_firm_id`), else `search_managers` with the name or CRD. Confirm the CRD with the user if more than one adviser matches.
 3. Resolve canonical IDs to pass to reconciliation:
    - Firm claims: use `firm_id`. Do NOT pass only `crd_number` — reconciliation currently fails to resolve a bare CRD.
-   - Fund claims: use the catalog `fund_id` (from the roster or `get_gradient_coverage` view `manager_subject`). If resolution returns a `pfid:` candidate with `canonical_id: null`, report governed reconciliation as unavailable for that fund; do not compare or calculate locally.
+   - Fund claims: use `subject_scope: "fund"` and the catalog `fund_id` (from the roster or
+     `get_gradient_coverage` view `manager_subject`). A DDQ containing auditor, administrator, custodian, or
+     prime-broker labels remains fund scope even when the manager name is prominent; firm scope checks only
+     the 8 firm fields. If resolution returns a `pfid:` candidate with `canonical_id: null`, report governed
+     reconciliation as unavailable for that fund; do not compare or calculate locally.
 4. Pull `get_manager_odd_profile` with the CRD for contextual filed evidence only. Do not use it to recreate reconciliation verdicts or numeric gaps.
 
 ## 2. Extract and transcribe claims

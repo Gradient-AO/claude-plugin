@@ -77,12 +77,13 @@ not infer the missing channel from another field or treat a typed not-applicable
 Strategy Lab is a standalone sandbox for saved or imported return series and the active lab panel state. It
 does not analyze a saved portfolio merely because a Portfolio Analytics `portfolio_id` is available.
 
-Build a session with `build_strategy_lab_session` before each selected-series Strategy Lab compute call.
-Pass `return_series_ids` plus a `benchmark_id` where the session domain requires it, then pass the returned
-`strategy_lab_session` object unchanged to the compute tool. For illustrative analysis, discover and use the
-named `strategy_lab_core` demo set. Never pass a Portfolio Analytics `portfolio_id`. Never describe Strategy
-Lab results as portfolio holdings, policy compliance, or realized portfolio performance. Preserve series
-labels, identifiers, and date coverage.
+For selected-series Strategy Lab compute calls, pass `return_series_ids` and the benchmark field required by
+the loaded tool schema (`benchmark_id` for relative return, `benchmark_series_id` for manager comparison).
+Do not also pass a `strategy_lab_session` stub: the connector builds the selected-series session. A complete
+server-built `strategy_lab_session` may be passed by itself, but never together with `return_series_ids`.
+For illustrative analysis, discover the named `strategy_lab_core` demo set and use its IDs. Never pass a
+Portfolio Analytics `portfolio_id`. Never describe Strategy Lab results as portfolio holdings, policy
+compliance, or realized portfolio performance. Preserve series labels, identifiers, and date coverage.
 
 If no matching Strategy Lab session or return series exists, keep Strategy Lab analysis optional and write
 `Not available — no Strategy Lab return series selected` where the report template requires a row.

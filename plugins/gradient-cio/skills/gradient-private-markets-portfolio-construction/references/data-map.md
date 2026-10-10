@@ -44,7 +44,7 @@ portfolio has no subject return history and do not substitute benchmark, commitm
 | Macro regime | `get_macro_signals`; `view: gradient_signal`, plus `view: regime_state` when available | Preserve GRIP availability/degradation reasons and returned regime status; context only, never a forecast |
 | Manager evidence | `get_manager_diligence_brief`, `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve | Preserve entity scope and severity; separate server evidence from plugin conclusions |
 | Manager shortlist | `search_managers`, `screen_managers` through `gradient-manager-compare` | Handoff rather than duplicating a comparison |
-| Selected-series robustness | `build_strategy_lab_session` with selected `return_series_ids`, then a supported `run_strategy_lab_*` tool with the returned session | Optional sandbox only; never pass `portfolio_id` |
+| Selected-series robustness | Pass selected `return_series_ids` directly to a supported `run_strategy_lab_*` tool and add the required benchmark field. Do not also pass a `strategy_lab_session` stub. | Optional sandbox only; never pass `portfolio_id` |
 | User documents | IPS, pacing plan, cash-flow forecast or consultant recommendation | Tag as user document with document date and scope |
 
 ## Fallbacks

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.5.1
+- Aligned setup probes and portfolio guidance with the current connector contracts for full historical-return coverage, fixed-income aggregates, three-series Strategy Lab comparisons, DDQ filing-date assumptions and preview-only write surfaces.
+- Added connector `pie` chart-hint rendering to the shared report renderer while preserving table fallback for mixed-unit data.
+- Centralized shared report-validation policy and split the regression harness into focused suites without dropping PDF, PowerPoint, layout or release-quality gates.
+- Moved cheap version and shared-file parity checks ahead of renderer installation in CI.
+
 ## 2.5.0
 - Added licensed Inter assets and upgraded the shared PDF renderer for flowing sections, split tables, heading keeps, signed/narrow bars, table-width controls, and waterfall, band, stacked, heat and timeline blocks (P0-1, P0-2, P0-3, P0-4, P0-5, P0-6, P0-7, P0-8).
 - Added deterministic layout checks for sparse pages and orphan headings (P0-9).

@@ -8,6 +8,7 @@
       "batch_reconcile_manager_ddq_claims",
       "build_strategy_lab_session",
       "check_portfolio_policy",
+      "create_diligence_finding",
       "extract_ddq_claims",
       "get_benchmarks",
       "get_cma_consensus_check",
@@ -16,7 +17,6 @@
       "get_gradient_capabilities",
       "get_manager_diligence_brief",
       "get_manager_odd_profile",
-      "get_the_read",
       "get_portfolio_attribution",
       "get_portfolio_ex_ante_attribution",
       "get_portfolio_exposure",
@@ -25,6 +25,7 @@
       "get_public_equity_filing_evidence",
       "get_public_equity_fundamentals",
       "get_return_series",
+      "get_the_read",
       "list_organizations",
       "list_portfolios",
       "log_diligence_review",
@@ -157,15 +158,14 @@
         "portfolio_totals.scope",
         "portfolio_totals.complete",
         "portfolio_totals.market_value_base",
-        "portfolio_totals.fixed_income_metrics.weighting_basis",
-        "portfolio_totals.fixed_income_metrics.effective_duration",
-        "portfolio_totals.fixed_income_metrics.spread_duration",
-        "portfolio_totals.fixed_income_metrics.yield_to_maturity_decimal",
         "aggregates_by_asset_classification.scope",
         "aggregates_by_asset_classification.basis",
         "aggregates_by_asset_classification.coverage.status",
         "aggregates_by_asset_classification.rows[0].fixed_income_metrics.weighting_basis",
-        "methodology"
+        "methodology",
+        "aggregates_by_asset_classification.rows[0].fixed_income_metrics.effective_duration",
+        "aggregates_by_asset_classification.rows[0].fixed_income_metrics.spread_duration",
+        "aggregates_by_asset_classification.rows[0].fixed_income_metrics.yield_to_maturity_decimal"
       ],
       "get_portfolio_historical_returns": [
         "coverage.status",
@@ -233,8 +233,10 @@
       ],
       "run_strategy_lab_relative_return": [
         "domain",
-        "tracking_error",
-        "information_ratio"
+        "result_rows[0]",
+        "result_rows[1]",
+        "result_rows[2]",
+        "result_row_count"
       ],
       "save_strategy_lab_scenario": [
         "action",
@@ -258,6 +260,48 @@
         "file.content_sha256",
         "would_create.source",
         "request_fingerprint_sha256"
+      ],
+      "create_diligence_finding": [
+        "action",
+        "dry_run",
+        "committed",
+        "outcome",
+        "receipt_id"
+      ],
+      "log_diligence_review": [
+        "action",
+        "dry_run",
+        "committed",
+        "outcome",
+        "receipt_id"
+      ],
+      "save_strategy_lab_scenario": [
+        "action",
+        "dry_run",
+        "committed",
+        "outcome",
+        "receipt_id"
+      ],
+      "update_diligence_roster": [
+        "action",
+        "dry_run",
+        "committed",
+        "outcome",
+        "receipt_id"
+      ],
+      "update_manager_monitoring": [
+        "action",
+        "dry_run",
+        "committed",
+        "outcome",
+        "receipt_id"
+      ],
+      "update_watchlist": [
+        "action",
+        "dry_run",
+        "committed",
+        "outcome",
+        "receipt_id"
       ]
     },
     "required_probe_ids": [
@@ -284,9 +328,7 @@
       "strategy_return_series",
       "strategy_expected_statistics_session",
       "strategy_expected_statistics",
-      "strategy_relative_return_session",
       "strategy_relative_return",
-      "strategy_manager_compare_session",
       "strategy_manager_compare",
       "strategy_date_windows_session",
       "strategy_date_windows",
@@ -925,10 +967,6 @@
         "portfolio_totals.scope",
         "portfolio_totals.complete",
         "portfolio_totals.market_value_base",
-        "portfolio_totals.fixed_income_metrics.weighting_basis",
-        "portfolio_totals.fixed_income_metrics.effective_duration",
-        "portfolio_totals.fixed_income_metrics.spread_duration",
-        "portfolio_totals.fixed_income_metrics.yield_to_maturity_decimal",
         "aggregates_by_asset_classification.scope",
         "aggregates_by_asset_classification.basis",
         "aggregates_by_asset_classification.coverage.status",
@@ -947,33 +985,12 @@
         "page_totals.scope": "current_page",
         "portfolio_totals.scope": "filtered_portfolio",
         "portfolio_totals.complete": true,
-        "portfolio_totals.fixed_income_metrics.weighting_basis": "current_holding_nav_base",
         "aggregates_by_asset_classification.scope": "filtered_portfolio",
         "aggregates_by_asset_classification.basis": "current_holding_market_value_or_drawdown_nav_excluding_unfunded",
         "aggregates_by_asset_classification.coverage.status": "available",
         "aggregates_by_asset_classification.rows[0].asset_classification": "Fixed Income",
         "aggregates_by_asset_classification.rows[0].fixed_income_metrics.weighting_basis": "current_holding_nav_base"
-      },
-      "reconciles": [
-        {
-          "left": "portfolio_totals.fixed_income_metrics.effective_duration",
-          "right": "aggregates_by_asset_classification.rows[0].fixed_income_metrics.effective_duration",
-          "absolute_tolerance": 1e-12,
-          "unit": "years"
-        },
-        {
-          "left": "portfolio_totals.fixed_income_metrics.spread_duration",
-          "right": "aggregates_by_asset_classification.rows[0].fixed_income_metrics.spread_duration",
-          "absolute_tolerance": 1e-12,
-          "unit": "years"
-        },
-        {
-          "left": "portfolio_totals.fixed_income_metrics.yield_to_maturity_decimal",
-          "right": "aggregates_by_asset_classification.rows[0].fixed_income_metrics.yield_to_maturity_decimal",
-          "absolute_tolerance": 1e-12,
-          "unit": "decimal_fraction"
-        }
-      ]
+      }
     },
     {
       "id": "portfolio_policy",
@@ -1366,79 +1383,30 @@
       }
     },
     {
-      "id": "strategy_relative_return_session",
-      "set": "full",
-      "tool": "build_strategy_lab_session",
-      "depends_on": [
-        "strategy_benchmarks"
-      ],
-      "args": {
-        "domain": "relative-return",
-        "demo_set_id": "strategy_lab_core",
-        "benchmark_id": "<strategy_benchmarks:demo_set.benchmark_series[0].series_id>"
-      },
-      "required": [
-        "status",
-        "domain",
-        "strategy_lab_session",
-        "coverage.status",
-        "provenance.builder"
-      ],
-      "non_null": [
-        "strategy_lab_session"
-      ],
-      "equals": {
-        "status": "available",
-        "domain": "relative-return",
-        "coverage.status": "available",
-        "provenance.builder": "server"
-      }
-    },
-    {
       "id": "strategy_relative_return",
       "set": "full",
       "tool": "run_strategy_lab_relative_return",
       "depends_on": [
-        "strategy_relative_return_session"
-      ],
-      "args": {
-        "strategy_lab_session": "<strategy_relative_return_session:strategy_lab_session>"
-      },
-      "required": [
-        "domain",
-        "tracking_error",
-        "information_ratio"
-      ],
-      "equals": {
-        "domain": "relative-return"
-      }
-    },
-    {
-      "id": "strategy_manager_compare_session",
-      "set": "full",
-      "tool": "build_strategy_lab_session",
-      "depends_on": [
         "strategy_benchmarks"
       ],
       "args": {
-        "domain": "manager-compare",
-        "demo_set_id": "strategy_lab_core"
+        "return_series_ids": [
+          "<strategy_benchmarks:demo_set.manager_fund_series[0].series_id>",
+          "<strategy_benchmarks:demo_set.manager_fund_series[1].series_id>",
+          "<strategy_benchmarks:demo_set.manager_fund_series[2].series_id>"
+        ],
+        "benchmark_id": "<strategy_benchmarks:demo_set.benchmark_series[0].series_id>"
       },
       "required": [
-        "status",
         "domain",
-        "strategy_lab_session",
-        "coverage.status",
-        "provenance.builder"
-      ],
-      "non_null": [
-        "strategy_lab_session"
+        "result_rows[0]",
+        "result_rows[1]",
+        "result_rows[2]",
+        "result_row_count"
       ],
       "equals": {
-        "status": "available",
-        "domain": "manager-compare",
-        "coverage.status": "available",
-        "provenance.builder": "server"
+        "domain": "relative-return",
+        "result_row_count": 3
       }
     },
     {
@@ -1446,17 +1414,32 @@
       "set": "full",
       "tool": "analyze_strategy_lab_compare",
       "depends_on": [
-        "strategy_manager_compare_session"
+        "strategy_benchmarks"
       ],
       "args": {
-        "strategy_lab_session": "<strategy_manager_compare_session:strategy_lab_session>"
+        "return_series_ids": [
+          "<strategy_benchmarks:demo_set.manager_fund_series[0].series_id>",
+          "<strategy_benchmarks:demo_set.manager_fund_series[1].series_id>",
+          "<strategy_benchmarks:demo_set.manager_fund_series[2].series_id>"
+        ],
+        "benchmark_series_id": "<strategy_benchmarks:demo_set.benchmark_series[0].series_id>"
       },
       "required": [
         "domain",
+        "selected_series_ids[0]",
+        "selected_series_ids[1]",
+        "selected_series_ids[2]",
+        "selected_series_summaries[0]",
+        "selected_series_summaries[1]",
+        "selected_series_summaries[2]",
+        "selected_series_id_count",
+        "selected_series_summary_count",
         "ranking_rows"
       ],
       "equals": {
-        "domain": "manager-compare"
+        "domain": "manager-compare",
+        "selected_series_id_count": 3,
+        "selected_series_summary_count": 3
       }
     },
     {
@@ -1769,7 +1752,6 @@
               "end": 13,
               "page": 1
             },
-            "asserted_as_of": "2026-09-30",
             "extraction_reason_codes": []
           }
         ]
@@ -1789,13 +1771,15 @@
         "rows[0].numeric_gap.formula_id",
         "rows[0].numeric_gap.formula_version",
         "rows[0].numeric_gap.missing_reason",
-        "verdict_counts"
+        "verdict_counts",
+        "rows[0].as_of_assumed"
       ],
       "equals": {
         "result_type": "ddq_reconciliation",
         "rows[0].field": "employees",
         "rows[0].numeric_gap.formula_id": "ddq-claim-filed-numeric-gap",
-        "rows[0].numeric_gap.formula_version": "v1"
+        "rows[0].numeric_gap.formula_version": "v1",
+        "rows[0].as_of_assumed": "filing_date"
       }
     },
     {
@@ -1828,7 +1812,6 @@
                   "end": 13,
                   "page": 1
                 },
-                "asserted_as_of": "2026-09-30",
                 "extraction_reason_codes": []
               }
             ]
@@ -1853,7 +1836,6 @@
                   "end": 13,
                   "page": 1
                 },
-                "asserted_as_of": "2026-09-30",
                 "extraction_reason_codes": []
               }
             ]
@@ -1872,7 +1854,9 @@
         "items[0].data.rows[0].numeric_gap.formula_id",
         "items[1].status",
         "items[1].data.rows[0].numeric_gap.formula_id",
-        "source_statement"
+        "source_statement",
+        "items[0].data.rows[0].as_of_assumed",
+        "items[1].data.rows[0].as_of_assumed"
       ],
       "equals": {
         "result_type": "batch_ddq_reconciliation",
@@ -1885,7 +1869,9 @@
         "items[0].status": "completed",
         "items[0].data.rows[0].numeric_gap.formula_id": "ddq-claim-filed-numeric-gap",
         "items[1].status": "completed",
-        "items[1].data.rows[0].numeric_gap.formula_id": "ddq-claim-filed-numeric-gap"
+        "items[1].data.rows[0].numeric_gap.formula_id": "ddq-claim-filed-numeric-gap",
+        "items[0].data.rows[0].as_of_assumed": "filing_date",
+        "items[1].data.rows[0].as_of_assumed": "filing_date"
       }
     },
     {

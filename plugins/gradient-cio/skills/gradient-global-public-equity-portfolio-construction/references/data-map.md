@@ -42,7 +42,7 @@ portfolio has no subject return history and do not substitute benchmark, commitm
 | Macro regime | `get_macro_signals`; `view: gradient_signal`, plus `view: regime_state` when available | Preserve GRIP availability/degradation reasons and returned regime status; context only, never a forecast |
 | Manager evidence | `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve; use `gradient-manager-compare` / `gradient-odd-report` for deeper work | Preserve entity scope and severity; never infer that an unmatched holding has no findings |
 | Issuer question | `get_public_equity_fundamentals`, `get_public_equity_filing_evidence`, `get_market_positioning` | Only for named concentrations; offer `gradient-equity-note` for full research |
-| Selected-series diagnostics | `build_strategy_lab_session` with selected return-series IDs, then `run_strategy_lab_expected_statistics`, `run_strategy_lab_relative_return` or `run_strategy_lab_date_window_robustness` with the returned session | Selected-series sandbox; never use portfolio ID |
+| Selected-series diagnostics | Pass selected `return_series_ids` directly to `run_strategy_lab_expected_statistics` or `run_strategy_lab_date_window_robustness`; add `benchmark_id` for `run_strategy_lab_relative_return`. Do not also pass a `strategy_lab_session` stub. | Selected-series sandbox; never use portfolio ID |
 | User documents | IPS, benchmark specification, manager structure or transition plan | Tag as user documents with date and scope |
 
 ## 13F caveat

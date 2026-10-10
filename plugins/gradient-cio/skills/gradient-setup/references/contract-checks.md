@@ -31,13 +31,13 @@ or report date; the default probe therefore exercises the current latest-publica
 sample_portfolio, chart_catalog. The sample probe verifies that `list_portfolios`
 returns Gradient's canonical example first.
 
-**Full read set (57 reads including standard):** standard plus capabilities_summary, manager_diligence_brief,
+**Full read set (55 reads including standard):** standard plus capabilities_summary, manager_diligence_brief,
 attention, findings, events, events_roster, entity_facts, conditions, credit_spreads, gradient_signal, regime_state,
 cma_baseline, cma_consensus, cma_consensus_allocation, watchlist,
 portfolio_tree, portfolio_exposure, portfolio_policy, portfolio_ownership, portfolio_returns,
 portfolio_attribution, portfolio_ex_ante_attribution, portfolio_series,
 chart_availability, portfolio_allocations, portfolio_commitments,
-strategy_benchmarks, strategy_return_series, four Strategy Lab session builders,
+strategy_benchmarks, strategy_return_series, two Strategy Lab session builders,
 strategy_expected_statistics, strategy_relative_return, strategy_manager_compare, strategy_date_windows,
 adv_13f_consistency,
 multi_manager_13f_overlap, search_managers, screen, cftc_positioning, hf_crowding, regional_facts,
@@ -100,9 +100,11 @@ The Portfolio Analytics probes cover list, exposure, structure, historical and g
 the supported allocations and commitments chart packs, and policy checking against the canonical
 illustrative `portfolio_id`. Strategy Lab separately covers the named demo benchmark catalog, one
 manager/fund return series, and the expected-statistics, relative-return, manager-compare and date-window
-IDD compute tools. Each compute probe receives the unchanged `strategy_lab_session` from a successful
-`build_strategy_lab_session` dependency. The discovery schema exposes `portfolio_id` as a compatibility
-field, but selected-series tools reject it. Report the two module results separately.
+IDD compute tools. Manager compare receives three demo `return_series_ids` plus `benchmark_series_id` and
+must return all three selected series. Relative return receives those same three IDs plus `benchmark_id` and
+must return one `result_rows` entry per series. Neither call also sends a `strategy_lab_session` stub. The
+discovery schema exposes `portfolio_id` as a compatibility field, but selected-series tools reject it.
+Report the two module results separately.
 
 For a non-entitled organization, successful Portfolio Analytics and Strategy Lab probes are expected to
 report illustrative access, not live client access. Confirm `record_kind: example`, `access_mode:
@@ -125,26 +127,14 @@ Results:
 
 ## Known issues (revalidated 2026-10-09)
 
-This table contains only currently reproducible exceptions. Re-check each one on every full run. When one
-stops reproducing, say so in the report ("resolved since 2026-10-09") so the maintainer can remove it.
+There are no currently reproducible connector exceptions with a client-side workaround.
 
-No known issue permits a Portfolio Analytics ID to be reused as Strategy Lab input.
-P-07 is an intentional contract boundary, not a connector fault: `get_chart_data` supports only
-`allocations` and `commitments`. Do not probe `expected-statistics` through that tool. Preserve
-`run_strategy_lab_expected_statistics` for a separately built Strategy Lab session.
+The following are supported contract boundaries, not known issues:
 
 | Tool / view | Classification | Ticket, owner, review | Symptom and current workaround | Removal criterion |
 |---|---|---|---|---|
 | DDQ transcribed claim dates | Non-blocking comparison-date limitation | P-23 · Gradient MCP · pending | Reconciliation can choose an unsuitable filing when a transcribed claim omits `asserted_as_of`. Always set `asserted_as_of` from the DDQ's stated date; if absent, ask the user for the applicable date before reconciliation. | P-23 ships and an undated transcribed-claim probe selects and reports the intended comparison basis twice. |
 | Non-fixed-income exposure rows | Non-blocking field-population defect | P-25 · Gradient MCP · pending | `fixed_income_metrics` may be populated on non-fixed-income exposure rows. Do not quote those values. Use complete `portfolio_totals` and the `Fixed Income` classification aggregate for duration, spread duration and yield. | P-25 ships and mixed-classification probes return fixed-income metrics only on the governed portfolio total and Fixed Income aggregate row. |
 
-P-12–P-20 are enforced by compatibility-epoch-3 schemas and probes: capability-level
-`capability_access_modes`, renamed entitlement fields, scoped exposure totals and aggregate coverage status,
-governed fixed-income reconciliation, coherent null reasons, positive-weight canonical CMA allocations, and
-fund-scope DDQ aliases carrying `reviewed_alias_match`. P-21 remains a data-readiness condition rather than a
-client workaround: retain GRIP `availability.reasons` and outlook reasons plus The Read visual section status,
-`coverage.unavailable_visuals`, and `coverage.omitted_visual_reasons` instead of inventing missing history.
-
-Decision hold: keep Strategy Lab simulation, saved-scenario and
-`run_strategy_lab_expected_statistics` references until the maintainer explicitly decides their
-public-surface status. They are not classified as removed by this release.
+Re-check this section on every full run and add only a currently reproducible exception with its exact error
+code, request ID, bounded workaround, owner, and removal criterion.

@@ -63,8 +63,9 @@ CMA consensus, The Read and selected-series Strategy Lab diagnostics are optiona
 - Historical attribution comes only from `get_portfolio_attribution`. Strategy Lab relative return is not
   attribution.
 - Separate observed historical risk, governed policy status and forward assumptions.
-- Use `portfolio_totals.fixed_income_metrics` for a complete filtered sleeve, or the Fixed Income
-  classification aggregate. Require `weighting_basis: current_holding_nav_base`, preserve coverage and
+- Use the Fixed Income classification aggregate for sleeve duration, spread duration and yield;
+  `portfolio_totals.fixed_income_metrics` is null for a mixed portfolio. Quote `fixed_income_metrics` only
+  for Fixed Income and Cash rows. Require `weighting_basis: current_holding_nav_base`, preserve coverage and
   methodology, and never recompute or equal-weight rows. Treat spread duration zero as a valid observation.
   Until P-25 ships, ignore `fixed_income_metrics` on individual exposure rows and non-Fixed-Income aggregates.
 - Never relabel yield to maturity as yield to worst. Report yield to worst, OAS, convexity, quality or

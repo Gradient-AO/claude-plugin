@@ -60,9 +60,10 @@ session path below.
 
 ### Strategy Lab supplement
 
-Use only when the user has selected return series for Strategy Lab. Build the matching domain session with
-`build_strategy_lab_session`, then pass its `strategy_lab_session` object unchanged to the compute tool. Load
-the tool schema before each call and preserve its result contract:
+Use only when the user has selected return series for Strategy Lab. Pass `return_series_ids` and the
+benchmark field required by the loaded compute-tool schema. Do not also pass a `strategy_lab_session` stub;
+the connector builds the selected-series session. Load the tool schema before each call and preserve its
+result contract:
 
 | Need | Tool | Fields used |
 |---|---|---|

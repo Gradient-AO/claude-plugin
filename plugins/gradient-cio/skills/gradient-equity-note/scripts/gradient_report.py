@@ -253,6 +253,19 @@ def b_chart(b):
                     "note": "Truncated output" if c.get("truncated") else "",
                 })
             return b_bars({"title": c.get("title"), "items": items})
+    if block == "pie" and x_key in keys and y_keys and y_keys[0] in keys:
+        xi, yi = keys.index(x_key), keys.index(y_keys[0])
+        items = [{"label": row[xi], "value": row[yi],
+                  "display": _chart_format(columns[yi], row[yi], c.get("currency"))}
+                 for row in c["rows"]
+                 if len(row) > max(xi, yi)
+                 and row[xi] is not None
+                 and isinstance(row[yi], (int, float))]
+        if (len(items) == len(c["rows"])
+                and items
+                and all(math.isfinite(item["value"]) and item["value"] >= 0 for item in items)
+                and sum(item["value"] for item in items) > 0):
+            return b_pie({"title": c.get("title"), "items": items})
     return b_table({"title": c.get("title"),
                     "columns": [column.get("title", column.get("key", "")) for column in columns],
                     "rows": [[_chart_format(column, value, c.get("currency"))

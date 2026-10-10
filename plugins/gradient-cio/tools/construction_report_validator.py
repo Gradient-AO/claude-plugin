@@ -22,20 +22,22 @@ from report_json_validator import (
     section_objects,
     validate_report,
 )
-
-
-ILLUSTRATIVE_LABEL = (
-    "Illustrative, Gradient Maintained — demo data, not the client's holdings "
-    "or managers"
+from report_constants import (
+    ATTRIBUTION_STATUS_PATTERNS,
+    ILLUSTRATIVE_LABEL,
+    LOCAL_CALC_TAG_PATTERNS,
 )
+
+
 SIGNAL_LEVELS = frozenset({"clear", "watch", "elevated", "insufficient"})
 COMPLETENESS_STATES = frozenset({"complete", "partial"})
 COMMON_FORBIDDEN_PATTERNS = (
-    r"\bsimulated attribution\b",
-    r"\bprojected attribution\b",
-    r"\[Calc(?:\s+C(?:\d+|#))?\]",
-    r"\bcreate(?:d|s|ing)? (?:the )?portfolio in Gradient",
-    r"\bupdated (?:the )?Gradient portfolio\b",
+    ATTRIBUTION_STATUS_PATTERNS
+    + LOCAL_CALC_TAG_PATTERNS
+    + (
+        r"\bcreate(?:d|s|ing)? (?:the )?portfolio in Gradient",
+        r"\bupdated (?:the )?Gradient portfolio\b",
+    )
 )
 ANALYSIS_ACTION_PATTERN = re.compile(
     r"\b(?:recommend(?:ation|ed|s|ing)?|committee action requested|"

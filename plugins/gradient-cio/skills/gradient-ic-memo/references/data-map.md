@@ -7,9 +7,9 @@ Step 2). Read `module-scope.md` first.
 Portfolio questions go to Portfolio Analytics: `list_portfolios`, `get_portfolio_exposure`,
 `get_portfolio_structure`, `get_portfolio_historical_returns`, `get_chart_data`,
 `get_portfolio_attribution`, and `check_portfolio_policy`. Strategy Lab rows are optional and run on selected
-return series: call `build_strategy_lab_session` with `return_series_ids` plus `benchmark_id` where required,
-then pass the returned `strategy_lab_session` unchanged to the compute tool. They never receive
-`portfolio_id`. Label the series and date coverage and do not present lab results as the portfolio.
+return series: pass `return_series_ids` plus the benchmark field required by the loaded compute-tool schema.
+Do not also pass a `strategy_lab_session` stub. They never receive `portfolio_id`. Label the series and date
+coverage and do not present lab results as the portfolio.
 
 ## 0. Context (header)
 
