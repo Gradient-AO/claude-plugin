@@ -86,14 +86,16 @@ def run_source_checks(check: Check) -> None:
     layout = _load_module("release_check_layout", SHARED / "check_layout.py")
 
     check(
-        "font-family:Inter" in report.CSS
+        "font-family:GradientInter,Inter" in report.CSS
         and 'paragraph.font.name = "Inter"' in (SHARED / "gradient_pptx.py").read_text(encoding="utf-8")
         and (ROOT / "assets" / "fonts" / "OFL.txt").is_file()
         and all(
             (ROOT / "assets" / "fonts" / filename).is_file()
             for filename in (
-                "inter-latin-wght-normal.woff2",
-                "inter-latin-ext-wght-normal.woff2",
+                "inter-latin-regular.ttf",
+                "inter-latin-semibold.ttf",
+                "inter-latin-ext-regular.ttf",
+                "inter-latin-ext-semibold.ttf",
             )
         ),
         "shared PDF and PowerPoint renderers require licensed Inter typography",
