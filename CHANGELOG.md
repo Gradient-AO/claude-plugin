@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.5.2
+- Removed superseded connector workarounds from shared portfolio guidance, DDQ reconciliation, and setup contract checks.
+- Kept the supported connector-boundary registry while removing the stale known-issues section.
+
 ## 2.5.1
 - Aligned setup probes and portfolio guidance with the current connector contracts for full historical-return coverage, fixed-income aggregates, three-series Strategy Lab comparisons, DDQ filing-date assumptions and preview-only write surfaces.
 - Added connector `pie` chart-hint rendering to the shared report renderer while preserving table fallback for mixed-unit data.

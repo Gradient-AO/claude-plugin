@@ -38,9 +38,6 @@ Work from one canonical text of the DDQ:
 - Compute `file_sha256` of the ORIGINAL uploaded file (`sha256sum`).
 - For each claim, copy the sentence verbatim as `quote`, and compute `source_locator.start/end` (character offsets) and `line_start/line_end` in the canonical text with a short Python script (`text.index(quote)`). Add `page`, `sheet` or `cell_range` when known. Never estimate offsets by eye.
 - `raw_value` is the value as written (`$12.4 billion`, `1,240`, `Yes`) — the comparator parses billions, commas and yes/no. Multiple names: separate with `; `.
-- Until P-23 ships, every transcribed claim must set `asserted_as_of` to the DDQ's stated as-of date
-  (YYYY-MM-DD). If the document has no applicable date, ask the user for one before reconciliation; never
-  invent a date or send a transcribed claim with `asserted_as_of: null`.
 - `claim_status`: `asserted` when stated; `ambiguous` when the DDQ hedges or gives a range; `not_found` when the DDQ doesn't answer. `extraction_reason_codes: []` for normal assertions.
 
 Checkable fields (map DDQ questions to these):

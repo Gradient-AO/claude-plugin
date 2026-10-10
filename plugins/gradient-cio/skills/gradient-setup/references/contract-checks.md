@@ -1,4 +1,4 @@
-# Contract checks and known issues
+# Contract checks
 
 The probes are defined in `contracts.json` (tool, arguments, required response paths, value assertions and
 dependencies). Every probe uses the standard `provenance.as_of` and `validation.status` envelope unless it
@@ -115,7 +115,6 @@ Results:
 
 - **Pass**: the call succeeded and every required path is present (empty lists count as present).
 - **Fail**: an error, or a required path is missing. Quote `error.code`, `http_status` and `request_id`.
-- **Known issue**: a failure listed below. Report it as "known issue — workaround in skill", not as a new fault.
 - `validation.status` = `failed` means a blocking check failed. Advisory failures remain in detailed checks
   as disclosures and do not make the overall status failed.
 - `not_applicable` means the check does not apply to the requested mode or returned evidence; `not_run` means
@@ -125,16 +124,9 @@ Results:
   `not_run` checks remain visible. This is intentional; preserve the `not_applicable`, `not_run` and
   `checks_omitted` counts, and request a full envelope only when auditing validation detail.
 
-## Known issues (revalidated 2026-10-09)
-
-There are no currently reproducible connector exceptions with a client-side workaround.
-
-The following are supported contract boundaries, not known issues:
+## Supported contract boundaries
 
 | Tool / view | Classification | Ticket, owner, review | Symptom and current workaround | Removal criterion |
 |---|---|---|---|---|
 | DDQ transcribed claim dates | Non-blocking comparison-date limitation | P-23 · Gradient MCP · pending | Reconciliation can choose an unsuitable filing when a transcribed claim omits `asserted_as_of`. Always set `asserted_as_of` from the DDQ's stated date; if absent, ask the user for the applicable date before reconciliation. | P-23 ships and an undated transcribed-claim probe selects and reports the intended comparison basis twice. |
 | Non-fixed-income exposure rows | Non-blocking field-population defect | P-25 · Gradient MCP · pending | `fixed_income_metrics` may be populated on non-fixed-income exposure rows. Do not quote those values. Use complete `portfolio_totals` and the `Fixed Income` classification aggregate for duration, spread duration and yield. | P-25 ships and mixed-classification probes return fixed-income metrics only on the governed portfolio total and Fixed Income aggregate row. |
-
-Re-check this section on every full run and add only a currently reproducible exception with its exact error
-code, request ID, bounded workaround, owner, and removal criterion.

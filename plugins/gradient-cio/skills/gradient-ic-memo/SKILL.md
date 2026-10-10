@@ -123,8 +123,7 @@ Page `get_portfolio_exposure` with `limit` / `cursor` and use returned display n
 classification aliases.
 Use fixed-income duration, spread-duration, and yield-to-maturity only from complete governed
 `portfolio_totals.fixed_income_metrics` or the Fixed Income classification aggregate; preserve coverage and
-never recompute or equal-weight rows. Until P-25 ships, do not quote `fixed_income_metrics` from exposure rows
-or non-Fixed-Income classification aggregates.
+never recompute or equal-weight rows.
 When policy risk rows are `not_assessed`, historical-return risk metrics remain separate observations: do not
 compare them with persisted thresholds or infer compliance unless `check_portfolio_policy` returns the status.
 When risk rows are assessed, preserve `risk_limits.observation_basis` and the returned magnitude comparison

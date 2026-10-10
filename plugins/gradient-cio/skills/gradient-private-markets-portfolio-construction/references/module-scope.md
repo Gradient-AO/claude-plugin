@@ -66,9 +66,7 @@ non-empty aggregate rows.
 For fixed-income duration, spread duration, and yield, use the governed `fixed_income_metrics` on
 `portfolio_totals` or the Fixed Income classification row when its `weighting_basis` is
 `current_holding_nav_base`; the two fixed-income-only aggregates should reconcile, and
-zero spread duration is a valid observation. Never equal-weight exposure rows. Until P-25 ships,
-`fixed_income_metrics` may also appear on non-fixed-income exposure rows; do not quote those values or any
-non-Fixed-Income classification row as sleeve duration, spread duration, or yield.
+zero spread duration is a valid observation. Never equal-weight exposure rows.
 For null `as_of_date`, `market_value_base`, or `nav_base`, preserve the matching `null_reasons` value and do
 not infer the missing channel from another field or treat a typed not-applicable reason as missing data.
 
