@@ -1,6 +1,6 @@
 ---
 name: gradient-macro-brief
-description: "Build a branded investment-committee macro briefing deck (16:9 PDF) from GradientCIO evidence: The Read, rates and credit conditions, Gradient macro signals and GRIP, the 30-day event calendar and capital market assumptions, with sources and what would change the view."
+description: "Build a branded investment-committee macro briefing from GradientCIO evidence: The Read, rates and credit conditions, Gradient macro signals and GRIP, the 30-day event calendar and capital market assumptions, with sources and what would change the view."
 ---
 
 # Macro briefing deck
@@ -9,9 +9,9 @@ Use when the user asks for a macro deck, market update for the committee or boar
 "turn The Read into slides", "what should the committee know about markets this month", or a pre-meeting
 macro pack.
 
-The deliverable is a 10–13 slide landscape PDF in the Gradient house style,
-**"<Org> - Macro Briefing <YYYY-MM-DD>.pdf"**, rendered with `--deck`. Audience: an investment committee.
-Each slide has one message in its title and a one-line takeaway.
+The deliverable is a 10–13 slide landscape briefing in the Gradient house style with base name
+**"<Org> - Macro Briefing <YYYY-MM-DD>"**. Audience: an investment committee. Each slide has one message in
+its title and a one-line takeaway.
 
 Evidence rules (from GradientCIO):
 - Use numbers only from structured fields: `read.facts`, `market_highlights`, indicator `latest` values,
@@ -56,12 +56,17 @@ deck and say what is missing on the slide and in the sources slide.
 1. **Cover** (automatic): title "Macro Briefing", subtitle "<Org> investment committee · <meeting date>",
    cover facts: As of, The Read edition, GRIP stance, Next major event.
 2. **The Read in one slide** — title = The Read headline. `statement` block with the governing thesis;
-   tiles with 2–4 `read.facts` values (value, unit, date). Takeaway: the thesis in plain words.
+   exactly four sourced `read.facts` tiles (value, unit, date); retain a typed unavailable tile rather than
+   inventing a fourth fact. Add three to five concise key judgments only when they fit without overflow.
+   Takeaway: the thesis in plain words.
 3. **What moved** — `table` of market highlights (category, series, move, horizon, date).
 4. **Rates and the curve** — `bars` or `table` of rate indicators: level, 1m change (bps), 1y percentile.
    Use `line` charts only when The Read returns `visuals` series.
-5. **Risk posture** — Gradient signal composite and regime; `bars` of driver scores (0–100, label stance);
-   GRIP stance and score with coverage. State that higher scores mean more risk pressure.
+5. **Risk posture** — Gradient signal composite and regime; `bars` of driver scores (0–100, label stance).
+   Add exactly four GRIP tiles: Current stance, Current score, Outlook and History coverage. Populate them
+   only from fields returned in `sources.grip.current`, `outlookMetadata`, `indexMetadata` and
+   `availability`; a missing item is `Not available — <returned reason>`, never zero. State that higher
+   scores mean more risk pressure.
 6. **Positioning** — `table` of the top 4–6 CFTC crowding flags (market, trader category, side, percentile,
    direction of travel) and one line on hedge-fund 13F consensus/building/unwinding. Positioning describes
    disclosed exposure, not intent or a forecast; percentiles are within a 156-week window; CFTC is weekly
@@ -80,19 +85,28 @@ deck and say what is missing on the slide and in the sources slide.
 
 Add regional facts to slide 2 or 3 only when The Read is about a region. Use a `section` layout slide only if the deck exceeds 12 slides. Use `two` for side-by-side content and `wide`
 for chart-plus-commentary.
+Every slide title is the message, not the topic. On analytical slides put a returned visual or typed
+unavailable state before the first table and never stack more than two tables. Preserve signed finite values
+in rate, z-score, flow and return marks. Every slide containing a `chart`, `line`, `bars`, `waterfall`,
+`band`, `stacked` or `heat` block must include a one-sentence, source-tagged `takeaway` that states what the
+visual means without forecasting.
 
 ## 3. Render and check
 
-Write `deck.json` (deck format in `references/report-style.md`). Meta: `eyebrow` "Investment Committee",
+Write `report.json` (slide format in `references/report-style.md`). Meta: `eyebrow` "Investment Committee",
 `header_label` "Macro Briefing", `title` "Macro Briefing", `data_as_of`.
 
-```
-python <this skill's directory>/scripts/gradient_report.py --deck deck.json "<Org> - Macro Briefing <date>.pdf"
+Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select
+both when it says `both` or `board pack`. Both formats must come from the same validated `report.json`; do
+not maintain a PDF-only deck source or format-specific storyline.
+
+```text
+python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Org> - Macro Briefing <date>"
 ```
 
-The renderer exits with code 3 and names the slides whose content overflows: split the slide or cut content,
-then re-render. Rasterize (`pdftoppm -r 40 -png`) and look at every slide. Then follow "Check and deliver".
+The renderer exits with code 3 and names slides whose content overflows: split the slide or cut content, then
+re-render. Inspect every requested output; rasterize PDFs with `pdftoppm -r 40 -png` and use the shared slide
+rendering/layout check for PPTX. Then follow "Check and deliver".
 Chat summary: The Read headline, the risk posture in one line, and the next high-importance event.
 
-If the user wants to edit slides, offer to rebuild the content in their slide tool of choice after delivering
-the PDF.
+If the user requests editable slides, the PPTX is the editable deliverable from the same report source.

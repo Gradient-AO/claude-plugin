@@ -1,8 +1,8 @@
 ---
 name: gradient-gips-policies-gap-check
-description: "This skill should be used when the user asks to \"review GIPS policies and procedures\", \"gap check our GIPS manual\", \"what's missing from this GIPS P&P\", \"review a manager's GIPS policies\", or wants a firm's or asset owner's GIPS policies and procedures document compared against the 2020 GIPS standards to find missing or weak policies. Delivers a branded PDF review in the Gradient house style.\n"
+description: "This skill should be used when the user asks to \"review GIPS policies and procedures\", \"gap check our GIPS manual\", \"what's missing from this GIPS P&P\", \"review a manager's GIPS policies\", or wants a firm's or asset owner's GIPS policies and procedures document compared against the 2020 GIPS standards to find missing or weak policies. Delivers a branded review in the Gradient house style.\n"
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # GIPS Policies & Procedures Gap Check
@@ -58,8 +58,15 @@ ex ante rule.
 
 ## Output
 
-Always deliver the review as a branded PDF. Write `review.md`, `visuals.json` and `meta.json`; validate and
-compose them with the shared scripts in `gradient-gips-standards/scripts`, then render `review.json` in JSON
-block mode with this skill's `scripts/gradient_report.py`. Preserve any investment-memo handoff markdown
-unchanged. Market charts are not required. Follow `output-format.md`, `report-layout.md` and this skill's
+Always deliver a branded review. Write `review.md`, `visuals.json` and `meta.json`; preserve the authoritative
+markdown and validate and compose them with the shared scripts in `gradient-gips-standards/scripts`, writing
+the resulting validated JSON as `report.json`. Preserve any investment-memo handoff markdown unchanged.
+Market charts are not required. Follow `output-format.md`, `report-layout.md` and this skill's
 `references/report-style.md`.
+
+Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select
+both when it says `both` or `board pack`. Both formats must come from the same validated `report.json`.
+
+```text
+python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Policies Gap Check"
+```

@@ -1,8 +1,8 @@
 ---
 name: gradient-gips-manager-diligence
-description: "This skill should be used when the user asks to \"check a manager's GIPS compliance\", \"verify GIPS claims\", \"review GIPS in the DDQ\", \"is this manager GIPS verified\", \"GIPS check for the investment memo\", \"performance integrity review\", or when operational or investment due diligence on a manager or fund needs a GIPS assessment. It cross-checks the manager's GIPS claim, verification, GIPS Report and marketing figures, using GradientCIO ODD and DDQ data when available, and produces a findings checklist plus a section ready to insert into an investment memo. Delivers a branded PDF review in the Gradient house style.\n"
+description: "This skill should be used when the user asks to \"check a manager's GIPS compliance\", \"verify GIPS claims\", \"review GIPS in the DDQ\", \"is this manager GIPS verified\", \"GIPS check for the investment memo\", \"performance integrity review\", or when operational or investment due diligence on a manager or fund needs a GIPS assessment. It cross-checks the manager's GIPS claim, verification, GIPS Report and marketing figures, using GradientCIO ODD and DDQ data when available, and produces a findings checklist plus a section ready to insert into an investment memo. Delivers a branded review in the Gradient house style.\n"
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # GIPS Manager Diligence
@@ -102,7 +102,15 @@ advisers, also apply the Marketing Rule checks in `advertising-and-marketing-rul
 
 ## Output
 
-Always deliver the review as a branded PDF. Write `review.md`, `visuals.json` and `meta.json`; validate and
-compose them with the shared scripts in `gradient-gips-standards/scripts`, then render `review.json` in JSON
-block mode with this skill's `scripts/gradient_report.py`. Market charts are not required. Follow
+Always deliver a branded review. Write `review.md`, `visuals.json` and `meta.json`; preserve the authoritative
+markdown and validate and compose them with the shared scripts in `gradient-gips-standards/scripts`, writing
+the resulting validated JSON as `report.json`. Market charts are not required. Follow
 `output-format.md`, `report-layout.md` and this skill's `references/report-style.md`.
+
+Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select
+both when it says `both` or `board pack`. Both formats must come from the same validated `report.json`; the
+memo handoff markdown remains unchanged through composition.
+
+```text
+python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Manager Diligence"
+```

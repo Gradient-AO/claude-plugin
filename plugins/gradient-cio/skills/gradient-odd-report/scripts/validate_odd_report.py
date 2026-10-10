@@ -49,6 +49,11 @@ FULL_SPEC = ReportSpec(
             "profile visual",
         ),
         SlotRule(
+            r"Firm profile & ownership",
+            frozenset({"tiles"}),
+            "four headline ADV tiles",
+        ),
+        SlotRule(
             r"Regulatory, conflicts & custody",
             frozenset({"table", "callout"}),
             "regulatory evidence",
@@ -74,6 +79,11 @@ FULL_SPEC = ReportSpec(
             "monitoring evidence",
         ),
         SlotRule(
+            r"Monitoring, findings & DDQ",
+            frozenset({"timeline"}),
+            "event timeline",
+        ),
+        SlotRule(
             r"Follow-up questions & open items",
             frozenset({"questions", "table"}),
             "existing follow-ups",
@@ -86,7 +96,32 @@ FULL_SPEC = ReportSpec(
         r"\b(?:hire|fire|terminate|redeem from|allocate to)\b",
     ),
     require_question_sources=True,
-    analysis_section_patterns=(r"Peer positioning",),
+    analysis_section_patterns=(
+        r"Firm profile & ownership",
+        r"Regulatory, conflicts & custody",
+        r"Peer positioning",
+        r"Fund operations & service providers",
+        r"Reported equity holdings \(Form 13F\)",
+        r"Monitoring, findings & DDQ",
+    ),
+    analytical_section_patterns=(
+        r"Firm profile & ownership",
+        r"Regulatory, conflicts & custody",
+        r"Peer positioning",
+        r"Fund operations & service providers",
+        r"Reported equity holdings \(Form 13F\)",
+        r"Monitoring, findings & DDQ",
+    ),
+    require_message_first_kickers=True,
+    require_visual_before_first_table=True,
+    key_judgment_section_patterns=(r"Executive summary",),
+    executive_tile_labels=(
+        "Regulatory AUM",
+        "Private funds",
+        "Item 11",
+        "Composite",
+    ),
+    require_tile_sources=True,
 )
 
 ROSTER_SPEC = ReportSpec(

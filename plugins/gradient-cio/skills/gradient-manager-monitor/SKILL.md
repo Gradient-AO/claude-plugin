@@ -1,6 +1,6 @@
 ---
 name: gradient-manager-monitor
-description: "Weekly manager monitoring digest: what changed across the client's Diligence Roster (new Form ADV filings, monitor alerts, changes since last review, red flags, open findings, firm and fund events, reviews coming due), delivered as a branded PDF; can be set up as a recurring scheduled task."
+description: "Weekly manager monitoring digest: what changed across the client's Diligence Roster (new Form ADV filings, monitor alerts, changes since last review, red flags, open findings, firm and fund events, reviews coming due), delivered as a branded report; can be set up as a recurring scheduled task."
 ---
 
 # Manager monitoring digest
@@ -8,8 +8,9 @@ description: "Weekly manager monitoring digest: what changed across the client's
 Use when the user asks "what changed across my managers", "weekly monitoring", "roster digest", "any alerts
 this week", "monitoring report", "what needs my attention", "watchlist update", or wants this run every week.
 
-The deliverable is a 3–5 page branded PDF, **"<Org> - Manager Monitoring Digest <YYYY-MM-DD>.pdf"**: one page
-that says what needs attention, then the detail. The reader is a busy CIO or ODD analyst: lead with what to do.
+The deliverable is a branded report with base name
+**"<Org> - Manager Monitoring Digest <YYYY-MM-DD>"**; its PDF form is normally 3–5 pages, with one page that
+says what needs attention, then the detail. The reader is a busy CIO or ODD analyst: lead with what to do.
 
 Rules that matter here:
 - Absence is not evidence. "No alerts" means no alerts in Gradient's processed window — state the window and
@@ -91,24 +92,31 @@ Every analytical or key-judgment callout must include an `[S#]` tag. Recommended
 existing action list in section 3 and must be triggered by an item already present in the digest; every
 Needs-attention row cites `[S#]`. Do not add a hire, fire, termination, redemption or allocation
 recommendation. Add one to three `callout` blocks with `role: "analysis"` to **Changes and alerts**, stating
-the observation, monitoring implication, uncertainty, and evidence that would change the view.
+the observation, monitoring implication, uncertainty, and evidence that would change the view. Title them
+`Analysis — <message>`, use the four-part structure in `../../shared/writing-standards.md`, and stay within
+60 words. Page 2 contains three to five sourced `Key judgment —` callouts with `role: "key_judgment"`.
+Use message-first kickers. Lead Changes and alerts with status `stacked`/`bars` and Review calendar with a
+dated `band`/`heat`, or typed unavailability, before the first table. Never place more than two tables
+consecutively.
 
 Validate before rendering:
 
 ```
-python <this skill's directory>/scripts/validate_monitor_digest.py digest.json
+python <this skill's directory>/scripts/validate_monitor_digest.py report.json
 ```
 
-Fix every error and re-run until it passes. Do not render a digest that fails validation. Then render:
+Fix every error and re-run until it passes. Do not render a digest that fails validation. Select PDF by
+default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select both when it
+says `both` or `board pack`. Both formats must come from the same validated `report.json`.
 
 ```
-python <this skill's directory>/scripts/gradient_report.py digest.json "<Org> - Manager Monitoring Digest <date>.pdf"
+python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Org> - Manager Monitoring Digest <date>"
 ```
 
-Then follow "Check and deliver" in `references/report-style.md`: rasterize and inspect every page, fix
-clipping, overflow, orphaned headings and unreadable visuals, re-render and repeat page QA, then spot-check
-the JSON against saved evidence. Delivery is blocked until page QA and fact checks pass. Chat summary:
-signal, the top item, and the number of subjects needing action.
+Then follow "Check and deliver" in `references/report-style.md`: inspect every requested output, fix clipping,
+overflow, orphaned headings and unreadable visuals, re-render and repeat QA, then spot-check the JSON against
+saved evidence. Delivery is blocked until QA and fact checks pass. Chat summary: signal, the top item, and
+the number of subjects needing action.
 
 ## 5. Follow-up actions (only when the user asks)
 
@@ -138,8 +146,8 @@ Scheduled runs never write (see below).
 If the user wants it every week, create a scheduled task (confirm day, time and time zone first; default
 Monday 07:45 in their time zone). Use this prompt, filled in:
 
-> Run the gradient-manager-monitor skill for organization <name> (<org id>) for the last 7 days. Save the PDF to
-> <connected folder, if any> and send me the three-line summary. Do not create findings, log reviews or change
-> monitoring settings.
+> Run the gradient-manager-monitor skill for organization <name> (<org id>) for the last 7 days. Use the
+> default PDF output, save it to <connected folder, if any> and send me the three-line summary. Do not create
+> findings, log reviews or change monitoring settings.
 
 Tell the user which approval setting the scheduled task received. Never schedule it without being asked.

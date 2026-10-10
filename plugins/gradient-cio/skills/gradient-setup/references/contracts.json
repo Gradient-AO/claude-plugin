@@ -27,11 +27,14 @@
       "get_return_series",
       "list_organizations",
       "list_portfolios",
+      "log_diligence_review",
       "reconcile_manager_ddq_claims",
       "run_strategy_lab_date_window_robustness",
       "run_strategy_lab_expected_statistics",
       "run_strategy_lab_relative_return",
+      "save_strategy_lab_scenario",
       "search_managers",
+      "update_manager_monitoring",
       "upload_ddq_document"
     ],
     "required_response_field_paths": {
@@ -166,6 +169,7 @@
       ],
       "get_portfolio_historical_returns": [
         "coverage.status",
+        "coverage.missing_reasons",
         "calendar_years[0].year",
         "calendar_years[0].month_count",
         "calendar_years[0].partial",
@@ -177,7 +181,12 @@
         "calendar_years[10].coverage_status",
         "calendar_years[10].missing_reason",
         "risk_metrics.annualized_volatility",
-        "benchmark_relative.portfolio"
+        "benchmark_relative.portfolio",
+        "benchmark_relative.commitments_total",
+        "benchmark_relative.commitments_returned",
+        "benchmark_relative.commitments_truncated",
+        "benchmark_relative.has_more",
+        "benchmark_relative.next_cursor"
       ],
       "get_portfolio_structure": [
         "nodes[0].target_weight",
@@ -204,6 +213,11 @@
         "portfolios[0].portfolio_id",
         "portfolios[0].canonical_default"
       ],
+      "log_diligence_review": [
+        "action",
+        "outcome",
+        "receipt_id"
+      ],
       "reconcile_manager_ddq_claims": [
         "rows[0].numeric_gap.formula_id",
         "rows[0].numeric_gap.formula_version"
@@ -222,9 +236,19 @@
         "tracking_error",
         "information_ratio"
       ],
+      "save_strategy_lab_scenario": [
+        "action",
+        "outcome",
+        "receipt_id"
+      ],
       "search_managers": [
         "advisers",
         "report_date"
+      ],
+      "update_manager_monitoring": [
+        "action",
+        "outcome",
+        "receipt_id"
       ],
       "upload_ddq_document": [
         "document_id",
@@ -274,7 +298,10 @@
       "batch_ddq_preview",
       "write_create_finding",
       "write_watchlist_manager",
+      "write_manager_monitoring",
+      "write_diligence_review",
       "write_roster",
+      "write_strategy_scenario",
       "write_upload_ddq"
     ]
   },
@@ -1035,7 +1062,7 @@
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
         "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
-        "limit": 25,
+        "limit": 100,
         "sections": [
           "standard_periods",
           "calendar_years",
@@ -1057,6 +1084,7 @@
         "portfolio.portfolio_id",
         "portfolio.record_kind",
         "coverage.status",
+        "coverage.missing_reasons",
         "coverage.selected_point_count",
         "coverage.sections.standard_periods.status",
         "coverage.sections.risk_metrics.status",
@@ -1082,7 +1110,13 @@
         "risk_metrics.max_drawdown",
         "risk_metrics.var_95",
         "risk_metrics.cvar_95",
-        "benchmark_relative.portfolio"
+        "benchmark_relative.portfolio",
+        "benchmark_relative.commitments",
+        "benchmark_relative.commitments_total",
+        "benchmark_relative.commitments_returned",
+        "benchmark_relative.commitments_truncated",
+        "benchmark_relative.has_more",
+        "benchmark_relative.next_cursor"
       ],
       "equals": {
         "portfolio.record_kind": "example",
@@ -1092,7 +1126,23 @@
         "calendar_years[0].coverage_status": "partial",
         "calendar_years[10].year": 2016,
         "calendar_years[10].partial": true,
-        "calendar_years[10].coverage_status": "partial"
+        "calendar_years[10].coverage_status": "partial",
+        "benchmark_relative.commitments_total": 69,
+        "benchmark_relative.commitments_returned": 69,
+        "benchmark_relative.commitments_truncated": false,
+        "benchmark_relative.has_more": false,
+        "benchmark_relative.next_cursor": null
+      },
+      "contains": {
+        "benchmark_relative.commitments": {
+          "comparisons": [
+            {
+              "missing_reason": {
+                "code": "not_yet_funded"
+              }
+            }
+          ]
+        }
       },
       "approx": {
         "display.risk_free_rate": {
@@ -1906,6 +1956,69 @@
       "envelope": false
     },
     {
+      "id": "write_manager_monitoring",
+      "set": "writes",
+      "tool": "update_manager_monitoring",
+      "depends_on": [
+        "odd_profile",
+        "roster"
+      ],
+      "args": {
+        "dry_run": true,
+        "idempotency_key": "gradient-contract-monitoring-subscribe-v1",
+        "action": "subscribe",
+        "crd_number": "<odd_profile:resolved_subject.crd_number>",
+        "firm_id": "<roster:funds[0].parent_firm_id>",
+        "max_tier": 1,
+        "email_enabled": false
+      },
+      "required": [
+        "action",
+        "outcome",
+        "receipt_id"
+      ],
+      "non_null": [
+        "receipt_id"
+      ],
+      "equals": {
+        "dry_run": true,
+        "committed": false
+      },
+      "envelope": false
+    },
+    {
+      "id": "write_diligence_review",
+      "set": "writes",
+      "tool": "log_diligence_review",
+      "depends_on": [
+        "roster"
+      ],
+      "args": {
+        "dry_run": true,
+        "idempotency_key": "gradient-contract-diligence-review-v1",
+        "firm_id": "<roster:funds[0].parent_firm_id>",
+        "notes": "Gradient contract self-test preview; do not persist this review.",
+        "scope": {
+          "version": 1,
+          "purpose": "contract_self_test"
+        },
+        "evidence_limit_acknowledged": true
+      },
+      "required": [
+        "action",
+        "outcome",
+        "receipt_id"
+      ],
+      "non_null": [
+        "receipt_id"
+      ],
+      "equals": {
+        "dry_run": true,
+        "committed": false
+      },
+      "envelope": false
+    },
+    {
       "id": "write_roster",
       "set": "writes",
       "tool": "update_diligence_roster",
@@ -1920,6 +2033,34 @@
         "action": "add",
         "subject_id": "<roster:funds[0].fund_id>",
         "reason": "Gradient contract self-test add preview"
+      },
+      "required": [
+        "action",
+        "outcome",
+        "receipt_id"
+      ],
+      "non_null": [
+        "receipt_id"
+      ],
+      "equals": {
+        "dry_run": true,
+        "committed": false
+      },
+      "envelope": false
+    },
+    {
+      "id": "write_strategy_scenario",
+      "set": "writes",
+      "tool": "save_strategy_lab_scenario",
+      "args": {
+        "dry_run": true,
+        "idempotency_key": "gradient-contract-strategy-scenario-v1",
+        "domain": "relative",
+        "name": "Gradient contract self-test preview",
+        "description": "Dry-run contract verification; do not persist this scenario.",
+        "form": {
+          "demo_set_id": "strategy_lab_core"
+        }
       },
       "required": [
         "action",

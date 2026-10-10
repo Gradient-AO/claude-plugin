@@ -1,42 +1,186 @@
 {
   "schema_version": "1.0",
   "executive_tiles": [
-    {"label": "Met", "value": "3", "sub": "Returns, benchmark and description", "tone": "good"},
-    {"label": "Partially met", "value": "1", "sub": "Fee disclosure", "tone": "watch"},
-    {"label": "Not met", "value": "1", "sub": "Significant-event date", "tone": "bad"},
-    {"label": "Not found", "value": "0", "sub": "No unlocated requirements", "tone": "watch"}
+    {
+      "label": "Met",
+      "value": "3",
+      "sub": "Returns, benchmark and description",
+      "tone": "good"
+    },
+    {
+      "label": "Partially met",
+      "value": "1",
+      "sub": "Fee disclosure",
+      "tone": "watch"
+    },
+    {
+      "label": "Not met",
+      "value": "1",
+      "sub": "Significant-event date",
+      "tone": "bad"
+    },
+    {
+      "label": "Not found",
+      "value": "0",
+      "sub": "No unlocated requirements",
+      "tone": "watch"
+    }
   ],
   "sections": {
     "1. Summary": {
       "before": [
-        {"type": "coverage", "title": "Evidence status", "items": [
-          {"name": "Composite report", "status": "available", "note": "Performance evidence [S1]"},
-          {"name": "Disclosure schedule", "status": "degraded", "note": "Fee wording incomplete [S2]"}
-        ]}
+        {
+          "type": "coverage",
+          "title": "Evidence status",
+          "items": [
+            {
+              "name": "Composite report",
+              "status": "available",
+              "note": "Performance evidence [S1]"
+            },
+            {
+              "name": "Disclosure schedule",
+              "status": "degraded",
+              "note": "Fee wording incomplete [S2]"
+            }
+          ]
+        }
       ],
       "after": [
-        {"type": "callout", "role": "analysis", "tone": "watch", "title": "Disclosure timing unclear", "text": "**Observation:** The significant event is named without an effective date [S1]. **Why it matters:** readers cannot place the event within the presented record. **Uncertainty:** the date may exist in evidence not supplied. **What would change the view:** No additional follow-up beyond request 1.", "follow_up_refs": []}
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — evidence balance",
+          "text": "Observation: Met is 3 and Not met is 1 [S1]. Why it matters: The evidence is mixed. Uncertainty: The review is document-bound. What would change the view: Additional governed evidence that changes either count."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — partial support",
+          "text": "Observation: Partially met is 1 [S1]. Why it matters: Partial support limits a clean conclusion. Uncertainty: Missing documents may exist. What would change the view: Complete evidence for the partially supported requirements."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "info",
+          "title": "Key judgment — evidence gaps",
+          "text": "Observation: Not found is 0 [S1]. Why it matters: Unlocated evidence remains outside the assessment. Uncertainty: Absence from the supplied record is not proof of absence. What would change the view: A current document resolving the gap."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Disclosure timing unclear",
+          "text": "**Observation:** The significant event is named without an effective date [S1]. **Why it matters:** readers cannot place the event within the presented record. **Uncertainty:** the date may exist in evidence not supplied. **What would change the view:** No additional follow-up beyond request 1.",
+          "follow_up_refs": []
+        }
       ]
     },
-    "2. Performance Integrity & GIPS": {"before": [], "after": []},
-    "3. Findings Checklist": {
+    "2. Performance Integrity & GIPS": {
       "before": [
-        {"type": "bars", "title": "Findings by severity", "items": [
-          {"label": "High", "value": 0, "display": "0"},
-          {"label": "Medium", "value": 2, "display": "2"},
-          {"label": "Low", "value": 1, "display": "1"}
-        ]}
+        {
+          "type": "heat",
+          "title": "Requirement evidence matrix (TEST)",
+          "columns": [
+            "Requirement",
+            "Evidence score"
+          ],
+          "rows": [
+            {
+              "label": "Performance record",
+              "values": [
+                1.0
+              ]
+            },
+            {
+              "label": "Disclosures",
+              "values": [
+                0.5
+              ]
+            },
+            {
+              "label": "Governance evidence",
+              "values": [
+                -0.5
+              ]
+            }
+          ]
+        }
+      ],
+      "after": []
+    },
+    "Appendix A — Findings Checklist": {
+      "before": [
+        {
+          "type": "stacked",
+          "title": "Checklist status by area",
+          "items": [
+            {"label": "Returns", "segments": [{"label": "Met", "value": 1}, {"label": "Partially met", "value": 0}, {"label": "Not met", "value": 0}, {"label": "Not found", "value": 0}]},
+            {"label": "Benchmark", "segments": [{"label": "Met", "value": 1}, {"label": "Partially met", "value": 0}, {"label": "Not met", "value": 0}, {"label": "Not found", "value": 0}]},
+            {"label": "Composite", "segments": [{"label": "Met", "value": 1}, {"label": "Partially met", "value": 0}, {"label": "Not met", "value": 0}, {"label": "Not found", "value": 0}]},
+            {"label": "Fees", "segments": [{"label": "Met", "value": 0}, {"label": "Partially met", "value": 1}, {"label": "Not met", "value": 0}, {"label": "Not found", "value": 0}]},
+            {"label": "Events", "segments": [{"label": "Met", "value": 0}, {"label": "Partially met", "value": 0}, {"label": "Not met", "value": 1}, {"label": "Not found", "value": 0}]}
+          ]
+        },
+        {
+          "type": "bars",
+          "title": "Findings by severity",
+          "items": [
+            {
+              "label": "High",
+              "value": 0,
+              "display": "0"
+            },
+            {
+              "label": "Medium",
+              "value": 2,
+              "display": "2"
+            },
+            {
+              "label": "Low",
+              "value": 1,
+              "display": "1"
+            }
+          ]
+        }
       ],
       "after": [
-        {"type": "findings", "title": "Priority findings", "items": [
-          {"severity": "medium", "title": "Event date absent", "detail": "The report does not date the significant event [S1]."},
-          {"severity": "medium", "title": "Fee wording incomplete", "detail": "The schedule does not clearly state the performance fee [S2]."},
-          {"severity": "low", "title": "Schedule lags report", "detail": "The disclosure schedule post-dates the report year-end [S1][S2]."}
-        ]}
+        {
+          "type": "findings",
+          "title": "Priority findings",
+          "items": [
+            {
+              "severity": "medium",
+              "title": "Event date absent",
+              "detail": "The report does not date the significant event [S1]."
+            },
+            {
+              "severity": "medium",
+              "title": "Fee wording incomplete",
+              "detail": "The schedule does not clearly state the performance fee [S2]."
+            },
+            {
+              "severity": "low",
+              "title": "Schedule lags report",
+              "detail": "The disclosure schedule post-dates the report year-end [S1][S2]."
+            }
+          ]
+        }
       ]
     },
-    "4. Follow-up Requests": {"before": [], "after": []},
-    "Appendix A — Sources": {"before": [], "after": []},
-    "Appendix B — Method & Disclaimer": {"before": [], "after": []}
+    "3. Follow-up Requests": {
+      "before": [],
+      "after": []
+    },
+    "Appendix B — Sources": {
+      "before": [],
+      "after": []
+    },
+    "Appendix C — Method & Disclaimer": {
+      "before": [],
+      "after": []
+    }
   }
 }

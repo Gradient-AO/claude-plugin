@@ -11,6 +11,7 @@ Exit code 0 means pass, 1 means validation errors, and 2 means invalid input.
 from __future__ import annotations
 
 import json
+import math
 import re
 import sys
 from collections import Counter
@@ -22,10 +23,10 @@ SCHEMA_VERSION = "1.0"
 REQUIRED_HEADINGS = [
     "1. Summary",
     "2. Performance Integrity & GIPS",
-    "3. Findings Checklist",
-    "4. Follow-up Requests",
-    "Appendix A — Sources",
-    "Appendix B — Method & Disclaimer",
+    "3. Follow-up Requests",
+    "Appendix A — Findings Checklist",
+    "Appendix B — Sources",
+    "Appendix C — Method & Disclaimer",
 ]
 TILE_LABELS = ["Met", "Partially met", "Not met", "Not found"]
 TILE_TONES = {
@@ -42,7 +43,12 @@ SUPPORTED_BLOCKS = {
     "table",
     "tiles",
     "bars",
+    "pie",
     "percentiles",
+    "waterfall",
+    "band",
+    "stacked",
+    "heat",
     "callout",
     "coverage",
     "findings",
@@ -116,9 +122,9 @@ def markdown_sections(markdown: str) -> tuple[list[str], dict[str, str]]:
 
 
 def source_tags(markdown: str) -> set[str]:
-    """Read source tags declared in Appendix A table rows."""
+    """Read source tags declared in Appendix B table rows."""
     _, sections = markdown_sections(markdown)
-    appendix = sections.get("Appendix A — Sources", "")
+    appendix = sections.get("Appendix B — Sources", "")
     return set(re.findall(r"^\|\s*\[?S(\d+)\]?\s*\|", appendix, re.MULTILINE))
 
 
@@ -150,7 +156,7 @@ def collect_strings(value: Any) -> list[str]:
 def checklist_counts(markdown: str) -> Counter[str]:
     """Count allowed checklist statuses from markdown tables."""
     _, sections = markdown_sections(markdown)
-    lines = sections.get("3. Findings Checklist", "").splitlines()
+    lines = sections.get("Appendix A — Findings Checklist", "").splitlines()
     counts: Counter[str] = Counter()
     header: list[str] | None = None
     for line in lines:
@@ -181,7 +187,7 @@ def follow_up_numbers(markdown: str) -> list[int]:
     return [
         int(match.group(1))
         for match in re.finditer(
-            r"^\s*(\d+)\.\s+\S", sections.get("4. Follow-up Requests", ""), re.MULTILINE
+            r"^\s*(\d+)\.\s+\S", sections.get("3. Follow-up Requests", ""), re.MULTILINE
         )
     ]
 
@@ -226,7 +232,12 @@ def validate_block_shape(block: dict[str, Any], location: str) -> list[str]:
         "table": "rows",
         "tiles": "tiles",
         "bars": "items",
+        "pie": "items",
         "percentiles": "items",
+        "waterfall": "items",
+        "band": "items",
+        "stacked": "items",
+        "heat": "rows",
         "coverage": "items",
         "findings": "items",
         "questions": "items",
@@ -251,6 +262,46 @@ def validate_block_shape(block: dict[str, Any], location: str) -> list[str]:
             errors.append(f"{location}: two_col needs left and right block arrays")
     if block_type == "chart" and not isinstance(block.get("chart"), dict):
         errors.append(f"{location}: chart block needs a chart object")
+    if block_type == "heat" and not isinstance(block.get("columns"), list):
+        errors.append(f"{location}: heat block needs a columns array")
+
+    if block_type in {"bars", "pie", "waterfall"}:
+        positive_values = 0
+        for index, item in enumerate(block.get("items", [])):
+            value = item.get("value") if isinstance(item, dict) else None
+            if (
+                not isinstance(value, (int, float))
+                or isinstance(value, bool)
+                or not math.isfinite(value)
+            ):
+                errors.append(
+                    f"{location}.items[{index}].value must be a finite "
+                    f"{'number' if block_type == 'pie' else 'signed number'}"
+                )
+            elif block_type == "pie":
+                if value < 0:
+                    errors.append(
+                        f"{location}.items[{index}].value must be nonnegative"
+                    )
+                elif value > 0:
+                    positive_values += 1
+        if block_type == "pie":
+            if positive_values == 0:
+                errors.append(f"{location}.items must contain a positive pie slice")
+            elif positive_values > 8:
+                errors.append(f"{location}.items supports at most 8 positive pie slices")
+    if block_type == "band":
+        for index, item in enumerate(block.get("items", [])):
+            for field in ("value", "low", "high"):
+                value = item.get(field) if isinstance(item, dict) else None
+                if (
+                    not isinstance(value, (int, float))
+                    or isinstance(value, bool)
+                    or not math.isfinite(value)
+                ):
+                    errors.append(
+                        f"{location}.items[{index}].{field} must be a finite signed number"
+                    )
 
     if "Not available —" in "\n".join(collect_strings(block)):
         errors.append(
@@ -303,7 +354,7 @@ def validate_visuals(
     sections = visuals.get("sections")
     if not isinstance(sections, dict):
         return errors + ["visuals.sections must be an object keyed by markdown heading"]
-    headings, _ = markdown_sections(markdown)
+    headings, markdown_bodies = markdown_sections(markdown)
     for heading, placement in sections.items():
         if heading not in headings:
             errors.append(f"visuals section does not match a markdown heading: {heading!r}")
@@ -341,6 +392,54 @@ def validate_visuals(
                         )
                     )
                 blocks.extend(iter_blocks(side_blocks))
+
+    def check_table_runs(values: Any, location: str) -> None:
+        if not isinstance(values, list):
+            return
+        consecutive = 0
+        for index, block in enumerate(values):
+            if not isinstance(block, dict):
+                continue
+            consecutive = consecutive + 1 if block.get("type") == "table" else 0
+            if consecutive > 2:
+                errors.append(
+                    f"{location} has more than two consecutive tables at block {index + 1}"
+                )
+            if block.get("type") == "two_col":
+                check_table_runs(block.get("left"), f"{location}.left")
+                check_table_runs(block.get("right"), f"{location}.right")
+
+    for heading, placement in sections.items():
+        if not isinstance(placement, dict):
+            continue
+        check_table_runs(placement.get("before"), f"{heading}.before")
+        check_table_runs(placement.get("after"), f"{heading}.after")
+
+    visual_types = {
+        "chart",
+        "line",
+        "bars",
+        "percentiles",
+        "waterfall",
+        "band",
+        "stacked",
+        "heat",
+    }
+    for heading in ("2. Performance Integrity & GIPS", "Appendix A — Findings Checklist"):
+        if "|" not in markdown_bodies.get(heading, ""):
+            continue
+        placement = sections.get(heading, {})
+        before = iter_blocks(placement.get("before")) if isinstance(placement, dict) else []
+        has_lead = any(
+            block.get("type") in visual_types
+            or block.get("type") == "unavailable"
+            for block in before
+        )
+        if not has_lead:
+            errors.append(
+                f"{heading} needs a visual or typed unavailable block before "
+                "its first table"
+            )
 
     coverage = [block for block in blocks if block.get("type") == "coverage"]
     if not coverage:
@@ -399,25 +498,94 @@ def validate_visuals(
             if not isinstance(item, dict) or item.get("label") not in SEVERITIES:
                 continue
             value = item.get("value")
-            if not isinstance(value, int) or isinstance(value, bool) or value < 0:
-                errors.append("severity bar values must be non-negative integers")
+            if not isinstance(value, int) or isinstance(value, bool):
+                errors.append("severity bar values must be finite signed integers")
             elif value != finding_counts[item["label"]]:
                 errors.append(
                     f"severity bar {item['label']!r} is {value}; findings contain "
                     f"{finding_counts[item['label']]}"
                 )
 
+    status_blocks = [
+        block
+        for block in blocks
+        if block.get("type") == "stacked"
+        and block.get("title") == "Checklist status by area"
+    ]
+    if len(status_blocks) != 1:
+        errors.append("visuals must contain exactly one 'Checklist status by area' stacked block")
+    else:
+        status_totals: Counter[str] = Counter()
+        for row in status_blocks[0].get("items", []):
+            if not isinstance(row, dict) or not str(row.get("label", "")).strip():
+                errors.append("checklist status rows need a non-empty area label")
+                continue
+            segments = row.get("segments")
+            if not isinstance(segments, list):
+                errors.append("checklist status rows need a segments array")
+                continue
+            labels = [
+                segment.get("label")
+                for segment in segments
+                if isinstance(segment, dict)
+            ]
+            if labels != TILE_LABELS:
+                errors.append(
+                    f"checklist status segment labels must be exactly {TILE_LABELS}"
+                )
+                continue
+            for segment in segments:
+                value = segment.get("value")
+                if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+                    errors.append("checklist status values must be non-negative integers")
+                else:
+                    status_totals[str(segment["label"])] += value
+        for status in TILE_LABELS:
+            if status_totals[status] != counts[status]:
+                errors.append(
+                    f"checklist status stacked total for {status!r} is "
+                    f"{status_totals[status]}; checklist contains {counts[status]}"
+                )
+
     requests = follow_up_numbers(markdown)
     if requests and requests != list(range(1, len(requests) + 1)):
         errors.append("follow-up requests must be consecutively numbered from 1")
+    key_judgments = [
+        block for block in blocks if block.get("role") == "key_judgment"
+    ]
+    if not 3 <= len(key_judgments) <= 5:
+        errors.append(
+            "visuals must contain 3–5 page-two callouts with role 'key_judgment'"
+        )
+    for block in key_judgments:
+        title = str(block.get("title", ""))
+        text = str(block.get("text", ""))
+        if block.get("type") != "callout":
+            errors.append("role 'key_judgment' is allowed only on callout blocks")
+        if not title.startswith("Key judgment —"):
+            errors.append("key-judgment titles must start with 'Key judgment —'")
+        if len(text.split()) > 60:
+            errors.append(f"key judgment {title!r} exceeds 60 words")
+        if not cited_tags(text):
+            errors.append(f"key judgment {title!r} must cite at least one [S#] tag")
+
     analysis_blocks = [block for block in blocks if block.get("role") == "analysis"]
     if not analysis_blocks:
         errors.append("visuals must contain at least one sourced analysis callout")
+    if len(analysis_blocks) > 3:
+        errors.append("visuals may contain at most three analysis callouts")
     for block in analysis_blocks:
         if block.get("type") != "callout":
             errors.append("role 'analysis' is allowed only on callout blocks")
             continue
         text = str(block.get("text", ""))
+        title = str(block.get("title", ""))
+        if not title.startswith("Analysis —"):
+            errors.append(
+                f"analysis callout {title!r} title must start with 'Analysis —'"
+            )
+        if len(text.split()) > 60:
+            errors.append(f"analysis callout {title!r} exceeds 60 words")
         positions = [text.find(label) for label in ANALYSIS_LABELS]
         if any(position < 0 for position in positions) or positions != sorted(positions):
             errors.append(
@@ -464,11 +632,11 @@ def validate_visuals(
             if number not in declared_tags:
                 errors.append(
                     f"unavailable block {block.get('title')!r} cites {tag} "
-                    "but Appendix A does not declare it"
+                    "but Appendix B does not declare it"
                 )
     unknown_tags = cited_tags(visuals) - declared_tags
     for tag in sorted(unknown_tags, key=int):
-        errors.append(f"visuals cite [S{tag}] but Appendix A does not declare S{tag}")
+        errors.append(f"visuals cite [S{tag}] but Appendix B does not declare S{tag}")
     return errors
 
 
@@ -487,13 +655,13 @@ def validate_markdown(markdown: str) -> list[str]:
     positions = [headings.index(heading) for heading in REQUIRED_HEADINGS if heading in headings]
     if positions != sorted(positions):
         errors.append("required markdown headings are out of order")
-    if "Status" not in sections.get("3. Findings Checklist", ""):
+    if "Status" not in sections.get("Appendix A — Findings Checklist", ""):
         errors.append("Findings Checklist must contain a Status column")
     counts = checklist_counts(markdown)
     if sum(counts.values()) == 0:
         errors.append("Findings Checklist contains no recognized status rows")
     if not source_tags(markdown):
-        errors.append("Appendix A must declare at least one S# source row")
+        errors.append("Appendix B must declare at least one S# source row")
     if re.search(r"<[^<>\n]{2,80}>", markdown):
         errors.append("markdown contains an unresolved <placeholder>")
     return errors
@@ -555,7 +723,7 @@ def validate_meta(
         errors.append("meta.executive.bottom_line is required")
     unknown_tags = cited_tags(meta) - declared_tags
     for tag in sorted(unknown_tags, key=int):
-        errors.append(f"meta cites [S{tag}] but Appendix A does not declare S{tag}")
+        errors.append(f"meta cites [S{tag}] but Appendix B does not declare S{tag}")
     return errors
 
 

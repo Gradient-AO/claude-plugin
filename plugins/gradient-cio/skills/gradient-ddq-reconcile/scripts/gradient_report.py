@@ -14,15 +14,16 @@ Labels are set per report in `meta` (header_label, signal_title, meter_title); b
 colours live only in the constants below. Do not edit copies of this file inside a
 skill: change the canonical copy and re-sync every skill.
 """
-import base64, datetime, html, json, os, re, shutil, subprocess, sys, tempfile
+import base64, copy, datetime, html, json, math, os, re, shutil, subprocess, sys, tempfile
 
 # ---- brand constants (change only here) ------------------------------------
 INK = "#0D1117"; PANEL = "#161C24"; LIME = "#C6F432"; LIME_DK = "#4F6B00"
 INK2 = "#4A5563"; MUTED = "#8A94A1"; RULE = "#E3E7EC"; PAPER = "#FFFFFF"; WASH = "#F5F7F9"
 AMBER = "#F2A93B"; CORAL = "#FF6B5E"; SLATE = "#9AA5B1"
 BRAND = "GradientCIO.com"
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 SERIES = [INK, "#7FA600", AMBER, "#5B8DEF", CORAL, SLATE]  # line-chart series order
+PIE = [INK, "#7FA600", AMBER, "#5B8DEF", CORAL, "#3FB8AF", "#B58AE0", SLATE]  # pie slice order; max 8 slices
 SIGNAL = {  # level -> (default label, color, text-on-color); meta.signal.label overrides the label
     # neutral / positive
     "clear": ("No flags identified", LIME, INK),
@@ -152,19 +153,29 @@ def b_kv(b):
 def b_table(b):
     al = b.get("align") or ["l"] * len(b["columns"])
     cls = lambda i: {"r": ' class="r"', "c": ' class="c"', "n": ' class="n"'}.get(al[i], "")
+    nowrap = set(b.get("nowrap") or [])
+    widths = b.get("widths") or []
+    colgroup = ""
+    if widths:
+        colgroup = "<colgroup>" + "".join(
+            f'<col style="width:{esc(width)}">' for width in widths
+        ) + "</colgroup>"
     head = "".join(f"<th{cls(i)}>{esc(c)}</th>" for i, c in enumerate(b["columns"]))
     body = ""
     for r in b["rows"]:
         cells = []
         for i, c in enumerate(r):
+            cell_cls = cls(i)
+            if i in nowrap or (i < len(b["columns"]) and b["columns"][i] in nowrap):
+                cell_cls = ' class="n"' if not cell_cls else cell_cls[:-1] + ' n"'
             if isinstance(c, dict) and "chip" in c:
-                cells.append(f"<td{cls(i)}>{chip(c['chip'], c.get('status', c['chip']))}</td>")
+                cells.append(f"<td{cell_cls}>{chip(c['chip'], c.get('status', c['chip']))}</td>")
             else:
-                cells.append(f"<td{cls(i)}>{rich(c)}</td>")
+                cells.append(f"<td{cell_cls}>{rich(c)}</td>")
         body += "<tr>" + "".join(cells) + "</tr>"
     title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
     note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
-    return f'{title}<table class="grid"><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>{note}'
+    return f'{title}<table class="grid">{colgroup}<thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>{note}'
 
 def _chart_format(column, value, currency=None):
     if value is None:
@@ -219,12 +230,28 @@ def b_chart(b):
             suffix = "%" if first_column.get("format") == "percentage" else ""
             return b_line({"title": c.get("title"), "series": series, "y_suffix": suffix,
                            "decimals": first_column.get("decimals") or 1})
-    if block == "bars" and x_key in keys and y_keys and y_keys[0] in keys:
+    unit_i = keys.index("unit") if "unit" in keys else None
+    mixed_units = unit_i is not None and len({
+        row[unit_i] for row in c["rows"] if len(row) > unit_i
+    }) > 1
+    if block in ("bars", "pie") and not mixed_units and x_key in keys and y_keys and y_keys[0] in keys:
         xi, yi = keys.index(x_key), keys.index(y_keys[0])
         items = [{"label": row[xi], "value": row[yi],
                   "display": _chart_format(columns[yi], row[yi], c.get("currency"))}
                  for row in c["rows"] if len(row) > max(xi, yi) and isinstance(row[yi], (int, float))]
-        if items and all(item["value"] >= 0 for item in items):
+        if items:
+            if block == "pie":
+                if all(item["value"] >= 0 for item in items):
+                    if len([item for item in items if item["value"] > 0]) <= len(PIE):
+                        return b_pie({"title": c.get("title"), "items": items})
+                    return b_bars({"title": c.get("title"), "items": items})
+                return b_table({
+                    "title": c.get("title"),
+                    "columns": [column.get("title", column.get("key", "")) for column in columns],
+                    "rows": [[_chart_format(column, value, c.get("currency"))
+                              for column, value in zip(columns, row)] for row in c["rows"]],
+                    "note": "Truncated output" if c.get("truncated") else "",
+                })
             return b_bars({"title": c.get("title"), "items": items})
     return b_table({"title": c.get("title"),
                     "columns": [column.get("title", column.get("key", "")) for column in columns],
@@ -243,32 +270,263 @@ def b_tiles(b, dark=False):
 
 DECK_MODE = False  # set by render_deck: taller chart rows for slides
 
+def _svg_start(width, height, title, description, css_class="chart"):
+    label = title or "Report chart"
+    detail = description or label
+    return (
+        f'<svg viewBox="0 0 {width} {height}" width="100%" class="{css_class}" '
+        f'role="img" aria-label="{esc(detail)}"><title>{esc(label)}</title>'
+        f'<desc>{esc(detail)}</desc>'
+    )
+
 def b_bars(b):
-    items = b["items"]; mx = b.get("max") or max(float(i["value"]) for i in items) or 1
+    items = b["items"]
+    values = [float(i["value"]) for i in items]
+    if not values or any(not math.isfinite(value) for value in values):
+        raise SystemExit("bars items require finite numeric values")
+    low = min(0.0, min(values))
+    high = max(0.0, max(values))
+    if b.get("min") is not None:
+        low = min(low, float(b["min"]))
+    if b.get("max") is not None:
+        high = max(high, float(b["max"]))
+    if low == high:
+        high = low + 1
     W, lw, rw, rh = (360, 128, 92, 22) if b.get("narrow") else (640, 210, 90, 22)
     rw = max(rw, 14 + 6.6 * max(len(str(i.get("display", i["value"]))) for i in items))   # never clip value labels
     if DECK_MODE:
         rh = 34 if len(items) <= 9 else 26
     H = rh * len(items) + 8
-    svg = [f'<svg viewBox="0 0 {W} {H}" width="100%" class="chart">']
+    x0, x1 = lw, W - rw
+    sx = lambda value: x0 + (x1 - x0) * (value - low) / (high - low)
+    zero = sx(0)
+    svg = [_svg_start(W, H, b.get("title"), b.get("description") or b.get("note"))]
+    svg.append(
+        f'<line x1="{zero:.1f}" x2="{zero:.1f}" y1="1" y2="{H-2}" '
+        f'stroke="{MUTED}" stroke-width="1"/>'
+    )
     for k, i in enumerate(items):
-        y = 4 + k * rh; w = max(1.5, (W - lw - rw) * float(i["value"]) / mx)
-        col = i.get("color") or (LIME if k == 0 or b.get("all_accent") else "#2B3440")
+        y = 4 + k * rh
+        value = float(i["value"])
+        end = sx(value)
+        x = min(zero, end)
+        w = max(1.5, abs(end - zero))
+        col = i.get("color") or (LIME if value >= 0 else CORAL)
+        label_x = min(W - rw + 8, end + 8) if value >= 0 else max(lw + 2, end - 8)
+        anchor = "start" if value >= 0 else "end"
         svg.append(f'<text x="{lw-10}" y="{y+14}" text-anchor="end" class="cl">{esc(i["label"])}</text>'
-                   f'<rect x="{lw}" y="{y+3}" width="{W-lw-rw}" height="{rh-8}" rx="2" fill="{WASH}"/>'
-                   f'<rect x="{lw}" y="{y+3}" width="{w:.1f}" height="{rh-8}" rx="2" fill="{col}"/>'
-                   f'<text x="{lw+w+8:.1f}" y="{y+14}" class="cv">{esc(i.get("display", i["value"]))}</text>')
+                   f'<rect x="{x0}" y="{y+3}" width="{x1-x0}" height="{rh-8}" rx="2" fill="{WASH}"/>'
+                   f'<rect x="{x:.1f}" y="{y+3}" width="{w:.1f}" height="{rh-8}" rx="2" fill="{col}"/>'
+                   f'<text x="{label_x:.1f}" y="{y+14}" text-anchor="{anchor}" class="cv">{esc(i.get("display", i["value"]))}</text>')
     svg.append("</svg>")
     title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
     note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
     return title + "".join(svg) + note
+
+def b_pie(b):
+    """Donut chart with a legend. Values must be finite and nonnegative; at most eight may be positive."""
+    values = [float(item["value"]) for item in b["items"]]
+    if any(not math.isfinite(value) or value < 0 for value in values):
+        raise SystemExit("pie items require finite nonnegative values")
+    items = [item for item, value in zip(b["items"], values) if value > 0]
+    total = sum(float(item["value"]) for item in items)
+    if not items or total <= 0 or len(items) > len(PIE):
+        return b_bars(b) if items else ""
+    W, H, cx, cy, r, ri = 640, 210, 105, 105, 95, 56
+    svg = [_svg_start(W, H, b.get("title"), b.get("description") or b.get("note"))]
+    start_angle = -math.pi / 2
+    for index, item in enumerate(items):
+        fraction = float(item["value"]) / total
+        color = item.get("color") or PIE[index]
+        if len(items) == 1:
+            svg.append(
+                f'<circle cx="{cx}" cy="{cy}" r="{(r + ri) / 2}" fill="none" '
+                f'stroke="{color}" stroke-width="{r - ri}"/>'
+            )
+        else:
+            end_angle = start_angle + 2 * math.pi * fraction
+            large_arc = 1 if fraction > 0.5 else 0
+            point = lambda radius, angle: (
+                cx + radius * math.cos(angle),
+                cy + radius * math.sin(angle),
+            )
+            (x0, y0), (x1, y1) = point(r, start_angle), point(r, end_angle)
+            (x2, y2), (x3, y3) = point(ri, end_angle), point(ri, start_angle)
+            svg.append(
+                f'<path d="M{x0:.2f},{y0:.2f} A{r},{r} 0 {large_arc} 1 {x1:.2f},{y1:.2f} '
+                f'L{x2:.2f},{y2:.2f} A{ri},{ri} 0 {large_arc} 0 {x3:.2f},{y3:.2f} Z" '
+                f'fill="{color}" stroke="{PAPER}" stroke-width="1.5"/>'
+            )
+            start_angle = end_angle
+        legend_y = 18 + index * 24
+        svg.append(
+            f'<rect x="250" y="{legend_y - 9}" width="11" height="11" rx="2" fill="{color}"/>'
+            f'<text x="270" y="{legend_y}" class="cl">{esc(item["label"])}</text>'
+            f'<text x="{W - 8}" y="{legend_y}" text-anchor="end" class="cv">'
+            f'{esc(item.get("display", item["value"]))}</text>'
+        )
+    if b.get("center"):
+        svg.append(
+            f'<text x="{cx}" y="{cy + 4}" text-anchor="middle" class="cv">{esc(b["center"])}</text>'
+        )
+    svg.append("</svg>")
+    title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
+    note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
+    return title + "".join(svg) + note
+
+def b_stacked(b):
+    raw_items = b["items"]
+    rows = raw_items if raw_items and raw_items[0].get("segments") else [
+        {"label": b.get("label", ""), "segments": raw_items}
+    ]
+    totals = [
+        sum(max(0.0, float(segment["value"])) for segment in row["segments"])
+        for row in rows
+    ]
+    if not totals or any(total <= 0 for total in totals):
+        return b_callout({"tone": "info", "title": b.get("title", "Allocation mix"),
+                          "text": "Not available — stacked values contain no positive total"})
+    W, lw, rh = 640, (130 if any(row.get("label") for row in rows) else 0), 32
+    H = rh * len(rows) + 40
+    out = [_svg_start(W, H, b.get("title"), b.get("description") or b.get("note"))]
+    for row_index, (row, total) in enumerate(zip(rows, totals)):
+        x, y, usable = float(lw), 6 + row_index * rh, W - lw
+        if row.get("label"):
+            out.append(f'<text x="{lw-10}" y="{y+17}" text-anchor="end" class="cl">{esc(row["label"])}</text>')
+        for index, segment in enumerate(row["segments"]):
+            value = max(0.0, float(segment["value"]))
+            width = usable * value / total
+            color = segment.get("color") or SERIES[index % len(SERIES)]
+            out.append(f'<rect x="{x:.1f}" y="{y}" width="{width:.1f}" height="24" fill="{color}"/>')
+            if width >= 44:
+                out.append(f'<text x="{x + width / 2:.1f}" y="{y+16}" text-anchor="middle" class="cv">{esc(segment.get("display", segment["value"]))}</text>')
+            x += width
+    legend_x = 0
+    legend_y = H - 17
+    for index, segment in enumerate(rows[0]["segments"]):
+        color = segment.get("color") or SERIES[index % len(SERIES)]
+        out.append(f'<rect x="{legend_x}" y="{legend_y-9}" width="9" height="9" fill="{color}"/>'
+                   f'<text x="{legend_x + 14}" y="{legend_y}" class="ax">{esc(segment["label"])}</text>')
+        legend_x += max(92, 18 + 6.2 * len(str(segment["label"])))
+    out.append("</svg>")
+    title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
+    note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
+    return title + "".join(out) + note
+
+def b_band(b):
+    items = b["items"]
+    values = [
+        float(value)
+        for item in items
+        for value in (
+            item.get("min", item.get("low")),
+            item.get("max", item.get("high")),
+            item.get("target", item.get("current", item.get("value", item.get("min", item.get("low"))))),
+        )
+    ]
+    low, high = min(values), max(values)
+    pad = (high - low) * .05 or 1
+    low, high = low - pad, high + pad
+    W, lw, rw, rh = (360, 128, 34, 28) if b.get("narrow") else (640, 205, 45, 28)
+    x0, x1 = lw, W - rw
+    sx = lambda value: x0 + (x1 - x0) * (float(value) - low) / (high - low)
+    H = len(items) * rh + 22
+    out = [_svg_start(W, H, b.get("title"), b.get("description") or b.get("note"))]
+    for index, item in enumerate(items):
+        y = 8 + index * rh
+        item_min = item.get("min", item.get("low"))
+        item_max = item.get("max", item.get("high"))
+        current = item.get("current", item.get("value"))
+        minimum, maximum = sx(item_min), sx(item_max)
+        target = sx(item.get("target", current if current is not None else item_min))
+        out.append(f'<text x="{lw-10}" y="{y+14}" text-anchor="end" class="cl">{esc(item["label"])}</text>'
+                   f'<rect x="{minimum:.1f}" y="{y+6}" width="{max(2, maximum-minimum):.1f}" height="9" rx="4" fill="{RULE}"/>'
+                   f'<line x1="{target:.1f}" x2="{target:.1f}" y1="{y+2}" y2="{y+20}" stroke="{INK}" stroke-width="2"/>')
+        if current is not None:
+            out.append(f'<circle cx="{sx(current):.1f}" cy="{y+10.5}" r="5" fill="{LIME_DK}" stroke="{PAPER}" stroke-width="1.5"/>')
+    out.append(f'<text x="{x0}" y="{H-2}" class="ax">{low:.1f}</text>'
+               f'<text x="{x1}" y="{H-2}" text-anchor="end" class="ax">{high:.1f}</text></svg>')
+    title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
+    note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
+    return title + "".join(out) + note
+
+def b_waterfall(b):
+    items = b["items"]
+    values = [float(item["value"]) for item in items]
+    cumulative = 0.0
+    levels = [0.0]
+    bars = []
+    for item, value in zip(items, values):
+        if item.get("total"):
+            start, end = 0.0, value
+            cumulative = value
+        else:
+            start, end = cumulative, cumulative + value
+            cumulative = end
+        bars.append((item, start, end))
+        levels.extend((start, end))
+    low, high = min(levels), max(levels)
+    pad = (high - low) * .12 or 1
+    low, high = low - pad, high + pad
+    W, H, pl, pr, pt, pb = 640, 230, 40, 16, 14, 52
+    iw, ih = W - pl - pr, H - pt - pb
+    sy = lambda value: pt + ih * (1 - (float(value) - low) / (high - low))
+    bw = iw / max(len(items), 1) * .58
+    out = [_svg_start(W, H, b.get("title"), b.get("description") or b.get("note"))]
+    zero = sy(0)
+    out.append(f'<line x1="{pl}" x2="{W-pr}" y1="{zero:.1f}" y2="{zero:.1f}" stroke="{MUTED}"/>')
+    previous_x = None
+    for index, (item, start, end) in enumerate(bars):
+        cx = pl + iw * (index + .5) / len(items)
+        top, bottom = min(sy(start), sy(end)), max(sy(start), sy(end))
+        color = item.get("color") or (INK if item.get("total") else (LIME if end >= start else CORAL))
+        if previous_x is not None:
+            out.append(f'<line x1="{previous_x + bw/2:.1f}" x2="{cx - bw/2:.1f}" y1="{sy(start):.1f}" y2="{sy(start):.1f}" stroke="{MUTED}" stroke-dasharray="2 2"/>')
+        out.append(f'<rect x="{cx-bw/2:.1f}" y="{top:.1f}" width="{bw:.1f}" height="{max(2,bottom-top):.1f}" fill="{color}"/>'
+                   f'<text x="{cx:.1f}" y="{max(10, top-4):.1f}" text-anchor="middle" class="cv">{esc(item.get("display", item["value"]))}</text>'
+                   f'<text x="{cx:.1f}" y="{H-26}" text-anchor="middle" class="ax">{esc(item["label"])}</text>')
+        previous_x = cx
+    out.append("</svg>")
+    title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
+    note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
+    return title + "".join(out) + note
+
+def b_heat(b):
+    columns = b["columns"]
+    normalized_rows = [
+        [row.get("label", "")] + list(row.get("values", []))
+        if isinstance(row, dict)
+        else row
+        for row in b["rows"]
+    ]
+    numeric = [
+        float(cell.get("value", 0) if isinstance(cell, dict) else cell)
+        for row in normalized_rows for cell in row[1:]
+        if isinstance(cell, (int, float)) or isinstance(cell, dict) and isinstance(cell.get("value"), (int, float))
+    ]
+    scale = max((abs(value) for value in numeric), default=1) or 1
+    rows = []
+    for row in normalized_rows:
+        cells = [f"<th>{rich(row[0])}</th>"]
+        for cell in row[1:]:
+            value = cell.get("value") if isinstance(cell, dict) else cell
+            display = cell.get("display", value) if isinstance(cell, dict) else value
+            amount = float(value) if isinstance(value, (int, float)) else 0
+            color = LIME if amount >= 0 else CORAL
+            alpha = .08 + .32 * min(1, abs(amount) / scale)
+            cells.append(f'<td style="background:{color};background:color-mix(in srgb,{color} {alpha*100:.0f}%,white)">{rich(display)}</td>')
+        rows.append("<tr>" + "".join(cells) + "</tr>")
+    head = "".join(f"<th>{esc(column)}</th>" for column in columns)
+    title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
+    note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
+    return f'{title}<table class="grid heat"><thead><tr>{head}</tr></thead><tbody>{"".join(rows)}</tbody></table>{note}'
 
 def b_percentiles(b):
     items = b["items"]; thr = b.get("threshold", 75)
     W, lw, rw, rh = 640, 200, 70, 26
     x0, x1 = lw, W - rw; sx = lambda p: x0 + (x1 - x0) * p / 100
     H = rh * len(items) + 30
-    s = [f'<svg viewBox="0 0 {W} {H}" width="100%" class="chart">',
+    s = [_svg_start(W, H, b.get("title"), b.get("description") or b.get("note")),
          f'<rect x="{sx(thr):.1f}" y="0" width="{x1-sx(thr):.1f}" height="{H-22}" fill="{CORAL}" opacity="0.10"/>',
          f'<text x="{x1-4}" y="11" text-anchor="end" class="ax" fill="{CORAL}">top quartile ≥{thr}th</text>']
     for p in (0, 25, 50, 75, 100):
@@ -309,6 +567,24 @@ def b_findings(b):
                    f'<div><div class="ft">{rich(f["title"])}</div><div class="fd">{rich(f.get("detail",""))}</div></div></div>')
     return "".join(out)
 
+def b_timeline(b):
+    items = b["items"]
+    title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
+    rows = []
+    for item in items:
+        color = {"good": LIME, "watch": AMBER, "bad": CORAL, "info": INK}.get(
+            item.get("tone", "info"), INK
+        )
+        rows.append(
+            f'<div class="timeline-row" style="--c:{color}">'
+            f'<div class="timeline-date">{esc(item["date"])}</div>'
+            f'<div class="timeline-mark"></div>'
+            f'<div><div class="timeline-title">{rich(item["title"])}</div>'
+            f'<div class="timeline-detail">{rich(item.get("detail", ""))}</div></div></div>'
+        )
+    note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
+    return title + '<div class="timeline">' + "".join(rows) + "</div>" + note
+
 def b_questions(b):
     return '<ol class="qs">' + "".join(
         f'<li><div class="qt">{rich(q["q"] if isinstance(q, dict) else q)}</div>' +
@@ -316,7 +592,16 @@ def b_questions(b):
         for q in b["items"]) + "</ol>"
 
 def b_two_col(b):
-    return f'<div class="two"><div>{render_blocks(b["left"])}</div><div>{render_blocks(b["right"])}</div></div>'
+    def narrow(blocks):
+        adjusted = copy.deepcopy(blocks)
+        for block in adjusted:
+            if block.get("type") in {"bars", "band"}:
+                block["narrow"] = True
+            if block.get("type") == "two_col":
+                block["left"] = narrow(block.get("left", []))
+                block["right"] = narrow(block.get("right", []))
+        return adjusted
+    return f'<div class="two"><div>{render_blocks(narrow(b["left"]))}</div><div>{render_blocks(narrow(b["right"]))}</div></div>'
 
 def b_pagebreak(b): return '<div class="pb"></div>'
 
@@ -342,7 +627,7 @@ def b_line(b, W=640, H=None):
     iw = W - pl - pr - end_w; ih = H - pt - pb
     sx = lambda x: pl + iw * ((x - x0) / ((x1 - x0) or 1)); sy = lambda y: pt + ih * (1 - (y - y0) / ((y1 - y0) or 1))
     dec = b.get("decimals", 1); suf = b.get("y_suffix", "")
-    o = [f'<svg viewBox="0 0 {W} {H}" width="100%" class="chart">']
+    o = [_svg_start(W, H, b.get("title"), b.get("description") or b.get("note"))]
     for k in range(5):
         yv = y0 + (y1 - y0) * k / 4; y = sy(yv)
         o.append(f'<line x1="{pl}" x2="{pl+iw:.1f}" y1="{y:.1f}" y2="{y:.1f}" stroke="{RULE}"/>'
@@ -475,9 +760,10 @@ def b_markdown(b):
     return '<div class="md">' + "".join(md_to_html(b["text"])) + "</div>"
 
 BLOCKS = {"text": b_text, "bullets": b_bullets, "kv": b_kv, "table": b_table, "tiles": b_tiles,
-          "bars": b_bars, "percentiles": b_percentiles, "callout": b_callout, "coverage": b_coverage,
-          "findings": b_findings, "questions": b_questions, "two_col": b_two_col, "pagebreak": b_pagebreak,
-          "markdown": b_markdown, "line": b_line, "statement": b_statement, "chart": b_chart}
+          "bars": b_bars, "pie": b_pie, "percentiles": b_percentiles, "callout": b_callout, "coverage": b_coverage,
+          "findings": b_findings, "timeline": b_timeline, "questions": b_questions, "two_col": b_two_col, "pagebreak": b_pagebreak,
+          "markdown": b_markdown, "line": b_line, "statement": b_statement, "chart": b_chart,
+          "waterfall": b_waterfall, "band": b_band, "stacked": b_stacked, "heat": b_heat}
 
 def render_blocks(blocks):
     out = []
@@ -485,7 +771,8 @@ def render_blocks(blocks):
         fn = BLOCKS.get(b["type"])
         if not fn:
             raise SystemExit(f"Unknown block type: {b['type']}")
-        out.append(f'<div class="blk">{fn(b)}</div>')
+        classes = "blk table-block" if b["type"] in {"table", "heat"} else "blk"
+        out.append(f'<div class="{classes}">{fn(b)}</div>')
     return "".join(out)
 
 # ---- pages -----------------------------------------------------------------
@@ -521,17 +808,18 @@ html{{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 body{{font-family:Inter,'Helvetica Neue',Arial,sans-serif;color:{INK};font-size:9.4pt;line-height:1.5;background:{PAPER}}}
 b{{font-weight:650}} code{{font-family:'DejaVu Sans Mono',Menlo,monospace;font-size:8pt;background:{WASH};padding:0 3px;border-radius:2px}}
 .src{{display:inline-block;font-size:6.6pt;font-weight:600;color:{LIME_DK};background:#F1FAD6;border-radius:3px;padding:0 4px;line-height:1.5;vertical-align:1px;white-space:nowrap}}
-.sec{{break-before:page}} .sec.first{{break-before:auto}}
+.sec{{break-before:auto;margin-top:22px}} .sec.first{{break-before:auto;margin-top:0}} .sec.new-page{{break-before:page;margin-top:0}}
 .sh{{display:flex;align-items:flex-end;gap:14px;border-bottom:2px solid {INK};padding-bottom:8px;margin-bottom:14px}}
 .sn{{background:{LIME};color:{INK};font-weight:800;font-size:15pt;line-height:1;padding:8px 9px 6px;border-radius:3px;letter-spacing:-.02em}}
 .st{{font-size:17pt;font-weight:750;letter-spacing:-.015em;line-height:1.1}}
 .sk{{color:{INK2};font-size:8.6pt;margin-top:3px}}
-.blk{{margin-bottom:13px;break-inside:avoid}}
+.blk{{margin-bottom:13px;break-inside:avoid}} .blk.table-block{{break-inside:auto}}
 .btitle{{font-size:7.4pt;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:{INK2};margin-bottom:6px}}
 p.body{{color:#1E2631}}
 .bul{{padding-left:0;list-style:none}} .bul li{{position:relative;padding-left:15px;margin-bottom:4px;color:#1E2631}}
 .bul li:before{{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;background:{LIME};border-radius:1px}}
 table{{border-collapse:collapse;width:100%}}
+thead{{display:table-header-group}} tr{{break-inside:avoid}}
 .kv th{{text-align:left;font-weight:500;color:{INK2};width:38%;padding:5px 10px 5px 0;border-bottom:1px solid {RULE};vertical-align:top}}
 .kv td{{padding:5px 0;border-bottom:1px solid {RULE};font-weight:550}}
 .grid{{font-size:8.2pt}} .grid th{{text-align:left;font-size:6.9pt;letter-spacing:.07em;text-transform:uppercase;color:{PAPER};background:{INK};padding:6px 8px;font-weight:650}}
@@ -555,14 +843,20 @@ table{{border-collapse:collapse;width:100%}}
 .finding{{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid {RULE}}}
 .fs{{font-size:6.8pt;font-weight:800;letter-spacing:.08em;color:{INK};background:var(--c);text-align:center;border-radius:3px;padding:3px 0;height:fit-content}}
 .ft{{font-weight:650}} .fd{{color:{INK2};font-size:8.4pt}}
+.timeline{{position:relative}} .timeline-row{{display:grid;grid-template-columns:82px 18px 1fr;gap:8px;min-height:38px;break-inside:avoid}}
+.timeline-date{{font-size:7.4pt;font-weight:700;color:{INK2};padding-top:2px;text-align:right}}
+.timeline-mark{{position:relative;border-left:2px solid {RULE};margin-left:8px}} .timeline-mark:before{{content:"";position:absolute;left:-5px;top:3px;width:8px;height:8px;border-radius:50%;background:var(--c);border:1px solid {PAPER}}}
+.timeline-title{{font-weight:650}} .timeline-detail{{color:{INK2};font-size:8.1pt;margin-top:1px}}
 .qs{{list-style:none;counter-reset:q}} .qs li{{counter-increment:q;position:relative;padding:7px 0 7px 34px;border-bottom:1px solid {RULE}}}
 .qs li:before{{content:counter(q,decimal-leading-zero);position:absolute;left:0;top:7px;font-weight:800;color:{LIME_DK};font-size:10pt}}
 .qt{{font-weight:600}} .qw{{color:{INK2};font-size:8.1pt;margin-top:1px}}
 .two{{display:grid;grid-template-columns:1fr 1fr;gap:20px}}
 .pb{{break-after:page}}
 .keep{{break-inside:avoid}}
+.opening-table table{{break-inside:avoid}}
 .md .h3{{font-size:11pt;font-weight:750;margin:14px 0 6px;letter-spacing:-.01em}} .md .h4{{font-size:7.4pt;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:{INK2};margin:10px 0 5px}}
 .md > *{{margin-bottom:9px}} .md table.grid{{break-inside:auto}} .md table.grid tr{{break-inside:avoid}}
+.heat th:first-child{{text-align:left}} .heat td{{text-align:center;font-variant-numeric:tabular-nums}}
 .onum{{padding-left:20px}} .onum li{{margin-bottom:4px;color:#1E2631}} .onum li::marker{{font-weight:700;color:{LIME_DK}}}
 .pre{{font-family:'DejaVu Sans Mono',Menlo,monospace;font-size:7.6pt;background:{WASH};padding:8px 10px;border-radius:4px;white-space:pre-wrap}}
 /* executive band */
@@ -577,15 +871,22 @@ table{{border-collapse:collapse;width:100%}}
 .stm{{border-left:6px solid var(--c);padding:6px 0 6px 16px}} .stm-t{{font-size:15pt;font-weight:750;line-height:1.25;letter-spacing:-.01em}} .stm-s{{color:{INK2};margin-top:4px}}
 """
 
+def page_spec(meta):
+    requested = str(meta.get("page_size", "Letter")).upper()
+    if requested == "A4":
+        return "A4", "8.2677in", "11.6929in"
+    return "Letter", "8.5in", "11in"
+
 def cover_html(r):
     m = r["meta"]
+    page_name, page_width, page_height = page_spec(m)
     sig = m.get("signal"); c = m.get("completeness")
     slabel, scol, stxt = SIGNAL[sig["level"]] if sig else ("", SLATE, INK)
     facts = "".join(f'<div><div class="fk">{esc(k)}</div><div class="fv">{esc(v)}</div></div>' for k, v in m.get("cover_facts", []))
-    return f"""<!doctype html><html><head><meta charset="utf-8">{FONT_LINK}<style>{CSS}
-@page{{size:Letter;margin:0}}
+    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>{esc(m["title"])}</title>{FONT_LINK}<style>{CSS}
+@page{{size:{page_name};margin:0}}
 body{{background:{INK}}}
-.cvr{{width:8.5in;height:11in;background:{INK};color:#F2F5F7;position:relative;overflow:hidden;padding:0.8in 0.75in}}
+.cvr{{width:{page_width};height:{page_height};background:{INK};color:#F2F5F7;position:relative;overflow:hidden;padding:0.8in 0.75in}}
 .glow{{position:absolute;right:-2.2in;top:-2.2in;width:6.4in;height:6.4in;border-radius:50%;background:radial-gradient(circle,{LIME}33 0%,{LIME}10 40%,transparent 70%)}}
 .lines{{position:absolute;right:0;top:0;width:5in;height:11in;opacity:.18}}
 .brand{{font-weight:800;font-size:12pt;letter-spacing:-.01em}} .brand span{{color:{LIME}}}
@@ -647,6 +948,7 @@ def exec_band(r):
 
 def body_html(r):
     parts = []
+    first_appendix = True
     for n, s in enumerate(r["sections"]):
         num = s.get("num", f"{n+1:02d}")
         head = (f'<div class="sh"><div class="sn">{esc(num)}</div><div><div class="st">{esc(s["title"])}</div>'
@@ -656,7 +958,12 @@ def body_html(r):
             pre = exec_band(r)
             if r.get("executive", {}).get("tiles"):
                 pre += f'<div class="blk">{b_tiles({"tiles": r["executive"]["tiles"]}, dark=True)}</div>'
-        cls = "sec first" if n == 0 else ("sec" if s.get("new_page", True) else "sec cont")
+        is_appendix = bool(re.match(r"^(?:Appendix\b|[A-Z]$)", str(s.get("title", "")))) or bool(re.fullmatch(r"[A-Z]", str(num)))
+        starts_page = n > 0 and bool(s.get("new_page", False))
+        if n > 0 and is_appendix and first_appendix:
+            starts_page = True
+            first_appendix = False
+        cls = "sec first" if n == 0 else ("sec new-page" if starts_page else "sec")
         blocks = s.get("blocks", [])
         if pre:
             body = f'<div class="keep">{head}{pre}</div>' + render_blocks(blocks)
@@ -665,13 +972,30 @@ def body_html(r):
             first = pieces[0] if pieces else ""
             body = (f'<div class="keep">{head}<div class="md">{first}</div></div>'
                     f'<div class="md">{"".join(pieces[1:])}</div>' + render_blocks(blocks[1:]))
+        elif blocks and blocks[0].get("type") in {"table", "heat"}:
+            first = copy.deepcopy(blocks[0])
+            rows = list(first.get("rows", []))
+            opening = copy.deepcopy(first)
+            opening["rows"] = rows[:3]
+            opening.pop("note", None)
+            remainder = []
+            if len(rows) > 3:
+                continuation = copy.deepcopy(first)
+                continuation["rows"] = rows[3:]
+                continuation.pop("title", None)
+                remainder = [continuation]
+            body = (
+                f'<div class="keep opening-table">{head}{render_blocks([opening])}</div>'
+                + render_blocks(remainder + blocks[1:])
+            )
         elif blocks:
             body = f'<div class="keep">{head}{render_blocks(blocks[:1])}</div>' + render_blocks(blocks[1:])
         else:
             body = head
         parts.append(f'<section class="{cls}">{body}</section>')
-    return f"""<!doctype html><html><head><meta charset="utf-8">{FONT_LINK}<style>{CSS}
-@page{{size:Letter;margin:0.72in 0.75in 0.7in 0.75in}} .sec.cont{{break-before:auto;margin-top:22px}}</style></head>
+    page_name, _, _ = page_spec(r["meta"])
+    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>{esc(r["meta"]["title"])}</title>{FONT_LINK}<style>{CSS}
+@page{{size:{page_name};margin:0.72in 0.75in 0.7in 0.75in}}</style></head>
 <body>{"".join(parts)}</body></html>"""
 
 def header_footer(r):
@@ -717,7 +1041,8 @@ def md_document_to_report(md, meta):
         body = "\n".join(s["body"]).strip()
         if k == 0 and "\n".join(pre).strip():
             body = "\n".join(pre).strip() + "\n\n" + body
-        sec = {"title": t, "blocks": [{"type": "markdown", "text": body}] if body else [], "new_page": new_page}
+        sec = {"title": t, "blocks": [{"type": "markdown", "text": body}] if body else [],
+               "new_page": new_page}
         if num: sec["num"] = num
         if k == 0 and meta.get("executive"):
             sec["id"] = "executive"
@@ -793,7 +1118,7 @@ def deck_html(d):
         take = f'<div class="s-take"><b>Takeaway</b><span>{rich(sl["takeaway"])}</span></div>' if sl.get("takeaway") else ""
         style = ' style="padding-bottom:1.45in"' if take else ""
         out.append(f'<section class="slide"{style}>{head}<div class="s-body">{body}</div>{take}{_deck_footer(m, k, total)}</section>')
-    return f"""<!doctype html><html><head><meta charset="utf-8">{FONT_LINK}<style>{CSS}{DECK_CSS}</style></head><body>{"".join(out)}</body></html>"""
+    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>{esc(m["title"])}</title>{FONT_LINK}<style>{CSS}{DECK_CSS}</style></head><body>{"".join(out)}</body></html>"""
 
 OVERFLOW_JS = """() => Array.from(document.querySelectorAll('.slide')).map((s, i) => {
   const b = s.querySelector('.s-body'); if (!b) return null;
@@ -811,6 +1136,60 @@ def _set(pg, src):
     pg.evaluate("document.fonts.ready.then(() => true)")
     pg.emulate_media(media="print")
 
+def _postprocess_pdf(source, target, document, deck=False):
+    """Apply metadata, language and title outlines after Chromium rendering."""
+    try:
+        from pypdf import PdfReader, PdfWriter
+        from pypdf.generic import NameObject, TextStringObject
+    except ImportError:
+        if os.path.abspath(source) != os.path.abspath(target):
+            shutil.move(source, target)
+        print("warning: pypdf not installed; PDF metadata and bookmarks were not added", file=sys.stderr)
+        return
+
+    reader = PdfReader(source)
+    writer = PdfWriter()
+    for page in reader.pages:
+        writer.add_page(page)
+    meta = document["meta"]
+    writer.add_metadata({
+        "/Title": str(meta.get("title", "")),
+        "/Author": client_name() or "GradientCIO",
+        "/Subject": str(meta.get("header_label", "Gradient report")),
+        "/Creator": f"Gradient CIO report renderer {VERSION}",
+    })
+    writer._root_object.update({NameObject("/Lang"): TextStringObject("en-US")})
+
+    entries = [(str(meta.get("title", "Cover")), 0)]
+    if deck:
+        entries.extend((str(slide.get("title", "Slide")), None) for slide in document.get("slides", []))
+    else:
+        entries.extend((str(section.get("title", "Section")), None) for section in document.get("sections", []))
+    page_text = [(page.extract_text() or "") for page in reader.pages]
+    search_from = 0
+    for title, fixed_page in entries:
+        page_index = fixed_page
+        if page_index is None:
+            page_index = next(
+                (index for index in range(search_from, len(page_text)) if title in page_text[index]),
+                None,
+            )
+        if page_index is None:
+            continue
+        writer.add_outline_item(title, page_index)
+        search_from = page_index
+
+    output = target
+    temporary = None
+    if os.path.abspath(source) == os.path.abspath(target):
+        handle, temporary = tempfile.mkstemp(suffix=".pdf", dir=os.path.dirname(os.path.abspath(target)) or None)
+        os.close(handle)
+        output = temporary
+    with open(output, "wb") as stream:
+        writer.write(stream)
+    if temporary:
+        os.replace(temporary, target)
+
 def render_deck(d, out, html_out=None):
     global DECK_MODE
     DECK_MODE = True
@@ -824,6 +1203,7 @@ def render_deck(d, out, html_out=None):
         over = pg.evaluate(OVERFLOW_JS)
         pg.pdf(path=out, width="13.333in", height="7.5in", print_background=True, prefer_css_page_size=True)
         br.close()
+    _postprocess_pdf(out, out, d, deck=True)
     print(f"Wrote {out}")
     if over:
         print("WARNING: content overflows on slide(s) " + ", ".join(str(x) for x in over) +
@@ -869,10 +1249,11 @@ def main():
             _set(pg, src)
             pg.pdf(path=dst, format="Letter", print_background=True, prefer_css_page_size=True, **opts)
         br.close()
+    merged = os.path.join(tmp, "merged.pdf")
     if shutil.which("pdfunite"):
-        subprocess.run(["pdfunite", p1, p2, out], check=True)
+        subprocess.run(["pdfunite", p1, p2, merged], check=True)
     elif shutil.which("qpdf"):
-        subprocess.run(["qpdf", "--empty", "--pages", p1, p2, "--", out], check=True)
+        subprocess.run(["qpdf", "--empty", "--pages", p1, p2, "--", merged], check=True)
     else:
         try:
             from pypdf import PdfReader, PdfWriter
@@ -884,8 +1265,10 @@ def main():
         for source in (p1, p2):
             for page in PdfReader(source).pages:
                 writer.add_page(page)
-        with open(out, "wb") as output:
+        with open(merged, "wb") as output:
             writer.write(output)
+    _postprocess_pdf(merged, out, r)
+    shutil.rmtree(tmp, ignore_errors=True)
     print(f"Wrote {out}")
 
 if __name__ == "__main__":

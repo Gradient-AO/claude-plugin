@@ -41,7 +41,13 @@ SPEC = ReportSpec(
             "change/alert evidence",
         ),
         SlotRule(
+            r"Changes and alerts", frozenset({"bars"}), "alerts-by-manager bars"
+        ),
+        SlotRule(
             r"Review calendar", frozenset({"table"}), "review-calendar table"
+        ),
+        SlotRule(
+            r"Review calendar", frozenset({"timeline"}), "reviews-due timeline"
         ),
         SlotRule(
             r"Coverage and freshness",
@@ -58,7 +64,18 @@ SPEC = ReportSpec(
         r"\b(?:hire|fire|terminate|redeem from|allocate to)\b",
     ),
     require_action_row_sources=True,
-    analysis_section_patterns=(r"Changes and alerts",),
+    analysis_section_patterns=(r"Changes and alerts", r"Review calendar"),
+    analytical_section_patterns=(r"Changes and alerts", r"Review calendar"),
+    require_message_first_kickers=True,
+    require_visual_before_first_table=True,
+    key_judgment_section_patterns=(r"This week",),
+    executive_tile_labels=(
+        "New alerts",
+        "Changes since review",
+        "Open findings",
+        "Reviews due ≤30d",
+    ),
+    require_tile_sources=True,
 )
 
 

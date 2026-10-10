@@ -110,6 +110,12 @@ def validate_manifest(contracts, public_tools=None):
         tool_name = probe.get("tool")
         if allowed_tools is not None and tool_name not in allowed_tools:
             errors.append(f"{probe_id}: unknown public tool {tool_name!r}")
+        contains = probe.get("contains", {})
+        if (
+            not isinstance(contains, dict)
+            or any(not isinstance(path, str) or not path for path in contains)
+        ):
+            errors.append(f"{probe_id}: contains assertions must use non-empty paths")
         for path, assertion in probe.get("approx", {}).items():
             if not isinstance(path, str) or not isinstance(assertion, dict):
                 errors.append(f"{probe_id}: invalid approx assertion")
@@ -264,6 +270,21 @@ def _approximately_equal(actual, expected, assertion):
     absolute = assertion.get("absolute_tolerance", 0)
     relative = assertion.get("relative_tolerance", 0)
     return math.isclose(actual, expected, rel_tol=relative, abs_tol=absolute)
+
+def _contains(actual, expected):
+    if isinstance(actual, list) and not isinstance(expected, list):
+        return any(_contains(item, expected) for item in actual)
+    if isinstance(expected, dict):
+        return isinstance(actual, dict) and all(
+            key in actual and _contains(actual[key], value)
+            for key, value in expected.items()
+        )
+    if isinstance(expected, list):
+        return isinstance(actual, list) and all(
+            any(_contains(item, expected_item) for item in actual)
+            for expected_item in expected
+        )
+    return actual == expected
 
 def load_and_validate_catalog(contracts_path):
     catalog_path = contracts_path.parent / "public-tools.json"
@@ -459,6 +480,14 @@ def main():
     ]
     if unequal:
         print(f"FAIL {pid}: {'; '.join(unequal)}"); sys.exit(1)
+    missing_contents = [
+        f"{path} does not contain {expected!r}"
+        for path, expected in probe.get("contains", {}).items()
+        if get(resp, path) is MISSING
+        or not _contains(get(resp, path), expected)
+    ]
+    if missing_contents:
+        print(f"FAIL {pid}: {'; '.join(missing_contents)}"); sys.exit(1)
     approximate_failures = [
         f"{path} expected approximately {assertion['expected']!r} "
         f"{assertion['unit']}, got {get(resp, path)!r}"

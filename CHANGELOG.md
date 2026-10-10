@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.5.0
+- Added licensed Inter assets and upgraded the shared PDF renderer for flowing sections, split tables, heading keeps, signed/narrow bars, table-width controls, and waterfall, band, stacked, heat and timeline blocks (P0-1, P0-2, P0-3, P0-4, P0-5, P0-6, P0-7, P0-8).
+- Added deterministic layout checks for sparse pages and orphan headings (P0-9).
+- Standardized four executive tiles, visual minimums, sourced four-part analysis, page-two key judgments, message-first kickers, cross-source context, markdown/visual composition, polish validators and fictional golden examples (P1-1, P1-2, P1-3, P1-4, P1-5, P1-6, P1-7, P1-8, P1-9).
+- Applied the complete per-skill visual, analysis, context and flow upgrade across IC memo, construction, portfolio review and attribution, ODD, equity note, manager compare and monitor, DDQ, GIPS, macro brief and setup (P2).
+- Added native editable 16:9 PowerPoint output alongside PDF from one validated `report.json`, with overflow, empty-placeholder, chart-data, conversion and visual-regression quality gates.
+- Added validated pie and doughnut charts with up to eight slices in PDF, PowerPoint and connector chart-hint rendering.
+
+## 2.4.1
+- Expanded setup contracts with complete 100-row sample-portfolio returns and dry-run monitoring, review and Strategy Lab scenario probes.
+- Replaced stale setup exceptions with the active P-23 DDQ-date and P-25 exposure-metric workarounds.
+- Aligned portfolio skills on projected historical-return coverage, partial-year and unfunded disclosures, and governed fixed-income aggregates.
+- Required fund-scope DDQ extraction for service-provider labels and explicit as-of dates on transcribed claims.
+
 ## 2.4.0
 - Added a validated visual and sourced Claude-analysis layer for IC memos, including required executive tiles, portfolio charts, semantic visual slots and fail-closed JSON composition.
 - Added deterministic JSON validators and analysis boundaries for brief portfolio reviews, ODD reports, DDQ reconciliations, equity notes, manager comparisons and manager-monitoring digests.

@@ -4,7 +4,7 @@ This repo is a **public** Claude plugin marketplace. Clients install from it dir
 
 ## Layout
 - `.claude-plugin/marketplace.json` — marketplace `gradientcio`; lists each plugin with its `version`.
-- `plugins/gradient-cio/` — the plugin. `.claude-plugin/plugin.json` (name, version), `.mcp.json` (GradientCIO connector URL, no credentials), `skills/<name>/SKILL.md`, `shared/` (canonical copies of `gradient_report.py`, `report-style.md`, `chart-data.md`, and `module-scope.md`), `tools/`, `tests/`.
+- `plugins/gradient-cio/` — the plugin. `.claude-plugin/plugin.json` (name, version), `.mcp.json` (GradientCIO connector URL, no credentials), `skills/<name>/SKILL.md`, `shared/` (canonical report renderers and standards), `tools/`, `tests/`, and pinned `requirements-test.txt`.
 - `CHANGELOG.md`, `README.md` (client install instructions).
 
 ## Rules
@@ -17,9 +17,10 @@ This repo is a **public** Claude plugin marketplace. Clients install from it dir
 2. Make the change. If shared files changed, run `sync_shared.py`.
 3. Bump the version in **both** `plugins/gradient-cio/.claude-plugin/plugin.json` and the matching entry in `.claude-plugin/marketplace.json` (semver: patch = fixes/wording, minor = new skill or feature, major = breaking change). Clients only receive an update when the version changes.
 4. Add an entry at the top of `CHANGELOG.md`.
-5. Run, and fix until both pass:
-   - `python plugins/gradient-cio/tests/run_tests.py`
-   - `claude plugin validate .`
+5. Install `plugins/gradient-cio/requirements-test.txt` plus Poppler, qpdf, LibreOffice and Inter, then run and fix until both pass:
+   - `python plugins/gradient-cio/tools/release_quality_gate.py` (runs `tests/run_tests.py`; skips Claude validation only when the CLI is unavailable)
+   - `claude plugin validate .` (required before release even when CI reports that the CLI was unavailable)
+   - for deterministic visual review artifacts: `python plugins/gradient-cio/tools/generate_golden_example.py --out <temporary-directory>`
    - if the change adds or changes which GradientCIO tools a skill calls: update `skills/gradient-setup/references/contracts.json` and `skill-requirements.md`, then run the gradient-setup full self-test against the live connector and update its known-issues table.
    - a secrets scan: `git diff main --stat` plus `grep -rInE "(api[_-]?key|secret|token|password|bearer)" plugins/ | grep -v -i "no credentials"` and review any hits.
 6. Commit with a clear message, push the branch, open a PR, wait for the `validate` check to pass, then merge to `main` (squash). If the owner asks to publish directly, push to `main` only after step 5 passes.

@@ -1,13 +1,13 @@
 ---
 name: gradient-equity-note
-description: "Write a sourced public-equity research note on one US-listed issuer (optionally against 2–8 peers) from GradientCIO SEC fundamentals, filing changes, risk factors, earnings releases, hedge-fund crowding and roster holdings, delivered as a branded PDF. Use for 'equity note on a ticker', 'look at this manager's top holding', 'research note on our concentrated position', 'what changed in a ticker's last filing' or 'who on our roster holds this ticker'."
+description: "Write a sourced public-equity research note on one US-listed issuer (optionally against 2–8 peers) from GradientCIO SEC fundamentals, filing changes, risk factors, earnings releases, hedge-fund crowding and roster holdings, delivered as a branded report. Use for 'equity note on a ticker', 'look at this manager's top holding', 'research note on our concentrated position', 'what changed in a ticker's last filing' or 'who on our roster holds this ticker'."
 ---
 
 # Gradient Equity Research Note
 
-Builds a 6–9 page PDF research note on one US-listed common stock for an allocator reviewing a manager's top
-holding, a concentrated position or a direct holding. Claude writes `report.json`; the shared renderer
-(`scripts/gradient_report.py`, house style in `references/report-style.md`) turns it into the PDF. Every figure
+Builds a polished research note on one US-listed common stock for an allocator reviewing a manager's top
+holding, a concentrated position or a direct holding. Claude writes one `report.json`; the shared renderer
+uses the house style in `references/report-style.md`. The PDF form is normally 6–9 pages. Every figure
 comes from a GradientCIO result or a listed calculation. Never fill a value from memory, and never add numbers
 from outside the tool results (consensus estimates, price targets, news).
 
@@ -178,20 +178,20 @@ Sections, in this order (keep each section even when its data is missing, and sh
    the largest change, the top review flag, positioning in one clause, coverage caveat), tiles as above. Blocks:
    a `two_col` of "What the filings show" / "What to check" bullets (3 + 3), then a `coverage` block listing
    every expected result.
-2. **Fundamentals and changes since the last filing**: `table` of annual year-over-year changes (metric,
-   current, prior, change, period, tag); `bars` of operating margin by fiscal year (`narrow: true` in a
-   `two_col`) next to a `kv` of cash conversion and capital allocation; a `table` of the latest 10-Q vs prior
-   10-Q from call 3 and the `disclosure_sources` counts; a callout for any revision or amendment.
+2. **Fundamentals, filing changes and risk factors**: `table` of annual year-over-year changes (metric,
+   current, prior, change, period, tag); revenue and operating-margin `line` visuals; a `kv` of cash conversion
+   and capital allocation; a filing-change `heat`; the latest 10-Q comparison; risk findings (category, short
+   quote, form, date, freshness); and a callout for any revision or amendment.
 3. **Peers**: `table` of aligned metrics (issuer, each peer, median, issuer rank with `rank_direction`) with
    period end in a note; or the misalignment callout plus peers' `computed_metrics` with basis and period.
    If no peers were requested: one `callout` (info) and `new_page: false`.
-4. **Risk factors and industry structure**: `table` of risk findings (category, short quote, form and date,
-   freshness), a `table` of the five forces (force, evidence basis chip, quote or missing reason), and the
-   tool's `attribution` sentence as a callout.
+4. **Industry structure**: `table` of the five forces (force, evidence basis chip, quote or missing reason)
+   and the tool's `attribution` sentence as a callout.
 5. **Latest earnings release**: `kv` (8-K date, items, accession), 3–5 bullets of reported results quoted from
    the release with GAAP/non-GAAP labels kept, one-time items, and guidance status ("No guidance changes
    extracted" when empty).
-6. **Positioning and crowding**: `kv` of the issuer's crowding row(s), a `table` of the issuer's sector peers that
+6. **Positioning and crowding**: signed `bars` for the issuer's crowding measures, a `kv` of the issuer's
+   crowding row(s), a `table` of the issuer's sector peers that
    appear in the same panels if useful, sector signal context or its unavailability, and a "how to read
    13F crowding" callout with the limitations.
 7. **Who holds it on the roster**: `table` (manager, 13F period, reported value, shares, put/call, status chip
@@ -212,22 +212,28 @@ server-returned metric identity, version, basis and source facts; do not derive 
 Every analytical or key-judgment callout must state the filed observation and include an `[S#]` tag. The JSON
 must contain no security recommendation: no price target, fair value, rating, buy/sell/hold,
 overweight/underweight, valuation adjective or forecast return. Add one to three `callout` blocks with
-`role: "analysis"` to **Fundamentals and changes since the last filing**, stating the observation, research
-implication, uncertainty, and evidence that would change the view.
+`role: "analysis"` and `Analysis —` titles to **Fundamentals and changes since the last filing**, using the
+four-part structure in `../../shared/writing-standards.md` and no more than 60 words. Page 2 contains three to
+five sourced `Key judgment —` callouts with `role: "key_judgment"`. Analytical kickers state the message.
+Before the first table, use a filed-trend `line`/`bars`, peer or risk `heat`, or typed unavailability. Preserve
+signed finite values and never place more than two tables consecutively.
 
 ## Step 5 — Render, check, deliver
 
 1. Run `python <this skill's directory>/scripts/validate_equity_note.py report.json`. Fix every error and
    re-run until it passes. Do not render a report that fails validation.
-2. `python <this skill's directory>/scripts/gradient_report.py report.json "<TICKER> - Equity Research Note <YYYY-MM-DD>.pdf"`
-   (report date). Never write a separate renderer.
-3. Rasterize (`pdftoppm -r 60 -png`) and look at every page; fix short overflow tails, squashed charts,
-   wrapped IDs, clipping and orphaned headings; re-render and repeat the full page review. Delivery is blocked
-   until page QA and fact checks pass. Then follow "Check and deliver" in `references/report-style.md`.
-4. Language check before delivery: search the JSON for "target", "rating", "buy", "sell", "overweight",
+2. Select output from explicit user wording: PDF by default; PPTX for `PowerPoint`, `deck`, `slides` or
+   `.pptx`; both for `both` or `board pack`. Both formats come from the same validated `report.json`; do not
+   create format-specific content.
+3. Render with
+   `python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "<TICKER> - Equity Research Note <YYYY-MM-DD>"`.
+4. Inspect every requested output. Rasterize PDFs with `pdftoppm -r 60 -png`; run the shared slide
+   rendering/layout check for PPTX. Fix overflow tails, squashed charts, wrapped IDs, clipping and orphaned
+   headings; re-render and repeat the full review. Delivery is blocked until QA and fact checks pass.
+5. Language check before delivery: search the JSON for "target", "rating", "buy", "sell", "overweight",
    "undervalued", "cheap", "upside", "will" and rewrite any hit that is not a quoted filing.
-5. In chat: three lines (review-flags signal and completeness, the largest filed change, the top open item)
-   and the file.
+6. In chat: three lines (review-flags signal and completeness, the largest filed change, the top open item)
+   and the requested file(s).
 
 ## Step 6 — Offer the watchlist (only on explicit confirmation)
 

@@ -28,5 +28,5 @@ To render a returned item, put it into the report unchanged:
 {"type": "chart", "chart": {"chart_id": "...", "status": "ok", "...": "..."}}
 ```
 
-The shared renderer owns all line/bar/table mapping through `render_hint`. Skills must not branch on chart IDs,
+The shared renderer owns all mapping from `render_hint` to line, bars, pie, or table output. Skills must not branch on chart IDs,
 recompute rows, or hand-map columns.

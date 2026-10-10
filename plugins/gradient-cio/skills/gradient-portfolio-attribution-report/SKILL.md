@@ -1,6 +1,6 @@
 ---
 name: gradient-portfolio-attribution-report
-description: "Produce a polished 10–14 page historical and governed ex ante attribution report for any saved Gradient portfolio, with Brinson-Fachler allocation, selection and interaction effects, reconciliation diagnostics, assumptions, limitations and sourced analysis. Use for attribution reports, performance attribution, Brinson analysis, manager or asset-allocation contribution analysis, and historical-versus-expected attribution reviews. For a broad portfolio review use gradient-portfolio-review; for a recommendation or vote use gradient-ic-memo."
+description: "Produce a polished historical and governed ex ante attribution report for any saved Gradient portfolio, with Brinson-Fachler allocation, selection and interaction effects, reconciliation diagnostics, assumptions, limitations and sourced analysis. Use for attribution reports, performance attribution, Brinson analysis, manager or asset-allocation contribution analysis, and historical-versus-expected attribution reviews. For a broad portfolio review use gradient-portfolio-review; for a recommendation or vote use gradient-ic-memo."
 ---
 
 # Portfolio Attribution Report
@@ -9,9 +9,9 @@ Use when the user asks for an attribution report, Brinson analysis,
 historical attribution, ex ante attribution, sources of active return, or a
 focused performance-attribution pack for a saved portfolio.
 
-The deliverable is a branded PDF:
-**"<Portfolio> - Portfolio Attribution Report <YYYY-MM-DD>.pdf"**.
-It is a 10–14 page monitoring report, not a recommendation or decision memo.
+The deliverable is a branded report with base name
+**"<Portfolio> - Portfolio Attribution Report <YYYY-MM-DD>"**. Its PDF form is normally 10–14 pages. It is a
+monitoring report, not a recommendation or decision memo.
 
 Rules:
 - Historical attribution comes only from `get_portfolio_attribution`.
@@ -37,7 +37,7 @@ Rules:
 | `references/chart-data.md` | Before using report charts. |
 | `references/report-style.md` | Before rendering. |
 | `scripts/validate_attribution.py` | Validate the JSON report. |
-| `scripts/gradient_report.py` | Render the branded PDF. |
+| `scripts/render.py` | Render validated `report.json` to PDF, PPTX or both. |
 
 ## 1. Scope
 
@@ -67,7 +67,7 @@ Required:
 - `get_portfolio_structure` with `view: allocation_tree`
 - `get_portfolio_historical_returns` for context, with a `fields` projection
   containing `portfolio`, `filters`, `coverage`, `display` and only the
-  requested return sections
+  requested return sections, and `limit: 100`
 - `get_portfolio_attribution` for the selected month-end period
 - `get_portfolio_ex_ante_attribution` for the same portfolio, benchmark role
   and parent cohort
@@ -82,9 +82,10 @@ State partial historical-return coverage as a report gap. For
 `no_subject_returns`, state that the selected portfolio has no subject return
 history and do not substitute another series.
 Treat `not_yet_funded` commitments as having no funded return history, not a
-zero return. Identify returned partial 2016 and 2026 calendar years with their
-month counts and do not present either as a full-year return. Until P-01 ships,
-disclose commitment-page truncation instead of following `next_cursor`.
+zero return. Identify returned partial 2016 and 2026 calendar years from their
+`month_count`, `partial`, `coverage_status`, and `missing_reason`, and do not
+present either as a full-year return. Disclose the returned count if the
+100-row commitment response is unexpectedly truncated.
 
 ## 3. Assess
 
@@ -114,9 +115,11 @@ Analysis:
 - Identify the largest positive and negative returned effects, whether each
   result reconciles, where allocation versus selection dominates, and which
   assumptions or coverage limitations matter.
-- Use three to six sourced `role: "analysis"` callouts only in Analysis and
-  Considerations. Keep titles to six words and use `Observation:`, `Why it
+- Use one to three sourced `role: "analysis"` callouts beside the evidence in
+  each analytical section. Start titles with `Analysis —`, keep the message to six words and use `Observation:`, `Why it
   matters:`, `Uncertainty:`, and `What would change the view:` in order.
+- Link the largest detractor segment to open findings for its resolved managers and the returned macro regime
+  over the historical period; label both as context, never as causal attribution.
 - Use neutral considerations for discussion; do not prescribe trades,
   rebalances, manager actions or votes.
 
@@ -126,30 +129,34 @@ Use JSON block mode and follow `references/attribution-template.md` exactly.
 Build polished, evidence-led graphics with readable labels and units. Tables
 and bars/waterfalls use returned effect values directly. Use exactly the four
 ordered executive tiles in the template and source every tile.
+Page 2 contains three to five sourced `Key judgment —` callouts. Analytical sections use message-first
+kickers and lead with signed segment `bars`, an allocation-selection-interaction `waterfall`, a segment ×
+lane `heat`, returned chart or typed unavailable state before the first table. Put the historical
+reconciliation `kv` beside its waterfall in `two_col`. Never place more than two tables consecutively.
 
 Validate:
 
 ```text
-python <skill>/scripts/validate_attribution.py attribution-report.json
+python <skill>/scripts/validate_attribution.py report.json
 ```
 
-Fix every error and re-run until the validator passes. A failed validator
-blocks delivery. Then render:
+Fix every error and re-run until the validator passes. A failed validator blocks delivery. Select PDF by
+default; select PPTX when the request says `PowerPoint`,
+`deck`, `slides` or `.pptx`; select both when it says `both` or `board pack`. Both formats must come from the
+same validated `report.json`.
 
 ```text
-python <skill>/scripts/gradient_report.py attribution-report.json "<Portfolio> - Portfolio Attribution Report <YYYY-MM-DD>.pdf"
+python <skill>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Portfolio Attribution Report <YYYY-MM-DD>"
 ```
 
-Follow “Check and deliver” in `references/report-style.md`: rasterize and
-inspect every page, fix clipping, overflow, orphaned headings and unreadable
-graphics, then re-render. Reconcile each displayed value to its source,
+Follow “Check and deliver” in `references/report-style.md`: inspect every requested output, fix clipping,
+overflow, orphaned headings and unreadable graphics, then re-render. Reconcile each displayed value to its source,
 verify that historical and ex ante labels are unambiguous, and confirm no
 unsupported attribution claim appears. PDF page QA and fact checks must pass
 before delivery.
 
-Reply with three lines: historical attribution conclusion, governed ex ante
-conclusion, and the number of coverage or diagnostic items to monitor, plus
-the PDF.
+Reply with three lines: historical attribution conclusion, governed ex ante conclusion, and the number of
+coverage or diagnostic items to monitor, plus the requested file(s).
 
 ## 5. Handoffs
 

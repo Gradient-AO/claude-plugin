@@ -13,11 +13,19 @@ overflow, branding appears only when requested.
 Live GradientCIO contract checks are run by the gradient-setup skill (full self-test), because they
 need the user's connector; see skills/gradient-setup/references/contract-checks.md.
 """
-import importlib.util, json, pathlib, re, shutil, subprocess, sys, tempfile
+import importlib.util, json, pathlib, re, shutil, subprocess, sys, tempfile, zipfile
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
+from release_quality import run_artifact_checks, run_source_checks
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 FIX = ROOT / "tests" / "fixtures"
 RENDER = ROOT / "shared" / "gradient_report.py"
+PPTX_TEMPLATE = ROOT / "assets" / "gradient-master.potx"
 CONTRACT_CHECKER = ROOT / "skills" / "gradient-setup" / "scripts" / "check_contract.py"
 CONTRACTS = ROOT / "skills" / "gradient-setup" / "references" / "contracts.json"
 CONTRACT_CHECKS = ROOT / "skills" / "gradient-setup" / "references" / "contract-checks.md"
@@ -200,7 +208,7 @@ _renderer_spec.loader.exec_module(_renderer_module)
 
 # name, args (relative to fixtures; OUT = output pdf), min pages, max pages, must-contain text
 CASES = [
-    ("odd",      ["odd.json", "OUT"],                                3, 6,  ["Operational Due Diligence"]),
+    ("odd",      ["odd.json", "OUT"],                                8, 9,  ["Operational Due Diligence"]),
     ("ddq",      ["ddq.json", "OUT"],                                3, 8,  ["DDQ Reconciliation"]),
     ("ic_memo",  ["ic-memo.json", "OUT"],                          14, 18, ["Recommendation", "Key judgment", "Growth of 100"]),
     ("gips_note",["--md", "note.md", "--meta", "note_meta.json", "OUT"], 1, 4, ["GIPS"]),
@@ -210,8 +218,8 @@ CASES = [
     ("deck",     ["--deck", "deck.json", "OUT"],                     11, 11, ["Macro Briefing", "Takeaway"]),
     ("branded",  ["--brand", "branding-test.json", "blocks.json", "OUT"], 2, 4, ["Northwind Pension Plan (TEST)", "Powered by GradientCIO.com"]),
     ("portfolio", ["portfolio.json", "OUT"],                         5, 8,  ["Portfolio Review", "Standard periods to", "Growth of 100", "Look-through concentration"]),
-    ("portfolio_comprehensive", ["portfolio-comprehensive.json", "OUT"], 15, 20, ["Comprehensive Portfolio Review", "Historical Attribution", "Projected Return and Risk Decomposition", "Analysis and Considerations"]),
-    ("portfolio_attribution_report", ["portfolio-attribution-report.json", "OUT"], 10, 14, ["Portfolio Attribution Report", "Historical Attribution", "Governed Ex Ante Attribution", "Analysis and Considerations"]),
+    ("portfolio_comprehensive", ["portfolio-comprehensive.json", "OUT"], 14, 19, ["Comprehensive Portfolio Review", "Historical Attribution", "Projected Return and Risk Decomposition", "Analysis —"]),
+    ("portfolio_attribution_report", ["portfolio-attribution-report.json", "OUT"], 10, 14, ["Portfolio Attribution Report", "Historical Attribution", "Governed Ex Ante Attribution", "Analysis —"]),
     ("construction_private_markets", ["construction-private-markets.json", "OUT"], 10, 14, ["Private Markets Portfolio Construction", "Commitments, Pacing and Cash Flow", "Committee action requested"]),
     ("construction_fixed_income", ["construction-fixed-income.json", "OUT"], 10, 14, ["Fixed Income Portfolio Construction", "Rates and Credit Context", "Committee action requested"]),
     ("construction_global_public_equity", ["construction-global-public-equity.json", "OUT"], 10, 14, ["Global Public Equity Portfolio Construction", "Factor Exposures and Concentration", "Committee action requested"]),
@@ -295,8 +303,27 @@ def static(allow_branded):
         "(use --allow-branded for a private client build)",
     )
     check(b.get("brand") == "gradient", "branding.json declares Gradient as the default brand")
+    template_ok = False
+    if PPTX_TEMPLATE.is_file():
+        with zipfile.ZipFile(PPTX_TEMPLATE) as archive:
+            content_types = archive.read("[Content_Types].xml")
+            layouts = [
+                name
+                for name in archive.namelist()
+                if re.fullmatch(r"ppt/slideLayouts/slideLayout\d+\.xml", name)
+            ]
+            template_ok = (
+                b'typeface="Inter"' in archive.read("ppt/theme/theme1.xml")
+                and b"presentationml.template.main+xml" in content_types
+                and len(layouts) == 7
+            )
+    check(
+        template_ok,
+        "PowerPoint master is a seven-layout POTX with Inter theme fonts",
+    )
     branded = json.loads((FIX / "branding-test.json").read_text(encoding="utf-8"))
     check(branded.get("brand") == "client", "client branding fixture declares the client brand")
+    run_source_checks(check)
     connector_cutover()
     chart_renderer()
     contract_manifest()
@@ -452,9 +479,9 @@ def connector_cutover():
         bad_tag["2"]["analysis"][0]["text"] += " [S999]"
         invalid_cases.append(("unknown source tag", bad_tag))
 
-        negative_bar = json.loads(json.dumps(base_visuals))
-        negative_bar["3"]["after"][0]["left"][0]["items"][0]["value"] = -52
-        invalid_cases.append(("negative bar value", negative_bar))
+        nonfinite_bar = json.loads(json.dumps(base_visuals))
+        nonfinite_bar["3"]["after"][0]["left"][0]["items"][0]["value"] = float("inf")
+        invalid_cases.append(("non-finite bar value", nonfinite_bar))
 
         decision_language = json.loads(json.dumps(base_visuals))
         decision_language["3"]["analysis"][0]["text"] += (
@@ -586,7 +613,7 @@ def connector_cutover():
         invalid_cases.append(("unknown source tag", bad_tag))
 
         negative_severity = json.loads(json.dumps(base_visuals))
-        negative_severity["sections"]["3. Findings Checklist"]["before"][0][
+        negative_severity["sections"]["Appendix A — Findings Checklist"]["before"][1][
             "items"
         ][0]["value"] = -1
         invalid_cases.append(("negative severity count", negative_severity))
@@ -720,7 +747,7 @@ def connector_cutover():
         fundamentals = next(
             section
             for section in equity_fixture["sections"]
-            if section["title"] == "Fundamentals and changes since the last filing"
+            if section["title"] == "Fundamentals, filing changes and risk factors"
         )
         analysis = next(
             block
@@ -733,7 +760,7 @@ def connector_cutover():
         missing_fundamentals = next(
             section
             for section in missing_analysis["sections"]
-            if section["title"] == "Fundamentals and changes since the last filing"
+            if section["title"] == "Fundamentals, filing changes and risk factors"
         )
         for block in missing_fundamentals["blocks"]:
             block.pop("role", None)
@@ -743,7 +770,7 @@ def connector_cutover():
         unknown_fundamentals = next(
             section
             for section in unknown_tag["sections"]
-            if section["title"] == "Fundamentals and changes since the last filing"
+            if section["title"] == "Fundamentals, filing changes and risk factors"
         )
         unknown_analysis = next(
             block
@@ -757,7 +784,7 @@ def connector_cutover():
         prohibited_fundamentals = next(
             section
             for section in prohibited_action["sections"]
-            if section["title"] == "Fundamentals and changes since the last filing"
+            if section["title"] == "Fundamentals, filing changes and risk factors"
         )
         prohibited_analysis = next(
             block
@@ -834,6 +861,18 @@ def connector_cutover():
                 "title": "Not available",
                 "text": (
                     "Not available — missing_portfolio_expected_return [S5]."
+                ),
+            },
+            {
+                "type": "callout",
+                "role": "analysis",
+                "tone": "info",
+                "title": "Analysis — Ex ante evidence unavailable",
+                "text": (
+                    "Observation: Governed ex ante attribution is unavailable [S5]. "
+                    "Why it matters: Expected contribution cannot be assessed. "
+                    "Uncertainty: The missing result may be temporary. "
+                    "What would change the view: A validated governed result."
                 ),
             }
         ]
@@ -990,9 +1029,9 @@ def connector_cutover():
 
     attribution_missing_role = cloned_fixture("portfolio-attribution-report.json")
     attribution_analysis = report_section(
-        attribution_missing_role, "Analysis and Considerations"
+        attribution_missing_role, "Historical Returns Context"
     )["blocks"]
-    attribution_analysis[0].pop("role")
+    next(block for block in attribution_analysis if block.get("role") == "analysis").pop("role")
     contract_regressions.append(
         (
             "attribution missing analysis role",
@@ -1002,9 +1041,12 @@ def connector_cutover():
     )
 
     unknown_analysis_tag = cloned_fixture("portfolio-attribution-report.json")
-    report_section(
-        unknown_analysis_tag, "Analysis and Considerations"
-    )["blocks"][0]["text"] += " [S999]"
+    unknown_blocks = report_section(
+        unknown_analysis_tag, "Historical Returns Context"
+    )["blocks"]
+    next(block for block in unknown_blocks if block.get("role") == "analysis")[
+        "text"
+    ] += " [S999]"
     contract_regressions.append(
         (
             "attribution unknown analysis source tag",
@@ -1014,9 +1056,12 @@ def connector_cutover():
     )
 
     malformed_analysis = cloned_fixture("portfolio-comprehensive.json")
-    malformed_block = report_section(
-        malformed_analysis, "Analysis and Considerations"
-    )["blocks"][0]
+    malformed_blocks = report_section(malformed_analysis, "Historical Returns")[
+        "blocks"
+    ]
+    malformed_block = next(
+        block for block in malformed_blocks if block.get("role") == "analysis"
+    )
     malformed_block["text"] = malformed_block["text"].replace(
         "Uncertainty:", "Caveat:"
     )
@@ -1029,9 +1074,12 @@ def connector_cutover():
     )
 
     prohibited_recommendation = cloned_fixture("portfolio-comprehensive.json")
-    report_section(
-        prohibited_recommendation, "Analysis and Considerations"
-    )["blocks"][0]["text"] += " We recommend increasing the allocation [S3]."
+    prohibited_blocks = report_section(
+        prohibited_recommendation, "Historical Returns"
+    )["blocks"]
+    next(block for block in prohibited_blocks if block.get("role") == "analysis")[
+        "text"
+    ] += " We recommend increasing the allocation [S3]."
     contract_regressions.append(
         (
             "comprehensive review prohibited recommendation language",
@@ -1057,18 +1105,18 @@ def connector_cutover():
         )
     )
 
-    negative_bar = cloned_fixture("portfolio-comprehensive.json")
+    nonfinite_bar = cloned_fixture("portfolio-comprehensive.json")
     exposure_blocks = report_section(
-        negative_bar, "Exposures and Concentration"
+        nonfinite_bar, "Exposures and Concentration"
     )["blocks"]
     next(block for block in exposure_blocks if block.get("type") == "bars")[
         "items"
-    ][0]["value"] = -1
+    ][0]["value"] = float("inf")
     contract_regressions.append(
         (
-            "comprehensive review negative renderer bar",
+            "comprehensive review non-finite renderer bar",
             PORTFOLIO_REVIEW_VALIDATOR,
-            negative_bar,
+            nonfinite_bar,
         )
     )
 
@@ -1132,6 +1180,38 @@ def chart_renderer():
         "<table" in mixed_line and "<svg" not in mixed_line,
         "chart renderer falls back to a table for mixed-unit lines",
     )
+    pie_chart = _renderer_module.b_chart({"chart": {
+        "title": "Allocation pie",
+        "status": "ok",
+        "columns": [
+            {"key": "sleeve", "title": "Sleeve", "format": "text", "decimals": None},
+            percentage_column,
+        ],
+        "rows": [["Public", 0.6], ["Private", 0.3], ["Liquidity", 0.1]],
+        "render_hint": {"block": "pie", "x": "sleeve", "y": ["ratio"]},
+    }})
+    check(
+        "<svg" in pie_chart
+        and "<path" in pie_chart
+        and "60.0%" in pie_chart
+        and _renderer_module.BLOCKS.get("pie") is _renderer_module.b_pie,
+        "chart renderer supports pie hints and direct pie blocks",
+    )
+    mixed_pie = _renderer_module.b_chart({"chart": {
+        "title": "Mixed-unit pie",
+        "status": "ok",
+        "columns": [
+            {"key": "sleeve", "title": "Sleeve", "format": "text", "decimals": None},
+            {"key": "value", "title": "Value", "format": "number", "decimals": 0},
+            {"key": "unit", "title": "Unit", "format": "text", "decimals": None},
+        ],
+        "rows": [["Public", 60, "%"], ["Private", 30, "USD"]],
+        "render_hint": {"block": "pie", "x": "sleeve", "y": ["value"]},
+    }})
+    check(
+        "<table" in mixed_pie and "<svg" not in mixed_pie,
+        "chart renderer falls back to a table for mixed-unit pies",
+    )
 
 def contract_manifest():
     contracts = json.loads(CONTRACTS.read_text(encoding="utf-8"))
@@ -1144,7 +1224,7 @@ def contract_manifest():
         for name in ("standard", "full", "writes", "ddq-save-preview")
     }
     check(
-        counts == {"standard": 8, "full": 49, "writes": 5, "ddq-save-preview": 3},
+        counts == {"standard": 8, "full": 49, "writes": 8, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
     )
 
@@ -1189,11 +1269,14 @@ def contract_manifest():
         "get_return_series",
         "list_organizations",
         "list_portfolios",
+        "log_diligence_review",
         "reconcile_manager_ddq_claims",
         "run_strategy_lab_date_window_robustness",
         "run_strategy_lab_expected_statistics",
         "run_strategy_lab_relative_return",
+        "save_strategy_lab_scenario",
         "search_managers",
+        "update_manager_monitoring",
         "upload_ddq_document",
     }
     minimum_probe_ids = set(minimum.get("required_probe_ids", []))
@@ -1232,7 +1315,10 @@ def contract_manifest():
             "manager_diligence_brief",
             "write_create_finding",
             "write_watchlist_manager",
+            "write_manager_monitoring",
+            "write_diligence_review",
             "write_roster",
+            "write_strategy_scenario",
             "write_upload_ddq",
         } <= minimum_probe_ids
         and set(minimum.get("required_response_field_paths", {}))
@@ -1271,7 +1357,10 @@ def contract_manifest():
     write_probes = [probe for probe in probes if probe.get("set") == "writes"]
     expected_write_tools = {
         "create_diligence_finding",
+        "log_diligence_review",
         "preview_diligence_changes",
+        "save_strategy_lab_scenario",
+        "update_manager_monitoring",
         "update_watchlist",
         "update_diligence_roster",
         "upload_ddq_document",
@@ -1471,6 +1560,7 @@ def contract_manifest():
             "risk_metrics",
             "benchmark_relative",
         ]
+        and returns_probe["args"].get("limit") == 100
         and returns_probe.get("approx", {}).get(
             "display.risk_free_rate",
         ) == {
@@ -1484,7 +1574,7 @@ def contract_manifest():
             "absolute_tolerance": 0,
             "unit": "count",
         }],
-        "historical-return probe covers bounded summary sections and numeric reconciliation",
+        "historical-return probe covers complete summary sections and numeric reconciliation",
     )
     check(
         {
@@ -1506,8 +1596,24 @@ def contract_manifest():
         and returns_probe.get("equals", {}).get("calendar_years[10].year")
         == 2016
         and returns_probe.get("equals", {}).get("calendar_years[10].partial")
-        is True,
-        "historical-return probe verifies the canonical partial 2016 and 2026 calendar years",
+        is True
+        and returns_probe.get("equals", {}).get(
+            "benchmark_relative.commitments_total",
+        ) == 69
+        and returns_probe.get("equals", {}).get(
+            "benchmark_relative.commitments_returned",
+        ) == 69
+        and returns_probe.get("equals", {}).get(
+            "benchmark_relative.commitments_truncated",
+        ) is False
+        and returns_probe.get("contains", {}).get(
+            "benchmark_relative.commitments",
+        ) == {
+            "comparisons": [{
+                "missing_reason": {"code": "not_yet_funded"},
+            }],
+        },
+        "historical-return probe verifies complete commitments and partial calendar years",
     )
     attribution_probe = by_id["portfolio_attribution"]
     check(
@@ -1603,6 +1709,31 @@ def contract_manifest():
             "items[1].receipt_id",
         } <= set(batch_preview.get("non_null", [])),
         "batch write probe previews two changes without committing",
+    )
+    dry_run_write_probes = {
+        "write_create_finding": "create_diligence_finding",
+        "write_watchlist_manager": "update_watchlist",
+        "write_manager_monitoring": "update_manager_monitoring",
+        "write_diligence_review": "log_diligence_review",
+        "write_roster": "update_diligence_roster",
+        "write_strategy_scenario": "save_strategy_lab_scenario",
+    }
+    check(
+        all(
+            by_id[probe_id]["tool"] == tool
+            and by_id[probe_id]["args"].get("dry_run") is True
+            and by_id[probe_id].get("equals", {}).get("committed") is False
+            and "receipt_id" in by_id[probe_id].get("non_null", [])
+            for probe_id, tool in dry_run_write_probes.items()
+        )
+        and by_id["write_manager_monitoring"]["args"].get("action")
+        == "subscribe"
+        and by_id["write_diligence_review"]["args"].get(
+            "evidence_limit_acknowledged",
+        ) is True
+        and by_id["write_strategy_scenario"]["args"].get("domain")
+        == "relative",
+        "singular write probes preview monitoring, review, and scenario changes",
     )
     contract_guidance = CONTRACT_CHECKS.read_text(encoding="utf-8")
     macro_guidance = MACRO_BRIEF_SKILL.read_text(encoding="utf-8")
@@ -1808,8 +1939,8 @@ def contract_manifest():
             "risk_metrics",
             "benchmark_relative",
         ]
-        and return_args.get("limit") == 25,
-        "historical-return probe uses a bounded summary projection",
+        and return_args.get("limit") == 100,
+        "historical-return probe uses a complete summary projection",
     )
     historical_return_skill_docs = []
     for skill in (ROOT / "skills").iterdir():
@@ -1830,7 +1961,7 @@ def contract_manifest():
             and "not_yet_funded" in text
             and "2016" in text
             and "2026" in text
-            and "P-01" in text
+            and "limit: 100" in text
             for _name, text in historical_return_skill_docs
         ),
         "historical-return skills project fields and disclose each required coverage gap",
@@ -1840,11 +1971,11 @@ def contract_manifest():
         in scope_guidance
         and "`points` and `cumulative_growth` separately"
         in scope_guidance
-        and "Until connector issue P-01 ships" in scope_guidance
-        and "do not follow `next_cursor`" in scope_guidance
+        and "Set `limit: 100` on every call" in scope_guidance
+        and "commitments_truncated" in scope_guidance
         and "not_yet_funded" in scope_guidance
         and "partial calendar years 2016 and 2026" in scope_guidance,
-        "historical-return skills project sections and disclose bounded coverage gaps",
+        "historical-return skills project sections and disclose complete coverage gaps",
     )
     fixed_income_guidance = (
         ROOT
@@ -1854,18 +1985,44 @@ def contract_manifest():
         / "data-map.md"
     ).read_text(encoding="utf-8")
     check(
-        "asset_classification: fixed_income" in fixed_income_guidance
-        and "fixed_income_metrics.{weighting_basis, effective_duration, spread_duration, "
-        "yield_to_maturity_decimal, coverage}"
-        in fixed_income_guidance
+        "`Fixed Income`" in fixed_income_guidance
+        and "`fixed_income`" in fixed_income_guidance
         and "portfolio_totals.fixed_income_metrics" in fixed_income_guidance
         and "aggregates_by_asset_classification" in fixed_income_guidance
         and "do not recompute or equal-weight rows" in fixed_income_guidance
         and "spread duration of zero is a valid value" in fixed_income_guidance
+        and "Until P-25 ships" in fixed_income_guidance
+        and "individual exposure rows" in fixed_income_guidance
         and "Do not relabel yield to maturity as yield to worst"
         in fixed_income_guidance
         and "OAS" in fixed_income_guidance,
-        "fixed-income exposure uses lowercase filtering and NAV-weighted metrics",
+        "fixed-income exposure uses supported aliases and governed aggregates",
+    )
+    non_fixed_income_guidance = [
+        (
+            ROOT
+            / "skills"
+            / skill_name
+            / "references"
+            / "data-map.md"
+        ).read_text(encoding="utf-8")
+        for skill_name in (
+            "gradient-global-public-equity-portfolio-construction",
+            "gradient-marketable-alternatives-portfolio-construction",
+            "gradient-private-markets-portfolio-construction",
+            "gradient-real-assets-portfolio-construction",
+        )
+    ]
+    check(
+        all(
+            "snake_case" in text
+            and "do not quote `fixed_income_metrics`" in text
+            and "P-25" in text
+            for text in non_fixed_income_guidance
+        )
+        and "non-fixed-income exposure rows" in scope_guidance
+        and "non-Fixed-Income classification row" in scope_guidance,
+        "non-fixed-income exposure guidance ignores P-25 metric leakage",
     )
     classification_guidance = {
         "gradient-private-markets-portfolio-construction":
@@ -1888,10 +2045,10 @@ def contract_manifest():
             )
             for skill_name, values in classification_guidance.items()
         )
-        and "use only the exact lowercase values" in scope_guidance
-        and "Never pass title-case display labels" in scope_guidance
-        and "rely on case-insensitive alias handling" in scope_guidance,
-        "exposure-reading skills require lowercase classification inputs",
+        and "use the returned display name" in scope_guidance
+        and "or its snake_case alias" in scope_guidance
+        and "`Fixed Income`" in scope_guidance,
+        "exposure-reading skills use display names or snake_case aliases",
     )
     check(
         "`page_totals` covers only the returned page" in scope_guidance
@@ -1995,7 +2152,8 @@ def contract_manifest():
         "credit-spreads probe passes only its view",
     )
     check(
-        all(issue_id in contract_guidance for issue_id in ("P-01", "P-07", "P-12", "P-21"))
+        all(issue_id in contract_guidance for issue_id in ("P-07", "P-12", "P-21", "P-23", "P-25"))
+        and "P-01" not in contract_guidance
         and "`allocations` and `commitments`" in contract_guidance
         and "`run_strategy_lab_expected_statistics`" in contract_guidance
         and all(stale_id not in contract_guidance for stale_id in (
@@ -2069,6 +2227,20 @@ def contract_manifest():
             for index in (0, 4, 7)
         ),
         "fund DDQ probe covers auditor, administrator and custodian aliases",
+    )
+    ddq_skill_guidance = (
+        ROOT / "skills" / "gradient-ddq-reconcile" / "SKILL.md"
+    ).read_text(encoding="utf-8")
+    check(
+        '`subject_scope: "fund"`' in ddq_skill_guidance
+        and "auditor, administrator, custodian, or prime-broker label"
+        in ddq_skill_guidance
+        and "every transcribed claim must set `asserted_as_of`"
+        in ddq_skill_guidance
+        and "ask the user for one before reconciliation"
+        in ddq_skill_guidance
+        and "`asserted_as_of: null`" in ddq_skill_guidance,
+        "DDQ skill applies P-23 dates and fund-scope provider extraction",
     )
     check(
         all(resolved_issue not in contract_guidance for resolved_issue in (
@@ -2232,6 +2404,11 @@ def contract_checker():
                     "required": ["receipt_id"],
                     "non_null": ["receipt_id"],
                     "equals": {"dry_run": True, "committed": False},
+                    "contains": {
+                        "rows": {
+                            "missing_reason": {"code": "not_yet_funded"},
+                        },
+                    },
                 },
             ],
         }
@@ -2250,17 +2427,44 @@ def contract_checker():
         )
         pass_path = temp / "pass.json"
         pass_path.write_text(
-            json.dumps({"receipt_id": "receipt", "dry_run": True, "committed": False}),
+            json.dumps({
+                "receipt_id": "receipt",
+                "dry_run": True,
+                "committed": False,
+                "rows": [
+                    {"missing_reason": {"code": "not_yet_funded", "message": "planned"}},
+                ],
+            }),
             encoding="utf-8",
         )
         null_path = temp / "null.json"
         null_path.write_text(
-            json.dumps({"receipt_id": None, "dry_run": True, "committed": False}),
+            json.dumps({
+                "receipt_id": None,
+                "dry_run": True,
+                "committed": False,
+                "rows": [{"missing_reason": {"code": "not_yet_funded"}}],
+            }),
             encoding="utf-8",
         )
         unequal_path = temp / "unequal.json"
         unequal_path.write_text(
-            json.dumps({"receipt_id": "receipt", "dry_run": False, "committed": True}),
+            json.dumps({
+                "receipt_id": "receipt",
+                "dry_run": False,
+                "committed": True,
+                "rows": [{"missing_reason": {"code": "not_yet_funded"}}],
+            }),
+            encoding="utf-8",
+        )
+        missing_content_path = temp / "missing-content.json"
+        missing_content_path.write_text(
+            json.dumps({
+                "receipt_id": "receipt",
+                "dry_run": True,
+                "committed": False,
+                "rows": [{"missing_reason": {"code": "no_nav_history"}}],
+            }),
             encoding="utf-8",
         )
         capabilities_path = temp / "capabilities.json"
@@ -2298,6 +2502,11 @@ def contract_checker():
         passed = run(contract_path, "preview", pass_path)
         null = run(contract_path, "preview", null_path)
         unequal = run(contract_path, "preview", unequal_path)
+        missing_content = run(
+            contract_path,
+            "preview",
+            missing_content_path,
+        )
         resolved = run("--resolve-args", contract_path, "preview", temp)
         connector_ready = run(
             "--validate-connector",
@@ -2317,6 +2526,11 @@ def contract_checker():
         check(passed.returncode == 0 and "PASS preview" in passed.stdout, "contract checker accepts matching values")
         check(null.returncode == 1 and "null receipt_id" in null.stdout, "contract checker rejects null values")
         check(unequal.returncode == 1 and "expected True" in unequal.stdout, "contract checker rejects unequal values")
+        check(
+            missing_content.returncode == 1
+            and "does not contain" in missing_content.stdout,
+            "contract checker rejects missing nested content",
+        )
         check(
             resolved.returncode == 0
             and json.loads(resolved.stdout)["reconciliation_id"] == "11111111-1111-4111-8111-111111111111",
@@ -2467,6 +2681,7 @@ def render(keep):
             f"GIPS {label}: contains {must}"
             + (f" — missing {missing}" if missing else ""),
         )
+    run_artifact_checks(check, out)
     print(f"PDFs in {out}")
 
 def main():

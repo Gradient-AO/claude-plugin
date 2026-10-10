@@ -28,7 +28,13 @@
 1. Reconcile composite assets between the DDQ and the GIPS Report.
 2. Provide the full fee schedule including the performance fee.
 
-## 3. Findings Checklist
+## 3. Follow-up Requests
+
+1. Composite asset reconciliation between DDQ 7.3 and the GIPS Report (1.A.7).
+2. Full fee schedule including the performance fee (4.C.11).
+3. List of composite descriptions (4.C.15).
+
+## Appendix A — Findings Checklist
 
 ### Claim & verification
 
@@ -48,13 +54,7 @@
 | Disclosures | Benchmark description | 4.C.32 | Met | GIPS Report p.3 | — |
 | Policies | List of composite descriptions available | 4.C.15 | Not found | — | Request |
 
-## 4. Follow-up Requests
-
-1. Composite asset reconciliation between DDQ 7.3 and the GIPS Report (1.A.7).
-2. Full fee schedule including the performance fee (4.C.11).
-3. List of composite descriptions (4.C.15).
-
-## Appendix A — Sources
+## Appendix B — Sources
 
 | Tag | Source | Detail | As of | Validation |
 |---|---|---|---|---|
@@ -62,6 +62,6 @@
 | S2 | Verification letter | Example Verifier LLP | 2026-03-15 | Document |
 | S3 | DDQ | Section 7 | 2026-06-30 | Document |
 
-## Appendix B — Method & Disclaimer
+## Appendix C — Method & Disclaimer
 
 Ratings follow the High/Medium/Low scale and overall-assessment rules in the Gradient GIPS output format. This is a diligence review against the published 2020 GIPS standards, not a verification, compliance certification or legal opinion.

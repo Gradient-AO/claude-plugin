@@ -1,88 +1,65 @@
-# Writing Standards for Portfolio Reviews
+# Gradient analytical writing standards
 
-The review explains what the evidence shows, why it matters for monitoring and what the committee may want to
-discuss. It does not recommend a transaction, allocation change, manager action or vote.
+These standards apply to client-facing analytical reports and decision packs. They do not apply to the
+`gradient-setup` readiness report or to the `gradient-gips-standards` reference answer. A family-specific skill
+may narrow the voice, required sections or permitted decision language, but it may not weaken evidence,
+availability or presentation rules.
 
-## Evidence pattern
+## Message first
 
-Use this sequence for every analytical paragraph or consideration:
+- Write section kickers as the conclusion a reader should retain, not as a topic label. Prefer
+  `Private-assets headroom is narrow` to `Allocation and policy`.
+- Lead each analytical section with a decision-useful visual. When the governed evidence cannot support that
+  visual, put a typed `Not available — <reason>` callout in the visual position.
+- Put the visual or typed unavailable state before the first table. Never open an analytical section with a
+  stack of tables.
+- Do not place more than two table blocks consecutively. Break a longer sequence with a visual, sourced
+  interpretation, typed unavailable state or a new section.
 
-1. **Observation** — lead with a dated quantity or governed status and its `[S#]` tag.
-2. **Why it matters** — explain the monitoring implication without claiming causation the evidence does not
-   establish.
-3. **Uncertainty** — name coverage, staleness, basis or model limitations.
-4. **Consideration for discussion** — state a neutral question, comparison or trigger to revisit.
+## Executive pages
 
-Tables and charts present the evidence first. Interpretation follows and is limited to three sentences per
-analytical section. The dedicated Analysis and Considerations section may contain three to six short callouts.
+- Use the four-tile executive band when the family specification defines four decision-useful measures.
+  Preserve the family labels and source every tile with `[S#]`.
+- Page 2 carries three to five **Key judgment —** callouts when the family specification calls for a judgment
+  page. Each judgment is sourced, no more than 60 words and subordinate to the report's stated decision or
+  monitoring purpose.
+- Do not invent a fourth measure. If a required tile is unavailable, retain the tile and show the typed state
+  and reason.
 
-In comprehensive mode, those callouts use `role: "analysis"`, have sourced titles of no more than six words,
-stay within 80 words, and use `Observation:`, `Why it matters:`, `Uncertainty:`, and
-`What would change the view:` in that exact order. Analysis-role callouts appear nowhere else.
+## Analysis callouts
 
-## Voice and tone
+- Use one to three `Analysis — <message>` callouts in each analytical section named by the family
+  specification. Keep each callout to 60 words or fewer and cite at least one `[S#]`.
+- Where the family specification requires structured analysis, use these four parts in order:
+  `Observation:`, `Why it matters:`, `Uncertainty:`, and `What would change the view:`.
+- Observation states returned evidence. Why it matters states the decision or monitoring implication.
+  Uncertainty names coverage, staleness, basis or model limitations. What would change the view names a
+  measurable trigger, evidence item or event.
+- Analysis may compare and rank sourced values. It may not introduce an unsourced metric, causal claim,
+  forecast, rating or action beyond the report's authorized scope.
 
-- Plain, neutral and precise. Use third person: `The portfolio`, `The policy benchmark`, `The Committee`.
-- Distinguish fact, returned model output and interpretation explicitly.
-- Use `is assumed to`, `the model indicates` and `under the returned assumptions` for forward results.
-- Describe direction and magnitude with dates and comparison bases. Avoid unsupported adjectives.
-- Preserve returned labels, units, basis, formula versions, coverage and missing reasons.
-- Every numerical statement carries an `[S#]` tag. A sentence containing several values may use one tag only
-  when all values come from the same source.
+## Evidence and availability
 
-## Analysis, not recommendations
+- Every factual number, governed status and analytical judgment carries an `[S#]` tag.
+- Preserve returned dates, units, bases, formula identity and version, coverage, validation state and
+  unavailable reason.
+- Absence is not zero, no exposure, no event or no issue. Write `Not available — <reason>`.
+- A visual may use only returned values, user-supplied evidence or allowed display-only scaling and rounding.
+  Never calculate a replacement series locally.
 
-Allowed:
+## Visual grammar
 
-- `The 1-year return trailed the policy benchmark by 80 bps [S4].`
-- `Selection in public equity was the largest negative attribution effect [S5].`
-- `The narrow 60 bps headroom makes this allocation sensitive to valuation movement [S3].`
-- `A consideration for discussion is whether the watch threshold remains appropriate before the next review.`
-- `The committee may wish to compare this result at the next quarter-end after another full observation.`
+- Prefer the smallest visual that answers the section's question. Supported analytical blocks include
+  `chart`, `line`, `bars`, `pie`, `percentiles`, `waterfall`, `band`, `stacked`, `heat`, `timeline`, `tiles`, `coverage` and
+  `findings`.
+- Bars and other quantitative marks accept signed finite values. Preserve the sign in `value` and in the
+  display label; do not convert negative values to absolute magnitudes.
+- Nested blocks are valid. Apply source, availability, table-sequencing and numeric rules inside every
+  `two_col` branch and other nested block list.
+- Titles and labels state the measure, unit, period and comparison basis where those are not already obvious.
 
-Not allowed:
+## Family authority
 
-- `We recommend reducing public equity.`
-- `The Committee should rebalance.`
-- `Sell the manager.`
-- `Increase the allocation by 200 bps.`
-- `Approve the proposed change.`
-
-If the evidence raises a possible action, describe the condition and offer a separate
-`gradient-ic-memo` hand-off. Do not draft the action inside the review.
-
-## Historical and forward labels
-
-- **Historical return**: returned by `get_portfolio_historical_returns`.
-- **Historical attribution**: realized Brinson-Fachler effects returned by `get_portfolio_attribution`.
-- **Realized risk**: metrics computed by the historical-return contract from observed returns.
-- **Projected return and risk decomposition**: governed policy / CMA assumptions, risk-contribution,
-  factor/currency or simulation outputs with their returned assumption basis.
-- **Selected-series sandbox**: Strategy Lab output, including `run_strategy_lab_expected_statistics`. It is
-  not saved-portfolio holdings, policy compliance, historical performance or Brinson attribution.
-
-Never use `simulated attribution`, `projected attribution` or `forward attribution` unless a public contract
-returns a result with that exact governed name. The current expected contract is named
-`get_portfolio_ex_ante_attribution`; use `gradient-portfolio-attribution-report` for that focused analysis.
-
-## Causation and comparison rules
-
-- Attribution may explain active return only for its returned period and benchmark.
-- Market context may be relevant but does not explain portfolio performance without attribution evidence.
-- Do not compare historical and forward values as if they share a basis.
-- Do not compare Strategy Lab selected series with a saved portfolio unless the report names both scopes and
-  the connector returns a valid comparison.
-- Do not turn `not_assessed`, missing or partial evidence into a favorable status.
-- Do not describe an entitlement failure as no exposure, no breach or no issue.
-
-## Illustrative and incomplete data
-
-For illustrative evidence, use **Illustrative, Gradient Maintained — demo data, not the client's holdings or
-managers** on the cover and at first use. Refer to `the illustrative portfolio`, never `your portfolio`.
-
-For unavailable evidence, write `Not available — <reason>`. For degraded evidence, state what is covered and
-what is not. Do not fill gaps from memory, general market knowledge or local calculations.
-
-Comprehensive reports use ODD-quality editorial and visual polish. Charts must advance the evidence, retain
-readable labels, legends, units and bases, and survive PDF rendering without clipping or overflow. Pass the
-validator before rendering and inspect every PDF page before delivery.
+The skill's template, writing standards and validator remain authoritative for section order, tile labels,
+required visual slots, analysis locations, decision language and hand-offs. Tool names in source appendices
+must match calls actually made; never add a tool call to satisfy a layout requirement.
