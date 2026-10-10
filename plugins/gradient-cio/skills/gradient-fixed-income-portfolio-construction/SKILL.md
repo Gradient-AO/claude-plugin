@@ -67,7 +67,6 @@ CMA consensus, The Read and selected-series Strategy Lab diagnostics are optiona
   `portfolio_totals.fixed_income_metrics` is null for a mixed portfolio. Quote `fixed_income_metrics` only
   for Fixed Income and Cash rows. Require `weighting_basis: current_holding_nav_base`, preserve coverage and
   methodology, and never recompute or equal-weight rows. Treat spread duration zero as a valid observation.
-  Until P-25 ships, ignore `fixed_income_metrics` on individual exposure rows and non-Fixed-Income aggregates.
 - Never relabel yield to maturity as yield to worst. Report yield to worst, OAS, convexity, quality or
   key-rate exposure only when another Gradient result or a cited user document directly supplies it.
 - Present rates and credit indicators as context, not forecasts. Do not claim that yields or spreads will

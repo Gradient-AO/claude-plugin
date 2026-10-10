@@ -141,8 +141,7 @@ returned, do not merge them into the policy table. Show geography or sector only
 those fields.
 Use governed fixed-income duration, spread-duration, and yield-to-maturity from complete
 `portfolio_totals.fixed_income_metrics` or the Fixed Income classification aggregate. Preserve weighting
-basis and coverage; do not recompute or equal-weight rows. Until P-25 ships, ignore
-`fixed_income_metrics` on exposure rows and non-Fixed-Income classification aggregates.
+basis and coverage; do not recompute or equal-weight rows.
 
 **Look-through.** Top issuers by look-through NAV across managers, with managers holding and share of NAV.
 Always add the caveat callout: 13F is lagged (up to 45 days after quarter end), long-only US-listed equity,

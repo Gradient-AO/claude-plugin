@@ -744,8 +744,6 @@ def contract_manifest():
         and "aggregates_by_asset_classification" in fixed_income_guidance
         and "do not recompute or equal-weight rows" in fixed_income_guidance
         and "spread duration of zero is a valid value" in fixed_income_guidance
-        and "Until P-25 ships" in fixed_income_guidance
-        and "individual exposure rows" in fixed_income_guidance
         and "Do not relabel yield to maturity as yield to worst"
         in fixed_income_guidance
         and "OAS" in fixed_income_guidance,
@@ -772,9 +770,7 @@ def contract_manifest():
             and "do not quote `fixed_income_metrics`" in text
             and "P-25" in text
             for text in non_fixed_income_guidance
-        )
-        and "non-fixed-income exposure rows" in scope_guidance
-        and "non-Fixed-Income classification row" in scope_guidance,
+        ),
         "non-fixed-income exposure guidance ignores P-25 metric leakage",
     )
     classification_guidance = {
