@@ -927,8 +927,8 @@ def font_faces():
             fp = os.path.join(d, name)
             if os.path.isfile(fp):
                 data = base64.b64encode(open(fp, "rb").read()).decode()
-                faces.append("@font-face{font-family:Inter;font-style:normal;font-display:block;font-weight:100 900;"
-                             f"src:local('Inter'),url(data:font/woff2;base64,{data}) format('woff2');unicode-range:{rng}}}")
+                faces.append("@font-face{font-family:GradientInter;font-style:normal;font-display:block;font-weight:100 900;"
+                             f"src:url(data:font/woff2;base64,{data}) format('woff2');unicode-range:{rng}}}")
         if faces:
             return "<style>" + "".join(faces) + "</style>"
     print("warning: Inter font files not found in assets/fonts; using system fonts", file=sys.stderr)
@@ -938,7 +938,7 @@ FONT_LINK = font_faces()
 CSS = f"""
 *{{box-sizing:border-box;margin:0;padding:0}}
 html{{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
-body{{font-family:Inter,'Helvetica Neue',Arial,sans-serif;color:{INK};font-size:9.4pt;line-height:1.5;background:{PAPER}}}
+body{{font-family:Inter,GradientInter,'Helvetica Neue',Arial,sans-serif;color:{INK};font-size:9.4pt;line-height:1.5;background:{PAPER}}}
 b{{font-weight:650}} code{{font-family:'DejaVu Sans Mono',Menlo,monospace;font-size:8pt;background:{WASH};padding:0 3px;border-radius:2px}}
 .src{{display:inline-block;font-size:6.6pt;font-weight:600;color:{LIME_DK};background:#F1FAD6;border-radius:3px;padding:0 4px;line-height:1.5;vertical-align:1px;white-space:nowrap}}
 .sec{{break-before:auto;margin-top:22px}} .sec.first{{break-before:auto;margin-top:0}} .sec.new-page{{break-before:page;margin-top:0}}
@@ -967,8 +967,8 @@ thead{{display:table-header-group}} tr{{break-inside:avoid}}
 .tile .tv{{font-size:17pt;font-weight:780;letter-spacing:-.02em;line-height:1.15;margin-top:3px}}
 .tile .ts{{font-size:7.2pt;color:{INK2};margin-top:1px;line-height:1.35}}
 .tile.dark{{background:{PANEL};color:#F2F5F7}} .tile.dark .tl{{color:#A7B1BC}} .tile.dark .tv{{color:{LIME}}} .tile.dark .ts{{color:#A7B1BC}}
-.chart{{display:block}} .chart .cl{{font-size:10.5px;fill:{INK};font-family:Inter,Arial}} .chart .cv{{font-size:10.5px;font-weight:650;fill:{INK};font-family:Inter,Arial}}
-.chart .ax{{font-size:9px;fill:{MUTED};font-family:Inter,Arial}}
+.chart{{display:block}} .chart .cl{{font-size:10.5px;fill:{INK};font-family:Inter,GradientInter,Arial}} .chart .cv{{font-size:10.5px;font-weight:650;fill:{INK};font-family:Inter,GradientInter,Arial}}
+.chart .ax{{font-size:9px;fill:{MUTED};font-family:Inter,GradientInter,Arial}}
 .callout{{border-left:4px solid var(--c);background:{WASH};padding:10px 13px;border-radius:0 4px 4px 0}}
 .callout .ct{{font-weight:700;margin-bottom:2px}}
 .covwrap{{border-top:1px solid {RULE}}} .cov{{display:grid;grid-template-columns:32% 16% 52%;gap:8px;padding:4px 0;border-bottom:1px solid {RULE};align-items:start}}
@@ -1133,7 +1133,7 @@ def body_html(r):
 
 def header_footer(r):
     m = r["meta"]
-    st = f"font-family:Inter,Arial,sans-serif;font-size:7px;color:{MUTED};width:100%;padding:0 0.75in;display:flex;justify-content:space-between;"
+    st = f"font-family:Inter,GradientInter,Arial,sans-serif;font-size:7px;color:{MUTED};width:100%;padding:0 0.75in;display:flex;justify-content:space-between;"
     who = (f'<b style="color:{INK}">{esc(client_name())}</b>' if client_name()
            else f'<b style="color:{INK}">Gradient</b><b style="color:{LIME_DK}">CIO</b>')
     hdr = (f'<div style="{st}"><span>{who}'
