@@ -19,6 +19,36 @@ from typing import Any
 import validate_gips_report as validator
 
 
+SECTION_MAPPINGS: dict[str, tuple[str, str, str | None]] = {
+    "1. Summary": ("executive", "Summary", "01"),
+    "2. Findings": ("findings", "Findings", "02"),
+    "3. Performance Integrity Memo": (
+        "performance-integrity-memo",
+        "Performance integrity memo",
+        "03",
+    ),
+    "3. Preparer Fix List": ("preparer-fix-list", "Preparer fix list", "03"),
+    "3. Oversight Summary": ("oversight-summary", "Oversight summary", "03"),
+    "3. Policy Gaps by Area": (
+        "policy-gaps-by-area",
+        "Policy gaps by area",
+        "03",
+    ),
+    "4. Follow-up Requests": ("follow-up-requests", "Follow-up requests", "04"),
+    "Appendix A — Findings Checklist": (
+        "appendix-a",
+        "Appendix — Findings checklist",
+        "A",
+    ),
+    "Appendix B — Sources": ("appendix-b", "Appendix — Sources", "B"),
+    "Appendix C — Method & Disclaimer": (
+        "appendix-c",
+        "Appendix — Method & disclaimer",
+        "C",
+    ),
+}
+
+
 def parse_markdown(markdown: str) -> tuple[str, list[dict[str, Any]], list[str]]:
     """Split markdown into renderer sections without rewriting section bodies."""
     lines = markdown.replace("\r\n", "\n").split("\n")
@@ -52,41 +82,25 @@ def parse_markdown(markdown: str) -> tuple[str, list[dict[str, Any]], list[str]]
     if "\n".join(preamble).strip():
         sections[0]["body"] = preamble + [""] + first_body
 
-    first_appendix = True
     rendered: list[dict[str, Any]] = []
-    for index, source in enumerate(sections):
+    for source in sections:
         source_heading = str(source["source_heading"])
-        display_title = source_heading
-        number: str | None = None
-        new_page = False
-        numbered = re.match(r"^(\d+)\.\s+(.*)$", source_heading)
-        appendix = re.match(
-            r"^Appendix\s+([A-Z])\b\s*[—–:-]?\s*(.*)$", source_heading
-        )
-        if numbered:
-            number = f"{int(numbered.group(1)):02d}"
-            display_title = numbered.group(2)
-        elif appendix:
-            number = appendix.group(1)
-            display_title = (
-                f"Appendix — {appendix.group(2)}"
-                if appendix.group(2)
-                else "Appendix"
-            )
-            new_page = first_appendix
-            first_appendix = False
+        mapping = SECTION_MAPPINGS.get(source_heading)
+        if mapping is None:
+            errors.append(f"unsupported markdown heading: {source_heading}")
+            continue
+        section_id, display_title, number = mapping
 
         body = "\n".join(source["body"]).strip()
         section: dict[str, Any] = {
+            "id": section_id,
             "title": display_title,
             "source_heading": source_heading,
-            "new_page": new_page,
+            "new_page": section_id == "appendix-a",
             "blocks": [{"type": "markdown", "text": body}],
         }
         if number is not None:
             section["num"] = number
-        if index == 0:
-            section["id"] = "executive"
         rendered.append(section)
     return title, rendered, errors
 
@@ -148,7 +162,6 @@ def compose(
         for key, value in meta.items()
         if key not in {"executive", "page_break_before"}
     }
-    report_meta.setdefault("title", title)
     report_meta.setdefault("title", title)
     executive = dict(meta["executive"])
     executive["tiles"] = visuals["executive_tiles"]

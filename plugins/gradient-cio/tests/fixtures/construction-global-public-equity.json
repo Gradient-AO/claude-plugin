@@ -137,21 +137,21 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a Manager and issuer concentration on watch signal [S1]. Why it matters: The signal frames the review. Uncertainty: Evidence coverage is bounded. What would change the view: New governed evidence that changes the signal."
+          "text": "Observation: The fictional TEST report carries a manager-and-issuer concentration signal above the clear threshold [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Public-equity weight is 42.0% in the TEST evidence [S2]. Why it matters: This measure anchors the executive view. Uncertainty: The fixture is deliberately compact. What would change the view: A refreshed source with a materially different value."
+          "text": "Observation: Public-equity weight is 42.0% in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Largest concentration is 2.3% NAV in the TEST evidence [S3]. Why it matters: It identifies a monitoring priority. Uncertainty: Supporting detail is limited. What would change the view: Corroborated evidence that resolves or reverses the item."
+          "text": "Observation: Largest concentration is 2.3% NAV in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
@@ -433,7 +433,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Why this target",
-          "text": "Observation: The target moves 4.0 percentage points from active core to passive completion [S4][S8]. Why it matters: Manager concentration falls while equity exposure is preserved [S3]. Uncertainty: CMA consensus, macro regime, open findings and costs are incomplete [S9]. What would change the view: Completed context that weakens the concentration benefit [S8][S9]."
+          "text": "Observation: The target moves 4.0 percentage points from active core to passive completion [S4][S8]. Why it matters: Manager concentration falls while equity exposure remains preserved [S3]. Uncertainty: CMA, regime, findings and cost coverage remain incomplete [S9]. What would change the view: Completed records showing no measurable concentration reduction [S8][S9]."
         },
         {
           "type": "text",
@@ -445,6 +445,33 @@
     {
       "title": "Historical Performance and Attribution",
       "blocks": [
+        {
+          "type": "waterfall",
+          "title": "Governed attribution effects",
+          "items": [
+            {
+              "label": "Allocation",
+              "value": 0.1,
+              "display": "+0.10pp"
+            },
+            {
+              "label": "Selection",
+              "value": -0.62,
+              "display": "-0.62pp"
+            },
+            {
+              "label": "Interaction",
+              "value": -0.06,
+              "display": "-0.06pp"
+            },
+            {
+              "label": "Residual",
+              "value": -0.02,
+              "display": "-0.02pp"
+            }
+          ],
+          "note": "Returned attribution effects; residual is shown explicitly [S5]."
+        },
         {
           "type": "table",
           "title": "Standard periods",
@@ -511,6 +538,10 @@
           ]
         },
         {
+          "type": "text",
+          "text": "Governed attribution method and reconciliation metadata follow [S5]."
+        },
+        {
           "type": "kv",
           "rows": [
             [
@@ -540,6 +571,28 @@
     {
       "title": "Factor Exposures and Concentration",
       "blocks": [
+        {
+          "type": "bars",
+          "title": "Regional allocation",
+          "items": [
+            {
+              "label": "North America",
+              "value": 59.0,
+              "display": "59.0%"
+            },
+            {
+              "label": "Europe",
+              "value": 23.0,
+              "display": "23.0%"
+            },
+            {
+              "label": "Emerging markets",
+              "value": 18.0,
+              "display": "18.0%"
+            }
+          ],
+          "note": "Returned equity-sleeve regional allocation [S4]."
+        },
         {
           "type": "chart",
           "chart": {
@@ -636,7 +689,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Concentration remains near limits",
-          "text": "Observation: The largest manager and issuer look-through remain below but near governed limits [S3][S4][S7]. Why it matters: Completion exposure can reduce reliance on concentrated active mandates. Uncertainty: Issuer evidence is lagged and incomplete [S7]. What would change the view: Fresher look-through or manager data showing materially lower concentration [S4][S7]."
+          "text": "Observation: The largest manager and issuer look-through remain below but near governed limits [S3][S4][S7]. Why it matters: Completion exposure can reduce reliance on concentrated active mandates. Uncertainty: Issuer look-through evidence is lagged and incomplete [S7]. What would change the view: Refreshed holdings showing concentration safely below policy thresholds [S4][S7]."
         },
         {
           "type": "callout",
@@ -650,6 +703,23 @@
     {
       "title": "Forward Return and Risk",
       "blocks": [
+        {
+          "type": "bars",
+          "title": "Forward expected-return comparison",
+          "items": [
+            {
+              "label": "Current ? Expected return",
+              "value": 7.199999999999999,
+              "display": "7.2%"
+            },
+            {
+              "label": "Proposed ? Expected return",
+              "value": 7.1,
+              "display": "7.1%"
+            }
+          ],
+          "note": "Governed forward assumptions; assumptions, not forecasts [S6]."
+        },
         {
           "type": "kv",
           "rows": [
@@ -737,7 +807,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Risk falls modestly",
-          "text": "Observation: The proposed sleeve has slightly lower expected return, volatility and drawdown than the current sleeve [S6]. Why it matters: The completion shift trades little assumed return for lower modeled risk. Uncertainty: These are long-horizon assumptions. What would change the view: A governed context where the proposed sleeve no longer improves risk meaningfully [S6]."
+          "text": "Observation: The proposed sleeve has lower expected return, volatility and drawdown than the current sleeve [S6]. Why it matters: Completion trades little assumed return for lower modeled risk. Uncertainty: These long-horizon assumptions exclude realized implementation results. What would change the view: Refreshed results showing no measurable modeled-risk improvement [S6]."
         },
         {
           "type": "text",
@@ -747,9 +817,36 @@
       "kicker": "Governed assumptions frame tradeoffs rather than forecasts"
     },
     {
-      "title": "Manager Lineup",
-      "new_page": false,
+      "title": "Manager and Issuer Concentration",
+      "kicker": "Concentration limits shape manager implementation",
       "blocks": [
+        {
+          "type": "bars",
+          "title": "Largest governed concentrations",
+          "items": [
+            {
+              "label": "Largest manager",
+              "value": 13.0,
+              "display": "13.0% NAV"
+            },
+            {
+              "label": "Manager limit",
+              "value": 15.0,
+              "display": "15.0% NAV"
+            },
+            {
+              "label": "Largest issuer",
+              "value": 2.3,
+              "display": "2.3% NAV"
+            },
+            {
+              "label": "Issuer limit",
+              "value": 3.0,
+              "display": "3.0% NAV"
+            }
+          ],
+          "note": "Returned concentrations and governed limits [S3][S4][S7]."
+        },
         {
           "type": "table",
           "title": "Current and proposed roles",
@@ -787,12 +884,7 @@
               "Confirm vehicle terms"
             ]
           ]
-        }
-      ]
-    },
-    {
-      "title": "Issuer-Level Flags",
-      "blocks": [
+        },
         {
           "type": "table",
           "title": "Look-through flags",
@@ -828,6 +920,13 @@
           "tone": "watch",
           "title": "Form 13F caveat",
           "text": "Form 13F evidence is lagged by up to 45 days, covers long-only US-listed equity, excludes shorts, cash, non-US listings and private assets, and uses USD filing values that are not FX-converted against NAV [S7]."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Concentration shapes implementation",
+          "text": "Observation: The largest manager and issuer remain below but near governed limits [S3][S4][S7]. Why it matters: Completion reduces reliance on concentrated active mandates. Uncertainty: Issuer look-through evidence is lagged and incomplete [S7]. What would change the view: Refreshed manager records showing concentration safely below policy thresholds [S4][S7]."
         }
       ]
     },
@@ -1070,6 +1169,26 @@
               "name": "Scenario and cost evidence",
               "status": "unavailable",
               "note": "Not returned [S9]"
+            },
+            {
+              "name": "CMA consensus",
+              "status": "unavailable",
+              "note": "Optional context not returned [S6]"
+            },
+            {
+              "name": "Strategy Lab",
+              "status": "unavailable",
+              "note": "No selected series [S9]"
+            },
+            {
+              "name": "Manager diligence",
+              "status": "unavailable",
+              "note": "Optional diligence not returned [S8]"
+            },
+            {
+              "name": "Transaction costs",
+              "status": "unavailable",
+              "note": "Not returned [S9]"
             }
           ]
         }
@@ -1215,20 +1334,6 @@
               "Linked returns; Brinson-Fachler",
               "portfolio-attribution-v1",
               "Net; 1 bp tolerance"
-            ],
-            [
-              "S6",
-              "Forward statistics",
-              "Expected-statistics chart",
-              "chart-contract-v1",
-              "10-year assumptions"
-            ],
-            [
-              "S7",
-              "Issuer look-through",
-              "Portfolio-to-manager 13F join",
-              "cross-domain-v1",
-              "Lagged US-listed long-only"
             ]
           ]
         },

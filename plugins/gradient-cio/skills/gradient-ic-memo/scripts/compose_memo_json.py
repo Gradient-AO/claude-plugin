@@ -11,6 +11,7 @@ Exit code 0 = pass, 1 = invalid content, 2 = invalid invocation or unreadable in
 
 from __future__ import annotations
 
+import argparse
 import copy
 import json
 import math
@@ -21,15 +22,23 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+PLUGIN_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(PLUGIN_ROOT / "tools"))
 from gradient_report import md_document_to_report  # noqa: E402
+from compose_report import validate_report_budget  # noqa: E402
+from report_json_validator import print_quality_notes  # noqa: E402
 
 
 TAG = re.compile(r"\[S(\d+)\]")
 PLACEHOLDER = re.compile(r"<[^<>\n]{2,80}>")
 ALLOWED_TONES = {"info", "watch", "bad", "good"}
-ANALYSIS_SECTIONS = {"2", "3", "4", "5", "6", "7", "9", "10", "12", "13"}
-NEW_PAGE_NUMBERS = {"05", "07", "14"}
+ANALYSIS_SECTIONS = {
+    "2", "3", "4", "5", "6", "7", "8", "9", "10", "12", "13", "14"
+}
+EVIDENCE_FIRST_SECTIONS = {"3", "4", "8", "10", "11", "14"}
+PREFERRED_PAGE_NUMBERS = {"05"}
+FORCED_PAGE_NUMBERS = {"A"}
 PROHIBITED_ANALYSIS_ACTIONS = [
     r"\bwe recommend\b",
     r"\bthe committee should\b",
@@ -81,6 +90,7 @@ REQUIRED_SLOTS: dict[str, list[tuple[str, str]]] = {
         ("bars", "Gradient vs consensus gap (bps)"),
         ("tiles", "Forward context"),
     ],
+    "8": [("bars", "Scenario impacts (%)")],
     "9": [
         ("bars", "Liquidity tiers (% NAV)"),
         ("chart", "commitments-liquidity-scorecard"),
@@ -88,6 +98,10 @@ REQUIRED_SLOTS: dict[str, list[tuple[str, str]]] = {
         ("chart", "commitments-cashflow"),
     ],
     "10": [("findings", "Exposure-weighted diligence findings")],
+    "11": [
+        ("coverage", "GIPS review coverage"),
+        ("callout", "GIPS follow-ups"),
+    ],
     "12": [("tiles", "Macro readings")],
     "14": [("tiles", "Risk count by rating")],
 }
@@ -406,7 +420,11 @@ def compose(markdown: str, visuals: dict[str, Any], meta: dict[str, Any]) -> dic
     report = md_document_to_report(markdown, copy.deepcopy(meta))
     for section in report["sections"]:
         number = str(section.get("num", ""))
-        if number in NEW_PAGE_NUMBERS:
+        if number in PREFERRED_PAGE_NUMBERS:
+            section["page_break"] = "prefer"
+            section["new_page"] = True
+        elif number in FORCED_PAGE_NUMBERS:
+            section["page_break"] = "force"
             section["new_page"] = True
         if not number.isdigit():
             continue
@@ -434,6 +452,14 @@ def compose(markdown: str, visuals: dict[str, Any], meta: dict[str, Any]) -> dic
         ]
         if not markdown_blocks:
             section["blocks"] = visual.get("before", []) + visual.get("after", []) + analysis
+            continue
+        if str(int(number)) in EVIDENCE_FIRST_SECTIONS:
+            section["blocks"] = (
+                visual.get("before", [])
+                + markdown_blocks
+                + visual.get("after", [])
+                + analysis
+            )
             continue
         first = markdown_blocks[0]
         text = str(first.get("text", ""))
@@ -478,10 +504,17 @@ def write_atomic(path: Path, document: dict[str, Any]) -> None:
 
 def main() -> int:
     """Run the command-line composer."""
-    if len(sys.argv) != 5:
-        print(__doc__)
-        return 2
-    markdown_path, visuals_path, meta_path, output_path = map(Path, sys.argv[1:])
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("markdown", type=Path)
+    parser.add_argument("visuals", type=Path)
+    parser.add_argument("meta", type=Path)
+    parser.add_argument("output", type=Path)
+    parser.add_argument("--budget", type=Path)
+    args = parser.parse_args()
+    markdown_path = args.markdown
+    visuals_path = args.visuals
+    meta_path = args.meta
+    output_path = args.output
     try:
         markdown = markdown_path.read_text(encoding="utf-8")
         visuals = load_json(visuals_path)
@@ -498,12 +531,28 @@ def main() -> int:
         return 1
 
     report = compose(markdown, visuals, meta)
+    if args.budget:
+        try:
+            budget = load_json(args.budget)
+        except (OSError, json.JSONDecodeError) as error:
+            print(f"Unable to read layout budget: {error}")
+            return 2
+        if not isinstance(budget, dict):
+            print("FAIL — layout budget root must be an object")
+            return 1
+        errors = validate_report_budget(report, budget)
+        if errors:
+            print(f"FAIL — {len(errors)} content budget issue(s):")
+            for error in errors:
+                print(f"  - {error}")
+            return 1
     try:
         write_atomic(output_path, report)
     except OSError as error:
         print(f"Unable to write {output_path}: {error}")
         return 2
     print(f"PASS — wrote {output_path}")
+    print_quality_notes(report, structured=True)
     return 0
 
 

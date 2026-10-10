@@ -206,6 +206,8 @@ available — baseline shown">.
 ## 8. Stress Tests & Scenarios
 
 {sort: by portfolio impact ascending (worst first)}
+{The visual layer leads with signed `Scenario impacts (%)` bars in this same order, or a typed unavailable
+callout with that exact title, and ends with sourced Analysis.}
 
 ```
 | Scenario | Type | Portfolio impact | Policy impact | Liquidity coverage after | Source |
@@ -266,6 +268,8 @@ available — baseline shown">.
 
 {Paste sections from gradient-gips-asset-owner-review (total fund) and gradient-gips-manager-diligence (each manager ≥ 5% NAV or
 being hired), unchanged, ordered: total fund first, then managers by exposure descending.}
+{The visual layer is compact: `GIPS review coverage` followed by `GIPS follow-ups`; do not repeat the pasted
+handoff in a second long table.}
 
 ```
 ### 11.1 Total fund
@@ -319,6 +323,7 @@ being hired), unchanged, ordered: total fund first, then managers by exposure de
 ## 14. Risks & Mitigants
 
 {sort: High, then Medium, then Low; within a rating, by section order. Include every High/Medium GIPS finding.}
+{The visual layer leads with `Risk count by rating` and ends with sourced Analysis.}
 
 ```
 | # | Risk | Rating | Evidence | Mitigant | Owner |
@@ -338,6 +343,8 @@ being hired), unchanged, ordered: total fund first, then managers by exposure de
 ```
 
 ## 16. Approvals
+
+{Flow directly from Section 15 without a forced page break.}
 
 ```
 | Role | Name | Decision | Date |

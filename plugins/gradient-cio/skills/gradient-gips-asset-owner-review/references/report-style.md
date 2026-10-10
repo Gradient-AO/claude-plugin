@@ -1,9 +1,9 @@
 # Gradient report style (shared by every gradient-* client skill)
 
 Every Gradient client skill ends with a **branded PDF, editable PowerPoint or both** built from one validated
-report JSON. All reports share one look: dark cover with lime accents, an executive band, numbered sections,
-status chips and source tags. Do not hand-build HTML, Word or slides, and do not change colours or fonts per
-report.
+report JSON. `report_theme.py` is the versioned source of colors, Inter typography, dimensions, cover
+hierarchy, branding and output-specific header/footer contracts. Skills customize metadata and content only.
+Do not hand-build HTML, Word or slides, and do not change colors, fonts, margins or cover geometry per report.
 
 ## Build and choose the format
 
@@ -65,14 +65,19 @@ eight positive slices) ·
 `chart {chart:<one chart item returned by get_chart_data>}` renders from `render_hint`: line, bars, pie, or a
 formatted table fallback. Pass the returned chart object unchanged; do not remap chart IDs in a skill.
 
-Sections: `{"id"?, "title", "kicker"?, "num"?, "new_page"? (default false), "blocks": [...]}`.
-Use `new_page: true` only for major parts; the first appendix starts a new page automatically.
+Sections: `{"id"?, "title", "kicker"?, "num"?, "page_break"?: "auto"|"prefer"|"force", "blocks": [...]}`.
+Legacy `new_page: true` means `force`. Use `prefer` only where QA may remove the break after a sparse page;
+hard `force` breaks are never removed automatically. Use `force` only for stable section IDs listed in the
+effective layout budget's `forced_breaks`; generated appendices manage their own forced starts.
 The section with `id: "executive"` gets the executive band.
 For analytical sections, `kicker` is a message-first conclusion rather than a topic label. Place a visual
 (`chart`, `line`, `bars`, `pie`, `percentiles`, `waterfall`, `band`, `stacked`, `heat`, `timeline`, `tiles`, `coverage` or
 `findings`) or a typed
 `Not available — <reason>` callout before the first table. Do not place more than two tables consecutively,
 including inside either side of `two_col`.
+Generic `Visual evidence` placeholders and tables made entirely of N/A rows are invalid unavailable states.
+Let short closing sections flow together or pair them in `two_col`; move long checklists, rosters and returned
+row detail to an appendix with a summary visual in the body.
 
 Chip statuses: available, passed, aligned, compliant, met, satisfactory, corroborated, consistent (lime) ·
 degraded, advisory, partial, watch, partially met, needs review, satisfactory with follow-ups, medium (amber) ·
@@ -141,9 +146,13 @@ write a branding file in the working directory (logo path relative to it) and pa
 
 ## Check and deliver
 
-1. Rasterize with `pdftoppm -r 60 -png <file>.pdf page` and look at every page. Fix a page holding only a short
-   overflow tail, squashed charts (`narrow: true`), wrapped dates or IDs (align `n`). Re-render.
-   For PowerPoint, convert with LibreOffice and inspect the slide thumbnails; charts must remain editable.
+1. Run one QA command after composition:
+   `python scripts/qa_report.py report.json --format pdf|pptx|both --out "<output base>" --budget references/layout-budget.json`.
+   It renders the requested files, checks hard layout failures and soft page targets, converts PowerPoint
+   through LibreOffice for inspection, and writes output-specific `-pdf-contact-sheet.png` and
+   `-pptx-contact-sheet.png` files plus `-qa.json` structured diagnostics. Inspect each requested contact
+   sheet. Apply the command's prioritized repair levers, re-compose, and rerun until clean.
+   Charts in PowerPoint must remain editable.
 2. Spot-check every number against the saved tool or document evidence. Preserve returned formula identity,
    version, basis, units, coverage and unavailable reasons; do not recompute report values locally.
 3. File name base: `<Subject> - <Report type> <YYYY-MM-DD>` with `.pdf`, `.pptx`, or both.

@@ -12,15 +12,16 @@ keys at its root. Each placement supports ``before``, ``after`` and ``analysis``
 from __future__ import annotations
 
 import copy
+import argparse
 import json
 import os
 import re
-import sys
 import tempfile
 from pathlib import Path
 from typing import Any
 
 from gradient_report import md_document_to_report
+from report_layout import load_layout_budget, validate_report_budget
 
 
 SOURCE_TAG = re.compile(r"\[S(\d+)\]")
@@ -202,10 +203,17 @@ def write_atomic(path: Path, document: dict[str, Any]) -> None:
 
 def main() -> int:
     """Run the generic composer."""
-    if len(sys.argv) != 5:
-        print(__doc__)
-        return 2
-    markdown_path, visuals_path, meta_path, output_path = map(Path, sys.argv[1:])
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("markdown", type=Path)
+    parser.add_argument("visuals", type=Path)
+    parser.add_argument("meta", type=Path)
+    parser.add_argument("output", type=Path)
+    parser.add_argument("--budget", type=Path)
+    args = parser.parse_args()
+    markdown_path = args.markdown
+    visuals_path = args.visuals
+    meta_path = args.meta
+    output_path = args.output
     try:
         markdown = markdown_path.read_text(encoding="utf-8")
         visuals = json.loads(visuals_path.read_text(encoding="utf-8"))
@@ -219,7 +227,20 @@ def main() -> int:
         for error in errors:
             print(f"  - {error}")
         return 1
-    write_atomic(output_path, compose(markdown, visuals, meta))
+    report = compose(markdown, visuals, meta)
+    if args.budget:
+        try:
+            budget = load_layout_budget(args.budget)
+        except ValueError as error:
+            print(f"ERROR — unable to load layout budget: {error}")
+            return 2
+        budget_errors = validate_report_budget(report, budget)
+        if budget_errors:
+            print(f"FAIL — {len(budget_errors)} content budget issue(s)")
+            for error in budget_errors:
+                print(f"  - {error}")
+            return 1
+    write_atomic(output_path, report)
     print(f"PASS — wrote {output_path}")
     return 0
 

@@ -15,60 +15,52 @@ colours live only in the constants below. Do not edit copies of this file inside
 skill: change the canonical copy and re-sync every skill.
 """
 import base64, copy, datetime, html, json, math, os, re, shutil, subprocess, sys, tempfile
+from pathlib import Path
 
-# ---- brand constants (change only here) ------------------------------------
-INK = "#0D1117"; PANEL = "#161C24"; LIME = "#C6F432"; LIME_DK = "#4F6B00"
-INK2 = "#4A5563"; MUTED = "#8A94A1"; RULE = "#E3E7EC"; PAPER = "#FFFFFF"; WASH = "#F5F7F9"
-AMBER = "#F2A93B"; CORAL = "#FF6B5E"; SLATE = "#9AA5B1"
-BRAND = "GradientCIO.com"
+from report_theme import (
+    AMBER,
+    BRAND_NAME,
+    CORAL,
+    DARK_METER,
+    DARK_RULE,
+    FONT_FAMILY,
+    INK,
+    INK2,
+    LIME,
+    LIME_DK,
+    MUTED,
+    PANEL,
+    PAPER,
+    PDF_COVER_PADDING_IN,
+    PDF_PAGE_MARGINS_IN,
+    PIE,
+    POWERED_BY_MUTED,
+    PPTX_SLIDE_HEIGHT_IN,
+    PPTX_SLIDE_WIDTH_IN,
+    RULE,
+    SERIES,
+    SEVERITY_COLOR,
+    SIGNAL,
+    SLATE,
+    STATUS_COLOR,
+    TEXT_ON_DARK,
+    TEXT_ON_DARK_MUTED,
+    THEME_VERSION,
+    WASH,
+    default_confidentiality as theme_default_confidentiality,
+    normalize_branding,
+)
+from report_layout import (
+    effective_chart_mode,
+    prepare_report_for_render,
+)
+
+BRAND = BRAND_NAME
 VERSION = "1.2.0"
-SERIES = [INK, "#7FA600", AMBER, "#5B8DEF", CORAL, SLATE]  # line-chart series order
-PIE = [INK, "#7FA600", AMBER, "#5B8DEF", CORAL, "#3FB8AF", "#B58AE0", SLATE]  # pie slice order; max 8 slices
-SIGNAL = {  # level -> (default label, color, text-on-color); meta.signal.label overrides the label
-    # neutral / positive
-    "clear": ("No flags identified", LIME, INK),
-    "consistent": ("Consistent with filings", LIME, INK),
-    "compliant": ("Compliant", LIME, INK),
-    "satisfactory": ("Satisfactory", LIME, INK),
-    # caution
-    "watch": ("Watch", AMBER, INK),
-    "review": ("Needs review", AMBER, INK),
-    "follow_ups": ("Satisfactory with follow-ups", AMBER, INK),
-    # adverse
-    "elevated": ("Elevated", CORAL, INK),
-    "discrepancies": ("Discrepancies found", CORAL, INK),
-    "breach": ("Breach", CORAL, INK),
-    "material_concern": ("Material concern", CORAL, INK),
-    # no basis
-    "insufficient": ("Insufficient evidence", SLATE, INK),
-    "not_applicable": ("Not applicable", SLATE, INK),
-    "not_assessed": ("Not assessed", SLATE, INK),
-    # setup / readiness
-    "ready": ("Ready", LIME, INK),
-    "partial": ("Partly ready", AMBER, INK),
-    "not_ready": ("Not ready", CORAL, INK),
-}
 DEFAULT_HEADER_LABEL = "Gradient Report"
 DEFAULT_SIGNAL_TITLE = "Assessment"
 DEFAULT_METER_TITLE = "Evidence completeness"
-STATUS_COLOR = {"available": LIME, "used": LIME, "passed": LIME, "aligned": LIME,
-                "degraded": AMBER, "advisory": AMBER, "partial": AMBER, "watch": AMBER,
-                "corroborated": LIME, "consistent": LIME, "needs_review": AMBER, "needs review": AMBER, "timing": AMBER,
-                "contradicted": CORAL, "unverifiable": SLATE, "not_checkable": SLATE, "analyst": SLATE,
-                "unavailable": CORAL, "failed": CORAL, "missing": CORAL, "elevated": CORAL,
-                "not_applicable": SLATE, "not_run": SLATE, "not_assessed": SLATE,
-                # memo / IPS / GIPS status words (matched case-insensitively, whole cell)
-                "compliant": LIME, "met": LIME, "satisfactory": LIME, "pass": LIME, "approve": LIME,
-                "breach": CORAL, "not met": CORAL, "material concern": CORAL, "fail": CORAL,
-                "partially met": AMBER, "satisfactory with follow-ups": AMBER, "open": AMBER,
-                "not found": SLATE, "n/a": SLATE, "not assessed": SLATE, "closed": SLATE,
-                "high": CORAL, "medium": AMBER, "low": SLATE,
-                # monitor / setup words
-                "new": AMBER, "changed": AMBER, "resolved": LIME, "no change": SLATE, "unchanged": SLATE,
-                "ready": LIME, "connected": LIME, "entitled": LIME, "ok": LIME,
-                "not ready": CORAL, "not connected": CORAL, "error": CORAL, "not entitled": SLATE, "not licensed": SLATE,
-                "stale": AMBER, "conditional": AMBER}
-SEV_COLOR = {"high": CORAL, "medium": AMBER, "low": SLATE, "info": LIME}
+SEV_COLOR = SEVERITY_COLOR
 
 # ---- client branding ---------------------------------------------------------
 # branding.json (at the plugin root, or via --brand):
@@ -84,10 +76,12 @@ def load_branding(explicit=None):
              os.path.join(here, "..", "branding.json")]               # shared/ -> plugin root
     for c in cands:
         if c and os.path.isfile(c):
-            b = json.load(open(c, encoding="utf-8"))
+            with open(c, encoding="utf-8") as handle:
+                raw = json.load(handle)
+            b = normalize_branding(raw, base_directory=Path(c).resolve().parent)
             logo = b.get("client_logo")
             if logo:
-                lp = logo if os.path.isabs(logo) else os.path.join(os.path.dirname(os.path.abspath(c)), logo)
+                lp = str(logo)
                 if os.path.isfile(lp):
                     ext = os.path.splitext(lp)[1].lower().lstrip(".")
                     mime = {"svg": "image/svg+xml", "jpg": "image/jpeg", "jpeg": "image/jpeg"}.get(ext, "image/" + ext)
@@ -102,12 +96,10 @@ def client_name():
     return (BRANDING.get("client_name") or "").strip()
 
 def default_confidentiality():
-    if BRANDING.get("confidentiality"):
-        return BRANDING["confidentiality"]
-    return f"Confidential — prepared for {client_name()}" if client_name() else "Confidential — prepared for internal investment use"
+    return theme_default_confidentiality(BRANDING)
 
 def gradient_mark(size="12pt", on_dark=True):
-    return (f'<span style="font-weight:800;font-size:{size};letter-spacing:-.01em;color:{"#F2F5F7" if on_dark else INK}">'
+    return (f'<span style="font-weight:800;font-size:{size};letter-spacing:-.01em;color:{TEXT_ON_DARK if on_dark else INK}">'
             f'Gradient<span style="color:{LIME if on_dark else LIME_DK}">CIO</span></span>')
 
 def cover_brand(on_dark=True):
@@ -116,7 +108,7 @@ def cover_brand(on_dark=True):
         return f'<div class="brand">{gradient_mark("12pt", on_dark)}</div>'
     who = (f'<img src="{BRANDING["_logo_uri"]}" style="max-height:.42in;max-width:2.6in;display:block">' if BRANDING.get("_logo_uri")
            else f'<span style="font-weight:800;font-size:13pt;letter-spacing:-.01em">{esc(client_name())}</span>')
-    pb = (f'<span style="font-size:7pt;letter-spacing:.12em;text-transform:uppercase;color:#6E7A87;font-weight:700;margin-right:8px">Powered by</span>'
+    pb = (f'<span style="font-size:7pt;letter-spacing:.12em;text-transform:uppercase;color:{POWERED_BY_MUTED};font-weight:700;margin-right:8px">Powered by</span>'
           f'{gradient_mark("10pt", on_dark)}') if BRANDING.get("powered_by", True) else ""
     return f'<div class="brand" style="display:flex;justify-content:space-between;align-items:center">{who}<span>{pb}</span></div>'
 
@@ -193,12 +185,22 @@ def _display_rows(rows, cap=CHART_TABLE_ROW_CAP):
 
 def _chart_table(c, columns, cap=None):
     rows = list(c["rows"]) if cap is None else _display_rows(c["rows"], cap)[0]
-    total = len(c["rows"])
+    total = int(c.get("_preview_total") or len(c["rows"]))
     notes = []
-    if len(rows) < total:
+    if c.get("_appendix_reference"):
+        notes.append(
+            f"Showing {len(rows)} of {total} returned rows; all returned rows "
+            f"are in {c['_appendix_reference']}"
+        )
+    elif len(rows) < total:
         notes.append(f"Showing {len(rows)} of {total} rows")
-    if c.get("truncated"):
-        notes.append("Source output truncated")
+    if c.get("_chart_data_appendix") and c.get("truncated"):
+        notes.append(
+            "Connector output was truncated at source; this appendix contains "
+            "all returned rows, not the complete dataset"
+        )
+    elif c.get("_source_truncated") or c.get("truncated"):
+        notes.append("Connector output was truncated at source")
     return b_table({
         "title": c.get("title"),
         "columns": [column.get("title", column.get("key", "")) for column in columns],
@@ -227,6 +229,33 @@ def _chart_plot_value(column, value):
     """Convert stored values to the display scale used by chart axes."""
     return value * 100 if column.get("format") == "percentage" else value
 
+def _axis_currency_prefix(currency):
+    """Return a compact, familiar currency prefix for chart axes."""
+    return {
+        "USD": "$",
+        "EUR": "€",
+        "GBP": "£",
+        "JPY": "¥",
+    }.get(str(currency or "").upper(), f"{currency} " if currency else "")
+
+def _format_axis_value(value, decimals=1, suffix="", currency=None, value_format=None):
+    """Format an axis value compactly so labels remain readable and unclipped."""
+    amount = float(value)
+    scale, marker = 1.0, ""
+    absolute = abs(amount)
+    for threshold, divisor, label in (
+        (1_000_000_000, 1_000_000_000, "B"),
+        (1_000_000, 1_000_000, "M"),
+        (1_000, 1_000, "K"),
+    ):
+        if absolute >= threshold:
+            scale, marker = divisor, label
+            break
+    scaled = amount / scale
+    precision = 0 if marker and abs(scaled) >= 100 else max(0, int(decimals))
+    prefix = _axis_currency_prefix(currency) if value_format == "currency" else ""
+    return f"{prefix}{scaled:.{precision}f}{marker}{suffix}"
+
 def b_chart(b):
     """Render the generic wire-format chart block returned by get_chart_data."""
     c = b["chart"]
@@ -236,7 +265,7 @@ def b_chart(b):
     columns = c.get("columns") or []
     keys = [column.get("key") for column in columns]
     hint = c.get("render_hint") or {}
-    block = hint.get("block", "table")
+    block = effective_chart_mode(c)
     x_key = hint.get("x")
     y_keys = hint.get("y") or []
     if block == "line" and x_key in keys:
@@ -259,7 +288,9 @@ def b_chart(b):
             first_column = y_columns[0][1]
             suffix = "%" if first_column.get("format") == "percentage" else ""
             return b_line({"title": c.get("title"), "series": series, "y_suffix": suffix,
-                           "decimals": first_column.get("decimals") or 1})
+                           "decimals": first_column.get("decimals") or 1,
+                           "y_format": first_column.get("format"),
+                           "currency": c.get("currency")})
     unit_i = keys.index("unit") if "unit" in keys else None
     mixed_units = unit_i is not None and len({
         row[unit_i] for row in c["rows"] if len(row) > unit_i
@@ -279,7 +310,7 @@ def b_chart(b):
                     return b_bars({"title": c.get("title"), "items": items})
                 return _chart_table(c, columns)
             return b_bars({"title": c.get("title"), "items": items})
-    if block == "pie" and x_key in keys and y_keys and y_keys[0] in keys:
+    if block == "pie" and not mixed_units and x_key in keys and y_keys and y_keys[0] in keys:
         xi, yi = keys.index(x_key), keys.index(y_keys[0])
         items = [{"label": row[xi], "value": row[yi],
                   "display": _chart_format(columns[yi], row[yi], c.get("currency"))}
@@ -728,7 +759,6 @@ def b_line(b, W=640, H=None):
     """Line chart. series: [{name, points: [[date|category|x, value], ...]}]."""
     series = [sr for sr in b["series"] if sr.get("points")]
     H = H or b.get("height", 220)
-    pl, pr, pt, pb = 46, 16 + (8 if b.get("end_labels", True) else 0), 14, 26
     raw_xs = [p[0] for sr in series for p in sr["points"]]
     x_kind = _line_x_kind(raw_xs)
     category_labels = []
@@ -751,17 +781,46 @@ def b_line(b, W=640, H=None):
     pad = (y1 - y0) * 0.08 or abs(y1) * 0.1 or 1; y0 -= pad; y1 += pad
     if b.get("y_min") is not None: y0 = float(b["y_min"])
     if b.get("y_max") is not None: y1 = float(b["y_max"])
+    dec = b.get("decimals", 1); suf = b.get("y_suffix", "")
+    axis_labels = [
+        _format_axis_value(
+            y0 + (y1 - y0) * k / 4,
+            dec,
+            suf,
+            b.get("currency"),
+            b.get("y_format"),
+        )
+        for k in range(5)
+    ]
+    pl = max(46, 10 + max(_svg_text_width(label) for label in axis_labels))
+    use_legend = len(series) > 4
+    show_end_labels = (
+        b.get("end_labels", True)
+        and len(series) > 1
+        and not use_legend
+    )
+    pr, pt, pb = 16 + (8 if show_end_labels else 0), 24 if use_legend else 14, 26
     end_w = 0
-    if b.get("end_labels", True) and len(series) > 1:
+    if show_end_labels:
         end_w = 8 + 6.2 * max(len(sr.get("name", "")) for sr in series)
     iw = W - pl - pr - end_w; ih = H - pt - pb
     sx = lambda x: pl + iw * ((x - x0) / ((x1 - x0) or 1)); sy = lambda y: pt + ih * (1 - (y - y0) / ((y1 - y0) or 1))
-    dec = b.get("decimals", 1); suf = b.get("y_suffix", "")
     o = [_svg_start(W, H, b.get("title"), b.get("description") or b.get("note"))]
+    if use_legend:
+        legend_x = pl
+        for j, sr in enumerate(series):
+            col = sr.get("color") or SERIES[j % len(SERIES)]
+            name = str(sr.get("name", ""))
+            o.append(
+                f'<line x1="{legend_x:.1f}" x2="{legend_x+12:.1f}" y1="9" y2="9" '
+                f'stroke="{col}" stroke-width="2"/>'
+                f'<text x="{legend_x+16:.1f}" y="12" class="ax">{esc(name)}</text>'
+            )
+            legend_x += 24 + _svg_text_width(name)
     for k in range(5):
         yv = y0 + (y1 - y0) * k / 4; y = sy(yv)
         o.append(f'<line x1="{pl}" x2="{pl+iw:.1f}" y1="{y:.1f}" y2="{y:.1f}" stroke="{RULE}"/>'
-                 f'<text x="{pl-6}" y="{y+3:.1f}" text-anchor="end" class="ax">{yv:.{dec}f}{esc(suf)}</text>')
+                 f'<text x="{pl-6}" y="{y+3:.1f}" text-anchor="end" class="ax">{esc(axis_labels[k])}</text>')
     if y0 < 0 < y1:
         o.append(f'<line x1="{pl}" x2="{pl+iw:.1f}" y1="{sy(0):.1f}" y2="{sy(0):.1f}" stroke="{MUTED}" stroke-width="1"/>')
     if b.get("ref") is not None:
@@ -781,6 +840,25 @@ def b_line(b, W=640, H=None):
     for k, (xv, lab) in enumerate(zip(tx, labs)):
         anchor = "start" if k == 0 else ("end" if k == n - 1 else "middle")
         o.append(f'<text x="{sx(xv):.1f}" y="{H-8}" text-anchor="{anchor}" class="ax">{lab}</text>')
+    end_positions = []
+    if show_end_labels:
+        for j, sr in enumerate(series):
+            last = sorted((x_value(p[0]), float(p[1])) for p in sr["points"])[-1]
+            end_positions.append([j, sy(last[1])])
+        end_positions.sort(key=lambda item: item[1])
+        minimum_gap = 11
+        for index in range(1, len(end_positions)):
+            end_positions[index][1] = max(
+                end_positions[index][1],
+                end_positions[index - 1][1] + minimum_gap,
+            )
+        overflow = max(0, end_positions[-1][1] - (pt + ih))
+        for item in end_positions:
+            item[1] -= overflow
+        underflow = max(0, pt - end_positions[0][1])
+        for item in end_positions:
+            item[1] += underflow
+    end_y = {index: position for index, position in end_positions}
     for j, sr in enumerate(series):
         col = sr.get("color") or SERIES[j % len(SERIES)]
         pts = sorted((x_value(p[0]), float(p[1])) for p in sr["points"])
@@ -788,8 +866,14 @@ def b_line(b, W=640, H=None):
         o.append(f'<path d="{d}" fill="none" stroke="{col}" stroke-width="{2.2 if j == 0 else 1.8}" stroke-linejoin="round"/>')
         lx, ly = pts[-1]
         o.append(f'<circle cx="{sx(lx):.1f}" cy="{sy(ly):.1f}" r="3" fill="{col}"/>')
-        if end_w:
-            o.append(f'<text x="{sx(lx)+7:.1f}" y="{sy(ly)+3:.1f}" class="cl" fill="{col}" style="fill:{col};font-weight:650">{esc(sr.get("name",""))}</text>')
+        if show_end_labels:
+            label_y = end_y[j]
+            if abs(label_y - sy(ly)) > 1:
+                o.append(
+                    f'<line x1="{sx(lx)+3:.1f}" x2="{sx(lx)+7:.1f}" '
+                    f'y1="{sy(ly):.1f}" y2="{label_y:.1f}" stroke="{col}" stroke-width="1"/>'
+                )
+            o.append(f'<text x="{sx(lx)+9:.1f}" y="{label_y+3:.1f}" class="cl" fill="{col}" style="fill:{col};font-weight:650">{esc(sr.get("name",""))}</text>')
     o.append("</svg>")
     title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
     note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
@@ -908,6 +992,21 @@ def render_blocks(blocks):
         out.append(f'<div class="{classes}">{fn(b)}</div>')
     return "".join(out)
 
+def _is_short_tail(block):
+    """Return whether a trailing block should stay with its predecessor."""
+    if block.get("type") not in {"callout", "statement", "text"}:
+        return False
+    return len(str(block.get("text", "")).split()) <= 45
+
+def render_body_blocks(blocks):
+    """Render blocks while keeping a short final message off an orphan page."""
+    if len(blocks) >= 2 and _is_short_tail(blocks[-1]):
+        return (
+            render_blocks(blocks[:-2])
+            + f'<div class="keep">{render_blocks(blocks[-2:])}</div>'
+        )
+    return render_blocks(blocks)
+
 # ---- pages -----------------------------------------------------------------
 # Inter (OFL-1.1) ships with the plugin in assets/fonts/ and is embedded in the page, so rendering makes no
 # network requests. If the files are missing, the CSS falls back to Helvetica Neue / Arial.
@@ -977,7 +1076,7 @@ thead{{display:table-header-group}} tr{{break-inside:avoid}}
 .tile .tl{{font-size:6.8pt;letter-spacing:.08em;text-transform:uppercase;color:{INK2};font-weight:650}}
 .tile .tv{{font-size:17pt;font-weight:780;letter-spacing:-.02em;line-height:1.15;margin-top:3px}}
 .tile .ts{{font-size:7.2pt;color:{INK2};margin-top:1px;line-height:1.35}}
-.tile.dark{{background:{PANEL};color:#F2F5F7}} .tile.dark .tl{{color:#A7B1BC}} .tile.dark .tv{{color:{LIME}}} .tile.dark .ts{{color:#A7B1BC}}
+.tile.dark{{background:{PANEL};color:{TEXT_ON_DARK}}} .tile.dark .tl{{color:{TEXT_ON_DARK_MUTED}}} .tile.dark .tv{{color:{LIME}}} .tile.dark .ts{{color:{TEXT_ON_DARK_MUTED}}}
 .chart{{display:block}} .chart .cl{{font-size:10.5px;fill:{INK};font-family:GradientInter,Inter,Arial}} .chart .cv{{font-size:10.5px;font-weight:650;fill:{INK};font-family:GradientInter,Inter,Arial}}
 .chart .ax{{font-size:9px;fill:{MUTED};font-family:GradientInter,Inter,Arial}}
 .callout{{border-left:4px solid var(--c);background:{WASH};padding:10px 13px;border-radius:0 4px 4px 0}}
@@ -1005,11 +1104,11 @@ thead{{display:table-header-group}} tr{{break-inside:avoid}}
 .pre{{font-family:'DejaVu Sans Mono',Menlo,monospace;font-size:7.6pt;background:{WASH};padding:8px 10px;border-radius:4px;white-space:pre-wrap}}
 /* executive band */
 .exec.one{{grid-template-columns:1fr}}
-.exec{{display:grid;grid-template-columns:200px 1fr;gap:18px;background:{INK};color:#F2F5F7;border-radius:6px;padding:18px 20px;margin-bottom:14px}}
+.exec{{display:grid;grid-template-columns:200px 1fr;gap:18px;background:{INK};color:{TEXT_ON_DARK};border-radius:6px;padding:18px 20px;margin-bottom:14px}}
 .sig{{border-radius:4px;padding:12px 12px 10px;color:{INK}}} .sig .k{{font-size:6.8pt;letter-spacing:.1em;text-transform:uppercase;font-weight:750;opacity:.75}}
 .sig .v{{font-size:15pt;font-weight:800;line-height:1.1;margin-top:4px;letter-spacing:-.01em}}
-.meter{{margin-top:12px;font-size:7pt;color:#A7B1BC;letter-spacing:.06em;text-transform:uppercase;font-weight:650}}
-.meter .bars{{display:flex;gap:3px;margin-top:5px}} .meter .bars i{{flex:1;height:7px;border-radius:1px;background:#2B3440}} .meter .bars i.on{{background:{LIME}}}
+.meter{{margin-top:12px;font-size:7pt;color:{TEXT_ON_DARK_MUTED};letter-spacing:.06em;text-transform:uppercase;font-weight:650}}
+.meter .bars{{display:flex;gap:3px;margin-top:5px}} .meter .bars i{{flex:1;height:7px;border-radius:1px;background:{DARK_METER}}} .meter .bars i.on{{background:{LIME}}}
 .exec .rt{{font-size:7pt;letter-spacing:.1em;text-transform:uppercase;color:{LIME};font-weight:750;margin-bottom:5px}}
 .exec .rx{{font-size:9.6pt;line-height:1.5;color:#E3E8ED}} .exec .rx .src{{background:#26301A;color:{LIME}}}
 .stm{{border-left:6px solid var(--c);padding:6px 0 6px 16px}} .stm-t{{font-size:15pt;font-weight:750;line-height:1.25;letter-spacing:-.01em}} .stm-s{{color:{INK2};margin-top:4px}}
@@ -1030,23 +1129,23 @@ def cover_html(r):
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>{esc(m["title"])}</title>{FONT_LINK}<style>{CSS}
 @page{{size:{page_name};margin:0}}
 body{{background:{INK}}}
-.cvr{{width:{page_width};height:{page_height};background:{INK};color:#F2F5F7;position:relative;overflow:hidden;padding:0.8in 0.75in}}
+.cvr{{width:{page_width};height:{page_height};background:{INK};color:{TEXT_ON_DARK};position:relative;overflow:hidden;padding:{PDF_COVER_PADDING_IN["top"]}in {PDF_COVER_PADDING_IN["right"]}in {PDF_COVER_PADDING_IN["bottom"]}in {PDF_COVER_PADDING_IN["left"]}in}}
 .glow{{position:absolute;right:-2.2in;top:-2.2in;width:6.4in;height:6.4in;border-radius:50%;background:radial-gradient(circle,{LIME}33 0%,{LIME}10 40%,transparent 70%)}}
 .lines{{position:absolute;right:0;top:0;width:5in;height:11in;opacity:.18}}
 .brand{{font-weight:800;font-size:12pt;letter-spacing:-.01em}} .brand span{{color:{LIME}}}
 .eyebrow{{margin-top:2.25in;color:{LIME};font-weight:750;font-size:9pt;letter-spacing:.18em;text-transform:uppercase}}
 .h1{{font-size:38pt;font-weight:800;line-height:1.02;letter-spacing:-.035em;margin-top:14px;max-width:6.4in}}
-.h2{{font-size:15pt;font-weight:500;color:#A7B1BC;margin-top:12px;max-width:6.4in;line-height:1.3}}
+.h2{{font-size:15pt;font-weight:500;color:{TEXT_ON_DARK_MUTED};margin-top:12px;max-width:6.4in;line-height:1.3}}
 .rule{{width:1.1in;height:5px;background:{LIME};margin:28px 0 26px;border-radius:1px}}
 .facts{{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 22px;max-width:6.6in}}
-.fk{{font-size:6.8pt;letter-spacing:.12em;text-transform:uppercase;color:#6E7A87;font-weight:700}} .fv{{font-size:10.5pt;font-weight:600;margin-top:2px}}
+.fk{{font-size:6.8pt;letter-spacing:.12em;text-transform:uppercase;color:{POWERED_BY_MUTED};font-weight:700}} .fv{{font-size:10.5pt;font-weight:600;margin-top:2px}}
 .sigrow{{display:flex;gap:12px;margin-top:34px;align-items:stretch}}
 .sg{{background:{scol};color:{stxt};border-radius:5px;padding:12px 16px;min-width:2.3in}}
 .sg .k{{font-size:6.8pt;letter-spacing:.12em;text-transform:uppercase;font-weight:800;opacity:.7}} .sg .v{{font-size:16pt;font-weight:800;margin-top:3px}}
 .cm{{background:{PANEL};border-radius:5px;padding:12px 16px;min-width:2.3in}}
-.cm .k{{font-size:6.8pt;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:#6E7A87}} .cm .v{{font-size:16pt;font-weight:800;margin-top:3px}}
-.cm .bars{{display:flex;gap:3px;margin-top:7px}} .cm .bars i{{flex:1;height:6px;background:#2B3440;border-radius:1px}} .cm .bars i.on{{background:{LIME}}}
-.foot{{position:absolute;left:.75in;right:.75in;bottom:.6in;display:flex;justify-content:space-between;font-size:7.4pt;color:#6E7A87;border-top:1px solid #242C36;padding-top:10px}}
+.cm .k{{font-size:6.8pt;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:{POWERED_BY_MUTED}}} .cm .v{{font-size:16pt;font-weight:800;margin-top:3px}}
+.cm .bars{{display:flex;gap:3px;margin-top:7px}} .cm .bars i{{flex:1;height:6px;background:{DARK_METER};border-radius:1px}} .cm .bars i.on{{background:{LIME}}}
+.foot{{position:absolute;left:.75in;right:.75in;bottom:.6in;display:flex;justify-content:space-between;font-size:7.4pt;color:{POWERED_BY_MUTED};border-top:1px solid {DARK_RULE};padding-top:10px}}
 </style></head><body><div class="cvr">
 <div class="glow"></div>
 <svg class="lines" viewBox="0 0 500 1100" preserveAspectRatio="none">{"".join(f'<line x1="{60+i*36}" y1="0" x2="{-340+i*36}" y2="1100" stroke="{LIME}" stroke-width="1"/>' for i in range(14))}</svg>
@@ -1091,6 +1190,7 @@ def exec_band(r):
     return f"""<div class="exec"><div>{left}</div><div><div class="rt">{esc(label)}</div><div class="rx">{rich(e["bottom_line"])}</div></div></div>"""
 
 def body_html(r):
+    r = prepare_report_for_render(r)
     parts = []
     first_appendix = True
     for n, s in enumerate(r["sections"]):
@@ -1110,36 +1210,75 @@ def body_html(r):
         cls = "sec first" if n == 0 else ("sec new-page" if starts_page else "sec")
         blocks = s.get("blocks", [])
         if pre:
-            body = f'<div class="keep">{head}{pre}</div>' + render_blocks(blocks)
+            body = f'<div class="keep">{head}{pre}</div>' + render_body_blocks(blocks)
         elif blocks and blocks[0]["type"] == "markdown":
             pieces = md_to_html(blocks[0]["text"])
             first = pieces[0] if pieces else ""
             body = (f'<div class="keep">{head}<div class="md">{first}</div></div>'
-                    f'<div class="md">{"".join(pieces[1:])}</div>' + render_blocks(blocks[1:]))
-        elif blocks and blocks[0].get("type") in {"table", "heat"}:
+                    f'<div class="md">{"".join(pieces[1:])}</div>' + render_body_blocks(blocks[1:]))
+        elif blocks and (
+            blocks[0].get("type") in {"table", "heat"}
+            or (
+                blocks[0].get("type") == "chart"
+                and effective_chart_mode(blocks[0].get("chart") or {}) == "table"
+                and (blocks[0].get("chart") or {}).get("_chart_data_appendix")
+            )
+        ):
             first = copy.deepcopy(blocks[0])
-            rows = list(first.get("rows", []))
+            row_container = (
+                first.get("chart")
+                if first.get("type") == "chart"
+                else first
+            )
+            rows = list(row_container.get("rows", []))
             opening = copy.deepcopy(first)
-            opening["rows"] = rows[:3]
-            opening.pop("note", None)
+            opening_container = (
+                opening.get("chart")
+                if opening.get("type") == "chart"
+                else opening
+            )
+            opening_container["rows"] = rows[:3]
+            opening_container.pop("note", None)
+            opening_container.pop("truncated", None)
+            opening_container.pop("_source_truncated", None)
+            opening_container.pop("_chart_data_appendix", None)
             remainder = []
             if len(rows) > 3:
-                continuation = copy.deepcopy(first)
-                continuation["rows"] = rows[3:]
-                continuation.pop("title", None)
-                remainder = [continuation]
+                chunk_size = 18 if first.get("type") == "chart" else len(rows)
+                for start in range(3, len(rows), chunk_size):
+                    continuation = copy.deepcopy(first)
+                    continuation_container = (
+                        continuation.get("chart")
+                        if continuation.get("type") == "chart"
+                        else continuation
+                    )
+                    continuation_container["rows"] = rows[
+                        start : start + chunk_size
+                    ]
+                    continuation_container.pop("title", None)
+                    if start + chunk_size < len(rows):
+                        continuation_container.pop("truncated", None)
+                        continuation_container.pop("_source_truncated", None)
+                        continuation_container.pop("_chart_data_appendix", None)
+                    remainder.append(continuation)
             body = (
                 f'<div class="keep opening-table">{head}{render_blocks([opening])}</div>'
-                + render_blocks(remainder + blocks[1:])
+                + render_body_blocks(remainder + blocks[1:])
             )
         elif blocks:
-            body = f'<div class="keep">{head}{render_blocks(blocks[:1])}</div>' + render_blocks(blocks[1:])
+            if len(blocks) == 2 and _is_short_tail(blocks[-1]):
+                body = f'<div class="keep">{head}{render_blocks(blocks)}</div>'
+            else:
+                body = (
+                    f'<div class="keep">{head}{render_blocks(blocks[:1])}</div>'
+                    + render_body_blocks(blocks[1:])
+                )
         else:
             body = head
         parts.append(f'<section class="{cls}">{body}</section>')
     page_name, _, _ = page_spec(r["meta"])
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>{esc(r["meta"]["title"])}</title>{FONT_LINK}<style>{CSS}
-@page{{size:{page_name};margin:0.72in 0.75in 0.7in 0.75in}}</style></head>
+@page{{size:{page_name};margin:{PDF_PAGE_MARGINS_IN["top"]}in {PDF_PAGE_MARGINS_IN["right"]}in {PDF_PAGE_MARGINS_IN["bottom"]}in {PDF_PAGE_MARGINS_IN["left"]}in}}</style></head>
 <body>{"".join(parts)}</body></html>"""
 
 def header_footer(r):
@@ -1200,9 +1339,9 @@ def md_document_to_report(md, meta):
 
 # ---- deck (16:9 slides) ----------------------------------------------------------
 DECK_CSS = f"""
-@page{{size:13.333in 7.5in;margin:0}}
+@page{{size:{PPTX_SLIDE_WIDTH_IN}in {PPTX_SLIDE_HEIGHT_IN}in;margin:0}}
 body{{font-size:12pt;line-height:1.42}}
-.slide{{width:13.333in;height:7.5in;position:relative;overflow:hidden;padding:.55in .7in .9in;break-after:page;background:{PAPER}}}
+.slide{{width:{PPTX_SLIDE_WIDTH_IN}in;height:{PPTX_SLIDE_HEIGHT_IN}in;position:relative;overflow:hidden;padding:.55in .7in .9in;break-after:page;background:{PAPER}}}
 .slide:last-child{{break-after:auto}}
 .s-k{{font-size:8.5pt;font-weight:750;letter-spacing:.14em;text-transform:uppercase;color:{LIME_DK}}}
 .s-t{{font-size:25pt;font-weight:780;letter-spacing:-.02em;line-height:1.08;margin-top:5px;max-width:11.2in}}
@@ -1211,23 +1350,23 @@ body{{font-size:12pt;line-height:1.42}}
 .s-body .blk{{margin-bottom:16px}}
 .s-two{{display:grid;grid-template-columns:1fr 1fr;gap:34px}}
 .s-wide{{display:grid;grid-template-columns:1.55fr 1fr;gap:34px}}
-.s-take{{position:absolute;left:.7in;right:.7in;bottom:.62in;background:{INK};color:#F2F5F7;border-radius:5px;padding:10px 16px;display:flex;gap:14px;align-items:baseline;font-size:11pt}}
+.s-take{{position:absolute;left:.7in;right:.7in;bottom:.62in;background:{INK};color:{TEXT_ON_DARK};border-radius:5px;padding:10px 16px;display:flex;gap:14px;align-items:baseline;font-size:11pt}}
 .s-take b{{color:{LIME};font-size:8pt;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}}
 .s-f{{position:absolute;left:.7in;right:.7in;bottom:.25in;display:flex;justify-content:space-between;font-size:7.5pt;color:{MUTED}}}
 .slide .grid{{font-size:10.5pt}} .slide .grid td{{padding:8px 10px}} .slide .grid th{{padding:8px 10px}} .slide .kv th,.slide .kv td{{padding:8px 10px 8px 0}} .slide .grid th{{font-size:7.6pt}} .slide .tile .tv{{font-size:22pt}} .slide .tile .tl{{font-size:7.6pt}} .slide .tile .ts{{font-size:8.6pt}}
 .slide .btitle{{font-size:8.4pt}} .slide .note{{font-size:8pt}} .slide .bul li{{margin-bottom:7px}} .slide .fd{{font-size:10pt}}
 .slide .chart .cl,.slide .chart .cv{{font-size:13px}} .slide .chart .ax{{font-size:10.5px}}
-.slide.dark{{background:{INK};color:#F2F5F7}} .slide.dark .s-f{{color:#6E7A87}}
+.slide.dark{{background:{INK};color:{TEXT_ON_DARK}}} .slide.dark .s-f{{color:{POWERED_BY_MUTED}}}
 .div-k{{margin-top:1.9in;color:{LIME};font-weight:750;font-size:10pt;letter-spacing:.18em;text-transform:uppercase}}
 .div-t{{font-size:40pt;font-weight:800;letter-spacing:-.03em;line-height:1.04;margin-top:12px;max-width:10in}}
-.div-s{{font-size:15pt;color:#A7B1BC;margin-top:12px;max-width:9in}}
+.div-s{{font-size:15pt;color:{TEXT_ON_DARK_MUTED};margin-top:12px;max-width:9in}}
 .dcv .glow{{position:absolute;right:-2in;top:-2.4in;width:6.4in;height:6.4in;border-radius:50%;background:radial-gradient(circle,{LIME}33 0%,{LIME}10 40%,transparent 70%)}}
 .dcv .brand{{font-size:12pt}} .dcv .eyebrow{{margin-top:1.45in;color:{LIME};font-weight:750;font-size:10pt;letter-spacing:.18em;text-transform:uppercase}}
 .dcv .h1{{font-size:44pt;font-weight:800;line-height:1.02;letter-spacing:-.035em;margin-top:14px;max-width:10.5in}}
-.dcv .h2{{font-size:16pt;font-weight:500;color:#A7B1BC;margin-top:12px;max-width:10in}}
+.dcv .h2{{font-size:16pt;font-weight:500;color:{TEXT_ON_DARK_MUTED};margin-top:12px;max-width:10in}}
 .dcv .rule{{width:1.1in;height:5px;background:{LIME};margin:26px 0 24px;border-radius:1px}}
 .dcv .facts{{display:grid;grid-template-columns:repeat(4,auto);gap:14px 40px;justify-content:start}}
-.dcv .fk{{font-size:7.4pt;letter-spacing:.12em;text-transform:uppercase;color:#6E7A87;font-weight:700}} .dcv .fv{{font-size:12pt;font-weight:600;margin-top:2px}}
+.dcv .fk{{font-size:7.4pt;letter-spacing:.12em;text-transform:uppercase;color:{POWERED_BY_MUTED};font-weight:700}} .dcv .fv{{font-size:12pt;font-weight:600;margin-top:2px}}
 """
 
 def _deck_footer(m, n, total, dark=False):
@@ -1241,7 +1380,7 @@ def deck_html(d):
     facts = "".join(f'<div><div class="fk">{esc(k)}</div><div class="fv">{esc(v)}</div></div>' for k, v in m.get("cover_facts", []))
     lines = "".join(f'<line x1="{60+i*36}" y1="0" x2="{-340+i*36}" y2="750" stroke="{LIME}" stroke-width="1"/>' for i in range(16))
     out = [f"""<section class="slide dark dcv"><div class="glow"></div>
-<svg style="position:absolute;right:0;top:0;width:5.5in;height:7.5in;opacity:.18" viewBox="0 0 500 750" preserveAspectRatio="none">{lines}</svg>
+<svg style="position:absolute;right:0;top:0;width:5.5in;height:{PPTX_SLIDE_HEIGHT_IN}in;opacity:.18" viewBox="0 0 500 750" preserveAspectRatio="none">{lines}</svg>
 {cover_brand()}<div class="eyebrow">{esc(m.get("eyebrow", m.get("header_label", "")))}</div>
 <div class="h1">{esc(m["title"])}</div><div class="h2">{esc(m.get("subtitle", ""))}</div><div class="rule"></div>
 <div class="facts">{facts}</div>{_deck_footer(m, 1, total, True)}</section>"""]
@@ -1301,6 +1440,7 @@ def _postprocess_pdf(source, target, document, deck=False):
         "/Author": client_name() or "GradientCIO",
         "/Subject": str(meta.get("header_label", "Gradient report")),
         "/Creator": f"Gradient CIO report renderer {VERSION}",
+        "/GradientThemeVersion": THEME_VERSION,
     })
     writer._root_object.update({NameObject("/Lang"): TextStringObject("en-US")})
 
@@ -1337,6 +1477,7 @@ def _postprocess_pdf(source, target, document, deck=False):
 def render_deck(d, out, html_out=None):
     global DECK_MODE
     DECK_MODE = True
+    d = prepare_report_for_render(d)
     src = deck_html(d)
     if html_out:
         open(html_out, "w", encoding="utf-8").write(src)
@@ -1345,7 +1486,13 @@ def render_deck(d, out, html_out=None):
         br = _launch(p); pg = br.new_page(viewport={"width": 1280, "height": 720})
         _set(pg, src)
         over = pg.evaluate(OVERFLOW_JS)
-        pg.pdf(path=out, width="13.333in", height="7.5in", print_background=True, prefer_css_page_size=True)
+        pg.pdf(
+            path=out,
+            width=f"{PPTX_SLIDE_WIDTH_IN}in",
+            height=f"{PPTX_SLIDE_HEIGHT_IN}in",
+            print_background=True,
+            prefer_css_page_size=True,
+        )
         br.close()
     _postprocess_pdf(out, out, d, deck=True)
     print(f"Wrote {out}")
@@ -1377,9 +1524,8 @@ def main():
     else:
         r = json.load(open(a[0], encoding="utf-8")); out = a[1]
     html_out = a[a.index("--html") + 1] if "--html" in a else None
+    r = prepare_report_for_render(r)
     cov, body = cover_html(r), body_html(r)
-    if html_out:
-        open(html_out, "w", encoding="utf-8").write(body)
     from playwright.sync_api import sync_playwright
     tmp = tempfile.mkdtemp()
     p1, p2 = os.path.join(tmp, "cover.pdf"), os.path.join(tmp, "body.pdf")
@@ -1387,12 +1533,23 @@ def main():
     with sync_playwright() as p:
         br = _launch(p)
         pg = br.new_page()
-        for src, dst, opts in ((cov, p1, {}), (body, p2, {"display_header_footer": True, "header_template": hdr,
-                                                          "footer_template": ftr,
-                                                          "margin": {"top": "0.72in", "bottom": "0.7in", "left": "0.75in", "right": "0.75in"}})):
+        body_options = {
+            "display_header_footer": True,
+            "header_template": hdr,
+            "footer_template": ftr,
+            "margin": {
+                "top": f"{PDF_PAGE_MARGINS_IN['top']}in",
+                "bottom": f"{PDF_PAGE_MARGINS_IN['bottom']}in",
+                "left": f"{PDF_PAGE_MARGINS_IN['left']}in",
+                "right": f"{PDF_PAGE_MARGINS_IN['right']}in",
+            },
+        }
+        for src, dst, opts in ((cov, p1, {}), (body, p2, body_options)):
             _set(pg, src)
             pg.pdf(path=dst, format="Letter", print_background=True, prefer_css_page_size=True, **opts)
         br.close()
+    if html_out:
+        open(html_out, "w", encoding="utf-8").write(body)
     merged = os.path.join(tmp, "merged.pdf")
     if shutil.which("pdfunite"):
         subprocess.run(["pdfunite", p1, p2, merged], check=True)

@@ -3,6 +3,7 @@ name: gradient-gips-report-review
 description: "Produce a line-by-line GIPS report or advertisement review. Use for review this GIPS report, composite presentation, pooled fund report, or advertising guidelines. For general requirements use gradient-gips-standards."
 metadata:
   version: "1.2.0"
+  summary: "Review GIPS reports and advertisements line by line."
 ---
 
 # GIPS Report Review
@@ -12,7 +13,8 @@ standards for firms, line by line.
 
 Shared references live in `${CLAUDE_PLUGIN_ROOT}/skills/gradient-gips-standards/references/` (fallback:
 `../gradient-gips-standards/references/`). Always load `firms-report-checklist.md`, `output-format.md` and
-`report-layout.md`.
+`report-layout.md`; before drafting, also load this skill's
+`references/writing-standards.md` and `references/analysis-examples.md`.
 
 ## Step 1 — Classify the document
 
@@ -62,10 +64,9 @@ applies.
 Produce the authoritative markdown checklist and separate visual layer using `output-format.md` and
 `report-layout.md`, delivered as the branded PDF (see Output). Require evidence-status tiles, evidence
 coverage, findings and severity summaries, sourced analysis, and typed unavailable blocks where expected
-evidence is missing. When the review supports a manager evaluation, also produce the memo section and
-preserve it unchanged. When the user is the preparer (reviewing their own firm's report), replace the memo
-section with a prioritized follow-up list: Not met items first, then Partially met, then Not found. Analysis
-is non-prescriptive and may point only to those existing numbered requests.
+evidence is missing. This workflow always uses `## 3. Preparer Fix List`, ordered Not met, Partially met, then
+Not found. A manager-evaluation memo belongs in `gradient-gips-manager-diligence`, which uses the Performance
+Integrity Memo body. Analysis is non-prescriptive and may point only to existing numbered requests.
 
 State any item resting on a † (to-be-confirmed) reference line as "confirm against the standards" rather than
 a definitive deficiency.
@@ -82,5 +83,8 @@ both when it says `both` or `board pack`. Both formats must come from the same v
 memo handoff markdown remains unchanged through composition.
 
 ```text
-python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Report Review"
+python <gradient-gips-standards>/scripts/validate_gips_report.py review.md visuals.json meta.json
+python <gradient-gips-standards>/scripts/compose_gips_report.py review.md visuals.json meta.json report.json
+python <gradient-gips-standards>/scripts/validate_gips_report.py report.json
+python <this skill's directory>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Report Review" --budget <this skill's directory>/references/layout-budget.json
 ```

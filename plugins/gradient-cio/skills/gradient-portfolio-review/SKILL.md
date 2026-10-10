@@ -1,6 +1,8 @@
 ---
 name: gradient-portfolio-review
 description: "Create a branded brief or comprehensive portfolio monitoring report. Triggers: 'portfolio review', 'quarterly review', 'board performance report', 'policy ranges'. Hands decisions to gradient-ic-memo and focused attribution to its report skill."
+metadata:
+  summary: "Review portfolio performance, policy, exposures, risk and liquidity."
 ---
 
 # Portfolio review
@@ -58,8 +60,8 @@ continue. Entitlement errors are Not licensed, not outages.
 
 Use returned performance, governed policy status, exposure aggregates,
 fixed-income aggregates, attribution, liquidity, and forward-assumption bases
-without local recomputation. Read `references/writing-standards.md` only before
-drafting analysis.
+without local recomputation. Read `references/writing-standards.md` and
+`references/analysis-examples.md` only before drafting analysis.
 
 Signal: breach for any policy Breach; otherwise watch for policy Watch or
 underperformance over both 1Y and 3Y; otherwise satisfactory; insufficient
@@ -73,21 +75,22 @@ failure.
 
 ## 4. Build, validate, deliver
 
-Brief mode follows the fixed Summary, Performance, Allocation, Look-through,
-Risk, Outlook, Coverage, and Appendix sequence in the data/report references.
-For comprehensive mode read `references/review-template.md` immediately before
-building and follow its exact order. Keep unavailable sections.
+Read `references/review-template.md` immediately before building either mode.
+Brief mode follows its exact Summary, Performance, Allocation, Look-through,
+Risk, Outlook, Coverage, and applicable Appendix sequence. Comprehensive mode
+follows its exact comprehensive order. Keep unavailable sections.
 
 Read `references/report-style.md` only before JSON construction/rendering.
-Set root `review_mode`, validate until clean, then render the same JSON:
+Set root `review_mode`, then run these commands in order against the same JSON.
+Fix validation failures before running QA:
 
 ```text
 python <skill>/scripts/validate_review.py report.json
-python <skill>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Portfolio Review <YYYY-MM-DD>"
+python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Portfolio Review <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json
 ```
 
 PDF is default; explicit slide wording selects PPTX; `both`/`board pack`
-selects both. Inspect every output and reconcile figures to saved evidence.
+selects both. Inspect the QA contact sheet and reconcile figures to saved evidence.
 QA and fact-check failures block delivery. Return three lines (status, top
 item, watch count) plus files.
 

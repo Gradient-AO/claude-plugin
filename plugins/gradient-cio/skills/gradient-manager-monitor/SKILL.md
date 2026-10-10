@@ -1,6 +1,8 @@
 ---
 name: gradient-manager-monitor
 description: "Create a branded manager-roster digest. Triggers: 'weekly monitoring', 'what changed across managers', 'roster digest', 'any alerts'. Hands flagged subjects to ODD or DDQ reconciliation and can schedule read-only runs."
+metadata:
+  summary: "Summarize weekly manager changes, alerts, findings and upcoming reviews."
 ---
 
 # Manager monitoring digest
@@ -47,15 +49,18 @@ allowed action list. Every recommended action cites the triggering `[S#]`.
 ## 3. Build and deliver
 
 Read `references/monitoring-contract.md#report-and-delivery`, then
-`references/report-style.md` and `references/writing-standards.md` only while
-drafting/rendering. Keep the fixed five-section sequence, required tiles,
-visual-first analytical sections, coverage, method, and disclaimer.
+`references/report-style.md`, `references/writing-standards.md`, and
+`references/analysis-examples.md` only while drafting/rendering. Keep the exact
+active- or quiet-week section grammar,
+required tiles, governed visual slots, visual-first analytical sections,
+coverage, method, and disclaimer. A quiet week exists only when both
+current-period alerts and returned changes are zero; keep its review calendar.
 
 Validate and render the same report source:
 
 ```text
 python <skill>/scripts/validate_monitor_digest.py report.json
-python <skill>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Org> - Manager Monitoring Digest <date>"
+python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Org> - Manager Monitoring Digest <date>" --budget <skill>/references/layout-budget.json
 ```
 
 PDF is default; explicit slide wording selects PPTX; `both`/`board pack`

@@ -3,6 +3,7 @@ name: gradient-gips-manager-diligence
 description: "Produce a GIPS manager-diligence report. Use for verify GIPS claim, manager GIPS review, performance integrity, or GIPS DDQ. For a report or presentation line review use gradient-gips-report-review."
 metadata:
   version: "1.2.0"
+  summary: "Verify manager GIPS claims, verification and performance integrity."
 ---
 
 # GIPS Manager Diligence
@@ -14,7 +15,8 @@ Shared references live in `${CLAUDE_PLUGIN_ROOT}/skills/gradient-gips-standards/
 expanded, use `../gradient-gips-standards/references/` relative to this skill). Load `red-flags.md`,
 `verification.md` and `output-format.md` at the start; load `firms-report-checklist.md` when a GIPS Report is
 available and `advertising-and-marketing-rule.md` when marketing materials are in scope. Load
-`report-layout.md` before building the report.
+`report-layout.md`, this skill's `references/writing-standards.md`, and
+`references/analysis-examples.md` before building the report.
 
 ## Step 1 — Identify the subject and gather evidence
 
@@ -112,5 +114,8 @@ both when it says `both` or `board pack`. Both formats must come from the same v
 memo handoff markdown remains unchanged through composition.
 
 ```text
-python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Manager Diligence"
+python <gradient-gips-standards>/scripts/validate_gips_report.py review.md visuals.json meta.json
+python <gradient-gips-standards>/scripts/compose_gips_report.py review.md visuals.json meta.json report.json
+python <gradient-gips-standards>/scripts/validate_gips_report.py report.json
+python <this skill's directory>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Manager Diligence" --budget <this skill's directory>/references/layout-budget.json
 ```

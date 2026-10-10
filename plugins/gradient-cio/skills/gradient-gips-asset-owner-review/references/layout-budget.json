@@ -1,0 +1,28 @@
+{
+  "schema_version": 2,
+  "design_profile": "analytical",
+  "forced_breaks": ["appendix-a"],
+  "pdf": {
+    "target_pages": {"min": 4, "max": 7},
+    "hard_max_pages": 10,
+    "minimum_body_fill": 0.3,
+    "orphan_tail_max_fill": 0.2
+  },
+  "content": {
+    "defaults": {
+      "max_pages": 2,
+      "max_words": 500,
+      "max_body_table_rows": 24,
+      "max_visuals": 4
+    },
+    "sections": {
+      "executive": {"role": "summary", "requires_analysis": false, "max_visuals": 1},
+      "findings": {"role": "analytical", "requires_analysis": true, "max_visuals": 3},
+      "oversight-summary": {"role": "analytical", "requires_analysis": false, "max_visuals": 1},
+      "follow-up-requests": {"role": "list", "requires_analysis": false, "max_visuals": 0},
+      "appendix-a": {"role": "appendix", "requires_analysis": false, "max_pages": 3, "max_visuals": 0},
+      "appendix-b": {"role": "appendix", "requires_analysis": false, "max_visuals": 0},
+      "appendix-c": {"role": "appendix", "requires_analysis": false, "max_visuals": 0}
+    }
+  }
+}

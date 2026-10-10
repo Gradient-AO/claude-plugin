@@ -19,15 +19,30 @@ from pathlib import Path
 from typing import Any
 
 
+PLUGIN_ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(PLUGIN_ROOT / "tools"))
+
+from report_json_validator import print_quality_notes  # noqa: E402
+
+
 SCHEMA_VERSION = "1.0"
-REQUIRED_HEADINGS = [
-    "1. Summary",
-    "2. Performance Integrity & GIPS",
-    "3. Follow-up Requests",
-    "Appendix A — Findings Checklist",
-    "Appendix B — Sources",
-    "Appendix C — Method & Disclaimer",
-]
+WORKFLOW_CONTRACTS = {
+    "GIPS Manager Diligence": (
+        "3. Performance Integrity Memo",
+        "performance-integrity-memo",
+    ),
+    "GIPS Report Review": ("3. Preparer Fix List", "preparer-fix-list"),
+    "GIPS Asset Owner Review": ("3. Oversight Summary", "oversight-summary"),
+    "GIPS Policies Gap Check": ("3. Policy Gaps by Area", "policy-gaps-by-area"),
+}
+COMMON_SECTION_IDS = {
+    "1. Summary": "executive",
+    "2. Findings": "findings",
+    "4. Follow-up Requests": "follow-up-requests",
+    "Appendix A — Findings Checklist": "appendix-a",
+    "Appendix B — Sources": "appendix-b",
+    "Appendix C — Method & Disclaimer": "appendix-c",
+}
 TILE_LABELS = ["Met", "Partially met", "Not met", "Not found"]
 TILE_TONES = {
     "Met": "good",
@@ -67,6 +82,42 @@ ANALYSIS_LABELS = [
     "**Uncertainty:**",
     "**What would change the view:**",
 ]
+
+
+def workflow_contract(markdown: str) -> tuple[list[str], list[str], list[str]]:
+    """Return exact headings and stable section IDs for the named workflow."""
+    title_match = re.search(r"^#\s+(.+)$", markdown, re.MULTILINE)
+    title = title_match.group(1).strip() if title_match else ""
+    matches = [
+        (review_type, body)
+        for review_type, body in WORKFLOW_CONTRACTS.items()
+        if title.endswith(review_type)
+    ]
+    if len(matches) != 1:
+        return [], [], [
+            "markdown title must end with exactly one supported GIPS review type: "
+            + ", ".join(WORKFLOW_CONTRACTS)
+        ]
+    _, (body_heading, body_id) = matches[0]
+    headings = [
+        "1. Summary",
+        "2. Findings",
+        body_heading,
+        "4. Follow-up Requests",
+        "Appendix A — Findings Checklist",
+        "Appendix B — Sources",
+        "Appendix C — Method & Disclaimer",
+    ]
+    ids = [
+        "executive",
+        "findings",
+        body_id,
+        "follow-up-requests",
+        "appendix-a",
+        "appendix-b",
+        "appendix-c",
+    ]
+    return headings, ids, []
 PRESCRIPTIVE_PATTERNS = [
     r"\bwe recommend\b",
     r"\brecommend(?:ed|ation|ations)?\b",
@@ -187,7 +238,7 @@ def follow_up_numbers(markdown: str) -> list[int]:
     return [
         int(match.group(1))
         for match in re.finditer(
-            r"^\s*(\d+)\.\s+\S", sections.get("3. Follow-up Requests", ""), re.MULTILINE
+            r"^\s*(\d+)\.\s+\S", sections.get("4. Follow-up Requests", ""), re.MULTILINE
         )
     ]
 
@@ -355,6 +406,13 @@ def validate_visuals(
     if not isinstance(sections, dict):
         return errors + ["visuals.sections must be an object keyed by markdown heading"]
     headings, markdown_bodies = markdown_sections(markdown)
+    expected_headings, _, contract_errors = workflow_contract(markdown)
+    errors.extend(contract_errors)
+    if expected_headings and list(sections) != expected_headings:
+        errors.append(
+            "visuals.sections keys must exactly match the markdown section order: "
+            + ", ".join(expected_headings)
+        )
     for heading, placement in sections.items():
         if heading not in headings:
             errors.append(f"visuals section does not match a markdown heading: {heading!r}")
@@ -371,6 +429,62 @@ def validate_visuals(
                 errors.append(f"visuals.sections[{heading!r}] must include {side!r}")
             elif not isinstance(placement[side], list):
                 errors.append(f"visuals.sections[{heading!r}].{side} must be an array")
+
+    if expected_headings:
+        body_heading = expected_headings[2]
+
+        def placed(heading: str, side: str) -> list[dict[str, Any]]:
+            placement = sections.get(heading)
+            values = placement.get(side) if isinstance(placement, dict) else None
+            return [value for value in values if isinstance(value, dict)] if isinstance(values, list) else []
+
+        summary_before = placed("1. Summary", "before")
+        summary_after = placed("1. Summary", "after")
+        if len(summary_before) != 1 or summary_before[0].get("type") != "coverage":
+            errors.append("1. Summary before slot must contain exactly one coverage block")
+        if not 3 <= len(summary_after) <= 5 or any(
+            block.get("role") != "key_judgment" for block in summary_after
+        ):
+            errors.append("1. Summary after slot must contain exactly 3–5 key-judgment callouts")
+
+        findings_before = placed("2. Findings", "before")
+        findings_after = placed("2. Findings", "after")
+        if [block.get("type") for block in findings_before] != [
+            "stacked",
+            "bars",
+            "findings",
+        ]:
+            errors.append(
+                "2. Findings before slot must be stacked status, severity bars, then findings"
+            )
+        if not 1 <= len(findings_after) <= 3 or any(
+            block.get("role") != "analysis" for block in findings_after
+        ):
+            errors.append("2. Findings after slot must contain 1–3 analysis callouts")
+
+        body_before = placed(body_heading, "before")
+        if not body_before or body_before[0].get("type") not in {"heat", "unavailable"}:
+            errors.append(f"{body_heading} must lead with a heat or typed unavailable block")
+
+        follow_up_before = placed("4. Follow-up Requests", "before")
+        if len(follow_up_before) != 1 or follow_up_before[0].get("type") != "questions":
+            errors.append(
+                "4. Follow-up Requests before slot must contain exactly one questions block"
+            )
+        elif len(follow_up_before[0].get("items", [])) != len(
+            follow_up_numbers(markdown)
+        ):
+            errors.append(
+                "4. Follow-up Requests questions must reconcile one-for-one to numbered requests"
+            )
+
+        for appendix in (
+            "Appendix A — Findings Checklist",
+            "Appendix B — Sources",
+            "Appendix C — Method & Disclaimer",
+        ):
+            if placed(appendix, "before") or placed(appendix, "after"):
+                errors.append(f"{appendix} may contain markdown only")
 
     blocks: list[dict[str, Any]] = []
     for heading, placement in sections.items():
@@ -425,7 +539,8 @@ def validate_visuals(
         "stacked",
         "heat",
     }
-    for heading in ("2. Performance Integrity & GIPS", "Appendix A — Findings Checklist"):
+    body_heading = expected_headings[2] if expected_headings else ""
+    for heading in (body_heading,):
         if "|" not in markdown_bodies.get(heading, ""):
             continue
         placement = sections.get(heading, {})
@@ -550,9 +665,7 @@ def validate_visuals(
     requests = follow_up_numbers(markdown)
     if requests and requests != list(range(1, len(requests) + 1)):
         errors.append("follow-up requests must be consecutively numbered from 1")
-    key_judgments = [
-        block for block in blocks if block.get("role") == "key_judgment"
-    ]
+    key_judgments = [block for block in blocks if block.get("role") == "key_judgment"]
     if not 3 <= len(key_judgments) <= 5:
         errors.append(
             "visuals must contain 3–5 page-two callouts with role 'key_judgment'"
@@ -646,15 +759,13 @@ def validate_markdown(markdown: str) -> list[str]:
     if re.search(r"^#\s+\S", markdown, re.MULTILINE) is None:
         errors.append("markdown must contain one '# <Subject> — <Review type>' title")
     headings, sections = markdown_sections(markdown)
-    for heading in REQUIRED_HEADINGS:
-        count = headings.count(heading)
-        if count == 0:
-            errors.append(f"missing markdown heading: {heading}")
-        elif count > 1:
-            errors.append(f"markdown heading appears {count} times: {heading}")
-    positions = [headings.index(heading) for heading in REQUIRED_HEADINGS if heading in headings]
-    if positions != sorted(positions):
-        errors.append("required markdown headings are out of order")
+    expected_headings, _, contract_errors = workflow_contract(markdown)
+    errors.extend(contract_errors)
+    if expected_headings and headings != expected_headings:
+        errors.append(
+            "markdown headings must exactly match the workflow order: "
+            + ", ".join(expected_headings)
+        )
     if "Status" not in sections.get("Appendix A — Findings Checklist", ""):
         errors.append("Findings Checklist must contain a Status column")
     counts = checklist_counts(markdown)
@@ -804,11 +915,10 @@ def source_bundle_from_report(
                 restored["right"] = [restore(item) for item in restored.get("right", [])]
             return restored
 
-        if before or after:
-            visual_sections[heading] = {
-                "before": [restore(block) for block in before],
-                "after": [restore(block) for block in after],
-            }
+        visual_sections[heading] = {
+            "before": [restore(block) for block in before],
+            "after": [restore(block) for block in after],
+        }
 
     meta = report.get("meta")
     if not isinstance(meta, dict):
@@ -829,6 +939,36 @@ def source_bundle_from_report(
         "executive_tiles": tiles,
         "sections": visual_sections,
     }
+    expected_headings, expected_ids, contract_errors = workflow_contract(
+        "\n\n".join(markdown_parts)
+    )
+    errors.extend(contract_errors)
+    actual_headings = [
+        section.get("source_heading")
+        for section in sections
+        if isinstance(section, dict)
+    ]
+    actual_ids = [
+        section.get("id")
+        for section in sections
+        if isinstance(section, dict)
+    ]
+    if expected_headings and actual_headings != expected_headings:
+        errors.append("composed sections do not preserve the exact workflow heading order")
+    if expected_ids and actual_ids != expected_ids:
+        errors.append(
+            "composed section IDs must exactly match: " + ", ".join(expected_ids)
+        )
+    appendix_a = next(
+        (
+            section
+            for section in sections
+            if isinstance(section, dict) and section.get("id") == "appendix-a"
+        ),
+        None,
+    )
+    if not isinstance(appendix_a, dict) or appendix_a.get("new_page") is not True:
+        errors.append("appendix-a must carry the stable forced-break marker new_page=true")
     return "\n\n".join(markdown_parts), visuals, meta, errors
 
 
@@ -851,13 +991,35 @@ def print_result(errors: list[str], label: str) -> int:
     return 0
 
 
+def quality_document_from_visuals(visuals: dict[str, Any]) -> dict[str, Any]:
+    """Adapt source visual placements to the composed report section shape."""
+    source_sections = visuals.get("sections")
+    if not isinstance(source_sections, dict):
+        return {"sections": []}
+    sections: list[dict[str, Any]] = []
+    for title, placement in source_sections.items():
+        if not isinstance(placement, dict):
+            continue
+        before = placement.get("before")
+        after = placement.get("after")
+        blocks = (
+            (before if isinstance(before, list) else [])
+            + (after if isinstance(after, list) else [])
+        )
+        sections.append({"title": str(title), "blocks": blocks})
+    return {"sections": sections}
+
+
 def main() -> int:
     """Run the command-line validator."""
     if len(sys.argv) == 2:
         report, errors = read_json(Path(sys.argv[1]))
         if report is not None:
             errors.extend(validate_composed(report))
-        return print_result(errors, "composed GIPS report is valid")
+        exit_code = print_result(errors, "composed GIPS report is valid")
+        if report is not None:
+            print_quality_notes(report, structured=True)
+        return exit_code
     if len(sys.argv) == 4:
         markdown, markdown_errors = read_markdown(Path(sys.argv[1]))
         visuals, visual_errors = read_json(Path(sys.argv[2]))
@@ -865,7 +1027,13 @@ def main() -> int:
         errors = markdown_errors + visual_errors + meta_errors
         if markdown is not None and visuals is not None and meta is not None:
             errors.extend(validate_sources(markdown, visuals, meta))
-        return print_result(errors, "GIPS report sources are valid")
+        exit_code = print_result(errors, "GIPS report sources are valid")
+        if visuals is not None:
+            print_quality_notes(
+                quality_document_from_visuals(visuals),
+                structured=True,
+            )
+        return exit_code
     print(
         "usage: validate_gips_report.py <review.md> <visuals.json> <meta.json>\n"
         "   or: validate_gips_report.py <review.json>"

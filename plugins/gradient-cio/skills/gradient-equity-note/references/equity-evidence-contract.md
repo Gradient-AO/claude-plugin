@@ -10,7 +10,8 @@ ticker or resolve ambiguous/ineligible candidates. Optional peers are 2–8
 user-confirmed tickers; never choose peers silently.
 
 After capability checks call:
-1. `get_public_equity_fundamentals`, `view: fundamentals`.
+1. `get_public_equity_fundamentals`, `view: fundamentals`,
+   `filing_periods: 4`.
 2. Same tool, `view: change_report`.
 3. Same tool, `view: changes`, `filing_forms: ["10-K","10-Q"]`,
    `filing_periods: 2`.
@@ -83,16 +84,41 @@ not fund exposure.
 
 ## Report and delivery
 
-Sections: Executive summary; Fundamentals, filing changes and risk factors;
-Peers; Industry structure; Latest earnings release; Positioning and crowding;
-Who holds it on the roster; Appendix — sources and method. Keep missing
-sections. Follow `report-style.md` schemas and sourced-analysis requirements.
+Use this exact report order and evidence lead:
+1. `Executive summary`: exactly the four defined tiles, evidence coverage, and
+   sourced `Key judgment —` callouts.
+2. `Fundamentals trend`: lead with a line visual from the fundamentals view,
+   followed by sourced `Analysis —`.
+3. `Filing changes`: lead with a heat visual from `change_report` / `changes`,
+   followed by sourced `Analysis —`.
+4. `Risk factors`: lead with `findings` from `risk_findings`, followed by
+   sourced `Analysis —`.
+5. `Latest earnings release`: lead with bars or tiles versus the prior period
+   from `earnings_release`; include sourced `Analysis —` only when the returned
+   evidence supports a comparison.
+6. `Peers and dated valuation context`: lead with peer-comparison bars, state
+   the valuation date, use no valuation adjectives, and include sourced
+   `Analysis —`.
+7. `Industry structure`: lead with a stacked visual from
+   `industry_structure`, followed by sourced `Analysis —`.
+8. `Positioning and crowding`: lead with percentiles or bars from
+   `hedge_fund_crowding`, followed by sourced `Analysis —`.
+9. `Roster holders`: lead with bars and a supporting table when holdings are
+   available; otherwise use one compact typed-unavailable callout. Analysis is
+   not required.
+10. `Appendix A — Sources and method`: appendix role with the source table and
+    method notes.
+
+Keep every section, including typed unavailability where evidence is missing.
+Every analytical section leads with its governed visual before its first table.
+Do not use generic `Visual evidence` placeholders or duplicate `Analysis —`
+prefixes. Follow `report-style.md` schemas and sourced-analysis requirements.
 No price target, fair value, rating, buy/sell/hold, overweight/underweight,
 valuation adjective, or return forecast.
 
 Validate with `python <skill>/scripts/validate_equity_note.py report.json`.
-Render the same validated JSON:
-`python <skill>/scripts/render.py report.json --format <pdf|pptx|both> --out "<TICKER> - Equity Research Note <YYYY-MM-DD>"`
+Run the same validated JSON through the authoritative QA path:
+`python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<TICKER> - Equity Research Note <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json`.
 Inspect and fact-check every requested output; delivery is blocked until QA
 passes.
 

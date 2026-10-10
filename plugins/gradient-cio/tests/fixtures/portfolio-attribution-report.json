@@ -149,27 +149,26 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a Both lanes reconcile signal [S1]. Why it matters: The signal frames the review. Uncertainty: Evidence coverage is bounded. What would change the view: New governed evidence that changes the signal."
+          "text": "Observation: The fictional TEST report carries a reconciled-lanes signal versus the prior unresolved status [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Historical active return is -0.6pp in the TEST evidence [S2]. Why it matters: This measure anchors the executive view. Uncertainty: The fixture is deliberately compact. What would change the view: A refreshed source with a materially different value."
+          "text": "Observation: Historical active return is -0.6pp in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Ex ante residual is 0.0bp in the TEST evidence [S3]. Why it matters: It identifies a monitoring priority. Uncertainty: Supporting detail is limited. What would change the view: Corroborated evidence that resolves or reverses the item."
+          "text": "Observation: Ex ante residual is 0.0bp in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
     {
       "title": "Benchmark and Data Basis",
-      "new_page": true,
       "kicker": "The two attribution lanes use different evidence",
       "blocks": [
         {
@@ -259,7 +258,6 @@
     },
     {
       "title": "Historical Returns Context",
-      "new_page": true,
       "kicker": "Observed performance provides context, not causal attribution",
       "blocks": [
         {
@@ -393,13 +391,12 @@
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Relative returns trailed recently",
-          "text": "Observation: The portfolio trailed over QTD, YTD and 1Y [S3]. Why it matters: The pattern establishes context for attribution. Uncertainty: Return totals do not identify causes. What would change the view: A complete later period with sustained positive excess return."
+          "text": "Observation: The portfolio trailed over all three periods: QTD, YTD and 1Y [S3]. Why it matters: The pattern establishes context for attribution results. Uncertainty: Aggregate return coverage does not identify causal effects. What would change the view: A later full-period report showing sustained positive excess return."
         }
       ]
     },
     {
       "title": "Historical Attribution",
-      "new_page": true,
       "kicker": "Realized Brinson-Fachler effects with symmetric-Carino linking",
       "blocks": [
         {
@@ -559,13 +556,12 @@
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Equity selection drove detractor",
-          "text": "Observation: Public-equity selection is the largest detractor, and its resolved managers have one open finding [S4][S6]. Why it matters: The effect and diligence context concentrate oversight. Uncertainty: The balanced macro regime is contextual, not causal [S7]. What would change the view: Closed findings or refreshed attribution showing a different leading effect."
+          "text": "Observation: Public-equity selection is the largest detractor, and resolved managers have one open finding [S4][S6]. Why it matters: Effect and diligence evidence concentrate oversight there. Uncertainty: The balanced-regime model is contextual and not causal [S7]. What would change the view: Closed findings or refreshed results identifying another leading effect."
         }
       ]
     },
     {
       "title": "Governed Ex Ante Attribution",
-      "new_page": true,
       "kicker": "Single-period expected effects from persisted assumptions",
       "blocks": [
         {
@@ -717,6 +713,12 @@
           "note": "Inputs and effects are returned by the governed ex ante contract [S5]."
         },
         {
+          "type": "callout",
+          "tone": "info",
+          "title": "Reconciliation basis",
+          "text": "The reconciliation below preserves the returned expected-active-return, residual, method, horizon, source, and currency fields [S5]."
+        },
+        {
           "type": "kv",
           "title": "Ex ante reconciliation and method",
           "rows": [
@@ -767,13 +769,12 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Assumption lineage remains incomplete",
-          "text": "Observation: Ex ante active return is +0.4pp, but no assumption set or regime is linked [S5]. Why it matters: Persisted inputs cannot be tied to a named release. Uncertainty: Input dates may differ by segment. What would change the view: A named release and regime linked to every segment input."
+          "text": "Observation: Ex ante active return is +0.4pp, but no assumption set or regime is linked [S5]. Why it matters: Persisted inputs cannot be tied to a named release. Uncertainty: Input dates may differ by segment. What would change the view: A named release and regime record linked to every segment."
         }
       ]
     },
     {
       "title": "Historical-versus-Ex-Ante Scope and Comparison",
-      "new_page": true,
       "kicker": "Directional comparison with explicit basis separation",
       "blocks": [
         {
@@ -850,15 +851,33 @@
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Public equity changes sign",
-          "text": "Observation: Public equity is -0.6pp historically and +0.3pp ex ante [S4][S5]. Why it matters: The sign change separates realized experience from expectations. Uncertainty: The lanes use different periods and weight bases. What would change the view: Refreshed persisted expectations on the intended policy basis."
+          "text": "Observation: Public equity is -0.6pp historically and +0.3pp ex ante [S4][S5]. Why it matters: The sign change separates experience from expectations. Uncertainty: The lanes use different periods and weight bases. What would change the view: Refreshed persisted results on the intended policy basis."
         }
       ]
     },
     {
       "title": "Diagnostics and Limitations",
-      "new_page": true,
       "kicker": "Reconciliation, coverage and model boundaries",
       "blocks": [
+        {
+          "type": "bars",
+          "title": "Residual vs tolerance (bp)",
+          "all_accent": false,
+          "items": [
+            {
+              "label": "Historical",
+              "value": 0.0,
+              "display": "0.0 bp",
+              "note": "Tolerance 0.000001 bp [S4]"
+            },
+            {
+              "label": "Ex ante",
+              "value": 0.0,
+              "display": "0.0 bp",
+              "note": "Tolerance 0.000001 bp [S5]"
+            }
+          ]
+        },
         {
           "type": "table",
           "title": "Reconciliation diagnostics",
@@ -917,7 +936,6 @@
     },
     {
       "title": "Coverage",
-      "new_page": true,
       "kicker": "Availability of every expected source",
       "blocks": [
         {
@@ -965,7 +983,6 @@
     {
       "title": "Appendix A — Sources",
       "num": "A",
-      "new_page": true,
       "blocks": [
         {
           "type": "table",
@@ -1088,7 +1105,6 @@
     {
       "title": "Appendix B — Server Metric Methods and Disclosures",
       "num": "B",
-      "new_page": true,
       "blocks": [
         {
           "type": "table",

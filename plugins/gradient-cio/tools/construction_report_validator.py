@@ -19,6 +19,7 @@ from report_json_validator import (
     collect_strings,
     direct_block_objects,
     load_json,
+    print_quality_notes,
     section_objects,
     validate_report,
 )
@@ -112,8 +113,8 @@ CONTRACTS = {
                 "Executive Decision",
                 "Mandate and Construction Objective",
                 "Current Private Markets Portfolio",
-                "Historical Performance and Attribution",
                 "Target Portfolio Structure",
+                "Historical Performance and Attribution",
                 "Forward Return and Risk",
                 "Commitments, Pacing and Cash Flow",
                 "Liquidity and Denominator Risk",
@@ -140,6 +141,11 @@ CONTRACTS = {
                     r"Current Private Markets Portfolio",
                     CONSTRUCTION_VISUALS,
                     "current-allocation visual",
+                ),
+                SlotRule(
+                    r"Historical Performance and Attribution",
+                    frozenset({"waterfall"}),
+                    "governed attribution waterfall",
                 ),
                 SlotRule(r"Target Portfolio Structure", frozenset({"band"}), "target policy-band visual"),
                 SlotRule(r"Target Portfolio Structure", frozenset({"stacked"}), "current/target mix visual"),
@@ -199,6 +205,11 @@ CONTRACTS = {
                     CONSTRUCTION_VISUALS,
                     "current-allocation visual",
                 ),
+                SlotRule(
+                    r"Historical Performance and Attribution",
+                    frozenset({"waterfall"}),
+                    "governed attribution waterfall",
+                ),
                 SlotRule(r"Target Portfolio Structure", frozenset({"band"}), "target policy-band visual"),
                 SlotRule(r"Target Portfolio Structure", frozenset({"stacked"}), "current/target mix visual"),
                 SlotRule(
@@ -238,8 +249,7 @@ CONTRACTS = {
                 "Historical Performance and Attribution",
                 "Factor Exposures and Concentration",
                 "Forward Return and Risk",
-                "Manager Lineup",
-                "Issuer-Level Flags",
+                "Manager and Issuer Concentration",
                 "Scenarios and Robustness",
                 "Implementation Plan",
                 "Risks, Open Items and Approvals",
@@ -257,12 +267,18 @@ CONTRACTS = {
                 "Target Portfolio Structure",
                 "Factor Exposures and Concentration",
                 "Forward Return and Risk",
+                "Manager and Issuer Concentration",
             ),
             slots=(
                 SlotRule(
                     r"Current Global Public Equity Portfolio",
                     CONSTRUCTION_VISUALS,
                     "current-allocation visual",
+                ),
+                SlotRule(
+                    r"Historical Performance and Attribution",
+                    frozenset({"waterfall"}),
+                    "governed attribution waterfall",
                 ),
                 SlotRule(r"Target Portfolio Structure", frozenset({"band"}), "target policy-band visual"),
                 SlotRule(r"Target Portfolio Structure", frozenset({"stacked"}), "current/target mix visual"),
@@ -275,6 +291,11 @@ CONTRACTS = {
                     r"Forward Return and Risk",
                     CONSTRUCTION_VISUALS,
                     "forward risk/return visual",
+                ),
+                SlotRule(
+                    r"Manager and Issuer Concentration",
+                    frozenset({"bars"}),
+                    "manager/issuer concentration bars",
                 ),
                 SlotRule(r"Scenarios and Robustness", frozenset({"bars"}), "scenario bars"),
             ),
@@ -319,12 +340,17 @@ CONTRACTS = {
                     CONSTRUCTION_VISUALS,
                     "current-allocation visual",
                 ),
+                SlotRule(
+                    r"Historical Performance and Attribution",
+                    frozenset({"waterfall"}),
+                    "governed attribution waterfall",
+                ),
                 SlotRule(r"Target Strategy and Manager Structure", frozenset({"band"}), "target policy-band visual"),
                 SlotRule(r"Target Strategy and Manager Structure", frozenset({"stacked"}), "current/target mix visual"),
                 SlotRule(
                     r"Factor, Currency and Concentration Evidence",
-                    CONSTRUCTION_VISUALS,
-                    "factor/concentration visual",
+                    frozenset({"heat"}),
+                    "strategy-correlation heat",
                 ),
                 SlotRule(
                     r"Forward Return and Risk",
@@ -383,6 +409,11 @@ CONTRACTS = {
                     r"Current Real Assets Portfolio",
                     CONSTRUCTION_VISUALS,
                     "current-allocation visual",
+                ),
+                SlotRule(
+                    r"Historical Performance and Attribution",
+                    frozenset({"waterfall"}),
+                    "governed attribution waterfall",
                 ),
                 SlotRule(r"Target Sub-Segment Structure", frozenset({"band"}), "target policy-band visual"),
                 SlotRule(r"Target Sub-Segment Structure", frozenset({"stacked"}), "current/target mix visual"),
@@ -499,6 +530,49 @@ def _validate_analysis_scope(
     return errors
 
 
+def _validate_named_visual_slot(
+    sections: list[dict[str, JsonValue]],
+    *,
+    section_title: str,
+    block_type: str,
+    title_pattern: str,
+    label: str,
+) -> list[str]:
+    """Require a specifically named lead visual or a typed unavailable substitute."""
+    section = _section(sections, section_title)
+    if section is None:
+        return []
+    top_level = direct_block_objects(section)
+    first_table = next(
+        (
+            index
+            for index, block in enumerate(top_level)
+            if block.get("type") == "table"
+        ),
+        len(top_level),
+    )
+    lead_blocks = top_level[:first_table]
+    if any(
+        block.get("type") == block_type
+        and re.search(title_pattern, str(block.get("title", "")), re.IGNORECASE)
+        for block in lead_blocks
+    ):
+        return []
+    if any(
+        block.get("type") in {"callout", "unavailable"}
+        and (
+            block.get("type") == "unavailable"
+            or TYPED_VISUAL_UNAVAILABLE_PATTERN.search(_text(block))
+        )
+        for block in lead_blocks
+    ):
+        return []
+    return [
+        f"{section_title} needs {label} or a typed unavailable block "
+        "before its first table"
+    ]
+
+
 def _validate_common_contract(
     root: dict[str, JsonValue],
     contract: ConstructionContract,
@@ -574,8 +648,29 @@ def _validate_mode_specific(
             errors.append(
                 "Rates and Credit Context must identify credit-spread evidence"
             )
+    elif mode == "private_markets":
+        errors.extend(
+            _validate_named_visual_slot(
+                sections,
+                section_title="Target Portfolio Structure",
+                block_type="stacked",
+                title_pattern=r"\bvintage",
+                label="vintage-year stacked visual",
+            )
+        )
     elif mode == "global_public_equity":
-        issuer = _text(_section(sections, "Issuer-Level Flags") or {})
+        errors.extend(
+            _validate_named_visual_slot(
+                sections,
+                section_title="Factor Exposures and Concentration",
+                block_type="bars",
+                title_pattern=r"\bregional\b",
+                label="regional allocation bars",
+            )
+        )
+        issuer = _text(
+            _section(sections, "Manager and Issuer Concentration") or {}
+        )
         for pattern in (
             r"\bbuy\b",
             r"\bsell\b",
@@ -598,6 +693,15 @@ def _validate_mode_specific(
                 "13F evidence requires the full lag, coverage and FX caveat"
             )
     elif mode == "marketable_alternatives":
+        errors.extend(
+            _validate_named_visual_slot(
+                sections,
+                section_title="Factor, Currency and Concentration Evidence",
+                block_type="heat",
+                title_pattern=r"\bstrategy.correlation\b",
+                label="strategy-correlation heat",
+            )
+        )
         liquidity = _text(
             _section(sections, "Liquidity, Redemption and Operational Terms") or {}
         )
@@ -607,6 +711,15 @@ def _validate_mode_specific(
                 "or its unavailable state"
             )
     elif mode == "real_assets":
+        errors.extend(
+            _validate_named_visual_slot(
+                sections,
+                section_title="Inflation, Commodity and Diversification Context",
+                block_type="tiles",
+                title_pattern=r"\binflation.sensitivity\b",
+                label="inflation-sensitivity tiles",
+            )
+        )
         context = _text(
             _section(
                 sections, "Inflation, Commodity and Diversification Context"
@@ -658,8 +771,20 @@ def run_construction_cli(argv: list[str], expected_mode: str | None = None) -> i
         print(f"FAIL — {name}: {len(errors)} issue(s)")
         for error in errors:
             print(f"  - {error}")
+        print_quality_notes(
+            document,
+            structured=(
+                contract.spec.require_analysis_structure
+                if contract is not None
+                else True
+            ),
+        )
         return 1
     print(f"PASS — {name} JSON contract is valid.")
+    print_quality_notes(
+        document,
+        structured=contract.spec.require_analysis_structure,
+    )
     return 0
 
 

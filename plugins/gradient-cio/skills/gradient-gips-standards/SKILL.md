@@ -3,6 +3,7 @@ name: gradient-gips-standards
 description: "Produce a sourced GIPS requirements briefing. Use for what does GIPS require, compliance statement, verification, required disclosures, or GIPS vs SEC Marketing Rule. For a document review use the matching gradient-gips-* skill."
 metadata:
   version: "1.1.0"
+  summary: "Answer GIPS requirements questions in a sourced briefing note."
 ---
 
 # GIPS Standards Reference
@@ -71,15 +72,14 @@ reports follow `references/report-layout.md`.
    October 2026", "confidentiality": "Prepared for <organization> internal use — not legal advice",
    "executive": {"label": "Short answer", "bottom_line": "<the answer in 2–3 sentences>"}}` (no signal).
 3. Write `visuals.json` as `{}` and preserve the markdown flow:
-   `python scripts/compose_report.py note.md visuals.json meta.json report.json`. Validate the composed
+   `python scripts/compose_report.py note.md visuals.json meta.json report.json --budget references/layout-budget.json`. Validate the composed
    `report.json` before rendering.
 4. Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select
    both when it says `both` or `board pack`. Both formats come from the same validated `report.json`.
-5. Render with
-   `python scripts/render.py report.json --format <pdf|pptx|both> --out "<Short title> - GIPS Briefing Note"`,
-   then run `python scripts/check_layout.py "<Short title> - GIPS Briefing Note.pdf" --min-pages 1
-   --max-pages 3` for PDF output. Inspect every requested output, repair and rerender any failed check, and
-   deliver. Style rules: `references/report-style.md`.
+5. Run `python scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Short title> - GIPS Briefing Note"
+   --budget references/layout-budget.json`. The soft target is 1–3 pages and the hard ceiling is 5. Inspect
+   the contact sheet, apply any specific repair levers, rerun until clean, and deliver. Style rules:
+   `references/report-style.md`.
 
 Review requests (a report, a manager, a policy manual) go to the workflow skills above, which deliver their
 own branded reviews.

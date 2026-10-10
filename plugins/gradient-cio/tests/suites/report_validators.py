@@ -212,7 +212,7 @@ def connector_cutover():
         invalid_cases.append(("unknown source tag", bad_tag))
 
         nonfinite_bar = json.loads(json.dumps(base_visuals))
-        nonfinite_bar["3"]["after"][0]["left"][0]["items"][0]["value"] = float("inf")
+        nonfinite_bar["3"]["before"][0]["left"][0]["items"][0]["value"] = float("inf")
         invalid_cases.append(("non-finite bar value", nonfinite_bar))
 
         decision_language = json.loads(json.dumps(base_visuals))
@@ -308,6 +308,94 @@ def connector_cutover():
                 validated_gips.returncode == 0,
                 f"composed GIPS {label} passes validate_gips_report.py",
             )
+            body_ids = {
+                "gips": "performance-integrity-memo",
+                "gips-report-review": "preparer-fix-list",
+                "gips-asset-owner-review": "oversight-summary",
+                "gips-policies-gap-check": "policy-gaps-by-area",
+            }
+            expected_ids = [
+                "executive",
+                "findings",
+                body_ids[prefix],
+                "follow-up-requests",
+                "appendix-a",
+                "appendix-b",
+                "appendix-c",
+            ]
+            skill_names = {
+                "gips": "gradient-gips-manager-diligence",
+                "gips-report-review": "gradient-gips-report-review",
+                "gips-asset-owner-review": "gradient-gips-asset-owner-review",
+                "gips-policies-gap-check": "gradient-gips-policies-gap-check",
+            }
+            skill_dir = ROOT / "skills" / skill_names[prefix]
+            budget = json.loads(
+                (skill_dir / "references" / "layout-budget.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            budget_sections = budget.get("content", {}).get("sections", {})
+            expected_roles = [
+                "summary",
+                "analytical",
+                "analytical",
+                "list",
+                "appendix",
+                "appendix",
+                "appendix",
+            ]
+            check(
+                budget.get("schema_version") == 2
+                and budget.get("forced_breaks") == ["appendix-a"]
+                and list(budget_sections) == expected_ids
+                and [
+                    budget_sections[section_id].get("role")
+                    for section_id in expected_ids
+                ]
+                == expected_roles
+                and [
+                    budget_sections[section_id].get("requires_analysis")
+                    for section_id in expected_ids
+                ]
+                == [False, True, False, False, False, False, False],
+                f"GIPS {label} budget retains exact stable IDs, roles and analysis flags",
+            )
+            skill_text = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
+            check(
+                "scripts/qa_report.py" in skill_text
+                and "--budget" in skill_text
+                and "/scripts/render.py report.json" not in skill_text,
+                f"GIPS {label} delivery uses validator and budgeted QA",
+            )
+            check(
+                [section.get("id") for section in composed_document.get("sections", [])]
+                == expected_ids
+                and next(
+                    section
+                    for section in composed_document.get("sections", [])
+                    if section.get("id") == "appendix-a"
+                ).get("new_page")
+                is True,
+                f"GIPS {label} retains exact stable section IDs and appendix break",
+            )
+            findings_blocks = next(
+                section
+                for section in composed_document.get("sections", [])
+                if section.get("id") == "findings"
+            ).get("blocks", [])
+            appendix_blocks = next(
+                section
+                for section in composed_document.get("sections", [])
+                if section.get("id") == "appendix-a"
+            ).get("blocks", [])
+            check(
+                [block.get("type") for block in findings_blocks[:3]]
+                == ["stacked", "bars", "findings"]
+                and len(appendix_blocks) == 1
+                and appendix_blocks[0].get("type") == "markdown",
+                f"GIPS {label} keeps findings visual-first and Appendix A checklist-only",
+            )
 
             expected_bodies = markdown_handoff_bodies(
                 markdown_path.read_text(encoding="utf-8")
@@ -345,7 +433,7 @@ def connector_cutover():
         invalid_cases = []
 
         missing_analysis = json.loads(json.dumps(base_visuals))
-        missing_analysis["sections"]["1. Summary"]["after"] = []
+        missing_analysis["sections"]["2. Findings"]["after"] = []
         invalid_cases.append(("missing sourced analysis", missing_analysis))
 
         bad_tag = json.loads(json.dumps(base_visuals))
@@ -353,7 +441,7 @@ def connector_cutover():
         invalid_cases.append(("unknown source tag", bad_tag))
 
         negative_severity = json.loads(json.dumps(base_visuals))
-        negative_severity["sections"]["Appendix A — Findings Checklist"]["before"][1][
+        negative_severity["sections"]["2. Findings"]["before"][1][
             "items"
         ][0]["value"] = -1
         invalid_cases.append(("negative severity count", negative_severity))
@@ -463,6 +551,94 @@ def connector_cutover():
             else ""
         ),
     )
+    check(
+        callable(review_callout) and callable(review_report),
+        "shared analysis-quality reviewer is importable",
+    )
+    if callable(review_callout) and callable(review_report):
+        strong_callout = (
+            "Observation: The TEST portfolio returned 8.4% versus 7.1% for its "
+            "benchmark [S2]. Why it matters: The 1.3-point lead supports continued "
+            "monitoring of current positioning. Uncertainty: The sample covers only "
+            "twelve months and may not persist. What would change the view: A "
+            "quarterly report showing underperformance below -1.0%."
+        )
+        check(
+            review_callout(
+                "Analysis — Relative results remain positive",
+                strong_callout,
+                structured=True,
+            )
+            == [],
+            "strong structured analysis callout produces zero quality notes",
+        )
+        strong_unstructured = (
+            "(TEST) Revenue rose 8.4% while operating margin fell from 18.2% "
+            "to 15.6% across the latest four filed quarters [S2]. The result "
+            "shows weaker conversion despite top-line growth, but one quarter "
+            "was revised and the filing does not isolate whether cost pressure "
+            "is temporary."
+        )
+        check(
+            review_callout(
+                "Analysis — Growth outpaced margin conversion",
+                strong_unstructured,
+                structured=False,
+            )
+            == [],
+            "strong unstructured analysis callout produces zero quality notes",
+        )
+
+        thin_review = json.loads(
+            (FIX / "portfolio-comprehensive.json").read_text(encoding="utf-8")
+        )
+        thin_section = next(
+            section
+            for section in thin_review["sections"]
+            if section["title"] == "Historical Returns"
+        )
+        thin_callout = next(
+            block
+            for block in thin_section["blocks"]
+            if block.get("role") == "analysis"
+        )
+        thin_callout["text"] = (
+            "Observation: Return was 8.4% [S2]. Why it matters: It frames the "
+            "review. Uncertainty: Coverage is limited. What would change the view: "
+            "A new report."
+        )
+        thin_notes = review_report(thin_review, structured=True)
+        thin_note_text = " ".join(thin_notes).casefold()
+        check(
+            bool(thin_notes)
+            and "35" in thin_note_text
+            and "why it matters" in thin_note_text
+            and (
+                "boilerplate" in thin_note_text
+                or "frames the review" in thin_note_text
+            ),
+            "thin boilerplate analysis produces length and specificity notes",
+        )
+        with tempfile.TemporaryDirectory() as quality_tmp:
+            thin_path = pathlib.Path(quality_tmp) / "thin-review.json"
+            thin_path.write_text(json.dumps(thin_review), encoding="utf-8")
+            thin_result = subprocess.run(
+                [
+                    sys.executable,
+                    str(PORTFOLIO_REVIEW_VALIDATOR),
+                    str(thin_path),
+                ],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+            thin_output = thin_result.stdout + thin_result.stderr
+            check(
+                thin_result.returncode == 0
+                and "Quality notes (advisory" in thin_output,
+                "quality notes remain advisory for an otherwise valid report",
+            )
     for label, validator, fixture in ANALYTICAL_REPORT_VALIDATORS:
         validated_report = subprocess.run(
             [sys.executable, str(validator), str(fixture)],
@@ -481,13 +657,247 @@ def connector_cutover():
             ),
         )
 
+    monitor_validator = next(
+        validator
+        for label, validator, _fixture in ANALYTICAL_REPORT_VALIDATORS
+        if label == "manager monitor"
+    )
+    monitor_fixture = json.loads((FIX / "digest.json").read_text(encoding="utf-8"))
+    monitor_sections = monitor_fixture["sections"]
+    check(
+        [section["id"] for section in monitor_sections]
+        == [
+            "executive",
+            "changes-alerts",
+            "review-calendar",
+            "coverage-freshness",
+            "sources-method",
+        ]
+        and [
+            block["type"] for block in monitor_sections[0]["blocks"][:2]
+        ]
+        == ["bars", "findings"]
+        and monitor_sections[1]["blocks"][0]["type"] == "two_col",
+        "manager-monitor fixture retains active-week IDs and evidence slots",
+    )
+    with tempfile.TemporaryDirectory() as monitor_tmp:
+        quiet = json.loads(json.dumps(monitor_fixture))
+        quiet["meta"]["signal"] = {"level": "clear", "label": "Quiet week"}
+        quiet["executive"]["bottom_line"] = (
+            "No current-period alerts or returned changes were identified in the "
+            "processed TEST window [S2] [S3]."
+        )
+        next(
+            tile
+            for tile in quiet["executive"]["tiles"]
+            if tile["label"] == "Changes since review"
+        ).update({"value": "0", "sub": "No returned changes [S2]", "tone": "good"})
+        quiet["sections"].pop(1)
+        quiet["sections"][0]["kicker"] = (
+            "No current-period alerts or returned changes require attention"
+        )
+        quiet["sections"][0]["blocks"][:2] = [
+            {
+                "type": "two_col",
+                "left": [
+                    {
+                        "type": "statement",
+                        "text": "Quiet week — no current-period alerts or returned changes [S2] [S3].",
+                        "sub": "The review calendar remains in force.",
+                        "tone": "good",
+                    }
+                ],
+                "right": [
+                    {
+                        "type": "coverage",
+                        "title": "Processed window",
+                        "items": [
+                            {
+                                "name": "Alerts and changes",
+                                "status": "available",
+                                "note": "Seven-day TEST window processed [S2] [S3]",
+                            }
+                        ],
+                    }
+                ],
+            }
+        ]
+        quiet_path = pathlib.Path(monitor_tmp) / "monitor-quiet-week.json"
+        quiet_path.write_text(json.dumps(quiet), encoding="utf-8")
+        quiet_result = subprocess.run(
+            [sys.executable, str(monitor_validator), str(quiet_path)],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        check(
+            quiet_result.returncode == 0,
+            "manager-monitor validator accepts deterministic quiet-week collapse"
+            + (
+                f": {(quiet_result.stderr or quiet_result.stdout).strip()}"
+                if quiet_result.returncode != 0
+                else ""
+            ),
+        )
+
+    odd_fixture = json.loads((FIX / "odd.json").read_text(encoding="utf-8"))
+    odd_sections = odd_fixture["sections"]
+    check(
+        [section["id"] for section in odd_sections]
+        == [
+            "executive",
+            "firm-profile-ownership",
+            "regulatory-conflicts-custody",
+            "peer-positioning",
+            "fund-operations-service-providers",
+            "reported-equity-holdings",
+            "monitoring-findings-ddq",
+            "follow-up-open-items",
+            "sources-method",
+        ]
+        and not any(
+            section.get("new_page") is True
+            or section.get("page_break") == "force"
+            for section in odd_sections
+        )
+        and "Visual evidence" not in json.dumps(odd_fixture),
+        "ODD fixture retains exact IDs without forced breaks or generic visuals",
+    )
+
+    ddq_validator = next(
+        validator
+        for label, validator, _fixture in ANALYTICAL_REPORT_VALIDATORS
+        if label == "DDQ reconciliation"
+    )
+    ddq_fixture = json.loads((FIX / "ddq.json").read_text(encoding="utf-8"))
+    ddq_sections = ddq_fixture["sections"]
+    check(
+        [(section["id"], section["title"]) for section in ddq_sections]
+        == [
+            ("executive", "Executive summary"),
+            ("discrepancies-follow-ups", "Discrepancies and follow-ups"),
+            ("firm-reconciliation", "Firm reconciliation"),
+            ("fund-reconciliation", "Fund reconciliation"),
+            ("coverage-scope", "Coverage and scope"),
+            ("sources-method", "Appendix — Sources and method"),
+        ],
+        "DDQ fixture retains exact schema-v2 section IDs and order",
+    )
+    ddq_executive = ddq_sections[0]
+    check(
+        len(ddq_fixture["executive"]["tiles"]) == 4
+        and 3
+        <= sum(
+            block.get("role") == "key_judgment"
+            for block in ddq_executive["blocks"]
+        )
+        <= 5,
+        "DDQ executive retains four tiles and 3–5 key judgments",
+    )
+    ddq_discrepancies = ddq_sections[1]["blocks"]
+    ddq_discrepancy_types = [block.get("type") for block in ddq_discrepancies]
+    check(
+        ddq_discrepancy_types[0] == "stacked"
+        and ddq_discrepancy_types.index("stacked")
+        < ddq_discrepancy_types.index("findings")
+        < ddq_discrepancy_types.index("questions")
+        and all(
+            not str(block.get("title", "")).startswith("Analysis — Analysis —")
+            for block in ddq_discrepancies
+        ),
+        "DDQ discrepancies lead with verdict mix before findings and questions",
+    )
+    ddq_firm_blocks = ddq_sections[2]["blocks"]
+    ddq_fund_blocks = ddq_sections[3]["blocks"]
+    check(
+        ddq_firm_blocks[0]["type"] == "heat"
+        and ddq_firm_blocks[1].get("role") == "analysis"
+        and ddq_fund_blocks[0]["type"] == "heat"
+        and ddq_fund_blocks[1].get("role") == "analysis",
+        "DDQ firm and compact fund sections are evidence-first",
+    )
+    ddq_fund_rows = sum(
+        len(block.get("rows", []))
+        for block in ddq_fund_blocks
+        if block.get("type") == "table"
+    )
+    check(
+        ddq_fund_rows <= 24
+        and [block.get("title") for block in ddq_fund_blocks if block.get("type") == "table"]
+        == ["Global Macro Fund III"],
+        "DDQ fixture exercises compact combined fund path",
+    )
+    ddq_closing = ddq_sections[4]["blocks"]
+    check(
+        len(ddq_closing) == 1
+        and ddq_closing[0]["type"] == "two_col"
+        and "Not available —" in ddq_closing[0]["right"][0]["text"],
+        "DDQ closing combines coverage with typed out-of-scope unavailability",
+    )
+    with tempfile.TemporaryDirectory() as ddq_tmp:
+        oversized = json.loads(json.dumps(ddq_fixture))
+        fund_table = next(
+            block
+            for block in oversized["sections"][3]["blocks"]
+            if block.get("type") == "table"
+        )
+        while len(fund_table["rows"]) <= 24:
+            fund_table["rows"].append(json.loads(json.dumps(fund_table["rows"][0])))
+        oversized_path = pathlib.Path(ddq_tmp) / "ddq-oversized-combined.json"
+        oversized_path.write_text(json.dumps(oversized), encoding="utf-8")
+        oversized_result = subprocess.run(
+            [sys.executable, str(ddq_validator), str(oversized_path)],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        check(
+            oversized_result.returncode == 1
+            and "above 24 rows" in (oversized_result.stdout + oversized_result.stderr),
+            "DDQ validator enforces per-fund split above 24 rows",
+        )
+        split_report = json.loads(json.dumps(ddq_fixture))
+        first_fund = split_report["sections"][3]
+        second_fund = json.loads(json.dumps(first_fund))
+        first_fund["title"] = "Fund reconciliation — Global Macro Fund III"
+        second_fund["id"] = "fund-reconciliation-example-credit-fund-test"
+        second_fund["title"] = "Fund reconciliation — Example Credit Fund (TEST)"
+        for section in (first_fund, second_fund):
+            table = next(
+                block
+                for block in section["blocks"]
+                if block.get("type") == "table"
+            )
+            table["rows"].append(json.loads(json.dumps(table["rows"][0])))
+        next(
+            block
+            for block in second_fund["blocks"]
+            if block.get("type") == "table"
+        )["title"] = "Example Credit Fund (TEST)"
+        split_report["sections"].insert(4, second_fund)
+        split_path = pathlib.Path(ddq_tmp) / "ddq-split-funds.json"
+        split_path.write_text(json.dumps(split_report), encoding="utf-8")
+        split_result = subprocess.run(
+            [sys.executable, str(ddq_validator), str(split_path)],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        check(
+            split_result.returncode == 0,
+            "DDQ validator accepts one analytical section per fund above 24 rows",
+        )
+
     with tempfile.TemporaryDirectory() as report_tmp:
         tmp_dir = pathlib.Path(report_tmp)
         equity_fixture = json.loads((FIX / "equity.json").read_text(encoding="utf-8"))
         fundamentals = next(
             section
             for section in equity_fixture["sections"]
-            if section["title"] == "Fundamentals, filing changes and risk factors"
+            if section["title"] == "Fundamentals trend"
         )
         analysis = next(
             block
@@ -500,17 +910,39 @@ def connector_cutover():
         missing_fundamentals = next(
             section
             for section in missing_analysis["sections"]
-            if section["title"] == "Fundamentals, filing changes and risk factors"
+            if section["title"] == "Fundamentals trend"
         )
         for block in missing_fundamentals["blocks"]:
             block.pop("role", None)
         malformed_reports.append(("missing analysis role", missing_analysis))
 
+        missing_earnings_analysis = json.loads(json.dumps(equity_fixture))
+        earnings_blocks = next(
+            section
+            for section in missing_earnings_analysis["sections"]
+            if section["title"] == "Latest earnings release"
+        )["blocks"]
+        next(
+            block for block in earnings_blocks if block.get("role") == "analysis"
+        ).pop("role")
+        malformed_reports.append(
+            ("missing evidence-backed earnings analysis", missing_earnings_analysis)
+        )
+
+        wrong_lead = json.loads(json.dumps(equity_fixture))
+        risk_blocks = next(
+            section
+            for section in wrong_lead["sections"]
+            if section["title"] == "Risk factors"
+        )["blocks"]
+        risk_blocks[0], risk_blocks[1] = risk_blocks[1], risk_blocks[0]
+        malformed_reports.append(("wrong risk-factor lead slot", wrong_lead))
+
         unknown_tag = json.loads(json.dumps(equity_fixture))
         unknown_fundamentals = next(
             section
             for section in unknown_tag["sections"]
-            if section["title"] == "Fundamentals, filing changes and risk factors"
+            if section["title"] == "Fundamentals trend"
         )
         unknown_analysis = next(
             block
@@ -524,7 +956,7 @@ def connector_cutover():
         prohibited_fundamentals = next(
             section
             for section in prohibited_action["sections"]
-            if section["title"] == "Fundamentals, filing changes and risk factors"
+            if section["title"] == "Fundamentals trend"
         )
         prohibited_analysis = next(
             block
@@ -562,6 +994,44 @@ def connector_cutover():
         check(
             analysis.get("role") == "analysis",
             "equity fixture retains its sourced analysis block",
+        )
+        check(
+            [section["title"] for section in equity_fixture["sections"]]
+            == [
+                "Executive summary",
+                "Fundamentals trend",
+                "Filing changes",
+                "Risk factors",
+                "Latest earnings release",
+                "Peers and dated valuation context",
+                "Industry structure",
+                "Positioning and crowding",
+                "Roster holders",
+                "Appendix A — Sources and method",
+            ],
+            "equity fixture retains the fixed evidence-first section order",
+        )
+        equity_lead_types = {
+            "Fundamentals trend": "line",
+            "Filing changes": "heat",
+            "Risk factors": "findings",
+            "Latest earnings release": "bars",
+            "Peers and dated valuation context": "bars",
+            "Industry structure": "stacked",
+            "Positioning and crowding": "bars",
+            "Roster holders": "callout",
+        }
+        check(
+            all(
+                next(
+                    section
+                    for section in equity_fixture["sections"]
+                    if section["title"] == title
+                )["blocks"][0]["type"]
+                == block_type
+                for title, block_type in equity_lead_types.items()
+            ),
+            "equity fixture leads each evidence section with its required slot",
         )
     validated_attribution = subprocess.run(
         [
@@ -741,6 +1211,273 @@ def connector_cutover():
             ),
         )
 
+    construction_expectations = {
+        "private-markets construction": {
+            "sections": [
+                "Executive Decision",
+                "Mandate and Construction Objective",
+                "Current Private Markets Portfolio",
+                "Target Portfolio Structure",
+                "Historical Performance and Attribution",
+                "Forward Return and Risk",
+                "Commitments, Pacing and Cash Flow",
+                "Liquidity and Denominator Risk",
+                "Diversification and Manager Diligence",
+                "Proposed Program and Implementation",
+                "Risks, Open Items and Approvals",
+                "Coverage",
+            ],
+            "roles": [
+                "summary", "reference", "reference", "analytical",
+                "reference", "analytical", "reference", "analytical",
+                "reference", "reference", "reference", "reference",
+            ],
+            "analysis": [
+                False,
+                False,
+                False,
+                True,
+                False,
+                True,
+                False,
+                True,
+                False,
+                False,
+                False,
+                False,
+            ],
+        },
+        "fixed-income construction": {
+            "sections": [
+                "Executive Decision",
+                "Mandate, Benchmark and Data Basis",
+                "Current Fixed Income Portfolio",
+                "Target Portfolio Structure",
+                "Historical Performance and Attribution",
+                "Rates and Credit Context",
+                "Forward Return and Risk",
+                "Policy Risk, Liquidity and Tradability",
+                "Scenarios and Robustness",
+                "Implementation Plan",
+                "Risks, Open Items and Approvals",
+                "Coverage",
+            ],
+            "roles": [
+                "summary", "reference", "reference", "analytical",
+                "reference", "analytical", "analytical", "reference",
+                "reference", "reference", "reference", "reference",
+            ],
+            "analysis": [
+                False,
+                False,
+                False,
+                True,
+                False,
+                True,
+                True,
+                False,
+                False,
+                False,
+                False,
+                False,
+            ],
+        },
+        "global-public-equity construction": {
+            "sections": [
+                "Executive Decision",
+                "Mandate, Benchmark and Data Basis",
+                "Current Global Public Equity Portfolio",
+                "Target Portfolio Structure",
+                "Historical Performance and Attribution",
+                "Factor Exposures and Concentration",
+                "Forward Return and Risk",
+                "Manager and Issuer Concentration",
+                "Scenarios and Robustness",
+                "Implementation Plan",
+                "Risks, Open Items and Approvals",
+                "Coverage",
+            ],
+            "roles": [
+                "summary", "reference", "reference", "analytical",
+                "reference", "analytical", "analytical", "analytical",
+                "reference", "reference", "reference", "reference",
+            ],
+            "analysis": [
+                False,
+                False,
+                False,
+                True,
+                False,
+                True,
+                True,
+                True,
+                False,
+                False,
+                False,
+                False,
+            ],
+        },
+        "marketable-alternatives construction": {
+            "sections": [
+                "Executive Decision",
+                "Mandate, Benchmark and Data Basis",
+                "Current Hedge Fund Portfolio",
+                "Target Strategy and Manager Structure",
+                "Historical Performance and Attribution",
+                "Factor, Currency and Concentration Evidence",
+                "Forward Return and Risk",
+                "Liquidity, Redemption and Operational Terms",
+                "Manager Lineup and Diligence",
+                "Scenarios and Robustness",
+                "Implementation Plan",
+                "Risks, Open Items and Approvals",
+                "Coverage",
+            ],
+            "roles": [
+                "summary", "reference", "reference", "analytical",
+                "reference", "analytical", "analytical", "reference",
+                "reference", "reference", "reference", "reference",
+                "reference",
+            ],
+            "analysis": [
+                False,
+                False,
+                False,
+                True,
+                False,
+                True,
+                True,
+                False,
+                False,
+                False,
+                False,
+                False,
+                False,
+            ],
+        },
+        "real-assets construction": {
+            "sections": [
+                "Executive Decision",
+                "Mandate, Inflation Objective and Data Basis",
+                "Current Real Assets Portfolio",
+                "Target Sub-Segment Structure",
+                "Historical Performance and Attribution",
+                "Inflation, Commodity and Diversification Context",
+                "Forward Return and Risk",
+                "Commitments, Liquidity and Valuation",
+                "Manager and Fund Diligence",
+                "Scenarios and Robustness",
+                "Implementation Plan",
+                "Risks, Open Items and Approvals",
+                "Coverage",
+            ],
+            "roles": [
+                "summary", "reference", "reference", "analytical",
+                "reference", "analytical", "analytical", "reference",
+                "reference", "reference", "reference", "reference",
+                "reference",
+            ],
+            "analysis": [
+                False,
+                False,
+                False,
+                True,
+                False,
+                True,
+                True,
+                False,
+                False,
+                False,
+                False,
+                False,
+                False,
+            ],
+        },
+    }
+    construction_skill_names = {
+        "private-markets construction":
+            "gradient-private-markets-portfolio-construction",
+        "fixed-income construction":
+            "gradient-fixed-income-portfolio-construction",
+        "global-public-equity construction":
+            "gradient-global-public-equity-portfolio-construction",
+        "marketable-alternatives construction":
+            "gradient-marketable-alternatives-portfolio-construction",
+        "real-assets construction":
+            "gradient-real-assets-portfolio-construction",
+    }
+    for label, _validator, fixture in CONSTRUCTION_VALIDATORS:
+        expected = construction_expectations[label]
+        document = json.loads(fixture.read_text(encoding="utf-8"))
+        body_sections = document["sections"][:-2]
+        check(
+            [section["title"] for section in body_sections]
+            == expected["sections"],
+            f"{label} fixture retains exact body-section order",
+        )
+        historical = next(
+            section
+            for section in body_sections
+            if section["title"] == "Historical Performance and Attribution"
+        )
+        current = body_sections[2]
+        check(
+            current["blocks"][0]["type"] != "table"
+            and historical["blocks"][0]["type"] == "waterfall",
+            f"{label} leads Current and Historical sections with governed visuals",
+        )
+        skill_dir = ROOT / "skills" / construction_skill_names[label]
+        budget = json.loads(
+            (skill_dir / "references" / "layout-budget.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        budget_sections = budget["sections"]
+        expected_keys = [
+            str(index) for index in range(1, len(expected["sections"]) + 1)
+        ]
+        check(
+            budget.get("schema_version") == 2
+            and list(budget_sections) == expected_keys
+            and [
+                budget_sections[key]["role"] for key in expected_keys
+            ] == expected["roles"]
+            and [
+                budget_sections[key]["requires_analysis"] for key in expected_keys
+            ] == expected["analysis"],
+            f"{label} budget retains exact ordered keys, roles and analysis flags",
+        )
+        skill_text = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
+        check(
+            skill_text.index(
+                "python scripts/validate_construction.py report.json"
+            )
+            < skill_text.index("python scripts/qa_report.py report.json")
+            and "--budget references/layout-budget.json" in skill_text
+            and "python scripts/render.py report.json" not in skill_text,
+            f"{label} delivery runs validator before budgeted QA",
+        )
+
+    renamed_construction_fixtures = [
+        FIX / "construction-marketable-alternatives.json",
+        FIX / "construction-real-assets.json",
+    ]
+    generate_examples_text = (
+        ROOT / "tools" / "generate_examples.py"
+    ).read_text(encoding="utf-8")
+    check(
+        all(path.exists() for path in renamed_construction_fixtures)
+        and all(path.name in generate_examples_text for path in renamed_construction_fixtures)
+        and all(
+            fixture == expected
+            for fixture, expected in zip(
+                [entry[2] for entry in CONSTRUCTION_VALIDATORS[-2:]],
+                renamed_construction_fixtures,
+            )
+        ),
+        "construction fixture paths use the canonical static names",
+    )
+
     def cloned_fixture(name):
         return json.loads((FIX / name).read_text(encoding="utf-8"))
 
@@ -798,6 +1535,77 @@ def connector_cutover():
             changed_action,
         )
     )
+
+    missing_historical_lead = cloned_fixture("construction-private-markets.json")
+    historical_blocks = report_section(
+        missing_historical_lead, "Historical Performance and Attribution"
+    )["blocks"]
+    historical_blocks[:] = [
+        block for block in historical_blocks if block.get("type") != "waterfall"
+    ]
+    contract_regressions.append(
+        (
+            "construction missing governed historical waterfall",
+            construction_validator,
+            missing_historical_lead,
+        )
+    )
+
+    missing_vintage = cloned_fixture("construction-private-markets.json")
+    vintage_blocks = report_section(
+        missing_vintage, "Target Portfolio Structure"
+    )["blocks"]
+    vintage_blocks[:] = [
+        block
+        for block in vintage_blocks
+        if "vintage" not in str(block.get("title", "")).lower()
+    ]
+    contract_regressions.append(
+        (
+            "private-markets construction missing vintage slot",
+            construction_validator,
+            missing_vintage,
+        )
+    )
+
+    specialized_visual_regressions = (
+        (
+            "global-equity construction missing regional bars",
+            CONSTRUCTION_VALIDATORS[2][1],
+            "construction-global-public-equity.json",
+            "Factor Exposures and Concentration",
+            "bars",
+        ),
+        (
+            "marketable-alternatives construction missing correlation heat",
+            CONSTRUCTION_VALIDATORS[3][1],
+            "construction-marketable-alternatives.json",
+            "Factor, Currency and Concentration Evidence",
+            "heat",
+        ),
+        (
+            "real-assets construction missing inflation-sensitivity tiles",
+            CONSTRUCTION_VALIDATORS[4][1],
+            "construction-real-assets.json",
+            "Inflation, Commodity and Diversification Context",
+            "tiles",
+        ),
+    )
+    for (
+        regression_label,
+        regression_validator,
+        fixture_name,
+        section_title,
+        block_type,
+    ) in specialized_visual_regressions:
+        document = cloned_fixture(fixture_name)
+        blocks = report_section(document, section_title)["blocks"]
+        blocks[:] = [
+            block for block in blocks if block.get("type") != block_type
+        ]
+        contract_regressions.append(
+            (regression_label, regression_validator, document)
+        )
 
     wrong_tile = cloned_fixture("portfolio-attribution-report.json")
     wrong_tile["executive"]["tiles"][0]["label"] = "Active result"

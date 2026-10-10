@@ -255,19 +255,26 @@ Not assessed — no GIPS Asset Owner Report provided.
 
 | # | Item | Reason | Timing | Owner |
 |---|---|---|---|---|
-| 1 | Confirm inflation assumption for real return objective | IPS does not state one | Before approval | CIO |
-| 2 | Provide look-through holdings | Not available | Next review | Operations |
+| 1 | Set real-return inflation assumption | IPS omission | Before approval | CIO |
+| 2 | Provide look-through holdings | Coverage gap | Next review | Operations |
 | 3 | Obtain Manager A verification report | GIPS follow-up | Within 30 days | Analyst |
-| 4 | Provide GIPS Asset Owner Report | Not provided | Next review | Operations |
-| 5 | Define the governed policy-risk observation horizon and return basis | Risk rows are not assessed without aligned observations | Next review | CIO |
+| 4 | Provide GIPS Asset Owner Report | Evidence gap | Next review | Operations |
+| 5 | Set policy-risk horizon and basis | Risk tests unassessed | Next review | CIO |
 
 ## 16. Approvals
+
+**Resolution:** Approve the Section 13 rebalance, subject to confirming the inflation assumption before the
+first trade and retaining the 30-day implementation window [S11].
 
 | Role | Name | Decision | Date |
 |---|---|---|---|
 | Prepared by | | n/a | |
 | Reviewed by (CIO) | | | |
 | Committee chair | | | |
+| Voting members | | Approve / Reject / Abstain | |
+
+**Post-decision record:** Operations records the final weights, implementation date and transaction-cost
+estimate. The CIO reports completion, exceptions and the five open items in Section 15 at the next meeting.
 
 ---
 
@@ -306,3 +313,6 @@ Not assessed — no GIPS Asset Owner Report provided.
 - Data sources and retrieval dates are listed in Appendix A. Sections using illustrative data are marked; they do not describe the organization's holdings.
 - GIPS assessments are diligence reviews against the 2020 GIPS standards, not verifications or legal opinions.
 - This memo was prepared with AI assistance from structured data and reviewed by the preparer.
+- Scenario results are conditional estimates under the named shocks, not probabilities or predictions; no local replacement series is used when governed results are unavailable.
+- Consensus comparisons preserve the returned peer universe, dates and basis. They are context for assumption review, not an independent recommendation.
+- Committee approval does not remove fiduciary review, legal review, manager-document review or implementation controls required by the organization's governing documents.

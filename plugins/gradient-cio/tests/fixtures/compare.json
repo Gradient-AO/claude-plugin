@@ -136,21 +136,21 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a 2 of 3 managers with flags signal [S1]. Why it matters: The signal frames the review. Uncertainty: Evidence coverage is bounded. What would change the view: New governed evidence that changes the signal."
+          "text": "Observation: The fictional TEST report carries a 2 of 3 managers with flags signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Managers compared is 3 in the TEST evidence [S2]. Why it matters: This measure anchors the executive view. Uncertainty: The fixture is deliberately compact. What would change the view: A refreshed source with a materially different value."
+          "text": "Observation: Managers compared is 3 in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Item 11 disclosures is 0 in the TEST evidence [S3]. Why it matters: It identifies a monitoring priority. Uncertainty: Supporting detail is limited. What would change the view: Corroborated evidence that resolves or reverses the item."
+          "text": "Observation: Item 11 disclosures is 0 in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
@@ -188,13 +188,13 @@
           ]
         },
         {
-          "type": "bars",
-          "title": "RAUM cohort percentile strips",
-          "suffix": "%",
+          "type": "percentiles",
+          "title": "RAUM cohort percentile positioning",
+          "threshold": 75,
           "items": [
-            {"label": "Ridgeview (n=214)", "value": 78, "source": "S7"},
-            {"label": "Harbor (n=187)", "value": 59, "source": "S7"},
-            {"label": "Northfield (n=96)", "value": 42, "source": "S7"}
+            {"label": "Ridgeview (n=214)", "percentile": 78, "value_display": "$12.40B"},
+            {"label": "Harbor (n=187)", "percentile": 59, "value_display": "$4.85B"},
+            {"label": "Northfield (n=96)", "percentile": 42, "value_display": "$1.92B"}
           ],
           "note": "Each percentile uses the adviser's own Gradient-selected cohort [S7]."
         },
@@ -329,7 +329,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Scale differs without deciding mandate fit",
-          "text": "Observation: Ridgeview reports the most RAUM and clients; all three report zero Item 11 disclosures [S1][S2][S3]. Why it matters: Scale affects operating context, not quality. Uncertainty: Cohorts differ. What would change the view: User criteria that privilege a specific operating scale."
+          "text": "Observation: Ridgeview reports the most RAUM and clients; all three report zero Item 11 disclosures [S1][S2][S3]. Why it matters: Scale changes operating complexity, not mandate quality. Uncertainty: Adviser cohorts differ in strategy and client bases. What would change the view: User criteria requiring a named operating-scale threshold."
         }
       ]
     },
@@ -391,7 +391,7 @@
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Evidence gaps differ",
-          "text": "Observation: The fictional TEST evidence supports the evidence gaps differ finding [S2][S3]. Why it matters: It focuses review on the principal evidence gap. Uncertainty: The compact fixture omits some corroborating detail. What would change the view: Updated governed evidence that contradicts the finding."
+          "text": "Observation: Harbor lacks complete provider evidence, while Northfield also lacks catalog identity [S2][S3]. Why it matters: The gaps require different diligence paths before selection. Uncertainty: The compact fixture omits some corroborating provider detail. What would change the view: Updated governed records resolving either named evidence gap."
         }
       ]
     },
@@ -494,7 +494,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Reported overlap is limited",
-          "text": "Observation: Ridgeview and Harbor have 18.4% weighted overlap across 31 positions [S6]. Why it matters: Their reported long books are not interchangeable. Uncertainty: Northfield lacks usable 13F identity. What would change the view: Complete same-period filings showing materially different overlap."
+          "text": "Observation: Ridgeview and Harbor have 18.4% weighted overlap across 31 positions [S6]. Why it matters: Their reported long books are not interchangeable. Uncertainty: Northfield lacks usable same-period Form 13F identity coverage. What would change the view: Complete same-period filings showing materially different weighted overlap."
         }
       ]
     },
@@ -505,9 +505,10 @@
       "blocks": [
         {
           "type": "callout",
-          "tone": "info",
-          "title": "Visual evidence",
-          "text": "Not available — No governed visual was returned for this fictional TEST fixture."
+          "role": "unavailable",
+          "tone": "watch",
+          "title": "Firm and fund event timeline",
+          "text": "Not available — event publication is not ready for Ridgeview or Harbor; Northfield is not in the diligence catalog [S10][S3]. Absence is not evidence of no events."
         },
         {
           "type": "table",
@@ -561,118 +562,114 @@
         },
         {
           "type": "callout",
-          "tone": "info",
-          "title": "Events",
-          "text": "No published events are available for Ridgeview or Harbor because event publication is not ready [S10]. Absence is not evidence of no events."
-        },
-        {
-          "type": "callout",
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Identity and coverage gaps govern interpretation",
-          "text": "Observation: Ridgeview and Harbor have usable consistency checks, while Northfield is outside the catalog [S8][S11][S3]. Why it matters: Evidence depth differs by manager. Uncertainty: Events are unpublished. What would change the view: Catalog resolution and published event coverage for Northfield."
+          "text": "Observation: Ridgeview and Harbor have usable consistency checks, while Northfield is outside the catalog [S8][S11][S3]. Why it matters: Evidence depth materially differs across the three managers. Uncertainty: Northfield event coverage and catalog identity remain unavailable. What would change the view: Catalog resolution plus published Northfield event records."
         }
       ]
     },
     {
-      "title": "Coverage",
-      "kicker": "What each source returned",
+      "title": "Coverage and next steps",
+      "kicker": "What returned and the permitted follow-up for each manager",
       "new_page": false,
       "blocks": [
         {
-          "type": "coverage",
-          "items": [
+          "type": "two_col",
+          "left": [
             {
-              "name": "Form ADV profiles (3)",
-              "status": "available",
-              "note": "Report 2026-10-01 [S1][S2][S3]"
+              "type": "coverage",
+              "title": "Coverage",
+              "items": [
+                {
+                  "name": "Form ADV profiles (3)",
+                  "status": "available",
+                  "note": "Report 2026-10-01 [S1][S2][S3]"
+                },
+                {
+                  "name": "Cohort comparison",
+                  "status": "available",
+                  "note": "Each adviser in its own cohort [S7]"
+                },
+                {
+                  "name": "Form 13F (2 of 3)",
+                  "status": "partial",
+                  "note": "Northfield not in catalog [S4][S5]"
+                },
+                {
+                  "name": "13F overlap",
+                  "status": "partial",
+                  "note": "1 of 3 pairs [S6]"
+                },
+                {
+                  "name": "ADV–13F consistency",
+                  "status": "partial",
+                  "note": "Identity unconfirmed [S8][S11]"
+                },
+                {
+                  "name": "Firm events",
+                  "status": "unavailable",
+                  "note": "event_publication_not_ready [S10]"
+                },
+                {
+                  "name": "Open findings",
+                  "status": "available",
+                  "note": "Ridgeview only (rostered): none [S9]"
+                }
+              ]
             },
             {
-              "name": "Cohort comparison",
-              "status": "available",
-              "note": "Each adviser in its own cohort [S7]"
+              "type": "text",
+              "text": "Completeness excludes catalog-inapplicable evidence and treats unpublished events as unavailable, not as a quiet period."
+            }
+          ],
+          "right": [
+            {
+              "type": "table",
+              "title": "Next steps",
+              "columns": [
+                "Manager",
+                "Next step",
+                "Why"
+              ],
+              "align": [
+                "l",
+                "l",
+                "l"
+              ],
+              "rows": [
+                [
+                  "Ridgeview (TEST)",
+                  {
+                    "chip": "Run ODD",
+                    "status": "ready"
+                  },
+                  "No flags [S1]"
+                ],
+                [
+                  "Harbor (TEST)",
+                  {
+                    "chip": "Reconcile DDQ",
+                    "status": "watch"
+                  },
+                  "Administrator gap [S2]"
+                ],
+                [
+                  "Northfield (TEST)",
+                  {
+                    "chip": "Run ODD",
+                    "status": "ready"
+                  },
+                  "Related-person custody [S3]"
+                ]
+              ],
+              "note": "Offers only; no action has been taken."
             },
             {
-              "name": "Form 13F (2 of 3)",
-              "status": "partial",
-              "note": "Northfield not in catalog [S4][S5]"
-            },
-            {
-              "name": "13F overlap",
-              "status": "partial",
-              "note": "1 of 3 pairs [S6]"
-            },
-            {
-              "name": "ADV–13F consistency",
-              "status": "partial",
-              "note": "Identity unconfirmed [S8][S11]"
-            },
-            {
-              "name": "Firm events",
-              "status": "unavailable",
-              "note": "event_publication_not_ready [S10]"
-            },
-            {
-              "name": "Open findings",
-              "status": "available",
-              "note": "Ridgeview only (rostered): none [S9]"
+              "type": "text",
+              "text": "Optional, only on request after a previewed dry run: add a manager to the research watchlist or start Form ADV monitoring."
             }
           ]
-        }
-      ]
-    },
-    {
-      "title": "Next steps",
-      "kicker": "Recommended per manager — offers, not actions taken",
-      "new_page": false,
-      "blocks": [
-        {
-          "type": "table",
-          "columns": [
-            "Manager",
-            "Next step",
-            "Why",
-            "Skill"
-          ],
-          "align": [
-            "l",
-            "l",
-            "l",
-            "l"
-          ],
-          "rows": [
-            [
-              "Ridgeview (TEST)",
-              {
-                "chip": "Run ODD report",
-                "status": "ready"
-              },
-              "Under consideration; no flags [S1]",
-              "gradient-odd-report"
-            ],
-            [
-              "Harbor (TEST)",
-              {
-                "chip": "Reconcile DDQ",
-                "status": "watch"
-              },
-              "Administrator gap on 2 funds [S2]",
-              "gradient-ddq-reconcile"
-            ],
-            [
-              "Northfield (TEST)",
-              {
-                "chip": "Run ODD report",
-                "status": "ready"
-              },
-              "Related-person custody [S3]",
-              "gradient-odd-report"
-            ]
-          ]
-        },
-        {
-          "type": "text",
-          "text": "Optional, only on request and after a previewed dry run: add managers to the research watchlist or start Form ADV monitoring."
         }
       ]
     },

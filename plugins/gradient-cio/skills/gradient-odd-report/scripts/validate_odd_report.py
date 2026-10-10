@@ -17,7 +17,10 @@ from report_json_validator import (  # noqa: E402
     SectionRule,
     SlotRule,
     as_object,
+    collect_strings,
     load_json,
+    print_quality_notes,
+    section_objects,
     validate_report,
 )
 
@@ -45,7 +48,7 @@ FULL_SPEC = ReportSpec(
         SlotRule(r"Executive summary", frozenset({"coverage"}), "coverage block"),
         SlotRule(
             r"Firm profile & ownership",
-            frozenset({"kv", "two_col", "bars"}),
+            frozenset({"kv", "two_col", "bars", "stacked"}),
             "profile visual",
         ),
         SlotRule(
@@ -164,6 +167,85 @@ def select_spec(document: JsonValue) -> tuple[ReportSpec, list[str]]:
     return FULL_SPEC, ["report_mode must be 'full' or 'roster_summary'"]
 
 
+def validate_full_layout(document: JsonValue) -> list[str]:
+    """Enforce stable full-report IDs and governed layout choices."""
+    root = as_object(document)
+    if root is None or root.get("report_mode") == "roster_summary":
+        return []
+    sections = section_objects(root)
+    expected_ids = (
+        "executive",
+        "firm-profile-ownership",
+        "regulatory-conflicts-custody",
+        "peer-positioning",
+        "fund-operations-service-providers",
+        "reported-equity-holdings",
+        "monitoring-findings-ddq",
+        "follow-up-open-items",
+        "sources-method",
+    )
+    actual_ids = tuple(str(section.get("id", "")) for section in sections)
+    errors: list[str] = []
+    if actual_ids != expected_ids:
+        errors.append(
+            "full-report section IDs must be exactly: " + ", ".join(expected_ids)
+        )
+    for section in sections:
+        title = str(section.get("title", ""))
+        if section.get("new_page") is True or section.get("page_break") == "force":
+            errors.append(f"{title} must not force a page break")
+        if any(
+            str(block.get("title", "")).strip().casefold() == "visual evidence"
+            for block in _block_objects(section)
+        ):
+            errors.append(
+                f"{title} uses forbidden generic Visual evidence placeholder"
+            )
+    profile = next(
+        (
+            section
+            for section in sections
+            if section.get("id") == "firm-profile-ownership"
+        ),
+        None,
+    )
+    if profile is not None:
+        for block in _block_objects(profile):
+            if block.get("type") != "stacked":
+                continue
+            block_text = "\n".join(collect_strings(block))
+            if "Form ADV" not in block_text or re.search(r"\[S\d+\]", block_text) is None:
+                errors.append(
+                    "Firm profile stacked visuals must identify Form ADV support "
+                    "and include an [S#] source tag"
+                )
+    return errors
+
+
+def _block_objects(section: dict[str, JsonValue]) -> list[dict[str, JsonValue]]:
+    """Return direct and two-column blocks without widening shared APIs."""
+    values = section.get("blocks")
+    if not isinstance(values, list):
+        return []
+    found: list[dict[str, JsonValue]] = []
+    for value in values:
+        block = as_object(value)
+        if block is None:
+            continue
+        found.append(block)
+        if block.get("type") != "two_col":
+            continue
+        for side in ("left", "right"):
+            children = block.get(side)
+            if isinstance(children, list):
+                found.extend(
+                    child
+                    for item in children
+                    if (child := as_object(item)) is not None
+                )
+    return found
+
+
 def main(argv: list[str]) -> int:
     """Run ODD report validation."""
     if len(argv) != 2:
@@ -179,12 +261,21 @@ def main(argv: list[str]) -> int:
 
     spec, errors = select_spec(document)
     errors.extend(validate_report(document, spec))
+    errors.extend(validate_full_layout(document))
     if errors:
         print(f"FAIL — {spec.name}: {len(errors)} issue(s)")
         for error in errors:
             print(f"  - {error}")
+        print_quality_notes(
+            document,
+            structured=spec.require_analysis_structure,
+        )
         return 1
     print(f"PASS — {spec.name} JSON contract is valid.")
+    print_quality_notes(
+        document,
+        structured=spec.require_analysis_structure,
+    )
     return 0
 
 

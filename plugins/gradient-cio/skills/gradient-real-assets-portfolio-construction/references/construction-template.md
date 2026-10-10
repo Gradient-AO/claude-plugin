@@ -1,10 +1,10 @@
 # Real Assets Construction Template
 
 Keep every section title and the order exactly as shown. Missing evidence becomes
-`Not available — <returned reason>`; never remove a section. Target 10–14 pages without filler.
-
-Before delivery, run `python scripts/check_layout.py "<Portfolio> - Real Assets Construction.pdf"
---min-pages 10 --max-pages 14`. If it fails, condense or repair the report, then re-render and rerun the check.
+`Not available — <returned reason>`; never remove a section. The soft target is 10–14 pages and the hard
+ceiling is 17; never add filler. Before delivery run
+`python scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Real Assets Construction" --budget references/layout-budget.json`;
+apply its specific repair levers and rerun until clean.
 
 ## Metadata and executive band
 
@@ -55,8 +55,8 @@ Before delivery, run `python scripts/check_layout.py "<Portfolio> - Real Assets 
 
 ### 3. Current Real Assets Portfolio
 
+- Lead with one unchanged allocation, geography, factor or currency chart when available; otherwise use a compact typed unavailable callout.
 - `table` **Current sleeve**: Sub-segment / exposure, Structure, Value, Unfunded, % portfolio, As of.
-- One unchanged allocation, geography, factor or currency chart when available.
 - Separate marketable values from drawdown NAV and unfunded commitments.
 
 ### 4. Target Sub-Segment Structure
@@ -71,14 +71,21 @@ Before delivery, run `python scripts/check_layout.py "<Portfolio> - Real Assets 
 
 ### 5. Historical Performance and Attribution
 
+- Lead with a governed attribution `waterfall` when returned. If governed attribution is unavailable,
+  use one compact typed `Not available — <returned reason>` callout before any table; do not stack N/A tables.
 - `table` **Standard periods**: Period, Portfolio / sleeve, Benchmark, Excess, Coverage.
 - `table` **Attribution effects** from `get_portfolio_attribution` only.
+- Distinguish historical-return policy benchmark entity excess from attribution
+  linked segment benchmark composite excess. If both appear, include returned
+  `diagnostics.entity_return_reconciliation` basis/delta fields; never compare
+  or conflate the two excess values.
+- One short sourced `text` bridge before the method metadata; do not stack a third data block.
 - `kv` method, linking, basis, currency, formula version, residual and tolerance.
 - Use a typed unavailable block when sleeve-specific performance is not returned.
 
 ### 6. Inflation, Commodity and Diversification Context
 
-- Lead with four inflation-context tiles populated only from returned observations and availability reasons.
+- Lead with four `tiles` titled **Inflation-sensitivity evidence**, populated only from returned observations and availability reasons; use one compact typed unavailable callout when no governed sensitivity evidence exists.
 - `table` **Returned context**: Indicator / exposure, Observation, Change / sensitivity, As of, Source.
 - Embed unchanged factor, currency or allocation charts where relevant.
 - Macro context does not establish inflation protection or explain performance.
@@ -98,6 +105,7 @@ Before delivery, run `python scripts/check_layout.py "<Portfolio> - Real Assets 
 - For closed-end/drawdown sleeves, embed usable `commitments` charts unchanged.
 - For fully marketable sleeves, use a typed `Not applicable — no drawdown exposures` state.
 - `table` **Liquidity and valuation**: Sub-segment, Structure, Liquidity / unfunded, Valuation date, Status.
+- One short sourced `text` bridge before the coverage metadata; do not stack a third data block.
 - `kv`: marketable share, locked share, unfunded ratio, valuation lag and governed coverage.
 
 ### 9. Manager and Fund Diligence

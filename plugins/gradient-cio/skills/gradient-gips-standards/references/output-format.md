@@ -5,7 +5,7 @@ the authoritative checklist, analysis narrative, follow-up list and investment-m
 not rewrite it. `visuals.json` adds evidence-status, coverage and finding summaries around those markdown
 sections, and `meta.json` supplies the cover.
 
-## Part 1 — Findings checklist
+## Findings and checklist
 
 Use one row per requirement checked and group rows by area (Claim & verification; Report numbers;
 Disclosures; Composite construction; Marketing consistency; Policies).
@@ -23,9 +23,10 @@ Allowed status values:
 - **N/A** — does not apply; state why.
 
 Evidence cites the source tag, document name and page or record. Preserve source dates, scope and validation
-status when supplied. Do not derive report values locally.
+status when supplied. Do not derive report values locally. Present status, severity, findings and analysis in
+`## 2. Findings`; Appendix A contains checklist tables only.
 
-## Part 2 — Memo handoff
+## Workflow body
 
 Keep this section at roughly 150–300 words. It remains markdown so it can be pasted into an investment memo
 unchanged.
@@ -52,8 +53,16 @@ any portability, carve-outs or sub-advisor periods relevant to interpreting retu
 verification or a legal opinion.*
 ```
 
-Asset-owner and preparer workflows may use the workflow-specific Oversight body summary or prioritized fix
-list in this section. Keep that markdown unchanged through composition.
+Use exactly one workflow body title:
+
+- manager diligence: `## 3. Performance Integrity Memo`;
+- report review: `## 3. Preparer Fix List` (the family standardizes on the preparer-facing path);
+- asset-owner review: `## 3. Oversight Summary`;
+- policies gap check: `## 3. Policy Gaps by Area`.
+
+The manager memo remains paste-ready at roughly 150–300 words. The preparer fix list orders Not met,
+Partially met and Not found items. The oversight summary is written to the board or investment committee.
+Policy gaps lead with the 17-area status heat and use compact grouped tables separated by subheadings.
 
 ## Overall assessment rules
 
@@ -76,16 +85,19 @@ Write `review.md` with these headings exactly:
 > standards; not a verification or legal opinion.>
 
 ## 1. Summary
-<3–5 sourced bullets: assessment, GIPS status and material findings.>
+<Coverage lead plus a concise assessment. The visual layer supplies 3–5 workflow-specific Key judgments.>
 
-## 2. Performance Integrity & GIPS
-<Memo handoff, Oversight body summary or prioritized fix list, as directed by the workflow skill.>
+## 2. Findings
+<Short findings lead. Visual order: stacked checklist status, severity bars, findings block, 1–3 Analysis callouts.>
 
-## 3. Follow-up Requests
+## 3. <Performance Integrity Memo | Preparer Fix List | Oversight Summary | Policy Gaps by Area>
+<Workflow-specific body led by a workflow-specific heat or typed unavailable block.>
+
+## 4. Follow-up Requests
 <Numbered list: request, provision and evidence that would close it.>
 
 ## Appendix A — Findings Checklist
-<Checklist tables grouped under `### <Area>` headings.>
+<Checklist tables only, grouped under `### <Area>` headings.>
 
 ## Appendix B — Sources
 | Tag | Source | Detail | As of | Validation |
@@ -107,8 +119,9 @@ Follow `report-layout.md`. `visuals.json` must contain:
 - a typed `unavailable` block wherever an expected visual or evidence view cannot be supported.
 
 Analysis is non-prescriptive. “What would change the view” may point only to numbered requests already present
-in `## 3. Follow-up Requests`; it must not add a recommendation or action. Keep the analytical body to 3–4
-pages; the full checklist begins Appendix A. Market charts are not required.
+in `## 4. Follow-up Requests`; it must not add a recommendation or action. Keep the analytical body to 3–4
+pages; the full checklist begins Appendix A. Review-skill schema-v2 budgets force the break with stable section
+ID `appendix-a`. Market charts are not required.
 
 Write `meta.json` in the existing shape:
 
@@ -142,7 +155,8 @@ default, PPTX for `PowerPoint`, `deck`, `slides` or `.pptx`, and both for `both`
 formats come from the same validated `report.json`.
 
 ```text
-python scripts/render.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS <Review type>"
+python <review skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> \
+  --out "<Subject> - GIPS <Review type>" --budget <review skill>/references/layout-budget.json
 ```
 
 Inspect every requested output before delivery. When the checklist has more than about 15 rows, also deliver

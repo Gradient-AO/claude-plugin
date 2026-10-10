@@ -104,64 +104,81 @@
           ]
         },
         {
-          "type": "coverage",
-          "title": "Check coverage",
-          "items": [
-            {
-              "name": "Firm claims (8)",
-              "status": "available",
-              "note": "Governed reconciliation, verdicts from Gradient [S1]"
-            },
-            {
-              "name": "Fund claims (12)",
-              "status": "partial",
-              "note": "Analyst comparison against Schedule D; governed check unavailable for this fund"
-            },
-            {
-              "name": "Fund status",
-              "status": "not_assessed",
-              "note": "Not stated in the DDQ"
-            },
-            {
-              "name": "Workpaper saved",
-              "status": "not_run",
-              "note": "Reconciliation returned no run ID; this report is the record"
-            }
-          ]
-        },
-        {
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a 4 discrepancies found signal [S1]. Why it matters: The signal frames the review. Uncertainty: Evidence coverage is bounded. What would change the view: New governed evidence that changes the signal."
+          "text": "Observation: The fictional TEST report carries a 4 discrepancies found signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Contradicted is 4 in the TEST evidence [S2]. Why it matters: This measure anchors the executive view. Uncertainty: The fixture is deliberately compact. What would change the view: A refreshed source with a materially different value."
+          "text": "Observation: Contradicted is 4 in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Not checkable is 0 in the TEST evidence [S3]. Why it matters: It identifies a monitoring priority. Uncertainty: Supporting detail is limited. What would change the view: Corroborated evidence that resolves or reverses the item."
+          "text": "Observation: Not checkable is 0 in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
     {
-      "id": "discrepancies",
-      "title": "Discrepancies & follow-up questions",
+      "id": "discrepancies-follow-ups",
+      "title": "Discrepancies and follow-ups",
       "kicker": "Ranked by severity; each question quotes both sides",
       "blocks": [
         {
-          "type": "callout",
-          "tone": "info",
-          "title": "Visual evidence",
-          "text": "Not available — No governed visual was returned for this fictional TEST fixture."
+          "type": "stacked",
+          "title": "Verdict mix by claim domain",
+          "items": [
+            {
+              "label": "Firm",
+              "segments": [
+                {
+                  "label": "Contradicted",
+                  "value": 2
+                },
+                {
+                  "label": "Needs review",
+                  "value": 0
+                },
+                {
+                  "label": "Consistent",
+                  "value": 6
+                },
+                {
+                  "label": "Not checkable",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "label": "Fund",
+              "segments": [
+                {
+                  "label": "Contradicted",
+                  "value": 2
+                },
+                {
+                  "label": "Needs review",
+                  "value": 3
+                },
+                {
+                  "label": "Consistent",
+                  "value": 7
+                },
+                {
+                  "label": "Not checkable",
+                  "value": 0
+                }
+              ]
+            }
+          ],
+          "note": "Governed and analyst-classified verdict counts for the fictional TEST claims [S1][S2]."
         },
         {
           "type": "findings",
@@ -199,8 +216,8 @@
           "type": "callout",
           "role": "analysis",
           "tone": "watch",
-          "title": "Analysis — Analysis — Provider conflict",
-          "text": "Observation: The fictional TEST evidence supports the analysis — provider conflict finding [S2]. Why it matters: It focuses review on the principal evidence gap. Uncertainty: The compact fixture omits some corroborating detail. What would change the view: Updated governed evidence that contradicts the finding."
+          "title": "Analysis — Provider identity conflict",
+          "text": "Observation: The administrator names conflict, while three provider lists are partial [S2]. Why it matters: Current service-provider responsibility cannot be assigned confidently. Uncertainty: Canonical catalog coverage for the fund is unavailable. What would change the view: Dated provider records reconciling the DDQ and Schedule D."
         },
         {
           "type": "questions",
@@ -230,10 +247,59 @@
       ]
     },
     {
-      "id": "firm",
-      "title": "Firm reconciliation (governed)",
+      "id": "firm-reconciliation",
+      "title": "Firm reconciliation",
       "kicker": "Gradient verdicts against Form ADV Part 1A, report 2026-10-01",
       "blocks": [
+        {
+          "type": "heat",
+          "title": "Firm claim domains by verdict",
+          "columns": [
+            "Claim domain",
+            "Consistent",
+            "Contradicted",
+            "Needs review",
+            "Not checkable"
+          ],
+          "rows": [
+            {
+              "label": "Scale and assets",
+              "values": [
+                3,
+                2,
+                0,
+                0
+              ]
+            },
+            {
+              "label": "Custody",
+              "values": [
+                1,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "label": "Discipline",
+              "values": [
+                2,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "decimals": 0,
+          "note": "Count of governed firm verdicts by claim domain [S1]."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Scale claims diverge",
+          "text": "Observation: Two of five scale claims are contradicted: employees and private funds [S1]. Why it matters: Both discrepancies affect the operating-profile baseline used for diligence. Uncertainty: Filing timing may explain part of the difference. What would change the view: Dated records reconciling headcount and fund launches."
+        },
         {
           "type": "table",
           "columns": [
@@ -337,18 +403,44 @@
       ]
     },
     {
-      "id": "fund",
-      "title": "Fund reconciliation: Global Macro Fund III",
+      "id": "fund-reconciliation",
+      "title": "Fund reconciliation",
       "kicker": "Analyst comparison against Schedule D 7.B.1 (PFID 805-5927286713)",
       "blocks": [
         {
+          "type": "heat",
+          "title": "Fund-by-domain verdict mix",
+          "columns": [
+            "Fund",
+            "Consistent",
+            "Contradicted",
+            "Needs review",
+            "Not checkable"
+          ],
+          "rows": [
+            {
+              "label": "Global Macro Fund III",
+              "values": [
+                7,
+                2,
+                3,
+                0
+              ]
+            }
+          ],
+          "decimals": 0,
+          "note": "Compact combined path: 11 authored fund rows, within the 24-row threshold [S1][S2]."
+        },
+        {
           "type": "callout",
+          "role": "analysis",
           "tone": "watch",
-          "title": "Analyst comparison — not a governed verdict",
-          "text": "Gradient resolved this fund only to a Schedule D record (`pfid:805-5927286713`) without a catalog ID, and its governed reconciliation rejected that record. The rows below compare the DDQ with the filed Schedule D values returned by the ODD profile [S2]."
+          "title": "Analysis — Canonical fund ID unavailable",
+          "text": "Observation: The fund resolves only to `pfid:805-5927286713`, so its rows are analyst comparisons [S2]. Why it matters: Those comparisons are not governed reconciliation verdicts. Uncertainty: A canonical catalog fund ID remains unavailable. What would change the view: Catalog resolution followed by governed reconciliation results."
         },
         {
           "type": "table",
+          "title": "Global Macro Fund III",
           "columns": [
             "Item",
             "DDQ says (line)",
@@ -425,9 +517,19 @@
               "DDQ names 1 of 2 audit firms"
             ],
             [
-              "Audited / unqualified",
-              "Yes / Yes (L46)",
-              "Yes / Yes [S2]",
+              "Audited",
+              "Yes (L46)",
+              "Yes [S2]",
+              {
+                "chip": "consistent",
+                "status": "consistent"
+              },
+              "Exact"
+            ],
+            [
+              "Unqualified opinion",
+              "Yes (L46)",
+              "Yes [S2]",
               {
                 "chip": "consistent",
                 "status": "consistent"
@@ -479,8 +581,54 @@
       ]
     },
     {
-      "id": "appendix",
-      "title": "Appendix — sources & method",
+      "id": "coverage-scope",
+      "title": "Coverage and scope",
+      "kicker": "Governed firm evidence is complete; fund governance remains partial",
+      "blocks": [
+        {
+          "type": "two_col",
+          "left": [
+            {
+              "type": "coverage",
+              "title": "Check coverage",
+              "items": [
+                {
+                  "name": "Firm claims (8)",
+                  "status": "available",
+                  "note": "Governed reconciliation, verdicts from Gradient [S1]"
+                },
+                {
+                  "name": "Fund claims (12)",
+                  "status": "partial",
+                  "note": "Analyst comparison against Schedule D; canonical fund ID unavailable [S2]"
+                },
+                {
+                  "name": "Fund status",
+                  "status": "not_assessed",
+                  "note": "Not stated in the synthetic DDQ [S3]"
+                },
+                {
+                  "name": "Workpaper saved",
+                  "status": "not_run",
+                  "note": "No run ID was returned; this TEST report is the record [S1]"
+                }
+              ]
+            }
+          ],
+          "right": [
+            {
+              "type": "callout",
+              "tone": "watch",
+              "title": "Out of scope",
+              "text": "Not available — No out-of-scope evidence was identified in the fictional TEST DDQ [S3]."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sources-method",
+      "title": "Appendix — Sources and method",
       "blocks": [
         {
           "type": "table",
@@ -564,6 +712,12 @@
               "−25.0%"
             ]
           ]
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Method boundary",
+          "text": "Numeric gaps and verdicts are reproduced from the saved reconciliation; no local verdict or filed value was synthesized [S1][S2]."
         },
         {
           "type": "kv",

@@ -137,21 +137,21 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a Credit allocation proposed signal [S1]. Why it matters: The signal frames the review. Uncertainty: Evidence coverage is bounded. What would change the view: New governed evidence that changes the signal."
+          "text": "Observation: The fictional TEST report carries a credit-allocation signal above the prior neutral baseline [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Fixed-income weight is 28.0% in the TEST evidence [S2]. Why it matters: This measure anchors the executive view. Uncertainty: The fixture is deliberately compact. What would change the view: A refreshed source with a materially different value."
+          "text": "Observation: Fixed-income weight is 28.0% in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Liquid share is 96.0% in the TEST evidence [S3]. Why it matters: It identifies a monitoring priority. Uncertainty: Supporting detail is limited. What would change the view: Corroborated evidence that resolves or reverses the item."
+          "text": "Observation: Liquid share is 96.0% in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
@@ -449,7 +449,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Why this target",
-          "text": "Observation: The target shifts 3.0 percentage points from core-plus credit to government and investment-grade bonds [S3][S4]. Why it matters: Credit concentration falls. Uncertainty: CMA consensus, macro regime, manager findings, duration and costs are incomplete [S8]. What would change the view: Completed context showing worse duration or transition outcomes [S8]."
+          "text": "Observation: The target shifts 3.0 percentage points from core-plus credit to government and investment-grade bonds [S3][S4]. Why it matters: The change directly reduces concentrated credit exposure. Uncertainty: Duration, cost, CMA, regime and manager coverage remain incomplete [S8]. What would change the view: Completed records showing higher duration or transition costs."
         },
         {
           "type": "text",
@@ -461,6 +461,33 @@
     {
       "title": "Historical Performance and Attribution",
       "blocks": [
+        {
+          "type": "waterfall",
+          "title": "Governed attribution effects",
+          "items": [
+            {
+              "label": "Allocation",
+              "value": 0.08,
+              "display": "+0.08pp"
+            },
+            {
+              "label": "Selection",
+              "value": 0.22,
+              "display": "+0.22pp"
+            },
+            {
+              "label": "Interaction",
+              "value": 0.02,
+              "display": "+0.02pp"
+            },
+            {
+              "label": "Residual",
+              "value": 0.0,
+              "display": "0.00pp"
+            }
+          ],
+          "note": "Returned attribution effects; residual is shown explicitly [S5]."
+        },
         {
           "type": "table",
           "title": "Standard periods",
@@ -525,6 +552,10 @@
               "[S5]"
             ]
           ]
+        },
+        {
+          "type": "text",
+          "text": "Governed attribution method and reconciliation metadata follow [S5]."
         },
         {
           "type": "kv",
@@ -668,7 +699,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Spread context is cautionary",
-          "text": "Observation: All three returned credit spreads widened over three months [S6]. Why it matters: The context supports caution around concentrated credit exposure. Uncertainty: Market spreads do not identify portfolio attribution or predict direction. What would change the view: Updated spread evidence and governed attribution showing a different concentration tradeoff [S5][S6]."
+          "text": "Observation: All three returned credit spreads widened over three months [S6]. Why it matters: The context supports caution around concentrated credit exposure. Uncertainty: Spread coverage neither attributes portfolio results nor predicts direction. What would change the view: Refreshed spreads and governed attribution results reversing the concentration tradeoff [S5][S6]."
         },
         {
           "type": "text",
@@ -680,6 +711,23 @@
     {
       "title": "Forward Return and Risk",
       "blocks": [
+        {
+          "type": "bars",
+          "title": "Forward expected-return comparison",
+          "items": [
+            {
+              "label": "Current ? Core government / IG",
+              "value": 4.1000000000000005,
+              "display": "4.1%"
+            },
+            {
+              "label": "Proposed ? Core government / IG",
+              "value": 5.2,
+              "display": "5.2%"
+            }
+          ],
+          "note": "Governed forward assumptions; assumptions, not forecasts [S6]."
+        },
         {
           "type": "kv",
           "rows": [
@@ -937,8 +985,7 @@
           "title": "Selected-series sandbox — not saved-portfolio analytics",
           "text": "Not available — no Strategy Lab return series selected [S8]."
         }
-      ],
-      "new_page": true
+      ]
     },
     {
       "title": "Implementation Plan",

@@ -7,6 +7,10 @@ availability or presentation rules.
 
 ## Message first
 
+- Default analytical-report order is verdict and executive band, key judgments, evidence sections ordered by
+  the decision question, risks and gaps, actions or follow-ups, coverage, then appendices. A family contract
+  may narrow or reorder this spine. The setup readiness report, GIPS reference answer and deck profile are
+  exempt.
 - Write section kickers as the conclusion a reader should retain, not as a topic label. Prefer
   `Private-assets headroom is narrow` to `Allocation and policy`.
 - Lead each analytical section with a decision-useful visual. When the governed evidence cannot support that
@@ -38,12 +42,24 @@ availability or presentation rules.
 - Analysis may compare and rank sourced values. It may not introduce an unsourced metric, causal claim,
   forecast, rating or action beyond the report's authorized scope.
 
+### Depth
+
+- Write every part as a full sentence and aim for 40 to 60 words in total.
+- Make the Observation specific, tie Why it matters to this report's decision or monitoring purpose, name the
+  actual limitation, and identify a measurable trigger or named evidence item that would change the view.
+- Use `references/analysis-examples.md` for a worked pattern for each required analysis section. Never reuse
+  the fictional example values in a client report.
+- The validator prints non-blocking quality notes after its contract result. Revise a callout whenever a
+  quality note appears; the notes do not change validation PASS/FAIL or exit codes.
+
 ## Evidence and availability
 
 - Every factual number, governed status and analytical judgment carries an `[S#]` tag.
 - Preserve returned dates, units, bases, formula identity and version, coverage, validation state and
   unavailable reason.
 - Absence is not zero, no exposure, no event or no issue. Write `Not available — <reason>`.
+- Empty or unavailable evidence collapses to one compact typed unavailable callout in the expected visual
+  position. Do not emit a table of N/A rows or a generic `Visual evidence` placeholder.
 - A visual may use only returned values, user-supplied evidence or allowed display-only scaling and rounding.
   Never calculate a replacement series locally.
 
@@ -52,6 +68,11 @@ availability or presentation rules.
 - Prefer the smallest visual that answers the section's question. Supported analytical blocks include
   `chart`, `line`, `bars`, `pie`, `percentiles`, `waterfall`, `band`, `stacked`, `heat`, `timeline`, `tiles`, `coverage` and
   `findings`.
+- Match the visual to the question: `line` for a time series or trend; `stacked` for composition or mix
+  (`pie` only for at most eight static slices); `waterfall` for contribution or bridge; `band` for a position
+  against a range or limit; `bars` for ranking or entity comparison; `heat` for two-dimensional status;
+  `percentiles` for peer standing; `timeline` for dated events; `findings` for issues by severity; and
+  `coverage` for evidence availability.
 - Bars and other quantitative marks accept signed finite values. Preserve the sign in `value` and in the
   display label; do not convert negative values to absolute magnitudes.
 - Nested blocks are valid. Apply source, availability, table-sequencing and numeric rules inside every
@@ -63,3 +84,12 @@ availability or presentation rules.
 The skill's template, writing standards and validator remain authoritative for section order, tile labels,
 required visual slots, analysis locations, decision language and hand-offs. Tool names in source appendices
 must match calls actually made; never add a tool call to satisfy a layout requirement.
+
+## Whitespace
+
+- A hard break is a content contract, not a styling preference. Use `page_break: "force"` only for section
+  IDs allowed by the effective layout budget. Use `prefer` when QA may safely remove a sparse break.
+- Let short closing sections such as coverage, next steps, open items and approvals flow together or pair
+  them in `two_col`.
+- Move long checklists, rosters and returned-row detail to an appendix; keep a decision-useful summary visual
+  in the body.

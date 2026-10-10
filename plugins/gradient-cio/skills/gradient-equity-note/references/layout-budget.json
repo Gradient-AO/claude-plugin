@@ -1,0 +1,88 @@
+{
+  "schema_version": 2,
+  "design_profile": "analytical",
+  "forced_breaks": [],
+  "pdf": {
+    "target_pages": {
+      "min": 6,
+      "max": 9
+    },
+    "hard_max_pages": 12,
+    "minimum_body_fill": 0.35,
+    "orphan_tail_max_fill": 0.2
+  },
+  "content": {
+    "defaults": {
+      "max_pages": 2,
+      "max_words": 320,
+      "max_body_table_rows": 16,
+      "max_visuals": 3
+    },
+    "sections": {
+      "executive": {
+        "role": "summary",
+        "requires_analysis": false,
+        "max_words": 300,
+        "max_body_table_rows": 0,
+        "max_visuals": 1
+      },
+      "fundamentals-trend": {
+        "role": "analytical",
+        "requires_analysis": true,
+        "max_body_table_rows": 12,
+        "max_visuals": 3
+      },
+      "filing-changes": {
+        "role": "analytical",
+        "requires_analysis": true,
+        "max_body_table_rows": 8,
+        "max_visuals": 1
+      },
+      "risk-factors": {
+        "role": "analytical",
+        "requires_analysis": true,
+        "max_body_table_rows": 8,
+        "max_visuals": 1
+      },
+      "latest-earnings-release": {
+        "role": "analytical",
+        "requires_analysis": false,
+        "max_body_table_rows": 6,
+        "max_visuals": 1
+      },
+      "peers-valuation-context": {
+        "role": "analytical",
+        "requires_analysis": true,
+        "max_body_table_rows": 8,
+        "max_visuals": 1
+      },
+      "industry-structure": {
+        "role": "analytical",
+        "requires_analysis": true,
+        "max_body_table_rows": 8,
+        "max_visuals": 1
+      },
+      "positioning-crowding": {
+        "role": "analytical",
+        "requires_analysis": true,
+        "max_body_table_rows": 8,
+        "max_visuals": 1
+      },
+      "roster-holders": {
+        "role": "reference",
+        "requires_analysis": false,
+        "max_words": 90,
+        "max_body_table_rows": 12,
+        "max_visuals": 1
+      },
+      "sources-method": {
+        "role": "appendix",
+        "requires_analysis": false,
+        "max_pages": 3,
+        "max_words": 350,
+        "max_body_table_rows": 18,
+        "max_visuals": 0
+      }
+    }
+  }
+}

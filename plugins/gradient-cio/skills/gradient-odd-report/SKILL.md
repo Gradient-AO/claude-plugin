@@ -1,12 +1,14 @@
 ---
 name: gradient-odd-report
 description: "Create a branded, sourced ODD report or roster triage. Triggers: 'ODD report', 'due diligence report', 'run diligence', 'ODD on my roster'. Hands findings to DDQ reconciliation, manager comparison, monitoring, or an IC memo."
+metadata:
+  summary: "Produce a sourced operational due diligence report or roster triage."
 ---
 
 # Gradient ODD report
 
 Use for operational diligence on one manager/fund or for roster triage. One
-full report covers one subject and is normally 9–11 PDF pages. Multiple or
+full report covers one subject and is normally 6–8 PDF pages. Multiple or
 unspecified subjects are triaged before full reports.
 
 ## Non-negotiable rules
@@ -60,15 +62,18 @@ gaps. A degraded clear result is not a clean bill of health.
 ## 4. Build and deliver
 
 Read `references/odd-execution-contract.md#full-report-layout-and-delivery`,
-then `references/report-style.md` and `references/writing-standards.md` only
-when drafting/rendering. Use `report_mode: full` or `roster_summary`, keep all
-fixed sections, and show typed unavailable blocks in place.
+then `references/report-style.md`, `references/writing-standards.md`, and
+`references/analysis-examples.md` only when drafting/rendering. Use
+`report_mode: full` or `roster_summary`, keep all
+fixed section IDs and governed visual slots, use no forced page breaks, and
+show specific typed unavailable blocks in place of missing evidence. Never use
+generic visual placeholders.
 
 Validate and render the same report source:
 
 ```text
 python <skill>/scripts/validate_odd_report.py report.json
-python <skill>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Subject> - ODD Report"
+python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - ODD Report" --budget <skill>/references/layout-budget.json
 ```
 
 PDF is default; explicit slide wording selects PPTX; `both`/`board pack`

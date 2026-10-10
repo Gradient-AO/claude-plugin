@@ -1,208 +1,86 @@
 {
   "schema_version": "1.0",
   "executive_tiles": [
-    {
-      "label": "Met",
-      "value": "4",
-      "sub": "Four requirements evidenced",
-      "tone": "good"
-    },
-    {
-      "label": "Partially met",
-      "value": "2",
-      "sub": "Verification and fee disclosure",
-      "tone": "watch"
-    },
-    {
-      "label": "Not met",
-      "value": "1",
-      "sub": "DDQ asset inconsistency",
-      "tone": "bad"
-    },
-    {
-      "label": "Not found",
-      "value": "1",
-      "sub": "Composite descriptions list",
-      "tone": "watch"
-    }
+    {"label": "Met", "value": "4", "sub": "Claim, assets and benchmark evidenced", "tone": "good"},
+    {"label": "Partially met", "value": "2", "sub": "Verification and fee disclosure", "tone": "watch"},
+    {"label": "Not met", "value": "1", "sub": "Composite assets conflict", "tone": "bad"},
+    {"label": "Not found", "value": "1", "sub": "Composite descriptions list", "tone": "watch"}
   ],
   "sections": {
     "1. Summary": {
-      "before": [
-        {
-          "type": "coverage",
-          "title": "Evidence status",
-          "items": [
-            {
-              "name": "GIPS Composite Report",
-              "status": "available",
-              "note": "Data through 2025-12-31 [S1]"
-            },
-            {
-              "name": "Verification letter",
-              "status": "available",
-              "note": "Coverage through 2024-12-31 [S2]"
-            },
-            {
-              "name": "DDQ",
-              "status": "degraded",
-              "note": "Composite assets conflict with the report [S3]"
-            }
-          ]
-        }
-      ],
+      "before": [{
+        "type": "coverage",
+        "title": "Evidence coverage",
+        "items": [
+          {"name": "GIPS Composite Report", "status": "available", "note": "Global Value Equity through 2025-12-31 [S1]"},
+          {"name": "Verification letter", "status": "available", "note": "Firm verification through 2024-12-31 [S2]"},
+          {"name": "DDQ section 7", "status": "degraded", "note": "Composite assets conflict with the report [S3]"}
+        ]
+      }],
       "after": [
-        {
-          "type": "callout",
-          "role": "key_judgment",
-          "tone": "watch",
-          "title": "Key judgment — evidence balance",
-          "text": "Observation: Met is 4 and Not met is 1 [S1]. Why it matters: The evidence is mixed. Uncertainty: The review is document-bound. What would change the view: Additional governed evidence that changes either count."
-        },
-        {
-          "type": "callout",
-          "role": "key_judgment",
-          "tone": "watch",
-          "title": "Key judgment — partial support",
-          "text": "Observation: Partially met is 2 [S1]. Why it matters: Partial support limits a clean conclusion. Uncertainty: Missing documents may exist. What would change the view: Complete evidence for the partially supported requirements."
-        },
-        {
-          "type": "callout",
-          "role": "key_judgment",
-          "tone": "info",
-          "title": "Key judgment — evidence gaps",
-          "text": "Observation: Not found is 1 [S1]. Why it matters: Unlocated evidence remains outside the assessment. Uncertainty: Absence from the supplied record is not proof of absence. What would change the view: A current document resolving the gap."
-        },
-        {
-          "type": "callout",
-          "role": "analysis",
-          "tone": "watch",
-          "title": "Analysis — Asset evidence needs reconciliation",
-          "text": "**Observation:** The DDQ and GIPS Report differ on composite assets [S1, S3]. **Why it matters:** the inconsistency limits reliance on the reported composite scale. **Uncertainty:** the effective date of any asset change is not documented. **What would change the view:** evidence closing follow-up request 1.",
-          "follow_up_refs": [
-            1
-          ]
-        }
+        {"type": "callout", "role": "key_judgment", "tone": "good", "title": "Key judgment — claim wording is supported", "text": "The firm-wide compliance statement follows the required wording in the reviewed report [S1]. This supports the presentation of the claim, but wording alone does not establish that every firm process, composite record and disclosure operated consistently during the covered periods."},
+        {"type": "callout", "role": "key_judgment", "tone": "watch", "title": "Key judgment — latest year is outside verification", "text": "Verification covers 2015–2024 while the composite report extends through 2025 [S1, S2]. The latest reported year therefore sits outside the stated verification period, so readers should not infer verifier coverage for 2025 from the earlier opinion."},
+        {"type": "callout", "role": "key_judgment", "tone": "bad", "title": "Key judgment — composite scale conflicts", "text": "The DDQ reports $2.4B of composite assets versus $2.1B in the year-end report [S1, S3]. The $0.3B difference remains unresolved because the records do not provide aligned effective dates or a reconciliation of flows and valuation changes."},
+        {"type": "callout", "role": "key_judgment", "tone": "watch", "title": "Key judgment — fee basis is incomplete", "text": "The report describes management fees but does not identify the stated performance fee [S1]. This omission limits interpretation of net returns because the reviewed schedule does not establish whether that additional fee applies or how it is reflected."}
       ]
     },
-    "2. Performance Integrity & GIPS": {
-      "before": [
-        {
-          "type": "heat",
-          "title": "Requirement evidence matrix (TEST)",
-          "columns": [
-            "Requirement",
-            "Evidence score"
-          ],
-          "rows": [
-            {
-              "label": "Performance record",
-              "values": [
-                1.0
-              ]
-            },
-            {
-              "label": "Disclosures",
-              "values": [
-                0.5
-              ]
-            },
-            {
-              "label": "Governance evidence",
-              "values": [
-                -0.5
-              ]
-            }
-          ]
-        }
-      ],
-      "after": []
-    },
-    "Appendix A — Findings Checklist": {
+    "2. Findings": {
       "before": [
         {
           "type": "stacked",
           "title": "Checklist status by area",
           "items": [
-            {
-              "label": "Claim & verification",
-              "segments": [
-                {"label": "Met", "value": 2},
-                {"label": "Partially met", "value": 1},
-                {"label": "Not met", "value": 0},
-                {"label": "Not found", "value": 0}
-              ]
-            },
-            {
-              "label": "Report numbers & disclosures",
-              "segments": [
-                {"label": "Met", "value": 2},
-                {"label": "Partially met", "value": 1},
-                {"label": "Not met", "value": 1},
-                {"label": "Not found", "value": 1}
-              ]
-            }
+            {"label": "Claim & verification", "segments": [{"label": "Met", "value": 2}, {"label": "Partially met", "value": 1}, {"label": "Not met", "value": 0}, {"label": "Not found", "value": 0}]},
+            {"label": "Report numbers & disclosures", "segments": [{"label": "Met", "value": 2}, {"label": "Partially met", "value": 1}, {"label": "Not met", "value": 1}, {"label": "Not found", "value": 1}]}
           ]
         },
-        {
-          "type": "bars",
-          "title": "Findings by severity",
-          "items": [
-            {
-              "label": "High",
-              "value": 0,
-              "display": "0"
-            },
-            {
-              "label": "Medium",
-              "value": 2,
-              "display": "2"
-            },
-            {
-              "label": "Low",
-              "value": 1,
-              "display": "1"
-            }
-          ]
-        }
-      ],
-      "after": [
+        {"type": "bars", "title": "Findings by severity", "items": [{"label": "High", "value": 0, "display": "0"}, {"label": "Medium", "value": 2, "display": "2"}, {"label": "Low", "value": 1, "display": "1"}]},
         {
           "type": "findings",
           "title": "Priority findings",
           "items": [
-            {
-              "severity": "medium",
-              "title": "Composite assets conflict",
-              "detail": "The DDQ reports $2.4B while the GIPS Report reports $2.1B [S1, S3]."
-            },
-            {
-              "severity": "medium",
-              "title": "Fee schedule incomplete",
-              "detail": "The reviewed fee schedule omits the performance fee [S1]."
-            },
-            {
-              "severity": "low",
-              "title": "Verification period gap",
-              "detail": "Verification evidence ends at 2024-12-31 [S2]."
-            }
+            {"severity": "medium", "title": "Composite assets conflict", "detail": "The DDQ reports $2.4B while the GIPS Report reports $2.1B [S1, S3]."},
+            {"severity": "medium", "title": "Fee schedule incomplete", "detail": "The reviewed fee disclosure omits the performance fee [S1]."},
+            {"severity": "low", "title": "Verification period gap", "detail": "Verification evidence ends at 2024-12-31 [S2]."}
           ],
-          "empty_title": "No findings returned",
-          "empty_text": "No High, Medium, or Low findings were identified."
+          "empty_title": "No findings",
+          "empty_text": "No High, Medium or Low findings were identified."
         }
+      ],
+      "after": [
+        {"type": "callout", "role": "analysis", "tone": "watch", "title": "Analysis — composite scale is unresolved", "text": "**Observation:** Composite assets differ by $0.3B across two records [S1, S3]. **Why it matters:** Scale changes the context for the presented track record. **Uncertainty:** Effective dates and reconciliation records were not supplied. **What would change the view:** Follow-up request 1 producing a dated reconciliation.", "follow_up_refs": [1]},
+        {"type": "callout", "role": "analysis", "tone": "watch", "title": "Analysis — net-return fee basis is incomplete", "text": "**Observation:** One stated performance fee is absent from the schedule [S1]. **Why it matters:** Net-return interpretation depends on a complete fee basis. **Uncertainty:** The supplied report may omit a separately approved schedule. **What would change the view:** Follow-up request 2 producing approved fee records.", "follow_up_refs": [2]}
       ]
     },
-    "3. Follow-up Requests": {
-      "before": [],
+    "3. Performance Integrity Memo": {
+      "before": [{
+        "type": "heat",
+        "title": "Track-record reliance by evidence area",
+        "columns": ["Supported", "Needs follow-up"],
+        "rows": [
+          {"label": "Compliance claim", "values": [2, 0]},
+          {"label": "Verification coverage", "values": [1, 1]},
+          {"label": "Composite scale", "values": [1, 1]},
+          {"label": "Fee basis", "values": [1, 1]}
+        ],
+        "decimals": 0,
+        "note": "Counts reflect the fictional reviewed evidence [S1][S2][S3]."
+      }],
       "after": []
     },
-    "Appendix B — Sources": {
-      "before": [],
+    "4. Follow-up Requests": {
+      "before": [{
+        "type": "questions",
+        "items": [
+          {"q": "Provide a dated reconciliation of the $2.4B DDQ and $2.1B report composite assets.", "why": "Closes the 1.A.7 inconsistency [S1][S3]."},
+          {"q": "Provide the complete fee schedule, including the performance fee.", "why": "Closes the 4.C.11 disclosure gap [S1]."},
+          {"q": "Provide the current list of composite descriptions.", "why": "Closes the 4.C.15 evidence request [S1]."}
+        ]
+      }],
       "after": []
     },
-    "Appendix C — Method & Disclaimer": {
-      "before": [],
-      "after": []
-    }
+    "Appendix A — Findings Checklist": {"before": [], "after": []},
+    "Appendix B — Sources": {"before": [], "after": []},
+    "Appendix C — Method & Disclaimer": {"before": [], "after": []}
   }
 }

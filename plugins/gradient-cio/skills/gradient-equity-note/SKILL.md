@@ -1,6 +1,8 @@
 ---
 name: gradient-equity-note
 description: "Create a branded, sourced note on one US-listed issuer. Triggers: 'equity note on a ticker', 'top holding', 'concentrated position', 'what changed in the filing', 'who holds this ticker'. Hands manager diligence to ODD and decisions to IC memo."
+metadata:
+  summary: "Research one public equity issuer with sourced fundamentals and filing changes."
 ---
 
 # Gradient equity research note
@@ -52,15 +54,24 @@ is not a clean bill of health.
 ## 4. Build and deliver
 
 Read `references/equity-evidence-contract.md#report-and-delivery`, then
-`references/report-style.md` and `references/writing-standards.md` only while
-drafting/rendering. Keep every fixed section and replace missing evidence with
+`references/report-style.md`, `references/writing-standards.md`, and
+`references/analysis-examples.md` only while drafting/rendering. Keep every
+fixed section and replace missing evidence with
 typed unavailability. Every analytical/key-judgment callout is sourced.
 
-Validate and render the same report source:
+Use this exact order: Executive summary; Fundamentals trend; Filing changes;
+Risk factors; Latest earnings release; Peers and dated valuation context;
+Industry structure; Positioning and crowding; Roster holders; Appendix A —
+Sources and method. Lead each analytical section with the governed visual
+defined by the evidence contract, before its first table. Keep the four
+executive tiles and Key judgments. Do not use generic `Visual evidence`
+placeholders or duplicate `Analysis —` prefixes.
+
+Validate and run authoritative QA on the same report source:
 
 ```text
 python <skill>/scripts/validate_equity_note.py report.json
-python <skill>/scripts/render.py report.json --format <pdf|pptx|both> --out "<TICKER> - Equity Research Note <YYYY-MM-DD>"
+python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<TICKER> - Equity Research Note <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json
 ```
 
 PDF is default; explicit slide wording selects PPTX; `both`/`board pack`

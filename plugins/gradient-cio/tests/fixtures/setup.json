@@ -93,83 +93,77 @@
    "new_page": false,
    "blocks": [
     {
-     "type": "table",
-     "columns": [
-      "Skill",
-      "Produces",
-      "Status",
-      "Note"
+     "type": "two_col",
+     "left": [
+      {
+       "type": "table",
+       "title": "Ready",
+       "columns": [
+        "Skill",
+        "Produces",
+        "Note"
+       ],
+       "align": [
+        "n",
+        "l",
+        "l"
+       ],
+       "rows": [
+        [
+         "gradient-odd-report",
+         "ODD report",
+         "Event feed not published; reports disclose the gap"
+        ],
+        [
+         "gradient-ddq-reconcile",
+         "DDQ reconciliation",
+         "One subject per call"
+        ],
+        [
+         "gradient-manager-monitor",
+         "Weekly digest",
+         "1 roster fund monitored"
+        ],
+        [
+         "gradient-gips-* (5)",
+         "GIPS reviews",
+         "Works from supplied documents"
+        ],
+        [
+         "gradient-setup",
+         "Readiness report",
+         "Current check"
+        ]
+       ]
+      }
      ],
-     "align": [
-      "n",
-      "l",
-      "l",
-      "l"
-     ],
-     "rows": [
-      [
-       "gradient-odd-report",
-       "ODD report",
-       {
-        "chip": "Ready",
-        "status": "ready"
-       },
-       "Event feed not yet published; reports say so"
-      ],
-      [
-       "gradient-ddq-reconcile",
-       "DDQ reconciliation",
-       {
-        "chip": "Ready",
-        "status": "ready"
-       },
-       "One subject per call; saving runs not yet available"
-      ],
-      [
-       "gradient-manager-monitor",
-       "Weekly monitoring digest",
-       {
-        "chip": "Ready",
-        "status": "ready"
-       },
-       "1 roster fund monitored"
-      ],
-      [
-       "gradient-macro-brief",
-       "Macro briefing deck",
-       {
-        "chip": "Partial",
-        "status": "partial"
-       },
-       "Regime-state view unavailable; deck uses Gradient signal instead"
-      ],
-      [
-       "gradient-ic-memo",
-       "IC memo",
-       {
-        "chip": "Partial",
-        "status": "partial"
-       },
-       "Portfolio and Strategy Lab not licensed: memo from supplied holdings only"
-      ],
-      [
-       "gradient-gips-* (5 skills)",
-       "GIPS reviews and briefing notes",
-       {
-        "chip": "Ready",
-        "status": "ready"
-       },
-       "Work from documents; Gradient evidence used when available"
-      ],
-      [
-       "gradient-setup",
-       "This report",
-       {
-        "chip": "Ready",
-        "status": "ready"
-       },
-       ""
-      ]
+     "right": [
+      {
+       "type": "table",
+       "title": "Partial",
+       "columns": [
+        "Skill",
+        "Produces",
+        "Note"
+       ],
+       "align": [
+        "n",
+        "l",
+        "l"
+       ],
+       "rows": [
+        [
+         "gradient-macro-brief",
+         "Macro deck",
+         "Regime state unavailable; uses Gradient signal"
+        ],
+        [
+         "gradient-ic-memo",
+         "IC memo",
+         "Portfolio core: Not licensed; Strategy Lab supplement: Not licensed (optional). Use supplied holdings"
+        ]
+       ]
+      }
      ]
     }
    ]
@@ -460,7 +454,7 @@
    ]
   },
   {
-   "title": "Appendix \u2014 Sources",
+   "title": "Appendix A \u2014 Sources",
    "num": "A",
    "blocks": [
     {
@@ -514,6 +508,46 @@
        "S4",
        "Diligence Roster",
        "get_diligence_roster_funds",
+       "2026-10-04",
+       {
+        "chip": "passed",
+        "status": "passed"
+       }
+      ],
+      [
+       "S5",
+       "The Read readiness probe",
+       "get_the_read",
+       "2026-10-02",
+       {
+        "chip": "passed",
+        "status": "passed"
+       }
+      ],
+      [
+       "S6",
+       "Macro conditions readiness probe",
+       "get_macro_conditions",
+       "2026-10-02",
+       {
+        "chip": "passed",
+        "status": "passed"
+       }
+      ],
+      [
+       "S7",
+       "Gradient signal readiness probe",
+       "get_macro_signals",
+       "2026-10-02",
+       {
+        "chip": "passed",
+        "status": "passed"
+       }
+      ],
+      [
+       "S8",
+       "Macro calendar readiness probe",
+       "get_macro_calendar",
        "2026-10-04",
        {
         "chip": "passed",

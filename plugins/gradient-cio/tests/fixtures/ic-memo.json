@@ -101,21 +101,21 @@
           "role": "key_judgment",
           "tone": "bad",
           "title": "Key judgment — Policy drives the decision",
-          "text": "Observation: Two allocation bands are in Breach [S1]. Why it matters: The proposed rebalance cures both. Uncertainty: Risk-limit observations remain unavailable. What would change the view: Aligned risk evidence that changes implementation capacity."
+          "text": "Observation: Two allocation bands are in Breach [S1]. Why it matters: The proposed rebalance directly cures both policy exceptions. Uncertainty: Governed risk-limit observations remain unavailable for the decision. What would change the view: Aligned risk results showing another breach or reduced implementation capacity."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "good",
           "title": "Key judgment — Liquidity supports implementation",
-          "text": "Observation: T1 liquidity is 44.6% versus a 15.0% minimum [S1]. Why it matters: It provides implementation capacity. Uncertainty: Private valuations lag. What would change the view: An updated liquidity schedule that reduces the cushion."
+          "text": "Observation: T1 liquidity is 44.6% versus a 15.0% minimum [S1]. Why it matters: The 29.6-point cushion provides meaningful implementation capacity. Uncertainty: Private valuations lag the liquid-asset measurement date. What would change the view: An updated liquidity schedule reducing coverage below the policy minimum."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — Return tradeoff is modest",
-          "text": "Observation: The proposed case lowers return 15 bps and volatility 60 bps [S3]. Why it matters: The tradeoff accompanies breach correction. Uncertainty: These are assumptions. What would change the view: A refreshed CMA with materially different estimates."
+          "text": "Observation: The proposed case lowers return 15 bps and volatility 60 bps [S3]. Why it matters: That tradeoff accompanies correction of both policy breaches. Uncertainty: Long-horizon CMA assumptions are not realized outcomes. What would change the view: A refreshed CMA reversing the 45-bps risk-return tradeoff."
         }
       ],
       "new_page": false,
@@ -124,35 +124,6 @@
     {
       "title": "Portfolio Snapshot",
       "blocks": [
-        {
-          "type": "markdown",
-          "text": "| Item | Value | Source |\n|---|---|---|\n| Total NAV | USD 3375.0m | [S1] |\n| Unfunded commitments | USD 420.0m | [S1] |\n| Number of holdings / commitments | 56 | [S1] |\n| Number of managers | 18 | [S1] |\n| Valuation date(s) | 2026-09-30; private funds 2026-06-30 (one quarter lag) | [S1] |"
-        },
-        {
-          "type": "waterfall",
-          "title": "Proposed allocation changes (percentage points)",
-          "items": [
-            {
-              "label": "Public equity",
-              "value": -4.0,
-              "display": "-4.0pp"
-            },
-            {
-              "label": "Fixed income",
-              "value": 2.0,
-              "display": "+2.0pp"
-            },
-            {
-              "label": "Cash",
-              "value": 2.0,
-              "display": "+2.0pp"
-            }
-          ]
-        },
-        {
-          "type": "markdown",
-          "text": "| Asset class | Current weight | Policy target | Range (min–max) | Active (bps) | Status |\n|---|---|---|---|---|---|\n| public_equity | 52.0% | 45.0% | 35.0%–55.0% | +700 bps | Compliant |\n| fixed_income | 19.0% | 25.0% | 20.0%–30.0% | −600 bps | Breach |\n| private_equity | 17.0% | 15.0% | 10.0%–20.0% | +200 bps | Compliant |\n| real_estate | 11.0% | 10.0% | 5.0%–12.0% | +100 bps | Compliant |\n| cash | 1.0% | 5.0% | 2.0%–8.0% | −400 bps | Breach |\n| Total | 100.0% | 100.0% | | | |"
-        },
         {
           "type": "two_col",
           "left": [
@@ -231,11 +202,15 @@
           ]
         },
         {
+          "type": "markdown",
+          "text": "| Item | Value | Source |\n|---|---|---|\n| Total NAV | USD 3375.0m | [S1] |\n| Unfunded commitments | USD 420.0m | [S1] |\n| Number of holdings / commitments | 56 | [S1] |\n| Number of managers | 18 | [S1] |\n| Valuation date(s) | 2026-09-30; private funds 2026-06-30 (one quarter lag) | [S1] |\n\n| Asset class | Current weight | Policy target | Range (min–max) | Active (bps) | Status |\n|---|---|---|---|---|---|\n| public_equity | 52.0% | 45.0% | 35.0%–55.0% | +700 bps | Compliant |\n| fixed_income | 19.0% | 25.0% | 20.0%–30.0% | −600 bps | Breach |\n| private_equity | 17.0% | 15.0% | 10.0%–20.0% | +200 bps | Compliant |\n| real_estate | 11.0% | 10.0% | 5.0%–12.0% | +100 bps | Compliant |\n| cash | 1.0% | 5.0% | 2.0%–8.0% | −400 bps | Breach |\n| Total | 100.0% | 100.0% | | | |"
+        },
+        {
           "type": "callout",
           "role": "analysis",
           "tone": "bad",
           "title": "Analysis — Two sleeves need correction",
-          "text": "Observation: Fixed income and cash are below policy minimums [S1]. Why it matters: The breaches drive trade sizing. Uncertainty: Valuations can move weights. What would change the view: Updated valuations that restore compliance."
+          "text": "Observation: Fixed income and cash are both below policy minimums [S1]. Why it matters: Those two breaches determine the required trade sizing. Uncertainty: Current valuation dates may omit subsequent weight movements. What would change the view: Refreshed valuations restoring both sleeves above minimum thresholds."
         }
       ],
       "new_page": false,
@@ -244,10 +219,6 @@
     {
       "title": "IPS Compliance",
       "blocks": [
-        {
-          "type": "markdown",
-          "text": "| # | Constraint | IPS requirement | Current | Status | Source |\n|---|---|---|---|---|---|\n| 1 | Allocation — public_equity | 35.0%–55.0% | 52.0% | Compliant | IPS §4.1 |\n| 2 | Allocation — fixed_income | 20.0%–30.0% | 19.0% | Breach | IPS §4.1 |\n| 3 | Allocation — private_equity | 10.0%–20.0% | 17.0% | Compliant | IPS §4.1 |\n| 4 | Allocation — real_estate | 5.0%–12.0% | 11.0% | Compliant | IPS §4.1 |\n| 5 | Allocation — cash | 2.0%–8.0% | 1.0% | Breach | IPS §4.1 |\n| 6 | Return objective | CPI + 4.5% | 6.7% | Watch | IPS §3.1 |\n| 7 | Expected volatility | ≤ 14.0% | Not available — observation basis unaligned | Not assessed | IPS §3.2 |\n| 8 | Expected max drawdown | ≤ 35.0% | Not available — observation basis unaligned | Not assessed | IPS §3.2 |\n| 9 | T1 liquidity (% NAV) | ≥ 15.0% | 21.0% | Compliant | IPS §5.1 |\n| 10 | Liquidity coverage ratio | ≥ 1.50 | 2.61 | Compliant | IPS §5.3 |\n| 11 | Largest single manager (% NAV) | ≤ 10.0% | 8.5% | Compliant | IPS §6.1 |\n| 12 | No direct tobacco holdings | prohibited | n/a | Not assessed | IPS §7.1 |"
-        },
         {
           "type": "coverage",
           "title": "Policy constraint status",
@@ -315,7 +286,7 @@
         },
         {
           "type": "markdown",
-          "text": "**Summary:** 6 Compliant, 1 Watch, 2 Breach, 3 Not assessed.\n**Breaches and required actions:** Fixed income and cash bands — cured by the Section 13 rebalance."
+          "text": "| # | Constraint | IPS requirement | Current | Status | Source |\n|---|---|---|---|---|---|\n| 1 | Allocation — public_equity | 35.0%–55.0% | 52.0% | Compliant | IPS §4.1 |\n| 2 | Allocation — fixed_income | 20.0%–30.0% | 19.0% | Breach | IPS §4.1 |\n| 3 | Allocation — private_equity | 10.0%–20.0% | 17.0% | Compliant | IPS §4.1 |\n| 4 | Allocation — real_estate | 5.0%–12.0% | 11.0% | Compliant | IPS §4.1 |\n| 5 | Allocation — cash | 2.0%–8.0% | 1.0% | Breach | IPS §4.1 |\n| 6 | Return objective | CPI + 4.5% | 6.7% | Watch | IPS §3.1 |\n| 7 | Expected volatility | ≤ 14.0% | Not available — observation basis unaligned | Not assessed | IPS §3.2 |\n| 8 | Expected max drawdown | ≤ 35.0% | Not available — observation basis unaligned | Not assessed | IPS §3.2 |\n| 9 | T1 liquidity (% NAV) | ≥ 15.0% | 21.0% | Compliant | IPS §5.1 |\n| 10 | Liquidity coverage ratio | ≥ 1.50 | 2.61 | Compliant | IPS §5.3 |\n| 11 | Largest single manager (% NAV) | ≤ 10.0% | 8.5% | Compliant | IPS §6.1 |\n| 12 | No direct tobacco holdings | prohibited | n/a | Not assessed | IPS §7.1 |\n\n**Summary:** 6 Compliant, 1 Watch, 2 Breach, 3 Not assessed.\n**Breaches and required actions:** Fixed income and cash bands — cured by the Section 13 rebalance."
         },
         {
           "type": "bars",
@@ -334,7 +305,7 @@
           "role": "analysis",
           "tone": "bad",
           "title": "Analysis — Compliance evidence is mixed",
-          "text": "Observation: Allocation has two Breaches while risk is Not assessed [S1]. Why it matters: Allocation can be addressed now. Uncertainty: Risk evidence is incomplete. What would change the view: Aligned risk observations that alter the policy conclusion."
+          "text": "Observation: Allocation has two Breaches while risk is Not assessed [S1]. Why it matters: Allocation can be corrected before risk evidence arrives. Uncertainty: Governed risk observations remain unavailable for aligned assessment. What would change the view: Returned risk results that create or remove a policy breach."
         }
       ],
       "new_page": false,
@@ -426,11 +397,12 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Relative return stayed positive",
-          "text": "Observation: The portfolio exceeded policy by 49 bps over one year [S2]. Why it matters: It supplies context, not causation. Uncertainty: Attribution is unavailable. What would change the view: A reconciled effect decomposition."
+          "text": "Observation: The portfolio exceeded policy by 49 bps over one year [S2]. Why it matters: Positive excess return supplies context but not causal attribution. Uncertainty: Effect-level attribution results remain unavailable for this period. What would change the view: Reconciled attribution records identifying a negative leading effect."
         }
       ],
       "new_page": true,
-      "num": "05"
+      "num": "05",
+      "page_break": "prefer"
     },
     {
       "title": "Factor Exposures & Concentration",
@@ -488,7 +460,7 @@
           "role": "analysis",
           "tone": "good",
           "title": "Analysis — Concentration remains within limit",
-          "text": "Observation: The largest manager is 8.5% versus a 10.0% limit [S1]. Why it matters: The returned measure is compliant. Uncertainty: Look-through holdings are incomplete. What would change the view: Completed holdings showing higher concentration."
+          "text": "Observation: The largest manager is 8.5% versus a 10.0% limit [S1]. Why it matters: The returned concentration measure remains policy compliant. Uncertainty: Incomplete look-through holdings may omit indirect manager exposure. What would change the view: Completed holdings showing concentration above the 10.0% threshold."
         }
       ],
       "new_page": false,
@@ -554,18 +526,45 @@
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Assumption gap needs review",
-          "text": "Observation: Real estate is 499 bps above consensus [S4]. Why it matters: The gap affects the forward case. Uncertainty: Dates and model bases differ. What would change the view: Aligned assumptions that narrow the gap."
+          "text": "Observation: Real estate is 499 bps above consensus [S4]. Why it matters: That gap materially affects the forward portfolio case. Uncertainty: Source dates and model bases are not aligned. What would change the view: Comparable refreshed assumptions narrowing the gap below 100 bps."
         }
       ],
-      "new_page": true,
+      "new_page": false,
       "num": "07"
     },
     {
       "title": "Stress Tests & Scenarios",
       "blocks": [
         {
+          "type": "bars",
+          "title": "Scenario impacts (%)",
+          "all_accent": false,
+          "items": [
+            {
+              "label": "2008 global financial crisis",
+              "value": -24.0,
+              "display": "−24.0%",
+              "color": "#E8735A"
+            },
+            {
+              "label": "5th percentile, 1 year",
+              "value": -14.0,
+              "display": "−14.0%",
+              "color": "#E8735A"
+            }
+          ],
+          "note": "Portfolio impact, worst first [S8]"
+        },
+        {
           "type": "markdown",
           "text": "| Scenario | Type | Portfolio impact | Policy impact | Liquidity coverage after | Source |\n|---|---|---|---|---|---|\n| 2008 global financial crisis | Historical | −24.0% | −21.0% | 2.61 | [S8] |\n| 5th percentile, 1 year | Simulated percentile | −14.0% | −12.5% | 3.80 | [S8] |\n\n**Robustness:** Results are stable across start dates within ±80 bps of expected return [S8]."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Stress losses remain material",
+          "text": "Observation: The historical stress impact is −24.0% [S8]. Why it matters: It frames the loss accepted alongside the proposed breach cure. Uncertainty: Scenario assumptions are illustrative rather than probability estimates. What would change the view: Governed scenario results showing materially lower portfolio impact."
         }
       ],
       "new_page": false,
@@ -712,6 +711,12 @@
           }
         },
         {
+          "type": "callout",
+          "tone": "info",
+          "title": "Commitment flow context",
+          "text": "Projected calls and distributions are shown separately so the returned pacing and cash-flow evidence remains readable [S9]."
+        },
+        {
           "type": "chart",
           "chart": {
             "chart_id": "commitments-cashflow",
@@ -752,7 +757,7 @@
           "role": "analysis",
           "tone": "good",
           "title": "Analysis — Liquidity clears the minimum",
-          "text": "Observation: Stress coverage is 2.61 versus a 1.50 minimum [S1][S11]. Why it matters: It supports implementation. Uncertainty: Calls are projected. What would change the view: An updated commitment schedule that reduces coverage."
+          "text": "Observation: Stress coverage is 2.61 versus a 1.50 minimum [S1][S11]. Why it matters: The 1.11 cushion supports near-term implementation capacity. Uncertainty: Commitment-call assumptions are projected and not yet confirmed. What would change the view: An updated schedule reducing coverage below the 1.50 threshold."
         }
       ],
       "new_page": false,
@@ -761,10 +766,6 @@
     {
       "title": "Manager & Operational Diligence",
       "blocks": [
-        {
-          "type": "markdown",
-          "text": "| Manager | Strategy | Exposure (% NAV) | ODD red flags | Open findings (H/M/L) | Monitor alerts | GIPS status | Last review | Source |\n|---|---|---|---|---|---|---|---|---|\n| Manager A | Global equity | 8.5% | 0 | 0/1/0 | 0 | Claims, verified | 2026-06-30 | [S5] |\n| Other (17 managers) | Various | 91.5% | n/a | 0/2/3 | 0 | n/a | n/a | [S5] |"
-        },
         {
           "type": "findings",
           "title": "Exposure-weighted diligence findings",
@@ -780,14 +781,14 @@
         },
         {
           "type": "markdown",
-          "text": "**Exposure-weighted findings:** No active High findings [S5].\n**Attention queue:** None overdue [S5]."
+          "text": "| Manager | Strategy | Exposure (% NAV) | ODD red flags | Open findings (H/M/L) | Monitor alerts | GIPS status | Last review | Source |\n|---|---|---|---|---|---|---|---|---|\n| Manager A | Global equity | 8.5% | 0 | 0/1/0 | 0 | Claims, verified | 2026-06-30 | [S5] |\n| Other (17 managers) | Various | 91.5% | n/a | 0/2/3 | 0 | n/a | n/a | [S5] |\n\n**Exposure-weighted findings:** No active High findings [S5].\n**Attention queue:** None overdue [S5]."
         },
         {
           "type": "callout",
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — No high findings returned",
-          "text": "Observation: No active High findings were returned [S5]. Why it matters: Immediate operational concern is lower. Uncertainty: Verification remains open. What would change the view: New findings or completed verification evidence."
+          "text": "Observation: No active High findings were returned [S5]. Why it matters: Immediate operational escalation is not evidenced today. Uncertainty: Verification remains open and may reveal missing findings. What would change the view: New High findings or completed verification records identifying one."
         }
       ],
       "new_page": false,
@@ -796,6 +797,28 @@
     {
       "title": "Performance Integrity & GIPS",
       "blocks": [
+        {
+          "type": "coverage",
+          "title": "GIPS review coverage",
+          "items": [
+            {
+              "name": "Total fund",
+              "status": "unavailable",
+              "note": "Asset Owner Report not provided [S5]"
+            },
+            {
+              "name": "Manager A",
+              "status": "degraded",
+              "note": "Assessment complete; latest verification report open [S5]"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "watch",
+          "title": "GIPS follow-ups",
+          "text": "Obtain Manager A's latest verification report within 30 days and provide the total-fund GIPS Asset Owner Report at the next review [S5]."
+        },
         {
           "type": "markdown",
           "text": "### 11.1 Total fund\nNot assessed — no GIPS Asset Owner Report provided.\n\n### 11.2 Manager A\n**Overall assessment:** Satisfactory with follow-ups. Verification report for the latest year not yet received."
@@ -840,7 +863,7 @@
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Macro context is defensive",
-          "text": "Observation: GRIP is 76 and Defensive [S7]. Why it matters: It informs pacing, not the breach decision. Uncertainty: One input is stale. What would change the view: A refreshed signal with a different regime."
+          "text": "Observation: GRIP is 76 and Defensive [S7]. Why it matters: The signal informs implementation pacing, not breach correction. Uncertainty: One macro input is stale within current coverage. What would change the view: Refreshed signal results crossing into a different named regime."
         }
       ],
       "new_page": false,
@@ -906,6 +929,12 @@
           ]
         },
         {
+          "type": "callout",
+          "tone": "info",
+          "title": "Decision economics",
+          "text": "The proposed case exchanges 15 bps of expected return for 60 bps lower expected volatility, 200 bps more T1 liquidity, and correction of both IPS breaches [S3][S11]."
+        },
+        {
           "type": "markdown",
           "text": "| Asset class / manager | Current | Proposed | Change (bps) | Funding source | IPS status after |\n|---|---|---|---|---|---|\n| public_equity | 52.0% | 48.0% | −400 bps | Index fund | Compliant |\n| fixed_income | 19.0% | 21.0% | +200 bps | Public equity | Compliant |\n| cash | 1.0% | 3.0% | +200 bps | Public equity | Compliant |\n\n**13.2 Impact summary**\n\n| Measure | Current | Proposed | Change | Source |\n|---|---|---|---|---|\n| Expected return | 6.7% | 6.6% | −15 bps | [S3] |\n| Expected volatility | 13.1% | 12.5% | −60 bps | [S3] |\n| Sharpe ratio | 0.22 | 0.22 | 0.00 | [S3] |\n| T1 liquidity (% NAV) | 44.6% | 46.6% | +200 bps | [S11] |\n| Liquidity coverage ratio | 2.61 | 2.70 | 0.09 | [S11] |\n| IPS breaches | 2 | 0 | −2 | [S11] |\n| Estimated transaction cost (bps) | n/a | 3 bps | +3 bps | [S11] |\n\n**Implementation:** Sell the index fund in two tranches over 30 days; buy core bonds and Treasury bills [S11].\n**Alternatives considered:** No change — rejected because two band breaches and the coverage breach would remain. Full rebalance to policy — rejected because it would sell 700 bps of equity into a Defensive regime in one step."
         },
@@ -914,7 +943,7 @@
           "role": "analysis",
           "tone": "good",
           "title": "Analysis — Proposal cures both breaches",
-          "text": "Observation: Proposed weights reduce IPS breaches from two to zero [S11]. Why it matters: The change addresses the decision. Uncertainty: Costs and market movement remain unknown. What would change the view: An implementation estimate that materially changes sizing."
+          "text": "Observation: Proposed weights reduce IPS breaches from two to zero [S11]. Why it matters: The change resolves both identified allocation exceptions. Uncertainty: Transaction costs and market movement remain unknown. What would change the view: An implementation estimate showing either breach remains after trades."
         }
       ],
       "new_page": false,
@@ -923,10 +952,6 @@
     {
       "title": "Risks & Mitigants",
       "blocks": [
-        {
-          "type": "markdown",
-          "text": "| # | Risk | Rating | Evidence | Mitigant | Owner |\n|---|---|---|---|---|---|\n| 1 | Risk-limit compliance not assessed | Medium | Persisted thresholds lack a governed observation horizon and return basis [S1] | Approve an observation basis before evaluating volatility, drawdown or CVaR compliance | CIO |\n| 2 | Real estate CMA well above consensus | Medium | +499 bps gap [S4] | Run Section 7 with consensus real estate assumption before the next review | Analyst |\n| 3 | Return objective shortfall | Low | −28 bps [S3] | Revisit spending policy at the annual review | Committee |"
-        },
         {
           "type": "tiles",
           "title": "Risk count by rating",
@@ -950,9 +975,20 @@
               "tone": "good"
             }
           ]
+        },
+        {
+          "type": "markdown",
+          "text": "| # | Risk | Rating | Evidence | Mitigant | Owner |\n|---|---|---|---|---|---|\n| 1 | Risk-limit compliance not assessed | Medium | Persisted thresholds lack a governed observation horizon and return basis [S1] | Approve an observation basis before evaluating volatility, drawdown or CVaR compliance | CIO |\n| 2 | Real estate CMA well above consensus | Medium | +499 bps gap [S4] | Run Section 7 with consensus real estate assumption before the next review | Analyst |\n| 3 | Return objective shortfall | Low | −28 bps [S3] | Revisit spending policy at the annual review | Committee |"
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Basis gaps remain actionable",
+          "text": "Observation: Two Medium risks concern unaligned policy-risk evidence and the 499 bps real-estate assumption gap [S1][S4]. Why it matters: Both limit confidence without changing the requested vote. Uncertainty: Comparable risk and assumption records remain unavailable. What would change the view: Refreshed records resolving either named Medium risk."
         }
       ],
-      "new_page": true,
+      "new_page": false,
       "num": "14"
     },
     {
@@ -960,7 +996,7 @@
       "blocks": [
         {
           "type": "markdown",
-          "text": "| # | Item | Reason | Timing | Owner |\n|---|---|---|---|---|\n| 1 | Confirm inflation assumption for real return objective | IPS does not state one | Before approval | CIO |\n| 2 | Provide look-through holdings | Not available | Next review | Operations |\n| 3 | Obtain Manager A verification report | GIPS follow-up | Within 30 days | Analyst |\n| 4 | Provide GIPS Asset Owner Report | Not provided | Next review | Operations |\n| 5 | Define the governed policy-risk observation horizon and return basis | Risk rows are not assessed without aligned observations | Next review | CIO |"
+          "text": "| # | Item | Reason | Timing | Owner |\n|---|---|---|---|---|\n| 1 | Set real-return inflation assumption | IPS omission | Before approval | CIO |\n| 2 | Provide look-through holdings | Coverage gap | Next review | Operations |\n| 3 | Obtain Manager A verification report | GIPS follow-up | Within 30 days | Analyst |\n| 4 | Provide GIPS Asset Owner Report | Evidence gap | Next review | Operations |\n| 5 | Set policy-risk horizon and basis | Risk tests unassessed | Next review | CIO |"
         }
       ],
       "new_page": false,
@@ -971,7 +1007,7 @@
       "blocks": [
         {
           "type": "markdown",
-          "text": "| Role | Name | Decision | Date |\n|---|---|---|---|\n| Prepared by | | n/a | |\n| Reviewed by (CIO) | | | |\n| Committee chair | | | |\n\n---"
+          "text": "**Resolution:** Approve the Section 13 rebalance, subject to confirming the inflation assumption before the\nfirst trade and retaining the 30-day implementation window [S11].\n\n| Role | Name | Decision | Date |\n|---|---|---|---|\n| Prepared by | | n/a | |\n| Reviewed by (CIO) | | | |\n| Committee chair | | | |\n| Voting members | | Approve / Reject / Abstain | |\n\n**Post-decision record:** Operations records the final weights, implementation date and transaction-cost\nestimate. The CIO reports completion, exceptions and the five open items in Section 15 at the next meeting.\n\n---"
         }
       ],
       "new_page": false,
@@ -986,7 +1022,8 @@
         }
       ],
       "new_page": true,
-      "num": "A"
+      "num": "A",
+      "page_break": "force"
     },
     {
       "title": "Appendix — Server Metric Methods",
@@ -1004,7 +1041,7 @@
       "blocks": [
         {
           "type": "markdown",
-          "text": "- Expected returns and risk are forward-looking assumptions from Gradient ICAPM Global Baseline Q3 2026, not forecasts or guarantees. Actual results will differ.\n- Performance is shown net of manager fees. Periods over one year are annualized.\n- Attribution is unavailable for this example because no governed segment-weight cohort was returned; no local fallback is used. Factor model: Portfolio Analytics factor/currency exposure.\n- Private-markets valuations may lag by 3 months; values as of 2026-06-30.\n- Data sources and retrieval dates are listed in Appendix A. Sections using illustrative data are marked; they do not describe the organization's holdings.\n- GIPS assessments are diligence reviews against the 2020 GIPS standards, not verifications or legal opinions.\n- This memo was prepared with AI assistance from structured data and reviewed by the preparer."
+          "text": "- Expected returns and risk are forward-looking assumptions from Gradient ICAPM Global Baseline Q3 2026, not forecasts or guarantees. Actual results will differ.\n- Performance is shown net of manager fees. Periods over one year are annualized.\n- Attribution is unavailable for this example because no governed segment-weight cohort was returned; no local fallback is used. Factor model: Portfolio Analytics factor/currency exposure.\n- Private-markets valuations may lag by 3 months; values as of 2026-06-30.\n- Data sources and retrieval dates are listed in Appendix A. Sections using illustrative data are marked; they do not describe the organization's holdings.\n- GIPS assessments are diligence reviews against the 2020 GIPS standards, not verifications or legal opinions.\n- This memo was prepared with AI assistance from structured data and reviewed by the preparer.\n- Scenario results are conditional estimates under the named shocks, not probabilities or predictions; no local replacement series is used when governed results are unavailable.\n- Consensus comparisons preserve the returned peer universe, dates and basis. They are context for assumption review, not an independent recommendation.\n- Committee approval does not remove fiduciary review, legal review, manager-document review or implementation controls required by the organization's governing documents."
         }
       ],
       "new_page": false,

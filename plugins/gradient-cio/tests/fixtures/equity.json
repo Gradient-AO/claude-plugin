@@ -164,62 +164,56 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a 2 items to review signal [S1]. Why it matters: The signal frames the review. Uncertainty: Evidence coverage is bounded. What would change the view: New governed evidence that changes the signal."
+          "text": "Observation: The fictional TEST report carries a 2 items to review signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Revenue growth is +6.2% in the TEST evidence [S2]. Why it matters: This measure anchors the executive view. Uncertainty: The fixture is deliberately compact. What would change the view: A refreshed source with a materially different value."
+          "text": "Observation: Revenue growth is +6.2% in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Latest filing is 10-Q in the TEST evidence [S3]. Why it matters: It identifies a monitoring priority. Uncertainty: Supporting detail is limited. What would change the view: Corroborated evidence that resolves or reverses the item."
+          "text": "Observation: Latest filing is 10-Q in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
     {
-      "title": "Fundamentals, filing changes and risk factors",
-      "kicker": "SEC XBRL facts, FY2025 10-K and 2026 10-Qs",
+      "id": "fundamentals-trend",
+      "title": "Fundamentals trend",
+      "kicker": "Revenue growth continued while operating margin declined",
       "blocks": [
         {
-          "type": "two_col",
-          "left": [
+          "type": "line",
+          "title": "Revenue (USD billions)",
+          "series": [
             {
-              "type": "line",
-              "title": "Revenue (USD billions)",
-              "series": [
-                {"name": "Revenue", "points": [["2022-12-31", 9.8], ["2023-12-31", 10.7], ["2024-12-31", 11.68], ["2025-12-31", 12.4]]}
-              ],
-              "note": "First-filed annual facts [S1]."
+              "name": "Revenue",
+              "points": [
+                [
+                  "2022-12-31",
+                  9.8
+                ],
+                [
+                  "2023-12-31",
+                  10.7
+                ],
+                [
+                  "2024-12-31",
+                  11.68
+                ],
+                [
+                  "2025-12-31",
+                  12.4
+                ]
+              ]
             }
           ],
-          "right": [
-            {
-              "type": "line",
-              "title": "Operating margin",
-              "series": [
-                {"name": "Margin", "points": [["2022-12-31", 15.2], ["2023-12-31", 15.9], ["2024-12-31", 16.1], ["2025-12-31", 14.8]]}
-              ],
-              "y_suffix": "%",
-              "note": "Calculated by the governed fundamentals result [S1]."
-            }
-          ]
-        },
-        {
-          "type": "heat",
-          "title": "Filing-change intensity",
-          "columns": ["Added", "Removed"],
-          "rows": [
-            {"label": "10-Q 2026-08-05", "values": [3, 0]},
-            {"label": "Risk factors", "values": [1, 0]}
-          ],
-          "decimals": 0,
-          "note": "Returned disclosure and risk-factor change counts [S3][S6]."
+          "note": "First-filed annual facts [S1]."
         },
         {
           "type": "table",
@@ -343,6 +337,46 @@
           ]
         },
         {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Growth with margin pressure",
+          "text": "Observation: FY2025 revenue rose 6.2% while operating margin fell to 14.8% [S1]. Why it matters: Growth did not translate into stable operating profitability. Uncertainty: Annual statement coverage does not isolate margin drivers. What would change the view: Later filed statements showing measurable margin stabilization."
+        }
+      ]
+    },
+    {
+      "id": "filing-changes",
+      "title": "Filing changes",
+      "kicker": "The latest quarterly filing added three disclosure passages",
+      "blocks": [
+        {
+          "type": "heat",
+          "title": "Filing-change intensity",
+          "columns": [
+            "Added",
+            "Removed"
+          ],
+          "rows": [
+            {
+              "label": "10-Q 2026-08-05",
+              "values": [
+                3,
+                0
+              ]
+            },
+            {
+              "label": "Risk factors",
+              "values": [
+                1,
+                0
+              ]
+            }
+          ],
+          "decimals": 0,
+          "note": "Returned disclosure and risk-factor change counts [S3][S6]."
+        },
+        {
           "type": "table",
           "title": "Latest 10-Q vs prior 10-Q",
           "columns": [
@@ -371,6 +405,37 @@
           "note": "Counts of disclosure passages from the filing diff [S3]."
         },
         {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — New passages merit review",
+          "text": "Observation: The 2026-08-05 10-Q added three passages and removed none [S3]. Why it matters: New language can identify changed disclosure emphasis. Uncertainty: Passage-count coverage does not measure the filing's economic impact. What would change the view: A later filing removing or quantifying the added passages."
+        }
+      ]
+    },
+    {
+      "id": "risk-factors",
+      "title": "Risk factors",
+      "kicker": "Supplier dependence is the newest retrieved risk finding",
+      "blocks": [
+        {
+          "type": "findings",
+          "title": "Retrieved risk findings",
+          "items": [
+            {
+              "title": "Supply chain",
+              "detail": "\"Disruptions at single-source suppliers could delay shipments.\" — 10-Q filed 2026-08-05 [S6]",
+              "severity": "medium"
+            },
+            {
+              "title": "Competitive",
+              "detail": "\"We face competition from larger, diversified manufacturers.\" — 10-K filed 2026-02-20 [S6]",
+              "severity": "low"
+            }
+          ],
+          "note": "Fictional TEST filing excerpts, each under 30 words [S6]."
+        },
+        {
           "type": "table",
           "title": "Risk-factor findings",
           "columns": [
@@ -379,19 +444,30 @@
             "Filing",
             "Freshness"
           ],
-          "align": ["l", "l", "n", "c"],
+          "align": [
+            "l",
+            "l",
+            "n",
+            "c"
+          ],
           "rows": [
             [
               "Supply chain",
               "\"Disruptions at single-source suppliers could delay shipments.\"",
               "10-Q 2026-08-05",
-              {"chip": "new", "status": "new"}
+              {
+                "chip": "new",
+                "status": "new"
+              }
             ],
             [
               "Competitive",
               "\"We face competition from larger, diversified manufacturers.\"",
               "10-K 2026-02-20",
-              {"chip": "available", "status": "available"}
+              {
+                "chip": "available",
+                "status": "available"
+              }
             ]
           ],
           "note": "Fictional sample sentences [S6]."
@@ -400,26 +476,102 @@
           "type": "callout",
           "role": "analysis",
           "tone": "watch",
-          "title": "Analysis — Filing changes sharpen review",
-          "text": "Observation: Revenue rose while margin fell and a new supply-chain passage appeared [S1][S3][S6]. Why it matters: Holders should distinguish growth from operating and disclosure changes. Uncertainty: Filing language does not quantify impact. What would change the view: Later filings showing margin recovery or removal of the cited risk."
+          "title": "Analysis — Supplier risk is newest",
+          "text": "Observation: One newest retrieved finding concerns single-source suppliers [S6]. Why it matters: That dependency can interrupt product shipment continuity. Uncertainty: The filing omits quantified probability and financial impact. What would change the view: Later filings documenting diversification or quantified supplier exposure."
         }
       ]
     },
     {
-      "title": "Peers",
-      "kicker": "User-selected peers; period-aligned metrics only",
-      "new_page": false,
+      "id": "latest-earnings-release",
+      "title": "Latest earnings release",
+      "kicker": "Quarterly revenue increased four percent versus the prior period",
       "blocks": [
         {
           "type": "bars",
-          "title": "Crowding measures",
+          "title": "Quarterly revenue versus prior period",
+          "suffix": "B",
+          "items": [
+            {
+              "label": "Prior period",
+              "value": 3.09,
+              "display": "$3.09B",
+              "source": "S8"
+            },
+            {
+              "label": "Latest period",
+              "value": 3.21,
+              "display": "$3.21B",
+              "source": "S8"
+            }
+          ],
+          "note": "GAAP revenue; Form 8-K Item 2.02 filed 2026-07-30 [S8]."
+        },
+        {
+          "type": "kv",
+          "rows": [
+            [
+              "Filed",
+              "2026-07-30",
+              "S8"
+            ],
+            [
+              "Items",
+              "2.02, 9.01",
+              "S8"
+            ],
+            [
+              "Guidance changes",
+              "None extracted",
+              "S8"
+            ]
+          ]
+        },
+        {
+          "type": "bullets",
+          "items": [
+            "Quarterly revenue $3.21B, up 4.0% (GAAP) [S8]",
+            "One-time item: none returned [S8]"
+          ]
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Revenue advanced modestly",
+          "text": "Observation: Quarterly revenue rose 4.0% to $3.21B [S8]. Why it matters: The release confirms continued top-line growth. Uncertainty: Extracted release coverage omits guidance changes and one-time items. What would change the view: A later report showing a materially different revenue trajectory."
+        }
+      ]
+    },
+    {
+      "id": "peers-valuation-context",
+      "title": "Peers and dated valuation context",
+      "kicker": "Free-cash-flow margin trails the two confirmed peers",
+      "blocks": [
+        {
+          "type": "bars",
+          "title": "FY2025 free-cash-flow margin",
           "suffix": "%",
           "items": [
-            {"label": "Filer ownership", "value": 62.1, "source": "S9"},
-            {"label": "Median holder weight", "value": 0.84, "source": "S9"},
-            {"label": "Consensus percentile", "value": 44.0, "source": "S9"}
+            {
+              "label": "EXIC",
+              "value": 5.1,
+              "display": "5.1%",
+              "source": "S4"
+            },
+            {
+              "label": "PEER1",
+              "value": 9.8,
+              "display": "9.8%",
+              "source": "S4"
+            },
+            {
+              "label": "PEER2",
+              "value": 7.2,
+              "display": "7.2%",
+              "source": "S4"
+            }
           ],
-          "note": "Percentages use distinct governed denominators; compare direction, not magnitude [S9]."
+          "note": "Annual periods ending 2025-12-31; peer context dated 2026-08-05 [S4]."
         },
         {
           "type": "table",
@@ -466,21 +618,66 @@
             ]
           ],
           "note": "Annual periods ending 2025-12-31 [S4]. Rank 1 = most favourable per rank_direction."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Cash margin trails peers",
+          "text": "Observation: EXIC's 5.1% FY2025 free-cash-flow margin ranks third among three issuers [S4]. Why it matters: Cash conversion differs across the confirmed comparison set. Uncertainty: The comparison is dated 2026-08-05 and some metrics are incomparable. What would change the view: Period-aligned peer filings reporting a different ranking."
         }
       ]
     },
     {
+      "id": "industry-structure",
       "title": "Industry structure",
-      "kicker": "Supplier concentration is the clearest disclosed structural pressure",
+      "kicker": "Retrieved disclosures emphasize rivalry and supplier dependence",
       "blocks": [
         {
-          "type": "tiles",
-          "tiles": [
-            {"label": "Forces evidenced", "value": "2 of 3", "source": "S7"},
-            {"label": "Single-source risk", "value": "Disclosed", "source": "S7", "tone": "watch"},
-            {"label": "Buyer power", "value": "Not found", "source": "S7"},
-            {"label": "Evidence basis", "value": "SEC text", "source": "S7"}
-          ]
+          "type": "stacked",
+          "title": "Industry evidence coverage by force",
+          "items": [
+            {
+              "label": "Rivalry",
+              "segments": [
+                {
+                  "label": "Evidenced",
+                  "value": 1
+                },
+                {
+                  "label": "Missing",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "label": "Supplier power",
+              "segments": [
+                {
+                  "label": "Evidenced",
+                  "value": 1
+                },
+                {
+                  "label": "Missing",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "label": "Buyer power",
+              "segments": [
+                {
+                  "label": "Evidenced",
+                  "value": 0
+                },
+                {
+                  "label": "Missing",
+                  "value": 1
+                }
+              ]
+            }
+          ],
+          "note": "Binary retrieval coverage, not force strength [S7]."
         },
         {
           "type": "table",
@@ -532,54 +729,38 @@
           "type": "callout",
           "role": "analysis",
           "tone": "watch",
-          "title": "Analysis — Supplier dependence is the clearest disclosed pressure",
-          "text": "Observation: Supplier concentration is evidenced while buyer power is not retrieved [S7]. Why it matters: Disclosed dependency can constrain operating resilience. Uncertainty: Filing text does not measure probability or loss. What would change the view: Diversification evidence or quantified supplier exposure in a later filing."
+          "title": "Analysis — Supplier dependence leads disclosures",
+          "text": "Observation: Supplier concentration is evidenced while buyer power is not retrieved [S7]. Why it matters: Disclosed dependency can constrain operating resilience. Uncertainty: Filing coverage omits probability and quantified loss estimates. What would change the view: Later filings documenting diversification or quantified supplier exposure."
         }
       ]
     },
     {
-      "title": "Latest earnings release",
-      "kicker": "Form 8-K Item 2.02, EX-99.1",
-      "new_page": false,
-      "blocks": [
-        {
-          "type": "kv",
-          "rows": [
-            [
-              "Filed",
-              "2026-07-30",
-              "S8"
-            ],
-            [
-              "Items",
-              "2.02, 9.01",
-              "S8"
-            ],
-            [
-              "Guidance changes",
-              "None extracted",
-              "S8"
-            ]
-          ]
-        },
-        {
-          "type": "bullets",
-          "items": [
-            "Quarterly revenue $3.21B, up 4.0% (GAAP) [S8]",
-            "One-time item: none returned [S8]"
-          ]
-        }
-      ]
-    },
-    {
+      "id": "positioning-crowding",
       "title": "Positioning and crowding",
-      "kicker": "Hedge-fund 13F cohort, period 2026-06-30",
+      "kicker": "Cohort ownership is broad but the directional panels are silent",
       "blocks": [
         {
-          "type": "callout",
-          "tone": "info",
-          "title": "Visual evidence",
-          "text": "Not available — No governed visual was returned for this fictional TEST fixture."
+          "type": "bars",
+          "title": "Crowding measures",
+          "suffix": "%",
+          "items": [
+            {
+              "label": "Filer ownership",
+              "value": 62.1,
+              "source": "S9"
+            },
+            {
+              "label": "Median holder weight",
+              "value": 0.84,
+              "source": "S9"
+            },
+            {
+              "label": "Consensus percentile",
+              "value": 44.0,
+              "source": "S9"
+            }
+          ],
+          "note": "Percentages use distinct governed denominators; compare direction, not magnitude [S9]."
         },
         {
           "type": "kv",
@@ -617,26 +798,26 @@
           "type": "callout",
           "role": "analysis",
           "tone": "info",
-          "title": "Analysis — Ownership is broad but not a directional signal",
-          "text": "Observation: 18 of 29 filers report the issuer, but it is absent from building and unwinding panels [S9]. Why it matters: Breadth alone does not establish momentum. Uncertainty: 13F data are delayed and omit shorts. What would change the view: A governed panel showing a sustained build or unwind."
+          "title": "Analysis — Broad ownership lacks direction",
+          "text": "Observation: 18 of 29 filers report the issuer, but it is absent from building and unwinding panels [S9]. Why it matters: Ownership breadth alone does not establish momentum. Uncertainty: Form 13F records are delayed and omit shorts. What would change the view: Refreshed panel results showing a sustained build or unwind."
         }
       ]
     },
     {
-      "title": "Who holds it on the roster",
-      "kicker": "Firm-level Form 13F",
-      "new_page": false,
+      "id": "roster-holders",
+      "title": "Roster holders",
+      "kicker": "Roster matching was not run without an issuer CUSIP",
       "blocks": [
         {
           "type": "callout",
           "tone": "info",
-          "title": "Not run",
-          "text": "No CUSIP was available for the issuer, so roster holdings were not checked. This is not evidence that no rostered manager holds it."
+          "title": "Roster holders unavailable",
+          "text": "Not available — no issuer CUSIP was returned, so roster holdings were not checked. This bounded miss is not evidence that no rostered manager holds the issuer."
         }
       ]
     },
     {
-      "title": "Appendix — sources and method",
+      "title": "Appendix A — Sources and method",
       "blocks": [
         {
           "type": "table",
@@ -798,7 +979,8 @@
           "title": "Disclaimer",
           "text": "This note summarizes public SEC filings and Gradient-normalized data as of the dates shown. It is not investment, legal, tax or accounting advice, not a recommendation to buy, sell or hold any security, and contains no price target or rating. Filed figures are issuer-reported; Form 13F data is delayed and incomplete. Verify against the source filings before relying on any figure."
         }
-      ]
+      ],
+      "id": "sources-method"
     }
   ]
 }

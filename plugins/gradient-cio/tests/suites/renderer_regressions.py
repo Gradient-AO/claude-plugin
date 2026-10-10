@@ -2,6 +2,13 @@
 
 from suites.harness import *
 from suites.harness import _renderer_module
+from report_layout import (
+    lint_report_design,
+    prepare_report_for_render,
+    repair_preferred_breaks,
+    resolve_layout_budget,
+    validate_layout_budget,
+)
 
 def chart_renderer():
     percentage_column = {
@@ -97,11 +104,10 @@ def chart_renderer():
         "render_hint": {"block": "pie", "x": "sleeve", "y": ["value"]},
     }})
     check(
-        "<svg" in mixed_pie
-        and "<path" in mixed_pie
+        "<table" in mixed_pie
         and "Public" in mixed_pie
-        and "<table" not in mixed_pie,
-        "chart renderer uses the selected numeric series for pie hints",
+        and "<svg" not in mixed_pie,
+        "mixed-unit pie hints fall back to a table",
     )
     allocation_donut = _renderer_module.b_chart({"chart": {
         "chart_id": "bar-portfolio-hierarchy",
@@ -252,6 +258,390 @@ def chart_renderer():
         >= _renderer_module._svg_text_width("Long fictional category label"),
         "narrow signed bars reserve gutters and place negative labels outside endpoints",
     )
+    stress = json.loads(
+        (FIX / "ic-memo-stress-report.json").read_text(encoding="utf-8")
+    )
+    prepared = prepare_report_for_render(stress)
+    body_chart = prepared["sections"][1]["blocks"][0]["chart"]
+    chart_appendix = next(
+        section
+        for section in prepared["sections"]
+        if section.get("id") == "chart-data-appendix"
+    )
+    full_chart = chart_appendix["blocks"][0]["chart"]
+    check(
+        len(body_chart["rows"]) == 12
+        and body_chart["_preview_total"] == 40
+        and body_chart["_appendix_reference"] == "Appendix D — Chart data"
+        and body_chart["truncated"] is False
+        and len(full_chart["rows"]) == 40
+        and full_chart["truncated"] is True,
+        "long chart tables use a body preview and preserve full returned rows in an appendix",
+    )
+    stress_html = _renderer_module.body_html(stress)
+    check(
+        "Showing 12 of 40 returned rows; all returned rows are in Appendix D — Chart data"
+        in stress_html
+        and "Connector output was truncated at source" in stress_html
+        and "not the complete dataset" in stress_html,
+        "chart table previews link to the appendix and retain source truncation disclosure",
+    )
+    check(
+        stress == json.loads(
+            (FIX / "ic-memo-stress-report.json").read_text(encoding="utf-8")
+        )
+        and prepare_report_for_render(prepared) == prepared,
+        "shared report preparation is source-immutable and idempotent",
+    )
+    invalid_budget = {
+        "schema_version": 99,
+        "content": {"sections": {"missing": {"max_words": 10}}},
+    }
+    check(
+        any(
+            "schema_version" in issue
+            for issue in validate_layout_budget(invalid_budget, stress)
+        ),
+        "layout policy rejects unsupported budget schema versions",
+    )
+    schema_v2_report = {
+        "sections": [
+            {"id": "summary", "title": "Summary", "blocks": []},
+            {"num": "02", "title": "Evidence", "blocks": []},
+        ]
+    }
+    schema_v2_budget = {
+        "schema_version": 2,
+        "design_profile": "analytical",
+        "forced_breaks": [],
+        "content": {
+            "defaults": {"max_words": 100},
+            "sections": {
+                "summary": {
+                    "role": "summary",
+                    "requires_analysis": False,
+                    "max_words": 100,
+                },
+                "2": {
+                    "role": "analytical",
+                    "requires_analysis": True,
+                    "max_visuals": 2,
+                },
+            },
+        },
+    }
+    check(
+        validate_layout_budget(schema_v2_budget, schema_v2_report) == [],
+        "schema v2 accepts roles, analysis requirements, and stable id/num resolution",
+    )
+    deck_report = {
+        "meta": {
+            "title": "Macro deck (TEST)",
+            "header_label": "Macro Briefing",
+            "data_as_of": "2026-10-10",
+        },
+        "slides": [{"title": "The message", "blocks": []}],
+    }
+    deck_budget = {
+        "schema_version": 2,
+        "design_profile": "deck",
+        "forced_breaks": [],
+        "sections": {
+            "1": {"role": "reference", "requires_analysis": False}
+        },
+    }
+    prepared_deck = prepare_report_for_render(deck_report)
+    check(
+        "sections" not in prepared_deck
+        and validate_layout_budget(deck_budget, prepared_deck) == [],
+        "deck preparation preserves slides for schema-v2 budget resolution",
+    )
+    malformed_v2 = json.loads(json.dumps(schema_v2_budget))
+    malformed_v2["design_profile"] = "brochure"
+    malformed_v2["forced_breaks"] = "02"
+    malformed_v2["content"]["sections"]["2"]["role"] = "narrative"
+    malformed_v2["content"]["sections"]["2"]["requires_analysis"] = "yes"
+    malformed_v2["content"]["sections"]["2"]["mystery"] = 1
+    malformed_errors = validate_layout_budget(malformed_v2, schema_v2_report)
+    check(
+        all(
+            any(fragment in issue for issue in malformed_errors)
+            for fragment in (
+                "design_profile",
+                "forced_breaks",
+                ".role",
+                ".requires_analysis",
+                "unknown field",
+            )
+        ),
+        "schema v2 rejects wrong types, enum values, and unknown fields",
+    )
+    unresolved_v2 = json.loads(json.dumps(schema_v2_budget))
+    unresolved_v2["content"]["sections"]["missing"] = {
+        "role": "reference",
+        "requires_analysis": False,
+    }
+    check(
+        any(
+            "configured section 'missing' resolves 0 times" in issue
+            for issue in validate_layout_budget(unresolved_v2, schema_v2_report)
+        ),
+        "schema v2 requires every configured section to resolve exactly once",
+    )
+    mode_budget = {
+        "schema_version": 2,
+        "design_profile": "analytical",
+        "forced_breaks": ["summary"],
+        "default_mode": "brief",
+        "content": {
+            "defaults": {"max_words": 100},
+            "sections": {
+                "summary": {
+                    "role": "summary",
+                    "requires_analysis": False,
+                }
+            },
+        },
+        "modes": {
+            "brief": {
+                "design_profile": "reference",
+                "forced_breaks": ["2"],
+                "content": {
+                    "sections": {
+                        "2": {
+                            "role": "analytical",
+                            "requires_analysis": True,
+                        }
+                    }
+                }
+            }
+        },
+    }
+    resolved_mode = resolve_layout_budget(mode_budget, schema_v2_report)
+    check(
+        resolved_mode["design_profile"] == "analytical"
+        and resolved_mode["forced_breaks"] == ["summary"]
+        and resolved_mode["content"]["defaults"] == {"max_words": 100}
+        and set(resolved_mode["content"]["sections"]) == {"summary", "2"},
+        "mode budgets inherit root design profile, breaks, defaults, and sections",
+    )
+    lint_budget = {
+        "schema_version": 2,
+        "design_profile": "analytical",
+        "forced_breaks": [],
+        "content": {
+            "defaults": {},
+            "sections": {
+                "analysis": {
+                    "role": "analytical",
+                    "requires_analysis": True,
+                },
+                "appendix": {
+                    "role": "appendix",
+                    "requires_analysis": False,
+                },
+            },
+        },
+    }
+    lint_report = {
+        "sections": [
+            {
+                "id": "analysis",
+                "title": "Evidence",
+                "new_page": True,
+                "blocks": [
+                    {"type": "table", "rows": []},
+                    {"type": "kv", "rows": []},
+                    {
+                        "type": "two_col",
+                        "left": [
+                            {"type": "table", "rows": []},
+                            {"type": "kv", "rows": []},
+                            {
+                                "type": "chart",
+                                "chart": {
+                                    "status": "ok",
+                                    "rows": [],
+                                    "render_hint": {"block": "table"},
+                                },
+                            },
+                        ],
+                        "right": [],
+                    },
+                    {
+                        "type": "callout",
+                        "title": "Analysis — Analysis — Repeated",
+                        "text": "Duplicate.",
+                    },
+                    {
+                        "type": "callout",
+                        "title": "Analysis — Second",
+                        "text": "Second.",
+                    },
+                    {
+                        "type": "callout",
+                        "title": "Analysis — Third",
+                        "text": "Third.",
+                    },
+                    {
+                        "type": "callout",
+                        "title": "Analysis — Fourth",
+                        "text": "Fourth.",
+                    },
+                    {"type": "callout", "title": "Visual evidence", "text": ""},
+                ],
+            },
+            {
+                "id": "appendix",
+                "title": "Appendix A — Sources",
+                "page_break": "force",
+                "blocks": [],
+            },
+            {
+                "id": "chart-data-appendix",
+                "title": "Appendix B — Chart data",
+                "page_break": "force",
+                "blocks": [],
+            },
+        ]
+    }
+    lint_codes = {
+        item["code"] for item in lint_report_design(lint_report, lint_budget)
+    }
+    check(
+        {
+            "design-forced-break-not-allowlisted",
+            "design-analytical-evidence-missing",
+            "design-analysis-callout-count",
+            "design-consecutive-data-blocks",
+            "design-duplicate-analysis-prefix",
+            "design-generic-visual-evidence",
+        }
+        <= lint_codes,
+        "design lint reports every analytical negative case with stable codes",
+    )
+    check(
+        sum(
+            item["code"] == "design-forced-break-not-allowlisted"
+            for item in lint_report_design(lint_report, lint_budget)
+        )
+        == 2,
+        "authored appendices require allowlisting while generated chart data is exempt",
+    )
+    valid_design_report = {
+        "sections": [
+            {
+                "id": "analysis",
+                "title": "Evidence",
+                "blocks": [
+                    {
+                        "type": "callout",
+                        "title": "Not available — governed result",
+                        "text": "Connector response unavailable.",
+                    },
+                    {"type": "table", "rows": []},
+                    {
+                        "type": "callout",
+                        "title": "Analysis — Evidence gap",
+                        "text": "The gap bounds the conclusion.",
+                    },
+                ],
+            },
+            {
+                "id": "appendix",
+                "title": "Appendix A — Sources",
+                "blocks": [],
+            },
+        ]
+    }
+    check(
+        lint_report_design(valid_design_report, lint_budget) == [],
+        "design lint accepts typed unavailable evidence and one analysis callout",
+    )
+    exempt_budget = json.loads(json.dumps(lint_budget))
+    exempt_budget["design_profile"] = "reference"
+    check(
+        lint_report_design(lint_report, exempt_budget) == []
+        and lint_report_design(
+            lint_report,
+            {**exempt_budget, "design_profile": "deck"},
+        )
+        == [],
+        "reference and deck profiles are exempt from analytical design lint",
+    )
+    forced = prepare_report_for_render(stress)
+    check(
+        forced["sections"][0]["page_break"] == "force"
+        and next(
+            section
+            for section in forced["sections"]
+            if section.get("num") == "13"
+        )["page_break"]
+        == "prefer"
+        and next(
+            section
+            for section in forced["sections"]
+            if section.get("num") == "A"
+        )["page_break"]
+        == "auto",
+        "layout policy preserves authored force and preferred breaks without forcing appendices",
+    )
+    repaired, removed = repair_preferred_breaks(
+        forced,
+        {"Forward Context", "Decision Analysis", "Appendix A — Sources"},
+    )
+    check(
+        removed == ["Decision Analysis"]
+        and repaired["sections"][0]["page_break"] == "force"
+        and next(
+            section
+            for section in repaired["sections"]
+            if section.get("num") == "A"
+        )["page_break"]
+        == "auto",
+        "layout repair removes only preferred breaks and preserves automatic appendices",
+    )
+    cashflow_line = _renderer_module.b_chart(
+        {"chart": stress["sections"][1]["blocks"][1]["chart"]}
+    )
+    label_positions = sorted(
+        float(value)
+        for value in re.findall(
+            r'<text x="[^"]+" y="([\d.]+)" class="cl"[^>]*>'
+            r"(?:Capital calls|Distributions|NAV|Unfunded)</text>",
+            cashflow_line,
+        )
+    )
+    check(
+        "$" in cashflow_line
+        and "M" in cashflow_line
+        and "005437.4" not in cashflow_line
+        and len(label_positions) == 4
+        and all(
+            right - left >= 10.9
+            for left, right in zip(label_positions, label_positions[1:])
+        ),
+        "cash-flow axes use compact currency labels and series end labels do not overlap",
+    )
+    pptx_path = ROOT / "shared" / "gradient_pptx.py"
+    pptx_spec = importlib.util.spec_from_file_location(
+        "gradient_pptx_renderer_test", pptx_path
+    )
+    if pptx_spec is None or pptx_spec.loader is None:
+        check(False, "PowerPoint renderer module can be loaded")
+    else:
+        pptx_module = importlib.util.module_from_spec(pptx_spec)
+        pptx_spec.loader.exec_module(pptx_module)
+        check(
+            pptx_module._axis_number_format(
+                5_437_400,
+                decimals=1,
+                currency="USD",
+                value_format="currency",
+            )
+            == '$0.0,,"M"',
+            "PowerPoint currency axes use the same compact scale",
+        )
 
 def render(keep):
     print("Render checks")
@@ -381,6 +771,119 @@ def render(keep):
             not missing,
             f"GIPS {label}: contains {must}"
             + (f" — missing {missing}" if missing else ""),
+        )
+    stress_pdf = out / "ic-memo-stress.pdf"
+    stress_html = out / "ic-memo-stress.html"
+    stress_report = FIX / "ic-memo-stress-report.json"
+    stress_rendered = subprocess.run(
+        [
+            sys.executable,
+            str(RENDER),
+            str(stress_report),
+            str(stress_pdf),
+            "--html",
+            str(stress_html),
+        ],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    check(
+        stress_rendered.returncode == 0,
+        "IC memo stress fixture renders"
+        + (
+            f": {(stress_rendered.stderr or stress_rendered.stdout).strip()[-300:]}"
+            if stress_rendered.returncode else ""
+        ),
+    )
+    if stress_rendered.returncode == 0 and external_pdf_tools:
+        layout_json = out / "ic-memo-stress-layout.json"
+        layout_checked = subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "shared" / "check_layout.py"),
+                str(stress_pdf),
+                "--report",
+                str(stress_report),
+                "--budget",
+                str(FIX / "ic-memo-stress-budget.json"),
+                "--json",
+                str(layout_json),
+            ],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        structured = (
+            json.loads(layout_json.read_text(encoding="utf-8"))
+            if layout_json.is_file()
+            else {}
+        )
+        check(
+            layout_checked.returncode == 1
+            and any(
+                item.get("code") == "page-underfill"
+                for item in structured.get("diagnostics", [])
+            ),
+            "IC memo stress fixture exposes the preferred-break repair diagnostic"
+            + (
+                f": {(layout_checked.stderr or layout_checked.stdout).strip()[-500:]}"
+                if layout_checked.returncode != 1 else ""
+            ),
+        )
+        check(
+            structured.get("status") == "fail"
+            and structured.get("theme_version")
+            and all(
+                {"start_page", "end_page", "pages_touched"} <= set(section)
+                for section in structured.get("sections", [])
+            ),
+            "layout checker emits stable structured body and section diagnostics",
+        )
+        qa_base = out / "ic-memo-stress-qa"
+        qa_checked = subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "shared" / "qa_report.py"),
+                str(stress_report),
+                "--format",
+                "pdf",
+                "--out",
+                str(qa_base),
+                "--budget",
+                str(FIX / "ic-memo-stress-budget.json"),
+            ],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        qa_json = out / "ic-memo-stress-qa-qa.json"
+        qa_contact = out / "ic-memo-stress-qa-pdf-contact-sheet.png"
+        qa_document = (
+            json.loads(qa_json.read_text(encoding="utf-8"))
+            if qa_json.is_file()
+            else {}
+        )
+        check(
+            qa_checked.returncode == 0
+            and qa_document.get("status") == "pass"
+            and qa_document.get("outputs", {}).get("pdf", {}).get("status")
+            == "pass"
+            and qa_document.get("repair", {}).get("rerendered") is True
+            and qa_document.get("repair", {}).get(
+                "removed_preferred_breaks"
+            )
+            == ["Decision Analysis"]
+            and qa_contact.is_file(),
+            "one-command QA writes structured diagnostics and a labeled PDF contact sheet"
+            + (
+                f": {(qa_checked.stderr or qa_checked.stdout).strip()[-500:]}"
+                if qa_checked.returncode
+                else ""
+            ),
         )
     run_artifact_checks(check, out)
     print(f"PDFs in {out}")

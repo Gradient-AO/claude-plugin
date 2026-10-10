@@ -3,6 +3,7 @@ name: gradient-ic-memo
 description: "Create a deterministic, sourced IC decision memo. Triggers: 'IC memo', 'board memo', 'allocation recommendation', 'rebalance proposal', 'manager hire/fire', 'committee vote'. Accepts handoffs from portfolio, diligence, and GIPS skills."
 metadata:
   version: "0.3.0"
+  summary: "Produce a sourced decision memo with recommendation and requested vote."
 ---
 
 # Gradient IC memo
@@ -62,15 +63,19 @@ their governed meanings.
 ## 4. Draft
 
 Immediately before drafting read `references/memo-template.md`,
-`references/calculations.md`, and `references/writing-standards.md`. Keep all
-16 sections and appendices in exact order, with exact headings, columns, sort
-rules, statuses, formats, and `[S#]` tags. Missing values remain in place as
-`Not available — <reason>`.
+`references/calculations.md`, `references/writing-standards.md`, and
+`references/analysis-examples.md`. Keep all 16 sections and appendices in exact
+order, with exact headings, columns, sort rules, statuses, formats, and `[S#]`
+tags. Missing values remain in place as `Not available — <reason>`.
 
 Before visual construction read `references/report-layout.md`,
 `references/chart-data.md`, and `references/report-style.md`. Visual data must
 come from cited saved results; returned chart items pass through unchanged.
 Analysis may explain uncertainty but introduces no action beyond Section 1.
+Sections 4 and 10 put their required visual evidence before the first table.
+Section 8 leads with scenario-impact bars (or a typed unavailable substitute)
+and ends with Analysis. Section 11 stays compact with coverage plus a follow-up
+callout. Section 14 ends with Analysis. Keep Sections 15 and 16 contiguous.
 
 ## 5. Validate, compose, render
 
@@ -78,13 +83,13 @@ Run each gate until clean:
 
 ```text
 python scripts/validate_memo.py memo.md
-python scripts/compose_memo_json.py memo.md visuals.json meta.json report.json
-python scripts/render.py report.json --format <pdf|pptx|both> --out "<Portfolio> - IC Memo"
+python scripts/compose_memo_json.py memo.md visuals.json meta.json report.json --budget references/layout-budget.json
+python scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - IC Memo" --budget references/layout-budget.json
 ```
 
 Never edit composed JSON directly. PDF is default; explicit slide wording
-selects PPTX; `both`/`board pack` selects both. Inspect every requested output,
-fix source layers, re-compose, and re-render. QA and fact checks block
+selects PPTX; `both`/`board pack` selects both. Inspect the generated QA contact
+sheet, fix source layers using the reported repair levers, re-compose, and rerun. QA and fact checks block
 delivery. Return three lines (recommendation, IPS status, open-item count) plus
 files.
 

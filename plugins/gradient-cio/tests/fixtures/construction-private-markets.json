@@ -138,21 +138,21 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a Pacing and concentration on watch signal [S1]. Why it matters: The signal frames the review. Uncertainty: Evidence coverage is bounded. What would change the view: New governed evidence that changes the signal."
+          "text": "Observation: The fictional TEST report carries a pacing-and-concentration signal above the clear threshold [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Private-markets weight is 23.0% in the TEST evidence [S2]. Why it matters: This measure anchors the executive view. Uncertainty: The fixture is deliberately compact. What would change the view: A refreshed source with a materially different value."
+          "text": "Observation: Private-markets weight is 23.0% in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Policy status is Watch in the TEST evidence [S3]. Why it matters: It identifies a monitoring priority. Uncertainty: Supporting detail is limited. What would change the view: Corroborated evidence that resolves or reverses the item."
+          "text": "Observation: Policy status is Watch rather than Clear in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
@@ -334,98 +334,6 @@
       ]
     },
     {
-      "title": "Historical Performance and Attribution",
-      "kicker": "Returned portfolio evidence; sleeve gaps remain explicit",
-      "blocks": [
-        {
-          "type": "table",
-          "title": "Standard periods",
-          "columns": [
-            "Period",
-            "Portfolio / sleeve",
-            "Benchmark",
-            "Excess",
-            "Coverage"
-          ],
-          "rows": [
-            [
-              "1Y total portfolio",
-              "7.2%",
-              "7.6%",
-              "-0.4pp",
-              "Complete [S8]"
-            ],
-            [
-              "3Y total portfolio (ann.)",
-              "6.8%",
-              "6.5%",
-              "+0.3pp",
-              "Complete [S8]"
-            ],
-            [
-              "Private-markets sleeve",
-              "Not available — sleeve return not returned",
-              "Not available",
-              "Not available",
-              "Unavailable [S8]"
-            ]
-          ]
-        },
-        {
-          "type": "table",
-          "title": "Attribution effects",
-          "columns": [
-            "Effect",
-            "Contribution",
-            "Source"
-          ],
-          "rows": [
-            [
-              "Private-assets total effect",
-              "+0.12pp",
-              "[S8]"
-            ],
-            [
-              "Total active return",
-              "-0.20pp",
-              "[S8]"
-            ],
-            [
-              "Residual",
-              "0.00pp",
-              "[S8]"
-            ]
-          ]
-        },
-        {
-          "type": "kv",
-          "title": "Method",
-          "rows": [
-            [
-              "Method",
-              "Brinson-Fachler",
-              "S8"
-            ],
-            [
-              "Linking",
-              "Symmetric Carino",
-              "S8"
-            ],
-            [
-              "Basis",
-              "Net, monthly linked",
-              "S8"
-            ],
-            [
-              "Tolerance",
-              "1 bp; reconciled",
-              "S8"
-            ]
-          ]
-        }
-      ]
-    },
-    {
       "title": "Target Portfolio Structure",
       "kicker": "The proposed mix reduces concentrated risk while preserving mandate exposure",
       "blocks": [
@@ -433,29 +341,128 @@
           "type": "band",
           "title": "Current weight versus policy range",
           "items": [
-            {"label": "Private equity", "value": 12.0, "low": 8.0, "high": 16.0, "target": 11.0, "display": "12.0% → 11.0%"},
-            {"label": "Private credit", "value": 7.0, "low": 4.0, "high": 10.0, "target": 7.0, "display": "7.0% → 7.0%"},
-            {"label": "Infrastructure", "value": 4.0, "low": 3.0, "high": 8.0, "target": 6.0, "display": "4.0% → 6.0%"},
-            {"label": "Secondaries", "value": 0.0, "low": 0.0, "high": 3.0, "target": 1.0, "display": "0.0% → 1.0%"}
+            {
+              "label": "Private equity",
+              "value": 12.0,
+              "low": 8.0,
+              "high": 16.0,
+              "target": 11.0,
+              "display": "12.0% → 11.0%"
+            },
+            {
+              "label": "Private credit",
+              "value": 7.0,
+              "low": 4.0,
+              "high": 10.0,
+              "target": 7.0,
+              "display": "7.0% → 7.0%"
+            },
+            {
+              "label": "Infrastructure",
+              "value": 4.0,
+              "low": 3.0,
+              "high": 8.0,
+              "target": 6.0,
+              "display": "4.0% → 6.0%"
+            },
+            {
+              "label": "Secondaries",
+              "value": 0.0,
+              "low": 0.0,
+              "high": 3.0,
+              "target": 1.0,
+              "display": "0.0% → 1.0%"
+            }
           ]
         },
         {
           "type": "stacked",
           "title": "Current and target mix",
           "items": [
-            {"label": "Current", "segments": [
-              {"label": "Private equity", "value": 12.0},
-              {"label": "Private credit", "value": 7.0},
-              {"label": "Infrastructure", "value": 4.0},
-              {"label": "Secondaries", "value": 0.0}
-            ]},
-            {"label": "Target", "segments": [
-              {"label": "Private equity", "value": 11.0},
-              {"label": "Private credit", "value": 7.0},
-              {"label": "Infrastructure", "value": 6.0},
-              {"label": "Secondaries", "value": 1.0}
-            ]}
+            {
+              "label": "Current",
+              "segments": [
+                {
+                  "label": "Private equity",
+                  "value": 12.0
+                },
+                {
+                  "label": "Private credit",
+                  "value": 7.0
+                },
+                {
+                  "label": "Infrastructure",
+                  "value": 4.0
+                },
+                {
+                  "label": "Secondaries",
+                  "value": 0.0
+                }
+              ]
+            },
+            {
+              "label": "Target",
+              "segments": [
+                {
+                  "label": "Private equity",
+                  "value": 11.0
+                },
+                {
+                  "label": "Private credit",
+                  "value": 7.0
+                },
+                {
+                  "label": "Infrastructure",
+                  "value": 6.0
+                },
+                {
+                  "label": "Secondaries",
+                  "value": 1.0
+                }
+              ]
+            }
           ]
+        },
+        {
+          "type": "stacked",
+          "title": "Vintage-year mix",
+          "items": [
+            {
+              "label": "Current NAV",
+              "segments": [
+                {
+                  "label": "2022 and earlier",
+                  "value": 62.0
+                },
+                {
+                  "label": "2023–2024",
+                  "value": 28.0
+                },
+                {
+                  "label": "2025–2026",
+                  "value": 10.0
+                }
+              ]
+            },
+            {
+              "label": "Proposed commitments",
+              "segments": [
+                {
+                  "label": "2026",
+                  "value": 35.0
+                },
+                {
+                  "label": "2027",
+                  "value": 35.0
+                },
+                {
+                  "label": "2028",
+                  "value": 30.0
+                }
+              ]
+            }
+          ],
+          "note": "Governed vintage evidence and proposed commitment pacing [S6][S7]."
         },
         {
           "type": "waterfall",
@@ -539,7 +546,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Why this target",
-          "text": "Observation: New pacing shifts exposure toward infrastructure and secondaries [S6]. Why it matters: The mix broadens within policy [S3]. Uncertainty: CMA consensus, macro regime and manager findings remain incomplete [S7]. What would change the view: Weaker liquidity coverage or completed context that does not support the proposed roles [S3][S7]."
+          "text": "Observation: New pacing increases two roles, infrastructure and secondaries, versus the current mix [S6]. Why it matters: The broader mix remains inside policy boundaries [S3]. Uncertainty: CMA, regime and manager-finding coverage remain incomplete [S7]. What would change the view: Liquidity coverage below policy or completed records rejecting either role [S3][S7]."
         },
         {
           "type": "text",
@@ -548,9 +555,137 @@
       ]
     },
     {
+      "title": "Historical Performance and Attribution",
+      "kicker": "Returned portfolio evidence; sleeve gaps remain explicit",
+      "blocks": [
+        {
+          "type": "waterfall",
+          "title": "Governed attribution effects",
+          "items": [
+            {
+              "label": "Private-assets total effect",
+              "value": 0.12,
+              "display": "+0.12pp"
+            },
+            {
+              "label": "Total active return",
+              "value": -0.2,
+              "display": "-0.20pp"
+            },
+            {
+              "label": "Residual",
+              "value": 0.0,
+              "display": "0.00pp"
+            }
+          ],
+          "note": "Returned attribution effects; residual is shown explicitly [S5]."
+        },
+        {
+          "type": "table",
+          "title": "Standard periods",
+          "columns": [
+            "Period",
+            "Portfolio / sleeve",
+            "Benchmark",
+            "Excess",
+            "Coverage"
+          ],
+          "rows": [
+            [
+              "1Y total portfolio",
+              "7.2%",
+              "7.6%",
+              "-0.4pp",
+              "Complete [S8]"
+            ],
+            [
+              "3Y total portfolio (ann.)",
+              "6.8%",
+              "6.5%",
+              "+0.3pp",
+              "Complete [S8]"
+            ]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Attribution effects",
+          "columns": [
+            "Effect",
+            "Contribution",
+            "Source"
+          ],
+          "rows": [
+            [
+              "Private-assets total effect",
+              "+0.12pp",
+              "[S8]"
+            ],
+            [
+              "Total active return",
+              "-0.20pp",
+              "[S8]"
+            ],
+            [
+              "Residual",
+              "0.00pp",
+              "[S8]"
+            ]
+          ]
+        },
+        {
+          "type": "text",
+          "text": "Governed attribution method and reconciliation metadata follow [S5]."
+        },
+        {
+          "type": "kv",
+          "title": "Method",
+          "rows": [
+            [
+              "Method",
+              "Brinson-Fachler",
+              "S8"
+            ],
+            [
+              "Linking",
+              "Symmetric Carino",
+              "S8"
+            ],
+            [
+              "Basis",
+              "Net, monthly linked",
+              "S8"
+            ],
+            [
+              "Tolerance",
+              "1 bp; reconciled",
+              "S8"
+            ]
+          ]
+        }
+      ]
+    },
+    {
       "title": "Forward Return and Risk",
       "kicker": "Governed assumptions frame tradeoffs rather than forecasts",
       "blocks": [
+        {
+          "type": "bars",
+          "title": "Forward expected-return comparison",
+          "items": [
+            {
+              "label": "Current ? Private equity",
+              "value": 9.6,
+              "display": "9.6%"
+            },
+            {
+              "label": "Proposed ? Private equity",
+              "value": 18.5,
+              "display": "18.5%"
+            }
+          ],
+          "note": "Governed forward assumptions; assumptions, not forecasts [S6]."
+        },
         {
           "type": "kv",
           "rows": [
@@ -638,7 +773,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Assumptions frame tradeoffs",
-          "text": "Observation: Private equity carries the highest expected return and volatility in the selected assumptions [S5]. Why it matters: Segment sizing trades return potential against risk. Uncertainty: These are long-horizon assumptions, not forecasts. What would change the view: A refreshed governed assumption set with materially different relative return or volatility [S5]."
+          "text": "Observation: Private equity has higher expected return and volatility than every other selected segment [S5]. Why it matters: Segment sizing balances return potential against modeled risk. Uncertainty: These long-horizon assumptions are not manager forecasts. What would change the view: A governed assumptions refresh reversing either relative ranking [S5]."
         },
         {
           "type": "text",
@@ -852,7 +987,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Coverage supports pacing",
-          "text": "Observation: Base liquid coverage is 4.8x against unfunded commitments [S3][S4]. Why it matters: Current resources support the staged pacing case. Uncertainty: No governed denominator stress result is available. What would change the view: Lower liquid resources, higher calls, or a returned stress result below the policy threshold [S3][S6]."
+          "text": "Observation: Base liquid coverage is 4.8x against unfunded commitments [S3][S4]. Why it matters: Current resources support the staged pacing case. Uncertainty: A governed denominator-stress result remains unavailable for this portfolio. What would change the view: Lower resources, higher calls, or stress results below the policy threshold [S3][S6]."
         },
         {
           "type": "table",
@@ -1154,6 +1289,31 @@
               "name": "Returns and attribution",
               "status": "degraded",
               "note": "No sleeve-specific return [S8]"
+            },
+            {
+              "name": "CMA consensus",
+              "status": "unavailable",
+              "note": "Optional context not returned [S5]"
+            },
+            {
+              "name": "Macro regime",
+              "status": "unavailable",
+              "note": "Optional context not returned [S5]"
+            },
+            {
+              "name": "Strategy Lab",
+              "status": "unavailable",
+              "note": "No selected series [S8]"
+            },
+            {
+              "name": "Peer allocation context",
+              "status": "unavailable",
+              "note": "Optional context not returned [S7]"
+            },
+            {
+              "name": "Transaction costs",
+              "status": "unavailable",
+              "note": "Not returned [S8]"
             }
           ]
         }
@@ -1296,13 +1456,6 @@
               "Expected-statistics charts",
               "chart-contract-v1",
               "10-year assumptions"
-            ],
-            [
-              "S6",
-              "Commitment pacing",
-              "Returned commitments pack",
-              "chart-contract-v1",
-              "Projected cash flows"
             ]
           ]
         },

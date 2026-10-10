@@ -80,106 +80,129 @@
       "kicker": "What needs attention across the Diligence Roster",
       "blocks": [
         {
-          "type": "table",
-          "title": "Needs attention",
-          "columns": [
-            "Subject",
-            "Reason",
-            "Severity",
-            "Source date",
-            "Action"
+          "type": "bars",
+          "title": "Alerts by severity",
+          "items": [
+            {
+              "label": "High",
+              "value": 0,
+              "source": "S3"
+            },
+            {
+              "label": "Medium",
+              "value": 0,
+              "source": "S3"
+            },
+            {
+              "label": "Low / info",
+              "value": 0,
+              "source": "S3"
+            }
           ],
-          "align": [
-            "l",
-            "l",
-            "l",
-            "n",
-            "l"
+          "note": "No registered-adviser alerts matched the monitored CRD in the processed window [S3]."
+        },
+        {
+          "type": "findings",
+          "title": "Top findings",
+          "items": [
+            {
+              "severity": "medium",
+              "title": "Ridgeview Example Advisors — review new ADV filing",
+              "detail": "A Form ADV snapshot dated 2026-10-01 was filed after the 2026-09-29 review [S2]."
+            }
           ],
-          "rows": [
-            [
-              "Ridgeview Example Advisors (firm)",
-              "Material change: Form ADV snapshot filed after last review [S2]",
-              {
-                "chip": "Medium",
-                "status": "medium"
-              },
-              "2026-10-01",
-              "Review new ADV filing; consider ODD refresh"
-            ]
-          ],
-          "note": "No new activity: Ridgeview Global Macro Fund II, Ltd. (fund) — no changes, alerts, findings or concerns since review on 2026-09-29 [S2]."
+          "empty_title": "No findings",
+          "empty_text": "No evidence-triggered findings were returned in the processed window."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a 1 item to review signal [S1]. Why it matters: The signal frames the review. Uncertainty: Evidence coverage is bounded. What would change the view: New governed evidence that changes the signal."
+          "text": "Observation: The fictional TEST report carries a 1 item to review signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: New alerts is 0 in the TEST evidence [S2]. Why it matters: This measure anchors the executive view. Uncertainty: The fixture is deliberately compact. What would change the view: A refreshed source with a materially different value."
+          "text": "Observation: New alerts is 0 in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Reviews due ≤30d is 0 in the TEST evidence [S3]. Why it matters: It identifies a monitoring priority. Uncertainty: Supporting detail is limited. What would change the view: Corroborated evidence that resolves or reverses the item."
+          "text": "Observation: Reviews due ≤30d is 0 in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
     {
+      "id": "changes-alerts",
       "title": "Changes and alerts",
-      "kicker": "Evidence behind each item",
+      "kicker": "One manager has a filing change; its event feed remains unpublished",
       "new_page": false,
       "blocks": [
         {
-          "type": "bars",
-          "title": "Alerts by manager",
-          "items": [
-            {"label": "Ridgeview Example Advisors", "value": 0, "source": "S3"}
+          "type": "two_col",
+          "left": [
+            {
+              "type": "findings",
+              "title": "Ridgeview filing change",
+              "items": [
+                {
+                  "severity": "medium",
+                  "title": "Form ADV snapshot post-dates the last review",
+                  "detail": "The 2026-10-01 snapshot followed the governed 2026-09-29 review date [S2]."
+                }
+              ],
+              "empty_title": "No changes",
+              "empty_text": "No returned changes for this manager."
+            },
+            {
+              "type": "kv",
+              "title": "Ridgeview Example Advisors — change since last review",
+              "rows": [
+                [
+                  "Change",
+                  "Form ADV snapshot dated 2026-10-01",
+                  "S2"
+                ],
+                [
+                  "Rule triggered",
+                  "change-since-review-adv_snapshot (medium): occurred after last review 2026-09-29",
+                  "S2"
+                ],
+                [
+                  "Evidence ID",
+                  "adv_history:2026-10-01",
+                  "S2"
+                ],
+                [
+                  "Monitor alerts on this filing",
+                  "0 alerts; 912 registered-adviser events classified across the market, none for monitored CRDs",
+                  "S3"
+                ],
+                [
+                  "Red-flag concerns",
+                  "None (manager ADV: no qualifying red flags)",
+                  "S2"
+                ],
+                [
+                  "Open findings",
+                  "None",
+                  "S4"
+                ]
+              ]
+            }
           ],
-          "note": "No registered-adviser alerts matched the monitored CRD [S3]."
-        },
-        {
-          "type": "kv",
-          "title": "Ridgeview Example Advisors — change since last review",
-          "rows": [
-            [
-              "Change",
-              "Form ADV snapshot dated 2026-10-01",
-              "S2"
-            ],
-            [
-              "Rule triggered",
-              "change-since-review-adv_snapshot (medium): occurred after last review 2026-09-29",
-              "S2"
-            ],
-            [
-              "Evidence ID",
-              "adv_history:2026-10-01",
-              "S2"
-            ],
-            [
-              "Monitor alerts on this filing",
-              "0 alerts; 912 registered-adviser events classified across the market, none for monitored CRDs",
-              "S3"
-            ],
-            [
-              "Red-flag concerns",
-              "None (manager ADV: no qualifying red flags)",
-              "S2"
-            ],
-            [
-              "Open findings",
-              "None",
-              "S4"
-            ]
+          "right": [
+            {
+              "type": "callout",
+              "tone": "watch",
+              "title": "Ridgeview event timeline unavailable",
+              "text": "Not available — firm and fund event publication is not ready; absence is not evidence of no events [S5]."
+            }
           ]
         },
         {
@@ -187,11 +210,12 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Why this is medium",
-          "text": "Observation: The fictional TEST evidence supports the why this is medium finding [S3]. Why it matters: It focuses review on the principal evidence gap. Uncertainty: The compact fixture omits some corroborating detail. What would change the view: Updated governed evidence that contradicts the finding."
+          "text": "Observation: One unavailable event-coverage item supports the fictional TEST medium finding [S3]. Why it matters: It focuses review on the principal monitoring gap. Uncertainty: The compact fixture omits some corroborating event detail. What would change the view: Refreshed governed event records resolving the unavailable item."
         }
       ]
     },
     {
+      "id": "review-calendar",
       "title": "Review calendar",
       "kicker": "Last and next reviews per roster subject",
       "new_page": false,
@@ -255,11 +279,12 @@
           "role": "analysis",
           "tone": "good",
           "title": "Analysis — No reviews are imminent",
-          "text": "Observation: Both roster subjects are current through 2027-09-29 [S1]. Why it matters: No review is due within 30 days. Uncertainty: The schedule depends on roster dates. What would change the view: A new finding or event that triggers an off-cycle review."
+          "text": "Observation: Both roster subjects are current through 2027-09-29 [S1]. Why it matters: Neither review is due within 30 days. Uncertainty: The calendar relies only on recorded roster dates. What would change the view: A new finding or event record triggering an off-cycle review."
         }
       ]
     },
     {
+      "id": "coverage-freshness",
       "title": "Coverage and freshness",
       "kicker": "What each source covered this week",
       "new_page": false,
@@ -302,6 +327,7 @@
       ]
     },
     {
+      "id": "sources-method",
       "title": "Appendix A — Sources and method",
       "num": "A",
       "blocks": [

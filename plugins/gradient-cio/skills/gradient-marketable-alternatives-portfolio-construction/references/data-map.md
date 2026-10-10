@@ -26,6 +26,11 @@ partial 2016 and 2026 calendar years from their `month_count`, `partial`, `cover
 `missing_reason`; never present them as full-year returns. For `no_subject_returns`, state that the selected
 portfolio has no subject return history and do not substitute benchmark, commitment or Strategy Lab returns.
 
+Attribution summary benchmark/excess uses the linked segment benchmark composite;
+historical-return benchmark/excess uses the policy benchmark entity. When both
+appear, preserve `diagnostics.entity_return_reconciliation` basis and delta
+fields, and never compare or conflate the two excess values.
+
 ## Marketable-alternatives evidence rules
 
 - Treat `market_value_base` and `nav_base` as value-basis alternatives and use the non-null returned channel.

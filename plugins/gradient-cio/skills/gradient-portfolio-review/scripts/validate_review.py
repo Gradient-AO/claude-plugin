@@ -6,6 +6,11 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(PLUGIN_ROOT / "tools"))
@@ -17,6 +22,7 @@ from report_json_validator import (  # noqa: E402
     SlotRule,
     as_object,
     load_json,
+    print_quality_notes,
     validate_report,
 )
 from report_constants import (  # noqa: E402
@@ -51,7 +57,7 @@ BRIEF_SPEC = ReportSpec(
             "Summary",
             "Performance",
             "Allocation",
-            "Look-through concentration",
+            "Look-through",
             "Risk",
             "Outlook",
             "Coverage",
@@ -62,14 +68,19 @@ BRIEF_SPEC = ReportSpec(
     signal_levels=frozenset({"breach", "watch", "satisfactory", "insufficient"}),
     completeness_states=frozenset({"complete", "partial"}),
     slot_rules=(
-        SlotRule(r"Summary", frozenset({"table"}), "at-a-glance table"),
-        SlotRule(r"Performance", frozenset({"line", "chart"}), "performance visual"),
-        SlotRule(r"Allocation", frozenset({"bars", "chart"}), "allocation visual"),
+        SlotRule(r"Performance", frozenset({"line"}), "growth-of-100 line"),
+        SlotRule(r"Performance", frozenset({"bars"}), "signed excess-return bars"),
+        SlotRule(r"Allocation", frozenset({"band"}), "policy-band visual"),
         SlotRule(
-            r"Look-through concentration", frozenset({"table"}), "concentration table"
+            r"Look-through", frozenset({"bars", "heat"}), "concentration visual"
         ),
-        SlotRule(r"Risk", frozenset({"kv"}), "risk key-values"),
-        SlotRule(r"Outlook", frozenset({"text", "callout"}), "outlook narrative"),
+        SlotRule(
+            r"Risk",
+            frozenset({"bars", "band", "chart"}),
+            "governed risk visual",
+        ),
+        SlotRule(r"Outlook", frozenset({"tiles"}), "forward-context tiles"),
+        SlotRule(r"Outlook", frozenset({"bars"}), "CMA bars"),
         SlotRule(r"Coverage", frozenset({"coverage"}), "coverage block"),
         SlotRule(
             r"Appendix — Sources and method",
@@ -79,17 +90,28 @@ BRIEF_SPEC = ReportSpec(
     ),
     forbidden_body_patterns=NEUTRAL_PATTERNS,
     illustrative_label=ILLUSTRATIVE_LABEL,
-    analysis_section_patterns=(r"Summary",),
+    analysis_section_patterns=(
+        r"Performance",
+        r"Allocation",
+        r"Look-through",
+        r"Risk",
+        r"Outlook",
+    ),
+    analysis_minimum=1,
+    analysis_maximum=3,
+    require_analysis_structure=True,
+    analysis_title_word_limit=6,
     analytical_section_patterns=(
         r"Performance",
         r"Allocation",
-        r"Look-through concentration",
+        r"Look-through",
         r"Risk",
         r"Outlook",
     ),
     require_message_first_kickers=True,
     require_visual_before_first_table=True,
     key_judgment_section_patterns=(r"Summary",),
+    require_key_judgment_structure=True,
     executive_tile_labels=(
         "Trailing 1Y",
         "Since inception (ann.)",
@@ -238,8 +260,16 @@ def main(argv: list[str]) -> int:
         print(f"FAIL — {spec.name}: {len(errors)} issue(s)")
         for error in errors:
             print(f"  - {error}")
+        print_quality_notes(
+            document,
+            structured=spec.require_analysis_structure,
+        )
         return 1
     print(f"PASS — {spec.name} JSON contract is valid.")
+    print_quality_notes(
+        document,
+        structured=spec.require_analysis_structure,
+    )
     return 0
 
 

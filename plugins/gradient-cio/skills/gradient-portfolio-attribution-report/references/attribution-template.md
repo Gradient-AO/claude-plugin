@@ -1,22 +1,21 @@
 # Portfolio Attribution Report Template
 
-Keep the titles and order exactly as shown. Target 10–14 pages when evidence
-supports the full report. Missing evidence keeps its section and becomes
-`Not available — <reason>`.
-
-Before delivery, run `python scripts/check_layout.py "<Portfolio> - Portfolio Attribution Report.pdf"
---min-pages 10 --max-pages 14`. If it fails, condense or repair the report, then re-render and rerun the check.
+Keep the titles and order exactly as shown. The soft target is 7–10 pages when evidence supports the full
+report and the hard ceiling is 13. Missing evidence keeps its section and becomes
+`Not available — <reason>`. Before delivery run
+`python scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Portfolio Attribution Report" --budget references/layout-budget.json`;
+apply its specific repair levers and rerun until clean.
 
 ## Page budget
 
 1. Cover and evidence status — 1 page.
 2. Executive Attribution Summary — 1 page.
-3. Benchmark and Data Basis — 1 page.
+3. Benchmark and Data Basis — flow with adjacent context where it fits.
 4. Historical Returns Context — 1 page.
-5. Historical Attribution — 2 pages.
-6. Governed Ex Ante Attribution — 2 pages.
+5. Historical Attribution — 1–2 pages.
+6. Governed Ex Ante Attribution — 1–2 pages.
 7. Historical-versus-Ex-Ante Scope and Comparison — 1 page.
-8. Diagnostics and Limitations — 1 page.
+8. Diagnostics and Limitations — flow into Coverage.
 9. Coverage, Sources, Methods and Disclosures — 1–2 pages.
 
 ## Metadata
@@ -47,6 +46,9 @@ Before delivery, run `python scripts/check_layout.py "<Portfolio> - Portfolio At
   Coverage.
 - `callout` **Scope**: monitoring analysis, not a recommendation or forecast.
 - Illustrative or Partial amber callout appears first.
+- Three to five sourced `role: "key_judgment"` callouts titled
+  **Key judgment — <message>**. Each uses the four-part Analysis structure and
+  introduces no recommendation or action.
 
 ### 2. Benchmark and Data Basis
 
@@ -58,12 +60,16 @@ Before delivery, run `python scripts/check_layout.py "<Portfolio> - Portfolio At
 ### 3. Historical Returns Context
 
 - `table` **Standard periods**: Period, Portfolio, Benchmark, Excess, Coverage.
+- Label Benchmark and Excess as policy benchmark entity values from historical
+  returns; do not present them as attribution-summary values.
 - `line` **Growth of 100** using only returned points.
 - End with one to three sourced `Analysis —` callouts; do not infer attribution
   causes from return context.
 
 ### 4. Historical Attribution
 
+- Visual-first: put the waterfall/reconciliation `two_col` and signed segment
+  visual before either attribution table.
 - `table` **Historical total effects**: Effect, Contribution, Source.
 - `table` **Historical segment effects**: Segment, Allocation, Selection,
   Interaction, Total.
@@ -72,12 +78,18 @@ Before delivery, run `python scripts/check_layout.py "<Portfolio> - Portfolio At
 - Put the waterfall and `kv` **Historical reconciliation and method** beside
   each other in `two_col`; include active return, total effects, residual,
   tolerance, method, linking, period, basis and currency.
+- Label attribution summary benchmark and excess as linked segment benchmark composite
+  values. When historical-return policy-benchmark-entity values also appear,
+  include the returned `diagnostics.entity_return_reconciliation` window,
+  portfolio and benchmark basis/delta fields. Never compare, subtract or
+  conflate the two excess values.
 - End with one to three sourced `Analysis —` callouts linking the largest
   detractor segment to its managers' open findings and the returned macro
   regime over the period. Context is not causal attribution.
 
 ### 5. Governed Ex Ante Attribution
 
+- Visual-first: put the segment-effect visual before either attribution table.
 - Amber `callout`: assumptions, not forecasts or guarantees.
 - `table` **Ex ante total effects**: Effect, Contribution, Source.
 - `table` **Ex ante segment effects**: Segment, Portfolio weight, Benchmark
@@ -104,6 +116,8 @@ Before delivery, run `python scripts/check_layout.py "<Portfolio> - Portfolio At
 
 ### 7. Diagnostics and Limitations
 
+- Lead with signed `bars` **Residual vs tolerance (bp)**, one item per lane,
+  using returned residuals and tolerance notes without recalculation.
 - `table` **Reconciliation diagnostics**: Lane, Coverage, Residual, Tolerance,
   Within tolerance, Warnings.
 - `bullets`: historical coverage/linking limitations, ex ante assumption and
@@ -119,6 +133,11 @@ trade, rebalance, manager action or vote.
 - `coverage` block for capabilities, portfolio, structure, returns context,
   historical attribution, ex ante attribution, manager findings and macro regime.
 - Status values: `available`, `degraded`, `unavailable`, `not licensed`.
+- Flow directly from Diagnostics without an authored forced page break.
+
+All sections flow by default. Do not set `new_page: true` or
+`page_break: "force"`; QA controls pagination from content and the layout
+budget.
 
 ### Appendix A — Sources
 

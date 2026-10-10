@@ -137,21 +137,21 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a Liquidity terms require confirmation signal [S1]. Why it matters: The signal frames the review. Uncertainty: Evidence coverage is bounded. What would change the view: New governed evidence that changes the signal."
+          "text": "Observation: The fictional TEST report carries a liquidity-terms signal above the clear monitoring threshold [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Marketable-alternatives weight is 12.0% in the TEST evidence [S2]. Why it matters: This measure anchors the executive view. Uncertainty: The fixture is deliberately compact. What would change the view: A refreshed source with a materially different value."
+          "text": "Observation: Marketable-alternatives weight is 12.0% in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Liquid share is 8.0% in the TEST evidence [S3]. Why it matters: It identifies a monitoring priority. Uncertainty: Supporting detail is limited. What would change the view: Corroborated evidence that resolves or reverses the item."
+          "text": "Observation: Liquid share is 8.0% in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
@@ -449,7 +449,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Why this target",
-          "text": "Observation: The target reallocates 2.0 percentage points from equity long/short to macro and relative value [S3][S4]. Why it matters: The largest strategy concentration declines. Uncertainty: CMA consensus, macro regime, manager findings and terms remain incomplete [S7][S8]. What would change the view: Completed context that does not support the new roles [S7][S8]."
+          "text": "Observation: The target reallocates 2.0 percentage points from equity long/short to macro and relative value [S3][S4]. Why it matters: The largest strategy concentration declines under the target. Uncertainty: CMA, regime, findings and term coverage remain incomplete [S7][S8]. What would change the view: Completed records contradicting either proposed strategy role [S7][S8]."
         },
         {
           "type": "text",
@@ -461,6 +461,33 @@
     {
       "title": "Historical Performance and Attribution",
       "blocks": [
+        {
+          "type": "waterfall",
+          "title": "Governed attribution effects",
+          "items": [
+            {
+              "label": "Allocation",
+              "value": 0.1,
+              "display": "+0.10pp"
+            },
+            {
+              "label": "Selection",
+              "value": 0.48,
+              "display": "+0.48pp"
+            },
+            {
+              "label": "Interaction",
+              "value": 0.02,
+              "display": "+0.02pp"
+            },
+            {
+              "label": "Residual",
+              "value": 0.0,
+              "display": "0.00pp"
+            }
+          ],
+          "note": "Returned attribution effects; residual is shown explicitly [S5]."
+        },
         {
           "type": "table",
           "title": "Standard periods",
@@ -485,13 +512,6 @@
               "5.5%",
               "+0.4pp",
               "Complete [S5]"
-            ],
-            [
-              "5Y hedge-fund sleeve (ann.)",
-              "Not available — sleeve history insufficient",
-              "Not available",
-              "Not available",
-              "Unavailable [S5]"
             ]
           ]
         },
@@ -527,6 +547,10 @@
           ]
         },
         {
+          "type": "text",
+          "text": "Governed attribution method and reconciliation metadata follow [S5]."
+        },
+        {
           "type": "kv",
           "rows": [
             [
@@ -556,6 +580,56 @@
     {
       "title": "Factor, Currency and Concentration Evidence",
       "blocks": [
+        {
+          "type": "heat",
+          "title": "Strategy-correlation matrix",
+          "columns": [
+            "Equity L/S",
+            "Macro",
+            "Relative value",
+            "Multi-strategy"
+          ],
+          "rows": [
+            {
+              "label": "Equity L/S",
+              "values": [
+                1.0,
+                0.18,
+                0.42,
+                0.51
+              ]
+            },
+            {
+              "label": "Macro",
+              "values": [
+                0.18,
+                1.0,
+                0.12,
+                0.24
+              ]
+            },
+            {
+              "label": "Relative value",
+              "values": [
+                0.42,
+                0.12,
+                1.0,
+                0.47
+              ]
+            },
+            {
+              "label": "Multi-strategy",
+              "values": [
+                0.51,
+                0.24,
+                0.47,
+                1.0
+              ]
+            }
+          ],
+          "decimals": 2,
+          "note": "Returned strategy-correlation evidence [S7]."
+        },
         {
           "type": "chart",
           "chart": {
@@ -652,7 +726,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Manager limit is binding",
-          "text": "Observation: The largest manager is at the 4.0% policy limit [S3][S4]. Why it matters: New funding should not increase that concentration. Uncertainty: Model-implied factors and incomplete look-through do not reveal the full hedge-fund book [S7]. What would change the view: Complete exposure evidence showing lower aggregate concentration [S4][S7]."
+          "text": "Observation: The largest manager is at the 4.0% policy limit [S3][S4]. Why it matters: New funding should not increase that concentration. Uncertainty: Model factors and incomplete look-through omit the full hedge-fund book [S7]. What would change the view: Complete exposure records showing concentration below the 4.0% threshold [S4][S7]."
         },
         {
           "type": "callout",
@@ -666,6 +740,23 @@
     {
       "title": "Forward Return and Risk",
       "blocks": [
+        {
+          "type": "bars",
+          "title": "Forward expected-return comparison",
+          "items": [
+            {
+              "label": "Current ? Hedge funds",
+              "value": 6.1,
+              "display": "6.1%"
+            },
+            {
+              "label": "Proposed ? Hedge funds",
+              "value": 8.9,
+              "display": "8.9%"
+            }
+          ],
+          "note": "Governed forward assumptions; assumptions, not forecasts [S6]."
+        },
         {
           "type": "kv",
           "rows": [
@@ -748,7 +839,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Assumptions show tradeoff",
-          "text": "Observation: Hedge funds carry higher expected return and volatility than absolute return in the selected assumptions [S6]. Why it matters: The target mix should preserve role diversification rather than maximize one measure. Uncertainty: These are class assumptions, not manager forecasts. What would change the view: A refreshed governed context with materially different relative measures [S6]."
+          "text": "Observation: Hedge funds carry higher expected return and volatility than absolute return in the selected assumptions [S6]. Why it matters: The target should preserve role diversification, not maximize one measure. Uncertainty: Class assumptions are not manager-level forecasts. What would change the view: Refreshed assumptions reversing the relative return or volatility results [S6]."
         },
         {
           "type": "text",
@@ -1279,13 +1370,6 @@
               "Linked returns; Brinson-Fachler",
               "portfolio-attribution-v1",
               "Net; 1 bp tolerance"
-            ],
-            [
-              "S6",
-              "Forward statistics",
-              "Expected-statistics chart",
-              "chart-contract-v1",
-              "5-year assumptions"
             ]
           ]
         },

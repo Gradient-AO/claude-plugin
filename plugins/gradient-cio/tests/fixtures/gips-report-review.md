@@ -4,16 +4,23 @@
 
 ## 1. Summary
 
-- **Overall assessment:** Satisfactory with follow-ups.
-- Required return history is present; the fee and significant-event disclosures need clarification.
+- **Overall assessment:** Satisfactory with follow-ups. Return and benchmark history are present, while the
+  fee wording and significant-event date require correction [S1][S2].
 
-## 2. Performance Integrity & GIPS
+## 2. Findings
 
-The fictional composite report presents annual gross and net returns with benchmark returns [S1]. The disclosure schedule identifies the composite, but its fee wording and significant-event timing are incomplete [S2].
+One Not met event disclosure and one Partially met fee disclosure drive the fix list. The underlying annual
+gross, net and benchmark return history is present [S1][S2].
 
-## 3. Follow-up Requests
+## 3. Preparer Fix List
 
-1. Clarify the complete fee schedule and significant-event date.
+1. Add the significant event's effective date to the report before the next issue (4.C.19) [S1].
+2. State the complete management and performance fee schedule in the disclosure note (4.C.11) [S2].
+
+## 4. Follow-up Requests
+
+1. Provide the significant-event effective date and the approved disclosure text (4.C.19) [S1].
+2. Provide the complete fee schedule and approved disclosure text (4.C.11) [S2].
 
 ## Appendix A — Findings Checklist
 
