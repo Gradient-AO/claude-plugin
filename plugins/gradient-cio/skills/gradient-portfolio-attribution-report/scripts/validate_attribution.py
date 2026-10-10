@@ -23,30 +23,30 @@ from report_json_validator import (  # noqa: E402
     section_objects,
     validate_report,
 )
-
-
-ILLUSTRATIVE_LABEL = (
-    "Illustrative, Gradient Maintained — demo data, "
-    "not the client's holdings or managers"
+from report_constants import (  # noqa: E402
+    ATTRIBUTION_STATUS_PATTERNS,
+    FORWARD_ATTRIBUTION_PATTERNS,
+    ILLUSTRATIVE_LABEL,
+    LOCAL_CALC_TAG_PATTERNS,
+    NEUTRAL_APPROVAL_ALLOCATION_PATTERNS,
+    NEUTRAL_DIRECTION_PATTERNS,
+    NEUTRAL_REBALANCE_PATTERNS,
+    NEUTRAL_RECOMMENDATION_PATTERNS,
 )
+
+
 PROHIBITED_REPORT_PATTERNS = (
-    r"\bsimulated attribution\b",
-    r"\bprojected attribution\b",
-    r"\bforward attribution\b",
-    r"\[Calc(?:\s+C(?:\d+|#))?\]",
+    ATTRIBUTION_STATUS_PATTERNS
+    + FORWARD_ATTRIBUTION_PATTERNS
+    + LOCAL_CALC_TAG_PATTERNS
 )
 
 PROHIBITED_ANALYSIS_PATTERNS = (
-    r"\bwe recommend\b",
-    r"\brecommend(?:ed|ation|ations)?\b",
-    r"\bshould\b",
-    r"\bmust\b",
-    r"\bbuy\b",
-    r"\bsell\b",
-    r"\brebalance\b",
-    r"\bapprove\b",
-    r"\bincrease (?:the )?allocation\b",
-    r"\breduce (?:the )?allocation\b",
+    NEUTRAL_RECOMMENDATION_PATTERNS
+    + (r"\brecommend(?:ed|ation|ations)?\b",)
+    + NEUTRAL_DIRECTION_PATTERNS
+    + NEUTRAL_REBALANCE_PATTERNS
+    + NEUTRAL_APPROVAL_ALLOCATION_PATTERNS
 )
 
 SPEC = ReportSpec(

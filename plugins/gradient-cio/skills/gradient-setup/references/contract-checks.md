@@ -31,13 +31,13 @@ or report date; the default probe therefore exercises the current latest-publica
 sample_portfolio, chart_catalog. The sample probe verifies that `list_portfolios`
 returns Gradient's canonical example first.
 
-**Full read set (57 reads including standard):** standard plus capabilities_summary, manager_diligence_brief,
+**Full read set (55 reads including standard):** standard plus capabilities_summary, manager_diligence_brief,
 attention, findings, events, events_roster, entity_facts, conditions, credit_spreads, gradient_signal, regime_state,
 cma_baseline, cma_consensus, cma_consensus_allocation, watchlist,
 portfolio_tree, portfolio_exposure, portfolio_policy, portfolio_ownership, portfolio_returns,
 portfolio_attribution, portfolio_series,
 chart_availability, portfolio_allocations, portfolio_commitments,
-strategy_benchmarks, strategy_return_series, four Strategy Lab session builders,
+strategy_benchmarks, strategy_return_series, two Strategy Lab session builders,
 strategy_expected_statistics, strategy_relative_return, strategy_manager_compare, strategy_date_windows,
 adv_13f_consistency,
 multi_manager_13f_overlap, search_managers, screen, cftc_positioning, hf_crowding, regional_facts,
@@ -46,10 +46,10 @@ ddq_numeric_gap and batch_ddq_preview.
 
 The portfolio policy probe verifies governed-only semantics and the 2% watch boundary. The returns probe
 requests the summary and benchmark-relative sections through an explicit `fields` projection, caps the
-commitment page at 25, checks the risk-free-rate contract approximately, and reconciles the risk-metric month
+commitment page at 100, checks the risk-free-rate contract approximately, and reconciles the risk-metric month
 count to selected points. It also verifies the canonical 2026 partial calendar-year row; reports must
-separately disclose both partial years (2016 and 2026) and any `not_yet_funded` commitment comparisons. Until
-P-01 ships, do not follow the commitment `next_cursor`; disclose the bounded page instead. A partial result or
+separately disclose both partial years (2016 and 2026) and any `not_yet_funded` commitment comparisons. A
+partial result or
 `no_subject_returns` is a reportable coverage gap, not a reason to substitute another series. Attribution
 verifies the bounded Brinson-Fachler surface, persisted
 monthly segment basis, linked summary, segment effects and zero-residual reconciliation for the canonical
@@ -57,9 +57,10 @@ example; no numeric attribution may be inferred when the tool reports typed unav
 the complete leverage contract, including formula identity and period basis. DDQ probes require server-returned
 numeric-gap formula metadata; the batch probe is read-only and must complete both items.
 
-**Writes set (5 dry-run previews):** write_create_finding, write_watchlist_manager, write_roster,
-write_batch_preview and write_upload_ddq. Every call must retain `dry_run: true`. The finding, watchlist and
-roster action previews require `committed: false` and a non-null `receipt_id`; the upload preview instead
+**Writes set (8 dry-run previews):** write_create_finding, write_watchlist_manager, write_roster,
+write_monitoring, write_review, write_scenario, write_batch_preview and write_upload_ddq. Every call must
+retain `dry_run: true`. The finding, watchlist, roster, monitoring, review and scenario action previews
+require `committed: false` and a non-null `receipt_id`; the upload preview instead
 requires `status: "preview"`, `document_id: null`, a request fingerprint and the complete `would_create`
 description. Never substitute
 `dry_run: false`, and never follow a preview receipt with a commit during a contract self-test. The roster
@@ -74,7 +75,7 @@ The first call persists fictional inline text as a ready subject-bound document 
 save call is still a dry-run preview and must return `outcome: "preview"`, `dry_run: true` and `committed:
 false`.
 
-The complete matrix is 65 calls. Run the standard or full read set without write confirmation. Run the
+The complete matrix is 66 calls. Run the standard or full read set without write confirmation. Run the
 writes set only as previews. Before the DDQ save-preview set, tell the user that its reconciliation call
 persists a test document and immutable test workpaper.
 
@@ -97,9 +98,11 @@ The Portfolio Analytics probes cover list, exposure, structure, historical and g
 the supported allocations and commitments chart packs, and policy checking against the canonical
 illustrative `portfolio_id`. Strategy Lab separately covers the named demo benchmark catalog, one
 manager/fund return series, and the expected-statistics, relative-return, manager-compare and date-window
-IDD compute tools. Each compute probe receives the unchanged `strategy_lab_session` from a successful
-`build_strategy_lab_session` dependency. The discovery schema exposes `portfolio_id` as a compatibility
-field, but selected-series tools reject it. Report the two module results separately.
+IDD compute tools. Manager compare receives three demo `return_series_ids` plus `benchmark_series_id` and
+must return all three selected series. Relative return receives those same three IDs plus `benchmark_id` and
+must return one `result_rows` entry per series. Neither call also sends a `strategy_lab_session` stub. The
+discovery schema exposes `portfolio_id` as a compatibility field, but selected-series tools reject it.
+Report the two module results separately.
 
 For a non-entitled organization, successful Portfolio Analytics and Strategy Lab probes are expected to
 report illustrative access, not live client access. Confirm `record_kind: example`, `access_mode:
@@ -122,25 +125,20 @@ Results:
 
 ## Known issues (revalidated 2026-10-09)
 
-This table contains only currently reproducible exceptions. Re-check each one on every full run. When one
-stops reproducing, say so in the report ("resolved since 2026-10-09") so the maintainer can remove it.
+There are no currently reproducible connector exceptions with a client-side workaround.
 
-No known issue permits a Portfolio Analytics ID to be reused as Strategy Lab input.
-P-07 is an intentional contract boundary, not a connector fault: `get_chart_data` supports only
-`allocations` and `commitments`. Do not probe `expected-statistics` through that tool. Preserve
-`run_strategy_lab_expected_statistics` for a separately built Strategy Lab session.
+The following are supported contract boundaries, not known issues:
 
-| Tool / view | Classification | Ticket, owner, review | Symptom and current workaround | Removal criterion |
-|---|---|---|---|---|
-| `get_portfolio_historical_returns` commitment continuation | Non-blocking bounded-response limitation | P-01 · Gradient MCP · pending | `benchmark_relative` may return only the first 25 commitment rows with `commitments_truncated: true`. Do not follow `next_cursor` until P-01 ships; disclose the returned count and omitted detail. Preserve `not_yet_funded` as a gap, not a zero return. | Reliable cursor continuation ships and a multi-page canonical probe completes twice without duplicates or omissions. |
+- `get_chart_data` supports only `allocations` and `commitments`; expected statistics remains a separate
+  Strategy Lab compute tool.
+- Historical-return reads use `limit: 100`, preserve `not_yet_funded`, and disclose partial 2016 / 2026
+  calendar years.
+- Exposure filters accept canonical display names or documented snake_case aliases. Fixed-income duration,
+  spread duration, and yield come from the `Fixed Income` classification aggregate for mixed portfolios.
+- Fund DDQs containing auditor, administrator, custodian, or prime-broker claims use `subject_scope: fund`.
+  Missing `asserted_as_of` is tagged by the server as `as_of_assumed: filing_date`.
+- Selected-series Strategy Lab calls pass IDs and the required benchmark field without a simultaneous
+  `strategy_lab_session` stub.
 
-P-12–P-20 are enforced by compatibility-epoch-3 schemas and probes: capability-level
-`capability_access_modes`, renamed entitlement fields, scoped exposure totals and aggregate coverage status,
-governed fixed-income reconciliation, coherent null reasons, positive-weight canonical CMA allocations, and
-fund-scope DDQ aliases carrying `reviewed_alias_match`. P-21 remains a data-readiness condition rather than a
-client workaround: retain GRIP `availability.reasons` and outlook reasons plus The Read visual section status,
-`coverage.unavailable_visuals`, and `coverage.omitted_visual_reasons` instead of inventing missing history.
-
-Decision hold: keep Strategy Lab simulation, saved-scenario and
-`run_strategy_lab_expected_statistics` references until the maintainer explicitly decides their
-public-surface status. They are not classified as removed by this release.
+Re-check this section on every full run and add only a currently reproducible exception with its exact error
+code, request ID, bounded workaround, owner, and removal criterion.

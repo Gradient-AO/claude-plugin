@@ -45,8 +45,8 @@ Follow `references/data-map.md`, save each raw result and build one source row p
 
 Required evidence:
 
-- portfolio record, allocation tree, exposure pages filtered with exact lowercase
-  `asset_classification: fixed_income`, and policy result;
+- portfolio record, allocation tree, exposure pages filtered with the `Fixed Income` display name or
+  documented `asset_classification: fixed_income` alias, and policy result;
 - historical returns and governed attribution, preserving typed unavailable states;
 - benchmark identity and return series when returned;
 - `get_chart_data` availability, then the `allocations` pack;
@@ -63,8 +63,9 @@ CMA consensus, The Read and selected-series Strategy Lab diagnostics are optiona
 - Historical attribution comes only from `get_portfolio_attribution`. Strategy Lab relative return is not
   attribution.
 - Separate observed historical risk, governed policy status and forward assumptions.
-- Use `portfolio_totals.fixed_income_metrics` for a complete filtered sleeve, or the Fixed Income
-  classification aggregate. Require `weighting_basis: current_holding_nav_base`, preserve coverage and
+- Use the Fixed Income classification aggregate for sleeve duration, spread duration and yield;
+  `portfolio_totals.fixed_income_metrics` is null for a mixed portfolio. Quote `fixed_income_metrics` only
+  for Fixed Income and Cash rows. Require `weighting_basis: current_holding_nav_base`, preserve coverage and
   methodology, and never recompute or equal-weight rows. Treat spread duration zero as a valid observation.
 - Never relabel yield to maturity as yield to worst. Report yield to worst, OAS, convexity, quality or
   key-rate exposure only when another Gradient result or a cited user document directly supplies it.

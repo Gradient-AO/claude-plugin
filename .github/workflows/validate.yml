@@ -9,10 +9,6 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with: { python-version: "3.12" }
-      - name: Install renderer
-        run: |
-          sudo apt-get update && sudo apt-get install -y poppler-utils qpdf
-          pip install playwright && python -m playwright install --with-deps chromium
       - name: Version check
         run: |
           python - <<'PY'
@@ -22,5 +18,11 @@ jobs:
           assert p == m, f"plugin.json {p} != marketplace.json {m}"
           print("version", p)
           PY
+      - name: Shared-file sync check
+        run: python plugins/gradient-cio/tools/sync_shared.py --check
+      - name: Install renderer
+        run: |
+          sudo apt-get update && sudo apt-get install -y poppler-utils qpdf
+          pip install playwright && python -m playwright install --with-deps chromium
       - name: Tests
         run: python plugins/gradient-cio/tests/run_tests.py

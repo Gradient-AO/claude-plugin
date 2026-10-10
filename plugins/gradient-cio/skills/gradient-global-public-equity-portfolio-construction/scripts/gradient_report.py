@@ -14,14 +14,14 @@ Labels are set per report in `meta` (header_label, signal_title, meter_title); b
 colours live only in the constants below. Do not edit copies of this file inside a
 skill: change the canonical copy and re-sync every skill.
 """
-import base64, datetime, html, json, os, re, shutil, subprocess, sys, tempfile
+import base64, datetime, html, json, math, os, re, shutil, subprocess, sys, tempfile
 
 # ---- brand constants (change only here) ------------------------------------
 INK = "#0D1117"; PANEL = "#161C24"; LIME = "#C6F432"; LIME_DK = "#4F6B00"
 INK2 = "#4A5563"; MUTED = "#8A94A1"; RULE = "#E3E7EC"; PAPER = "#FFFFFF"; WASH = "#F5F7F9"
 AMBER = "#F2A93B"; CORAL = "#FF6B5E"; SLATE = "#9AA5B1"
 BRAND = "GradientCIO.com"
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 SERIES = [INK, "#7FA600", AMBER, "#5B8DEF", CORAL, SLATE]  # line-chart series order
 SIGNAL = {  # level -> (default label, color, text-on-color); meta.signal.label overrides the label
     # neutral / positive
@@ -226,6 +226,19 @@ def b_chart(b):
                  for row in c["rows"] if len(row) > max(xi, yi) and isinstance(row[yi], (int, float))]
         if items and all(item["value"] >= 0 for item in items):
             return b_bars({"title": c.get("title"), "items": items})
+    if block == "pie" and x_key in keys and y_keys and y_keys[0] in keys:
+        xi, yi = keys.index(x_key), keys.index(y_keys[0])
+        items = [{"label": row[xi], "value": row[yi],
+                  "display": _chart_format(columns[yi], row[yi], c.get("currency"))}
+                 for row in c["rows"]
+                 if len(row) > max(xi, yi)
+                 and row[xi] is not None
+                 and isinstance(row[yi], (int, float))]
+        if (len(items) == len(c["rows"])
+                and items
+                and all(math.isfinite(item["value"]) and item["value"] >= 0 for item in items)
+                and sum(item["value"] for item in items) > 0):
+            return b_pie({"title": c.get("title"), "items": items})
     return b_table({"title": c.get("title"),
                     "columns": [column.get("title", column.get("key", "")) for column in columns],
                     "rows": [[_chart_format(column, value, c.get("currency"))
@@ -258,6 +271,43 @@ def b_bars(b):
                    f'<rect x="{lw}" y="{y+3}" width="{W-lw-rw}" height="{rh-8}" rx="2" fill="{WASH}"/>'
                    f'<rect x="{lw}" y="{y+3}" width="{w:.1f}" height="{rh-8}" rx="2" fill="{col}"/>'
                    f'<text x="{lw+w+8:.1f}" y="{y+14}" class="cv">{esc(i.get("display", i["value"]))}</text>')
+    svg.append("</svg>")
+    title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
+    note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
+    return title + "".join(svg) + note
+
+def b_pie(b):
+    """Donut chart for a non-negative part-to-whole series."""
+    items = b["items"]
+    total = sum(float(item["value"]) for item in items)
+    W, H = 640, max(210, 30 * len(items) + 24)
+    cx, cy, radius, stroke = 120, H / 2, 72, 34
+    circumference = 2 * math.pi * radius
+    offset = 0.0
+    svg = [
+        f'<svg viewBox="0 0 {W} {H}" width="100%" class="chart donut">',
+        f'<circle cx="{cx}" cy="{cy:.1f}" r="{radius}" fill="none" '
+        f'stroke="{WASH}" stroke-width="{stroke}"/>',
+    ]
+    for index, item in enumerate(items):
+        share = float(item["value"]) / total
+        length = circumference * share
+        color = SERIES[index % len(SERIES)]
+        if length > 0:
+            svg.append(
+                f'<circle cx="{cx}" cy="{cy:.1f}" r="{radius}" fill="none" '
+                f'stroke="{color}" stroke-width="{stroke}" '
+                f'stroke-dasharray="{length:.3f} {circumference - length:.3f}" '
+                f'stroke-dashoffset="{-offset:.3f}" transform="rotate(-90 {cx} {cy:.1f})"/>'
+            )
+        offset += length
+        y = 25 + index * 30
+        svg.append(
+            f'<rect x="245" y="{y - 10}" width="10" height="10" rx="2" fill="{color}"/>'
+            f'<text x="265" y="{y}" class="cl">{esc(item["label"])}</text>'
+            f'<text x="{W - 12}" y="{y}" text-anchor="end" class="cv">'
+            f'{esc(item.get("display", item["value"]))}</text>'
+        )
     svg.append("</svg>")
     title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
     note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""

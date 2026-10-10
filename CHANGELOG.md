@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.4.2
+- Centralized shared portfolio-report validation policy without changing report-specific language rules.
+- Split the dependency-free regression harness into focused static, report, renderer and connector suites while preserving its existing command-line interface.
+- Added contract-manifest edge coverage and moved cheap version and shared-file checks ahead of renderer setup in CI.
+
+## 2.4.1
+- Added renderer v1.2.0 donut support for chart `pie` hints while preserving table rendering for mixed-unit pacing metrics.
+- Refreshed setup probes for full sample-portfolio coverage, three-series IDD comparisons, relative-return rows and all preview-only write surfaces.
+- Updated historical-return, exposure, DDQ and Strategy Lab guidance for the current connector contracts and removed stale known-issue workarounds.
+
 ## 2.4.0
 - Added a validated visual and sourced Claude-analysis layer for IC memos, including required executive tiles, portfolio charts, semantic visual slots and fail-closed JSON composition.
 - Added deterministic JSON validators and analysis boundaries for brief portfolio reviews, ODD reports, DDQ reconciliations, equity notes, manager comparisons and manager-monitoring digests.

@@ -49,25 +49,24 @@ history; do not treat it as a zero return or omit the gap. The canonical illustr
 partial calendar years 2016 and 2026: label each from its returned `month_count`, `partial`,
 `coverage_status`, and `missing_reason`, and never present either as a full-year return.
 Do not request all six result sections in one call. Request summary and benchmark-relative sections together,
-then request `points` and `cumulative_growth` separately when needed. Until connector issue P-01 ships, use
-the default commitment `limit` of 25, do not follow `next_cursor`, and disclose
-`benchmark_relative.commitments_truncated` plus the returned commitment count. After P-01 ships and the
-loaded schema supports reliable continuation, follow `next_cursor` only when commitment-level benchmark
-detail is needed.
+then request `points` and `cumulative_growth` separately when needed. Pass `limit: 100` so the canonical
+69 commitment comparisons return in one call. If a response still reports truncation, disclose the returned
+count and omitted detail rather than presenting the page as complete.
 
-For `get_portfolio_exposure.asset_classification` inputs, use only the exact lowercase values relevant to
-the request:
+For `get_portfolio_exposure.asset_classification`, use the canonical display name returned by the connector
+(for example `Fixed Income`) or its documented snake_case alias. Supported aliases include
 `public_equity`, `fixed_income`, `private_equity`, `private_credit`, `real_estate`, `infrastructure`,
-`alternatives`, and `cash`. Never pass title-case display labels or rely on case-insensitive alias handling.
+`alternatives`, and `cash`; do not invent classifications.
 `page_totals` covers only the returned page. Use `portfolio_totals` for the filtered portfolio and only treat
 it as complete when `complete: true`; classification rows live in `aggregates_by_asset_classification`.
 Classification aggregates declare `scope: filtered_portfolio`. Interpret their `coverage.status` as
 `available`, `partial`, or `unavailable`, retain `missing_reasons`, and do not infer complete coverage from
 non-empty aggregate rows.
-For fixed-income duration, spread duration, and yield, use the governed `fixed_income_metrics` on
-`portfolio_totals` or the Fixed Income classification row when its `weighting_basis` is
-`current_holding_nav_base`; the two fixed-income-only aggregates should reconcile, and
-zero spread duration is a valid observation. Never equal-weight exposure rows.
+For fixed-income duration, spread duration, and yield, use the governed `fixed_income_metrics` on the
+`Fixed Income` row in `aggregates_by_asset_classification` when its `weighting_basis` is
+`current_holding_nav_base`; `portfolio_totals.fixed_income_metrics` is null for a mixed portfolio. Quote
+`fixed_income_metrics` only from `Fixed Income` and `Cash` rows. A zero spread duration is a valid
+observation. Never equal-weight exposure rows.
 For null `as_of_date`, `market_value_base`, or `nav_base`, preserve the matching `null_reasons` value and do
 not infer the missing channel from another field or treat a typed not-applicable reason as missing data.
 
@@ -76,12 +75,13 @@ not infer the missing channel from another field or treat a typed not-applicable
 Strategy Lab is a standalone sandbox for saved or imported return series and the active lab panel state. It
 does not analyze a saved portfolio merely because a Portfolio Analytics `portfolio_id` is available.
 
-Build a session with `build_strategy_lab_session` before each selected-series Strategy Lab compute call.
-Pass `return_series_ids` plus a `benchmark_id` where the session domain requires it, then pass the returned
-`strategy_lab_session` object unchanged to the compute tool. For illustrative analysis, discover and use the
-named `strategy_lab_core` demo set. Never pass a Portfolio Analytics `portfolio_id`. Never describe Strategy
-Lab results as portfolio holdings, policy compliance, or realized portfolio performance. Preserve series
-labels, identifiers, and date coverage.
+For selected-series Strategy Lab compute calls, pass `return_series_ids` and the benchmark field required by
+the loaded tool schema (`benchmark_id` for relative return, `benchmark_series_id` for manager comparison).
+Do not also pass a `strategy_lab_session` stub: the connector builds the selected-series session. A complete
+server-built `strategy_lab_session` may be passed by itself, but never together with `return_series_ids`.
+For illustrative analysis, discover the named `strategy_lab_core` demo set and use its IDs. Never pass a
+Portfolio Analytics `portfolio_id`. Never describe Strategy Lab results as portfolio holdings, policy
+compliance, or realized portfolio performance. Preserve series labels, identifiers, and date coverage.
 
 If no matching Strategy Lab session or return series exists, keep Strategy Lab analysis optional and write
 `Not available — no Strategy Lab return series selected` where the report template requires a row.

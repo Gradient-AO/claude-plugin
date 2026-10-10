@@ -63,9 +63,9 @@ Follow `references/data-map.md` section by section. Key rules:
 - If the user has more than one organization, confirm which before calling org-scoped tools. Call
   `list_assumption_sets` and state the organization and selected assumption set in the memo header.
 - Read `references/module-scope.md` before selecting tools. Portfolio questions use Portfolio
-  Analytics. Strategy Lab is optional and uses a `build_strategy_lab_session` result built from separately
-  selected `return_series_ids`. Pass the returned `strategy_lab_session` unchanged to the compute tool.
-  Never pass a Portfolio Analytics `portfolio_id` to a Strategy Lab tool.
+  Analytics. Strategy Lab is optional and uses separately selected `return_series_ids` plus the required
+  benchmark field. Do not also send a `strategy_lab_session` stub; the connector builds the selected-series
+  session. Never pass a Portfolio Analytics `portfolio_id` to a Strategy Lab tool.
 - Use `envelope: "compact"` and optional `fields` only on research-read tools whose loaded schema offers
   them. Do not pass either parameter to any `run_strategy_lab_*` tool.
 - Use `get_chart_data` after portfolio selection: check availability, then request one relevant pack at a time.
@@ -116,12 +116,14 @@ reasons. State partial coverage as a report gap. For `no_subject_returns`, state
 has no subject return history and do not substitute benchmark, commitment or Strategy Lab returns. Other
 governed results remain unavailable when their server method is unavailable.
 State `not_yet_funded` commitment comparisons as having no funded return history, not zero return. Identify
-returned partial 2016 and 2026 calendar years with their month counts. Until P-01 ships, disclose a truncated
-default commitment page rather than following `next_cursor`.
-Page `get_portfolio_exposure` with `limit` / `cursor` and use only exact lowercase classification filters.
-Use fixed-income duration, spread-duration, and yield-to-maturity only from complete governed
-`portfolio_totals.fixed_income_metrics` or the Fixed Income classification aggregate; preserve coverage and
-never recompute or equal-weight rows.
+returned partial 2016 and 2026 calendar years with their month counts. Pass `limit: 100` and disclose any
+remaining truncation.
+Page `get_portfolio_exposure` with `limit` / `cursor` and use canonical display names or documented
+snake_case aliases for classification filters. Use fixed-income duration, spread-duration, and
+yield-to-maturity only from the complete governed Fixed Income classification aggregate;
+`portfolio_totals.fixed_income_metrics` is null for a mixed portfolio. Quote `fixed_income_metrics` only for
+Fixed Income and Cash rows. Preserve weighting basis, coverage, and a valid zero spread duration; never
+equal-weight rows or substitute unsupported yield-to-worst / OAS.
 When policy risk rows are `not_assessed`, historical-return risk metrics remain separate observations: do not
 compare them with persisted thresholds or infer compliance unless `check_portfolio_policy` returns the status.
 When risk rows are assessed, preserve `risk_limits.observation_basis` and the returned magnitude comparison

@@ -20,8 +20,9 @@
 - Do not predict a rate move, spread move, recession or default cycle.
 - Historical attribution comes only from governed portfolio attribution.
 - Report sleeve effective duration, spread duration and yield to maturity only from complete governed
-  `portfolio_totals.fixed_income_metrics` or the Fixed Income classification aggregate. Preserve weighting
-  basis, coverage and methodology. Do not relabel yield to maturity as yield to worst. Yield to worst, OAS,
+  Fixed Income classification aggregate; `portfolio_totals.fixed_income_metrics` is null for a mixed
+  portfolio. Quote `fixed_income_metrics` only for Fixed Income and Cash rows. Preserve weighting basis,
+  coverage and methodology. Do not relabel yield to maturity as yield to worst. Yield to worst, OAS,
   convexity, quality and key-rate exposure require another direct source.
 - Distinguish daily-NAV funds, marketable securities and illiquid/private credit using returned evidence.
 - Transaction costs, turnover and tax impacts remain unavailable unless sourced.

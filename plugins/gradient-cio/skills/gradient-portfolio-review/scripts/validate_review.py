@@ -19,28 +19,28 @@ from report_json_validator import (  # noqa: E402
     load_json,
     validate_report,
 )
-
-
-ILLUSTRATIVE_LABEL = (
-    "Illustrative, Gradient Maintained — demo data, "
-    "not the client's holdings or managers"
+from report_constants import (  # noqa: E402
+    ATTRIBUTION_STATUS_PATTERNS,
+    FORWARD_ATTRIBUTION_PATTERNS,
+    ILLUSTRATIVE_LABEL,
+    LOCAL_CALC_TAG_PATTERNS,
+    NEUTRAL_APPROVAL_ALLOCATION_PATTERNS,
+    NEUTRAL_DIRECTION_PATTERNS,
+    NEUTRAL_REBALANCE_PATTERNS,
+    NEUTRAL_RECOMMENDATION_PATTERNS,
 )
+
+
 NEUTRAL_PATTERNS = (
-    r"\bwe recommend\b",
-    r"\bshould\b",
-    r"\bmust\b",
-    r"\bbuy\b",
-    r"\bsell\b",
-    r"\bapprove\b",
-    r"\bincrease (?:the )?allocation\b",
-    r"\breduce (?:the )?allocation\b",
-    r"\bsimulated attribution\b",
-    r"\bprojected attribution\b",
-    r"\bforward attribution\b",
-    r"\[Calc(?:\s+C(?:\d+|#))?\]",
+    NEUTRAL_RECOMMENDATION_PATTERNS
+    + NEUTRAL_DIRECTION_PATTERNS
+    + NEUTRAL_APPROVAL_ALLOCATION_PATTERNS
+    + ATTRIBUTION_STATUS_PATTERNS
+    + FORWARD_ATTRIBUTION_PATTERNS
+    + LOCAL_CALC_TAG_PATTERNS
 )
-COMPREHENSIVE_NEUTRAL_PATTERNS = NEUTRAL_PATTERNS + (
-    r"\brebalance\b",
+COMPREHENSIVE_NEUTRAL_PATTERNS = (
+    NEUTRAL_PATTERNS + NEUTRAL_REBALANCE_PATTERNS
 )
 
 BRIEF_SPEC = ReportSpec(

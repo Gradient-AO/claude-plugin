@@ -89,7 +89,7 @@ save `context.fingerprint`, `basis`, and unavailable reasons. Embed each usable 
 | Portfolio record | `list_portfolios` | Yes |
 | Dashboard chart packs | `get_chart_data` availability, then one supported `analysis_type` at a time | Comprehensive: allocations and commitments; brief: optional |
 | Allocation tree | `get_portfolio_structure` `view: allocation_tree` | Yes |
-| Returns | `get_portfolio_historical_returns` with `end_date` = period end: request summary / benchmark-relative sections with matching `fields`, then request `points` and `cumulative_growth` separately; until P-01 ships, disclose a truncated default commitment page instead of following `next_cursor` | Yes |
+| Returns | `get_portfolio_historical_returns` with `end_date` = period end and `limit: 100`: request summary / benchmark-relative sections with matching `fields`, then request `points` and `cumulative_growth` separately; disclose any remaining truncation | Yes |
 | Benchmark | the benchmark named in `benchmark_relative`; else ask the user which benchmark; then `get_benchmarks` `benchmark_id` for its name and classes, and `get_return_series` `series_kind: benchmark` for monthly points | Optional (performance is reported without relative rows if absent) |
 | Policy | `check_portfolio_policy` | Yes |
 | Attribution | `get_portfolio_attribution` with `benchmark_role: policy`, `parent_allocation_id: root`, month-end start/end and all sections | Comprehensive: always call and preserve typed unavailability; brief: optional |
@@ -135,13 +135,15 @@ callout required by `references/review-template.md`. Never treat this optional e
 
 **Exposure.** Use `get_portfolio_exposure.aggregates_by_asset_classification` for governed value totals,
 shares, coverage and truncation. The server chooses market value for marketable assets and NAV for drawdown
-funds and never adds unfunded commitments. Show uncovered rows as "no current value". Exposure classifications
-(e.g. `public_equity`, `fixed_income`, `alternatives`) do not map one-to-one to tree names — show them as
-returned, do not merge them into the policy table. Show geography or sector only if the response carries
-those fields.
-Use governed fixed-income duration, spread-duration, and yield-to-maturity from complete
-`portfolio_totals.fixed_income_metrics` or the Fixed Income classification aggregate. Preserve weighting
-basis and coverage; do not recompute or equal-weight rows.
+funds and never adds unfunded commitments. Show uncovered rows as "no current value". Exposure filters may
+use returned display names (for example `Fixed Income`) or documented snake_case aliases (`public_equity`,
+`fixed_income`, `alternatives`); classifications do not map one-to-one to tree names. Show them as returned
+and do not merge them into the policy table. Show geography or sector only if the response carries those
+fields.
+Use governed fixed-income duration, spread-duration, and yield-to-maturity from the Fixed Income
+classification aggregate; `portfolio_totals.fixed_income_metrics` is null for a mixed portfolio. Quote
+`fixed_income_metrics` only for Fixed Income and Cash rows. Preserve weighting basis and coverage; do not
+recompute or equal-weight rows.
 
 **Look-through.** Top issuers by look-through NAV across managers, with managers holding and share of NAV.
 Always add the caveat callout: 13F is lagged (up to 45 days after quarter end), long-only US-listed equity,

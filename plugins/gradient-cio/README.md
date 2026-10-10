@@ -61,3 +61,13 @@ Gradient branding. A single report can also be branded at run time (see `shared/
 
 Follow `CLAUDE.md` at the repository root: it is the single source for the change, test, versioning and
 release process. Edit the renderer and style guide only in `shared/`, then run `python tools/sync_shared.py`.
+
+Validation policy shared by multiple JSON reports lives in `tools/report_constants.py`; generic report
+contracts live in `tools/report_json_validator.py`, and construction contracts live in
+`tools/construction_report_validator.py`. Skill-local validators retain their small `parents[3]` path
+bootstrap so they can be invoked directly from a skill while importing the plugin-level tools.
+
+`tests/run_tests.py` is the dependency-free test entry point. It orchestrates the focused modules under
+`tests/suites/`; use `--static` for the fast contract and validator lane, or run it without flags for the
+complete PDF-render regression suite. CI checks manifest version parity and shared-file sync before installing
+the heavier renderer dependencies.

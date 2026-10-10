@@ -10,9 +10,9 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 | Access | `get_gradient_capabilities`; selected organization | Portfolio, research, macro and diligence capability state |
 | Portfolio selection | `list_portfolios` | Existing `portfolio_id`, name, currency and record kind |
 | Allocation | `get_portfolio_structure`; `view: allocation_tree`, selected `portfolio_id`, depth 3 | Real-assets policy nodes, total-portfolio targets, actuals, limits and coverage |
-| Exposure | `get_portfolio_exposure`; selected `portfolio_id`; page exact lowercase `asset_classification: real_estate` and `asset_classification: infrastructure` separately; use another classification only when the loaded schema documents that exact lowercase input value | Market value or NAV, commitment, unfunded, manager / fund, currency and valuation date |
+| Exposure | `get_portfolio_exposure`; selected `portfolio_id`; page returned display names or documented aliases `asset_classification: real_estate` and `asset_classification: infrastructure` separately; use another classification only when the loaded schema documents it | Market value or NAV, commitment, unfunded, manager / fund, currency and valuation date |
 | Policy | `check_portfolio_policy`; selected `portfolio_id` | Allocation, return objective, risk, liquidity, unfunded and concentration status |
-| Returns | `get_portfolio_historical_returns`; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`, then separate projected calls for `points` and `cumulative_growth` when needed; until P-01 ships, keep the default commitment page and disclose truncation rather than following `next_cursor` | Period returns, benchmark-relative values, risk and coverage |
+| Returns | `get_portfolio_historical_returns`; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`, then separate projected calls for `points` and `cumulative_growth` when needed; pass `limit: 100`, preserve `not_yet_funded` missing reasons, and disclose partial 2016 / 2026 calendar years with their month counts | Period returns, benchmark-relative values, risk and coverage |
 | Attribution | `get_portfolio_attribution`; policy benchmark, relevant policy node when supported, month-end period, all sections | Realized effects, method, linking, residual, diagnostics and unavailable reasons |
 | Allocation charts | `get_chart_data`; availability, then `analysis_type: allocations` | Weights, risk contribution, factor and currency items where returned |
 | Assumptions | `list_assumption_sets`; `get_capital_market_assumptions` with `view: baseline` | Active release, horizon, currency and returned real-asset classes |
@@ -47,7 +47,7 @@ portfolio has no subject return history and do not substitute benchmark, commitm
 | Commodity positioning | `get_market_positioning`; `view: cftc` | Context only; not a portfolio exposure or expected-return source |
 | Broader context | `get_the_read`; `visuals: none` | Facts only; at most two short paragraphs |
 | Manager evidence | `get_manager_diligence_brief`, `get_manager_diligence_findings` | Use only for resolved roster managers / funds |
-| Selected-series diagnostics | `build_strategy_lab_session` with selected `return_series_ids`, then a supported `run_strategy_lab_*` tool with the returned session | Selected-series sandbox; never pass a Portfolio Analytics ID |
+| Selected-series diagnostics | Pass selected `return_series_ids` directly to a supported `run_strategy_lab_*` tool and add the required benchmark field. Do not also pass a `strategy_lab_session` stub. | Selected-series sandbox; never pass a Portfolio Analytics ID |
 | User documents | IPS, real-assets taxonomy, commodity mandate, linker benchmark, appraisal or pacing plan | Tag as user documents with date and scope |
 
 ## Fallbacks

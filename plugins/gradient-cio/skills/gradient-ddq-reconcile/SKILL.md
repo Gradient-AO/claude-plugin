@@ -15,7 +15,11 @@ The deliverable is a branded PDF report: every checkable DDQ statement is marked
 2. Find the firm: `get_diligence_roster_funds` first (gives canonical `fund_id` and `parent_firm_id`), else `search_managers` with the name or CRD. Confirm the CRD with the user if more than one adviser matches.
 3. Resolve canonical IDs to pass to reconciliation:
    - Firm claims: use `firm_id`. Do NOT pass only `crd_number` — reconciliation currently fails to resolve a bare CRD.
-   - Fund claims: use the catalog `fund_id` (from the roster or `get_gradient_coverage` view `manager_subject`). If resolution returns a `pfid:` candidate with `canonical_id: null`, report governed reconciliation as unavailable for that fund; do not compare or calculate locally.
+   - Fund claims: use `subject_scope: "fund"` and the catalog `fund_id` (from the roster or
+     `get_gradient_coverage` view `manager_subject`). A DDQ containing auditor, administrator, custodian, or
+     prime-broker labels remains fund scope even when the manager name is prominent; firm scope checks only
+     the 8 firm fields. If resolution returns a `pfid:` candidate with `canonical_id: null`, report governed
+     reconciliation as unavailable for that fund; do not compare or calculate locally.
 4. Pull `get_manager_odd_profile` with the CRD for contextual filed evidence only. Do not use it to recreate reconciliation verdicts or numeric gaps.
 
 ## 2. Extract and transcribe claims
@@ -31,7 +35,9 @@ Work from one canonical text of the DDQ:
 - Compute `file_sha256` of the ORIGINAL uploaded file (`sha256sum`).
 - For each claim, copy the sentence verbatim as `quote`, and compute `source_locator.start/end` (character offsets) and `line_start/line_end` in the canonical text with a short Python script (`text.index(quote)`). Add `page`, `sheet` or `cell_range` when known. Never estimate offsets by eye.
 - `raw_value` is the value as written (`$12.4 billion`, `1,240`, `Yes`) — the comparator parses billions, commas and yes/no. Multiple names: separate with `; `.
-- `asserted_as_of`: the DDQ's stated as-of date (YYYY-MM-DD) or null.
+- `asserted_as_of`: include the DDQ's stated as-of date (YYYY-MM-DD) when present; otherwise omit it or pass
+  null. Do not invent a date. The server compares an undated assertion with the filing date and returns
+  `as_of_assumed: filing_date`.
 - `claim_status`: `asserted` when stated; `ambiguous` when the DDQ hedges or gives a range; `not_found` when the DDQ doesn't answer. `extraction_reason_codes: []` for normal assertions.
 
 Checkable fields (map DDQ questions to these):

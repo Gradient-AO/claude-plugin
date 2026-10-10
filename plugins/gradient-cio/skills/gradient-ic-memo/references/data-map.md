@@ -7,9 +7,9 @@ Step 2). Read `module-scope.md` first.
 Portfolio questions go to Portfolio Analytics: `list_portfolios`, `get_portfolio_exposure`,
 `get_portfolio_structure`, `get_portfolio_historical_returns`, `get_chart_data`,
 `get_portfolio_attribution`, and `check_portfolio_policy`. Strategy Lab rows are optional and run on selected
-return series: call `build_strategy_lab_session` with `return_series_ids` plus `benchmark_id` where required,
-then pass the returned `strategy_lab_session` unchanged to the compute tool. They never receive
-`portfolio_id`. Label the series and date coverage and do not present lab results as the portfolio.
+return series: pass `return_series_ids` plus the benchmark field required by the loaded compute-tool schema.
+Do not also pass a `strategy_lab_session` stub. They never receive `portfolio_id`. Label the series and date
+coverage and do not present lab results as the portfolio.
 
 ## 0. Context (header)
 
@@ -25,9 +25,9 @@ then pass the returned `strategy_lab_session` unchanged to the compute tool. The
 
 | § | Content | Primary tool (view / mode) | Fallback if unavailable |
 |---|---|---|---|
-| 3 | NAV, unfunded, holdings, allocation | Portfolio Analytics: page `get_portfolio_exposure` with `limit` / `cursor`; use exact lowercase `asset_classification` filters; preserve `null_reasons`, page versus filtered-portfolio scopes, completeness, and governed fixed-income aggregates. Policy hierarchy and weights come from `get_portfolio_structure` (`view: allocation_tree`, then `ownership_weights`) | User-supplied holdings file; else Not available |
+| 3 | NAV, unfunded, holdings, allocation | Portfolio Analytics: page `get_portfolio_exposure` with `limit` / `cursor`; use canonical display names or documented snake_case `asset_classification` aliases; preserve `null_reasons`, page versus filtered-portfolio scopes, completeness, and governed fixed-income classification aggregates. Policy hierarchy and weights come from `get_portfolio_structure` (`view: allocation_tree`, then `ownership_weights`) | User-supplied holdings file; else Not available |
 | 4 | IPS compliance | `check_portfolio_policy` governed allocation bands, return objective, risk limits with observation basis, liquidity and concentration | Not assessed — governed policy or observation unavailable |
-| 5.1 | Returns vs benchmark | Portfolio Analytics: `get_portfolio_historical_returns` (`sections: standard_periods, calendar_years, risk_metrics, benchmark_relative`; `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`; keep partial-period labels and coverage states; identify `not_yet_funded` gaps and partial 2016 / 2026 calendar years; until P-01 ships, disclose commitment truncation instead of following `next_cursor`) | User performance report; else Not available |
+| 5.1 | Returns vs benchmark | Portfolio Analytics: `get_portfolio_historical_returns` (`sections: standard_periods, calendar_years, risk_metrics, benchmark_relative`; `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`; keep partial-period labels and coverage states; identify `not_yet_funded` gaps and partial 2016 / 2026 calendar years; pass `limit: 100` and disclose any remaining truncation) | User performance report; else Not available |
 | 5 (visuals) | Growth of 100, calendar years | Second `get_portfolio_historical_returns` call: `sections: [cumulative_growth, calendar_years]`; `fields: [portfolio, filters, coverage, display, cumulative_growth, calendar_years]` | Not available callout |
 | 5.2 | Attribution | `get_portfolio_attribution` for the governed saved portfolio and policy benchmark | User attribution report quoted as a document; else Not available |
 | 5.3 | Contributors / detractors | Governed holding or asset-class contribution data from a user report | Not available |
