@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 import subprocess
 import tempfile
@@ -89,6 +90,20 @@ def report_headings(report_path: Path | None) -> list[str]:
     ]
 
 
+def is_heading_line(line: str, heading: str) -> bool:
+    """Match rendered section headings without matching prose containing the title."""
+    normalized_line = " ".join(line.split())
+    normalized_heading = " ".join(heading.split())
+    if normalized_line == normalized_heading:
+        return True
+    return bool(
+        re.fullmatch(
+            rf"(?:\d{{1,2}}|[A-Z])\s+{re.escape(normalized_heading)}",
+            normalized_line,
+        )
+    )
+
+
 def check_layout(
     pdf_path: Path,
     *,
@@ -119,7 +134,9 @@ def check_layout(
         page_text = lines[number - 1] if number - 1 < len(lines) else []
         for heading in headings:
             positions = [
-                index for index, line in enumerate(page_text) if heading in line
+                index
+                for index, line in enumerate(page_text)
+                if is_heading_line(line, heading)
             ]
             if positions and len(page_text) - positions[-1] <= 3:
                 failures.append(f"page {number} ends with heading '{heading}'")
