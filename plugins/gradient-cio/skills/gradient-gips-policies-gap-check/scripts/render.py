@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Sequence
 
 from gradient_pptx import RenderValidationError, load_report, render_report
+from report_theme import load_branding
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -38,6 +39,11 @@ def _parser() -> argparse.ArgumentParser:
         required=True,
         help="output base path; .pdf or .pptx is added",
     )
+    parser.add_argument(
+        "--brand",
+        type=Path,
+        help="optional branding.json; colors, fonts and geometry cannot be overridden",
+    )
     return parser
 
 
@@ -47,7 +53,11 @@ def _output_base(path: Path) -> Path:
     return path
 
 
-def _render_pdf(report_path: Path, output_path: Path) -> int:
+def _render_pdf(
+    report_path: Path,
+    output_path: Path,
+    brand_path: Path | None = None,
+) -> int:
     renderer = Path(__file__).with_name("gradient_report.py")
     if not renderer.is_file():
         print(f"ERROR — PDF renderer not found: {renderer}", file=sys.stderr)
@@ -58,6 +68,8 @@ def _render_pdf(report_path: Path, output_path: Path) -> int:
     if report.get("slides") and not report.get("sections"):
         arguments.append("--deck")
     arguments.extend((str(report_path), str(output_path)))
+    if brand_path is not None:
+        arguments.extend(("--brand", str(brand_path)))
     completed = subprocess.run(
         arguments,
         check=False,
@@ -65,10 +77,14 @@ def _render_pdf(report_path: Path, output_path: Path) -> int:
     return completed.returncode
 
 
-def _render_pptx(report_path: Path, output_path: Path) -> int:
+def _render_pptx(
+    report_path: Path,
+    output_path: Path,
+    branding: dict[str, object] | None = None,
+) -> int:
     try:
         report = load_report(report_path)
-        render_report(report, output_path)
+        render_report(report, output_path, branding=branding)
     except RenderValidationError as error:
         print(
             f"FAIL — PowerPoint render validation: {len(error.errors)} issue(s)",
@@ -91,12 +107,25 @@ def main(argv: Sequence[str] | None = None) -> int:
     if not report_path.is_file():
         print(f"ERROR — report JSON not found: {report_path}", file=sys.stderr)
         return 2
+    try:
+        branding = load_branding(args.brand.resolve() if args.brand else None)
+    except ValueError as error:
+        print(f"ERROR — {error}", file=sys.stderr)
+        return 2
 
     return_codes: list[int] = []
     if args.output_format in {"pdf", "both"}:
-        return_codes.append(_render_pdf(report_path, Path(f"{base}.pdf")))
+        return_codes.append(
+            _render_pdf(
+                report_path,
+                Path(f"{base}.pdf"),
+                args.brand.resolve() if args.brand else None,
+            )
+        )
     if args.output_format in {"pptx", "both"}:
-        return_codes.append(_render_pptx(report_path, Path(f"{base}.pptx")))
+        return_codes.append(
+            _render_pptx(report_path, Path(f"{base}.pptx"), branding)
+        )
     return max(return_codes, default=0)
 
 

@@ -6,9 +6,16 @@ from __future__ import annotations
 import json
 import math
 import re
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TypeAlias
+
+
+PLUGIN_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PLUGIN_ROOT / "shared"))
+
+from analysis_quality import review_report  # noqa: E402
 
 
 JsonValue: TypeAlias = (
@@ -980,6 +987,14 @@ def load_json(path: Path) -> tuple[JsonValue | None, str | None]:
         )
 
 
+def print_quality_notes(document: JsonValue, *, structured: bool) -> None:
+    """Print non-blocking analysis-quality guidance for a report document."""
+    notes = review_report(document, structured=structured)
+    print(f"Quality notes (advisory, {len(notes)}):")
+    for note in notes:
+        print(f"  - {note}")
+
+
 def run_cli(argv: list[str], spec: ReportSpec) -> int:
     """Run a skill-specific validator command."""
     if len(argv) != 2:
@@ -999,7 +1014,15 @@ def run_cli(argv: list[str], spec: ReportSpec) -> int:
         print(f"FAIL — {spec.name}: {len(errors)} issue(s)")
         for error in errors:
             print(f"  - {error}")
+        print_quality_notes(
+            document,
+            structured=spec.require_analysis_structure,
+        )
         return 1
 
     print(f"PASS — {spec.name} JSON contract is valid.")
+    print_quality_notes(
+        document,
+        structured=spec.require_analysis_structure,
+    )
     return 0

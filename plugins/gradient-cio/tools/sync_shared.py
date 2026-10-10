@@ -11,9 +11,13 @@ import re
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 FILES = {"shared/gradient_report.py": "scripts/gradient_report.py",
          "shared/gradient_pptx.py": "scripts/gradient_pptx.py",
+         "shared/report_theme.py": "scripts/report_theme.py",
+         "shared/report_layout.py": "scripts/report_layout.py",
          "shared/render.py": "scripts/render.py",
          "shared/compose_report.py": "scripts/compose_report.py",
          "shared/check_layout.py": "scripts/check_layout.py",
+         "shared/qa_report.py": "scripts/qa_report.py",
+         "shared/analysis_quality.py": "scripts/analysis_quality.py",
          "shared/report-style.md": "references/report-style.md",
          "shared/writing-standards.md": "references/writing-standards.md",
          "shared/chart-data.md": "references/chart-data.md",

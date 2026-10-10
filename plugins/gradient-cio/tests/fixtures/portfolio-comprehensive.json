@@ -157,24 +157,23 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a 2 policy items on watch signal [S1]. Why it matters: The signal frames the review. Uncertainty: Evidence coverage is bounded. What would change the view: New governed evidence that changes the signal."
+          "text": "Observation: The fictional TEST report carries a 2 policy items on watch signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Trailing 1Y is 8.4% in the TEST evidence [S2]. Why it matters: This measure anchors the executive view. Uncertainty: The fixture is deliberately compact. What would change the view: A refreshed source with a materially different value."
+          "text": "Observation: Trailing 1Y is 8.4% in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Liquid share is 63.0% in the TEST evidence [S3]. Why it matters: It identifies a monitoring priority. Uncertainty: Supporting detail is limited. What would change the view: Corroborated evidence that resolves or reverses the item."
+          "text": "Observation: Liquid share is 63.0% in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
-      ],
-      "new_page": true
+      ]
     },
     {
       "title": "Mandate, Policy and Data Basis",
@@ -295,8 +294,7 @@
             ]
           ]
         }
-      ],
-      "new_page": true
+      ]
     },
     {
       "title": "Period and Market Context",
@@ -357,8 +355,7 @@
           "title": "Forward context",
           "text": "The regime and capital-market figures used later are assumptions, not forecasts [S8][S9]."
         }
-      ],
-      "new_page": true
+      ]
     },
     {
       "title": "Historical Returns",
@@ -633,10 +630,10 @@
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Recent relative returns weakened",
-          "text": "Observation: The strongest full year is +0.8pp in 2022 and the weakest is -0.7pp in 2024 [S4]. Why it matters: Recent QTD, YTD and 1Y periods also trail. Uncertainty: Overlapping periods are not independent. What would change the view: A full-year result showing sustained relative improvement."
+          "text": "Observation: The strongest full year is +0.8pp in 2022 and the weakest is -0.7pp in 2024 [S4]. Why it matters: Recent QTD, YTD and 1Y periods also trail. Uncertainty: Overlapping-period coverage reuses some underlying observations. What would change the view: A full-year report showing sustained relative improvement."
         }
       ],
-      "new_page": true
+      "page_break": "prefer"
     },
     {
       "title": "Historical Attribution",
@@ -751,6 +748,12 @@
           "note": "Rows are sorted by absolute returned total effect [S5]."
         },
         {
+          "type": "callout",
+          "tone": "info",
+          "title": "Reconciliation diagnostic",
+          "text": "The returned residual is -0.02pp against a 1 bp tolerance; the method details below preserve the server basis and version [S5]."
+        },
+        {
           "type": "kv",
           "title": "Reconciliation and method",
           "rows": [
@@ -801,10 +804,10 @@
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Selection drove the shortfall",
-          "text": "Observation: Public-equity selection is the largest negative segment effect at -0.31pp [S5]. Why it matters: One segment explains most of the active shortfall. Uncertainty: The -0.02pp residual exceeds tolerance. What would change the view: Manager-level evidence showing the effect is broad rather than concentrated."
+          "text": "Observation: Public-equity selection is the largest negative segment effect at -0.31pp [S5]. Why it matters: One segment explains most active shortfall. Uncertainty: The unexplained -0.02pp residual remains outside reconciliation coverage. What would change the view: Manager records showing no single source exceeds half the effect."
         }
       ],
-      "new_page": true
+      "page_break": "prefer"
     },
     {
       "title": "Allocation and Policy Compliance",
@@ -1056,10 +1059,10 @@
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Private-assets headroom is narrow",
-          "text": "Observation: Private Assets has 1.8pp of upper-band headroom and Real Assets has 1.7pp above its lower band [S3]. Why it matters: Valuation changes can alter status without policy changes. Uncertainty: Private valuations lag. What would change the view: Updated valuations or pacing that materially changes headroom."
+          "text": "Observation: Private Assets has 1.8pp upper-band headroom and Real Assets sits 1.7pp above its lower band [S3]. Why it matters: Valuation changes can alter status without policy changes. Uncertainty: Private valuations lag current public-market records. What would change the view: Refreshed valuations widening headroom above 3.0pp."
         }
       ],
-      "new_page": true
+      "page_break": "prefer"
     },
     {
       "title": "Exposures and Concentration",
@@ -1155,14 +1158,6 @@
               "Current [S6]"
             ],
             [
-              "Example Fund D (TEST)",
-              "Private credit",
-              "$126.0M",
-              "8.4%",
-              "2026-03-31",
-              "Lagged [S6]"
-            ],
-            [
               "Example Issuer E (TEST)",
               "13F look-through",
               "$28.5M",
@@ -1243,10 +1238,10 @@
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Exposure amplifies open findings",
-          "text": "Observation: Example Manager A represents 12.8% of NAV and has an open medium finding [S6][S11]. Why it matters: A high-exposure manager can transmit an operational concern to portfolio oversight. Uncertainty: The finding remains open. What would change the view: Closure evidence or materially lower exposure."
+          "text": "Observation: Example Manager A represents 12.8% of NAV and has one open medium finding [S6][S11]. Why it matters: High exposure can transmit operational concern. Uncertainty: Completed closure evidence for the open finding remains unavailable. What would change the view: Closure records or refreshed exposure below 10.0%."
         }
       ],
-      "new_page": true
+      "page_break": "prefer"
     },
     {
       "title": "Realized Risk and Decomposition",
@@ -1406,10 +1401,10 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Observed risk remains compliant",
-          "text": "Observation: Realized volatility and drawdown are compliant, while CVaR is not assessed [S3][S4]. Why it matters: Observed risk and an unavailable measure require separate treatment. Uncertainty: Modeled contribution is not policy status. What would change the view: A returned CVaR observation or a governed risk-limit breach."
+          "text": "Observation: Realized volatility and drawdown are compliant, while CVaR is not assessed [S3][S4]. Why it matters: Observed risk and an unavailable measure require separate treatment. Uncertainty: Modeled-contribution assumptions do not establish governed policy status. What would change the view: A returned CVaR observation or governed risk-limit breach."
         }
       ],
-      "new_page": true
+      "page_break": "prefer"
     },
     {
       "title": "Projected Return and Risk Decomposition",
@@ -1549,7 +1544,7 @@
           "text": "Observation: Expected return is 0.7pp above the policy objective while GRIP is balanced [S3][S8][S12]. Why it matters: The evidence frames monitoring without forecasting. Uncertainty: Saved-portfolio volatility, drawdown and CVaR are unavailable. What would change the view: A governed refresh below the objective or a materially different GRIP stance."
         }
       ],
-      "new_page": true
+      "page_break": "prefer"
     },
     {
       "title": "Liquidity and Commitments",
@@ -1622,9 +1617,12 @@
             ],
             "truncated": false,
             "render_hint": {
-              "block": "table",
+              "block": "bars",
               "x": "quarter",
-              "y": []
+              "y": [
+                "calls",
+                "distributions"
+              ]
             }
           }
         },
@@ -1724,10 +1722,10 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Liquidity covers near-term calls",
-          "text": "Observation: Daily-to-quarterly assets are 63.0% of NAV and unfunded commitments are 9.3% [S3][S6]. Why it matters: Governed liquid coverage remains compliant as calls exceed distributions. Uncertainty: Pacing is a returned projection. What would change the view: Higher calls, lower liquid assets or a policy-status change [S3][S7]."
+          "text": "Observation: Daily-to-quarterly assets are 63.0% of NAV and unfunded commitments are 9.3% [S3][S6]. Why it matters: Liquid coverage remains compliant as calls exceed distributions. Uncertainty: Pacing results are assumptions, not confirmed call schedules. What would change the view: Calls above projections or liquid assets below policy [S3][S7]."
         }
       ],
-      "new_page": true
+      "page_break": "prefer"
     },
     {
       "title": "Coverage",
@@ -1808,8 +1806,7 @@
             }
           ]
         }
-      ],
-      "new_page": true
+      ]
     },
     {
       "title": "Appendix A — Sources",
@@ -1997,7 +1994,7 @@
           ]
         }
       ],
-      "new_page": true
+      "page_break": "prefer"
     },
     {
       "title": "Appendix B — Server Metric Methods and Disclosures",
@@ -2076,8 +2073,7 @@
             "This AI-assisted monitoring analysis is not investment, legal or compliance advice."
           ]
         }
-      ],
-      "new_page": true
+      ]
     }
   ]
 }

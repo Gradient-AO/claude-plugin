@@ -16,12 +16,12 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 | `gradient-portfolio-review` | Create a branded brief or comprehensive portfolio monitoring report. Triggers: 'portfolio review', 'quarterly review', 'board performance report', 'policy ranges'. Hands decisions to gradient-ic-memo and focused attribution to its report skill. |
 | `gradient-portfolio-attribution-report` | Create a branded historical and governed ex ante attribution report. Triggers: 'attribution report', 'Brinson analysis', 'sources of active return'. Hands broad monitoring to portfolio review and decisions to IC memo. |
 | `gradient-equity-note` | Create a branded, sourced note on one US-listed issuer. Triggers: 'equity note on a ticker', 'top holding', 'concentrated position', 'what changed in the filing', 'who holds this ticker'. Hands manager diligence to ODD and decisions to IC memo. |
+| `gradient-macro-brief` | Produce an IC macro briefing from The Read, rates, credit, signals, GRIP, events, and CMAs. Use for macro brief, market outlook, rates and credit, or IC macro deck. For a portfolio decision use gradient-ic-memo. |
 
 ### Decide
 
 | Skill | Produces / routes |
 |---|---|
-| `gradient-macro-brief` | Produce an IC macro briefing from The Read, rates, credit, signals, GRIP, events, and CMAs. Use for macro brief, market outlook, rates and credit, or IC macro deck. For a portfolio decision use gradient-ic-memo. |
 | `gradient-ic-memo` | Create a deterministic, sourced IC decision memo. Triggers: 'IC memo', 'board memo', 'allocation recommendation', 'rebalance proposal', 'manager hire/fire', 'committee vote'. Accepts handoffs from portfolio, diligence, and GIPS skills. |
 | `gradient-fixed-income-portfolio-construction` | Build a fixed-income allocation report covering bonds, duration, credit, benchmarks, liquidity, and scenarios. Use for bond portfolio, core/core-plus, duration, or credit sleeve. For a cross-portfolio decision use gradient-ic-memo. |
 | `gradient-global-public-equity-portfolio-construction` | Build a global public-equity allocation report covering regions, managers, factors, concentration, and benchmarks. Use for global equity, active/passive, factor tilt, or manager lineup. For a committee vote use gradient-ic-memo. |

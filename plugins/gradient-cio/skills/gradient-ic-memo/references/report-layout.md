@@ -44,8 +44,10 @@ The composer validates these semantic slots by block type and title.
 | 5 | `bars` **1Y attribution — total effect by asset class (bps)** | Signed bars ordered by absolute returned total effect descending. |
 | 6 | `chart` with exact `chart_id` **bar-portfolio-factor-currency-exposure** | Pass the complete returned `get_chart_data` item unchanged, including its title and payload. If unavailable, use that exact chart ID as the `callout` title. |
 | 7 | `bars` **Gradient vs consensus gap (bps)** and `tiles` **Forward context** | Signed bars; tiles show GRIP score/stance, policy expected return, and return objective. |
+| 8 | `bars` **Scenario impacts (%)** before the text | Portfolio impacts use signed bars ordered worst first. If no governed scenario result is available, use a typed unavailable callout with this exact title. |
 | 9 | `bars` **Liquidity tiers (% NAV)** plus returned commitments charts | Pass liquidity-scorecard, pacing, and cash-flow chart items unchanged when available. |
 | 10 | `findings` **Exposure-weighted diligence findings** | Include severity, exposure, and due date; use `empty_title` when none are returned. |
+| 11 | `coverage` **GIPS review coverage** and `callout` **GIPS follow-ups** | Keep total-fund and in-scope manager coverage compact; the callout carries material findings, follow-ups, or a typed none/unavailable state. |
 | 12 | `tiles` **Macro readings** | Three or four dated, sourced facts only. |
 | 13 | `two_col` **Current vs proposed weights**, or `callout` **No change proposed** | Never manufacture a proposed case. |
 | 14 | `tiles` **Risk count by rating** before the text | High / Medium / Low use bad / watch / good tones. |
@@ -58,7 +60,7 @@ For signed quantities preserve the finite signed number in `value` and the sign 
 
 ## Claude analysis
 
-Analytical sections 2, 3, 4, 5, 6, 7, 9, 10, 12, and 13 end with analysis callouts. Section 2 contains
+Analytical sections 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, and 14 end with analysis callouts. Section 2 contains
 three to five `role: "key_judgment"` **Key judgment —** callouts connecting evidence across sections; every
 other analytical section contains one to three `role: "analysis"` **Analysis —** callouts.
 
@@ -76,7 +78,12 @@ Section 1. Titles are six words or fewer, text is about 60 words or fewer, and t
 
 ## Page flow
 
-Sections flow by default. Section 1 opens after the cover; Sections 5, 7, and 14 and Appendix A start on new
-pages. Target 14–18 pages without adding filler. Use `narrow: true` for bars inside `two_col`. Before delivery,
-run `python scripts/check_layout.py "<Portfolio> - IC Memo.pdf" --min-pages 14 --max-pages 18`; if it fails,
-condense or repair the report, then re-render and rerun the check.
+Sections flow by default. Section 1 opens after the cover; Section 5 has a preferred page start that QA may
+remove, while Appendix A is the only authored forced page start. Sections 14–16 flow contiguously.
+The soft target is 14–18 pages and the hard ceiling is 22; never add filler to reach the target.
+`references/layout-budget.json` controls section words, body rows, visuals and page spans. Long returned chart
+tables show a 12-row body preview and move their complete returned rows to the generated Chart data appendix.
+Sections 4 and 10 place required visuals before their first markdown table. Use `narrow: true` for bars inside
+`two_col`. Before delivery run
+`python scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - IC Memo" --budget references/layout-budget.json`;
+apply its specific repair levers, re-compose and rerun until clean.

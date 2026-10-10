@@ -66,17 +66,38 @@ event feed is unavailable, never no events. Form ADV is adviser-reported.
 ## Report and delivery
 
 Meta title is the organization; subtitle identifies the window. Sections:
-This week; Changes and alerts; Review calendar; Coverage and freshness;
-Appendix A — Sources and method. Use the exact `report-style.md` schemas,
-source-tag every analytical statement/action, include the required tiles,
-status visuals, coverage, severity rules, and disclaimer. No unsupported
+`executive` / This week; `changes-alerts` / Changes and alerts;
+`review-calendar` / Review calendar; `coverage-freshness` / Coverage and
+freshness; `sources-method` / Appendix A — Sources and method. Keep that exact
+ID and title order for an active week.
+
+This week leads with alerts-by-severity `bars`, then a `findings` block with
+the top evidence-backed items. Changes and alerts groups each changed manager
+in one `two_col`: manager change evidence on the left and its returned event
+`timeline` on the right. If an event feed is unavailable or unpublished, use
+a typed `Not available — <reason>` callout in that manager group; never invent
+an empty timeline. Review calendar contains both a nonempty reviews-due
+`timeline` and a governed review-date `table`. Coverage and freshness uses
+`coverage`; the appendix uses a source `table`.
+
+A quiet week is deterministic: current-period alerts equal zero and the
+changes-since-review call returns zero changes. In that case omit
+`changes-alerts` and make `executive` start with one `two_col` containing a
+quiet-week `statement` on the left and monitoring `coverage` on the right.
+Keep a nonempty `review-calendar`, then `coverage-freshness` and
+`sources-method`; do not collapse the calendar even when no review is due.
+
+Use the exact `report-style.md` schemas, source-tag every analytical
+statement/action, include the four required tiles, severity rules, and
+disclaimer. Changes and review calendar are analytical sections and each
+contains one to three sourced `Analysis —` callouts. No unsupported
 hire/fire/redeem/allocation recommendation.
 
 Validate:
 `python <skill>/scripts/validate_monitor_digest.py report.json`
 
-Render the same validated JSON:
-`python <skill>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Org> - Manager Monitoring Digest <date>"`
+Run one QA render of the same validated JSON:
+`python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Org> - Manager Monitoring Digest <date>" --budget <skill>/references/layout-budget.json`
 
 Inspect all requested pages/slides, re-render after fixes, and spot-check
 against saved evidence. QA and fact checks block delivery. Reply with signal,

@@ -22,9 +22,9 @@ GROUPS = {
         "gradient-portfolio-review",
         "gradient-portfolio-attribution-report",
         "gradient-equity-note",
+        "gradient-macro-brief",
     ),
     "Decide": (
-        "gradient-macro-brief",
         "gradient-ic-memo",
         "gradient-fixed-income-portfolio-construction",
         "gradient-global-public-equity-portfolio-construction",
@@ -83,16 +83,23 @@ def frontmatter(path: Path) -> dict[str, str]:
     return values
 
 
-def descriptions() -> dict[str, str]:
-    """Return every installed skill description keyed by public name."""
-    result: dict[str, str] = {}
+def descriptions() -> dict[str, dict[str, str]]:
+    """Return every installed skill's catalog copy keyed by public name."""
+    result: dict[str, dict[str, str]] = {}
     for skill_file in sorted(SKILLS.glob("*/SKILL.md")):
         data = frontmatter(skill_file)
         name = data.get("name", "")
         description = data.get("description", "")
-        if not name or not description:
-            raise ValueError(f"{skill_file}: name and description are required")
-        result[name] = description
+        summary = data.get("summary", "")
+        if not name or not description or not summary:
+            raise ValueError(
+                f"{skill_file}: name, description and metadata.summary are required"
+            )
+        if len(summary.split()) > 12:
+            raise ValueError(
+                f"{skill_file}: metadata.summary exceeds 12 words"
+            )
+        result[name] = {"description": description, "summary": summary}
     return result
 
 
@@ -104,7 +111,7 @@ def grouped_names() -> set[str]:
     } | {"gradient-setup", "gradient-menu"}
 
 
-def readme_catalog(items: dict[str, str]) -> str:
+def readme_catalog(items: dict[str, dict[str, str]]) -> str:
     """Build the grouped README catalog from frontmatter descriptions."""
     lines = [
         README_BEGIN,
@@ -114,13 +121,15 @@ def readme_catalog(items: dict[str, str]) -> str:
     ]
     for group, names in GROUPS.items():
         lines.extend((f"### {group}", "", "| Skill | Produces / routes |", "|---|---|"))
-        lines.extend(f"| `{name}` | {items[name]} |" for name in names)
+        lines.extend(
+            f"| `{name}` | {items[name]['description']} |" for name in names
+        )
         lines.append("")
     lines.append(README_END)
     return "\n".join(lines)
 
 
-def menu_catalog(items: dict[str, str]) -> str:
+def menu_catalog(items: dict[str, dict[str, str]]) -> str:
     """Build the concise in-chat command menu."""
     lines = [
         MENU_BEGIN,
@@ -131,7 +140,7 @@ def menu_catalog(items: dict[str, str]) -> str:
     for group, names in GROUPS.items():
         lines.append(f"## {group}")
         lines.extend(
-            f"- `/gradient-cio:{name}` — {items[name]}"
+            f"- `/gradient-cio:{name}` — {items[name]['summary']}"
             for name in names
         )
         lines.extend(("", f'Example: “{EXAMPLES[group]}”', ""))

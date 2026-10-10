@@ -4,12 +4,16 @@
 
 ## 1. Summary
 
-- **Overall assessment:** Satisfactory with follow-ups.
-- Firm-wide compliance claim uses the required wording (4.C.1) and is verified through 2024-12-31.
-- **Medium:** the DDQ states composite assets of $2.4B; the GIPS Report shows $2.1B at 2025-12-31 (1.A.7).
-- **Medium:** the fee schedule disclosure omits the performance fee (4.C.11).
+- **Overall assessment:** Satisfactory with follow-ups. The compliance claim is supported, but composite-scale
+  and fee evidence need reconciliation [S1][S2][S3].
 
-## 2. Performance Integrity & GIPS
+## 2. Findings
+
+Two Medium findings limit reliance on the supplied record: composite assets conflict across the DDQ and GIPS
+Report, and the fee schedule does not identify the performance fee. Verification ends one year before the
+latest report period, a Low finding [S1][S2][S3].
+
+## 3. Performance Integrity Memo
 
 ### Performance Integrity & GIPS
 
@@ -28,11 +32,11 @@
 1. Reconcile composite assets between the DDQ and the GIPS Report.
 2. Provide the full fee schedule including the performance fee.
 
-## 3. Follow-up Requests
+## 4. Follow-up Requests
 
-1. Composite asset reconciliation between DDQ 7.3 and the GIPS Report (1.A.7).
-2. Full fee schedule including the performance fee (4.C.11).
-3. List of composite descriptions (4.C.15).
+1. Provide a dated composite-asset reconciliation between DDQ 7.3 and the GIPS Report (1.A.7) [S1][S3].
+2. Provide the full fee schedule including the performance fee (4.C.11) [S1].
+3. Provide the current list of composite descriptions (4.C.15) [S1].
 
 ## Appendix A — Findings Checklist
 

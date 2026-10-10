@@ -1,13 +1,15 @@
 ---
 name: gradient-manager-compare
 description: "Create a branded evidence comparison for 2–5 managers or screen a mandate. Triggers: 'compare managers', 'shortlist managers', 'screen advisers', 'manager overlap'. Hands off selected managers to gradient-odd-report or gradient-ic-memo."
+metadata:
+  summary: "Compare managers side by side or screen a mandate shortlist."
 ---
 
 # Manager comparison and shortlist
 
 Use for manager screening, a 2–5 manager comparison, a shortlist, or 13F
 overlap. Deliver **"<Mandate or first manager> - Manager Comparison
-<YYYY-MM-DD>"**, normally 5–8 PDF pages. This is evidence comparison, not a
+<YYYY-MM-DD>"**, normally 5–9 PDF pages. This is evidence comparison, not a
 ranking or investment recommendation.
 
 ## Non-negotiable rules
@@ -58,9 +60,10 @@ manager's own Gradient cohort and are never a quality ranking.
 ## 4. Build and deliver
 
 Read `references/comparison-contract.md#report-and-rendering-contract`, then
-`references/report-style.md` and `references/writing-standards.md` only when
-drafting/rendering. Keep every fixed section and show typed gaps. Every figure
-has a unit, date, and `[S#]`; every analytical judgment is sourced.
+`references/report-style.md`, `references/writing-standards.md`, and
+`references/analysis-examples.md` only when drafting/rendering. Keep every
+fixed section and show typed gaps. Every figure has a unit, date, and `[S#]`;
+every analytical judgment is sourced.
 
 Validate until clean:
 
@@ -68,10 +71,16 @@ Validate until clean:
 python <skill>/scripts/validate_manager_compare.py report.json
 ```
 
-Render the same validated `report.json` to PDF by default, PPTX for explicit
-slide wording, or both for `both`/`board pack`. Inspect every page/slide and
-fact-check against saved results; QA failures block delivery. Return the files
-plus three lines: managers/signal, top flag, and next-step count.
+Then run the canonical delivery QA on that same validated file:
+
+```text
+python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Mandate> - Manager Comparison <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json
+```
+
+Use PDF by default, PPTX for explicit slide wording, or both for `both`/`board
+pack`. Inspect every page/slide and fact-check against saved results; validator
+or QA failures block delivery. Return the files plus three lines:
+managers/signal, top flag, and next-step count.
 
 ## 5. Handoffs and optional writes
 

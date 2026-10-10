@@ -1,13 +1,15 @@
 ---
 name: gradient-portfolio-attribution-report
 description: "Create a branded historical and governed ex ante attribution report. Triggers: 'attribution report', 'Brinson analysis', 'sources of active return'. Hands broad monitoring to portfolio review and decisions to IC memo."
+metadata:
+  summary: "Explain historical and governed ex ante sources of portfolio return."
 ---
 
 # Portfolio attribution report
 
 Use for a focused saved-portfolio historical and governed ex ante attribution
 pack. Deliver **"<Portfolio> - Portfolio Attribution Report <YYYY-MM-DD>"**,
-normally 10–14 PDF pages. This is monitoring, not a recommendation.
+normally 7–10 PDF pages. This is monitoring, not a recommendation.
 
 ## Non-negotiable rules
 
@@ -61,16 +63,20 @@ or forecast. Manager findings and regime are context, not causal attribution.
 ## 4. Build and deliver
 
 Read `references/attribution-template.md`,
-`references/writing-standards.md`, `references/chart-data.md`, and
-`references/report-style.md` only before drafting/rendering. Follow the exact
+`references/writing-standards.md`, `references/analysis-examples.md`,
+`references/chart-data.md`, and `references/report-style.md` only before
+drafting/rendering. Follow the exact
 section order, four executive tiles, required visuals, sourced analysis, and
-typed unavailable states.
+typed unavailable states. Section 1 includes three to five sourced Key
+judgments. Sections 4 and 5 are visual-first. Diagnostics leads with
+residual-versus-tolerance bars and supporting evidence, then flows directly
+into Coverage. Do not author forced page breaks.
 
 Validate and render the same report source:
 
 ```text
 python <skill>/scripts/validate_attribution.py report.json
-python <skill>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Portfolio Attribution Report <YYYY-MM-DD>"
+python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Portfolio Attribution Report <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json
 ```
 
 PDF is default; explicit slide wording selects PPTX; `both`/`board pack`

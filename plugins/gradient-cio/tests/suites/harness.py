@@ -74,10 +74,10 @@ GIPS_REPORT_VALIDATOR = (
     / "validate_gips_report.py"
 )
 GIPS_VARIANTS = [
-    ("manager diligence", "gips", 4, 7, ["GIPS Manager Diligence", "Evidence status"]),
-    ("asset-owner review", "gips-asset-owner-review", 4, 7, ["GIPS Asset Owner Review", "Evidence status"]),
-    ("policies gap check", "gips-policies-gap-check", 4, 7, ["GIPS Policies Gap Check", "Findings by severity"]),
-    ("report review", "gips-report-review", 4, 7, ["GIPS Report Review", "Findings by severity"]),
+    ("manager diligence", "gips", 4, 7, ["GIPS Manager Diligence", "Performance integrity memo"]),
+    ("asset-owner review", "gips-asset-owner-review", 4, 7, ["GIPS Asset Owner Review", "Oversight summary"]),
+    ("policies gap check", "gips-policies-gap-check", 5, 8, ["GIPS Policies Gap Check", "Policy gaps by area"]),
+    ("report review", "gips-report-review", 4, 7, ["GIPS Report Review", "Preparer fix list"]),
 ]
 ANALYTICAL_REPORT_VALIDATORS = [
     (
@@ -162,7 +162,7 @@ CONSTRUCTION_VALIDATORS = [
         / "gradient-marketable-alternatives-portfolio-construction"
         / "scripts"
         / "validate_construction.py",
-        FIX / "portfolio-construction-marketable-alternatives.json",
+        FIX / "construction-marketable-alternatives.json",
     ),
     (
         "real-assets construction",
@@ -171,12 +171,20 @@ CONSTRUCTION_VALIDATORS = [
         / "gradient-real-assets-portfolio-construction"
         / "scripts"
         / "validate_construction.py",
-        FIX / "portfolio-construction-real-assets.json",
+        FIX / "construction-real-assets.json",
     ),
 ]
 SETUP_SKILL = ROOT / "skills" / "gradient-setup" / "SKILL.md"
 STALE = re.compile(r"(?<!gradient-)\bgips-(compliance|standards|manager-diligence|report-review|asset-owner-review|policies-gap-check)\b|gradient-capabilities")
 REPORT_CONSTANTS = ROOT / "tools" / "report_constants.py"
+if str(ROOT / "shared") not in sys.path:
+    sys.path.insert(0, str(ROOT / "shared"))
+
+try:
+    from analysis_quality import review_callout, review_report
+except ImportError:
+    review_callout = None
+    review_report = None
 
 _report_constants_spec = importlib.util.spec_from_file_location(
     "gradient_report_constants",
@@ -210,7 +218,7 @@ _renderer_spec.loader.exec_module(_renderer_module)
 
 # name, args (relative to fixtures; OUT = output PDF), min pages, max pages, required text
 CASES = [
-    ("odd",      ["odd.json", "OUT"],                                8, 9,  ["Operational Due Diligence"]),
+    ("odd",      ["odd.json", "OUT"],                                6, 8,  ["Operational Due Diligence"]),
     ("ddq",      ["ddq.json", "OUT"],                                3, 8,  ["DDQ Reconciliation"]),
     ("ic_memo",  ["ic-memo.json", "OUT"],                          14, 18, ["Recommendation", "Key judgment", "Growth of 100"]),
     ("gips_note",["--md", "note.md", "--meta", "note_meta.json", "OUT"], 1, 3, ["GIPS"]),
@@ -221,14 +229,14 @@ CASES = [
     ("branded",  ["--brand", "branding-test.json", "blocks.json", "OUT"], 2, 4, ["Northwind Pension Plan (TEST)", "Powered by GradientCIO.com"]),
     ("portfolio", ["portfolio.json", "OUT"],                         5, 8,  ["Portfolio Review", "Standard periods to", "Growth of 100", "Look-through concentration"]),
     ("portfolio_comprehensive", ["portfolio-comprehensive.json", "OUT"], 15, 20, ["Comprehensive Portfolio Review", "Historical Attribution", "Projected Return and Risk Decomposition", "Analysis —"]),
-    ("portfolio_attribution_report", ["portfolio-attribution-report.json", "OUT"], 10, 14, ["Portfolio Attribution Report", "Historical Attribution", "Governed Ex Ante Attribution", "Analysis —"]),
+    ("portfolio_attribution_report", ["portfolio-attribution-report.json", "OUT"], 7, 10, ["Portfolio Attribution Report", "Historical Attribution", "Governed Ex Ante Attribution", "Analysis —"]),
     ("construction_private_markets", ["construction-private-markets.json", "OUT"], 10, 14, ["Private Markets Portfolio Construction", "Commitments, Pacing and Cash Flow", "Committee action requested"]),
     ("construction_fixed_income", ["construction-fixed-income.json", "OUT"], 10, 14, ["Fixed Income Portfolio Construction", "Rates and Credit Context", "Committee action requested"]),
     ("construction_global_public_equity", ["construction-global-public-equity.json", "OUT"], 10, 14, ["Global Public Equity Portfolio Construction", "Factor Exposures and Concentration", "Committee action requested"]),
-    ("construction_marketable_alternatives", ["portfolio-construction-marketable-alternatives.json", "OUT"], 10, 14, ["Marketable Alternatives Portfolio Construction", "Liquidity, Redemption and Operational Terms", "Committee action requested"]),
-    ("construction_real_assets", ["portfolio-construction-real-assets.json", "OUT"], 10, 14, ["Real Assets Portfolio Construction", "Commitments, Liquidity and Valuation", "Committee action requested"]),
+    ("construction_marketable_alternatives", ["construction-marketable-alternatives.json", "OUT"], 10, 14, ["Marketable Alternatives Portfolio Construction", "Liquidity, Redemption and Operational Terms", "Committee action requested"]),
+    ("construction_real_assets", ["construction-real-assets.json", "OUT"], 10, 14, ["Real Assets Portfolio Construction", "Commitments, Liquidity and Valuation", "Committee action requested"]),
     ("compare",  ["compare.json", "OUT"],                            5, 9,  ["Manager Comparison", "Side-by-side comparison", "Form 13F overlap"]),
-    ("equity",   ["equity.json", "OUT"],                             5, 8,  ["Equity Research Note", "Review flags", "not a recommendation"]),
+    ("equity",   ["equity.json", "OUT"],                             6, 9,  ["Equity Research Note", "Review flags", "not a recommendation"]),
 ]
 
 fails = []

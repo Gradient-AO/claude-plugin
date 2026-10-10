@@ -3,6 +3,7 @@ name: gradient-gips-policies-gap-check
 description: "Produce a GIPS policies-and-procedures gap report. Use for review our GIPS manual, policy gap check, missing GIPS policies, or asset-owner P&P. For report disclosures use gradient-gips-report-review."
 metadata:
   version: "1.2.0"
+  summary: "Gap-check GIPS policies and procedures against required provisions."
 ---
 
 # GIPS Policies & Procedures Gap Check
@@ -12,7 +13,8 @@ asset owners) to document, and identify gaps.
 
 Shared references live in `${CLAUDE_PLUGIN_ROOT}/skills/gradient-gips-standards/references/` (fallback:
 `../gradient-gips-standards/references/`). Load `firms-fundamentals.md` (or `asset-owners.md`), `output-format.md`,
-`report-layout.md`, and `firms-report-checklist.md` for the report-preparation policies.
+`report-layout.md`, and `firms-report-checklist.md` for the report-preparation policies. Before drafting,
+also load this skill's `references/writing-standards.md` and `references/analysis-examples.md`.
 
 ## Policy areas the document must cover
 
@@ -68,5 +70,8 @@ Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `
 both when it says `both` or `board pack`. Both formats must come from the same validated `report.json`.
 
 ```text
-python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Policies Gap Check"
+python <gradient-gips-standards>/scripts/validate_gips_report.py review.md visuals.json meta.json
+python <gradient-gips-standards>/scripts/compose_gips_report.py review.md visuals.json meta.json report.json
+python <gradient-gips-standards>/scripts/validate_gips_report.py report.json
+python <this skill's directory>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Policies Gap Check" --budget <this skill's directory>/references/layout-budget.json
 ```

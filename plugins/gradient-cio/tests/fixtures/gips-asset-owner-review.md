@@ -4,17 +4,25 @@
 
 ## 1. Summary
 
-- **Overall assessment:** Partial evidence with follow-ups.
-- Total-fund reporting is documented, while benchmark-change disclosure and valuation-policy evidence need completion.
+- **Overall assessment:** Satisfactory with follow-ups. Total-fund return and policy-benchmark evidence are
+  present; benchmark lineage and policy support remain incomplete [S1][S2][S3].
 
-## 2. Performance Integrity & GIPS
+## 2. Findings
 
-The fictional board report presents total-fund returns net of external manager fees and identifies the policy benchmark [S1]. The policy names the reporting basis, but the custodian package does not evidence the effective date of a benchmark change [S2][S3].
+The benchmark-change disclosure omits its effective date, the valuation policy was not supplied, and no
+error-correction policy was found in the reviewed package [S1][S2][S3].
 
-## 3. Follow-up Requests
+## 3. Oversight Summary
 
-1. Provide the benchmark-change effective date and rationale.
-2. Provide the valuation and error-correction policies.
+The board report presents total-fund returns net of external manager fees and identifies the approved policy
+benchmark [S1][S2]. Oversight evidence is incomplete for the benchmark change because its effective date and
+rationale are absent. The custodian package also does not include the valuation or error-correction policies
+needed to understand the reporting control framework [S3].
+
+## 4. Follow-up Requests
+
+1. Provide the benchmark-change effective date, approval record and rationale (22.C.9) [S1][S2].
+2. Provide the current valuation and error-correction policies (21.A.6; 22.C.20) [S3].
 
 ## Appendix A — Findings Checklist
 

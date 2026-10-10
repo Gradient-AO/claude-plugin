@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "design_profile": "analytical",
+  "forced_breaks": [],
+  "pdf": {
+    "target_pages": {
+      "min": 3,
+      "max": 8
+    },
+    "hard_max_pages": 10,
+    "minimum_body_fill": 0.3,
+    "orphan_tail_max_fill": 0.2
+  },
+  "content": {
+    "defaults": {
+      "max_pages": 2,
+      "max_words": 420,
+      "max_body_table_rows": 24,
+      "max_visuals": 3
+    },
+    "sections": {
+      "executive": {
+        "role": "summary",
+        "requires_analysis": false,
+        "max_body_table_rows": 0,
+        "max_visuals": 1
+      },
+      "discrepancies-follow-ups": {
+        "role": "analytical",
+        "requires_analysis": true,
+        "max_body_table_rows": 0,
+        "max_visuals": 2
+      },
+      "firm-reconciliation": {
+        "role": "analytical",
+        "requires_analysis": true,
+        "max_body_table_rows": 16,
+        "max_visuals": 1
+      },
+      "fund-reconciliation": {
+        "role": "analytical",
+        "requires_analysis": true,
+        "max_body_table_rows": 24,
+        "max_visuals": 1
+      },
+      "coverage-scope": {
+        "role": "closing",
+        "requires_analysis": false,
+        "max_body_table_rows": 0,
+        "max_visuals": 1
+      },
+      "sources-method": {
+        "role": "appendix",
+        "requires_analysis": false,
+        "max_pages": 3,
+        "max_words": 300,
+        "max_body_table_rows": 16,
+        "max_visuals": 0
+      }
+    }
+  }
+}

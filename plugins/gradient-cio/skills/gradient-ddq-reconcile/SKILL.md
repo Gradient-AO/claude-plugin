@@ -1,6 +1,8 @@
 ---
 name: gradient-ddq-reconcile
 description: "Create a branded DDQ-versus-Form-ADV discrepancy report. Triggers: 'check this DDQ', 'verify the questionnaire', 'reconcile DDQ', 'does this match the ADV'. Hands confirmed gaps to diligence findings and ODD."
+metadata:
+  summary: "Reconcile DDQ answers against Form ADV and surface discrepancies."
 ---
 
 # DDQ vs Form ADV reconciliation
@@ -45,22 +47,25 @@ never locally compared.
 ## 3. Build and deliver
 
 Read `references/reconciliation-contract.md#report-contract`, then
-`references/report-style.md` and `references/writing-standards.md` only while
-drafting/rendering. Keep the fixed section order, one governed section per
-fund, exact source/location tags, typed unavailable blocks, and the
-adviser-reported/manager-assertion disclaimer.
+`references/report-style.md`, `references/writing-standards.md`, and
+`references/analysis-examples.md` only while drafting/rendering. Keep the fixed
+section order and deterministic compact or per-fund reconciliation structure,
+exact source/location tags, typed
+unavailable blocks, and the adviser-reported/manager-assertion disclaimer.
 
-Validate and render the same report source:
+Validate and QA the same report source:
 
 ```text
 python <skill>/scripts/validate_ddq_report.py report.json
-python <skill>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Subject> - DDQ Reconciliation"
+python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - DDQ Reconciliation" --budget <skill>/references/layout-budget.json
 ```
 
 PDF is default; explicit slide wording selects PPTX; `both`/`board pack`
-selects both. Inspect every page/slide and spot-check every table against the
-saved governed reconciliation. QA and fact-check failures block delivery.
-Return three lines (result, top discrepancy, follow-up count) plus files.
+selects both. The QA command is the authoritative delivery path; do not invoke
+`render.py` directly for delivery. Inspect every page/slide and spot-check
+every table against the saved governed reconciliation. QA and fact-check
+failures block delivery. Return three lines (result, top discrepancy,
+follow-up count) plus files.
 
 ## 4. Findings, workpaper, and handoff
 

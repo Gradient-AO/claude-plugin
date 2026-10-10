@@ -34,12 +34,12 @@ DIRECT_SOURCES = {
     "gradient-macro-brief": "deck.json",
     "gradient-manager-compare": "compare.json",
     "gradient-manager-monitor": "digest.json",
-    "gradient-marketable-alternatives-portfolio-construction": "portfolio-construction-marketable-alternatives.json",
+    "gradient-marketable-alternatives-portfolio-construction": "construction-marketable-alternatives.json",
     "gradient-odd-report": "odd.json",
     "gradient-portfolio-attribution-report": "portfolio-attribution-report.json",
     "gradient-portfolio-review": "portfolio-comprehensive.json",
     "gradient-private-markets-portfolio-construction": "construction-private-markets.json",
-    "gradient-real-assets-portfolio-construction": "portfolio-construction-real-assets.json",
+    "gradient-real-assets-portfolio-construction": "construction-real-assets.json",
     "gradient-setup": "setup.json",
 }
 

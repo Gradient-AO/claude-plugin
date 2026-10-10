@@ -82,12 +82,15 @@ def run_source_checks(check: Check) -> None:
     """Exercise pure rendering, composition and layout contracts."""
     report = _load_module("release_gradient_report", SHARED / "gradient_report.py")
     pptx = _load_module("release_gradient_pptx", SHARED / "gradient_pptx.py")
+    theme = _load_module("release_report_theme", SHARED / "report_theme.py")
     composer = _load_module("release_compose_report", SHARED / "compose_report.py")
     layout = _load_module("release_check_layout", SHARED / "check_layout.py")
 
     check(
         "font-family:GradientInter,Inter" in report.CSS
-        and 'paragraph.font.name = "Inter"' in (SHARED / "gradient_pptx.py").read_text(encoding="utf-8")
+        and "paragraph.font.name = FONT_FAMILY"
+        in (SHARED / "gradient_pptx.py").read_text(encoding="utf-8")
+        and theme.FONT_FAMILY == "Inter"
         and (ROOT / "assets" / "fonts" / "OFL.txt").is_file()
         and all(
             (ROOT / "assets" / "fonts" / filename).is_file()
@@ -200,7 +203,10 @@ def run_source_checks(check: Check) -> None:
         "## 2. Second\n\nSecond body.\n\n"
         "## Appendix A — Sources\n\nSource body."
     )
-    flowed = report.md_document_to_report(markdown, {})
+    flowed = report.md_document_to_report(
+        markdown,
+        {"header_label": "Flow test", "data_as_of": "2026-10-10"},
+    )
     sections = flowed["sections"]
     check(
         len(sections) == 3
@@ -273,6 +279,7 @@ def run_source_checks(check: Check) -> None:
 
     original_bbox = layout.bbox_pages
     original_lines = layout.page_lines
+    original_raster = layout.raster_body_metrics
     try:
         layout.bbox_pages = lambda _path: [
             (100.0, [(10.0, 70.0)]),
@@ -281,6 +288,10 @@ def run_source_checks(check: Check) -> None:
         layout.page_lines = lambda _path: [
             ["Body", "continues", "normally"],
             ["Section heading", "Footer"],
+        ]
+        layout.raster_body_metrics = lambda _path: [
+            {"page": 1, "fill": 0.60, "ink_share": 0.1, "clusters": 2},
+            {"page": 2, "fill": 0.15, "ink_share": 0.01, "clusters": 1},
         ]
         failures = layout.check_layout(
             pathlib.Path("fictional.pdf"),
@@ -293,6 +304,7 @@ def run_source_checks(check: Check) -> None:
     finally:
         layout.bbox_pages = original_bbox
         layout.page_lines = original_lines
+        layout.raster_body_metrics = original_raster
     check(
         any("page count 2 is below 3" in failure for failure in failures)
         and any("page 2 is 15% full" in failure for failure in failures)
@@ -534,6 +546,30 @@ def run_artifact_checks(check: Check, output_directory: pathlib.Path) -> None:
         "PowerPoint retains source footers and full analysis notes",
     )
 
+    run_fonts = []
+    for slide in presentation.slides:
+        for shape in slide.shapes:
+            frames = []
+            if getattr(shape, "has_text_frame", False):
+                frames.append(shape.text_frame)
+            if getattr(shape, "has_table", False):
+                frames.extend(
+                    cell.text_frame
+                    for row in shape.table.rows
+                    for cell in row.cells
+                )
+            run_fonts.extend(
+                run.font.name
+                for frame in frames
+                for paragraph in frame.paragraphs
+                for run in paragraph.runs
+                if run.text.strip()
+            )
+    check(
+        bool(run_fonts) and all(name == "Inter" for name in run_fonts),
+        "every PowerPoint text run names Inter",
+    )
+
     with zipfile.ZipFile(pptx_path) as archive:
         presentation_xml = "\n".join(
             archive.read(name).decode("utf-8", errors="ignore")
@@ -548,6 +584,73 @@ def run_artifact_checks(check: Check, output_directory: pathlib.Path) -> None:
     check(
         "Inter" in presentation_xml and len(chart_parts) == len(charts),
         "PowerPoint stores Inter text and native chart XML",
+    )
+    branded_pptx = output_directory / "gradientcio-golden-branded-test.pptx"
+    branded_result = subprocess.run(
+        [
+            sys.executable,
+            str(UNIFIED_RENDERER),
+            str(GOLDEN_REPORT),
+            "--format",
+            "pptx",
+            "--out",
+            str(branded_pptx.with_suffix("")),
+            "--brand",
+            str(FIXTURES / "branding-test.json"),
+        ],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    branded_cover = (
+        _slide_text(Presentation(branded_pptx).slides[0])
+        if branded_pptx.is_file()
+        else ""
+    )
+    check(
+        branded_result.returncode == 0
+        and "Northwind Pension Plan (TEST)" in branded_cover
+        and "Powered by GradientCIO" in branded_cover
+        and "TEST" in branded_cover
+        and "2 of 2" in branded_cover,
+        "PowerPoint cover honors normalized branding, signal and completeness",
+    )
+    odd_pptx = output_directory / "odd-visual-baseline-test.pptx"
+    odd_result = subprocess.run(
+        [
+            sys.executable,
+            str(UNIFIED_RENDERER),
+            str(FIXTURES / "odd.json"),
+            "--format",
+            "pptx",
+            "--out",
+            str(odd_pptx.with_suffix("")),
+        ],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    odd_presentation = Presentation(odd_pptx) if odd_pptx.is_file() else None
+    odd_cover = (
+        _slide_text(odd_presentation.slides[0])
+        if odd_presentation is not None
+        else ""
+    )
+    odd_first_body = (
+        _slide_text(odd_presentation.slides[1])
+        if odd_presentation is not None and len(odd_presentation.slides) > 1
+        else ""
+    )
+    check(
+        odd_result.returncode == 0
+        and "Ridgeview Example Advisors, LP (TEST)" in odd_cover
+        and "No flags identified" in odd_cover
+        and "5 of 7" in odd_cover
+        and "Executive summary" in odd_first_body
+        and "Data as of 2026-10-01" in odd_first_body,
+        "ODD fixture anchors the shared PowerPoint cover and body visual contract",
     )
 
     with tempfile.TemporaryDirectory() as directory:

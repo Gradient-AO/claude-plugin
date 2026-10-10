@@ -1,6 +1,8 @@
 ---
 name: gradient-setup
 description: "Check GradientCIO connection, organization, entitlements, data readiness, and connector contracts; produces a readiness report. Use for setup, connection check, or what is ready. For a command catalog use gradient-menu."
+metadata:
+  summary: "Check connection, entitlements, contracts and data readiness."
 ---
 
 # Gradient setup and readiness check
@@ -97,13 +99,15 @@ Write and validate `report.json` (JSON block mode, see `references/report-style.
 select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select both when it says `both`
 or `board pack`. Both formats must come from the same validated `report.json`.
 
-The readiness report is operational, not analytical. It is exempt from the four-tile analytical-band labels,
-page-2 key judgments, visual-before-table rule and `Analysis —` callout requirement. Keep its established
-readiness tiles and diagnostic flow.
+```
+python <this skill's directory>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "Gradient Readiness Report - <Org>" --budget <this skill's directory>/references/layout-budget.json
+```
 
-```
-python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "Gradient Readiness Report - <Org>"
-```
+This is the canonical delivery command: it renders, checks the layout budget and
+creates the review artifacts. The readiness report is operational, not
+analytical. It is exempt from the four-tile analytical-band labels, page-2 key
+judgments, visual-before-table rule and `Analysis —` callout requirement. Keep
+its established readiness tiles and diagnostic flow.
 
 Meta: `eyebrow` "Setup & Readiness", `header_label` "Readiness Check", `title` the organization name,
 `subtitle` "GradientCIO connection, access and data readiness", `signal_title` "Readiness",
@@ -114,14 +118,17 @@ Signal: `ready` (connected, all core skills ready, no new failures) · `partial`
 partial or not licensed, or degradable failures are present) · `not_ready` (not connected, auth failed, or any
 core skill not available).
 
-Sections (keep to 4–5 pages):
+Sections (soft target 4–5 pages; hard ceiling 7):
 
 1. **Summary** (`id: executive`) — bottom line in 3 sentences; tiles: Skills ready, Partial, Not licensed,
    Checks passed.
-2. **Skills you can use** — table: Skill, What it produces, Status (chip: Ready / Partial / Not licensed),
-   Note (what is missing or unavailable). For the IC memo, show Portfolio Analytics core readiness and
-   `Strategy Lab supplement: <Ready / Not licensed (optional) / Unavailable (optional)>` separately. A
-   missing Strategy Lab supplement makes the combined IC memo status Partial, not Not licensed.
+2. **Skills you can use** — one compact `two_col` block: a **Ready** table and a
+   **Partial or unavailable** table. Each uses Skill, What it produces, and Note;
+   status is explicit in the table title or a chip when needed. For the IC memo,
+   show Portfolio Analytics core readiness and `Strategy Lab supplement: <Ready
+   / Not licensed (optional) / Unavailable (optional)>` separately. A missing
+   Strategy Lab supplement makes the combined IC memo status Partial, not Not
+   licensed.
 3. **Access and data** — `coverage` block for the data domains (status and as-of); kv block for organization,
    role, licensed modules, roster capacity, and the available chart packs for the first portfolio from
    `chart_availability`.
@@ -132,9 +139,8 @@ Sections (keep to 4–5 pages):
    Thursday's committee".
 6. **Appendix A — Sources** — tool, as-of, validation status, payload digest for each call.
 
-Then follow "Check and deliver" in `references/report-style.md`. Before delivery, run
-`python scripts/check_layout.py "<Organization> - GradientCIO Readiness.pdf" --min-pages 4 --max-pages 5`;
-if it fails, condense or repair the report, then re-render and rerun the check.
+Then follow "Check and deliver" in `references/report-style.md`. Apply the
+canonical QA command's specific repair levers and rerun it until clean.
 
 ## 6. Offer next steps
 

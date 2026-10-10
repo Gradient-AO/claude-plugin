@@ -1714,7 +1714,8 @@
       "tool": "get_public_equity_fundamentals",
       "args": {
         "view": "fundamentals",
-        "symbol": "<test ticker>"
+        "symbol": "<test ticker>",
+        "filing_periods": 4
       },
       "required": [
         "resolved_subject.cik",

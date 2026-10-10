@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "design_profile": "analytical",
+  "forced_breaks": [
+    "07"
+  ],
+  "pdf": {
+    "target_pages": {
+      "min": 4,
+      "max": 12
+    },
+    "hard_max_pages": 14,
+    "minimum_body_fill": 0.4,
+    "orphan_tail_max_fill": 0.2
+  },
+  "pptx": {
+    "target_slides": {
+      "min": 6,
+      "max": 16
+    },
+    "hard_max_slides": 20
+  },
+  "content": {
+    "defaults": {},
+    "sections": {
+      "7": {
+        "max_words": 350,
+        "max_body_table_rows": 12,
+        "max_visuals": 2,
+        "role": "summary",
+        "requires_analysis": false
+      },
+      "9": {
+        "max_words": 350,
+        "max_body_table_rows": 24,
+        "max_visuals": 3,
+        "hard_max_pdf_pages": 4,
+        "role": "analytical",
+        "requires_analysis": false
+      },
+      "13": {
+        "max_words": 200,
+        "max_body_table_rows": 0,
+        "max_visuals": 1,
+        "hard_max_pdf_pages": 1,
+        "role": "closing",
+        "requires_analysis": false
+      }
+    }
+  }
+}

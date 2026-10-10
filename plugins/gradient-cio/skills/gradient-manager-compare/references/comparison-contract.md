@@ -50,8 +50,11 @@ overlap is `n/a — <reason>`, never zero.
 
 ADV–13F consistency accepts `firm_id`, not CRD. Preserve status, identity,
 recency, totals, ratio, flags, and caveats; they are context, not a diligence
-conclusion. Preserve event evidence state and absence warnings. Preserve
-findings `absence_reason`, including `no_open_findings`.
+conclusion. When events are returned, show them as a dated timeline in the
+ADV–13F consistency and events section. When they are absent or unpublished,
+show `Not available — <returned reason>` there; never imply a quiet period.
+Preserve event evidence state and absence warnings. Preserve findings
+`absence_reason`, including `no_open_findings`.
 
 Record one source row per call: tag, evidence, tool/view, as-of or report date,
 validation status, first eight digest characters, and SEC URL/accession.
@@ -80,20 +83,23 @@ criterion failed. Never make a hire, fire, allocation, or quality ranking.
 ## Report and rendering contract
 
 Use fixed sections: Executive summary; Side-by-side comparison; Operational
-flags; Form 13F overlap; ADV–13F consistency and events; Coverage; Next steps;
-Appendix A — Sources and method. Keep missing sections and show typed gaps.
+flags; Form 13F overlap; ADV–13F consistency and events; Coverage and next
+steps; Appendix A — Sources and method. Keep missing sections and show typed
+gaps.
 Use the exact layouts and block schemas in `report-style.md`; include comparison
 bars, per-manager cohort percentile strips, a returned overlap heat matrix,
-coverage, source tags, units, dates, caveats, and the non-ranking disclaimer.
-No more than two consecutive tables. Add sourced `Key judgment —` and
-`Analysis —` callouts under the shared writing standard.
+an events timeline when returned, coverage, source tags, units, dates, caveats,
+and the non-ranking disclaimer. Pair Coverage and Next steps in one compact
+`Coverage and next steps` closing section using a `two_col` block: coverage on
+the left and the next-steps table on the right. No more than two consecutive
+tables. Add sourced `Key judgment —` and `Analysis —` callouts under the shared
+writing standard.
 
 Validate with:
 `python <skill>/scripts/validate_manager_compare.py report.json`
 
-Render the same validated JSON to PDF by default, PPTX for slide wording, or
-both for `both`/`board pack`:
-`python <skill>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Mandate> - Manager Comparison <YYYY-MM-DD>"`
+Run canonical delivery QA on the same validated JSON:
+`python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Mandate> - Manager Comparison <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json`
 
 Follow `report-style.md` Check and deliver; page QA and fact checks block
 delivery.

@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.7.0
+- Centralized PDF and PowerPoint colors, typography, dimensions, branding and template validation in one versioned report theme.
+- Added an immutable shared layout policy for metadata, chart-table appendices, page-break semantics and versioned cross-format budgets.
+- Replaced hard report page ranges with section content budgets, soft page targets and hard safety ceilings.
+- Added one-command PDF and PowerPoint QA with structured body-only diagnostics, concrete repair levers and output-specific contact sheets.
+- Moved long returned chart tables to generated data appendices while keeping representative body previews and source-truncation disclosures.
+- Fixed compact currency axes, crowded line-series labels, short-tail orphans and sparse preferred page breaks in the shared renderers.
+- Reworked analytical report structures around decision-first narratives, governed lead visuals and explicit Claude analysis slots, with profile-aware design lint preventing sparse hard breaks and table-first analytical sections.
+- Added per-section worked analysis examples and non-blocking quality notes that flag thin, boilerplate or non-specific callouts without changing report validation results.
+- Added concise skill-menu summaries and routed macro briefings under Review.
+- Aligned equity filing-period probes and portfolio attribution guidance with governed benchmark and excess-return bases.
+
 ## 2.6.0
 - Added a lightweight grouped skill menu and generated README catalog while preserving existing public command names.
 - Shortened routing descriptions, clarified the five asset-class construction routes, and moved heavy workflow detail into step-specific references.

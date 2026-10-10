@@ -1,6 +1,8 @@
 ---
 name: gradient-macro-brief
 description: "Produce an IC macro briefing from The Read, rates, credit, signals, GRIP, events, and CMAs. Use for macro brief, market outlook, rates and credit, or IC macro deck. For a portfolio decision use gradient-ic-memo."
+metadata:
+  summary: "Brief investment committees on macro conditions, signals, events and assumptions."
 ---
 
 # Macro briefing deck
@@ -9,7 +11,7 @@ Use when the user asks for a macro deck, market update for the committee or boar
 "turn The Read into slides", "what should the committee know about markets this month", or a pre-meeting
 macro pack.
 
-The deliverable is a 10–13 slide landscape briefing in the Gradient house style with base name
+The deliverable is a 10–14 slide landscape briefing in the Gradient house style with base name
 **"<Org> - Macro Briefing <YYYY-MM-DD>"**. Audience: an investment committee. Each slide has one message in
 its title and a one-line takeaway.
 
@@ -100,13 +102,16 @@ Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `
 both when it says `both` or `board pack`. Both formats must come from the same validated `report.json`; do
 not maintain a PDF-only deck source or format-specific storyline.
 
+Run canonical delivery QA, which renders and checks the requested outputs from
+the same source:
+
 ```text
-python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Org> - Macro Briefing <date>"
+python <this skill's directory>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Org> - Macro Briefing <date>" --budget <this skill's directory>/references/layout-budget.json
 ```
 
-The renderer exits with code 3 and names slides whose content overflows: split the slide or cut content, then
-re-render. Inspect every requested output; rasterize PDFs with `pdftoppm -r 40 -png` and use the shared slide
-rendering/layout check for PPTX. Then follow "Check and deliver".
+QA reports slides whose content overflows: split the slide or cut content, then
+rerun the same command. Inspect every requested output and its generated contact
+sheet. Then follow "Check and deliver".
 Chat summary: The Read headline, the risk posture in one line, and the next high-importance event.
 
 If the user requests editable slides, the PPTX is the editable deliverable from the same report source.

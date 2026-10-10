@@ -89,21 +89,51 @@ health. Build neutral, source-tagged follow-up questions from governed
 
 ## Full report layout and delivery
 
-Sections, in order: Executive summary; Firm profile & ownership; Regulatory,
-conflicts & custody; Peer positioning; Fund operations & service providers;
-Reported equity holdings (Form 13F); Monitoring, findings & DDQ; Follow-up
-questions & open items; Appendix — sources & method. Keep missing sections with
-typed unavailability. Use the exact block schemas in `report-style.md`, the
-four ADV tiles and required evidence visuals, and the shared sourced-analysis
-rules. Recommendations to hire, fire, redeem, terminate, or allocate are
-forbidden.
+Sections use these exact IDs and titles, in order:
+1. `executive` / Executive summary
+2. `firm-profile-ownership` / Firm profile & ownership
+3. `regulatory-conflicts-custody` / Regulatory, conflicts & custody
+4. `peer-positioning` / Peer positioning
+5. `fund-operations-service-providers` / Fund operations & service providers
+6. `reported-equity-holdings` / Reported equity holdings (Form 13F)
+7. `monitoring-findings-ddq` / Monitoring, findings & DDQ
+8. `follow-up-open-items` / Follow-up questions & open items
+9. `sources-method` / Appendix — sources & method
+
+The governed visual slots are exact:
+- Executive summary: evidence `coverage`.
+- Firm profile & ownership: four headline ADV `tiles`, plus a profile
+  `kv`, `two_col`, `bars`, or ADV-supported `stacked` visual. Ownership or
+  client-mix `stacked` is allowed only when the returned ADV evidence supports
+  every segment; otherwise use a typed unavailable callout.
+- Regulatory, conflicts & custody: regulatory evidence `table` or typed
+  unavailable `callout`.
+- Peer positioning: `percentiles` or `bars`.
+- Fund operations & service providers: service-provider `table` or typed
+  unavailable `callout`.
+- Reported equity holdings (Form 13F): `bars`, `kv`, or `table`, with the
+  firm-level and lagged/partial caveats.
+- Monitoring, findings & DDQ: `findings` or `kv`, plus returned event
+  `timeline`; use a typed unavailable callout for an unavailable event feed.
+- Follow-up questions & open items: `questions` or `table`.
+- Appendix — sources & method: source `table`.
+
+Keep missing sections with specific typed unavailability; generic `Visual
+evidence` placeholders are forbidden. Do not force page breaks in the full
+report. Let compact regulatory and fund-operations sections flow; use
+`two_col` only when their content remains within their existing section
+budgets, otherwise keep their evidence and analysis separate. Sections 2–7
+are analytical and each requires one to three sourced `Analysis —` callouts.
+Use the exact block schemas in `report-style.md`, the four ADV tiles, and the
+shared sourced-analysis rules. Recommendations to hire, fire, redeem,
+terminate, or allocate are forbidden.
 
 Validate:
 `python <skill>/scripts/validate_odd_report.py report.json`
 
-Render the same validated JSON to PDF by default, PPTX for slide wording, or
-both for `both`/`board pack`:
-`python <skill>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Subject> - ODD Report"`
+Run one QA render of the same validated JSON to PDF by default, PPTX for slide
+wording, or both for `both`/`board pack`:
+`python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - ODD Report" --budget <skill>/references/layout-budget.json`
 
 Inspect all pages/slides, re-render after fixes, reconcile numeric comparisons,
 and spot-check tables. QA and fact checks block delivery.

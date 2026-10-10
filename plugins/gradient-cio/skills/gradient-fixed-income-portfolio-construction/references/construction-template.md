@@ -1,10 +1,10 @@
 # Fixed Income Construction Template
 
 Keep every section title and the order exactly as shown. Missing evidence becomes
-`Not available — <returned reason>`; never remove a section. Target 10–14 pages without filler.
-
-Before delivery, run `python scripts/check_layout.py "<Portfolio> - Fixed Income Construction.pdf"
---min-pages 10 --max-pages 14`. If it fails, condense or repair the report, then re-render and rerun the check.
+`Not available — <returned reason>`; never remove a section. The soft target is 10–14 pages and the hard
+ceiling is 17; never add filler. Before delivery run
+`python scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Fixed Income Construction" --budget references/layout-budget.json`;
+apply its specific repair levers and rerun until clean.
 
 ## Metadata and executive band
 
@@ -54,8 +54,8 @@ Before delivery, run `python scripts/check_layout.py "<Portfolio> - Fixed Income
 
 ### 3. Current Fixed Income Portfolio
 
+- Lead with one unchanged allocation or currency chart when available; otherwise use a compact typed unavailable callout.
 - `table` **Current sleeve**: Segment / exposure, Value, % portfolio, % fixed income, Currency, As of.
-- One unchanged allocation or currency chart when available.
 - Do not force exposure classifications into policy-tree names.
 
 ### 4. Target Portfolio Structure
@@ -70,8 +70,15 @@ Before delivery, run `python scripts/check_layout.py "<Portfolio> - Fixed Income
 
 ### 5. Historical Performance and Attribution
 
+- Lead with a governed attribution `waterfall` when returned. If governed attribution is unavailable,
+  use one compact typed `Not available — <returned reason>` callout before any table; do not stack N/A tables.
 - `table` **Standard periods**: Period, Portfolio / sleeve, Benchmark, Excess, Coverage.
 - `table` **Attribution effects** from `get_portfolio_attribution` only.
+- Distinguish historical-return policy benchmark entity excess from attribution
+  linked segment benchmark composite excess. If both appear, include returned
+  `diagnostics.entity_return_reconciliation` basis/delta fields; never compare
+  or conflate the two excess values.
+- One short sourced `text` bridge before the method metadata; do not stack a third data block.
 - `kv` method, linking, basis, currency, formula version, residual and tolerance.
 - Use a typed unavailable block when sleeve-specific performance is not returned.
 

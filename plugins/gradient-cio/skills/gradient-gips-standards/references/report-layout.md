@@ -31,15 +31,28 @@ reinterpret or expand the checklist or follow-up requests.
       "after": [
         {
           "type": "callout",
-          "role": "analysis",
-          "tone": "info",
-          "title": "Analysis — evidence consistency",
-          "text": "**Observation:** The reviewed sources differ on composite assets [S1, S3]. **Why it matters:** The inconsistency limits reliance on the stated asset base. **Uncertainty:** The review does not establish which source is current. **What would change the view:** Follow-up request 1.",
-          "follow_up_refs": [1]
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — latest period is unverified",
+          "text": "The compliance claim is verified through 2024, one year short of the report period [S1, S2]."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "bad",
+          "title": "Key judgment — asset totals conflict",
+          "text": "The DDQ and GIPS Report differ by $0.3 billion in composite assets [S1, S3]."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — fee evidence is incomplete",
+          "text": "The reviewed schedule does not state the performance fee [S1]."
         }
       ]
     },
-    "Appendix A — Findings Checklist": {
+    "2. Findings": {
       "before": [
         {
           "type": "stacked",
@@ -79,6 +92,45 @@ reinterpret or expand the checklist or follow-up requests.
           "empty_text": "No High, Medium or Low findings were identified."
         }
       ],
+      "after": [
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — evidence consistency",
+          "text": "**Observation:** The sources differ on composite assets [S1, S3]. **Why it matters:** Reliance on stated scale is limited. **Uncertainty:** The current source is not established. **What would change the view:** Follow-up request 1.",
+          "follow_up_refs": [1]
+        }
+      ]
+    },
+    "3. Performance Integrity Memo": {
+      "before": [
+        {
+          "type": "heat",
+          "title": "Track-record reliance by evidence area",
+          "columns": ["Supported", "Needs follow-up"],
+          "rows": [
+            {"label": "Claim and verification", "values": [2, 1]},
+            {"label": "Performance record", "values": [2, 0]},
+            {"label": "Disclosures", "values": [1, 2]}
+          ]
+        }
+      ],
+      "after": []
+    },
+    "4. Follow-up Requests": {
+      "before": [
+        {
+          "type": "questions",
+          "items": [
+            {"q": "Reconcile composite assets.", "why": "Closes finding 1 [S1, S3]."}
+          ]
+        }
+      ],
+      "after": []
+    },
+    "Appendix A — Findings Checklist": {
+      "before": [],
       "after": []
     }
   }
@@ -90,6 +142,10 @@ arrays. Supported renderer blocks are `text`, `bullets`, `kv`, `table`, `tiles`,
 `waterfall`, `band`, `stacked`, `heat`, `callout`, `coverage`, `findings`, `questions`, `two_col`,
 `markdown`, `pagebreak`, `line`, `statement` and `chart`. Visuals must use evidence already cited in the
 markdown source appendix.
+
+The example uses manager diligence. Replace `3. Performance Integrity Memo` with exactly one of
+`3. Preparer Fix List`, `3. Oversight Summary` or `3. Policy Gaps by Area` for the other review workflows.
+Keep the other six keys and their order unchanged.
 
 ## Required visual contracts
 
@@ -104,7 +160,11 @@ markdown source appendix.
 - Every block with `role: "analysis"` is a callout and uses the four bold labels in the example. It cites at
   least one Appendix A source, starts its title with `Analysis —`, and stays within 60 words. Use one to three
   analysis callouts. `follow_up_refs` contains only request numbers already present in the markdown.
-- Page 2 contains three to five sourced `Key judgment —` callouts with `role: "key_judgment"`.
+- Summary contains three to five sourced `Key judgment —` callouts with `role: "key_judgment"`.
+- Findings begins with exactly one stacked status block, one severity bars block and one findings block, in
+  that order, followed by one to three sourced Analysis callouts.
+- The workflow body starts with a workflow-specific `heat` block (or typed `unavailable` block).
+- Follow-up Requests starts with one `questions` block. Appendix A has no visual blocks.
 - Use message-first section kickers where the report schema provides them. In analytical table sections, put
   a visual or typed unavailable block in `before`; do not place more than two tables consecutively in any
   nested block list. Quantitative marks use signed finite values.

@@ -10,5 +10,5 @@
   "signal": {"level": "follow_ups", "label": "Satisfactory with follow-ups"},
   "completeness": {"used": 5, "expected": 5, "state": "complete"},
   "meter_title": "Requirements evidenced",
-  "executive": {"label": "Bottom line", "bottom_line": "Performance history and benchmark evidence are present, while fee and significant-event disclosures need clarification [S1][S2]."}
+  "executive": {"label": "Bottom line", "bottom_line": "Performance history and benchmark evidence are present; the Preparer Fix List addresses fee wording and the missing significant-event date [S1][S2]."}
 }

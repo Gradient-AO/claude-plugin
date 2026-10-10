@@ -30,73 +30,115 @@ def contract_manifest():
     }
     documented_budgets = {
         "gips_note": (
-            ROOT / "skills" / "gradient-gips-standards" / "SKILL.md"
+            ROOT / "skills" / "gradient-gips-standards" / "SKILL.md",
+            ROOT / "skills" / "gradient-gips-standards" / "references" / "layout-budget.json",
         ),
-        "setup": SETUP_SKILL,
+        "setup": (
+            SETUP_SKILL,
+            ROOT / "skills" / "gradient-setup" / "references" / "layout-budget.json",
+        ),
         "ic_memo": (
             ROOT
             / "skills"
             / "gradient-ic-memo"
             / "references"
-            / "report-layout.md"
+            / "report-layout.md",
+            ROOT / "skills" / "gradient-ic-memo" / "references" / "layout-budget.json",
         ),
-        "portfolio_comprehensive": PORTFOLIO_REVIEW_TEMPLATE,
+        "portfolio_comprehensive": (
+            PORTFOLIO_REVIEW_TEMPLATE,
+            ROOT / "skills" / "gradient-portfolio-review" / "references" / "layout-budget.json",
+        ),
+        "portfolio": (
+            PORTFOLIO_REVIEW_SKILL,
+            ROOT / "skills" / "gradient-portfolio-review" / "references" / "layout-budget.json",
+        ),
         "portfolio_attribution_report": (
             ROOT
             / "skills"
             / "gradient-portfolio-attribution-report"
             / "references"
-            / "attribution-template.md"
+            / "attribution-template.md",
+            ROOT / "skills" / "gradient-portfolio-attribution-report" / "references" / "layout-budget.json",
         ),
         "construction_private_markets": (
             ROOT
             / "skills"
             / "gradient-private-markets-portfolio-construction"
             / "references"
-            / "construction-template.md"
+            / "construction-template.md",
+            ROOT / "skills" / "gradient-private-markets-portfolio-construction" / "references" / "layout-budget.json",
         ),
         "construction_fixed_income": (
             ROOT
             / "skills"
             / "gradient-fixed-income-portfolio-construction"
             / "references"
-            / "construction-template.md"
+            / "construction-template.md",
+            ROOT / "skills" / "gradient-fixed-income-portfolio-construction" / "references" / "layout-budget.json",
         ),
         "construction_global_public_equity": (
             ROOT
             / "skills"
             / "gradient-global-public-equity-portfolio-construction"
             / "references"
-            / "construction-template.md"
+            / "construction-template.md",
+            ROOT / "skills" / "gradient-global-public-equity-portfolio-construction" / "references" / "layout-budget.json",
         ),
         "construction_marketable_alternatives": (
             ROOT
             / "skills"
             / "gradient-marketable-alternatives-portfolio-construction"
             / "references"
-            / "construction-template.md"
+            / "construction-template.md",
+            ROOT / "skills" / "gradient-marketable-alternatives-portfolio-construction" / "references" / "layout-budget.json",
         ),
         "construction_real_assets": (
             ROOT
             / "skills"
             / "gradient-real-assets-portfolio-construction"
             / "references"
-            / "construction-template.md"
+            / "construction-template.md",
+            ROOT / "skills" / "gradient-real-assets-portfolio-construction" / "references" / "layout-budget.json",
         ),
     }
     budget_errors = []
-    for case_name, guidance_path in documented_budgets.items():
+    for case_name, (guidance_path, budget_path) in documented_budgets.items():
         minimum, maximum = case_budgets[case_name]
         guidance = " ".join(
             guidance_path.read_text(encoding="utf-8").split()
         )
-        expected = (
-            f"--min-pages {minimum} --max-pages {maximum}"
+        budget = json.loads(budget_path.read_text(encoding="utf-8"))
+        mode = (
+            "comprehensive"
+            if case_name == "portfolio_comprehensive"
+            else "brief" if case_name == "portfolio" else None
         )
-        if "scripts/check_layout.py" not in guidance or expected not in guidance:
+        effective_budget = (
+            budget.get("modes", {}).get(mode, {})
+            if mode else budget
+        )
+        pdf_budget = effective_budget.get("pdf", {})
+        target = (
+            pdf_budget.get("target_pages", {})
+            if isinstance(pdf_budget, dict)
+            else {}
+        ) or effective_budget.get("page_target", {})
+        hard_ceiling = (
+            pdf_budget.get("hard_max_pages")
+            if isinstance(pdf_budget, dict)
+            else None
+        ) or effective_budget.get("hard_ceiling")
+        if (
+            "scripts/qa_report.py" not in guidance
+            or "layout-budget.json" not in guidance
+            or target != {"min": minimum, "max": maximum}
+            or not isinstance(hard_ceiling, int)
+        ):
             budget_errors.append(
-                f"{case_name}: expected {expected} in "
-                f"{guidance_path.relative_to(ROOT)}"
+                f"{case_name}: expected QA command and soft target "
+                f"{minimum}–{maximum} in {guidance_path.relative_to(ROOT)} "
+                f"and {budget_path.relative_to(ROOT)}"
             )
     check(
         not budget_errors,
@@ -525,6 +567,44 @@ def contract_manifest():
         and not attribution_probe.get("reconciles"),
         "portfolio-attribution probe verifies available linked example data",
     )
+    attribution_guidance_paths = (
+        ROOT
+        / "skills"
+        / "gradient-portfolio-attribution-report"
+        / "references"
+        / "data-map.md",
+        ROOT
+        / "skills"
+        / "gradient-portfolio-attribution-report"
+        / "references"
+        / "attribution-template.md",
+    )
+    construction_skill_names = (
+        "gradient-fixed-income-portfolio-construction",
+        "gradient-global-public-equity-portfolio-construction",
+        "gradient-marketable-alternatives-portfolio-construction",
+        "gradient-private-markets-portfolio-construction",
+        "gradient-real-assets-portfolio-construction",
+    )
+    attribution_guidance_paths += tuple(
+        ROOT / "skills" / name / "references" / file_name
+        for name in construction_skill_names
+        for file_name in ("data-map.md", "construction-template.md")
+    )
+    attribution_guidance = [
+        re.sub(r"\s+", " ", path.read_text(encoding="utf-8").lower())
+        for path in attribution_guidance_paths
+    ]
+    check(
+        all(
+            "linked segment benchmark composite" in text
+            and "policy benchmark entity" in text
+            and "diagnostics.entity_return_reconciliation" in text
+            and "conflate" in text
+            for text in attribution_guidance
+        ),
+        "attribution-consuming guidance separates benchmark and excess bases",
+    )
     ex_ante_attribution_probe = by_id["portfolio_ex_ante_attribution"]
     check(
         ex_ante_attribution_probe["tool"]
@@ -561,8 +641,18 @@ def contract_manifest():
         "regional capital-markets probe verifies reporting coverage",
     )
     equity_probe = by_id["equity_fundamentals"]
+    equity_evidence_contract = (
+        ROOT
+        / "skills"
+        / "gradient-equity-note"
+        / "references"
+        / "equity-evidence-contract.md"
+    ).read_text(encoding="utf-8")
     check(
-        {
+        equity_probe["args"].get("filing_periods") == 4
+        and "`view: fundamentals`,\n   `filing_periods: 4`"
+        in equity_evidence_contract
+        and {
             "leverage_metric.status",
             "leverage_metric.value",
             "leverage_metric.formula_id",
@@ -570,7 +660,7 @@ def contract_manifest():
             "leverage_metric.period_basis",
             "leverage_metric.source_facts",
         } <= set(equity_probe.get("required", [])),
-        "equity-fundamentals probe requires the leverage contract",
+        "equity-fundamentals probe requests four periods and requires leverage",
     )
     ddq_gap_probe = by_id["ddq_numeric_gap"]
     batch_ddq_probe = by_id["batch_ddq_preview"]

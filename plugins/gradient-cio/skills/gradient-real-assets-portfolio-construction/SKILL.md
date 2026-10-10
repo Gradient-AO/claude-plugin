@@ -1,6 +1,8 @@
 ---
 name: gradient-real-assets-portfolio-construction
 description: "Build a real-assets allocation report covering real estate, infrastructure, commodities, inflation linkage, and liquidity. Use for real assets portfolio, inflation hedge, or real estate mix. For a committee vote use gradient-ic-memo."
+metadata:
+  summary: "Design real-assets allocation for inflation, diversification and liquidity."
 ---
 
 # Real Assets Portfolio Construction
@@ -21,11 +23,12 @@ The deliverable is a branded report. Its PDF form is normally 10–14 pages and 
 | `references/data-map.md` | Always — tools, arguments, evidence fields and fallbacks. |
 | `references/construction-template.md` | Always — exact section order and required blocks. |
 | `references/writing-standards.md` | Before drafting — real-assets and recommendation rules. |
+| `references/analysis-examples.md` | Before drafting — worked patterns for every required analysis section. |
 | `references/module-scope.md` | Always — Portfolio Analytics and Strategy Lab stay separate. |
 | `references/chart-data.md` | Always — chart discovery, basis and unchanged chart blocks. |
 | `references/report-style.md` | Before rendering — metadata, blocks and delivery checks. |
 | `scripts/validate_construction.py` | After drafting — validates structure, evidence and decision language. |
-| `scripts/render.py` | Renders validated `report.json` to PDF, PPTX or both. Never restyle it. |
+| `scripts/qa_report.py` | Validates the layout budget, renders requested outputs and runs structural PDF QA. |
 
 ## 1. Scope
 
@@ -96,7 +99,7 @@ Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `
 both when it says `both` or `board pack`. Both formats must come from the same validated `report.json`.
 
 ```text
-python scripts/render.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Real Assets Portfolio Construction <YYYY-MM-DD>"
+python scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Real Assets Portfolio Construction <YYYY-MM-DD>" --budget references/layout-budget.json
 ```
 
 Inspect every requested output and reconcile all figures to saved evidence. Reply with three lines:

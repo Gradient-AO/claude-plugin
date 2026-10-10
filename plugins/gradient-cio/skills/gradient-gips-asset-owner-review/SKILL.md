@@ -3,6 +3,7 @@ name: gradient-gips-asset-owner-review
 description: "Produce a GIPS Asset Owner Report review for pensions, endowments, foundations, and sovereign funds. Use for asset owner GIPS, total fund report, or board performance report. For firm reports use gradient-gips-report-review."
 metadata:
   version: "1.2.0"
+  summary: "Review asset-owner performance reporting against the GIPS standards."
 ---
 
 # GIPS Asset Owner Review
@@ -12,7 +13,8 @@ GIPS standards for asset owners.
 
 Shared references live in `${CLAUDE_PLUGIN_ROOT}/skills/gradient-gips-standards/references/` (fallback:
 `../gradient-gips-standards/references/`). Load `asset-owners.md`, `verification.md`, `output-format.md` and
-`report-layout.md`.
+`report-layout.md`; before drafting, also load this skill's
+`references/writing-standards.md` and `references/analysis-examples.md`.
 
 ## Step 1 — Confirm the right standards apply
 
@@ -69,5 +71,8 @@ both when it says `both` or `board pack`. Both formats must come from the same v
 markdown checklist and memo handoff remain unchanged through composition.
 
 ```text
-python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Asset Owner Review"
+python <gradient-gips-standards>/scripts/validate_gips_report.py review.md visuals.json meta.json
+python <gradient-gips-standards>/scripts/compose_gips_report.py review.md visuals.json meta.json report.json
+python <gradient-gips-standards>/scripts/validate_gips_report.py report.json
+python <this skill's directory>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Asset Owner Review" --budget <this skill's directory>/references/layout-budget.json
 ```

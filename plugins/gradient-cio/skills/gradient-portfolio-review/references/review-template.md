@@ -1,15 +1,56 @@
-# Comprehensive Portfolio Review Template
+# Portfolio Review Templates
+
+## Brief mode
+
+Use this fixed order when `review_mode` is `brief`. The soft target is 5–8
+pages and the hard ceiling is 10. Keep unavailable sections in place with a
+typed `Not available — <returned reason>` block. Use section IDs exactly as
+shown.
+
+1. `id: 1`, **Summary** — the four executive tiles followed by three to five
+   sourced `Key judgment —` callouts.
+2. `id: 2`, **Performance** — a Growth of 100 `line`, signed calendar-period
+   excess-return `bars`, and one to three sourced `Analysis —` callouts.
+3. `id: 3`, **Allocation** — a governed policy-range `band` and one to three
+   sourced `Analysis —` callouts.
+4. `id: 4`, **Look-through** — returned concentration `bars` or `heat` evidence
+   and one to three sourced `Analysis —` callouts. Preserve filing lag, scope,
+   coverage and FX caveats.
+5. `id: 5`, **Risk** — an unchanged governed `chart`, or returned `bars` or
+   `band`, and one to three sourced `Analysis —` callouts. Keep observed risk
+   separate from policy status.
+6. `id: 6`, **Outlook** — forward-context `tiles`, returned CMA `bars`, and one
+   to three sourced `Analysis —` callouts. State `Assumptions, not forecasts`.
+7. `id: 7`, **Coverage** — a `coverage` block followed by a concise closing
+   perspective that states the principal limitation without recommending an
+   action.
+8. `id: A`, **Appendix — Sources and method**, plus further appendices only
+   when applicable.
+
+Every brief analytical section ends with `Analysis — <message>` callouts. Each
+uses no more than six message words and 60 words of text in this order:
+`Observation:`, `Why it matters:`, `Uncertainty:`,
+`What would change the view:`. Summary uses only `Key judgment —` callouts,
+not `Analysis —` callouts.
+
+Before delivery run, in order:
+
+```text
+python scripts/validate_review.py report.json
+python scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Portfolio Review" --budget references/layout-budget.json
+```
+
+## Comprehensive mode
 
 Use this template when `review_mode` is `comprehensive`. Keep the section titles and order exactly as shown.
 The report is a monitoring document, not a decision memo. It analyzes evidence and identifies considerations;
 it does not recommend trades, allocation changes, manager actions or votes.
 
-The target is 15–20 pages when the available evidence supports the full review. Never invent or repeat content
-to reach a page count. Keep every section when evidence is unavailable and replace its analytical blocks with
-`Not available — <returned reason>`.
-
-Before delivery, run `python scripts/check_layout.py "<Portfolio> - Portfolio Review.pdf" --min-pages 15
---max-pages 20`. If it fails, condense or repair the report, then re-render and rerun the check.
+The soft target is 15–20 pages when the available evidence supports the full review; the hard ceiling is 24.
+Never invent or repeat content to reach a page count. Keep every section when evidence is unavailable and
+replace its analytical blocks with `Not available — <returned reason>`. Before delivery run
+`python scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Portfolio Review" --budget references/layout-budget.json`;
+apply its specific repair levers and rerun until clean.
 
 ## Page budget
 

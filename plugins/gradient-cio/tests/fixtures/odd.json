@@ -110,35 +110,29 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a clear signal [S1]. Why it matters: The signal frames the review. Uncertainty: Evidence coverage is bounded. What would change the view: New governed evidence that changes the signal."
+          "text": "Observation: The fictional TEST report carries one clear headline signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Regulatory AUM is $12.4B in the TEST evidence [S2]. Why it matters: This measure anchors the executive view. Uncertainty: The fixture is deliberately compact. What would change the view: A refreshed source with a materially different value."
+          "text": "Observation: Regulatory AUM is $12.4B in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Composite is 32.4 in the TEST evidence [S3]. Why it matters: It identifies a monitoring priority. Uncertainty: Supporting detail is limited. What would change the view: Corroborated evidence that resolves or reverses the item."
+          "text": "Observation: Composite is 32.4 in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
     {
+      "id": "firm-profile-ownership",
       "title": "Firm profile & ownership",
       "kicker": "Form ADV Part 1A, report 2026-10-01",
-      "new_page": true,
       "blocks": [
-        {
-          "type": "callout",
-          "tone": "info",
-          "title": "Visual evidence",
-          "text": "Not available — No governed visual was returned for this fictional TEST fixture."
-        },
         {
           "type": "tiles",
           "tiles": [
@@ -200,36 +194,41 @@
           ],
           "right": [
             {
-              "type": "bars",
-              "title": "RAUM by client type ($B)",
-              "narrow": true,
+              "type": "stacked",
+              "title": "Reported client mix ($B)",
               "items": [
                 {
-                  "label": "Pooled vehicles",
-                  "value": 114.73,
-                  "display": "$114.7B"
-                },
-                {
-                  "label": "Other",
-                  "value": 12.6,
-                  "display": "$12.6B"
-                },
-                {
-                  "label": "Sovereign",
-                  "value": 8.85,
-                  "display": "$8.9B"
-                },
-                {
-                  "label": "State & municipal",
-                  "value": 7.96,
-                  "display": "$8.0B"
-                },
-                {
-                  "label": "Pension plans",
-                  "value": 5.32,
-                  "display": "$5.3B"
+                  "label": "Client assets",
+                  "segments": [
+                    {
+                      "label": "Pooled vehicles",
+                      "value": 114.73,
+                      "display": "$114.7B"
+                    },
+                    {
+                      "label": "Other",
+                      "value": 12.6,
+                      "display": "$12.6B"
+                    },
+                    {
+                      "label": "Sovereign",
+                      "value": 8.85,
+                      "display": "$8.9B"
+                    },
+                    {
+                      "label": "State & municipal",
+                      "value": 7.96,
+                      "display": "$8.0B"
+                    },
+                    {
+                      "label": "Pension plans",
+                      "value": 5.32,
+                      "display": "$5.3B"
+                    }
+                  ]
                 }
-              ]
+              ],
+              "note": "Every segment is supported by the returned Form ADV client-type evidence [S1]."
             }
           ]
         },
@@ -238,19 +237,19 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Scale frames the operating review",
-          "text": "Observation: The TEST adviser reports $12.4B of RAUM and 38 private funds [S1]. Why it matters: Scale raises the importance of ownership and service-provider controls. Uncertainty: The compact fixture omits owner detail. What would change the view: Corroborated ownership evidence that changes the control assessment."
+          "text": "Observation: The TEST adviser reports $12.4B of RAUM and 38 private funds [S1]. Why it matters: Scale raises the importance of ownership and provider controls. Uncertainty: The compact fixture omits detailed owner records. What would change the view: Corroborated ownership records changing the control assessment."
         }
       ]
     },
     {
+      "id": "regulatory-conflicts-custody",
       "title": "Regulatory, conflicts & custody",
-      "new_page": false,
       "blocks": [
         {
           "type": "callout",
-          "tone": "info",
-          "title": "Visual evidence",
-          "text": "Not available — No governed visual was returned for this fictional TEST fixture."
+          "tone": "watch",
+          "title": "Regulatory evidence unavailable",
+          "text": "Not available — this compact TEST fixture does not return governed regulatory rows [S1]."
         },
         {
           "type": "callout",
@@ -263,15 +262,15 @@
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Regulatory detail remains an evidence gap",
-          "text": "Observation: Detailed conflict and custody rows are unavailable in this compact TEST record [S1]. Why it matters: The signal cannot be read as a clean bill of health. Uncertainty: Missing detail may contain neutral or adverse items. What would change the view: A validated complete ADV response set."
+          "text": "Observation: Zero detailed conflict or custody rows are available in this compact TEST record [S1]. Why it matters: The signal cannot be read as a clean bill of health. Uncertainty: Missing rows may contain neutral or adverse items. What would change the view: A complete validated ADV response set."
         }
       ],
       "kicker": "The filing evidence identifies custody and conflict items for review"
     },
     {
+      "id": "peer-positioning",
       "title": "Peer positioning",
       "kicker": "Gradient cohort analytics · 587 advisers",
-      "new_page": true,
       "blocks": [
         {
           "type": "percentiles",
@@ -320,19 +319,19 @@
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Percentiles do not close gaps",
-          "text": "Observation: No pillar reaches the 75th percentile, while events remain unavailable [S1]. Why it matters: Moderate peer positioning does not override unresolved findings or gaps in the composite signal. Uncertainty: The cohort is Gradient-selected. What would change the view: New findings or materially different validated pillar percentiles."
+          "text": "Observation: No pillar reaches the 75th percentile, while events remain unavailable [S1]. Why it matters: Moderate peer positioning does not override unresolved findings. Uncertainty: Gradient-selected cohort coverage may not represent every comparable adviser. What would change the view: Refreshed results above the 75th percentile or new findings."
         }
       ]
     },
     {
+      "id": "fund-operations-service-providers",
       "title": "Fund operations & service providers",
-      "new_page": true,
       "blocks": [
         {
           "type": "callout",
-          "tone": "info",
-          "title": "Visual evidence",
-          "text": "Not available — No governed visual was returned for this fictional TEST fixture."
+          "tone": "watch",
+          "title": "Service-provider evidence unavailable",
+          "text": "Not available — this compact TEST fixture does not return governed administrator, auditor or custodian rows [S1]."
         },
         {
           "type": "callout",
@@ -345,20 +344,20 @@
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Fund operations are not yet corroborated",
-          "text": "Observation: Fund-level service-provider evidence is absent from the compact TEST record [S1]. Why it matters: Operating-party independence cannot be assessed. Uncertainty: Absence is not adverse evidence. What would change the view: Validated fund records naming the administrator, auditor and custodian."
+          "text": "Observation: Zero fund-level provider records appear in the compact TEST fixture [S1]. Why it matters: Independence among operating parties cannot yet be assessed. Uncertainty: Missing provider coverage is not affirmative adverse evidence. What would change the view: Validated records naming the administrator, auditor and custodian."
         }
       ],
       "kicker": "Service-provider evidence remains incomplete in the compact TEST record"
     },
     {
+      "id": "reported-equity-holdings",
       "title": "Reported equity holdings (Form 13F)",
-      "new_page": false,
       "blocks": [
         {
           "type": "callout",
-          "tone": "info",
-          "title": "Visual evidence",
-          "text": "Not available — No governed visual was returned for this fictional TEST fixture."
+          "tone": "watch",
+          "title": "Holding rows unavailable",
+          "text": "Not available — the governed Form 13F snapshot is present, but this compact TEST fixture omits its holding rows [S3]."
         },
         {
           "type": "callout",
@@ -371,21 +370,15 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Holdings evidence remains partial",
-          "text": "Observation: A Form 13F snapshot exists, but holding rows are omitted from this TEST fixture [S3]. Why it matters: Concentration cannot be interpreted from the summary alone. Uncertainty: Form 13F is lagged and partial. What would change the view: Complete validated holding rows and identity reconciliation."
+          "text": "Observation: One Form 13F snapshot exists, but holding rows are omitted from this TEST fixture [S3]. Why it matters: Concentration cannot be interpreted from the summary alone. Uncertainty: Form 13F coverage is lagged and partial. What would change the view: Complete holding records plus successful identity reconciliation."
         }
       ],
       "kicker": "Lagged holdings provide a partial concentration lens"
     },
     {
+      "id": "monitoring-findings-ddq",
       "title": "Monitoring, findings & DDQ",
-      "new_page": true,
       "blocks": [
-        {
-          "type": "callout",
-          "tone": "info",
-          "title": "Visual evidence",
-          "text": "Not available — No governed visual was returned for this fictional TEST fixture."
-        },
         {
           "type": "timeline",
           "title": "Governed event timeline",
@@ -421,14 +414,14 @@
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Event coverage limits the monitoring conclusion",
-          "text": "Observation: Filing dates are known, but firm and fund events are unavailable [S1] [S2] [S3]. Why it matters: A quiet timeline cannot be inferred from missing publication. Uncertainty: Unpublished events may be immaterial or significant. What would change the view: Complete event coverage with validated open findings."
+          "text": "Observation: Three filing dates are known, but firm and fund events are unavailable [S1] [S2] [S3]. Why it matters: A quiet timeline cannot be inferred from missing publication. Uncertainty: Unpublished event coverage may conceal immaterial or significant changes. What would change the view: Complete event records plus validated open findings."
         }
       ],
       "kicker": "Open evidence gaps define the next diligence work"
     },
     {
+      "id": "follow-up-open-items",
       "title": "Follow-up questions & open items",
-      "new_page": true,
       "blocks": [
         {
           "type": "callout",
@@ -439,6 +432,7 @@
       ]
     },
     {
+      "id": "sources-method",
       "title": "Appendix — sources & method",
       "blocks": [
         {
@@ -494,6 +488,14 @@
               },
               "90d3de53"
             ]
+          ]
+        },
+        {
+          "type": "bullets",
+          "items": [
+            "Method: the ODD signal applies the governed Item 11, finding, alert, ownership-change and cohort-percentile rules to available evidence; unavailable evidence degrades completeness rather than becoming zero [S1] [S2] [S3].",
+            "Form ADV is adviser-reported. Gradient cohort percentiles describe positioning, not quality or performance. Form 13F is firm-level, lagged and partial [S1] [S3].",
+            "This fictional TEST report is a diligence aid, not investment, legal or compliance advice. No hire, fire, redemption, termination or allocation recommendation is made."
           ]
         }
       ]

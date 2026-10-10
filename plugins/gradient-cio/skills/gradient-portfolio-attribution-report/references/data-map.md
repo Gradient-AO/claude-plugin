@@ -40,6 +40,23 @@ no subject return history; do not substitute benchmark or Strategy Lab returns.
 
 Never use historical return points to recalculate effects.
 
+### Benchmark and excess boundary
+
+Attribution `summary.benchmark_return` is the linked segment benchmark
+composite (`summary.benchmark_return_basis:
+linked_segment_benchmark_composite`), and attribution
+`summary.excess_return` is measured against that composite. Historical-return
+`benchmark_relative` rows instead use the portfolio policy benchmark entity
+(`policy_benchmark_return_basis: portfolio_policy_benchmark_entity`) and their
+arithmetic excess is measured against that entity.
+
+When both lanes appear, preserve `diagnostics.entity_return_reconciliation`:
+`window_basis`, both portfolio returns and
+`portfolio_attribution_minus_entity_return`, both benchmark returns and their
+basis fields, and `benchmark_composite_minus_entity_return` with its basis.
+These diagnostics explain the basis delta. Never compare, subtract or conflate
+the attribution-summary excess with historical-return policy-benchmark excess.
+
 ## Governed ex ante attribution
 
 `get_portfolio_ex_ante_attribution` is the sole source. V1 is a single-period,

@@ -1,10 +1,10 @@
 # Global Public Equity Construction Template
 
 Keep every section title and the order exactly as shown. Missing evidence becomes
-`Not available — <returned reason>`; never remove a section. Target 10–14 pages without filler.
-
-Before delivery, run `python scripts/check_layout.py "<Portfolio> - Global Public Equity Construction.pdf"
---min-pages 10 --max-pages 14`. If it fails, condense or repair the report, then re-render and rerun the check.
+`Not available — <returned reason>`; never remove a section. The soft target is 10–14 pages and the hard
+ceiling is 17; never add filler. Before delivery run
+`python scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Global Public Equity Construction" --budget references/layout-budget.json`;
+apply its specific repair levers and rerun until clean.
 
 ## Metadata and executive band
 
@@ -22,12 +22,14 @@ Before delivery, run `python scripts/check_layout.py "<Portfolio> - Global Publi
 - Render exactly the four named tiles. Source `executive.bottom_line` and every tile with `[S#]`.
 - Page 2 contains 3–5 sourced `callout` blocks with `role: key_judgment` and titles beginning
   `Key judgment —`. Keep each to 60 words and use the four-part analysis structure below.
-- In Target Portfolio Structure, Factor Exposures and Concentration, and Forward Return and Risk, include
-  1–3 sourced `callout` blocks with `role: analysis` and titles beginning `Analysis —`. Keep the title
+- In Target Portfolio Structure, Factor Exposures and Concentration, Forward Return and Risk, and Manager
+  and Issuer Concentration, include 1–3 sourced `callout` blocks with `role: analysis` and titles beginning
+  `Analysis —`. Keep the title
   message to six words and text to 60 words. Each text must use, in order: `Observation:`,
   `Why it matters:`, `Uncertainty:`, and
   `What would change the view:`. Analysis supports, but never changes, the fixed Committee Action Requested.
-- Include graphics for current allocation, factor/concentration and forward risk/return. Only unavailable
+- Include graphics for current allocation, regional allocation, factor/concentration, forward risk/return,
+  and manager/issuer concentration. Only unavailable
   governed evidence may use a `callout` reading `Not available — <reason>` in place of a required visual.
   Every analytical section has a message-first kicker and puts its visual or unavailable substitute before
   the first table. Use signed finite values; never place more than two tables consecutively.
@@ -54,8 +56,8 @@ Before delivery, run `python scripts/check_layout.py "<Portfolio> - Global Publi
 
 ### 3. Current Global Public Equity Portfolio
 
+- Lead with one unchanged allocation, geography or currency chart when available; otherwise use a compact typed unavailable callout.
 - `table` **Current sleeve**: Manager / exposure, Role, Value, % portfolio, % equity, As of.
-- One unchanged allocation, geography or currency chart when available.
 - Active / passive labels appear only when returned or user-supplied.
 
 ### 4. Target Portfolio Structure
@@ -70,8 +72,15 @@ Before delivery, run `python scripts/check_layout.py "<Portfolio> - Global Publi
 
 ### 5. Historical Performance and Attribution
 
+- Lead with a governed attribution `waterfall` when returned. If governed attribution is unavailable,
+  use one compact typed `Not available — <returned reason>` callout before any table; do not stack N/A tables.
 - `table` **Standard periods**: Period, Portfolio / sleeve, Benchmark, Excess, Coverage.
 - `table` **Attribution effects** from `get_portfolio_attribution` only.
+- Distinguish historical-return policy benchmark entity excess from attribution
+  linked segment benchmark composite excess. If both appear, include returned
+  `diagnostics.entity_return_reconciliation` basis/delta fields; never compare
+  or conflate the two excess values.
+- One short sourced `text` bridge before the method metadata; do not stack a third data block.
 - `kv` method, linking, basis, currency, formula version, residual and tolerance.
 
 ### 6. Factor Exposures and Concentration
@@ -88,37 +97,34 @@ Before delivery, run `python scripts/check_layout.py "<Portfolio> - Global Publi
 - Unsupported saved-portfolio return or risk statistics remain `Not available`; do not derive them from CMA rows.
 - State `Assumptions, not forecasts`.
 
-### 8. Manager Lineup
+### 8. Manager and Issuer Concentration
 
+- Lead with signed `bars` comparing the largest governed manager and issuer concentrations with their limits.
 - `table` **Current and proposed roles**: Manager, Role, Exposure, Evidence status, Proposed action, Next step.
-- Proposed hires require manager comparison and diligence or `Not assessed`.
-- Do not infer style, skill or active share.
-
-### 9. Issuer-Level Flags
-
 - `table` **Look-through flags**: Issuer, Look-through value, % NAV, Managers, Evidence date, Flag.
-- Optional filing or fundamentals evidence answers a named concentration question only.
-- Never issue a single-stock buy, sell, hold, overweight, underweight or price target.
+- Proposed hires require manager comparison and diligence or `Not assessed`; optional issuer evidence answers a named concentration question only.
+- Include an `Analysis — Concentration shapes implementation` judgment using the required four-part structure.
+- Do not infer style, skill or active share, and never issue a single-stock buy, sell, hold, overweight, underweight or price target.
 
-### 10. Scenarios and Robustness
+### 9. Scenarios and Robustness
 
 - Lead with signed `bars` for every governed scenario result.
 - `table` **Supported scenarios**: Scenario, Return / loss, Risk measure, Basis, Source.
 - Optional selected-series Strategy Lab results carry the sandbox label.
 - Unsupported tracking-error or stress rows remain unavailable.
 
-### 11. Implementation Plan
+### 10. Implementation Plan
 
 - `table` **Implementation steps**: Phase, Action, Size, Funding source, Condition, Owner.
 - `table` **Alternatives considered**: Alternative, Benefit, Cost / risk, Reason not selected.
 - Costs and turnover remain unavailable unless returned or user-supplied.
 
-### 12. Risks, Open Items and Approvals
+### 11. Risks, Open Items and Approvals
 
 - `table` **Decision risks**: Priority, Risk, Evidence, Mitigation / condition, Owner.
 - `table` **Open items and approvals**: Timing, Item, Required evidence, Owner, Status.
 
-### 13. Coverage
+### 12. Coverage
 
 - `coverage` block with every expected source and its typed status.
 

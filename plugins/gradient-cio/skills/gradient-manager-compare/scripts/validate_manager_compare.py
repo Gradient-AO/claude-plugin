@@ -28,8 +28,7 @@ SPEC = ReportSpec(
             "Operational flags",
             "Form 13F overlap",
             "ADV–13F consistency and events",
-            "Coverage",
-            "Next steps",
+            "Coverage and next steps",
             "Appendix A — Sources and method",
         )
     ),
@@ -48,8 +47,13 @@ SPEC = ReportSpec(
         SlotRule(
             r"Side-by-side comparison",
             frozenset({"bars"}),
-            "RAUM, clients, disclosures and percentile strips",
-            minimum=4,
+            "RAUM, clients and disclosure bars",
+            minimum=3,
+        ),
+        SlotRule(
+            r"Side-by-side comparison",
+            frozenset({"percentiles"}),
+            "per-manager cohort percentile strips",
         ),
         SlotRule(
             r"Operational flags", frozenset({"findings"}), "per-manager findings"
@@ -67,8 +71,26 @@ SPEC = ReportSpec(
             frozenset({"table"}),
             "consistency table",
         ),
-        SlotRule(r"Coverage", frozenset({"coverage"}), "coverage block"),
-        SlotRule(r"Next steps", frozenset({"table"}), "next-steps table"),
+        SlotRule(
+            r"ADV–13F consistency and events",
+            frozenset({"timeline"}),
+            "events timeline",
+        ),
+        SlotRule(
+            r"Coverage and next steps",
+            frozenset({"two_col"}),
+            "paired coverage and next-steps layout",
+        ),
+        SlotRule(
+            r"Coverage and next steps",
+            frozenset({"coverage"}),
+            "coverage block",
+        ),
+        SlotRule(
+            r"Coverage and next steps",
+            frozenset({"table"}),
+            "next-steps table",
+        ),
         SlotRule(
             r"Appendix A — Sources and method",
             frozenset({"table"}),

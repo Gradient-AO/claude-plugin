@@ -1,10 +1,10 @@
 # Private Markets Construction Template
 
 Keep every section title and the order exactly as shown. Missing evidence becomes
-`Not available — <returned reason>`; never remove a section. Target 10–14 pages without filler.
-
-Before delivery, run `python scripts/check_layout.py "<Portfolio> - Private Markets Construction.pdf"
---min-pages 10 --max-pages 14`. If it fails, condense or repair the report, then re-render and rerun the check.
+`Not available — <returned reason>`; never remove a section. The soft target is 10–14 pages and the hard
+ceiling is 17; never add filler. Before delivery run
+`python scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Private Markets Construction" --budget references/layout-budget.json`;
+apply its specific repair levers and rerun until clean.
 
 ## Metadata and executive band
 
@@ -54,26 +54,34 @@ Before delivery, run `python scripts/check_layout.py "<Portfolio> - Private Mark
 
 ### 3. Current Private Markets Portfolio
 
+- Lead with one unchanged allocations chart when available; otherwise use a compact typed unavailable callout.
 - `table` **Current program snapshot**: Strategy, NAV, Unfunded, Commitment, % NAV, Valuation date.
-- One unchanged allocations chart when available.
 - `text` states valuation lag, coverage and unsupported classifications.
 
-### 4. Historical Performance and Attribution
-
-- `table` **Standard periods**: Period, Portfolio / sleeve, Benchmark, Excess, Coverage.
-- `table` **Attribution effects** from `get_portfolio_attribution` only.
-- `kv` method, linking, basis, currency, formula version, residual and tolerance.
-- Use a typed unavailable block when private-market-sleeve results are not returned.
-
-### 5. Target Portfolio Structure
+### 4. Target Portfolio Structure
 
 - `band` **Current weight versus policy range** for every segment, with the proposed target marker.
 - `stacked` **Current and target mix** with one bar for each mix.
+- `stacked` **Vintage-year mix** from governed vintage evidence; otherwise use one compact typed unavailable callout.
 - `table` **Current versus target**: Segment, Current, Target, Change, Range / constraint, Rationale.
 - Optional strategy, vintage, geography and manager tables only when returned or user-supplied.
 - Numeric targets must trace to a source; otherwise use `Not available`.
 - Include an `Analysis — Why this target` judgment that ties the fixed proposal to returned CMA consensus,
   macro regime and open manager findings; name any unavailable context rather than filling the gap.
+
+### 5. Historical Performance and Attribution
+
+- Lead with a governed attribution `waterfall` when returned. If governed attribution is unavailable,
+  use one compact typed `Not available — <returned reason>` callout before any table; do not stack N/A tables.
+- `table` **Standard periods**: Period, Portfolio / sleeve, Benchmark, Excess, Coverage.
+- `table` **Attribution effects** from `get_portfolio_attribution` only.
+- Distinguish historical-return policy benchmark entity excess from attribution
+  linked segment benchmark composite excess. If both appear, include returned
+  `diagnostics.entity_return_reconciliation` basis/delta fields; never compare
+  or conflate the two excess values.
+- One short sourced `text` bridge before the method metadata; do not stack a third data block.
+- `kv` method, linking, basis, currency, formula version, residual and tolerance.
+- Use a typed unavailable block when private-market-sleeve results are not returned.
 
 ### 6. Forward Return and Risk
 

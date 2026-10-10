@@ -20,6 +20,7 @@ from report_json_validator import (  # noqa: E402
     block_objects,
     collect_strings,
     load_json,
+    print_quality_notes,
     section_objects,
     validate_report,
 )
@@ -103,8 +104,13 @@ SPEC = ReportSpec(
         ),
         SlotRule(
             r"Diagnostics and Limitations",
+            frozenset({"bars"}),
+            "residual-versus-tolerance visual",
+        ),
+        SlotRule(
+            r"Diagnostics and Limitations",
             frozenset({"table"}),
-            "diagnostics evidence",
+            "diagnostics supporting evidence",
         ),
         SlotRule(r"Coverage", frozenset({"coverage"}), "coverage block"),
         SlotRule(r"Appendix A — Sources", frozenset({"table"}), "sources table"),
@@ -167,6 +173,12 @@ def validate(document: JsonValue) -> list[str]:
     if executive is not None and executive.get("id") != "executive":
         errors.append("Executive Attribution Summary must use id 'executive'")
 
+    for section in sections:
+        if section.get("new_page") is True or section.get("page_break") == "force":
+            errors.append(
+                f"{section.get('title', 'Untitled section')} has an unapproved forced page break"
+            )
+
     historical = by_title.get("Historical Attribution")
     if historical is not None and not block_objects(historical):
         errors.append("Historical Attribution must retain at least one evidence block")
@@ -176,6 +188,25 @@ def validate(document: JsonValue) -> list[str]:
         errors.append(
             "Governed Ex Ante Attribution must retain evidence or typed unavailability"
         )
+
+    diagnostics = by_title.get("Diagnostics and Limitations")
+    if diagnostics is not None:
+        diagnostic_blocks = diagnostics.get("blocks")
+        first_block = (
+            diagnostic_blocks[0]
+            if isinstance(diagnostic_blocks, list) and diagnostic_blocks
+            and isinstance(diagnostic_blocks[0], dict)
+            else None
+        )
+        if (
+            first_block is None
+            or first_block.get("type") != "bars"
+            or first_block.get("title") != "Residual vs tolerance (bp)"
+        ):
+            errors.append(
+                "Diagnostics and Limitations must lead with bars titled "
+                "'Residual vs tolerance (bp)'"
+            )
 
     all_text = "\n".join(collect_strings(root))
     for pattern in PROHIBITED_REPORT_PATTERNS:
@@ -221,8 +252,16 @@ def main(argv: list[str]) -> int:
         print(f"FAIL — {SPEC.name}: {len(errors)} issue(s)")
         for error in errors:
             print(f"  - {error}")
+        print_quality_notes(
+            document,
+            structured=SPEC.require_analysis_structure,
+        )
         return 1
     print(f"PASS — {SPEC.name} JSON contract is valid.")
+    print_quality_notes(
+        document,
+        structured=SPEC.require_analysis_structure,
+    )
     return 0
 
 

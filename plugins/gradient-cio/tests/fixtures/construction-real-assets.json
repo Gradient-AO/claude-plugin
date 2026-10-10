@@ -137,21 +137,21 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a Valuation lag and structure mix on watch signal [S1]. Why it matters: The signal frames the review. Uncertainty: Evidence coverage is bounded. What would change the view: New governed evidence that changes the signal."
+          "text": "Observation: The fictional TEST report carries a valuation-lag signal above the clear threshold [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Real-assets weight is 15.0% in the TEST evidence [S2]. Why it matters: This measure anchors the executive view. Uncertainty: The fixture is deliberately compact. What would change the view: A refreshed source with a materially different value."
+          "text": "Observation: Real-assets weight is 15.0% in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Policy status is Watch in the TEST evidence [S3]. Why it matters: It identifies a monitoring priority. Uncertainty: Supporting detail is limited. What would change the view: Corroborated evidence that resolves or reverses the item."
+          "text": "Observation: Policy status is Watch rather than Clear in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
@@ -495,7 +495,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Why this target",
-          "text": "Observation: The target shifts 2.0 percentage points from listed real estate toward infrastructure and natural resources [S3][S4]. Why it matters: The largest sub-segment falls. Uncertainty: CMA consensus, macro regime, findings, valuations and mappings are incomplete [S8]. What would change the view: Completed context that weakens the diversification case [S4][S8]."
+          "text": "Observation: The target shifts 2.0 percentage points from listed real estate toward infrastructure and natural resources [S3][S4]. Why it matters: The largest sub-segment declines under the proposed mix. Uncertainty: CMA, regime, findings, valuation and mapping coverage remain incomplete [S8]. What would change the view: Completed records showing no diversification improvement [S4][S8]."
         },
         {
           "type": "text",
@@ -507,6 +507,33 @@
     {
       "title": "Historical Performance and Attribution",
       "blocks": [
+        {
+          "type": "waterfall",
+          "title": "Governed attribution effects",
+          "items": [
+            {
+              "label": "Allocation",
+              "value": -0.12,
+              "display": "-0.12pp"
+            },
+            {
+              "label": "Selection",
+              "value": -0.36,
+              "display": "-0.36pp"
+            },
+            {
+              "label": "Interaction",
+              "value": -0.02,
+              "display": "-0.02pp"
+            },
+            {
+              "label": "Residual",
+              "value": 0.0,
+              "display": "0.00pp"
+            }
+          ],
+          "note": "Returned attribution effects; residual is shown explicitly [S5]."
+        },
         {
           "type": "table",
           "title": "Standard periods",
@@ -531,13 +558,6 @@
               "5.2%",
               "+0.4pp",
               "Complete [S5]"
-            ],
-            [
-              "5Y real-assets sleeve (ann.)",
-              "Not available — valuation-linked history incomplete",
-              "Not available",
-              "Not available",
-              "Unavailable [S5]"
             ]
           ]
         },
@@ -573,6 +593,10 @@
           ]
         },
         {
+          "type": "text",
+          "text": "Governed attribution method and reconciliation metadata follow [S5]."
+        },
+        {
           "type": "kv",
           "rows": [
             [
@@ -605,11 +629,32 @@
         {
           "type": "tiles",
           "tiles": [
-            {"label": "Headline inflation", "value": "2.8%", "sub": "2026-06-30 [S7]", "tone": "info"},
-            {"label": "Inflation exposure", "value": "0.32", "sub": "Model-implied [S7]", "tone": "good"},
-            {"label": "Rates exposure", "value": "-0.18", "sub": "Model-implied [S7]", "tone": "watch"},
-            {"label": "Inflation sensitivity", "value": "Not available", "sub": "No governed result [S8]", "tone": "watch"}
-          ]
+            {
+              "label": "Headline inflation",
+              "value": "2.8%",
+              "sub": "2026-06-30 [S7]",
+              "tone": "info"
+            },
+            {
+              "label": "Inflation exposure",
+              "value": "0.32",
+              "sub": "Model-implied [S7]",
+              "tone": "good"
+            },
+            {
+              "label": "Rates exposure",
+              "value": "-0.18",
+              "sub": "Model-implied [S7]",
+              "tone": "watch"
+            },
+            {
+              "label": "Inflation sensitivity",
+              "value": "Not available",
+              "sub": "No governed result [S8]",
+              "tone": "watch"
+            }
+          ],
+          "title": "Inflation-sensitivity evidence"
         },
         {
           "type": "chart",
@@ -698,7 +743,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Context is not protection",
-          "text": "Observation: The model shows positive inflation and commodity exposures [S7]. Why it matters: These signals describe diversification context, not a guaranteed hedge. Uncertainty: Governed portfolio inflation sensitivity is unavailable [S8]. What would change the view: A returned sensitivity result or explicit mandate mapping that contradicts the contextual exposure [S7][S8]."
+          "text": "Observation: Two modeled exposures, inflation and commodities, are positive [S7]. Why it matters: These signals provide diversification context, not a guaranteed hedge. Uncertainty: Governed portfolio inflation sensitivity remains unavailable [S8]. What would change the view: Returned sensitivity results or mandate mappings contradicting both exposures [S7][S8]."
         },
         {
           "type": "text",
@@ -710,6 +755,23 @@
     {
       "title": "Forward Return and Risk",
       "blocks": [
+        {
+          "type": "bars",
+          "title": "Forward expected-return comparison",
+          "items": [
+            {
+              "label": "Current ? Real estate",
+              "value": 6.9,
+              "display": "6.9%"
+            },
+            {
+              "label": "Proposed ? Real estate",
+              "value": 14.2,
+              "display": "14.2%"
+            }
+          ],
+          "note": "Governed forward assumptions; assumptions, not forecasts [S6]."
+        },
         {
           "type": "kv",
           "rows": [
@@ -797,7 +859,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Infrastructure balances risk",
-          "text": "Observation: Infrastructure has lower expected volatility than real estate and natural resources in the selected assumptions [S6]. Why it matters: Its larger target role balances the broader mix. Uncertainty: Commodity securities lack a standalone governed mapping [S8]. What would change the view: Revised assumptions or a mandate mapping with materially different risk-return evidence [S6][S8]."
+          "text": "Observation: Infrastructure has lower expected volatility than real estate and natural resources in the selected assumptions [S6]. Why it matters: Its larger target role balances the broader mix. Uncertainty: Standalone governed mapping for commodity securities remains unavailable [S8]. What would change the view: Refreshed assumptions reversing the relative volatility results [S6][S8]."
         },
         {
           "type": "table",
@@ -971,6 +1033,10 @@
               }
             ]
           ]
+        },
+        {
+          "type": "text",
+          "text": "Liquidity and valuation coverage metadata follow [S8]."
         },
         {
           "type": "kv",
@@ -1438,20 +1504,6 @@
               "Server exposure aggregation",
               "portfolio-exposure-v1",
               "Market value or NAV; unfunded separate"
-            ],
-            [
-              "S5",
-              "Returns and attribution",
-              "Linked returns; Brinson-Fachler",
-              "portfolio-attribution-v1",
-              "Net; 1 bp tolerance"
-            ],
-            [
-              "S6",
-              "Forward statistics and pacing",
-              "Returned chart packs",
-              "chart-contract-v1",
-              "10-year assumptions; projected drawdown flows"
             ]
           ]
         },

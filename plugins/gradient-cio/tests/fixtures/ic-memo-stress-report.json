@@ -1,0 +1,167 @@
+{
+  "meta": {
+    "eyebrow": "IC Memo Layout Stress Test",
+    "header_label": "IC Memo (TEST)",
+    "title": "Northwind Total Fund (TEST)",
+    "subtitle": "Fictional layout and pagination regression fixture",
+    "running_head": "Northwind (TEST)",
+    "data_as_of": "2026-09-30",
+    "confidentiality": "FICTIONAL TEST DATA — not for distribution",
+    "cover_facts": [["Purpose", "Renderer stress test"], ["Currency", "USD"]]
+  },
+  "executive": {
+    "label": "Test purpose",
+    "bottom_line": "This fictional memo exercises long tables, compact currency axes, crowded series labels and orphan prevention [S1]."
+  },
+  "sections": [
+    {
+      "id": "executive",
+      "num": "07",
+      "title": "Forward Context",
+      "new_page": true,
+      "blocks": [
+        {
+          "type": "text",
+          "text": "Fictional forward context is included only to provide realistic report density for pagination testing. Every amount, date and conclusion is invented and explicitly marked TEST [S1]."
+        },
+        {
+          "type": "table",
+          "title": "Fictional assumptions (TEST)",
+          "columns": ["Series", "Expected return", "Risk", "Basis"],
+          "rows": [
+            ["Public equity (TEST)", "6.5%", "17.0%", "Gradient maintained [S1]"],
+            ["Fixed income (TEST)", "4.2%", "6.5%", "Gradient maintained [S1]"],
+            ["Private markets (TEST)", "7.5%", "22.0%", "Gradient maintained [S1]"],
+            ["Real assets (TEST)", "5.8%", "14.0%", "Gradient maintained [S1]"],
+            ["Liquidity (TEST)", "3.5%", "1.0%", "Gradient maintained [S1]"]
+          ]
+        }
+      ]
+    },
+    {
+      "num": "09",
+      "title": "Liquidity and Commitments",
+      "blocks": [
+        {
+          "type": "chart",
+          "chart": {
+            "chart_id": "commitments-pacing",
+            "title": "Fictional commitments pacing (TEST)",
+            "status": "ok",
+            "currency": "USD",
+            "columns": [
+              {"key": "period", "title": "Period", "format": "text", "decimals": null},
+              {"key": "amount", "title": "Amount", "format": "currency", "decimals": 0}
+            ],
+            "rows": [
+              ["2026 Q1", 1000000], ["2026 Q2", 1100000], ["2026 Q3", 1200000], ["2026 Q4", 1300000],
+              ["2027 Q1", 1400000], ["2027 Q2", 1500000], ["2027 Q3", 1600000], ["2027 Q4", 1700000],
+              ["2028 Q1", 1800000], ["2028 Q2", 1900000], ["2028 Q3", 2000000], ["2028 Q4", 2100000],
+              ["2029 Q1", 2200000], ["2029 Q2", 2300000], ["2029 Q3", 2400000], ["2029 Q4", 2500000],
+              ["2030 Q1", 2600000], ["2030 Q2", 2700000], ["2030 Q3", 2800000], ["2030 Q4", 2900000],
+              ["2031 Q1", 3000000], ["2031 Q2", 3100000], ["2031 Q3", 3200000], ["2031 Q4", 3300000],
+              ["2032 Q1", 3400000], ["2032 Q2", 3500000], ["2032 Q3", 3600000], ["2032 Q4", 3700000],
+              ["2033 Q1", 3800000], ["2033 Q2", 3900000], ["2033 Q3", 4000000], ["2033 Q4", 4100000],
+              ["2034 Q1", 4200000], ["2034 Q2", 4300000], ["2034 Q3", 4400000], ["2034 Q4", 4500000],
+              ["2035 Q1", 4600000], ["2035 Q2", 4700000], ["2035 Q3", 4800000], ["2035 Q4", 4900000]
+            ],
+            "truncated": true,
+            "render_hint": {"block": "table", "x": null, "y": []}
+          }
+        },
+        {
+          "type": "chart",
+          "chart": {
+            "chart_id": "commitments-cashflow",
+            "title": "Fictional commitment cash flows (TEST)",
+            "status": "ok",
+            "currency": "USD",
+            "columns": [
+              {"key": "period", "title": "Period", "format": "date", "decimals": null},
+              {"key": "calls", "title": "Capital calls", "format": "currency", "decimals": 1},
+              {"key": "distributions", "title": "Distributions", "format": "currency", "decimals": 1},
+              {"key": "nav", "title": "NAV", "format": "currency", "decimals": 1},
+              {"key": "unfunded", "title": "Unfunded", "format": "currency", "decimals": 1}
+            ],
+            "rows": [
+              ["2026-03-31", 1200000, 900000, 4800000, 5400000],
+              ["2026-06-30", 1500000, 1100000, 5000000, 5500000],
+              ["2026-09-30", 1800000, 1400000, 5200000, 5520000],
+              ["2026-12-31", 2100000, 1700000, 5350000, 5510000],
+              ["2027-03-31", 2400000, 2050000, 5420000, 5490000],
+              ["2027-06-30", 2700000, 2400000, 5437000, 5440000]
+            ],
+            "truncated": false,
+            "render_hint": {
+              "block": "line",
+              "x": "period",
+              "y": ["calls", "distributions", "nav", "unfunded"]
+            }
+          }
+        },
+        {
+          "type": "text",
+          "text": "The fictional pacing series is intentionally long. The body must remain concise while complete returned rows and the source truncation disclosure remain available in the Chart data appendix [S1]."
+        }
+      ]
+    },
+    {
+      "num": "13",
+      "title": "Decision Analysis",
+      "page_break": "prefer",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "No proposed portfolio was supplied for this fictional renderer test. The section remains in the memo so the final callout exercises short-tail orphan prevention [S1]."
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "No proposal to evaluate",
+          "text": "No change proposed — renderer test only [S1]."
+        }
+      ]
+    },
+    {
+      "num": "A",
+      "title": "Appendix A — Sources",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": ["Tag", "Evidence", "Status"],
+          "rows": [["S1", "Fictional renderer fixture (TEST)", "Available"]]
+        }
+      ]
+    },
+    {
+      "num": "B",
+      "title": "Appendix B — Assumptions",
+      "blocks": [
+        {
+          "type": "bullets",
+          "items": [
+            "Public-market returns are fictional (TEST).",
+            "Private-market pacing is fictional (TEST).",
+            "Currency is USD for renderer coverage (TEST).",
+            "Dates are deterministic fixture dates (TEST)."
+          ]
+        }
+      ]
+    },
+    {
+      "num": "C",
+      "title": "Appendix C — Methods",
+      "blocks": [
+        {
+          "type": "bullets",
+          "items": [
+            "Endpoint sampling preserves first and last rows (TEST).",
+            "Compact axes exercise million-scale labels (TEST).",
+            "Preferred breaks may be repaired once (TEST).",
+            "Forced appendix breaks remain immutable (TEST)."
+          ]
+        }
+      ]
+    }
+  ]
+}

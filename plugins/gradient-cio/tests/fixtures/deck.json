@@ -254,52 +254,32 @@
    "layout": "full",
    "blocks": [
     {
-     "type": "table",
-     "title": "Most crowded futures positions (TEST data)",
-     "columns": [
-      "Market",
-      "Trader category",
-      "Side",
-      "Percentile (156w)",
-      "Direction"
+     "type": "percentiles",
+     "title": "Most crowded futures positions (156-week percentile; TEST data)",
+     "threshold": 95,
+     "items": [
+      {
+       "label": "Gold · swap dealers",
+       "percentile": 4,
+       "value_display": "Short · building"
+      },
+      {
+       "label": "British pound · asset managers",
+       "percentile": 2,
+       "value_display": "Short · building"
+      },
+      {
+       "label": "10-Year UST · asset managers",
+       "percentile": 97,
+       "value_display": "Long · unwinding"
+      },
+      {
+       "label": "2-Year UST · leveraged funds",
+       "percentile": 100,
+       "value_display": "Short · unwinding"
+      }
      ],
-     "align": [
-      "l",
-      "l",
-      "l",
-      "r",
-      "l"
-     ],
-     "rows": [
-      [
-       "Gold",
-       "Swap dealers",
-       "Short",
-       "4th",
-       "Building"
-      ],
-      [
-       "British pound",
-       "Asset managers",
-       "Short",
-       "2nd",
-       "Building"
-      ],
-      [
-       "10-Year UST notes",
-       "Asset managers",
-       "Long",
-       "97th",
-       "Unwinding"
-      ],
-      [
-       "2-Year UST notes",
-       "Leveraged funds",
-       "Short",
-       "100th",
-       "Unwinding"
-      ]
-     ]
+     "note": "Percentiles are within each market/category series over 156 weeks [S6]."
     },
     {
      "type": "callout",
@@ -307,7 +287,8 @@
      "title": "How to read this",
      "text": "Positioning is disclosed exposure, not intent or a forecast. Hedge-fund 13F consensus covers 29 of 30 cohort managers for 2026-06-30 and lags by up to 45 days [S7]."
     }
-   ]
+   ],
+   "takeaway": "The most extreme disclosed positions sit at both tails of their own 156-week histories; that is crowding context, not a directional forecast [S6]."
   },
   {
    "kicker": "Signal detail [S3]",
@@ -448,85 +429,53 @@
    "layout": "full",
    "blocks": [
     {
-     "type": "table",
-     "columns": [
-      "Date",
-      "Event",
-      "Importance",
-      "What to watch"
+     "type": "timeline",
+     "title": "High- and medium-importance events",
+     "items": [
+      {
+       "date": "2026-10-05",
+       "title": "U.S. ISM Services PMI · High",
+       "detail": "Sub-50 activity with rising prices would break the cooling path [S4].",
+       "tone": "watch"
+      },
+      {
+       "date": "2026-10-14",
+       "title": "U.S. CPI · High",
+       "detail": "Services re-acceleration would lift front-end yields [S4].",
+       "tone": "watch"
+      },
+      {
+       "date": "2026-10-15",
+       "title": "U.S. retail sales and PPI · High",
+       "detail": "Watch the control group for real consumption and PPI margins for pass-through [S4].",
+       "tone": "watch"
+      },
+      {
+       "date": "2026-10-28",
+       "title": "FOMC decision · High",
+       "detail": "Projections and the press conference set the front-end path [S4].",
+       "tone": "watch"
+      },
+      {
+       "date": "2026-10-29",
+       "title": "U.S. GDP, PCE and ECB decision · High",
+       "detail": "Core PCE versus spending; ECB persistence versus growth [S4].",
+       "tone": "watch"
+      },
+      {
+       "date": "2026-10-30",
+       "title": "BOJ decision · High",
+       "detail": "An earlier hike signal would lift JGB yields and the yen [S4].",
+       "tone": "watch"
+      },
+      {
+       "date": "2026-10-31",
+       "title": "China NBS PMIs · Medium",
+       "detail": "New orders below 50 would pressure commodities [S4].",
+       "tone": "info"
+      }
      ],
-     "align": [
-      "n",
-      "l",
-      "l",
-      "l"
-     ],
-     "rows": [
-      [
-       "2026-10-05",
-       "U.S. ISM Services PMI",
-       {
-        "chip": "High",
-        "status": "watch"
-       },
-       "Sub-50 activity with rising prices would break the cooling path"
-      ],
-      [
-       "2026-10-14",
-       "U.S. CPI",
-       {
-        "chip": "High",
-        "status": "watch"
-       },
-       "Breadth of core: services re-acceleration lifts front-end yields"
-      ],
-      [
-       "2026-10-15",
-       "U.S. retail sales; PPI",
-       {
-        "chip": "High",
-        "status": "watch"
-       },
-       "Control group = real consumption; PPI margins = pass-through"
-      ],
-      [
-       "2026-10-28",
-       "FOMC decision",
-       {
-        "chip": "High",
-        "status": "watch"
-       },
-       "Projections and press conference set the front-end path"
-      ],
-      [
-       "2026-10-29",
-       "U.S. GDP; PCE; ECB decision",
-       {
-        "chip": "High",
-        "status": "watch"
-       },
-       "Core PCE vs spending; ECB persistence vs growth"
-      ],
-      [
-       "2026-10-30",
-       "BOJ decision",
-       {
-        "chip": "High",
-        "status": "watch"
-       },
-       "Earlier hike signal lifts JGB yields and the yen"
-      ],
-      [
-       "2026-10-31",
-       "China NBS PMIs",
-       {
-        "chip": "Medium",
-        "status": "medium"
-       },
-       "New orders below 50 would pressure commodities"
-      ]
-     ],
-     "note": "Scheduled dates are known calendar events, not forecasts; 14 events in the window, 12 retrieved [S4]."
+     "note": "Scheduled dates are known calendar events, not forecasts; 14 events are in the window and 12 were retrieved [S4]."
     }
    ],
    "takeaway": "The thesis test (CPI, 2026-10-14) lands two weeks before the FOMC."
@@ -722,6 +671,26 @@
         "status": "advisory"
        },
        "Quality receipt unvalidated; 15 quality flags"
+      ],
+      [
+       "S6",
+       "CFTC positioning (get_market_positioning, cftc)",
+       "2026-09-29",
+       {
+        "chip": "passed",
+        "status": "passed"
+       },
+       "Flags only; 156-week within-series percentiles"
+      ],
+      [
+       "S7",
+       "Hedge-fund crowding (get_market_positioning)",
+       "2026-06-30",
+       {
+        "chip": "passed",
+        "status": "passed"
+       },
+       "29 of 30 managers; quarterly and lagged"
       ]
      ]
     },

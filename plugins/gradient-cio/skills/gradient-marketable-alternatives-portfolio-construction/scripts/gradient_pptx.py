@@ -17,28 +17,60 @@ from io import BytesIO
 from pathlib import Path
 from typing import Any, TypeAlias, cast
 
+from report_layout import (
+    LayoutPolicyError,
+    effective_chart_mode,
+    prepare_report_for_render,
+)
+from report_theme import (
+    AMBER as THEME_AMBER,
+    BRAND_NAME,
+    CORAL as THEME_CORAL,
+    FONT_FAMILY,
+    INK as THEME_INK,
+    INK2 as THEME_INK_2,
+    LIME as THEME_LIME,
+    LIME_DK as THEME_LIME_DARK,
+    MUTED as THEME_MUTED,
+    PANEL as THEME_PANEL,
+    PAPER as THEME_PAPER,
+    PIE as THEME_PIE,
+    PPTX_SLIDE_HEIGHT_IN,
+    PPTX_SLIDE_WIDTH_IN,
+    RULE as THEME_RULE,
+    SERIES as THEME_SERIES,
+    SIGNAL as THEME_SIGNAL,
+    SLATE as THEME_SLATE,
+    STATUS_COLOR as THEME_STATUS_COLOR,
+    THEME_VERSION,
+    WASH as THEME_WASH,
+    default_confidentiality,
+    pptx_hex,
+    validate_potx_theme,
+)
+
 
 JsonValue: TypeAlias = (
     str | int | float | bool | None | list["JsonValue"] | dict[str, "JsonValue"]
 )
 JsonObject: TypeAlias = dict[str, JsonValue]
 
-INK = "0D1117"
-PANEL = "161C24"
-LIME = "C6F432"
-LIME_DARK = "4F6B00"
-INK_2 = "4A5563"
-MUTED = "8A94A1"
-RULE = "E3E7EC"
-PAPER = "FFFFFF"
-WASH = "F5F7F9"
-AMBER = "F2A93B"
-CORAL = "FF6B5E"
-SLATE = "9AA5B1"
-SERIES = (INK, "7FA600", AMBER, "5B8DEF", CORAL, SLATE)
-PIE = (INK, "7FA600", AMBER, "5B8DEF", CORAL, "3FB8AF", "B58AE0", SLATE)
-SLIDE_WIDTH_IN = 13.333
-SLIDE_HEIGHT_IN = 7.5
+INK = pptx_hex(THEME_INK)
+PANEL = pptx_hex(THEME_PANEL)
+LIME = pptx_hex(THEME_LIME)
+LIME_DARK = pptx_hex(THEME_LIME_DARK)
+INK_2 = pptx_hex(THEME_INK_2)
+MUTED = pptx_hex(THEME_MUTED)
+RULE = pptx_hex(THEME_RULE)
+PAPER = pptx_hex(THEME_PAPER)
+WASH = pptx_hex(THEME_WASH)
+AMBER = pptx_hex(THEME_AMBER)
+CORAL = pptx_hex(THEME_CORAL)
+SLATE = pptx_hex(THEME_SLATE)
+SERIES = tuple(pptx_hex(color) for color in THEME_SERIES)
+PIE = tuple(pptx_hex(color) for color in THEME_PIE)
+SLIDE_WIDTH_IN = PPTX_SLIDE_WIDTH_IN
+SLIDE_HEIGHT_IN = PPTX_SLIDE_HEIGHT_IN
 TABLE_ROWS_PER_SLIDE = 12
 ALL_SOURCE_TAGS = re.compile(r"(?<![A-Z0-9])S(\d+)")
 PLACEHOLDERS = (
@@ -110,6 +142,38 @@ def _number(value: JsonValue | object, default: float = 0.0) -> float:
     return default
 
 
+def _axis_number_format(
+    maximum: float,
+    *,
+    decimals: int = 1,
+    currency: str = "",
+    value_format: str = "",
+    suffix: str = "",
+) -> str:
+    """Return a compact PowerPoint axis format matching the PDF renderer."""
+    prefix = {
+        "USD": "$",
+        "EUR": "€",
+        "GBP": "£",
+        "JPY": "¥",
+    }.get(currency.upper(), f"{currency} " if currency else "")
+    if value_format != "currency":
+        prefix = ""
+    scale = ""
+    marker = ""
+    absolute = abs(maximum)
+    if absolute >= 1_000_000_000:
+        scale, marker = ",,,", "B"
+    elif absolute >= 1_000_000:
+        scale, marker = ",,", "M"
+    elif absolute >= 1_000:
+        scale, marker = ",", "K"
+    precision = 0 if marker and absolute / (1_000 ** len(scale)) >= 100 else decimals
+    zeroes = "0" if precision <= 0 else "0." + ("0" * precision)
+    literal_suffix = f'"{marker}{suffix}"' if marker or suffix else ""
+    return f'{prefix}{zeroes}{scale}{literal_suffix}'
+
+
 def _plain(value: JsonValue | object) -> str:
     text = _text(value)
     text = re.sub(r"\*\*(.+?)\*\*", r"\1", text)
@@ -143,47 +207,8 @@ def _tone_color(tone: str) -> str:
 
 def _status_color(status: str) -> str:
     normalized = status.lower().replace("_", " ")
-    if normalized in {
-        "available",
-        "passed",
-        "aligned",
-        "compliant",
-        "met",
-        "satisfactory",
-        "ready",
-        "consistent",
-        "corroborated",
-        "complete",
-        "yes",
-        "resolved",
-    }:
-        return LIME
-    if normalized in {
-        "watch",
-        "warning",
-        "degraded",
-        "partial",
-        "medium",
-        "advisory",
-        "needs review",
-        "partially met",
-        "changed",
-        "stale",
-    }:
-        return AMBER
-    if normalized in {
-        "bad",
-        "high",
-        "failed",
-        "missing",
-        "breach",
-        "not met",
-        "elevated",
-        "contradicted",
-        "not ready",
-    }:
-        return CORAL
-    return SLATE
+    color = THEME_STATUS_COLOR.get(normalized)
+    return pptx_hex(color) if color else SLATE
 
 
 def _collect_strings(value: JsonValue) -> list[str]:
@@ -312,10 +337,9 @@ def _split_table_block(block: JsonObject) -> list[JsonObject]:
     block_type = _text(block.get("type"))
     if block_type == "chart":
         chart = _object(block.get("chart"))
-        hint = _object(chart.get("render_hint"))
         if (
             _text(chart.get("status")) == "ok"
-            and _text(hint.get("block"), "table") == "table"
+            and effective_chart_mode(chart) == "table"
             and len(_array(chart.get("rows"))) > TABLE_ROWS_PER_SLIDE
         ):
             rows = _array(chart.get("rows"))
@@ -441,7 +465,12 @@ def _infer_layout(section: JsonObject, blocks: list[JsonObject]) -> str:
 class PptxRenderer:
     """Render one validated report object to an editable PowerPoint deck."""
 
-    def __init__(self, report: JsonObject, template_path: Path | None = None) -> None:
+    def __init__(
+        self,
+        report: JsonObject,
+        template_path: Path | None = None,
+        branding: JsonObject | None = None,
+    ) -> None:
         try:
             from pptx import Presentation
             from pptx.util import Inches
@@ -451,6 +480,9 @@ class PptxRenderer:
             ) from error
         self._pptx: Any = __import__("pptx")
         if template_path and template_path.suffix.casefold() == ".potx":
+            theme_errors = validate_potx_theme(template_path)
+            if theme_errors:
+                raise RenderValidationError(theme_errors)
             source = BytesIO(template_path.read_bytes())
             converted = BytesIO()
             with zipfile.ZipFile(source, "r") as archive, zipfile.ZipFile(
@@ -473,8 +505,12 @@ class PptxRenderer:
         self._presentation.slide_width = Inches(SLIDE_WIDTH_IN)
         self._presentation.slide_height = Inches(SLIDE_HEIGHT_IN)
         self._blank_layout: Any = self._presentation.slide_layouts[6]
-        self._report = report
-        self._meta = _object(report.get("meta"))
+        try:
+            self._report = cast(JsonObject, prepare_report_for_render(report))
+        except LayoutPolicyError as error:
+            raise RenderValidationError(error.errors) from error
+        self._meta = _object(self._report.get("meta"))
+        self._branding = branding or {}
         self._notes: dict[int, list[str]] = {}
         self._layout_errors: list[str] = []
         self._slide_number = 0
@@ -493,16 +529,39 @@ class PptxRenderer:
                 [_object(value) for value in _array(self._report.get("slides"))]
             )
         self._write_notes()
+        self._apply_run_fonts()
         errors = self._validate_presentation()
         if errors:
             raise RenderValidationError(errors)
         self._presentation.core_properties.title = _text(self._meta.get("title"))
-        self._presentation.core_properties.author = "GradientCIO"
+        self._presentation.core_properties.author = (
+            _text(self._branding.get("client_name")) or "GradientCIO"
+        )
         self._presentation.core_properties.subject = _text(
             self._meta.get("header_label"), "Gradient report"
         )
+        self._presentation.core_properties.keywords = (
+            f"Gradient report theme {THEME_VERSION}"
+        )
         output_path.parent.mkdir(parents=True, exist_ok=True)
         self._presentation.save(str(output_path))
+
+    def _apply_run_fonts(self) -> None:
+        """Name the licensed report font on every generated text run."""
+        def apply_frame(frame: Any) -> None:
+            for paragraph in frame.paragraphs:
+                paragraph.font.name = FONT_FAMILY
+                for run in paragraph.runs:
+                    run.font.name = FONT_FAMILY
+
+        for slide in self._presentation.slides:
+            for shape in slide.shapes:
+                if getattr(shape, "has_text_frame", False):
+                    apply_frame(shape.text_frame)
+                if getattr(shape, "has_table", False):
+                    for row in shape.table.rows:
+                        for cell in row.cells:
+                            apply_frame(cell.text_frame)
 
     def _new_slide(self) -> Any:
         slide = self._presentation.slides.add_slide(self._blank_layout)
@@ -513,9 +572,41 @@ class PptxRenderer:
         slide = self._new_slide()
         self._shape(slide, 0, 0, SLIDE_WIDTH_IN, SLIDE_HEIGHT_IN, INK, INK)
         self._shape(slide, 10.25, 0.18, 2.75, 2.75, PANEL, PANEL, "oval")
-        self._text_box(
-            slide, 0.75, 0.5, 3.0, 0.35, "GradientCIO", 12, PAPER, bold=True
-        )
+        client_name = _text(self._branding.get("client_name"))
+        logo = _text(self._branding.get("client_logo"))
+        if logo and Path(logo).suffix.casefold() in {".png", ".jpg", ".jpeg"}:
+            from pptx.util import Inches
+
+            slide.shapes.add_picture(
+                logo,
+                Inches(0.75),
+                Inches(0.45),
+                height=Inches(0.42),
+            )
+        else:
+            self._text_box(
+                slide,
+                0.75,
+                0.5,
+                5.2,
+                0.35,
+                client_name or "GradientCIO",
+                12,
+                PAPER,
+                bold=True,
+            )
+        if client_name and bool(self._branding.get("powered_by", True)):
+            self._text_box(
+                slide,
+                9.5,
+                0.54,
+                3.1,
+                0.25,
+                "Powered by GradientCIO",
+                7,
+                MUTED,
+                align="right",
+            )
         self._text_box(
             slide,
             0.75,
@@ -552,12 +643,76 @@ class PptxRenderer:
             y = 5.0 + row * 0.72
             self._text_box(slide, x, y, 3.35, 0.2, _text(fact[0]).upper(), 7, MUTED, bold=True)
             self._text_box(slide, x, y + 0.22, 3.35, 0.35, _text(fact[1]), 10, PAPER, bold=True)
+        signal = _object(self._meta.get("signal"))
+        if signal:
+            signal_level = _text(signal.get("level"), "info")
+            signal_label = _text(
+                signal.get("label")
+                or (
+                    THEME_SIGNAL[signal_level][0]
+                    if signal_level in THEME_SIGNAL
+                    else signal_level
+                ),
+                "Not assessed",
+            )
+            signal_color = (
+                pptx_hex(THEME_SIGNAL[signal_level][1])
+                if signal_level in THEME_SIGNAL
+                else _tone_color(signal_level)
+            )
+            self._shape(slide, 0.75, 6.38, 3.35, 0.42, signal_color, signal_color)
+            self._text_box(
+                slide,
+                0.9,
+                6.49,
+                3.05,
+                0.18,
+                signal_label,
+                8,
+                INK,
+                bold=True,
+            )
+        completeness = _object(self._meta.get("completeness"))
+        if completeness:
+            used = int(_number(completeness.get("used")))
+            expected = int(_number(completeness.get("expected")))
+            meter_label = _text(
+                self._meta.get("meter_title"),
+                "Evidence completeness",
+            )
+            self._text_box(
+                slide,
+                4.35,
+                6.37,
+                3.4,
+                0.18,
+                meter_label.upper(),
+                6.5,
+                MUTED,
+                bold=True,
+            )
+            self._text_box(
+                slide,
+                4.35,
+                6.56,
+                3.4,
+                0.22,
+                f"{used} of {expected} · {_text(completeness.get('state')).title()}",
+                8,
+                PAPER,
+                bold=True,
+            )
         confidentiality = _text(
             self._meta.get("confidentiality"),
-            "Confidential — prepared for internal investment use",
+            default_confidentiality(self._branding),
         )
         self._text_box(slide, 0.75, 7.08, 8.8, 0.2, confidentiality, 7, MUTED)
-        self._text_box(slide, 10.8, 7.08, 1.8, 0.2, "GradientCIO.com", 7, MUTED, align="right")
+        footer_brand = (
+            f"Powered by {BRAND_NAME}"
+            if client_name and bool(self._branding.get("powered_by", True))
+            else ("" if client_name else BRAND_NAME)
+        )
+        self._text_box(slide, 9.6, 7.08, 3.0, 0.2, footer_brand, 7, MUTED, align="right")
 
     def _render_sections(self, sections: list[JsonObject]) -> None:
         executive = _object(self._report.get("executive"))
@@ -669,11 +824,32 @@ class PptxRenderer:
         sources = "Sources: " + " · ".join(tags) if tags else "Sources: none cited"
         confidentiality = _text(
             self._meta.get("confidentiality"),
-            "Confidential — internal investment use",
+            default_confidentiality(self._branding),
         )
+        client_name = _text(self._branding.get("client_name"))
+        powered = (
+            f" · Powered by {BRAND_NAME}"
+            if client_name and bool(self._branding.get("powered_by", True))
+            else ""
+        )
+        data_as_of = _text(self._meta.get("data_as_of"))
+        footer_identity = confidentiality
+        if data_as_of:
+            footer_identity += f" · Data as of {data_as_of}"
+        footer_identity += powered
         self._shape(slide, 0.7, 7.05, 11.93, 0.01, RULE, RULE)
         self._text_box(slide, 0.7, 7.11, 4.7, 0.16, sources, 6.5, MUTED)
-        self._text_box(slide, 4.9, 7.11, 5.8, 0.16, confidentiality, 6.5, MUTED, align="center")
+        self._text_box(
+            slide,
+            4.9,
+            7.11,
+            5.8,
+            0.16,
+            footer_identity,
+            6.5,
+            MUTED,
+            align="center",
+        )
         self._text_box(slide, 11.25, 7.11, 1.38, 0.16, str(self._slide_number), 6.5, MUTED, align="right")
 
     def _render_two_up_slide(
@@ -1045,6 +1221,21 @@ class PptxRenderer:
             chart.legend.position = XL_LEGEND_POSITION.BOTTOM
         chart.value_axis.has_major_gridlines = True
         chart.value_axis.tick_labels.font.size = Pt(8)
+        values = [
+            _number(point[1])
+            for item in series
+            for value in _array(item.get("points"))
+            if len(point := _array(value)) >= 2
+        ]
+        if values:
+            chart.value_axis.tick_labels.number_format = _axis_number_format(
+                max(values, key=abs),
+                decimals=int(_number(block.get("decimals"), 1)),
+                currency=_text(block.get("currency")),
+                value_format=_text(block.get("y_format")),
+                suffix=_text(block.get("y_suffix")),
+            )
+            chart.value_axis.tick_labels.number_format_is_linked = False
         chart.category_axis.tick_labels.font.size = Pt(7)
         for index, chart_series in enumerate(chart.series):
             chart_series.format.line.color.rgb = self._rgb(SERIES[index % len(SERIES)])
@@ -1447,7 +1638,7 @@ class PptxRenderer:
             )
             return
         hint = _object(chart.get("render_hint"))
-        kind = _text(hint.get("block"), "table")
+        kind = effective_chart_mode(chart)
         columns = [_object(value) for value in _array(chart.get("columns"))]
         keys = [_text(column.get("key")) for column in columns]
         rows = [_array(value) for value in _array(chart.get("rows"))]
@@ -1472,7 +1663,28 @@ class PptxRenderer:
                 )
             self._line(
                 slide,
-                {"type": "line", "title": chart.get("title"), "series": series},
+                {
+                    "type": "line",
+                    "title": chart.get("title"),
+                    "series": series,
+                    "y_suffix": "%" if (
+                        y_keys
+                        and y_keys[0] in keys
+                        and _text(columns[keys.index(y_keys[0])].get("format"))
+                        == "percentage"
+                    ) else "",
+                    "decimals": (
+                        columns[keys.index(y_keys[0])].get("decimals")
+                        if y_keys and y_keys[0] in keys
+                        else 1
+                    ),
+                    "y_format": (
+                        columns[keys.index(y_keys[0])].get("format")
+                        if y_keys and y_keys[0] in keys
+                        else ""
+                    ),
+                    "currency": chart.get("currency"),
+                },
                 x,
                 y,
                 width,
@@ -1527,6 +1739,23 @@ class PptxRenderer:
                     for index, column in enumerate(columns)
                 ]
             )
+        note = ""
+        if chart.get("_appendix_reference"):
+            note = (
+                f"Showing {len(formatted_rows)} of "
+                f"{int(_number(chart.get('_preview_total')))} returned rows; "
+                f"all returned rows are in "
+                f"{_text(chart.get('_appendix_reference'))}"
+            )
+            if chart.get("_source_truncated"):
+                note += ". Connector output was truncated at source"
+        elif chart.get("_chart_data_appendix") and chart.get("truncated"):
+            note = (
+                "Connector output was truncated at source; this appendix contains "
+                "all returned rows, not the complete dataset"
+            )
+        elif chart.get("truncated"):
+            note = "Connector output was truncated at source"
         self._table(
             slide,
             {
@@ -1534,7 +1763,7 @@ class PptxRenderer:
                 "title": chart.get("title"),
                 "columns": [column.get("title") or column.get("key") or "" for column in columns],
                 "rows": formatted_rows[:TABLE_ROWS_PER_SLIDE],
-                "note": "Truncated output" if chart.get("truncated") else "",
+                "note": note,
             },
             x,
             y,
@@ -1685,7 +1914,7 @@ class PptxRenderer:
         for index, value in enumerate(values):
             paragraph = frame.paragraphs[0] if index == 0 else frame.add_paragraph()
             paragraph.text = value
-            paragraph.font.name = "Inter"
+            paragraph.font.name = FONT_FAMILY
             paragraph.font.size = Pt(size)
             paragraph.font.bold = bold
             paragraph.font.color.rgb = self._rgb(color)
@@ -1722,7 +1951,7 @@ class PptxRenderer:
         frame.clear()
         paragraph = frame.paragraphs[0]
         paragraph.text = text
-        paragraph.font.name = "Inter"
+        paragraph.font.name = FONT_FAMILY
         paragraph.font.size = Pt(size)
         paragraph.font.bold = bold
         paragraph.font.color.rgb = self._rgb(color)
@@ -1752,6 +1981,7 @@ def render_report(
     report: JsonObject,
     output_path: str | Path,
     template_path: str | Path | None = None,
+    branding: JsonObject | None = None,
 ) -> None:
     """Render one report object to an editable PowerPoint presentation."""
     resolved_template = Path(template_path) if template_path is not None else None
@@ -1768,7 +1998,7 @@ def render_report(
             ),
             None,
         )
-    renderer = PptxRenderer(report, resolved_template)
+    renderer = PptxRenderer(report, resolved_template, branding)
     renderer.render(Path(output_path))
 
 
