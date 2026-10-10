@@ -1,6 +1,6 @@
 ---
 name: gradient-global-public-equity-portfolio-construction
-description: "Constructs a global public-equity portfolio from an existing GradientCIO portfolio and produces a standalone investment-committee report with a recommendation, benchmark framework, current and target regional and manager structure, performance and attribution, factor and concentration charts, forward assumptions, implementation steps, risks and approvals. Use for global equity sleeves, active-passive design, regional or factor tilts, manager lineups, concentration reviews or public-equity rebalances."
+description: "Build a global public-equity allocation report covering regions, managers, factors, concentration, and benchmarks. Use for global equity, active/passive, factor tilt, or manager lineup. For a committee vote use gradient-ic-memo."
 ---
 
 # Global Public Equity Portfolio Construction
@@ -49,7 +49,8 @@ Required evidence:
 - portfolio record, allocation tree, public-equity-filtered exposure pages and policy result;
 - historical returns and governed attribution, preserving typed unavailable states;
 - benchmark identity and return series when returned;
-- `get_chart_data` availability, then the `allocations` pack;
+- `get_chart_data` availability, then the `allocations` pack, or up to four targeted `chart_ids` (never both
+  selectors); `max_rows` defaults to 40 and is capped at 100; disclose `truncated: true`;
 - active assumption set and capital-market assumptions.
 
 Portfolio 13F look-through, manager diligence, CMA consensus, issuer research and selected-series Strategy

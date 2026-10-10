@@ -1,6 +1,6 @@
 ---
 name: gradient-gips-manager-diligence
-description: "This skill should be used when the user asks to \"check a manager's GIPS compliance\", \"verify GIPS claims\", \"review GIPS in the DDQ\", \"is this manager GIPS verified\", \"GIPS check for the investment memo\", \"performance integrity review\", or when operational or investment due diligence on a manager or fund needs a GIPS assessment. It cross-checks the manager's GIPS claim, verification, GIPS Report and marketing figures, using GradientCIO ODD and DDQ data when available, and produces a findings checklist plus a section ready to insert into an investment memo. Delivers a branded review in the Gradient house style.\n"
+description: "Produce a GIPS manager-diligence report. Use for verify GIPS claim, manager GIPS review, performance integrity, or GIPS DDQ. For a report or presentation line review use gradient-gips-report-review."
 metadata:
   version: "1.2.0"
 ---

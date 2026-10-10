@@ -383,7 +383,7 @@
               }
             ]
           ],
-          "note": "S4 validation: advisory 'empty primary list has no explicit reason' although the response states absence_reason no_open_findings (known issue)."
+          "note": "S4 validation: advisory 'empty primary list has no explicit reason' although the response states absence_reason no_open_findings."
         },
         {
           "type": "bullets",

@@ -31,7 +31,8 @@ or report date; the default probe therefore exercises the current latest-publica
 sample_portfolio, chart_catalog. The sample probe verifies that `list_portfolios`
 returns Gradient's canonical example first.
 
-**Full read set (55 reads including standard):** standard plus capabilities_summary, manager_diligence_brief,
+**Full read set (57 reads including standard):** standard plus capabilities_summary,
+fund_diligence_monitoring, fund_diligence_review, manager_diligence_brief,
 attention, findings, events, events_roster, entity_facts, conditions, credit_spreads, gradient_signal, regime_state,
 cma_baseline, cma_consensus, cma_consensus_allocation, watchlist,
 portfolio_tree, portfolio_exposure, portfolio_policy, portfolio_ownership, portfolio_returns,
@@ -77,7 +78,7 @@ The first call persists fictional inline text as a ready subject-bound document 
 save call is still a dry-run preview and must return `outcome: "preview"`, `dry_run: true` and `committed:
 false`.
 
-The complete matrix is 68 calls. Run the standard or full read set without write confirmation. Run the
+The complete matrix is 70 calls. Run the standard or full read set without write confirmation. Run the
 writes set only as previews. Before the DDQ save-preview set, tell the user that its reconciliation call
 persists a test document and immutable test workpaper.
 
@@ -123,10 +124,3 @@ Results:
 - Compact envelopes omit passed checks, `not_applicable` checks and advisory `not_run` checks. Blocking
   `not_run` checks remain visible. This is intentional; preserve the `not_applicable`, `not_run` and
   `checks_omitted` counts, and request a full envelope only when auditing validation detail.
-
-## Supported contract boundaries
-
-| Tool / view | Classification | Ticket, owner, review | Symptom and current workaround | Removal criterion |
-|---|---|---|---|---|
-| DDQ transcribed claim dates | Non-blocking comparison-date limitation | P-23 · Gradient MCP · pending | Reconciliation can choose an unsuitable filing when a transcribed claim omits `asserted_as_of`. Always set `asserted_as_of` from the DDQ's stated date; if absent, ask the user for the applicable date before reconciliation. | P-23 ships and an undated transcribed-claim probe selects and reports the intended comparison basis twice. |
-| Non-fixed-income exposure rows | Non-blocking field-population defect | P-25 · Gradient MCP · pending | `fixed_income_metrics` may be populated on non-fixed-income exposure rows. Do not quote those values. Use complete `portfolio_totals` and the `Fixed Income` classification aggregate for duration, spread duration and yield. | P-25 ships and mixed-classification probes return fixed-income metrics only on the governed portfolio total and Fixed Income aggregate row. |

@@ -1,6 +1,6 @@
 ---
 name: gradient-gips-asset-owner-review
-description: "This skill should be used when the user asks to \"review a GIPS Asset Owner Report\", \"check a pension fund's GIPS compliance\", \"is this endowment's board report GIPS compliant\", \"check total fund performance reporting against GIPS\", or wants a pension fund, endowment, foundation, sovereign wealth fund or similar asset owner's total fund or composite performance report checked against the 2020 GIPS standards for asset owners. Delivers a branded review in the Gradient house style.\n"
+description: "Produce a GIPS Asset Owner Report review for pensions, endowments, foundations, and sovereign funds. Use for asset owner GIPS, total fund report, or board performance report. For firm reports use gradient-gips-report-review."
 metadata:
   version: "1.2.0"
 ---

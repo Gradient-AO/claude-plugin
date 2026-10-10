@@ -8,14 +8,18 @@ pass this portfolio ID to a Strategy Lab tool or treat a Strategy Lab result as 
 2. Call `get_chart_data` without a portfolio to browse the two supported packs and stable chart IDs:
    `allocations` and `commitments`.
 3. Add `portfolio_id` without a chart selector to check availability.
-4. Request one `analysis_type` pack, or at most four explicit `chart_ids`, for data.
+4. Request one `analysis_type` pack, or at most four explicit `chart_ids`, for data. Never send both
+   selectors in the same call.
+5. `max_rows` defaults to 40 and cannot exceed 100. Use the default unless a report needs more returned
+   table rows; when it does, request up to 100 rather than paging or reconstructing chart rows locally.
 
 When the loaded connector schema includes `organization_id`, pass the selected organization for catalog,
 availability, and data calls.
 
 Use one pack per report section. Skip charts listed as unavailable and state their returned reason in the
 coverage notes. Preserve `basis`, portfolio currency, row truncation, and `context.fingerprint`; cite the
-fingerprint in the report source appendix.
+fingerprint in the report source appendix. If a returned chart has `truncated: true`, disclose that the table
+shows only the returned rows and do not present it as complete.
 
 `expected-statistics` is not a supported `get_chart_data.analysis_type`. Use governed Portfolio Analytics
 policy / CMA evidence for saved-portfolio forward assumptions, or

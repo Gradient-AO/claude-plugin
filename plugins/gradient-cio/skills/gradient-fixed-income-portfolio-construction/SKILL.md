@@ -1,6 +1,6 @@
 ---
 name: gradient-fixed-income-portfolio-construction
-description: "Constructs a fixed-income portfolio from an existing GradientCIO portfolio and produces a standalone investment-committee report with a recommendation, benchmark framework, current and target segment structure, performance and attribution, rates and credit context, forward assumptions, liquidity, scenarios, implementation steps, risks and approvals. Use for bond allocations, core or core-plus mandates, credit sleeves, duration positioning, liability-aware portfolios, active-passive structure or fixed-income rebalances."
+description: "Build a fixed-income allocation report covering bonds, duration, credit, benchmarks, liquidity, and scenarios. Use for bond portfolio, core/core-plus, duration, or credit sleeve. For a cross-portfolio decision use gradient-ic-memo."
 ---
 
 # Fixed Income Portfolio Construction
@@ -49,7 +49,8 @@ Required evidence:
   `Fixed Income` or snake_case alias `fixed_income`, and policy result;
 - historical returns and governed attribution, preserving typed unavailable states;
 - benchmark identity and return series when returned;
-- `get_chart_data` availability, then the `allocations` pack;
+- `get_chart_data` availability, then the `allocations` pack, or up to four targeted `chart_ids` (never both
+  selectors); `max_rows` defaults to 40 and is capped at 100; disclose `truncated: true`;
 - active assumption set, capital-market assumptions and `get_macro_conditions` with exactly
   `{"view": "credit_spreads"}`.
 
@@ -63,10 +64,10 @@ CMA consensus, The Read and selected-series Strategy Lab diagnostics are optiona
 - Historical attribution comes only from `get_portfolio_attribution`. Strategy Lab relative return is not
   attribution.
 - Separate observed historical risk, governed policy status and forward assumptions.
-- Use the Fixed Income classification aggregate for sleeve duration, spread duration and yield;
-  `portfolio_totals.fixed_income_metrics` is null for a mixed portfolio. Quote `fixed_income_metrics` only
-  for Fixed Income and Cash rows. Require `weighting_basis: current_holding_nav_base`, preserve coverage and
-  methodology, and never recompute or equal-weight rows. Treat spread duration zero as a valid observation.
+- Use governed `fixed_income_metrics` from complete `portfolio_totals` or the Fixed Income classification
+  aggregate for sleeve duration, spread duration and yield. Require `weighting_basis:
+  current_holding_nav_base`, preserve coverage and methodology, and never recompute or equal-weight rows.
+  Treat spread duration zero as a valid observation.
 - Never relabel yield to maturity as yield to worst. Report yield to worst, OAS, convexity, quality or
   key-rate exposure only when another Gradient result or a cited user document directly supplies it.
 - Present rates and credit indicators as context, not forecasts. Do not claim that yields or spreads will

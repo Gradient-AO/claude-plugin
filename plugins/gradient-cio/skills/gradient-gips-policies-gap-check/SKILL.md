@@ -1,6 +1,6 @@
 ---
 name: gradient-gips-policies-gap-check
-description: "This skill should be used when the user asks to \"review GIPS policies and procedures\", \"gap check our GIPS manual\", \"what's missing from this GIPS P&P\", \"review a manager's GIPS policies\", or wants a firm's or asset owner's GIPS policies and procedures document compared against the 2020 GIPS standards to find missing or weak policies. Delivers a branded review in the Gradient house style.\n"
+description: "Produce a GIPS policies-and-procedures gap report. Use for review our GIPS manual, policy gap check, missing GIPS policies, or asset-owner P&P. For report disclosures use gradient-gips-report-review."
 metadata:
   version: "1.2.0"
 ---

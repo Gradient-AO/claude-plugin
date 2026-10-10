@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-09",
+  "version": "2026-10-10",
   "minimum_connector_contract": {
     "minimum_service_version": "0.9.0",
     "compatibility_epoch": 3,
@@ -14,6 +14,8 @@
       "get_cma_consensus_check",
       "get_diligence_roster_funds",
       "get_firm_entity_facts",
+      "get_fund_diligence_monitoring",
+      "get_fund_diligence_review",
       "get_gradient_capabilities",
       "get_manager_diligence_brief",
       "get_manager_odd_profile",
@@ -98,6 +100,22 @@
         "status",
         "subject_key",
         "facts"
+      ],
+      "get_fund_diligence_monitoring": [
+        "status",
+        "monitoring",
+        "item_count"
+      ],
+      "get_fund_diligence_review": [
+        "status",
+        "fund_id",
+        "review",
+        "history.events",
+        "history.pagination.limit",
+        "history.pagination.next_cursor",
+        "history.pagination.has_more",
+        "history.pagination.total_count",
+        "history.pagination.truncated"
       ],
       "get_gradient_capabilities": [
         "version",
@@ -308,6 +326,8 @@
       "orgs",
       "capabilities_summary",
       "roster",
+      "fund_diligence_monitoring",
+      "fund_diligence_review",
       "odd_profile",
       "the_read",
       "manager_diligence_brief",
@@ -405,6 +425,47 @@
         "funds",
         "capacity.effective_limit",
         "capacity.used"
+      ]
+    },
+    {
+      "id": "fund_diligence_monitoring",
+      "set": "full",
+      "tool": "get_fund_diligence_monitoring",
+      "depends_on": [
+        "roster"
+      ],
+      "args": {
+        "fund_ids": [
+          "<roster:funds[0].fund_id>"
+        ]
+      },
+      "required": [
+        "status",
+        "monitoring",
+        "item_count"
+      ]
+    },
+    {
+      "id": "fund_diligence_review",
+      "set": "full",
+      "tool": "get_fund_diligence_review",
+      "depends_on": [
+        "roster"
+      ],
+      "args": {
+        "fund_id": "<roster:funds[0].fund_id>",
+        "history_limit": 10
+      },
+      "required": [
+        "status",
+        "fund_id",
+        "review",
+        "history.events",
+        "history.pagination.limit",
+        "history.pagination.next_cursor",
+        "history.pagination.has_more",
+        "history.pagination.total_count",
+        "history.pagination.truncated"
       ]
     },
     {

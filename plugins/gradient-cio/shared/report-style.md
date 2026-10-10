@@ -148,8 +148,7 @@ write a branding file in the working directory (logo path relative to it) and pa
    version, basis, units, coverage and unavailable reasons; do not recompute report values locally.
 3. File name base: `<Subject> - <Report type> <YYYY-MM-DD>` with `.pdf`, `.pptx`, or both.
    Save to `/mnt/user-data/outputs/`; if a folder is connected, also write it there.
-4. If a GradientCIO call fails, preserve its error code and request ID, then consult the supported contract
-   boundaries in gradient-setup (`references/contract-checks.md`) before deciding whether a documented
-   limitation applies.
+4. If a GradientCIO call fails, preserve its error code and request ID in coverage, use any independent
+   evidence that remains available, and do not infer a successful, empty or zero result.
 5. In chat: a three-line summary (headline assessment, top issue, number of follow-ups or open items) and the
    file. Do not repeat the report in chat. Offer an editable Claude Doc copy when the user may need to edit it.

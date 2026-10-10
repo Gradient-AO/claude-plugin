@@ -1,153 +1,81 @@
 ---
 name: gradient-manager-monitor
-description: "Weekly manager monitoring digest: what changed across the client's Diligence Roster (new Form ADV filings, monitor alerts, changes since last review, red flags, open findings, firm and fund events, reviews coming due), delivered as a branded report; can be set up as a recurring scheduled task."
+description: "Create a branded manager-roster digest. Triggers: 'weekly monitoring', 'what changed across managers', 'roster digest', 'any alerts'. Hands flagged subjects to ODD or DDQ reconciliation and can schedule read-only runs."
 ---
 
 # Manager monitoring digest
 
-Use when the user asks "what changed across my managers", "weekly monitoring", "roster digest", "any alerts
-this week", "monitoring report", "what needs my attention", "watchlist update", or wants this run every week.
+Use for a 7-day or user-specified organization-wide diligence-roster digest.
+Deliver **"<Org> - Manager Monitoring Digest <YYYY-MM-DD>"**, normally 3–5
+PDF pages, with attention items first.
 
-The deliverable is a branded report with base name
-**"<Org> - Manager Monitoring Digest <YYYY-MM-DD>"**; its PDF form is normally 3–5 pages, with one page that
-says what needs attention, then the detail. The reader is a busy CIO or ODD analyst: lead with what to do.
+## Non-negotiable rules
 
-Rules that matter here:
-- Absence is not evidence. "No alerts" means no alerts in Gradient's processed window — state the window and
-  the source as-of. An empty events list caused by `event_publication_not_ready` is "event feed not yet
-  available", never "no events".
-- Form ADV is adviser-reported. A new ADV filing is a change to review, not a finding.
-- Do not create findings, log reviews or change monitoring settings unless the user asks.
+- No alerts means none in the processed window; always state window and source
+  as-of. Empty/unpublished evidence is typed unavailable, never none or zero.
+- Form ADV is adviser-reported. A new filing is a review trigger, not a
+  finding.
+- Only supported, evidence-triggered actions may appear. No hire, fire,
+  redemption, termination, or allocation recommendation.
+- Do not create findings, log reviews, change monitoring, or schedule work
+  unless the user explicitly asks. Scheduled runs never write.
 
-## 1. Scope
+## 1. Scope and collect
 
-1. Organization: `list_organizations`; ask if more than one and none named.
-2. Window: default the last 7 days ending today; use the user's window if given ("since my last review",
-   "this month"). For a scheduled run, use 7 days.
-3. Roster: `get_diligence_roster_funds` → subjects (fund, parent firm, last review, next review due, status).
-   If the roster is empty, say so and offer to add funds (`update_diligence_roster` — only on request).
+Resolve organization, date window (default last seven days), and roster. Ask
+only when multiple organizations remain. An empty roster is reported; roster
+changes are merely offered.
 
-## 2. Collect
+Before calls read
+`references/monitoring-contract.md#collection-and-incremental-state`. Collect
+governed fund monitoring and review state, attention, changes, red flags,
+alert/coverage evidence, open findings, events, and watchlist changes. Save
+results and preserve source dates, validation, digests, publication state,
+reasons, and IDs.
 
-Call these for the organization (parallel where possible; save each result):
+For `subject_resolution_unavailable`, write
+`Not available — subject_resolution_unavailable`, append the returned reason,
+and continue with independent evidence. Local incremental cursor state is
+allowed as specified in the reference; it is not a Gradient write.
 
-| Evidence | Call | Use |
-|---|---|---|
-| Attention queue | `get_manager_diligence_attention_queue` (default view) | Primary reason and severity per subject |
-| Changes since review | same tool, `view: changes_since_review` | Each change with date, source and evidence ID |
-| Red flags | same tool, `view: red_flags` | Top concerns and trigger rows |
-| Monitor alerts | `get_manager_monitor_evidence` `mode: alerts` (and `since_cursor` if a saved cursor exists) | Tiered ADV change alerts by category |
-| Monitor coverage | `get_manager_monitor_evidence` `mode: coverage` | ADV freshness, processed runs, missing CRDs |
-| Open findings | `get_manager_diligence_findings` `view: open` per parent firm (and fund) | Open items, severity, due dates |
-| Events | `get_firm_fund_events` with `firm_id` per parent firm | Fundraising, leadership, regulatory events |
-| Watchlist | `get_research_watchlist_changes` | Changes on the caller's research watchlist |
+## 2. Assess
 
-Use `firm_id` / `fund_id` from the roster. If a call fails, record it in coverage and keep going.
+Read `references/monitoring-contract.md#assessment`. Apply its deterministic
+High/Medium/Low rules, digest signal, completeness denominator, and exact
+allowed action list. Every recommended action cites the triggering `[S#]`.
 
-**Incremental runs.** `get_manager_monitor_evidence` returns `next_since_cursor`. If a folder is connected,
-read and write `gradient-monitor-state.json` there (`{"org_id", "since_cursor", "last_run"}`) so the next run
-returns only newer alerts. Without a folder, filter alerts by date to the window.
+## 3. Build and deliver
 
-## 3. Assess
+Read `references/monitoring-contract.md#report-and-delivery`, then
+`references/report-style.md` and `references/writing-standards.md` only while
+drafting/rendering. Keep the fixed five-section sequence, required tiles,
+visual-first analytical sections, coverage, method, and disclaimer.
 
-Per subject, combine: attention reasons, changes in the window, alerts (tier and category), red-flag concerns,
-open findings (with overdue ones), events, and review due within 30 days or overdue.
+Validate and render the same report source:
 
-Severity per subject:
-- **High**: tier-1 alert, new red-flag concern, overdue high finding, or review overdue.
-- **Medium**: material change since last review (e.g. new ADV filing), tier-2 alert, open medium finding,
-  review due within 30 days.
-- **Low / info**: tier-3 alert, events, watchlist changes, nothing new.
-
-Digest signal (`meta.signal.level`): `clear` (nothing above low) · `review` (any medium) · `elevated` (any high).
-`completeness`: subjects with `completeness: complete` in the attention queue / roster subjects;
-`meter_title` "Subjects fully covered".
-
-Recommended action per subject — pick one: "No action", "Review new ADV filing", "Run ODD refresh"
-(gradient-odd-report), "Reconcile latest DDQ" (gradient-ddq-reconcile), "Close or update finding",
-"Schedule review". Link the action to the evidence that triggered it.
-
-## 4. Build the report
-
-JSON block mode (`references/report-style.md`). Meta: `eyebrow` "Manager Monitoring Digest",
-`header_label` "Monitoring Digest", `title` the organization name, `subtitle` "Week of <start> – <end>",
-`signal_title` "This week", `cover_facts`: Roster funds, Managers, New alerts, Changes since review,
-Open findings, ADV data as of.
-
-Sections:
-
-1. **This week** (`id: executive`) — bottom line (what needs attention and why, 2–4 sentences with source tags);
-   tiles: New alerts, Changes since review, Open findings, Reviews due ≤30d. Then a `table` "Needs attention":
-   Subject, Reason, Severity (chip), Source date (align `n`), Action. Subjects with nothing new go in one line
-   below the table ("No new activity: …").
-2. **Changes and alerts** — per subject with activity: a `kv` or `table` of each change/alert (date, category,
-   summary, evidence ID), then `findings` for open findings. Skip subjects with nothing new.
-3. **Review calendar** — `table`: Subject, Last review, Next due, Status (chip: current / due soon / overdue).
-4. **Coverage and freshness** — `coverage` block: each source (attention queue, monitor alerts, ADV data,
-   findings, events, watchlist) with status and a note (window, as-of, publication state).
-5. **Appendix A — Sources and method** — tag table (tool, view, as-of, validation, payload digest), the window,
-   severity rules above, and the disclaimer.
-
-Every analytical or key-judgment callout must include an `[S#]` tag. Recommended actions are limited to the
-existing action list in section 3 and must be triggered by an item already present in the digest; every
-Needs-attention row cites `[S#]`. Do not add a hire, fire, termination, redemption or allocation
-recommendation. Add one to three `callout` blocks with `role: "analysis"` to **Changes and alerts**, stating
-the observation, monitoring implication, uncertainty, and evidence that would change the view. Title them
-`Analysis — <message>`, use the four-part structure in `../../shared/writing-standards.md`, and stay within
-60 words. Page 2 contains three to five sourced `Key judgment —` callouts with `role: "key_judgment"`.
-Use message-first kickers. Lead Changes and alerts with status `stacked`/`bars` and Review calendar with a
-dated `band`/`heat`, or typed unavailability, before the first table. Never place more than two tables
-consecutively.
-
-Validate before rendering:
-
-```
-python <this skill's directory>/scripts/validate_monitor_digest.py report.json
+```text
+python <skill>/scripts/validate_monitor_digest.py report.json
+python <skill>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Org> - Manager Monitoring Digest <date>"
 ```
 
-Fix every error and re-run until it passes. Do not render a digest that fails validation. Select PDF by
-default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select both when it
-says `both` or `board pack`. Both formats must come from the same validated `report.json`.
+PDF is default; explicit slide wording selects PPTX; `both`/`board pack`
+selects both. Inspect all requested outputs and spot-check against saved
+evidence. QA/fact-check failures block delivery. Return signal, top item,
+action-subject count, and files.
 
-```
-python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Org> - Manager Monitoring Digest <date>"
-```
+## 4. Handoffs and writes
 
-Then follow "Check and deliver" in `references/report-style.md`: inspect every requested output, fix clipping,
-overflow, orphaned headings and unreadable visuals, re-render and repeat QA, then spot-check the JSON against
-saved evidence. Delivery is blocked until QA and fact checks pass. Chat summary: signal, the top item, and
-the number of subjects needing action.
+- Material subject change or stale review → `gradient-odd-report`.
+- New manager assertion or DDQ conflict → `gradient-ddq-reconcile`.
 
-## 5. Follow-up actions (only when the user asks)
+Only when asked after delivery, read
+`references/monitoring-contract.md#follow-up-writes`. Preview every listed
+review, finding, or monitoring change with `dry_run: true`; commit only
+explicitly confirmed items with the same key and report receipts. Re-read and
+reconfirm version conflicts.
 
-After delivering the digest, offer — do not perform — the follow-ups the evidence supports, one line each:
-"Log a review for <firm>", "Mark finding <title> resolved / in review / waived", "Start (or change) ADV
-monitoring for <manager>". Each write tool previews first; never skip the preview:
+## 5. Scheduling
 
-| Action | Tool | Key arguments |
-|---|---|---|
-| Log a completed review (resets the review clock) | `log_diligence_review` | `firm_id`, `reviewed_at`, `notes` (what was reviewed, cite the digest), `evidence_limit_acknowledged: true`, `idempotency_key` |
-| Change a finding's status or assignee | `update_diligence_finding` | `finding_id`, `if_version` (from the finding), `status` or `assignee_user_id`/`due_at` (separate calls), `note`, `idempotency_key` |
-| Subscribe, update or unsubscribe ADV alerts | `update_manager_monitoring` | `action`, `crd_number` (and `firm_id`), `max_tier`, `email_enabled`, `key_person_watchlist`, `idempotency_key` |
-
-Steps for every write:
-1. Call with `dry_run: true` (the default). Show the user the preview in plain words (what changes, for whom).
-2. Only after the user explicitly confirms that specific change, repeat the identical call with `dry_run: false`
-   and the same `idempotency_key` (use `<tool>-<subject>-<YYYYMMDD>`).
-3. Report the receipt ID. `log_diligence_review` is not idempotent — never repeat a committed call.
-4. A version conflict on `update_diligence_finding` means someone changed it: re-read the finding, show the
-   current state and ask again.
-
-Batch confirmations are fine ("log reviews for these three firms") but list every item in the preview first.
-Scheduled runs never write (see below).
-
-## 6. Make it weekly (on request)
-
-If the user wants it every week, create a scheduled task (confirm day, time and time zone first; default
-Monday 07:45 in their time zone). Use this prompt, filled in:
-
-> Run the gradient-manager-monitor skill for organization <name> (<org id>) for the last 7 days. Use the
-> default PDF output, save it to <connected folder, if any> and send me the three-line summary. Do not create
-> findings, log reviews or change monitoring settings.
-
-Tell the user which approval setting the scheduled task received. Never schedule it without being asked.
+Only when the user asks for recurring monitoring, read
+`references/monitoring-contract.md#scheduling`, confirm day/time/time zone,
+create a read-only seven-day run, and report its approval setting.

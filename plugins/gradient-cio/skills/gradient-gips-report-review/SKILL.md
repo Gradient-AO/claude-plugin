@@ -1,6 +1,6 @@
 ---
 name: gradient-gips-report-review
-description: "This skill should be used when the user asks to \"review this GIPS Report\", \"check a composite presentation\", \"is this GIPS Composite Report complete\", \"check required GIPS disclosures\", \"review a pooled fund GIPS Report\", \"check this factsheet against the GIPS Advertising Guidelines\", or wants a firm's composite or pooled fund performance presentation (time- or money-weighted) or advertisement checked line by line against the 2020 GIPS standards. Delivers a branded review in the Gradient house style.\n"
+description: "Produce a line-by-line GIPS report or advertisement review. Use for review this GIPS report, composite presentation, pooled fund report, or advertising guidelines. For general requirements use gradient-gips-standards."
 metadata:
   version: "1.2.0"
 ---

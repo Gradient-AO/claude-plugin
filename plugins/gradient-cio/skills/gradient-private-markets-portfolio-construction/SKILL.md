@@ -1,6 +1,6 @@
 ---
 name: gradient-private-markets-portfolio-construction
-description: "Constructs a closed-end private-markets program from an existing GradientCIO portfolio and produces a standalone investment-committee report with a recommendation, target structure, commitments and pacing charts, liquidity analysis, manager considerations, implementation steps, risks and approvals. Use for private equity, private credit, drawdown real estate, infrastructure or natural-resources funds, pacing plans, commitment programs, vintage diversification, unfunded exposure or denominator-risk decisions."
+description: "Build a private-markets allocation report covering PE/private credit, commitments, pacing, cash flows, and liquidity. Use for private markets portfolio, commitment plan, or pacing. For a committee vote use gradient-ic-memo."
 ---
 
 # Private Markets Portfolio Construction
@@ -50,7 +50,9 @@ Required evidence:
 
 - portfolio record, allocation tree, full exposure pages and policy result;
 - historical returns and governed attribution, preserving typed unavailable states;
-- `get_chart_data` availability, then `allocations` and `commitments` one pack at a time;
+- `get_chart_data` availability, then `allocations` and `commitments` one pack at a time, or up to four
+  targeted `chart_ids` (never both selectors); `max_rows` defaults to 40 and is capped at 100; disclose
+  `truncated: true`;
 - active assumption set and baseline capital-market assumptions.
 
 Manager diligence, CMA consensus and selected-series Strategy Lab results are optional. An entitlement block

@@ -1,6 +1,6 @@
 ---
 name: gradient-real-assets-portfolio-construction
-description: "Constructs a broad real-assets portfolio from an existing GradientCIO portfolio and produces a standalone investment-committee report with a recommendation, current and target sub-segment mix, liquid-versus-drawdown structure, inflation context, forward assumptions, commitments and liquidity evidence where applicable, manager considerations, implementation steps, risks and approvals. Use for real estate, infrastructure, natural resources, commodities, inflation-linked assets or diversified real-assets rebalances."
+description: "Build a real-assets allocation report covering real estate, infrastructure, commodities, inflation linkage, and liquidity. Use for real assets portfolio, inflation hedge, or real estate mix. For a committee vote use gradient-ic-memo."
 ---
 
 # Real Assets Portfolio Construction
@@ -49,7 +49,9 @@ Required evidence:
 
 - portfolio record, allocation tree, real-assets exposure pages and policy result;
 - historical returns and governed attribution, preserving typed unavailable states;
-- `get_chart_data` availability, then `allocations`; request `commitments` only when drawdown exposures exist;
+- `get_chart_data` availability, then `allocations`; request `commitments` only when drawdown exposures exist,
+  or use up to four targeted `chart_ids` (never both selectors); `max_rows` defaults to 40 and is capped at
+  100; disclose `truncated: true`;
 - active assumption set and capital-market assumptions for returned `real_assets`, `real_estate`,
   `infrastructure` and `natural_resources` classes;
 - `commitments` charts only when the selected real-assets sleeve contains closed-end or drawdown exposures.

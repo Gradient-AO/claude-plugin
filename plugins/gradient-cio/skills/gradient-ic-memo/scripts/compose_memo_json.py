@@ -168,8 +168,9 @@ def validate_slots(section: str, blocks: list[dict[str, Any]], errors: list[str]
             )
         if not matched and not unavailable_for(blocks, title, exact=section == "6"):
             errors.append(
-                f"Section {section}: missing {block_type} slot '{title}' "
-                "or its titled Not available callout"
+                f'Section {section} is missing "{title}". Add a {block_type} '
+                f'with that title, or add a watch callout titled "{title}" '
+                'whose text begins "Not available — <reason>".'
             )
 
 

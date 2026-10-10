@@ -1,6 +1,6 @@
 ---
 name: gradient-marketable-alternatives-portfolio-construction
-description: "Constructs a marketable-alternatives portfolio from an existing GradientCIO portfolio and produces a standalone investment-committee report with a hedge-fund recommendation, benchmark framework, current and target strategy and manager mix, performance and attribution, factor and liquidity evidence, forward assumptions, implementation steps, risks and approvals. Use for hedge funds, absolute-return portfolios, diversifying strategies, liquid alternatives, redemption planning or hedge-fund rebalances."
+description: "Build a marketable-alternatives report covering hedge funds, strategy mix, factor risk, redemption terms, and liquidity. Use for hedge fund portfolio, alternatives sleeve, or redemptions. For a committee vote use gradient-ic-memo."
 ---
 
 # Marketable Alternatives Portfolio Construction
@@ -49,7 +49,8 @@ Required evidence:
 - portfolio record, allocation tree, hedge-fund exposure pages and policy result;
 - historical returns and governed attribution, preserving typed unavailable states;
 - benchmark identity and return series when returned;
-- `get_chart_data` availability, then the `allocations` pack;
+- `get_chart_data` availability, then the `allocations` pack, or up to four targeted `chart_ids` (never both
+  selectors); `max_rows` defaults to 40 and is capped at 100; disclose `truncated: true`;
 - active assumption set and capital-market assumptions for returned `hedge_funds` or `absolute_return`
   classes.
 
