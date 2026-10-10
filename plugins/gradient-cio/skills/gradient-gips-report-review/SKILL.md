@@ -1,8 +1,8 @@
 ---
 name: gradient-gips-report-review
-description: "This skill should be used when the user asks to \"review this GIPS Report\", \"check a composite presentation\", \"is this GIPS Composite Report complete\", \"check required GIPS disclosures\", \"review a pooled fund GIPS Report\", \"check this factsheet against the GIPS Advertising Guidelines\", or wants a firm's composite or pooled fund performance presentation (time- or money-weighted) or advertisement checked line by line against the 2020 GIPS standards. Delivers a branded PDF review in the Gradient house style.\n"
+description: "This skill should be used when the user asks to \"review this GIPS Report\", \"check a composite presentation\", \"is this GIPS Composite Report complete\", \"check required GIPS disclosures\", \"review a pooled fund GIPS Report\", \"check this factsheet against the GIPS Advertising Guidelines\", or wants a firm's composite or pooled fund performance presentation (time- or money-weighted) or advertisement checked line by line against the 2020 GIPS standards. Delivers a branded review in the Gradient house style.\n"
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # GIPS Report Review
@@ -72,7 +72,15 @@ a definitive deficiency.
 
 ## Output
 
-Always deliver the review as a branded PDF. Write `review.md`, `visuals.json` and `meta.json`; validate and
-compose them with the shared scripts in `gradient-gips-standards/scripts`, then render `review.json` in JSON
-block mode with this skill's `scripts/gradient_report.py`. Market charts are not required. Follow
+Always deliver a branded review. Write `review.md`, `visuals.json` and `meta.json`; preserve the authoritative
+markdown and validate and compose them with the shared scripts in `gradient-gips-standards/scripts`, writing
+the resulting validated JSON as `report.json`. Market charts are not required. Follow
 `output-format.md`, `report-layout.md` and this skill's `references/report-style.md`.
+
+Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select
+both when it says `both` or `board pack`. Both formats must come from the same validated `report.json`; any
+memo handoff markdown remains unchanged through composition.
+
+```text
+python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Report Review"
+```

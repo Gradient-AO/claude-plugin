@@ -1,0 +1,450 @@
+{
+  "meta": {
+    "eyebrow": "Release Quality",
+    "header_label": "Golden Example (TEST)",
+    "title": "GradientCIO Golden Report (TEST)",
+    "subtitle": "Fictional data for deterministic renderer testing only",
+    "running_head": "Golden Report (TEST)",
+    "data_as_of": "2026-09-30",
+    "confidentiality": "FICTIONAL TEST DATA — not for distribution",
+    "cover_facts": [
+      ["Purpose", "Release testing"],
+      ["Data", "Fictional (TEST)"],
+      ["Currency", "USD"]
+    ],
+    "signal": {
+      "level": "watch",
+      "label": "TEST"
+    },
+    "completeness": {
+      "used": 2,
+      "expected": 2,
+      "state": "complete"
+    }
+  },
+  "executive": {
+    "label": "Test purpose",
+    "bottom_line": "This fictional report exercises the shared PDF and PowerPoint renderers [S1].",
+    "tiles": [
+      {
+        "label": "Coverage",
+        "value": "100%",
+        "sub": "Fictional source set [S1]",
+        "tone": "good"
+      },
+      {
+        "label": "Status",
+        "value": "TEST",
+        "sub": "No production data",
+        "tone": "watch"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "executive",
+      "num": "01",
+      "title": "Executive summary",
+      "kicker": "Fictional release fixture",
+      "blocks": [
+        {
+          "type": "statement",
+          "text": "Every value in this report is invented for testing.",
+          "sub": "The source labels and entity names are explicitly marked TEST.",
+          "tone": "good"
+        },
+        {
+          "type": "bars",
+          "title": "Signed contribution (TEST)",
+          "description": "Positive and negative fictional contributions",
+          "items": [
+            {
+              "label": "Positive sleeve (TEST)",
+              "value": 2.4,
+              "display": "+2.4%",
+              "color": "#C6F432"
+            },
+            {
+              "label": "Negative sleeve (TEST)",
+              "value": -1.1,
+              "display": "-1.1%",
+              "color": "#FF6B5E"
+            }
+          ],
+          "note": "Fictional values [S1]"
+        }
+      ]
+    },
+    {
+      "num": "02",
+      "title": "Native analytical blocks",
+      "kicker": "Editable PowerPoint charts",
+      "blocks": [
+        {
+          "type": "stacked",
+          "title": "Fictional allocation mix",
+          "categories": [
+            "Portfolio (TEST)"
+          ],
+          "series": [
+            {
+              "name": "Public (TEST)",
+              "values": [
+                60
+              ]
+            },
+            {
+              "name": "Private (TEST)",
+              "values": [
+                40
+              ]
+            }
+          ],
+          "items": [
+            {
+              "label": "Public (TEST)",
+              "value": 60,
+              "display": "60%"
+            },
+            {
+              "label": "Private (TEST)",
+              "value": 40,
+              "display": "40%"
+            }
+          ],
+          "note": "Fictional allocation [S1]"
+        },
+        {
+          "type": "chart",
+          "chart": {
+            "chart_id": "bar-portfolio-hierarchy",
+            "title": "Fictional allocation shares",
+            "analysis_type": "allocations",
+            "basis": "holdings",
+            "status": "ok",
+            "error": null,
+            "currency": null,
+            "columns": [
+              {
+                "key": "allocation",
+                "title": "Allocation",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "weight",
+                "title": "Weight",
+                "format": "percentage",
+                "decimals": 1
+              }
+            ],
+            "rows": [
+              ["Public (TEST)", 0.6],
+              ["Private (TEST)", 0.3],
+              ["Liquidity (TEST)", 0.1]
+            ],
+            "totals": null,
+            "metrics": null,
+            "truncated": false,
+            "truncation_reason": null,
+            "total_rows": 3,
+            "render_hint": {
+              "block": "pie",
+              "x": "allocation",
+              "y": ["weight"]
+            },
+            "methodology_uri": "gradient://charts/bar-portfolio-hierarchy",
+            "methodology": null,
+            "interpretation_guidance": null
+          }
+        },
+        {
+          "type": "chart",
+          "chart": {
+            "chart_id": "commitments-pacing-metrics",
+            "title": "Fictional pacing metrics",
+            "analysis_type": "commitments",
+            "basis": "cash_flows",
+            "status": "ok",
+            "error": null,
+            "currency": "USD",
+            "columns": [
+              {
+                "key": "metric",
+                "title": "Metric",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "value",
+                "title": "Value",
+                "format": "number",
+                "decimals": 1
+              },
+              {
+                "key": "unit",
+                "title": "Unit",
+                "format": "text",
+                "decimals": null
+              }
+            ],
+            "rows": [
+              ["Gap", 0.1, "%"],
+              ["Targets", 3, "count"],
+              ["Runway", 2.5, "years"],
+              ["Dollar gap", 12, "$M"]
+            ],
+            "totals": null,
+            "metrics": null,
+            "truncated": false,
+            "truncation_reason": null,
+            "total_rows": 4,
+            "render_hint": {
+              "block": "table",
+              "x": null,
+              "y": []
+            },
+            "methodology_uri": "gradient://charts/commitments-pacing-metrics",
+            "methodology": null,
+            "interpretation_guidance": null
+          }
+        },
+        {
+          "type": "waterfall",
+          "title": "Fictional bridge",
+          "items": [
+            {
+              "label": "Start",
+              "value": 100,
+              "display": "100",
+              "total": true
+            },
+            {
+              "label": "Gain",
+              "value": 8,
+              "display": "+8"
+            },
+            {
+              "label": "Loss",
+              "value": -3,
+              "display": "-3"
+            },
+            {
+              "label": "End",
+              "value": 105,
+              "display": "105",
+              "total": true
+            }
+          ],
+          "note": "Fictional bridge [S1]"
+        },
+        {
+          "type": "band",
+          "title": "Fictional policy bands",
+          "columns": [
+            "Sleeve",
+            "Minimum",
+            "Maximum",
+            "Current"
+          ],
+          "rows": [
+            [
+              "Growth (TEST)",
+              40,
+              70,
+              58
+            ],
+            [
+              "Defensive (TEST)",
+              20,
+              50,
+              32
+            ]
+          ],
+          "items": [
+            {
+              "label": "Growth (TEST)",
+              "min": 40,
+              "max": 70,
+              "target": 55,
+              "current": 58
+            },
+            {
+              "label": "Defensive (TEST)",
+              "min": 20,
+              "max": 50,
+              "target": 35,
+              "current": 32
+            }
+          ],
+          "note": "Fictional limits [S2]"
+        },
+        {
+          "type": "heat",
+          "title": "Fictional score matrix",
+          "columns": [
+            "Metric",
+            "Alpha",
+            "Beta"
+          ],
+          "row_labels": [
+            "Return",
+            "Risk"
+          ],
+          "values": [
+            [
+              0.8,
+              -0.3
+            ],
+            [
+              -0.2,
+              0.5
+            ]
+          ],
+          "rows": [
+            [
+              "Return",
+              0.8,
+              -0.3
+            ],
+            [
+              "Risk",
+              -0.2,
+              0.5
+            ]
+          ],
+          "note": "Fictional normalized scores [S2]"
+        }
+      ]
+    },
+    {
+      "num": "03",
+      "title": "Long table behavior",
+      "kicker": "Split and repeated headers",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Long holdings register (TEST)",
+          "columns": [
+            "Holding",
+            "Weight",
+            "Status"
+          ],
+          "rows": [
+            ["Fictional Holding 01 (TEST)", "1.0%", "Available"],
+            ["Fictional Holding 02 (TEST)", "1.1%", "Available"],
+            ["Fictional Holding 03 (TEST)", "1.2%", "Available"],
+            ["Fictional Holding 04 (TEST)", "1.3%", "Available"],
+            ["Fictional Holding 05 (TEST)", "1.4%", "Available"],
+            ["Fictional Holding 06 (TEST)", "1.5%", "Available"],
+            ["Fictional Holding 07 (TEST)", "1.6%", "Available"],
+            ["Fictional Holding 08 (TEST)", "1.7%", "Available"],
+            ["Fictional Holding 09 (TEST)", "1.8%", "Available"],
+            ["Fictional Holding 10 (TEST)", "1.9%", "Available"],
+            ["Fictional Holding 11 (TEST)", "2.0%", "Available"],
+            ["Fictional Holding 12 (TEST)", "2.1%", "Available"],
+            ["Fictional Holding 13 (TEST)", "2.2%", "Available"],
+            ["Fictional Holding 14 (TEST)", "2.3%", "Available"],
+            ["Fictional Holding 15 (TEST)", "2.4%", "Available"],
+            ["Fictional Holding 16 (TEST)", "2.5%", "Available"],
+            ["Fictional Holding 17 (TEST)", "2.6%", "Available"],
+            ["Fictional Holding 18 (TEST)", "2.7%", "Available"],
+            ["Fictional Holding 19 (TEST)", "2.8%", "Available"],
+            ["Fictional Holding 20 (TEST)", "2.9%", "Available"],
+            ["Fictional Holding 21 (TEST)", "3.0%", "Available"],
+            ["Fictional Holding 22 (TEST)", "3.1%", "Available"],
+            ["Fictional Holding 23 (TEST)", "3.2%", "Available"],
+            ["Fictional Holding 24 (TEST)", "3.3%", "Available"],
+            ["Fictional Holding 25 (TEST)", "3.4%", "Available"]
+          ],
+          "note": "All holdings are fictional [S1]"
+        }
+      ]
+    },
+    {
+      "num": "04",
+      "title": "Canonical chart payloads",
+      "kicker": "Native chart data and source notes",
+      "blocks": [
+        {
+          "type": "chart",
+          "chart": {
+            "chart_id": "golden-relative-return-test",
+            "title": "Relative return series (TEST)",
+            "status": "ok",
+            "currency": "USD",
+            "columns": [
+              {
+                "key": "period",
+                "title": "Period",
+                "format": "date",
+                "decimals": null
+              },
+              {
+                "key": "portfolio",
+                "title": "Portfolio (TEST)",
+                "format": "percentage",
+                "decimals": 1
+              },
+              {
+                "key": "benchmark",
+                "title": "Benchmark (TEST)",
+                "format": "percentage",
+                "decimals": 1
+              }
+            ],
+            "rows": [
+              ["2026-06-30", 0.012, 0.009],
+              ["2026-07-31", -0.008, -0.004],
+              ["2026-08-31", 0.016, 0.011],
+              ["2026-09-30", 0.006, 0.007]
+            ],
+            "truncated": false,
+            "render_hint": {
+              "block": "line",
+              "x": "period",
+              "y": [
+                "portfolio",
+                "benchmark"
+              ]
+            }
+          }
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — fictional observation",
+          "text": "The fictional portfolio led in two of four periods and lagged in two; this sentence tests speaker-note retention [S2]."
+        }
+      ],
+      "takeaway": "Canonical chart rows remain editable in PowerPoint."
+    },
+    {
+      "num": "A",
+      "title": "Appendix — Sources",
+      "kicker": "Fictional provenance",
+      "layout": "appendix",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Source register",
+          "columns": [
+            "Source",
+            "Description"
+          ],
+          "rows": [
+            [
+              "S1",
+              "Synthetic portfolio evidence generated for testing only"
+            ],
+            [
+              "S2",
+              "Synthetic analytical evidence generated for testing only"
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

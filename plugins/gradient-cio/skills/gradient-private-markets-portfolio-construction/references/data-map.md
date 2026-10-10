@@ -11,9 +11,9 @@ and payload digest for every source row.
 | Access | `get_gradient_capabilities`; selected organization | Portfolio capability, tool availability and live / illustrative mode |
 | Portfolio selection | `list_portfolios` | Existing `portfolio_id`, name, currency, `record_kind`, canonical default |
 | Allocation | `get_portfolio_structure`; `view: allocation_tree`, selected `portfolio_id`, depth 3 | Returned total-portfolio target, actual, limits, policy status and coverage |
-| Exposure | `get_portfolio_exposure`; selected `portfolio_id`; use exact lowercase filters `private_equity` and `private_credit`, plus `real_estate` or `infrastructure` only when the requested mandate includes them; page each filter to completion | NAV, commitment, unfunded, value basis, valuation date, manager / fund and server aggregates |
+| Exposure | `get_portfolio_exposure`; selected `portfolio_id`; use returned display names or snake_case aliases `private_equity` and `private_credit`, plus `real_estate` or `infrastructure` only when the requested mandate includes them; page each filter to completion | NAV, commitment, unfunded, value basis, valuation date, manager / fund and server aggregates; do not quote `fixed_income_metrics` from these non-fixed-income sleeves (P-25) |
 | Policy | `check_portfolio_policy`; selected `portfolio_id` | Allocation, return objective, risk, liquidity, unfunded and concentration assessments |
-| Returns | `get_portfolio_historical_returns`; selected period end; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`, then separate projected calls for `points` and `cumulative_growth` when needed; until P-01 ships, keep the default commitment page and disclose truncation rather than following `next_cursor` | Returned periods, risk, benchmark-relative values, points and coverage |
+| Returns | `get_portfolio_historical_returns`; selected period end; `limit: 100`; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`, then separate projected calls for `points` and `cumulative_growth` when needed; disclose the returned count if the 100-row response is unexpectedly truncated | Returned periods, risk, benchmark-relative values, points and coverage |
 | Attribution | `get_portfolio_attribution`; policy benchmark, root allocation, month-end period, all sections | Realized effects, linking, residual, diagnostics and typed unavailability |
 | Chart availability | `get_chart_data`; selected `portfolio_id`, no pack selector | Available chart IDs, unavailable reasons and context |
 | Allocation charts | `get_chart_data`; `analysis_type: allocations` | Returned allocation, risk-contribution, factor and currency items |
@@ -23,7 +23,8 @@ and payload digest for every source row.
 Call each chart pack separately and embed each usable `charts[]` item unchanged. Never hand-map chart IDs or
 derive chart rows. Preserve `basis`, `context.fingerprint`, status, truncation and unavailable reason.
 State partial historical-return coverage as a report gap, including `not_yet_funded` commitments and the
-partial 2016 and 2026 calendar years when returned. For `no_subject_returns`, state that the selected
+partial 2016 and 2026 calendar years from their `month_count`, `partial`, `coverage_status`, and
+`missing_reason`; never present them as full-year returns. For `no_subject_returns`, state that the selected
 portfolio has no subject return history and do not substitute benchmark, commitment or Strategy Lab returns.
 
 ## Private-market evidence rules
@@ -40,7 +41,8 @@ portfolio has no subject return history and do not substitute benchmark, commitm
 | Need | Tool | Rule |
 |---|---|---|
 | CMA positioning | `get_cma_consensus_check`; `mode: asset_class`, held private-market classes | Preserve returned positioning and coverage |
-| Manager evidence | `get_manager_diligence_brief`, `get_manager_diligence_findings` | Use only for resolved roster managers / funds; separate server evidence from plugin conclusions |
+| Macro regime | `get_macro_signals`; `view: gradient_signal`, plus `view: regime_state` when available | Preserve GRIP availability/degradation reasons and returned regime status; context only, never a forecast |
+| Manager evidence | `get_manager_diligence_brief`, `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve | Preserve entity scope and severity; separate server evidence from plugin conclusions |
 | Manager shortlist | `search_managers`, `screen_managers` through `gradient-manager-compare` | Handoff rather than duplicating a comparison |
 | Selected-series robustness | `build_strategy_lab_session` with selected `return_series_ids`, then a supported `run_strategy_lab_*` tool with the returned session | Optional sandbox only; never pass `portfolio_id` |
 | User documents | IPS, pacing plan, cash-flow forecast or consultant recommendation | Tag as user document with document date and scope |

@@ -1,6 +1,6 @@
 ---
 name: gradient-fixed-income-portfolio-construction
-description: "Constructs a fixed-income portfolio from an existing GradientCIO portfolio and produces a standalone 10–14 page investment-committee PDF with a recommendation, benchmark framework, current and target segment structure, performance and attribution, rates and credit context, forward assumptions, liquidity, scenarios, implementation steps, risks and approvals. Use for bond allocations, core or core-plus mandates, credit sleeves, duration positioning, liability-aware portfolios, active-passive structure or fixed-income rebalances."
+description: "Constructs a fixed-income portfolio from an existing GradientCIO portfolio and produces a standalone investment-committee report with a recommendation, benchmark framework, current and target segment structure, performance and attribution, rates and credit context, forward assumptions, liquidity, scenarios, implementation steps, risks and approvals. Use for bond allocations, core or core-plus mandates, credit sleeves, duration positioning, liability-aware portfolios, active-passive structure or fixed-income rebalances."
 ---
 
 # Fixed Income Portfolio Construction
@@ -9,8 +9,8 @@ Produce a deterministic, fully sourced, decision-ready fixed-income construction
 Gradient portfolio, assess its fixed-income sleeve, and recommend a target structure and implementation
 path. The committee decides; this skill never creates, updates or rebalances a portfolio in GradientCIO.
 
-The deliverable is a branded 10–14 page PDF:
-`"<Portfolio> - Fixed Income Portfolio Construction <YYYY-MM-DD>.pdf"`.
+The deliverable is a branded report. Its PDF form is normally 10–14 pages and uses the base name
+`"<Portfolio> - Fixed Income Portfolio Construction <YYYY-MM-DD>"`.
 
 ## Files in this skill
 
@@ -23,7 +23,7 @@ The deliverable is a branded 10–14 page PDF:
 | `references/chart-data.md` | Always — chart discovery, basis and unchanged chart blocks. |
 | `references/report-style.md` | Before rendering — metadata, blocks and delivery checks. |
 | `scripts/validate_construction.py` | After drafting — validates structure, evidence and decision language. |
-| `scripts/gradient_report.py` | Renders the JSON report. Never restyle it. |
+| `scripts/render.py` | Renders validated `report.json` to PDF, PPTX or both. Never restyle it. |
 
 ## 1. Scope
 
@@ -45,8 +45,8 @@ Follow `references/data-map.md`, save each raw result and build one source row p
 
 Required evidence:
 
-- portfolio record, allocation tree, exposure pages filtered with exact lowercase
-  `asset_classification: fixed_income`, and policy result;
+- portfolio record, allocation tree, exposure pages filtered with display name
+  `Fixed Income` or snake_case alias `fixed_income`, and policy result;
 - historical returns and governed attribution, preserving typed unavailable states;
 - benchmark identity and return series when returned;
 - `get_chart_data` availability, then the `allocations` pack;
@@ -66,6 +66,7 @@ CMA consensus, The Read and selected-series Strategy Lab diagnostics are optiona
 - Use `portfolio_totals.fixed_income_metrics` for a complete filtered sleeve, or the Fixed Income
   classification aggregate. Require `weighting_basis: current_holding_nav_base`, preserve coverage and
   methodology, and never recompute or equal-weight rows. Treat spread duration zero as a valid observation.
+  Until P-25 ships, ignore `fixed_income_metrics` on individual exposure rows and non-Fixed-Income aggregates.
 - Never relabel yield to maturity as yield to worst. Report yield to worst, OAS, convexity, quality or
   key-rate exposure only when another Gradient result or a cited user document directly supplies it.
 - Present rates and credit indicators as context, not forecasts. Do not claim that yields or spreads will
@@ -90,11 +91,17 @@ Run until clean:
 
 ```text
 python scripts/validate_construction.py report.json
-python scripts/gradient_report.py report.json "<Portfolio> - Fixed Income Portfolio Construction <YYYY-MM-DD>.pdf"
 ```
 
-Inspect every page and reconcile all figures to saved evidence. Reply with three lines: recommendation,
-fixed-income policy status, open-item count, plus the PDF.
+Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select
+both when it says `both` or `board pack`. Both formats must come from the same validated `report.json`.
+
+```text
+python scripts/render.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Fixed Income Portfolio Construction <YYYY-MM-DD>"
+```
+
+Inspect every requested output and reconcile all figures to saved evidence. Reply with three lines:
+recommendation, fixed-income policy status, open-item count, plus the requested file(s).
 
 ## 5. Handoffs
 

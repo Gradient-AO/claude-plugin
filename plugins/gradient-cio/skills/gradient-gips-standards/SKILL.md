@@ -1,8 +1,8 @@
 ---
 name: gradient-gips-standards
-description: "This skill should be used when the user asks \"what does GIPS require\", \"is this GIPS compliant\", \"what is the GIPS compliance statement\", \"what has to be in a GIPS Report\", \"explain GIPS verification\", \"GIPS vs the SEC Marketing Rule\", or any question about the 2020 Global Investment Performance Standards (GIPS) for firms or asset owners. It holds the shared GIPS reference checklists, the finding-rating scale and the output format used by the other Gradient GIPS skills. Answers are delivered as a branded GIPS briefing note PDF in the Gradient house style.\n"
+description: "This skill should be used when the user asks \"what does GIPS require\", \"is this GIPS compliant\", \"what is the GIPS compliance statement\", \"what has to be in a GIPS Report\", \"explain GIPS verification\", \"GIPS vs the SEC Marketing Rule\", or any question about the 2020 Global Investment Performance Standards (GIPS) for firms or asset owners. It holds the shared GIPS reference checklists, the finding-rating scale and the output format used by the other Gradient GIPS skills. Answers are delivered as a branded GIPS briefing note in the Gradient house style.\n"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # GIPS Standards Reference
@@ -55,8 +55,12 @@ All paths are relative to this skill's directory (`${CLAUDE_PLUGIN_ROOT}/skills/
 
 ## Output — GIPS briefing note (always)
 
-Answer the question in chat in a few sentences, then deliver a 1–3 page branded **GIPS briefing note** PDF so the
-answer can be filed or shared:
+Answer the question in chat in a few sentences, then deliver a branded **GIPS briefing note** so the answer
+can be filed or shared. Its PDF form is normally 1–3 pages.
+
+This reference briefing note is exempt from the analytical four-tile, page-2 key-judgment,
+visual-before-table and `Analysis —` callout contracts. The four GIPS review workflows are not exempt; their
+reports follow `references/report-layout.md`.
 
 1. Write markdown: `# <Question, as a short title>`, then `## 1. Answer` (the direct answer with provision
    numbers), `## 2. Requirements` (table: Requirement · Provision · Applies to · Notes), `## 3. Practical
@@ -66,8 +70,14 @@ answer can be filed or shared:
    standards · <firms | asset owners>", "running_head": "<short title>", "data_as_of": "References as of
    October 2026", "confidentiality": "Prepared for <organization> internal use — not legal advice",
    "executive": {"label": "Short answer", "bottom_line": "<the answer in 2–3 sentences>"}}` (no signal).
-3. Render with this skill's `scripts/gradient_report.py --md note.md --meta meta.json "<Short title> - GIPS Briefing Note.pdf"`,
-   check the pages, and deliver. Style rules: `references/report-style.md`.
+3. Write `visuals.json` as `{}` and preserve the markdown flow:
+   `python scripts/compose_report.py note.md visuals.json meta.json report.json`. Validate the composed
+   `report.json` before rendering.
+4. Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select
+   both when it says `both` or `board pack`. Both formats come from the same validated `report.json`.
+5. Render with
+   `python scripts/render.py report.json --format <pdf|pptx|both> --out "<Short title> - GIPS Briefing Note"`,
+   inspect every requested output, and deliver. Style rules: `references/report-style.md`.
 
-Review requests (a report, a manager, a policy manual) go to the workflow skills above, which deliver their own
-review PDFs.
+Review requests (a report, a manager, a policy manual) go to the workflow skills above, which deliver their
+own branded reviews.

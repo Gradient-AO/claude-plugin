@@ -1,6 +1,6 @@
 ---
 name: gradient-portfolio-review
-description: "Quarterly, annual or on-demand total-portfolio monitoring review for a board or investment committee, from GradientCIO data. Produces either a 5–8 page brief or a 15–20 page comprehensive review with sourced Claude analysis and considerations covering historical returns and attribution, allocation and policy, exposures and concentration, realized risk, projected return and risk decomposition, liquidity and optional outlook. Use for portfolio reviews, performance reviews, board reports, total fund reviews and committee packs. For a decision or recommendation use gradient-ic-memo."
+description: "Quarterly, annual or on-demand total-portfolio monitoring review for a board or investment committee, from GradientCIO data. Produces either a brief or comprehensive report with sourced Claude analysis and considerations covering historical returns and attribution, allocation and policy, exposures and concentration, realized risk, projected return and risk decomposition, liquidity and optional outlook. Use for portfolio reviews, performance reviews, board reports, total fund reviews and committee packs. For a decision or recommendation use gradient-ic-memo."
 ---
 
 # Portfolio review
@@ -9,8 +9,8 @@ Use when the user asks for a "portfolio review", "quarterly review", "annual rev
 "board performance report", "how did the portfolio do this quarter", "are we within our policy ranges", or a
 recurring committee pack on the portfolio.
 
-The deliverable is a branded PDF, **"<Portfolio> - Portfolio Review <YYYY-MM-DD>.pdf"** (date = the performance
-period end), in one of two modes:
+The deliverable is a branded report with base name **"<Portfolio> - Portfolio Review <YYYY-MM-DD>"** (date =
+the performance period end), in one of two modes:
 
 - **Brief** (default): 5–8 pages for routine monitoring.
 - **Comprehensive**: 15–20 pages when the user asks for a detailed, full, comprehensive, board-book or
@@ -44,7 +44,7 @@ Rules that matter here:
 | `references/review-template.md` | Comprehensive mode — exact section order, block schemas and page budget. |
 | `references/writing-standards.md` | Before drafting — sourced analysis, considerations and prohibited recommendations. |
 | `references/report-style.md` | Before rendering — shared style, block types, meta fields, "Check and deliver". |
-| `scripts/gradient_report.py` | Renders the JSON blocks into the branded PDF. Never restyle. |
+| `scripts/render.py` | Renders the validated JSON source to PDF, PPTX or both. Never restyle. |
 | `scripts/validate_review.py` | Both modes — validates exact layout, required evidence slots, source parity and monitoring-only language. |
 
 ## 1. Scope (ask at most one question)
@@ -89,7 +89,7 @@ save `context.fingerprint`, `basis`, and unavailable reasons. Embed each usable 
 | Portfolio record | `list_portfolios` | Yes |
 | Dashboard chart packs | `get_chart_data` availability, then one supported `analysis_type` at a time | Comprehensive: allocations and commitments; brief: optional |
 | Allocation tree | `get_portfolio_structure` `view: allocation_tree` | Yes |
-| Returns | `get_portfolio_historical_returns` with `end_date` = period end: request summary / benchmark-relative sections with matching `fields`, then request `points` and `cumulative_growth` separately; until P-01 ships, disclose a truncated default commitment page instead of following `next_cursor` | Yes |
+| Returns | `get_portfolio_historical_returns` with `end_date` = period end and `limit: 100`: request summary / benchmark-relative sections with matching `fields`, then request `points` and `cumulative_growth` separately; disclose the returned count if unexpectedly truncated | Yes |
 | Benchmark | the benchmark named in `benchmark_relative`; else ask the user which benchmark; then `get_benchmarks` `benchmark_id` for its name and classes, and `get_return_series` `series_kind: benchmark` for monthly points | Optional (performance is reported without relative rows if absent) |
 | Policy | `check_portfolio_policy` | Yes |
 | Attribution | `get_portfolio_attribution` with `benchmark_role: policy`, `parent_allocation_id: root`, month-end start/end and all sections | Comprehensive: always call and preserve typed unavailability; brief: optional |
@@ -107,7 +107,7 @@ an outage — do not retry it.
 
 ## 3. Assess
 
-**Performance.** Use `standard_periods`, `calendar_years`, `risk_metrics`, `benchmark_relative`,
+**Performance.** Pass `limit: 100` and use `standard_periods`, `calendar_years`, `risk_metrics`, `benchmark_relative`,
 `cumulative_growth` and `points` exactly as returned by `get_portfolio_historical_returns`. Preserve each
 period's benchmark return, excess return, coverage and annualization status; preserve drawdown peak, trough
 and recovery, monthly extremes, positive-month count, beta and benchmark volatility. If a section is
@@ -141,7 +141,8 @@ returned, do not merge them into the policy table. Show geography or sector only
 those fields.
 Use governed fixed-income duration, spread-duration, and yield-to-maturity from complete
 `portfolio_totals.fixed_income_metrics` or the Fixed Income classification aggregate. Preserve weighting
-basis and coverage; do not recompute or equal-weight rows.
+basis and coverage; do not recompute or equal-weight rows. Until P-25 ships, ignore
+`fixed_income_metrics` on exposure rows and non-Fixed-Income classification aggregates.
 
 **Look-through.** Top issuers by look-through NAV across managers, with managers holding and share of NAV.
 Always add the caveat callout: 13F is lagged (up to 45 days after quarter end), long-only US-listed equity,
@@ -162,6 +163,11 @@ simulated-attribution contract exists.
 **Analysis and considerations.** Follow `references/writing-standards.md`. Each point contains a sourced
 observation, why it matters, uncertainty and a neutral consideration for discussion. Do not prescribe an
 action. If the analysis raises a possible decision, offer an IC memo outside the report.
+Use three to five sourced `Key judgment —` callouts on page 2 and one to three `Analysis —` callouts beside
+the evidence in every analytical section; do not create a separate analysis page. Lead analytical evidence
+with a returned `line`, calendar-year signed `bars`, attribution `waterfall`, policy `band`, liquidity
+`stacked`, exposure `heat`, diligence `findings`, GRIP tiles or a typed unavailable state before the first
+table. Kickers state the message, and no block list contains more than two consecutive tables.
 
 **Signal** (`meta.signal.level`, `signal_title` "Portfolio status"): `breach` if any policy row is Breach;
 else `watch` if any row is Watch or the portfolio trails its benchmark over both 1Y and 3Y; else
@@ -224,40 +230,42 @@ Every analytical or key-judgment callout uses a concrete observation and an `[S#
 neutral: considerations may identify a question for discussion, but the JSON must not recommend a trade,
 allocation change, manager action or vote. In brief mode, include one to three `callout` blocks with
 `role: "analysis"` in **Summary**; each states the observation, monitoring implication, uncertainty, and
-evidence that would change the view. Comprehensive mode keeps its required Analysis and Considerations
-section.
+evidence that would change the view. Comprehensive mode keeps each required analysis callout beside its
+related evidence instead of collecting analysis on a separate page.
 
 ### Comprehensive mode
 
 Read and follow `references/review-template.md` exactly. Keep all sections in the defined order, including
 Historical Attribution, Realized Risk and Decomposition, Projected Return and Risk Decomposition, Liquidity
-and Commitments, and Analysis and Considerations. A missing source becomes a typed unavailable block; it does
+and Commitments. A missing source becomes a typed unavailable block; it does
 not remove the section. Target 15–20 pages when evidence supports the full report, but never add filler or
 repeat evidence to reach the target. Apply ODD-quality editorial and visual polish with evidence-led,
-publication-ready charts. Use exactly the four sourced executive tiles in the template. Analysis and
-Considerations contains three to six sourced `role: "analysis"` callouts with six-word-or-shorter titles and
+publication-ready charts. Use exactly the four sourced executive tiles in the template. Every analytical
+section contains one to three sourced `role: "analysis"` callouts with `Analysis —` titles whose message is
+six words or shorter and
 the exact four-part sequence `Observation:`, `Why it matters:`, `Uncertainty:`,
 `What would change the view:`.
 
 Before rendering either mode, set root `review_mode` to `brief` or `comprehensive`, then run:
 
 ```
-python <this skill's directory>/scripts/validate_review.py review.json
+python <this skill's directory>/scripts/validate_review.py report.json
 ```
 
 Fix every error and re-run until it passes. Do not render a report that fails validation.
 
-Render:
+Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select
+both when it says `both` or `board pack`. Both formats must come from the same validated `report.json`.
 
 ```
-python <this skill's directory>/scripts/gradient_report.py review.json "<Portfolio> - Portfolio Review <YYYY-MM-DD>.pdf"
+python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Portfolio Review <YYYY-MM-DD>"
 ```
 
-Then follow "Check and deliver" in `references/report-style.md`: rasterize and inspect every page, fix
-overflow, clipping, orphaned headings and unreadable visuals, re-render after any fix, reconcile every returned
-metric within its stated tolerance, and check every figure against the saved results. Delivery is blocked
-until page QA and fact checks pass. Chat summary (three lines): status signal, the top item (e.g.
-"Alternatives 1.4pp below the upper limit"), and the number of items to watch — plus the file.
+Then follow "Check and deliver" in `references/report-style.md`: inspect every requested output, fix overflow,
+clipping, orphaned headings and unreadable visuals, re-render after any fix, reconcile every returned metric
+within its stated tolerance, and check every figure against the saved results. Delivery is blocked until QA
+and fact checks pass. Chat summary (three lines): status signal, top item and items to watch — plus the
+requested file(s).
 
 ## 5. Hand-off and repeat runs
 
@@ -267,5 +275,6 @@ until page QA and fact checks pass. Chat summary (three lines): status signal, t
   passing the portfolio, period end, the allocation table and the source rows so the memo reuses them.
 - **Quarterly run**: if the user wants it every quarter, offer a scheduled task (confirm timing first; never
   schedule unasked) with the prompt: "Run gradient-portfolio-review for <portfolio> (<organization>) for the
-  latest quarter-end. Save the PDF and send the three-line summary. Do not change any Gradient data."
+  latest quarter-end. Use the default PDF output, save it and send the three-line summary. Do not change any
+  Gradient data."
 - This skill only reads. Never call create, update, save or log tools.

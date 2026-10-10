@@ -2,8 +2,8 @@
 
 The memo text stays deterministic: `memo.md` follows `memo-template.md` and passes `validate_memo.py`.
 This file defines the separate visual and Claude-analysis layer. `scripts/compose_memo_json.py` merges
-`memo.md`, `visuals.json`, and `meta.json` into `memo.json`; `gradient_report.py` renders it in JSON block mode.
-Never restyle the renderer or hand-edit `memo.json`.
+`memo.md`, `visuals.json`, and `meta.json` into `report.json`; `render.py` renders that same validated source
+to the selected output format. Never restyle the renderer or hand-edit `report.json`.
 
 ## `visuals.json`
 
@@ -20,10 +20,13 @@ Never restyle the renderer or hand-edit `memo.json`.
 - Keys are section numbers `"1"` through `"16"`. Appendices have no visual layer.
 - `before` renders after the section's opening markdown paragraph; `after` renders after its remaining
   markdown; `analysis` renders last as `Analysis — <title>` callouts.
-- Block types are those in `report-style.md`: `tiles`, `bars`, `line`, `chart`, `callout`, `findings`,
-  `coverage`, `two_col`, `statement`, `table`, and `kv`.
+- Block types are those in `report-style.md`: `tiles`, `bars`, `line`, `chart`, `waterfall`, `band`,
+  `stacked`, `heat`, `callout`, `findings`, `coverage`, `two_col`, `statement`, `table`, and `kv`.
 - A required visual whose evidence is unavailable becomes a `callout` with tone `watch` and text
   `Not available — <specific reason>`. Never silently drop a slot.
+- In each analytical section, put a decision-useful visual or its typed unavailable substitute in `before`,
+  ahead of the first markdown table. Never place more than two tables consecutively, including inside
+  `two_col`.
 
 ## Required visuals
 
@@ -49,15 +52,15 @@ The composer validates these semantic slots by block type and title.
 
 ### Signed bars
 
-The renderer draws non-negative bar lengths. For signed quantities set `value` to `abs(x)`, put the signed
-formatted figure in `display` (for example `−550 bps`), use coral `#E8735A` for negatives and lime
-`#B5E52A` for positives, and set `all_accent: false`.
+For signed quantities preserve the finite signed number in `value` and the sign in `display` (for example
+`−550 bps`). Use coral `#E8735A` for negatives and lime `#B5E52A` for positives, and set
+`all_accent: false`. Do not convert negative values to absolute magnitudes.
 
 ## Claude analysis
 
 Analytical sections 2, 3, 4, 5, 6, 7, 9, 10, 12, and 13 end with analysis callouts. Section 2 contains
-three to five **Key judgments** connecting evidence across sections; every other analytical section contains
-one to three callouts.
+three to five `role: "key_judgment"` **Key judgment —** callouts connecting evidence across sections; every
+other analytical section contains one to three `role: "analysis"` **Analysis —** callouts.
 
 Each callout follows:
 

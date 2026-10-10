@@ -1,43 +1,194 @@
 {
   "schema_version": "1.0",
   "executive_tiles": [
-    {"label": "Met", "value": "2", "sub": "Firm and composite governance", "tone": "good"},
-    {"label": "Partially met", "value": "2", "sub": "Errors and portability", "tone": "watch"},
-    {"label": "Not met", "value": "1", "sub": "Current approval evidence", "tone": "bad"},
-    {"label": "Not found", "value": "1", "sub": "Supplemental inventory", "tone": "watch"}
+    {
+      "label": "Met",
+      "value": "2",
+      "sub": "Firm and composite governance",
+      "tone": "good"
+    },
+    {
+      "label": "Partially met",
+      "value": "2",
+      "sub": "Errors and portability",
+      "tone": "watch"
+    },
+    {
+      "label": "Not met",
+      "value": "1",
+      "sub": "Current approval evidence",
+      "tone": "bad"
+    },
+    {
+      "label": "Not found",
+      "value": "1",
+      "sub": "Supplemental inventory",
+      "tone": "watch"
+    }
   ],
   "sections": {
     "1. Summary": {
       "before": [
-        {"type": "coverage", "title": "Evidence status", "items": [
-          {"name": "Policies manual", "status": "available", "note": "Core policies reviewed [S1]"},
-          {"name": "Change log", "status": "degraded", "note": "Current sign-off absent [S2]"}
-        ]}
+        {
+          "type": "coverage",
+          "title": "Evidence status",
+          "items": [
+            {
+              "name": "Policies manual",
+              "status": "available",
+              "note": "Core policies reviewed [S1]"
+            },
+            {
+              "name": "Change log",
+              "status": "degraded",
+              "note": "Current sign-off absent [S2]"
+            }
+          ]
+        }
       ],
       "after": [
-        {"type": "callout", "role": "analysis", "tone": "bad", "title": "Approval evidence is stale", "text": "**Observation:** The current policy approval is not evidenced [S2]. **Why it matters:** governance cannot be tied to the current manual. **Uncertainty:** approval may exist outside the supplied log. **What would change the view:** evidence closing follow-up request 2.", "follow_up_refs": [2]}
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — evidence balance",
+          "text": "Observation: Met is 2 and Not met is 1 [S1]. Why it matters: The evidence is mixed. Uncertainty: The review is document-bound. What would change the view: Additional governed evidence that changes either count."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — partial support",
+          "text": "Observation: Partially met is 2 [S1]. Why it matters: Partial support limits a clean conclusion. Uncertainty: Missing documents may exist. What would change the view: Complete evidence for the partially supported requirements."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "info",
+          "title": "Key judgment — evidence gaps",
+          "text": "Observation: Not found is 1 [S1]. Why it matters: Unlocated evidence remains outside the assessment. Uncertainty: Absence from the supplied record is not proof of absence. What would change the view: A current document resolving the gap."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "bad",
+          "title": "Analysis — Approval evidence is stale",
+          "text": "**Observation:** The current policy approval is not evidenced [S2]. **Why it matters:** governance cannot be tied to the current manual. **Uncertainty:** approval may exist outside the supplied log. **What would change the view:** evidence closing follow-up request 2.",
+          "follow_up_refs": [
+            2
+          ]
+        }
       ]
     },
-    "2. Performance Integrity & GIPS": {"before": [], "after": []},
-    "3. Findings Checklist": {
+    "2. Performance Integrity & GIPS": {
       "before": [
-        {"type": "bars", "title": "Findings by severity", "items": [
-          {"label": "High", "value": 1, "display": "1"},
-          {"label": "Medium", "value": 2, "display": "2"},
-          {"label": "Low", "value": 1, "display": "1"}
-        ]}
+        {
+          "type": "heat",
+          "title": "Requirement evidence matrix (TEST)",
+          "columns": [
+            "Requirement",
+            "Evidence score"
+          ],
+          "rows": [
+            {
+              "label": "Performance record",
+              "values": [
+                1.0
+              ]
+            },
+            {
+              "label": "Disclosures",
+              "values": [
+                0.5
+              ]
+            },
+            {
+              "label": "Governance evidence",
+              "values": [
+                -0.5
+              ]
+            }
+          ]
+        }
+      ],
+      "after": []
+    },
+    "Appendix A — Findings Checklist": {
+      "before": [
+        {
+          "type": "stacked",
+          "title": "Checklist status by area",
+          "items": [
+            {"label": "Firm", "segments": [{"label": "Met", "value": 1}, {"label": "Partially met", "value": 0}, {"label": "Not met", "value": 0}, {"label": "Not found", "value": 0}]},
+            {"label": "Composite", "segments": [{"label": "Met", "value": 1}, {"label": "Partially met", "value": 0}, {"label": "Not met", "value": 0}, {"label": "Not found", "value": 0}]},
+            {"label": "Errors", "segments": [{"label": "Met", "value": 0}, {"label": "Partially met", "value": 1}, {"label": "Not met", "value": 0}, {"label": "Not found", "value": 0}]},
+            {"label": "Portability", "segments": [{"label": "Met", "value": 0}, {"label": "Partially met", "value": 1}, {"label": "Not met", "value": 0}, {"label": "Not found", "value": 0}]},
+            {"label": "Review", "segments": [{"label": "Met", "value": 0}, {"label": "Partially met", "value": 0}, {"label": "Not met", "value": 1}, {"label": "Not found", "value": 0}]},
+            {"label": "Records", "segments": [{"label": "Met", "value": 0}, {"label": "Partially met", "value": 0}, {"label": "Not met", "value": 0}, {"label": "Not found", "value": 1}]}
+          ]
+        },
+        {
+          "type": "bars",
+          "title": "Findings by severity",
+          "items": [
+            {
+              "label": "High",
+              "value": 1,
+              "display": "1"
+            },
+            {
+              "label": "Medium",
+              "value": 2,
+              "display": "2"
+            },
+            {
+              "label": "Low",
+              "value": 1,
+              "display": "1"
+            }
+          ]
+        }
       ],
       "after": [
-        {"type": "findings", "title": "Priority findings", "items": [
-          {"severity": "high", "title": "Approval not evidenced", "detail": "The current manual has no supplied approval record [S2]."},
-          {"severity": "medium", "title": "Error threshold absent", "detail": "The error policy omits materiality thresholds [S1]."},
-          {"severity": "medium", "title": "Portability ownership absent", "detail": "The portability policy does not identify its documentation owner [S1]."},
-          {"severity": "low", "title": "Inventory not found", "detail": "No supplemental-information inventory was supplied [S1][S2]."}
-        ]}
+        {
+          "type": "findings",
+          "title": "Priority findings",
+          "items": [
+            {
+              "severity": "high",
+              "title": "Approval not evidenced",
+              "detail": "The current manual has no supplied approval record [S2]."
+            },
+            {
+              "severity": "medium",
+              "title": "Error threshold absent",
+              "detail": "The error policy omits materiality thresholds [S1]."
+            },
+            {
+              "severity": "medium",
+              "title": "Portability ownership absent",
+              "detail": "The portability policy does not identify its documentation owner [S1]."
+            },
+            {
+              "severity": "low",
+              "title": "Inventory not found",
+              "detail": "No supplemental-information inventory was supplied [S1][S2]."
+            }
+          ]
+        }
       ]
     },
-    "4. Follow-up Requests": {"before": [], "after": []},
-    "Appendix A — Sources": {"before": [], "after": []},
-    "Appendix B — Method & Disclaimer": {"before": [], "after": []}
+    "3. Follow-up Requests": {
+      "before": [],
+      "after": []
+    },
+    "Appendix B — Sources": {
+      "before": [],
+      "after": []
+    },
+    "Appendix C — Method & Disclaimer": {
+      "before": [],
+      "after": []
+    }
   }
 }

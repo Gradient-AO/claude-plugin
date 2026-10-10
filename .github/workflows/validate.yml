@@ -9,10 +9,15 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with: { python-version: "3.12" }
-      - name: Install renderer
+      - name: Install system renderers
         run: |
-          sudo apt-get update && sudo apt-get install -y poppler-utils qpdf
-          pip install playwright && python -m playwright install --with-deps chromium
+          sudo apt-get update
+          sudo apt-get install -y fonts-inter libreoffice poppler-utils qpdf
+      - name: Install pinned Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r plugins/gradient-cio/requirements-test.txt
+          python -m playwright install --with-deps chromium
       - name: Version check
         run: |
           python - <<'PY'
@@ -23,4 +28,32 @@ jobs:
           print("version", p)
           PY
       - name: Tests
+        env:
+          REQUIRE_INTER_PDF: "1"
+          REQUIRE_LIBREOFFICE: "1"
         run: python plugins/gradient-cio/tests/run_tests.py
+      - name: Golden example and visual regression checks
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/gradient-examples /tmp/gradient-reference /tmp/gradient-actual
+          python plugins/gradient-cio/tools/generate_examples.py \
+            --format both --out /tmp/gradient-examples
+          python plugins/gradient-cio/tools/render_example_thumbnails.py \
+            --examples plugins/gradient-cio/assets/examples \
+            --out /tmp/gradient-reference --format both
+          python plugins/gradient-cio/tools/render_example_thumbnails.py \
+            --examples /tmp/gradient-examples \
+            --out /tmp/gradient-actual --format both
+          python plugins/gradient-cio/tools/check_visual_regression.py \
+            /tmp/gradient-reference /tmp/gradient-actual --threshold 0.02
+          for report in /tmp/gradient-examples/*.pdf; do
+            python plugins/gradient-cio/shared/check_layout.py "$report" \
+              --min-fill 0.40 --exclude 1
+          done
+      - name: Claude plugin validation when available
+        run: |
+          if command -v claude >/dev/null 2>&1; then
+            claude plugin validate .
+          else
+            echo "::notice::Claude CLI unavailable on the runner; plugin validation remains a required maintainer check."
+          fi

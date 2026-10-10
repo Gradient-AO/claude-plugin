@@ -12,28 +12,78 @@
     "analysis": []
   },
   "2": {
-    "before": [],
+    "before": [
+      {
+        "type": "band",
+        "title": "Decision ranges (TEST)",
+        "items": [
+          {
+            "label": "Public equity",
+            "value": 52.0,
+            "low": 35.0,
+            "high": 50.0,
+            "display": "52.0%"
+          },
+          {
+            "label": "Fixed income",
+            "value": 19.0,
+            "low": 20.0,
+            "high": 35.0,
+            "display": "19.0%"
+          },
+          {
+            "label": "Cash",
+            "value": 1.0,
+            "low": 2.0,
+            "high": 8.0,
+            "display": "1.0%"
+          }
+        ]
+      }
+    ],
     "after": [],
     "analysis": [
       {
         "title": "Policy drives the decision",
-        "text": "Two allocation bands are in Breach [S1]. The proposed rebalance directly cures both. Risk-limit observations remain unavailable, so aligned risk evidence would change the implementation view.",
+        "text": "Observation: Two allocation bands are in Breach [S1]. Why it matters: The proposed rebalance cures both. Uncertainty: Risk-limit observations remain unavailable. What would change the view: Aligned risk evidence that changes implementation capacity.",
         "tone": "bad"
       },
       {
         "title": "Liquidity supports implementation",
-        "text": "T1 liquidity is 44.6% against a 15.0% minimum [S1]. This provides implementation capacity. Private valuations lag, so an updated liquidity schedule would change confidence in that conclusion.",
+        "text": "Observation: T1 liquidity is 44.6% versus a 15.0% minimum [S1]. Why it matters: It provides implementation capacity. Uncertainty: Private valuations lag. What would change the view: An updated liquidity schedule that reduces the cushion.",
         "tone": "good"
       },
       {
         "title": "Return tradeoff is modest",
-        "text": "The proposed case lowers expected return by 15 bps and volatility by 60 bps [S3]. The tradeoff supports curing the breaches. These are assumptions; a refreshed CMA would change the view.",
+        "text": "Observation: The proposed case lowers return 15 bps and volatility 60 bps [S3]. Why it matters: The tradeoff accompanies breach correction. Uncertainty: These are assumptions. What would change the view: A refreshed CMA with materially different estimates.",
         "tone": "watch"
       }
     ]
   },
   "3": {
-    "before": [],
+    "before": [
+      {
+        "type": "waterfall",
+        "title": "Proposed allocation changes (percentage points)",
+        "items": [
+          {
+            "label": "Public equity",
+            "value": -4.0,
+            "display": "-4.0pp"
+          },
+          {
+            "label": "Fixed income",
+            "value": 2.0,
+            "display": "+2.0pp"
+          },
+          {
+            "label": "Cash",
+            "value": 2.0,
+            "display": "+2.0pp"
+          }
+        ]
+      }
+    ],
     "after": [
       {
         "type": "two_col",
@@ -43,11 +93,31 @@
             "title": "Current weight by asset class",
             "narrow": true,
             "items": [
-              {"label": "Public equity", "value": 52.0, "display": "52.0%"},
-              {"label": "Fixed income", "value": 19.0, "display": "19.0%"},
-              {"label": "Private equity", "value": 17.0, "display": "17.0%"},
-              {"label": "Real estate", "value": 11.0, "display": "11.0%"},
-              {"label": "Cash", "value": 1.0, "display": "1.0%"}
+              {
+                "label": "Public equity",
+                "value": 52.0,
+                "display": "52.0%"
+              },
+              {
+                "label": "Fixed income",
+                "value": 19.0,
+                "display": "19.0%"
+              },
+              {
+                "label": "Private equity",
+                "value": 17.0,
+                "display": "17.0%"
+              },
+              {
+                "label": "Real estate",
+                "value": 11.0,
+                "display": "11.0%"
+              },
+              {
+                "label": "Cash",
+                "value": 1.0,
+                "display": "1.0%"
+              }
             ]
           }
         ],
@@ -58,11 +128,36 @@
             "narrow": true,
             "all_accent": false,
             "items": [
-              {"label": "Public equity", "value": 700, "display": "+700 bps", "color": "#B5E52A"},
-              {"label": "Fixed income", "value": 600, "display": "−600 bps", "color": "#E8735A"},
-              {"label": "Private equity", "value": 200, "display": "+200 bps", "color": "#B5E52A"},
-              {"label": "Real estate", "value": 100, "display": "+100 bps", "color": "#B5E52A"},
-              {"label": "Cash", "value": 400, "display": "−400 bps", "color": "#E8735A"}
+              {
+                "label": "Public equity",
+                "value": 700,
+                "display": "+700 bps",
+                "color": "#B5E52A"
+              },
+              {
+                "label": "Fixed income",
+                "value": -600,
+                "display": "−600 bps",
+                "color": "#E8735A"
+              },
+              {
+                "label": "Private equity",
+                "value": 200,
+                "display": "+200 bps",
+                "color": "#B5E52A"
+              },
+              {
+                "label": "Real estate",
+                "value": 100,
+                "display": "+100 bps",
+                "color": "#B5E52A"
+              },
+              {
+                "label": "Cash",
+                "value": -400,
+                "display": "−400 bps",
+                "color": "#E8735A"
+              }
             ]
           }
         ]
@@ -71,7 +166,7 @@
     "analysis": [
       {
         "title": "Two sleeves need correction",
-        "text": "Fixed income and cash sit below their policy minimums [S1]. The breach, rather than total NAV, drives the decision. Updated valuations could alter weights and would change the required trade sizes.",
+        "text": "Observation: Fixed income and cash are below policy minimums [S1]. Why it matters: The breaches drive trade sizing. Uncertainty: Valuations can move weights. What would change the view: Updated valuations that restore compliance.",
         "tone": "bad"
       }
     ]
@@ -82,11 +177,65 @@
         "type": "coverage",
         "title": "Policy constraint status",
         "items": [
-          {"name": "Allocation", "status": "breach", "note": "Two breached bands [S1]"},
-          {"name": "Return", "status": "watch", "note": "Objective gap [S1]"},
-          {"name": "Risk", "status": "not_assessed", "note": "Observation basis unavailable [S1]"},
-          {"name": "Liquidity", "status": "compliant", "note": "Minimum met [S1]"},
-          {"name": "Concentration", "status": "compliant", "note": "Manager cap met [S1]"}
+          {
+            "name": "Allocation",
+            "status": "breach",
+            "note": "Two breached bands [S1]"
+          },
+          {
+            "name": "Return",
+            "status": "watch",
+            "note": "Objective gap [S1]"
+          },
+          {
+            "name": "Risk",
+            "status": "not_assessed",
+            "note": "Observation basis unavailable [S1]"
+          },
+          {
+            "name": "Liquidity",
+            "status": "compliant",
+            "note": "Minimum met [S1]"
+          },
+          {
+            "name": "Concentration",
+            "status": "compliant",
+            "note": "Manager cap met [S1]"
+          }
+        ]
+      },
+      {
+        "type": "heat",
+        "title": "Policy status matrix (TEST)",
+        "columns": [
+          "Constraint",
+          "Status score"
+        ],
+        "rows": [
+          {
+            "label": "Allocation",
+            "values": [
+              -1.0
+            ]
+          },
+          {
+            "label": "Liquidity",
+            "values": [
+              1.0
+            ]
+          },
+          {
+            "label": "Concentration",
+            "values": [
+              1.0
+            ]
+          },
+          {
+            "label": "Risk evidence",
+            "values": [
+              0.0
+            ]
+          }
         ]
       }
     ],
@@ -95,38 +244,89 @@
         "type": "bars",
         "title": "Concentration vs limit",
         "items": [
-          {"label": "Largest manager", "value": 8.5, "display": "8.5%", "note": "10.0% limit"}
+          {
+            "label": "Largest manager",
+            "value": 8.5,
+            "display": "8.5%",
+            "note": "10.0% limit"
+          }
         ]
       }
     ],
     "analysis": [
       {
         "title": "Compliance evidence is mixed",
-        "text": "Allocation has two Breaches while risk is Not assessed [S1]. The committee can address the allocation issue now, but aligned risk observations could change the overall policy conclusion.",
+        "text": "Observation: Allocation has two Breaches while risk is Not assessed [S1]. Why it matters: Allocation can be addressed now. Uncertainty: Risk evidence is incomplete. What would change the view: Aligned risk observations that alter the policy conclusion.",
         "tone": "bad"
       }
     ]
   },
   "5": {
-    "before": [],
-    "after": [
+    "before": [
       {
         "type": "line",
         "title": "Growth of 100",
         "decimals": 0,
-        "ref": {"value": 100, "label": "Base 100"},
+        "ref": {
+          "value": 100,
+          "label": "Base 100"
+        },
         "series": [
-          {"name": "Portfolio", "points": [["2025-09-30", 100.0], ["2026-03-31", 103.1], ["2026-09-30", 106.9]]},
-          {"name": "Policy benchmark", "points": [["2025-09-30", 100.0], ["2026-03-31", 102.8], ["2026-09-30", 106.4]]}
+          {
+            "name": "Portfolio",
+            "points": [
+              [
+                "2025-09-30",
+                100.0
+              ],
+              [
+                "2026-03-31",
+                103.1
+              ],
+              [
+                "2026-09-30",
+                106.9
+              ]
+            ]
+          },
+          {
+            "name": "Policy benchmark",
+            "points": [
+              [
+                "2025-09-30",
+                100.0
+              ],
+              [
+                "2026-03-31",
+                102.8
+              ],
+              [
+                "2026-09-30",
+                106.4
+              ]
+            ]
+          }
         ]
-      },
+      }
+    ],
+    "after": [
       {
         "type": "bars",
         "title": "Calendar-year returns",
         "all_accent": false,
         "items": [
-          {"label": "2025", "value": 6.2, "display": "+6.2%", "color": "#B5E52A"},
-          {"label": "2026 (9 mo)", "value": 5.2, "display": "+5.2%", "color": "#B5E52A"}
+          {
+            "label": "2025",
+            "value": 6.2,
+            "display": "+6.2%",
+            "color": "#B5E52A"
+          },
+          {
+            "label": "2026 (9 mo)",
+            "value": 5.2,
+            "display": "+5.2%",
+            "color": "#B5E52A"
+          }
         ]
       },
       {
@@ -139,14 +339,13 @@
     "analysis": [
       {
         "title": "Relative return stayed positive",
-        "text": "The portfolio exceeded the policy benchmark by 49 bps over one year [S2]. That supports context, not causation. Attribution is unavailable, and a reconciled effect decomposition would change the interpretation.",
+        "text": "Observation: The portfolio exceeded policy by 49 bps over one year [S2]. Why it matters: It supplies context, not causation. Uncertainty: Attribution is unavailable. What would change the view: A reconciled effect decomposition.",
         "tone": "info"
       }
     ]
   },
   "6": {
-    "before": [],
-    "after": [
+    "before": [
       {
         "type": "chart",
         "chart": {
@@ -154,77 +353,201 @@
           "title": "Factor and currency exposure (TEST)",
           "status": "ok",
           "columns": [
-            {"key": "factor", "title": "Factor", "format": "text", "decimals": null},
-            {"key": "exposure", "title": "Exposure", "format": "number", "decimals": 2}
+            {
+              "key": "factor",
+              "title": "Factor",
+              "format": "text",
+              "decimals": null
+            },
+            {
+              "key": "exposure",
+              "title": "Exposure",
+              "format": "number",
+              "decimals": 2
+            }
           ],
-          "rows": [["Equity market", 0.78], ["Duration", 1.90]],
+          "rows": [
+            [
+              "Equity market",
+              0.78
+            ],
+            [
+              "Duration",
+              1.9
+            ]
+          ],
           "truncated": false,
-          "render_hint": {"block": "bars", "x": "factor", "y": ["exposure"]}
+          "render_hint": {
+            "block": "bars",
+            "x": "factor",
+            "y": [
+              "exposure"
+            ]
+          }
         }
       }
     ],
+    "after": [],
     "analysis": [
       {
         "title": "Concentration remains within limit",
-        "text": "The largest manager is 8.5% of NAV against a 10.0% limit [S1]. The available evidence is manager-level; completed look-through holdings could change the concentration assessment.",
+        "text": "Observation: The largest manager is 8.5% versus a 10.0% limit [S1]. Why it matters: The returned measure is compliant. Uncertainty: Look-through holdings are incomplete. What would change the view: Completed holdings showing higher concentration.",
         "tone": "good"
       }
     ]
   },
   "7": {
-    "before": [],
-    "after": [
+    "before": [
       {
         "type": "bars",
         "title": "Gradient vs consensus gap (bps)",
         "all_accent": false,
         "items": [
-          {"label": "Public equity", "value": 34, "display": "−34 bps", "color": "#E8735A"},
-          {"label": "Real estate", "value": 499, "display": "+499 bps", "color": "#B5E52A"}
+          {
+            "label": "Public equity",
+            "value": -34,
+            "display": "−34 bps",
+            "color": "#E8735A"
+          },
+          {
+            "label": "Real estate",
+            "value": 499,
+            "display": "+499 bps",
+            "color": "#B5E52A"
+          }
         ],
         "note": "Example consultant CMA survey, 2025-12-31 [S4]"
-      },
+      }
+    ],
+    "after": [
       {
         "type": "tiles",
         "title": "Forward context",
         "tiles": [
-          {"label": "GRIP", "value": "76", "sub": "Defensive [S7]", "tone": "watch"},
-          {"label": "Policy expected return", "value": "6.5%", "sub": "Baseline [S3]", "tone": "watch"},
-          {"label": "Return objective", "value": "7.0%", "sub": "IPS [S1]", "tone": "info"}
+          {
+            "label": "GRIP",
+            "value": "76",
+            "sub": "Defensive [S7]",
+            "tone": "watch"
+          },
+          {
+            "label": "Policy expected return",
+            "value": "6.5%",
+            "sub": "Baseline [S3]",
+            "tone": "watch"
+          },
+          {
+            "label": "Return objective",
+            "value": "7.0%",
+            "sub": "IPS [S1]",
+            "tone": "info"
+          }
         ]
       }
     ],
     "analysis": [
       {
         "title": "Assumption gap needs review",
-        "text": "The real-estate assumption is 499 bps above consensus [S4]. This is material to the forward case. Publisher dates and model basis differ, and aligned assumptions would change the comparison.",
+        "text": "Observation: Real estate is 499 bps above consensus [S4]. Why it matters: The gap affects the forward case. Uncertainty: Dates and model bases differ. What would change the view: Aligned assumptions that narrow the gap.",
         "tone": "watch"
       }
     ]
   },
   "9": {
-    "before": [],
-    "after": [
+    "before": [
       {
         "type": "bars",
         "title": "Liquidity tiers (% NAV)",
         "items": [
-          {"label": "T1", "value": 44.6, "display": "44.6%"},
-          {"label": "T2", "value": 11.9, "display": "11.9%"},
-          {"label": "T3", "value": 11.9, "display": "11.9%"},
-          {"label": "T4", "value": 31.7, "display": "31.7%"}
+          {
+            "label": "T1",
+            "value": 44.6,
+            "display": "44.6%"
+          },
+          {
+            "label": "T2",
+            "value": 11.9,
+            "display": "11.9%"
+          },
+          {
+            "label": "T3",
+            "value": 11.9,
+            "display": "11.9%"
+          },
+          {
+            "label": "T4",
+            "value": 31.7,
+            "display": "31.7%"
+          }
         ]
       },
+      {
+        "type": "stacked",
+        "title": "Liquidity tier mix (TEST)",
+        "items": [
+          {
+            "label": "Portfolio",
+            "segments": [
+              {
+                "label": "T1",
+                "value": 44.6,
+                "display": "44.6%"
+              },
+              {
+                "label": "T2",
+                "value": 11.9,
+                "display": "11.9%"
+              },
+              {
+                "label": "T3",
+                "value": 11.9,
+                "display": "11.9%"
+              },
+              {
+                "label": "T4",
+                "value": 31.7,
+                "display": "31.7%"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "after": [
       {
         "type": "chart",
         "chart": {
           "chart_id": "commitments-liquidity-scorecard",
           "title": "Commitments liquidity scorecard (TEST)",
           "status": "ok",
-          "columns": [{"key": "metric", "title": "Metric", "format": "text", "decimals": null}, {"key": "value", "title": "Value", "format": "number", "decimals": 2}],
-          "rows": [["Stress coverage", 2.61]],
+          "columns": [
+            {
+              "key": "metric",
+              "title": "Metric",
+              "format": "text",
+              "decimals": null
+            },
+            {
+              "key": "value",
+              "title": "Value",
+              "format": "number",
+              "decimals": 2
+            }
+          ],
+          "rows": [
+            [
+              "Stress coverage",
+              2.61
+            ]
+          ],
           "truncated": false,
-          "render_hint": {"block": "table", "x": "metric", "y": ["value"]}
+          "render_hint": {
+            "block": "table",
+            "x": "metric",
+            "y": [
+              "value"
+            ]
+          }
         }
       },
       {
@@ -233,10 +556,34 @@
           "chart_id": "commitments-pacing",
           "title": "Commitment pacing (TEST)",
           "status": "ok",
-          "columns": [{"key": "period", "title": "Period", "format": "text", "decimals": null}, {"key": "calls", "title": "Calls", "format": "currency", "decimals": 0}],
-          "rows": [["Next 12 months", 180000000]],
+          "columns": [
+            {
+              "key": "period",
+              "title": "Period",
+              "format": "text",
+              "decimals": null
+            },
+            {
+              "key": "calls",
+              "title": "Calls",
+              "format": "currency",
+              "decimals": 0
+            }
+          ],
+          "rows": [
+            [
+              "Next 12 months",
+              180000000
+            ]
+          ],
           "truncated": false,
-          "render_hint": {"block": "table", "x": "period", "y": ["calls"]}
+          "render_hint": {
+            "block": "table",
+            "x": "period",
+            "y": [
+              "calls"
+            ]
+          }
         }
       },
       {
@@ -245,66 +592,108 @@
           "chart_id": "commitments-cashflow",
           "title": "Commitment cash flow (TEST)",
           "status": "ok",
-          "columns": [{"key": "period", "title": "Period", "format": "text", "decimals": null}, {"key": "distributions", "title": "Distributions", "format": "currency", "decimals": 0}],
-          "rows": [["Next 12 months", 95000000]],
+          "columns": [
+            {
+              "key": "period",
+              "title": "Period",
+              "format": "text",
+              "decimals": null
+            },
+            {
+              "key": "distributions",
+              "title": "Distributions",
+              "format": "currency",
+              "decimals": 0
+            }
+          ],
+          "rows": [
+            [
+              "Next 12 months",
+              95000000
+            ]
+          ],
           "truncated": false,
-          "render_hint": {"block": "table", "x": "period", "y": ["distributions"]}
+          "render_hint": {
+            "block": "table",
+            "x": "period",
+            "y": [
+              "distributions"
+            ]
+          }
         }
       }
     ],
     "analysis": [
       {
         "title": "Liquidity clears the minimum",
-        "text": "Stress liquidity coverage is 2.61 against a 1.50 minimum [S1][S11]. The result supports implementation. Pacing relies on projected calls, and an updated commitment schedule would change the cushion.",
+        "text": "Observation: Stress coverage is 2.61 versus a 1.50 minimum [S1][S11]. Why it matters: It supports implementation. Uncertainty: Calls are projected. What would change the view: An updated commitment schedule that reduces coverage.",
         "tone": "good"
       }
     ]
   },
   "10": {
-    "before": [],
-    "after": [
+    "before": [
       {
         "type": "findings",
         "title": "Exposure-weighted diligence findings",
         "items": [
-          {"severity": "medium", "title": "Verification follow-up", "detail": "Manager A verification report remains open at 8.5% exposure [S5]."}
+          {
+            "severity": "medium",
+            "title": "Verification follow-up",
+            "detail": "Manager A verification report remains open at 8.5% exposure [S5]."
+          }
         ],
         "empty_title": "No active findings returned",
         "empty_text": "No active findings were returned by Gradient."
       }
     ],
+    "after": [],
     "analysis": [
       {
         "title": "No high findings returned",
-        "text": "No active High diligence findings were returned [S5]. This reduces immediate operational concern but does not close the verification follow-up; receipt of that report would change completeness.",
+        "text": "Observation: No active High findings were returned [S5]. Why it matters: Immediate operational concern is lower. Uncertainty: Verification remains open. What would change the view: New findings or completed verification evidence.",
         "tone": "watch"
       }
     ]
   },
   "12": {
-    "before": [],
-    "after": [
+    "before": [
       {
         "type": "tiles",
         "title": "Macro readings",
         "tiles": [
-          {"label": "GRIP", "value": "76", "sub": "2026-10-01 [S7]", "tone": "watch"},
-          {"label": "Core PCE", "value": "+0.3%", "sub": "3 months [S10]", "tone": "info"},
-          {"label": "Next CPI", "value": "Oct 14", "sub": "2026 [S10]", "tone": "info"}
+          {
+            "label": "GRIP",
+            "value": "76",
+            "sub": "2026-10-01 [S7]",
+            "tone": "watch"
+          },
+          {
+            "label": "Core PCE",
+            "value": "+0.3%",
+            "sub": "3 months [S10]",
+            "tone": "info"
+          },
+          {
+            "label": "Next CPI",
+            "value": "Oct 14",
+            "sub": "2026 [S10]",
+            "tone": "info"
+          }
         ]
       }
     ],
+    "after": [],
     "analysis": [
       {
         "title": "Macro context is defensive",
-        "text": "GRIP is 76 and Defensive as of 2026-10-01 [S7]. This informs pacing, not the breach decision. One lagging input degrades coverage; a refreshed signal would change the context.",
+        "text": "Observation: GRIP is 76 and Defensive [S7]. Why it matters: It informs pacing, not the breach decision. Uncertainty: One input is stale. What would change the view: A refreshed signal with a different regime.",
         "tone": "watch"
       }
     ]
   },
   "13": {
-    "before": [],
-    "after": [
+    "before": [
       {
         "type": "two_col",
         "title": "Current vs proposed weights",
@@ -314,9 +703,21 @@
             "title": "Current weights",
             "narrow": true,
             "items": [
-              {"label": "Public equity", "value": 52, "display": "52.0%"},
-              {"label": "Fixed income", "value": 19, "display": "19.0%"},
-              {"label": "Cash", "value": 1, "display": "1.0%"}
+              {
+                "label": "Public equity",
+                "value": 52,
+                "display": "52.0%"
+              },
+              {
+                "label": "Fixed income",
+                "value": 19,
+                "display": "19.0%"
+              },
+              {
+                "label": "Cash",
+                "value": 1,
+                "display": "1.0%"
+              }
             ]
           }
         ],
@@ -326,18 +727,31 @@
             "title": "Proposed weights",
             "narrow": true,
             "items": [
-              {"label": "Public equity", "value": 48, "display": "48.0%"},
-              {"label": "Fixed income", "value": 21, "display": "21.0%"},
-              {"label": "Cash", "value": 3, "display": "3.0%"}
+              {
+                "label": "Public equity",
+                "value": 48,
+                "display": "48.0%"
+              },
+              {
+                "label": "Fixed income",
+                "value": 21,
+                "display": "21.0%"
+              },
+              {
+                "label": "Cash",
+                "value": 3,
+                "display": "3.0%"
+              }
             ]
           }
         ]
       }
     ],
+    "after": [],
     "analysis": [
       {
         "title": "Proposal cures both breaches",
-        "text": "The proposed weights reduce IPS breaches from two to zero [S11]. This directly supports Section 1. Transaction costs and market movement remain uncertain; an updated implementation estimate would change sizing.",
+        "text": "Observation: Proposed weights reduce IPS breaches from two to zero [S11]. Why it matters: The change addresses the decision. Uncertainty: Costs and market movement remain unknown. What would change the view: An implementation estimate that materially changes sizing.",
         "tone": "good"
       }
     ]
@@ -348,9 +762,24 @@
         "type": "tiles",
         "title": "Risk count by rating",
         "tiles": [
-          {"label": "High", "value": "0", "sub": "No High risks [S1]", "tone": "bad"},
-          {"label": "Medium", "value": "2", "sub": "Basis and CMA [S1][S4]", "tone": "watch"},
-          {"label": "Low", "value": "1", "sub": "Objective gap [S3]", "tone": "good"}
+          {
+            "label": "High",
+            "value": "0",
+            "sub": "No High risks [S1]",
+            "tone": "bad"
+          },
+          {
+            "label": "Medium",
+            "value": "2",
+            "sub": "Basis and CMA [S1][S4]",
+            "tone": "watch"
+          },
+          {
+            "label": "Low",
+            "value": "1",
+            "sub": "Objective gap [S3]",
+            "tone": "good"
+          }
         ]
       }
     ],

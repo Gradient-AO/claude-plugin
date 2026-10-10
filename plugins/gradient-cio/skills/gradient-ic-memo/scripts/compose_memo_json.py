@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import copy
 import json
+import math
 import os
 import re
 import sys
@@ -35,6 +36,25 @@ PROHIBITED_ANALYSIS_ACTIONS = [
     r"\bthe committee must\b",
     r"\bthe committee is asked to\b",
 ]
+ANALYSIS_LABELS = (
+    "Observation:",
+    "Why it matters:",
+    "Uncertainty:",
+    "What would change the view:",
+)
+VISUAL_TYPES = {
+    "chart",
+    "line",
+    "bars",
+    "percentiles",
+    "waterfall",
+    "band",
+    "stacked",
+    "heat",
+    "tiles",
+    "coverage",
+    "findings",
+}
 EXECUTIVE_TILE_LABELS = [
     "Trailing 1Y vs benchmark",
     "IPS breaches",
@@ -140,7 +160,7 @@ def validate_slots(section: str, blocks: list[dict[str, Any]], errors: list[str]
 
 
 def validate_bars(blocks: list[dict[str, Any]], section: str, errors: list[str]) -> None:
-    """Validate renderer-safe values and signed-bar display conventions."""
+    """Validate finite signed bar values."""
     for block in blocks:
         if block.get("type") != "bars":
             continue
@@ -149,14 +169,15 @@ def validate_bars(blocks: list[dict[str, Any]], section: str, errors: list[str])
                 errors.append(f"Section {section}: bars item must be an object")
                 continue
             value = item.get("value")
-            if not isinstance(value, (int, float)) or isinstance(value, bool):
-                errors.append(f"Section {section}: bars item value must be numeric")
-                continue
-            if value < 0:
+            if (
+                not isinstance(value, (int, float))
+                or isinstance(value, bool)
+                or not math.isfinite(value)
+            ):
                 errors.append(
-                    f"Section {section}: bars '{block.get('title', '')}' has a negative "
-                    "value; use the signed-bar convention"
+                    f"Section {section}: bars item value must be a finite signed number"
                 )
+                continue
             display = str(item.get("display", "")).strip()
             if display.startswith(("-", "−")) and item.get("color") != "#E8735A":
                 errors.append(
@@ -199,6 +220,13 @@ def validate_analysis(
             errors.append(f"Section {section}: analysis '{title}' cites no [S#]")
         if len(text.split()) > 60:
             errors.append(f"Section {section}: analysis '{title}' exceeds 60 words")
+        normalized = text.replace("**", "")
+        positions = [normalized.find(label) for label in ANALYSIS_LABELS]
+        if any(position < 0 for position in positions) or positions != sorted(positions):
+            errors.append(
+                f"Section {section}: analysis '{title}' must use Observation, "
+                "Why it matters, Uncertainty, and What would change the view in order"
+            )
         if tone not in ALLOWED_TONES:
             errors.append(f"Section {section}: analysis '{title}' has invalid tone '{tone}'")
         for pattern in PROHIBITED_ANALYSIS_ACTIONS:
@@ -208,6 +236,49 @@ def validate_analysis(
                     "keep the action in Section 1"
                 )
                 break
+
+
+def validate_flow(
+    section: str,
+    before: list[Any],
+    after: list[Any],
+    markdown_has_table: bool,
+    errors: list[str],
+) -> None:
+    """Require evidence-first flow and reject table walls in nested block lists."""
+    before_blocks = nested_blocks(before)
+    if section in ANALYSIS_SECTIONS and markdown_has_table and not any(
+        block.get("type") in VISUAL_TYPES
+        or (
+            block.get("type") in {"callout", "unavailable"}
+            and re.search(r"\bNot (?:available|applicable) — \S", " ".join(collect_strings(block)))
+        )
+        for block in before_blocks
+    ):
+        errors.append(
+            f"Section {section}: before must start the analytical flow with a "
+            "visual or typed unavailable block"
+        )
+
+    def check_list(values: list[Any], location: str) -> None:
+        consecutive = 0
+        for index, value in enumerate(values):
+            if not isinstance(value, dict):
+                continue
+            consecutive = consecutive + 1 if value.get("type") == "table" else 0
+            if consecutive > 2:
+                errors.append(
+                    f"Section {section}: {location} has more than two consecutive "
+                    f"tables at block {index + 1}"
+                )
+            if value.get("type") == "two_col":
+                for side in ("left", "right"):
+                    children = value.get(side, [])
+                    if isinstance(children, list):
+                        check_list(children, f"{location}.{side}")
+
+    check_list(before, "before")
+    check_list(after, "after")
 
 
 def validate_inputs(
@@ -268,6 +339,16 @@ def validate_inputs(
         blocks = nested_blocks(before + after)
         validate_slots(section, blocks, errors)
         validate_bars(blocks, section, errors)
+        section_match = re.search(
+            rf"^## {re.escape(section)}\..*?(?=^## |\Z)",
+            markdown,
+            re.MULTILINE | re.DOTALL,
+        )
+        markdown_has_table = bool(
+            section_match
+            and re.search(r"^\s*\|", section_match.group(0), re.MULTILINE)
+        )
+        validate_flow(section, before, after, markdown_has_table, errors)
         if section in ANALYSIS_SECTIONS:
             validate_analysis(section, value.get("analysis"), errors)
 
@@ -321,6 +402,11 @@ def compose(markdown: str, visuals: dict[str, Any], meta: dict[str, Any]) -> dic
         analysis = [
             {
                 "type": "callout",
+                "role": (
+                    "key_judgment"
+                    if str(int(number)) == "2"
+                    else "analysis"
+                ),
                 "tone": callout.get("tone", "info"),
                 "title": (
                     f"Key judgment — {callout['title']}"

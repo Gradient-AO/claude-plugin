@@ -39,8 +39,26 @@ reinterpret or expand the checklist or follow-up requests.
         }
       ]
     },
-    "3. Findings Checklist": {
+    "Appendix A — Findings Checklist": {
       "before": [
+        {
+          "type": "stacked",
+          "title": "Checklist status by area",
+          "items": [
+            {"label": "Claim & verification", "segments": [
+              {"label": "Met", "value": 2}, {"label": "Partially met", "value": 1},
+              {"label": "Not met", "value": 0}, {"label": "Not found", "value": 0}
+            ]},
+            {"label": "Report numbers", "segments": [
+              {"label": "Met", "value": 1}, {"label": "Partially met", "value": 1},
+              {"label": "Not met", "value": 1}, {"label": "Not found", "value": 0}
+            ]},
+            {"label": "Disclosures", "segments": [
+              {"label": "Met", "value": 3}, {"label": "Partially met", "value": 0},
+              {"label": "Not met", "value": 0}, {"label": "Not found", "value": 1}
+            ]}
+          ]
+        },
         {
           "type": "bars",
           "title": "Findings by severity",
@@ -68,9 +86,10 @@ reinterpret or expand the checklist or follow-up requests.
 ```
 
 Section keys must match the markdown `##` heading text exactly. Each section may have `before` and `after`
-arrays. Supported renderer blocks are `text`, `bullets`, `kv`, `table`, `tiles`, `bars`, `percentiles`,
-`callout`, `coverage`, `findings`, `questions`, `two_col`, `markdown`, `pagebreak`, `line`, `statement` and
-`chart`. Visuals must use evidence already cited in the markdown source appendix.
+arrays. Supported renderer blocks are `text`, `bullets`, `kv`, `table`, `tiles`, `bars`, `pie`, `percentiles`,
+`waterfall`, `band`, `stacked`, `heat`, `callout`, `coverage`, `findings`, `questions`, `two_col`,
+`markdown`, `pagebreak`, `line`, `statement` and `chart`. Visuals must use evidence already cited in the
+markdown source appendix.
 
 ## Required visual contracts
 
@@ -78,10 +97,17 @@ arrays. Supported renderer blocks are `text`, `bullets`, `kv`, `table`, `tiles`,
   status counts. N/A and Not assessed rows are not folded into those four tiles.
 - A `coverage` block lists every material reviewed or expected, with status `available`, `degraded`,
   `unavailable` or `not assessed`, a dated note and source tag when evidence exists.
+- A `stacked` block summarizes Met / Partially met / Not met / Not found by checklist area. Values reconcile
+  exactly to the appendix checklist and do not include N/A or Not assessed rows.
 - A `findings` block carries the report's High/Medium/Low findings. Its sourced items reconcile to the
   `Findings by severity` bars. Do not convert checklist status into severity unless the workflow assigned it.
 - Every block with `role: "analysis"` is a callout and uses the four bold labels in the example. It cites at
-  least one Appendix A source. `follow_up_refs` contains only request numbers already present in the markdown.
+  least one Appendix A source, starts its title with `Analysis —`, and stays within 60 words. Use one to three
+  analysis callouts. `follow_up_refs` contains only request numbers already present in the markdown.
+- Page 2 contains three to five sourced `Key judgment —` callouts with `role: "key_judgment"`.
+- Use message-first section kickers where the report schema provides them. In analytical table sections, put
+  a visual or typed unavailable block in `before`; do not place more than two tables consecutively in any
+  nested block list. Quantitative marks use signed finite values.
 - If an expected block cannot be supported, use:
 
 ```json

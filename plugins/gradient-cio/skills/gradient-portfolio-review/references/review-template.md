@@ -21,8 +21,7 @@ to reach a page count. Keep every section when evidence is unavailable and repla
 9. Realized Risk and Decomposition — 2 pages.
 10. Projected Return and Risk Decomposition — 2 pages.
 11. Liquidity and Commitments — 1 page.
-12. Analysis and Considerations — 1 page.
-13. Coverage, Sources, Methods and Disclosures — 1–2 pages.
+12. Coverage, Sources, Methods and Disclosures — 1–2 pages.
 
 ## Report metadata
 
@@ -55,6 +54,8 @@ Use JSON block mode. Set:
 - Fixed row order: Performance, Attribution, Allocation / policy, Risk, Liquidity, Exposure / concentration.
 - `callout` **Scope of this review** stating that the report provides analysis and considerations, not
   investment recommendations.
+- Three to five sourced `Key judgment —` callouts connect performance, attribution, policy, liquidity,
+  GRIP and manager findings across the report.
 - If evidence is illustrative or completeness is Partial, show the required amber callout first.
 
 ### 2. Mandate, Policy and Data Basis
@@ -76,23 +77,24 @@ Use JSON block mode. Set:
 - `table` **Standard periods to <date>** with columns `Period`, `Portfolio`, `Benchmark`, `Excess`, `Coverage`.
 - `table` **Calendar years** with columns `Year`, `Portfolio`, `Benchmark`, `Excess`, `Coverage`.
 - `line` **Growth of 100** using only returned portfolio and benchmark points.
-- `text` **Interpretation** with no more than three sourced sentences: strongest relative period, weakest
-  relative period, and persistence or reversal visible in the returned periods. Do not infer causes here.
+- Signed `bars` **Calendar-year excess returns** using the same returned rows.
+- End with one to three sourced `Analysis —` callouts using the shared four-part structure.
 
 ### 5. Historical Attribution
 
+- `waterfall` **Allocation → selection → interaction** using returned linked effects.
 - `table` **Total attribution effects** with columns `Effect`, `Contribution`, `Source`.
 - `table` **Segment attribution** with columns `Segment`, `Allocation`, `Selection`, `Interaction`, `Total`.
   Sort by absolute returned total effect descending.
 - `kv` **Reconciliation and method** with active return, sum of effects, residual, method, linking, basis,
   currency and formula version as returned.
-- `text` **Interpretation** naming the largest positive and negative returned effects and whether diagnostics
-  reconcile within the returned tolerance.
+- End with one to three sourced `Analysis —` callouts naming the largest effects and reconciliation status.
 - Historical attribution comes only from `get_portfolio_attribution`. Never substitute Strategy Lab relative
   return or factor output.
 
 ### 6. Allocation and Policy Compliance
 
+- `band` **Current weight versus policy range** for every governed asset-class row, with the policy target.
 - `table` **Asset class versus policy** with columns `Asset class`, `Target`, `Actual`, `Active`, `Range`,
   `Headroom`, `Status`.
 - `table` **Sub-allocation versus policy** with the same columns when depth-1 rows exist.
@@ -101,8 +103,8 @@ Use JSON block mode. Set:
   usable evidence. When it is not licensed, include one `callout` in this section:
   `Not licensed — Peer allocation context was skipped because peerIntelligence is not available for this
   organization. This review uses portfolio evidence only.`
-- `text` **Interpretation** identifying breaches, watch rows and the smallest returned headroom. Do not propose
-  a rebalance.
+- End with one to three sourced `Analysis —` callouts identifying breaches, watch rows and the smallest
+  returned headroom without proposing a rebalance.
 
 ### 7. Exposures and Concentration
 
@@ -111,7 +113,10 @@ Use JSON block mode. Set:
   `% NAV`, `As of`, `Coverage`.
 - `table` **Governed concentration checks** with columns `Axis`, `Observed`, `Limit`, `Status`, `Source`.
 - Optional returned factor, currency, sector, geography and 13F look-through blocks. Preserve each basis.
+- `findings` **Exposure-weighted diligence findings** for every resolved manager or fund; preserve severity,
+  due date and exposure. Use a typed unavailable state for unmatched entities.
 - Include the standard 13F lag, coverage and FX caveat whenever 13F evidence appears.
+- End with one to three sourced `Analysis —` callouts.
 
 ### 8. Realized Risk and Decomposition
 
@@ -120,8 +125,8 @@ Use JSON block mode. Set:
 - `table` **Policy risk limits** with columns `Metric`, `Observed`, `Limit`, `Status`, `Coverage`.
 - Embed unchanged returned marginal contribution to risk, risk contribution, factor exposure and currency
   exposure charts when available.
-- `text` **Interpretation** separates observed historical risk from governed policy assessment. A
-  `not_assessed` policy row is never inferred from historical metrics.
+- End with one to three sourced `Analysis —` callouts separating observed historical risk from governed
+  policy assessment. A `not_assessed` row is never inferred from historical metrics.
 
 ### 9. Projected Return and Risk Decomposition
 
@@ -133,26 +138,27 @@ Use JSON block mode. Set:
 - Optional `table` **Strategy Lab sandbox** with returned simulation, expected-statistics, relative-return,
   or date-window robustness results only when `return_series_ids` were selected.
 - Label Strategy Lab content `Selected-series sandbox — not saved-portfolio analytics`.
+- Add four **Forward context** tiles for GRIP score, GRIP stance, policy expected return and return objective;
+  preserve every GRIP availability or degradation reason.
 - Never title this section or any block `Simulated attribution`. No public saved-portfolio simulated
   attribution contract exists.
+- End with one to three sourced `Analysis —` callouts.
 
 ### 10. Liquidity and Commitments
 
+- `stacked` **Liquidity tiers** as one bar using the governed bucket shares.
 - `table` **Liquidity profile** with columns `Bucket`, `% NAV`, `Amount`, `Policy requirement`, `Status`.
 - `kv` with Locked share, Unfunded commitment ratio, Liquid assets, Unfunded commitments and Coverage.
 - Embed unchanged returned commitments, cash-flow, pacing and liquidity-scorecard charts.
-- `text` **Interpretation** identifies timing mismatches and coverage limitations without proposing actions.
+- End with one to three sourced `Analysis —` callouts identifying timing mismatches and coverage limitations
+  without proposing actions.
 
-### 11. Analysis and Considerations
+Every analytical section's callouts use titles `Analysis — <message>` with no more than six message words.
+Text is no more than 60 words and uses, in order: `Observation:`, `Why it matters:`, `Uncertainty:`,
+`What would change the view:`. Do not state a recommendation, action, trade, allocation change, manager
+decision or vote.
 
-- Three to six sourced `callout` blocks with `role: "analysis"`. Analysis-role blocks appear only here. Sort
-  by materiality: policy breach, policy watch, performance / attribution, risk, liquidity, exposure /
-  concentration, forward assumptions.
-- Titles contain no more than six words. Text is no more than 80 words and uses these labels exactly, in
-  order: `Observation:`, `Why it matters:`, `Uncertainty:`, `What would change the view:`.
-- Do not state a recommendation, action, trade, allocation change, manager decision or vote.
-
-### 12. Coverage
+### 11. Coverage
 
 - `coverage` block with every expected source for comprehensive mode.
 - Status values: `available`, `degraded`, `unavailable`, `not licensed`.

@@ -1,13 +1,13 @@
 ---
 name: gradient-odd-report
-description: "Produce a branded, fully sourced operational due diligence (ODD) report PDF for a manager or fund from GradientCIO data, with an evidence signal, follow-up questions and a source appendix; triages multi-fund rosters first."
+description: "Produce a branded, fully sourced operational due diligence (ODD) report for a manager or fund from GradientCIO data, with an evidence signal, follow-up questions and a source appendix; triages multi-fund rosters first."
 ---
 
 # Gradient ODD Report
 
-Builds a 9–11 page, visually polished PDF ODD report from GradientCIO evidence. Claude writes the content as a
-structured `report.json`; the shared Gradient renderer (`scripts/gradient_report.py`) turns it into the PDF in
-the house style used by every Gradient client skill (see `references/report-style.md`). Every number comes from a Gradient result, a user document, or a listed
+Builds a visually polished ODD report from GradientCIO evidence; its PDF form is normally 9–11 pages. Claude
+writes one structured `report.json`, rendered in the house style used by every Gradient client skill (see
+`references/report-style.md`). Every number comes from a Gradient result, a user document, or a listed
 calculation. Never fill a value from memory.
 
 **One full report covers one subject (one fund or one firm).** Never combine several funds' full reports in one
@@ -70,7 +70,7 @@ The goal is a quick, cheap ranking so full reports are built only where they're 
 5. If the session is unattended, produce the Roster ODD Summary PDF plus full reports for `elevated` funds only,
    and state that choice at the top of the reply.
 
-## Step 1B — Roster ODD Summary PDF (optional)
+## Step 1B — Roster ODD Summary (optional)
 
 Uses the same renderer and the same source and validation rules. Build `report.json` with:
 
@@ -91,11 +91,12 @@ Uses the same renderer and the same source and validation rules. Build `report.j
   2. **Roster detail** (`new_page: false` if it fits): one row per fund, all funds, same columns plus
      completeness and changes since review.
   3. **Appendix — sources & method**: the sources table, the triage rubric above, and the disclaimer.
-- Target 2–3 pages. Save as "<Organization> - Roster ODD Summary.pdf". Render and check as in Step 5.
+- Target 2–3 PDF pages. Use base name "<Organization> - Roster ODD Summary". Render and check as in Step 5.
 
 ## Step 1C — Several full reports
 
-- Produce **one PDF per fund**, each following Steps 2–5 independently, named "<Fund> - ODD Report.pdf".
+- Produce **one report per fund** in the selected format(s), each following Steps 2–5 independently, with base
+  name "<Fund> - ODD Report".
 - Reuse firm-level results across funds that share a parent firm (13F snapshot, firm events, firm-level
   findings): call once per firm and cite the same `S#` evidence in each report.
 - Build them one at a time and send each PDF as it's finished. Finish with a short chat table: fund, ODD
@@ -144,18 +145,9 @@ Rules:
 - **Form ADV is adviser-reported**, not SEC verification. Percentiles, pillars, the composite and the cohort
   are Gradient analytics: say the cohort was selected by Gradient, and that percentiles are positioning, not
   a quality or performance ranking.
-- **Item codes:** describe "yes" responses using the Form ADV Part 1A question (paraphrased), not Gradient's
-  `flag_labels`. Those labels currently describe Item 8 codes as custody, which is Item 9, so they don't match
-  the form. Reference: 6.A(n) other business activities (6.A(3) = commodity pool operator or commodity trading
-  advisor); 7.A(n) related-person types (7.A(2) = another investment adviser, 7.A(16) = sponsor, GP or managing
-  member of pooled vehicles); 7.B = advises private funds; 8.A(1) = principal transactions; 8.A(2) = trades for
-  itself securities it recommends; 8.A(3) = other proprietary interest; 8.B(n) = sales interest
-  (8.B(2) = securities a related person underwrites or is GP for); 8.C(n) = discretion (8.C(1) = which
-  securities); 9.x = custody; 11 = disciplinary history.
-- **Item 5.D client types:** (a) individuals, (b) high-net-worth individuals, (c) banks and thrifts,
-  (d) investment companies, (e) business development companies, (f) pooled vehicles, (g) pension plans,
-  (h) charitable organizations, (i) state and municipal entities, (j) other advisers, (k) insurance companies,
-  (l) sovereign wealth funds and foreign official institutions, (m) corporations, (n) other.
+- **Item codes:** describe "yes" responses using the Form ADV Part 1A question, not Gradient's `flag_labels`;
+  Item 8 covers transaction, sales-interest and discretion practices, Item 9 custody and Item 11 disciplinary
+  history. Keep returned Item 5.D client-type labels; do not reinterpret them.
 - **Schedule A/B ownership bands:** NA <5%, A 5–<10%, B 10–<25%, C 25–<50%, D 50–<75%, E ≥75%,
   F other (general partner, trustee, elected manager).
 - **13F** is firm-level, lagged, long-only reportable exposure. Never present it as the fund's holdings.
@@ -196,8 +188,8 @@ the gap in it):
 1. **Executive summary** (`id: "executive"`) — the exec band and tiles render automatically from
    `executive`. Add a `two_col` of 3+3 bullets and a `coverage` block listing all 9 sections. Keep notes to one
    line so it fits on one page.
-2. **Firm profile & ownership** — identity `kv` plus a `narrow` client-type `bars` chart in a `two_col`, then
-   an owners table.
+2. **Firm profile & ownership** — exactly four headline ADV tiles (RAUM, clients, employees and private
+   funds), then identity `kv` plus a `narrow` client-type `bars` chart in a `two_col`, then an owners table.
 3. **Regulatory, conflicts & custody** — an Item 11 callout, an item-responses table, and a table of changes
    since the prior release.
 4. **Peer positioning** — a `percentiles` chart (sort by percentile, descending), `narrow` pillar bars, and
@@ -206,7 +198,8 @@ the gap in it):
    sorted by gross assets, and observation bullets.
 6. **Reported equity holdings (Form 13F)** — 4 tiles, a top-10 `bars` chart, a "how to read this" callout, and a
    small `kv` "ADV vs 13F consistency" (ADV RAUM, 13F total, ratio, 13F period and age, identity check, flags).
-7. **Monitoring, findings & DDQ** — two `kv`s, a `findings` block, and the DDQ status.
+7. **Monitoring, findings & DDQ** — a chronological `timeline` of firm and fund events, two `kv`s, a
+   `findings` block, and the DDQ status.
 8. **Follow-up questions & open items** — `questions`, then an open-items table with status chips.
 9. **Appendix — sources & method** — a sources table, server metric methods next to the rubric, and the disclaimer
    text.
@@ -221,6 +214,14 @@ dates, and preserve unchanged returned chart items inside `chart` blocks.
 Chip statuses: available, passed, aligned (lime); degraded, advisory, partial (amber); unavailable, failed,
 missing (coral); not_applicable, not_run, not_assessed (slate). Text fields support `**bold**`, `` `code` `` and
 source tags.
+
+Apply `../../shared/writing-standards.md`: page 2 contains three to five sourced `Key judgment —` callouts
+with `role: "key_judgment"`; every analytical section contains one to three `Analysis —` callouts of at most
+60 words. Explain explicitly how pillar percentiles and open findings combine into the overall signal.
+Analytical kickers state the finding. Put profile tiles or `bars`, peer `percentiles`, holdings `bars`, event
+`timeline`, findings severity visual or a typed unavailable state before each analytical section's first
+table. A returned `heat` may summarize source coverage or conflicts. Never place more than two tables
+consecutively, including inside `two_col`, and preserve signed finite values.
 
 Top level:
 
@@ -237,25 +238,27 @@ Top level:
  "sections": [ {"id": "executive", "title": "Executive summary", "kicker": "…", "blocks": [ … ]}, … ]}
 ```
 
-Every section starts on a new page; set `"new_page": false` on a section to continue on the same page.
+Sections flow by default. Start a new page before sections 2, 4, 5, 7 and 8; keep sections 2–3 and 5–6
+together, and let the first appendix start a new page automatically. A complete report should finish in
+8–9 dense pages.
 
 ## Step 5 — Render, check, deliver
 
 1. Run `python <this skill's directory>/scripts/validate_odd_report.py report.json`. Fix every error and
    re-run until it passes. Do not render a report that fails validation.
-2. Run `python <this skill's directory>/scripts/gradient_report.py report.json "<Subject> - ODD Report.pdf"`.
-   Requirements and troubleshooting are in `references/report-style.md`. Never write a separate renderer or
-   change the styling.
-3. Rasterize with `pdftoppm -r 60 -png` and look at every page. Fix any page holding only a short tail of
-   overflow (shorten notes or bullets, or set `new_page: false`), any squashed chart in a column (set
-   `narrow: true`), and any wrapped dates or digests (align `n`). Re-render and repeat the full page review.
-   Delivery is blocked until no clipping, overflow, orphaned heading or unreadable visual remains.
-4. Fact-check: reconcile each server-returned numeric comparison within its stated tolerance, and spot-check
+2. Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select
+   both when it says `both` or `board pack`. Both formats must come from the same validated `report.json`.
+3. Render with
+   `python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Subject> - ODD Report"`.
+4. Inspect every requested output. Rasterize PDF with `pdftoppm -r 60 -png`; run the shared slide
+   rendering/layout check for PPTX. Fix short overflow tails, squashed charts and wrapped dates or digests,
+   then re-render and repeat the full review. Delivery is blocked until no clipping, overflow, orphaned
+   heading or unreadable visual remains.
+5. Fact-check: reconcile each server-returned numeric comparison within its stated tolerance, and spot-check
    every table value against the saved JSON.
-5. Save the PDF under `/mnt/user-data/outputs/`. If a folder is connected, also write it there. In chat, give a
-   three-line summary (signal and completeness, the top concern, the number of open items) and the file. Don't
-   repeat the report in chat. For several reports (Step 1C), use the closing table instead of a three-line
-   summary per fund.
+6. Save requested output(s) under `/mnt/user-data/outputs/` and any connected folder. In chat, give a
+   three-line summary (signal and completeness, top concern, open-item count) and the file(s). For several
+   reports, use the closing table instead of a summary per fund.
 
 ## Step 6 — Follow-up actions (only when the user asks)
 

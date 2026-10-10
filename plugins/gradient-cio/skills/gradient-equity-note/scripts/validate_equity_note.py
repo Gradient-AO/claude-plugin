@@ -24,9 +24,9 @@ SPEC = ReportSpec(
         SectionRule(title, title)
         for title in (
             "Executive summary",
-            "Fundamentals and changes since the last filing",
+            "Fundamentals, filing changes and risk factors",
             "Peers",
-            "Risk factors and industry structure",
+            "Industry structure",
             "Latest earnings release",
             "Positioning and crowding",
             "Who holds it on the roster",
@@ -39,16 +39,25 @@ SPEC = ReportSpec(
     slot_rules=(
         SlotRule(r"Executive summary", frozenset({"coverage"}), "coverage block"),
         SlotRule(
-            r"Fundamentals and changes since the last filing",
+            r"Fundamentals, filing changes and risk factors",
             frozenset({"table"}),
             "fundamentals table",
         ),
+        SlotRule(
+            r"Fundamentals, filing changes and risk factors",
+            frozenset({"line"}),
+            "revenue and margin line",
+        ),
+        SlotRule(
+            r"Fundamentals, filing changes and risk factors",
+            frozenset({"heat"}),
+            "filing-change heat",
+        ),
         SlotRule(r"Peers", frozenset({"table"}), "peer table"),
         SlotRule(
-            r"Risk factors and industry structure",
+            r"Industry structure",
             frozenset({"table"}),
-            "risk/industry table",
-            minimum=2,
+            "industry table",
         ),
         SlotRule(
             r"Latest earnings release",
@@ -59,6 +68,11 @@ SPEC = ReportSpec(
             r"Positioning and crowding",
             frozenset({"kv", "table"}),
             "positioning evidence",
+        ),
+        SlotRule(
+            r"Positioning and crowding",
+            frozenset({"bars"}),
+            "crowding bars",
         ),
         SlotRule(
             r"Who holds it on the roster",
@@ -79,8 +93,24 @@ SPEC = ReportSpec(
         r"\bupside potential\b",
     ),
     analysis_section_patterns=(
-        r"Fundamentals and changes since the last filing",
+        r"Fundamentals, filing changes and risk factors",
     ),
+    analytical_section_patterns=(
+        r"Fundamentals, filing changes and risk factors",
+        r"Peers",
+        r"Industry structure",
+        r"Positioning and crowding",
+    ),
+    require_message_first_kickers=True,
+    require_visual_before_first_table=True,
+    key_judgment_section_patterns=(r"Executive summary",),
+    executive_tile_labels=(
+        "Revenue growth",
+        "Operating margin",
+        "Net debt / EBITDA",
+        "Latest filing",
+    ),
+    require_tile_sources=True,
 )
 
 

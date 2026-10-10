@@ -73,6 +73,17 @@ SPEC = ReportSpec(
     ),
     require_question_sources=True,
     analysis_section_patterns=(r"Discrepancies & follow-up questions",),
+    analytical_section_patterns=(r"Discrepancies & follow-up questions",),
+    require_message_first_kickers=True,
+    require_visual_before_first_table=True,
+    key_judgment_section_patterns=(r"Executive summary",),
+    executive_tile_labels=(
+        "Contradicted",
+        "Needs review",
+        "Consistent",
+        "Not checkable",
+    ),
+    require_tile_sources=True,
 )
 
 

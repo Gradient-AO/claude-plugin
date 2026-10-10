@@ -1,6 +1,6 @@
 ---
 name: gradient-real-assets-portfolio-construction
-description: "Constructs a broad real-assets portfolio from an existing GradientCIO portfolio and produces a standalone 10–14 page investment-committee PDF with a recommendation, current and target sub-segment mix, liquid-versus-drawdown structure, inflation context, forward assumptions, commitments and liquidity evidence where applicable, manager considerations, implementation steps, risks and approvals. Use for real estate, infrastructure, natural resources, commodities, inflation-linked assets or diversified real-assets rebalances."
+description: "Constructs a broad real-assets portfolio from an existing GradientCIO portfolio and produces a standalone investment-committee report with a recommendation, current and target sub-segment mix, liquid-versus-drawdown structure, inflation context, forward assumptions, commitments and liquidity evidence where applicable, manager considerations, implementation steps, risks and approvals. Use for real estate, infrastructure, natural resources, commodities, inflation-linked assets or diversified real-assets rebalances."
 ---
 
 # Real Assets Portfolio Construction
@@ -11,8 +11,8 @@ Gradient portfolio, separate marketable from drawdown sleeves, and recommend a t
 implementation path. The committee decides; this skill never creates, updates or rebalances a portfolio in
 GradientCIO.
 
-The deliverable is a branded 10–14 page PDF:
-`"<Portfolio> - Real Assets Portfolio Construction <YYYY-MM-DD>.pdf"`.
+The deliverable is a branded report. Its PDF form is normally 10–14 pages and uses the base name
+`"<Portfolio> - Real Assets Portfolio Construction <YYYY-MM-DD>"`.
 
 ## Files in this skill
 
@@ -25,7 +25,7 @@ The deliverable is a branded 10–14 page PDF:
 | `references/chart-data.md` | Always — chart discovery, basis and unchanged chart blocks. |
 | `references/report-style.md` | Before rendering — metadata, blocks and delivery checks. |
 | `scripts/validate_construction.py` | After drafting — validates structure, evidence and decision language. |
-| `scripts/gradient_report.py` | Renders the JSON report. Never restyle it. |
+| `scripts/render.py` | Renders validated `report.json` to PDF, PPTX or both. Never restyle it. |
 
 ## 1. Scope
 
@@ -88,11 +88,17 @@ Run until clean:
 
 ```text
 python scripts/validate_construction.py report.json
-python scripts/gradient_report.py report.json "<Portfolio> - Real Assets Portfolio Construction <YYYY-MM-DD>.pdf"
 ```
 
-Inspect every page and reconcile all figures to saved evidence. Reply with three lines: recommendation,
-real-assets policy status, open-item count, plus the PDF.
+Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select
+both when it says `both` or `board pack`. Both formats must come from the same validated `report.json`.
+
+```text
+python scripts/render.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Real Assets Portfolio Construction <YYYY-MM-DD>"
+```
+
+Inspect every requested output and reconcile all figures to saved evidence. Reply with three lines:
+recommendation, real-assets policy status, open-item count, plus the requested file(s).
 
 ## 5. Handoffs
 

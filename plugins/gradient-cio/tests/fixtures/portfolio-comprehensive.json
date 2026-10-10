@@ -9,12 +9,30 @@
     "data_as_of": "2026-06-30 (portfolio); 2026-05-15 (Form 13F)",
     "confidentiality": "TEST DATA — fictional portfolio for rendering tests only",
     "cover_facts": [
-      ["Period end", "2026-06-30"],
-      ["Base currency", "USD"],
-      ["Total NAV", "$1,500.0M"],
-      ["Policy benchmark", "Example Policy Benchmark (TEST)"],
-      ["Review mode", "Comprehensive"],
-      ["Data scope", "Fictional TEST data"]
+      [
+        "Period end",
+        "2026-06-30"
+      ],
+      [
+        "Base currency",
+        "USD"
+      ],
+      [
+        "Total NAV",
+        "$1,500.0M"
+      ],
+      [
+        "Policy benchmark",
+        "Example Policy Benchmark (TEST)"
+      ],
+      [
+        "Review mode",
+        "Comprehensive"
+      ],
+      [
+        "Data scope",
+        "Fictional TEST data"
+      ]
     ],
     "signal_title": "Portfolio status",
     "signal": {
@@ -67,15 +85,65 @@
         {
           "type": "table",
           "title": "At a glance",
-          "columns": ["Area", "Evidence-based finding", "Status"],
-          "align": ["l", "l", "l"],
+          "columns": [
+            "Area",
+            "Evidence-based finding",
+            "Status"
+          ],
+          "align": [
+            "l",
+            "l",
+            "l"
+          ],
           "rows": [
-            ["Performance", "Trailing 1Y return is 0.6pp below the policy benchmark [S4].", {"chip": "Watch", "status": "watch"}],
-            ["Attribution", "Public-equity selection is the largest negative effect for the review period [S5].", {"chip": "Watch", "status": "watch"}],
-            ["Allocation / policy", "All allocation bands remain inside their governed ranges [S3].", {"chip": "Compliant", "status": "compliant"}],
-            ["Risk", "Realized volatility is below the benchmark; the private-assets risk contribution is the largest [S4][S7].", {"chip": "Available", "status": "available"}],
-            ["Liquidity", "Daily-to-quarterly assets cover 63.0% of NAV; unfunded commitments equal 9.3% [S3].", {"chip": "Compliant", "status": "compliant"}],
-            ["Exposure / concentration", "The largest manager is 12.8% of NAV against a 15.0% policy limit [S3][S6].", {"chip": "Watch", "status": "watch"}]
+            [
+              "Performance",
+              "Trailing 1Y return is 0.6pp below the policy benchmark [S4].",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              }
+            ],
+            [
+              "Attribution",
+              "Public-equity selection is the largest negative effect for the review period [S5].",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              }
+            ],
+            [
+              "Allocation / policy",
+              "All allocation bands remain inside their governed ranges [S3].",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              }
+            ],
+            [
+              "Risk",
+              "Realized volatility is below the benchmark; the private-assets risk contribution is the largest [S4][S7].",
+              {
+                "chip": "Available",
+                "status": "available"
+              }
+            ],
+            [
+              "Liquidity",
+              "Daily-to-quarterly assets cover 63.0% of NAV; unfunded commitments equal 9.3% [S3].",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              }
+            ],
+            [
+              "Exposure / concentration",
+              "The largest manager is 12.8% of NAV against a 15.0% policy limit [S3][S6].",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              }
+            ]
           ]
         },
         {
@@ -83,8 +151,30 @@
           "tone": "info",
           "title": "Scope of this review",
           "text": "This monitoring report provides sourced analysis and considerations for discussion. It does not contain investment recommendations, trades, allocation changes, manager actions or proposed votes."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — headline signal",
+          "text": "Observation: The fictional TEST report carries a 2 policy items on watch signal [S1]. Why it matters: The signal frames the review. Uncertainty: Evidence coverage is bounded. What would change the view: New governed evidence that changes the signal."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "info",
+          "title": "Key judgment — primary measure",
+          "text": "Observation: Trailing 1Y is 8.4% in the TEST evidence [S2]. Why it matters: This measure anchors the executive view. Uncertainty: The fixture is deliberately compact. What would change the view: A refreshed source with a materially different value."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "info",
+          "title": "Key judgment — monitoring priority",
+          "text": "Observation: Liquid share is 63.0% in the TEST evidence [S3]. Why it matters: It identifies a monitoring priority. Uncertainty: Supporting detail is limited. What would change the view: Corroborated evidence that resolves or reverses the item."
         }
-      ]
+      ],
+      "new_page": true
     },
     {
       "title": "Mandate, Policy and Data Basis",
@@ -93,30 +183,120 @@
         {
           "type": "kv",
           "rows": [
-            ["Portfolio", "Example Comprehensive Portfolio (TEST)", "S2"],
-            ["Organization", "Example Institution (TEST)", "S1"],
-            ["Review period", "2026-04-01 to 2026-06-30", "S4"],
-            ["Base currency", "USD", "S2"],
-            ["Policy benchmark", "Example Policy Benchmark (TEST)", "S4"],
-            ["Return basis", "Net of investment-management fees", "S4"],
-            ["Assumption set / regime", "Example 2026 CMA (TEST) / Baseline", "S8"],
-            ["Data scope", "Fictional TEST data", "S1"]
+            [
+              "Portfolio",
+              "Example Comprehensive Portfolio (TEST)",
+              "S2"
+            ],
+            [
+              "Organization",
+              "Example Institution (TEST)",
+              "S1"
+            ],
+            [
+              "Review period",
+              "2026-04-01 to 2026-06-30",
+              "S4"
+            ],
+            [
+              "Base currency",
+              "USD",
+              "S2"
+            ],
+            [
+              "Policy benchmark",
+              "Example Policy Benchmark (TEST)",
+              "S4"
+            ],
+            [
+              "Return basis",
+              "Net of investment-management fees",
+              "S4"
+            ],
+            [
+              "Assumption set / regime",
+              "Example 2026 CMA (TEST) / Baseline",
+              "S8"
+            ],
+            [
+              "Data scope",
+              "Fictional TEST data",
+              "S1"
+            ]
           ]
         },
         {
           "type": "table",
           "title": "Policy framework",
-          "columns": ["Area", "Objective or limit", "Observed", "Status", "Source"],
-          "align": ["l", "l", "l", "l", "n"],
+          "columns": [
+            "Area",
+            "Objective or limit",
+            "Observed",
+            "Status",
+            "Source"
+          ],
+          "align": [
+            "l",
+            "l",
+            "l",
+            "l",
+            "n"
+          ],
           "rows": [
-            ["Return objective", "5.5% nominal over 10 years", "6.2% expected return", {"chip": "Compliant", "status": "compliant"}, "[S3][S8]"],
-            ["Realized volatility", "At or below 12.0%", "9.1%", {"chip": "Compliant", "status": "compliant"}, "[S3][S4]"],
-            ["Maximum drawdown", "Monitor at -18.0%", "-12.4%", {"chip": "Compliant", "status": "compliant"}, "[S3][S4]"],
-            ["Private assets", "15.0% to 30.0%", "28.2%", {"chip": "Watch", "status": "watch"}, "[S3]"],
-            ["Single manager", "At or below 15.0%", "12.8%", {"chip": "Watch", "status": "watch"}, "[S3][S6]"]
+            [
+              "Return objective",
+              "5.5% nominal over 10 years",
+              "6.2% expected return",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              },
+              "[S3][S8]"
+            ],
+            [
+              "Realized volatility",
+              "At or below 12.0%",
+              "9.1%",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              },
+              "[S3][S4]"
+            ],
+            [
+              "Maximum drawdown",
+              "Monitor at -18.0%",
+              "-12.4%",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              },
+              "[S3][S4]"
+            ],
+            [
+              "Private assets",
+              "15.0% to 30.0%",
+              "28.2%",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              },
+              "[S3]"
+            ],
+            [
+              "Single manager",
+              "At or below 15.0%",
+              "12.8%",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              },
+              "[S3][S6]"
+            ]
           ]
         }
-      ]
+      ],
+      "new_page": true
     },
     {
       "title": "Period and Market Context",
@@ -134,12 +314,41 @@
             "status": "ok",
             "currency": "USD",
             "columns": [
-              {"key": "market", "title": "Market", "format": "text", "decimals": null},
-              {"key": "return", "title": "Quarter return", "format": "percentage", "decimals": 1}
+              {
+                "key": "market",
+                "title": "Market",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "return",
+                "title": "Quarter return",
+                "format": "percentage",
+                "decimals": 1
+              }
             ],
-            "rows": [["Global equity", 0.041], ["Core bonds", 0.012], ["Real assets", 0.023]],
+            "rows": [
+              [
+                "Global equity",
+                0.041
+              ],
+              [
+                "Core bonds",
+                0.012
+              ],
+              [
+                "Real assets",
+                0.023
+              ]
+            ],
             "truncated": false,
-            "render_hint": {"block": "bars", "x": "market", "y": ["return"]}
+            "render_hint": {
+              "block": "bars",
+              "x": "market",
+              "y": [
+                "return"
+              ]
+            }
           }
         },
         {
@@ -148,42 +357,13 @@
           "title": "Forward context",
           "text": "The regime and capital-market figures used later are assumptions, not forecasts [S8][S9]."
         }
-      ]
+      ],
+      "new_page": true
     },
     {
       "title": "Historical Returns",
       "kicker": "Observed performance versus the policy benchmark",
       "blocks": [
-        {
-          "type": "table",
-          "title": "Standard periods to 2026-06-30",
-          "columns": ["Period", "Portfolio", "Benchmark", "Excess", "Coverage"],
-          "align": ["l", "r", "r", "r", "l"],
-          "rows": [
-            ["QTD", "2.8%", "3.2%", "-0.4pp", {"chip": "Complete", "status": "available"}],
-            ["YTD", "4.6%", "5.1%", "-0.5pp", {"chip": "Complete", "status": "available"}],
-            ["1Y", "8.4%", "9.0%", "-0.6pp", {"chip": "Complete", "status": "available"}],
-            ["3Y (ann.)", "7.1%", "7.5%", "-0.4pp", {"chip": "Complete", "status": "available"}],
-            ["5Y (ann.)", "6.3%", "6.1%", "+0.2pp", {"chip": "Complete", "status": "available"}],
-            ["10Y (ann.)", "Not available", "Not available", "Not available", {"chip": "Insufficient history", "status": "not_applicable"}],
-            ["Since inception (ann.)", "6.6%", "6.4%", "+0.2pp", {"chip": "Complete", "status": "available"}]
-          ],
-          "note": "Returned period labels, annualization and coverage are preserved [S4]."
-        },
-        {
-          "type": "table",
-          "title": "Calendar years",
-          "columns": ["Year", "Portfolio", "Benchmark", "Excess", "Coverage"],
-          "align": ["n", "r", "r", "r", "l"],
-          "rows": [
-            ["2022", "-7.2%", "-8.0%", "+0.8pp", {"chip": "Full year", "status": "available"}],
-            ["2023", "9.1%", "8.7%", "+0.4pp", {"chip": "Full year", "status": "available"}],
-            ["2024", "7.5%", "8.2%", "-0.7pp", {"chip": "Full year", "status": "available"}],
-            ["2025", "6.9%", "6.5%", "+0.4pp", {"chip": "Full year", "status": "available"}],
-            ["2026 partial (Jan–Jun)", "4.6%", "5.1%", "-0.5pp", {"chip": "Partial year", "status": "partial"}]
-          ],
-          "note": "The 2026 partial year is cumulative and is not annualized [S4]."
-        },
         {
           "type": "line",
           "title": "Growth of 100 since 2022-06-30 (TEST)",
@@ -191,49 +371,382 @@
           "series": [
             {
               "name": "Portfolio",
-              "points": [["2022-06-30", 100.0], ["2022-12-31", 96.0], ["2023-06-30", 100.1], ["2023-12-31", 104.7], ["2024-06-30", 108.0], ["2024-12-31", 112.6], ["2025-06-30", 116.0], ["2025-12-31", 120.4], ["2026-06-30", 125.9]]
+              "points": [
+                [
+                  "2022-06-30",
+                  100.0
+                ],
+                [
+                  "2022-12-31",
+                  96.0
+                ],
+                [
+                  "2023-06-30",
+                  100.1
+                ],
+                [
+                  "2023-12-31",
+                  104.7
+                ],
+                [
+                  "2024-06-30",
+                  108.0
+                ],
+                [
+                  "2024-12-31",
+                  112.6
+                ],
+                [
+                  "2025-06-30",
+                  116.0
+                ],
+                [
+                  "2025-12-31",
+                  120.4
+                ],
+                [
+                  "2026-06-30",
+                  125.9
+                ]
+              ]
             },
             {
               "name": "Benchmark",
-              "points": [["2022-06-30", 100.0], ["2022-12-31", 95.5], ["2023-06-30", 99.9], ["2023-12-31", 103.8], ["2024-06-30", 107.8], ["2024-12-31", 112.3], ["2025-06-30", 116.2], ["2025-12-31", 119.6], ["2026-06-30", 125.7]]
+              "points": [
+                [
+                  "2022-06-30",
+                  100.0
+                ],
+                [
+                  "2022-12-31",
+                  95.5
+                ],
+                [
+                  "2023-06-30",
+                  99.9
+                ],
+                [
+                  "2023-12-31",
+                  103.8
+                ],
+                [
+                  "2024-06-30",
+                  107.8
+                ],
+                [
+                  "2024-12-31",
+                  112.3
+                ],
+                [
+                  "2025-06-30",
+                  116.2
+                ],
+                [
+                  "2025-12-31",
+                  119.6
+                ],
+                [
+                  "2026-06-30",
+                  125.7
+                ]
+              ]
             }
           ],
           "note": "Returned cumulative-growth observations [S4]."
         },
         {
-          "type": "text",
-          "text": "Interpretation: The strongest returned relative period is the full 2022 calendar year at +0.8pp, while the weakest is 2024 at -0.7pp [S4]. The latest quarter, year to date and trailing year are all below the policy benchmark, following positive relative results in 2025 [S4]."
+          "type": "table",
+          "title": "Standard periods to 2026-06-30",
+          "columns": [
+            "Period",
+            "Portfolio",
+            "Benchmark",
+            "Excess",
+            "Coverage"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "r",
+            "l"
+          ],
+          "rows": [
+            [
+              "QTD",
+              "2.8%",
+              "3.2%",
+              "-0.4pp",
+              {
+                "chip": "Complete",
+                "status": "available"
+              }
+            ],
+            [
+              "YTD",
+              "4.6%",
+              "5.1%",
+              "-0.5pp",
+              {
+                "chip": "Complete",
+                "status": "available"
+              }
+            ],
+            [
+              "1Y",
+              "8.4%",
+              "9.0%",
+              "-0.6pp",
+              {
+                "chip": "Complete",
+                "status": "available"
+              }
+            ],
+            [
+              "3Y (ann.)",
+              "7.1%",
+              "7.5%",
+              "-0.4pp",
+              {
+                "chip": "Complete",
+                "status": "available"
+              }
+            ],
+            [
+              "5Y (ann.)",
+              "6.3%",
+              "6.1%",
+              "+0.2pp",
+              {
+                "chip": "Complete",
+                "status": "available"
+              }
+            ],
+            [
+              "10Y (ann.)",
+              "Not available",
+              "Not available",
+              "Not available",
+              {
+                "chip": "Insufficient history",
+                "status": "not_applicable"
+              }
+            ],
+            [
+              "Since inception (ann.)",
+              "6.6%",
+              "6.4%",
+              "+0.2pp",
+              {
+                "chip": "Complete",
+                "status": "available"
+              }
+            ]
+          ],
+          "note": "Returned period labels, annualization and coverage are preserved [S4]."
+        },
+        {
+          "type": "bars",
+          "title": "Calendar-year excess returns",
+          "items": [
+            {"label": "2022", "value": 0.8, "display": "+0.8pp"},
+            {"label": "2023", "value": 0.4, "display": "+0.4pp"},
+            {"label": "2024", "value": -0.7, "display": "-0.7pp"},
+            {"label": "2025", "value": 0.4, "display": "+0.4pp"},
+            {"label": "2026 partial", "value": -0.5, "display": "-0.5pp"}
+          ],
+          "note": "2026 is partial through June [S4]."
+        },
+        {
+          "type": "table",
+          "title": "Calendar years",
+          "columns": [
+            "Year",
+            "Portfolio",
+            "Benchmark",
+            "Excess",
+            "Coverage"
+          ],
+          "align": [
+            "n",
+            "r",
+            "r",
+            "r",
+            "l"
+          ],
+          "rows": [
+            [
+              "2022",
+              "-7.2%",
+              "-8.0%",
+              "+0.8pp",
+              {
+                "chip": "Full year",
+                "status": "available"
+              }
+            ],
+            [
+              "2023",
+              "9.1%",
+              "8.7%",
+              "+0.4pp",
+              {
+                "chip": "Full year",
+                "status": "available"
+              }
+            ],
+            [
+              "2024",
+              "7.5%",
+              "8.2%",
+              "-0.7pp",
+              {
+                "chip": "Full year",
+                "status": "available"
+              }
+            ],
+            [
+              "2025",
+              "6.9%",
+              "6.5%",
+              "+0.4pp",
+              {
+                "chip": "Full year",
+                "status": "available"
+              }
+            ],
+            [
+              "2026 partial (Jan–Jun)",
+              "4.6%",
+              "5.1%",
+              "-0.5pp",
+              {
+                "chip": "Partial year",
+                "status": "partial"
+              }
+            ]
+          ],
+          "note": "The 2026 partial year is cumulative and is not annualized [S4]."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Recent relative returns weakened",
+          "text": "Observation: The strongest full year is +0.8pp in 2022 and the weakest is -0.7pp in 2024 [S4]. Why it matters: Recent QTD, YTD and 1Y periods also trail. Uncertainty: Overlapping periods are not independent. What would change the view: A full-year result showing sustained relative improvement."
         }
-      ]
+      ],
+      "new_page": true
     },
     {
       "title": "Historical Attribution",
       "kicker": "Realized Brinson-Fachler effects for the review period",
       "blocks": [
         {
+          "type": "waterfall",
+          "title": "Allocation, selection and interaction",
+          "items": [
+            {"label": "Allocation", "value": 0.18, "display": "+0.18pp"},
+            {"label": "Selection", "value": -0.51, "display": "-0.51pp"},
+            {"label": "Interaction", "value": -0.05, "display": "-0.05pp"},
+            {"label": "Residual", "value": -0.02, "display": "-0.02pp"}
+          ],
+          "note": "Realized linked effects for the review period [S5]."
+        },
+        {
           "type": "table",
           "title": "Total attribution effects",
-          "columns": ["Effect", "Contribution", "Source"],
-          "align": ["l", "r", "n"],
+          "columns": [
+            "Effect",
+            "Contribution",
+            "Source"
+          ],
+          "align": [
+            "l",
+            "r",
+            "n"
+          ],
           "rows": [
-            ["Allocation", "+0.18pp", "[S5]"],
-            ["Selection", "-0.51pp", "[S5]"],
-            ["Interaction", "-0.05pp", "[S5]"],
-            ["Residual", "-0.02pp", "[S5]"],
-            ["Total active return", "-0.40pp", "[S5]"]
+            [
+              "Allocation",
+              "+0.18pp",
+              "[S5]"
+            ],
+            [
+              "Selection",
+              "-0.51pp",
+              "[S5]"
+            ],
+            [
+              "Interaction",
+              "-0.05pp",
+              "[S5]"
+            ],
+            [
+              "Residual",
+              "-0.02pp",
+              "[S5]"
+            ],
+            [
+              "Total active return",
+              "-0.40pp",
+              "[S5]"
+            ]
           ]
         },
         {
           "type": "table",
           "title": "Segment attribution",
-          "columns": ["Segment", "Allocation", "Selection", "Interaction", "Total"],
-          "align": ["l", "r", "r", "r", "r"],
+          "columns": [
+            "Segment",
+            "Allocation",
+            "Selection",
+            "Interaction",
+            "Total"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "r",
+            "r"
+          ],
           "rows": [
-            ["Public Equity", "+0.04pp", "-0.31pp", "-0.03pp", "-0.30pp"],
-            ["Private Assets", "+0.06pp", "-0.12pp", "-0.01pp", "-0.07pp"],
-            ["Fixed Income", "+0.05pp", "-0.05pp", "0.00pp", "0.00pp"],
-            ["Real Assets", "+0.02pp", "-0.02pp", "-0.01pp", "-0.01pp"],
-            ["Cash", "+0.01pp", "-0.01pp", "0.00pp", "0.00pp"]
+            [
+              "Public Equity",
+              "+0.04pp",
+              "-0.31pp",
+              "-0.03pp",
+              "-0.30pp"
+            ],
+            [
+              "Private Assets",
+              "+0.06pp",
+              "-0.12pp",
+              "-0.01pp",
+              "-0.07pp"
+            ],
+            [
+              "Fixed Income",
+              "+0.05pp",
+              "-0.05pp",
+              "0.00pp",
+              "0.00pp"
+            ],
+            [
+              "Real Assets",
+              "+0.02pp",
+              "-0.02pp",
+              "-0.01pp",
+              "-0.01pp"
+            ],
+            [
+              "Cash",
+              "+0.01pp",
+              "-0.01pp",
+              "0.00pp",
+              "0.00pp"
+            ]
           ],
           "note": "Rows are sorted by absolute returned total effect [S5]."
         },
@@ -241,53 +754,73 @@
           "type": "kv",
           "title": "Reconciliation and method",
           "rows": [
-            ["Portfolio active return", "-0.40pp", "S5"],
-            ["Sum of linked effects", "-0.38pp", "S5"],
-            ["Residual", "-0.02pp", "S5"],
-            ["Method", "Realized Brinson-Fachler", "S5"],
-            ["Linking", "Symmetric Carino", "S5"],
-            ["Basis", "Net, monthly linked", "S5"],
-            ["Currency", "USD", "S5"],
-            ["Formula version / tolerance", "portfolio-attribution-v1 / 1 bp", "S5"]
+            [
+              "Portfolio active return",
+              "-0.40pp",
+              "S5"
+            ],
+            [
+              "Sum of linked effects",
+              "-0.38pp",
+              "S5"
+            ],
+            [
+              "Residual",
+              "-0.02pp",
+              "S5"
+            ],
+            [
+              "Method",
+              "Realized Brinson-Fachler",
+              "S5"
+            ],
+            [
+              "Linking",
+              "Symmetric Carino",
+              "S5"
+            ],
+            [
+              "Basis",
+              "Net, monthly linked",
+              "S5"
+            ],
+            [
+              "Currency",
+              "USD",
+              "S5"
+            ],
+            [
+              "Formula version / tolerance",
+              "portfolio-attribution-v1 / 1 bp",
+              "S5"
+            ]
           ]
         },
         {
-          "type": "text",
-          "text": "Interpretation: Public-equity selection is the largest negative segment effect at -0.31pp, while private-assets allocation is the largest positive allocation effect at +0.06pp [S5]. The returned residual is -0.02pp, outside the stated 1 bp tolerance, so the reconciliation remains degraded [S5]."
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Selection drove the shortfall",
+          "text": "Observation: Public-equity selection is the largest negative segment effect at -0.31pp [S5]. Why it matters: One segment explains most of the active shortfall. Uncertainty: The -0.02pp residual exceeds tolerance. What would change the view: Manager-level evidence showing the effect is broad rather than concentrated."
         }
-      ]
+      ],
+      "new_page": true
     },
     {
       "title": "Allocation and Policy Compliance",
       "kicker": "Current weights, policy ranges and headroom",
       "blocks": [
         {
-          "type": "table",
-          "title": "Asset class versus policy",
-          "columns": ["Asset class", "Target", "Actual", "Active", "Range", "Headroom", "Status"],
-          "align": ["l", "r", "r", "r", "n", "r", "l"],
-          "rows": [
-            ["Public Equity", "42.0%", "43.5%", "+1.5pp", "32–52%", "8.5pp", {"chip": "Compliant", "status": "compliant"}],
-            ["Fixed Income", "25.0%", "23.1%", "-1.9pp", "15–35%", "8.1pp", {"chip": "Compliant", "status": "compliant"}],
-            ["Private Assets", "25.0%", "28.2%", "+3.2pp", "15–30%", "1.8pp", {"chip": "Watch", "status": "watch"}],
-            ["Real Assets", "5.0%", "3.7%", "-1.3pp", "2–10%", "1.7pp", {"chip": "Watch", "status": "watch"}],
-            ["Cash", "3.0%", "1.5%", "-1.5pp", "0–8%", "1.5pp", {"chip": "Compliant", "status": "compliant"}]
+          "type": "band",
+          "title": "Current weight versus policy range",
+          "items": [
+            {"label": "Public Equity", "value": 43.5, "low": 32.0, "high": 52.0, "target": 42.0, "display": "43.5%"},
+            {"label": "Fixed Income", "value": 23.1, "low": 15.0, "high": 35.0, "target": 25.0, "display": "23.1%"},
+            {"label": "Private Assets", "value": 28.2, "low": 15.0, "high": 30.0, "target": 25.0, "display": "28.2%"},
+            {"label": "Real Assets", "value": 3.7, "low": 2.0, "high": 10.0, "target": 5.0, "display": "3.7%"},
+            {"label": "Cash", "value": 1.5, "low": 0.0, "high": 8.0, "target": 3.0, "display": "1.5%"}
           ],
-          "note": "Governed status and headroom are preserved from the policy result [S3]."
-        },
-        {
-          "type": "table",
-          "title": "Sub-allocation versus policy",
-          "columns": ["Asset class", "Target", "Actual", "Active", "Range", "Headroom", "Status"],
-          "align": ["l", "r", "r", "r", "n", "r", "l"],
-          "rows": [
-            ["US Equity", "24.0%", "25.0%", "+1.0pp", "18–30%", "5.0pp", {"chip": "Compliant", "status": "compliant"}],
-            ["Non-US Equity", "18.0%", "18.5%", "+0.5pp", "12–24%", "5.5pp", {"chip": "Compliant", "status": "compliant"}],
-            ["Core Bonds", "15.0%", "13.6%", "-1.4pp", "10–20%", "3.6pp", {"chip": "Compliant", "status": "compliant"}],
-            ["Private Credit", "10.0%", "11.8%", "+1.8pp", "5–14%", "2.2pp", {"chip": "Watch", "status": "watch"}],
-            ["Private Equity", "15.0%", "16.4%", "+1.4pp", "8–18%", "1.6pp", {"chip": "Watch", "status": "watch"}]
-          ],
-          "note": "Total-portfolio targets are returned directly; parent and child targets are not multiplied [S2][S3]."
+          "note": "Governed policy ranges and targets [S3]."
         },
         {
           "type": "chart",
@@ -297,13 +830,220 @@
             "status": "ok",
             "currency": "USD",
             "columns": [
-              {"key": "asset_class", "title": "Asset class", "format": "text", "decimals": null},
-              {"key": "weight", "title": "Weight", "format": "percentage", "decimals": 1}
+              {
+                "key": "asset_class",
+                "title": "Asset class",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "weight",
+                "title": "Weight",
+                "format": "percentage",
+                "decimals": 1
+              }
             ],
-            "rows": [["Public Equity", 0.435], ["Private Assets", 0.282], ["Fixed Income", 0.231], ["Real Assets", 0.037], ["Cash", 0.015]],
+            "rows": [
+              [
+                "Public Equity",
+                0.435
+              ],
+              [
+                "Private Assets",
+                0.282
+              ],
+              [
+                "Fixed Income",
+                0.231
+              ],
+              [
+                "Real Assets",
+                0.037
+              ],
+              [
+                "Cash",
+                0.015
+              ]
+            ],
             "truncated": false,
-            "render_hint": {"block": "bars", "x": "asset_class", "y": ["weight"]}
+            "render_hint": {
+              "block": "bars",
+              "x": "asset_class",
+              "y": [
+                "weight"
+              ]
+            }
           }
+        },
+        {
+          "type": "table",
+          "title": "Asset class versus policy",
+          "columns": [
+            "Asset class",
+            "Target",
+            "Actual",
+            "Active",
+            "Range",
+            "Headroom",
+            "Status"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "r",
+            "n",
+            "r",
+            "l"
+          ],
+          "rows": [
+            [
+              "Public Equity",
+              "42.0%",
+              "43.5%",
+              "+1.5pp",
+              "32–52%",
+              "8.5pp",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              }
+            ],
+            [
+              "Fixed Income",
+              "25.0%",
+              "23.1%",
+              "-1.9pp",
+              "15–35%",
+              "8.1pp",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              }
+            ],
+            [
+              "Private Assets",
+              "25.0%",
+              "28.2%",
+              "+3.2pp",
+              "15–30%",
+              "1.8pp",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              }
+            ],
+            [
+              "Real Assets",
+              "5.0%",
+              "3.7%",
+              "-1.3pp",
+              "2–10%",
+              "1.7pp",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              }
+            ],
+            [
+              "Cash",
+              "3.0%",
+              "1.5%",
+              "-1.5pp",
+              "0–8%",
+              "1.5pp",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              }
+            ]
+          ],
+          "note": "Governed status and headroom are preserved from the policy result [S3]."
+        },
+        {
+          "type": "table",
+          "title": "Sub-allocation versus policy",
+          "columns": [
+            "Asset class",
+            "Target",
+            "Actual",
+            "Active",
+            "Range",
+            "Headroom",
+            "Status"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "r",
+            "n",
+            "r",
+            "l"
+          ],
+          "rows": [
+            [
+              "US Equity",
+              "24.0%",
+              "25.0%",
+              "+1.0pp",
+              "18–30%",
+              "5.0pp",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              }
+            ],
+            [
+              "Non-US Equity",
+              "18.0%",
+              "18.5%",
+              "+0.5pp",
+              "12–24%",
+              "5.5pp",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              }
+            ],
+            [
+              "Core Bonds",
+              "15.0%",
+              "13.6%",
+              "-1.4pp",
+              "10–20%",
+              "3.6pp",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              }
+            ],
+            [
+              "Private Credit",
+              "10.0%",
+              "11.8%",
+              "+1.8pp",
+              "5–14%",
+              "2.2pp",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              }
+            ],
+            [
+              "Private Equity",
+              "15.0%",
+              "16.4%",
+              "+1.4pp",
+              "8–18%",
+              "1.6pp",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              }
+            ]
+          ],
+          "note": "Total-portfolio targets are returned directly; parent and child targets are not multiplied [S2][S3]."
         },
         {
           "type": "callout",
@@ -312,10 +1052,14 @@
           "text": "Not licensed — Peer allocation context was skipped because peerIntelligence is not available for this organization. This review uses portfolio evidence only."
         },
         {
-          "type": "text",
-          "text": "Interpretation: No allocation band is in breach [S3]. Private Assets has 1.8pp of upper-band headroom, while Real Assets has 1.7pp of lower-band headroom; both are returned as Watch [S3]."
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Private-assets headroom is narrow",
+          "text": "Observation: Private Assets has 1.8pp of upper-band headroom and Real Assets has 1.7pp above its lower band [S3]. Why it matters: Valuation changes can alter status without policy changes. Uncertainty: Private valuations lag. What would change the view: Updated valuations or pacing that materially changes headroom."
         }
-      ]
+      ],
+      "new_page": true
     },
     {
       "title": "Exposures and Concentration",
@@ -325,37 +1069,167 @@
           "type": "bars",
           "title": "Value by exposure classification ($M)",
           "items": [
-            {"label": "Public equity", "value": 652.5, "display": "$652.5M · 43.5%"},
-            {"label": "Private assets", "value": 423.0, "display": "$423.0M · 28.2%"},
-            {"label": "Fixed income", "value": 346.5, "display": "$346.5M · 23.1%"},
-            {"label": "Real assets", "value": 55.5, "display": "$55.5M · 3.7%"},
-            {"label": "Cash", "value": 22.5, "display": "$22.5M · 1.5%"}
+            {
+              "label": "Public equity",
+              "value": 652.5,
+              "display": "$652.5M · 43.5%"
+            },
+            {
+              "label": "Private assets",
+              "value": 423.0,
+              "display": "$423.0M · 28.2%"
+            },
+            {
+              "label": "Fixed income",
+              "value": 346.5,
+              "display": "$346.5M · 23.1%"
+            },
+            {
+              "label": "Real assets",
+              "value": 55.5,
+              "display": "$55.5M · 3.7%"
+            },
+            {
+              "label": "Cash",
+              "value": 22.5,
+              "display": "$22.5M · 1.5%"
+            }
           ],
           "note": "Server aggregates exclude unfunded commitments [S6]."
         },
         {
+          "type": "findings",
+          "title": "Exposure-weighted diligence findings",
+          "items": [
+            {
+              "severity": "medium",
+              "title": "Example Manager A review is due",
+              "detail": "The manager represents 12.8% of NAV and has an open key-person review item [S6][S11]."
+            }
+          ],
+          "empty_title": "No open findings",
+          "empty_text": "No open findings were returned for resolved portfolio managers [S11]."
+        },
+        {
           "type": "table",
           "title": "Largest manager and holding exposures",
-          "columns": ["Exposure", "Classification", "Value", "% NAV", "As of", "Coverage"],
-          "align": ["l", "l", "r", "r", "n", "l"],
+          "columns": [
+            "Exposure",
+            "Classification",
+            "Value",
+            "% NAV",
+            "As of",
+            "Coverage"
+          ],
+          "align": [
+            "l",
+            "l",
+            "r",
+            "r",
+            "n",
+            "l"
+          ],
           "rows": [
-            ["Example Manager A (TEST)", "Public equity", "$192.0M", "12.8%", "2026-06-30", "Current [S6]"],
-            ["Example Manager B (TEST)", "Private equity", "$171.0M", "11.4%", "2026-03-31", "Lagged [S6]"],
-            ["Example Manager C (TEST)", "Fixed income", "$157.5M", "10.5%", "2026-06-30", "Current [S6]"],
-            ["Example Fund D (TEST)", "Private credit", "$126.0M", "8.4%", "2026-03-31", "Lagged [S6]"],
-            ["Example Issuer E (TEST)", "13F look-through", "$28.5M", "1.9%", "2026-05-15", "Partial [S10]"]
+            [
+              "Example Manager A (TEST)",
+              "Public equity",
+              "$192.0M",
+              "12.8%",
+              "2026-06-30",
+              "Current [S6]"
+            ],
+            [
+              "Example Manager B (TEST)",
+              "Private equity",
+              "$171.0M",
+              "11.4%",
+              "2026-03-31",
+              "Lagged [S6]"
+            ],
+            [
+              "Example Manager C (TEST)",
+              "Fixed income",
+              "$157.5M",
+              "10.5%",
+              "2026-06-30",
+              "Current [S6]"
+            ],
+            [
+              "Example Fund D (TEST)",
+              "Private credit",
+              "$126.0M",
+              "8.4%",
+              "2026-03-31",
+              "Lagged [S6]"
+            ],
+            [
+              "Example Issuer E (TEST)",
+              "13F look-through",
+              "$28.5M",
+              "1.9%",
+              "2026-05-15",
+              "Partial [S10]"
+            ]
           ]
         },
         {
           "type": "table",
           "title": "Governed concentration checks",
-          "columns": ["Axis", "Observed", "Limit", "Status", "Source"],
-          "align": ["l", "r", "r", "l", "n"],
+          "columns": [
+            "Axis",
+            "Observed",
+            "Limit",
+            "Status",
+            "Source"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "l",
+            "n"
+          ],
           "rows": [
-            ["Largest allocation", "43.5%", "52.0%", {"chip": "Compliant", "status": "compliant"}, "[S3]"],
-            ["Largest manager", "12.8%", "15.0%", {"chip": "Watch", "status": "watch"}, "[S3][S6]"],
-            ["Top five managers", "46.9%", "55.0%", {"chip": "Compliant", "status": "compliant"}, "[S3][S6]"],
-            ["Largest issuer look-through", "1.9%", "Not assessed", {"chip": "Not assessed", "status": "not_assessed"}, "[S10]"]
+            [
+              "Largest allocation",
+              "43.5%",
+              "52.0%",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              },
+              "[S3]"
+            ],
+            [
+              "Largest manager",
+              "12.8%",
+              "15.0%",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              },
+              "[S3][S6]"
+            ],
+            [
+              "Top five managers",
+              "46.9%",
+              "55.0%",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              },
+              "[S3][S6]"
+            ],
+            [
+              "Largest issuer look-through",
+              "1.9%",
+              "Not assessed",
+              {
+                "chip": "Not assessed",
+                "status": "not_assessed"
+              },
+              "[S10]"
+            ]
           ]
         },
         {
@@ -363,38 +1237,21 @@
           "tone": "watch",
           "title": "Form 13F coverage",
           "text": "Form 13F can lag quarter end by up to 45 days and covers long US-listed equity positions only. It excludes shorts, cash, non-US listings and private holdings; reported USD values are not FX-converted against NAV [S10]."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Exposure amplifies open findings",
+          "text": "Observation: Example Manager A represents 12.8% of NAV and has an open medium finding [S6][S11]. Why it matters: A high-exposure manager can transmit an operational concern to portfolio oversight. Uncertainty: The finding remains open. What would change the view: Closure evidence or materially lower exposure."
         }
-      ]
+      ],
+      "new_page": true
     },
     {
       "title": "Realized Risk and Decomposition",
       "kicker": "Observed risk and returned contribution measures",
       "blocks": [
-        {
-          "type": "kv",
-          "title": "Realized risk",
-          "rows": [
-            ["Annualized volatility", "9.1% (benchmark 10.0%)", "S4"],
-            ["Maximum drawdown", "-12.4%: peak 2022-08, trough 2023-03, recovered 2024-02", "S4"],
-            ["Best / worst month", "4.1% / -4.8%", "S4"],
-            ["Positive months", "31 of 48", "S4"],
-            ["Beta to benchmark", "0.88", "S4"],
-            ["Tracking error", "2.4%", "S4"],
-            ["Information ratio", "-0.17", "S4"],
-            ["95% CVaR", "Not available — historical contract did not return CVaR", "S4"]
-          ]
-        },
-        {
-          "type": "table",
-          "title": "Policy risk limits",
-          "columns": ["Metric", "Observed", "Limit", "Status", "Coverage"],
-          "align": ["l", "r", "r", "l", "l"],
-          "rows": [
-            ["Volatility", "9.1%", "12.0%", {"chip": "Compliant", "status": "compliant"}, "48 months [S3][S4]"],
-            ["Maximum drawdown", "-12.4%", "-18.0%", {"chip": "Compliant", "status": "compliant"}, "48 months [S3][S4]"],
-            ["95% CVaR", "Not available", "15.0%", {"chip": "Not assessed", "status": "not_assessed"}, "Observation missing [S3]"]
-          ]
-        },
         {
           "type": "chart",
           "chart": {
@@ -403,47 +1260,279 @@
             "status": "ok",
             "currency": "USD",
             "columns": [
-              {"key": "asset_class", "title": "Asset class", "format": "text", "decimals": null},
-              {"key": "risk_contribution", "title": "Risk contribution", "format": "percentage", "decimals": 1}
+              {
+                "key": "asset_class",
+                "title": "Asset class",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "risk_contribution",
+                "title": "Risk contribution",
+                "format": "percentage",
+                "decimals": 1
+              }
             ],
-            "rows": [["Public Equity", 0.46], ["Private Assets", 0.31], ["Fixed Income", 0.12], ["Real Assets", 0.08], ["Cash", 0.03]],
+            "rows": [
+              [
+                "Public Equity",
+                0.46
+              ],
+              [
+                "Private Assets",
+                0.31
+              ],
+              [
+                "Fixed Income",
+                0.12
+              ],
+              [
+                "Real Assets",
+                0.08
+              ],
+              [
+                "Cash",
+                0.03
+              ]
+            ],
             "truncated": false,
-            "render_hint": {"block": "bars", "x": "asset_class", "y": ["risk_contribution"]}
+            "render_hint": {
+              "block": "bars",
+              "x": "asset_class",
+              "y": [
+                "risk_contribution"
+              ]
+            }
           }
         },
         {
-          "type": "text",
-          "text": "Interpretation: Realized volatility and maximum drawdown are returned as compliant, while CVaR remains Not assessed because no observed value was returned [S3][S4]. The allocation chart attributes 31.0% of modeled risk to private assets under its stated basis; this is separate from historical policy status [S7]."
+          "type": "kv",
+          "title": "Realized risk",
+          "rows": [
+            [
+              "Annualized volatility",
+              "9.1% (benchmark 10.0%)",
+              "S4"
+            ],
+            [
+              "Maximum drawdown",
+              "-12.4%: peak 2022-08, trough 2023-03, recovered 2024-02",
+              "S4"
+            ],
+            [
+              "Best / worst month",
+              "4.1% / -4.8%",
+              "S4"
+            ],
+            [
+              "Positive months",
+              "31 of 48",
+              "S4"
+            ],
+            [
+              "Beta to benchmark",
+              "0.88",
+              "S4"
+            ],
+            [
+              "Tracking error",
+              "2.4%",
+              "S4"
+            ],
+            [
+              "Information ratio",
+              "-0.17",
+              "S4"
+            ],
+            [
+              "95% CVaR",
+              "Not available — historical contract did not return CVaR",
+              "S4"
+            ]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Policy risk limits",
+          "columns": [
+            "Metric",
+            "Observed",
+            "Limit",
+            "Status",
+            "Coverage"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "l",
+            "l"
+          ],
+          "rows": [
+            [
+              "Volatility",
+              "9.1%",
+              "12.0%",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              },
+              "48 months [S3][S4]"
+            ],
+            [
+              "Maximum drawdown",
+              "-12.4%",
+              "-18.0%",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              },
+              "48 months [S3][S4]"
+            ],
+            [
+              "95% CVaR",
+              "Not available",
+              "15.0%",
+              {
+                "chip": "Not assessed",
+                "status": "not_assessed"
+              },
+              "Observation missing [S3]"
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Observed risk remains compliant",
+          "text": "Observation: Realized volatility and drawdown are compliant, while CVaR is not assessed [S3][S4]. Why it matters: Observed risk and an unavailable measure require separate treatment. Uncertainty: Modeled contribution is not policy status. What would change the view: A returned CVaR observation or a governed risk-limit breach."
         }
-      ]
+      ],
+      "new_page": true
     },
     {
       "title": "Projected Return and Risk Decomposition",
       "kicker": "Forward assumptions, not forecasts",
       "blocks": [
         {
+          "type": "tiles",
+          "tiles": [
+            {"label": "GRIP score", "value": "63", "sub": "Available history [S12]", "tone": "info"},
+            {"label": "GRIP stance", "value": "Balanced", "sub": "Current context [S12]", "tone": "info"},
+            {"label": "Policy expected return", "value": "6.2%", "sub": "Governed basis [S3][S8]", "tone": "good"},
+            {"label": "Return objective", "value": "5.5%", "sub": "Policy objective [S3]", "tone": "good"}
+          ]
+        },
+        {
+          "type": "band",
+          "title": "Forward assumption range (TEST)",
+          "items": [
+            {
+              "label": "Expected return",
+              "value": 6.2,
+              "low": 5.5,
+              "high": 6.8,
+              "display": "6.2%"
+            },
+            {
+              "label": "Expected volatility",
+              "value": 10.4,
+              "low": 9.6,
+              "high": 11.2,
+              "display": "10.4%"
+            }
+          ]
+        },
+        {
           "type": "kv",
           "title": "Assumption context",
           "rows": [
-            ["Assumption set", "Example 2026 CMA (TEST)", "S8"],
-            ["CMA release", "2026.2 (2026-06-15)", "S8"],
-            ["Regime", "Baseline", "S8"],
-            ["Horizon", "10 years", "S8"],
-            ["Currency", "USD", "S8"],
-            ["Evidence basis", "Governed policy and CMA evidence", "S3,S8"]
+            [
+              "Assumption set",
+              "Example 2026 CMA (TEST)",
+              "S8"
+            ],
+            [
+              "CMA release",
+              "2026.2 (2026-06-15)",
+              "S8"
+            ],
+            [
+              "Regime",
+              "Baseline",
+              "S8"
+            ],
+            [
+              "Horizon",
+              "10 years",
+              "S8"
+            ],
+            [
+              "Currency",
+              "USD",
+              "S8"
+            ],
+            [
+              "Evidence basis",
+              "Governed policy and CMA evidence",
+              "S3,S8"
+            ]
           ]
         },
         {
           "type": "table",
           "title": "Forward assumptions and decomposition",
-          "columns": ["Measure", "Portfolio", "Policy / reference", "Basis", "Source"],
-          "align": ["l", "r", "r", "l", "n"],
+          "columns": [
+            "Measure",
+            "Portfolio",
+            "Policy / reference",
+            "Basis",
+            "Source"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "l",
+            "n"
+          ],
           "rows": [
-            ["Expected return", "6.2%", "6.1%", "10-year nominal", "[S3][S8]"],
-            ["Expected volatility", "Not available", "Not available", "No governed saved-portfolio statistic", "[S3]"],
-            ["Expected max drawdown", "Not available", "Not available", "No governed saved-portfolio statistic", "[S3]"],
-            ["95% CVaR", "Not available", "Not available", "No governed saved-portfolio statistic", "[S3]"],
-            ["Largest risk contribution", "Public Equity 46.0%", "n/a", "Forward assumptions", "[S7]"]
+            [
+              "Expected return",
+              "6.2%",
+              "6.1%",
+              "10-year nominal",
+              "[S3][S8]"
+            ],
+            [
+              "Expected volatility",
+              "Not available",
+              "Not available",
+              "No governed saved-portfolio statistic",
+              "[S3]"
+            ],
+            [
+              "Expected max drawdown",
+              "Not available",
+              "Not available",
+              "No governed saved-portfolio statistic",
+              "[S3]"
+            ],
+            [
+              "95% CVaR",
+              "Not available",
+              "Not available",
+              "No governed saved-portfolio statistic",
+              "[S3]"
+            ],
+            [
+              "Largest risk contribution",
+              "Public Equity 46.0%",
+              "n/a",
+              "Forward assumptions",
+              "[S7]"
+            ]
           ]
         },
         {
@@ -453,37 +1542,34 @@
           "text": "Not available — no Strategy Lab return series selected. Saved-portfolio forward evidence is limited to governed policy and CMA assumptions [S3][S8]."
         },
         {
-          "type": "text",
-          "text": "Interpretation: The returned expected return is 0.7pp above the policy objective [S3][S8]. Saved-portfolio expected volatility, drawdown and CVaR are unavailable; CMA values are assumptions, not forecasts [S3][S8]."
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Forward context supports monitoring",
+          "text": "Observation: Expected return is 0.7pp above the policy objective while GRIP is balanced [S3][S8][S12]. Why it matters: The evidence frames monitoring without forecasting. Uncertainty: Saved-portfolio volatility, drawdown and CVaR are unavailable. What would change the view: A governed refresh below the objective or a materially different GRIP stance."
         }
-      ]
+      ],
+      "new_page": true
     },
     {
       "title": "Liquidity and Commitments",
       "kicker": "Liquidity profile, unfunded commitments and pacing",
       "blocks": [
         {
-          "type": "table",
-          "title": "Liquidity profile",
-          "columns": ["Bucket", "% NAV", "Amount", "Policy requirement", "Status"],
-          "align": ["l", "r", "r", "l", "l"],
-          "rows": [
-            ["Daily to weekly", "48.0%", "$720.0M", "At least 25.0%", {"chip": "Compliant", "status": "compliant"}],
-            ["Monthly to quarterly", "15.0%", "$225.0M", "Included in liquid share", {"chip": "Compliant", "status": "compliant"}],
-            ["Semi-annual to 2 years", "12.0%", "$180.0M", "Monitor", {"chip": "Available", "status": "available"}],
-            ["Over 2 years / locked", "25.0%", "$375.0M", "At or below 30.0%", {"chip": "Watch", "status": "watch"}]
+          "type": "stacked",
+          "title": "Liquidity tiers",
+          "items": [
+            {
+              "label": "Portfolio",
+              "segments": [
+                {"label": "Daily to weekly", "value": 48.0},
+                {"label": "Monthly to quarterly", "value": 15.0},
+                {"label": "Semi-annual to 2 years", "value": 12.0},
+                {"label": "Over 2 years / locked", "value": 25.0}
+              ]
+            }
           ],
-          "note": "Buckets and governed statuses are returned by the policy contract [S3]."
-        },
-        {
-          "type": "kv",
-          "rows": [
-            ["Locked share", "25.0%", "S3"],
-            ["Unfunded commitment ratio", "9.3%", "S3"],
-            ["Liquid assets", "$945.0M", "S3"],
-            ["Unfunded commitments", "$139.5M", "S6"],
-            ["Coverage", "Complete for 31 commitments", "S6"]
-          ]
+          "note": "Governed liquidity buckets [S3]."
         },
         {
           "type": "chart",
@@ -493,54 +1579,155 @@
             "status": "ok",
             "currency": "USD",
             "columns": [
-              {"key": "quarter", "title": "Quarter", "format": "text", "decimals": null},
-              {"key": "calls", "title": "Calls", "format": "currency", "decimals": 0},
-              {"key": "distributions", "title": "Distributions", "format": "currency", "decimals": 0}
+              {
+                "key": "quarter",
+                "title": "Quarter",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "calls",
+                "title": "Calls",
+                "format": "currency",
+                "decimals": 0
+              },
+              {
+                "key": "distributions",
+                "title": "Distributions",
+                "format": "currency",
+                "decimals": 0
+              }
             ],
-            "rows": [["2026-Q3", 28000000, 16000000], ["2026-Q4", 24000000, 18000000], ["2027-Q1", 21000000, 19000000], ["2027-Q2", 18000000, 20000000]],
+            "rows": [
+              [
+                "2026-Q3",
+                28000000,
+                16000000
+              ],
+              [
+                "2026-Q4",
+                24000000,
+                18000000
+              ],
+              [
+                "2027-Q1",
+                21000000,
+                19000000
+              ],
+              [
+                "2027-Q2",
+                18000000,
+                20000000
+              ]
+            ],
             "truncated": false,
-            "render_hint": {"block": "table", "x": "quarter", "y": []}
+            "render_hint": {
+              "block": "table",
+              "x": "quarter",
+              "y": []
+            }
           }
         },
         {
-          "type": "text",
-          "text": "Interpretation: Daily-to-quarterly assets equal 63.0% of NAV and unfunded commitments equal 9.3% [S3][S6]. Returned pacing shows calls exceeding distributions in the next three quarters, while the policy result remains compliant on liquid coverage [S3][S7]."
-        }
-      ]
-    },
-    {
-      "title": "Analysis and Considerations",
-      "kicker": "Items for monitoring and committee discussion",
-      "blocks": [
-        {
-          "type": "callout",
-          "role": "analysis",
-          "tone": "watch",
-          "title": "Recent relative performance",
-          "text": "Observation: The portfolio trails the policy benchmark over QTD, YTD and 1Y [S4]. Why it matters: the pattern spans three overlapping monitoring periods. Uncertainty: the periods are not independent. What would change the view: a full-year or attribution observation that distinguishes persistence from a temporary result."
+          "type": "table",
+          "title": "Liquidity profile",
+          "columns": [
+            "Bucket",
+            "% NAV",
+            "Amount",
+            "Policy requirement",
+            "Status"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "l",
+            "l"
+          ],
+          "rows": [
+            [
+              "Daily to weekly",
+              "48.0%",
+              "$720.0M",
+              "At least 25.0%",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              }
+            ],
+            [
+              "Monthly to quarterly",
+              "15.0%",
+              "$225.0M",
+              "Included in liquid share",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              }
+            ],
+            [
+              "Semi-annual to 2 years",
+              "12.0%",
+              "$180.0M",
+              "Monitor",
+              {
+                "chip": "Available",
+                "status": "available"
+              }
+            ],
+            [
+              "Over 2 years / locked",
+              "25.0%",
+              "$375.0M",
+              "At or below 30.0%",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              }
+            ]
+          ],
+          "note": "Buckets and governed statuses are returned by the policy contract [S3]."
         },
         {
-          "type": "callout",
-          "role": "analysis",
-          "tone": "watch",
-          "title": "Attribution concentration",
-          "text": "Observation: Public-equity selection accounts for -0.31pp of the -0.40pp active result [S5]. Why it matters: one segment explains most of the returned relative shortfall. Uncertainty: the residual is outside the stated tolerance. What would change the view: manager-level evidence clarifying whether the effect is broad or concentrated."
-        },
-        {
-          "type": "callout",
-          "role": "analysis",
-          "tone": "watch",
-          "title": "Private-assets headroom",
-          "text": "Observation: Private Assets is 28.2% of NAV with 1.8pp of upper-band headroom [S3]. Why it matters: valuation movement or net calls can change headroom without a policy-target change. Uncertainty: private valuations lag public-market observations. What would change the view: updated pacing or valuations that materially increase or reduce headroom."
+          "type": "kv",
+          "rows": [
+            [
+              "Locked share",
+              "25.0%",
+              "S3"
+            ],
+            [
+              "Unfunded commitment ratio",
+              "9.3%",
+              "S3"
+            ],
+            [
+              "Liquid assets",
+              "$945.0M",
+              "S3"
+            ],
+            [
+              "Unfunded commitments",
+              "$139.5M",
+              "S6"
+            ],
+            [
+              "Coverage",
+              "Complete for 31 commitments",
+              "S6"
+            ]
+          ]
         },
         {
           "type": "callout",
           "role": "analysis",
           "tone": "info",
-          "title": "Forward assumption sensitivity",
-          "text": "Observation: The forward expected return is 6.2% with expected volatility of 10.4% [S7][S8]. Why it matters: the return assumption exceeds the 5.5% policy objective under the selected context. Uncertainty: model outputs depend on the assumption set, horizon and regime. What would change the view: a materially different result under an alternative governed assumption context."
+          "title": "Analysis — Liquidity covers near-term calls",
+          "text": "Observation: Daily-to-quarterly assets are 63.0% of NAV and unfunded commitments are 9.3% [S3][S6]. Why it matters: Governed liquid coverage remains compliant as calls exceed distributions. Uncertainty: Pacing is a returned projection. What would change the view: Higher calls, lower liquid assets or a policy-status change [S3][S7]."
         }
-      ]
+      ],
+      "new_page": true
     },
     {
       "title": "Coverage",
@@ -549,21 +1736,80 @@
         {
           "type": "coverage",
           "items": [
-            {"name": "Organization and capabilities", "status": "available", "note": "Live fictional TEST scope [S1]"},
-            {"name": "Portfolio record and allocation tree", "status": "available", "note": "5 asset classes; as of 2026-06-30 [S2]"},
-            {"name": "Policy assessment", "status": "available", "note": "Allocation, risk, liquidity and concentration [S3]"},
-            {"name": "Historical returns", "status": "available", "note": "48 months; net basis [S4]"},
-            {"name": "Historical attribution", "status": "degraded", "note": "Residual -2 bps vs 1 bp tolerance [S5]"},
-            {"name": "Holdings exposure", "status": "available", "note": "31 commitments; all pages retrieved [S6]"},
-            {"name": "Portfolio chart packs", "status": "available", "note": "allocations and commitments [S7]"},
-            {"name": "Capital-market assumptions", "status": "available", "note": "Example 2026 CMA (TEST) [S8]"},
-            {"name": "Market context", "status": "available", "note": "As of 2026-06-30 [S9]"},
-            {"name": "13F look-through", "status": "degraded", "note": "Long-only US-listed equity; as of 2026-05-15 [S10]"},
-            {"name": "Peer allocation intelligence", "status": "not licensed", "note": "Not licensed — peerIntelligence is not available for this organization"},
-            {"name": "Strategy Lab supplement", "status": "unavailable", "note": "No selected return-series session [S7]"}
+            {
+              "name": "Organization and capabilities",
+              "status": "available",
+              "note": "Live fictional TEST scope [S1]"
+            },
+            {
+              "name": "Portfolio record and allocation tree",
+              "status": "available",
+              "note": "5 asset classes; as of 2026-06-30 [S2]"
+            },
+            {
+              "name": "Policy assessment",
+              "status": "available",
+              "note": "Allocation, risk, liquidity and concentration [S3]"
+            },
+            {
+              "name": "Historical returns",
+              "status": "available",
+              "note": "48 months; net basis [S4]"
+            },
+            {
+              "name": "Historical attribution",
+              "status": "degraded",
+              "note": "Residual -2 bps vs 1 bp tolerance [S5]"
+            },
+            {
+              "name": "Holdings exposure",
+              "status": "available",
+              "note": "31 commitments; all pages retrieved [S6]"
+            },
+            {
+              "name": "Portfolio chart packs",
+              "status": "available",
+              "note": "allocations and commitments [S7]"
+            },
+            {
+              "name": "Capital-market assumptions",
+              "status": "available",
+              "note": "Example 2026 CMA (TEST) [S8]"
+            },
+            {
+              "name": "Market context",
+              "status": "available",
+              "note": "As of 2026-06-30 [S9]"
+            },
+            {
+              "name": "13F look-through",
+              "status": "degraded",
+              "note": "Long-only US-listed equity; as of 2026-05-15 [S10]"
+            },
+            {
+              "name": "Manager diligence findings",
+              "status": "available",
+              "note": "One open medium finding for a resolved manager [S11]"
+            },
+            {
+              "name": "GRIP context",
+              "status": "available",
+              "note": "Balanced stance with available history [S12]"
+            },
+            {
+              "name": "Peer allocation intelligence",
+              "status": "not licensed",
+              "note": "Not licensed — peerIntelligence is not available for this organization"
+            },
+            {
+              "name": "Strategy Lab supplement",
+              "status": "unavailable",
+              "note": "No selected return-series session [S7]"
+            }
           ]
         }
-      ]
+      ],
+      "new_page": true
     },
     {
       "title": "Appendix A — Sources",
@@ -571,22 +1817,187 @@
       "blocks": [
         {
           "type": "table",
-          "columns": ["Tag", "Evidence", "Tool / view", "Key parameters", "As of", "Data scope", "Validation", "Digest"],
-          "align": ["n", "l", "l", "l", "n", "l", "l", "n"],
+          "columns": [
+            "Tag",
+            "Evidence",
+            "Tool / view",
+            "Key parameters",
+            "As of",
+            "Data scope",
+            "Validation",
+            "Digest"
+          ],
+          "align": [
+            "n",
+            "l",
+            "l",
+            "l",
+            "n",
+            "l",
+            "l",
+            "n"
+          ],
           "rows": [
-            ["S1", "Organization and capabilities", "list_organizations; get_gradient_capabilities", "organization_id=test", "2026-06-30", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s1"],
-            ["S2", "Portfolio record and allocation tree", "list_portfolios; get_portfolio_structure", "view=allocation_tree", "2026-06-30", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s2"],
-            ["S3", "Policy assessment", "check_portfolio_policy", "portfolio_id=test", "2026-06-30", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s3"],
-            ["S4", "Historical returns and realized risk", "get_portfolio_historical_returns", "all six sections", "2026-06-30", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s4"],
-            ["S5", "Historical attribution", "get_portfolio_attribution", "summary, segments, diagnostics", "2026-06-30", "Fictional TEST data", {"chip": "degraded", "status": "degraded"}, "test-s5"],
-            ["S6", "Holdings exposure", "get_portfolio_exposure", "all pages", "2026-06-30", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s6"],
-            ["S7", "Portfolio chart packs", "get_chart_data", "allocations, commitments", "2026-06-30", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s7"],
-            ["S8", "Capital-market assumptions", "get_capital_market_assumptions", "view=baseline", "2026-06-15", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s8"],
-            ["S9", "Market context", "get_the_read", "visuals=none", "2026-06-30", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s9"],
-            ["S10", "13F look-through", "get_cross_domain_research", "portfolio_13f_lookthrough", "2026-05-15", "Fictional TEST data", {"chip": "advisory", "status": "advisory"}, "test-s10"]
+            [
+              "S1",
+              "Organization and capabilities",
+              "list_organizations; get_gradient_capabilities",
+              "organization_id=test",
+              "2026-06-30",
+              "Fictional TEST data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "test-s1"
+            ],
+            [
+              "S2",
+              "Portfolio record and allocation tree",
+              "list_portfolios; get_portfolio_structure",
+              "view=allocation_tree",
+              "2026-06-30",
+              "Fictional TEST data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "test-s2"
+            ],
+            [
+              "S3",
+              "Policy assessment",
+              "check_portfolio_policy",
+              "portfolio_id=test",
+              "2026-06-30",
+              "Fictional TEST data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "test-s3"
+            ],
+            [
+              "S4",
+              "Historical returns and realized risk",
+              "get_portfolio_historical_returns",
+              "all six sections",
+              "2026-06-30",
+              "Fictional TEST data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "test-s4"
+            ],
+            [
+              "S5",
+              "Historical attribution",
+              "get_portfolio_attribution",
+              "summary, segments, diagnostics",
+              "2026-06-30",
+              "Fictional TEST data",
+              {
+                "chip": "degraded",
+                "status": "degraded"
+              },
+              "test-s5"
+            ],
+            [
+              "S6",
+              "Holdings exposure",
+              "get_portfolio_exposure",
+              "all pages",
+              "2026-06-30",
+              "Fictional TEST data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "test-s6"
+            ],
+            [
+              "S7",
+              "Portfolio chart packs",
+              "get_chart_data",
+              "allocations, commitments",
+              "2026-06-30",
+              "Fictional TEST data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "test-s7"
+            ],
+            [
+              "S8",
+              "Capital-market assumptions",
+              "get_capital_market_assumptions",
+              "view=baseline",
+              "2026-06-15",
+              "Fictional TEST data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "test-s8"
+            ],
+            [
+              "S9",
+              "Market context",
+              "get_the_read",
+              "visuals=none",
+              "2026-06-30",
+              "Fictional TEST data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "test-s9"
+            ],
+            [
+              "S10",
+              "13F look-through",
+              "get_cross_domain_research",
+              "portfolio_13f_lookthrough",
+              "2026-05-15",
+              "Fictional TEST data",
+              {
+                "chip": "advisory",
+                "status": "advisory"
+              },
+              "test-s10"
+            ],
+            [
+              "S11",
+              "Manager diligence findings",
+              "get_manager_diligence_findings",
+              "view=open; resolved portfolio managers",
+              "2026-06-30",
+              "Fictional TEST data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "test-s11"
+            ],
+            [
+              "S12",
+              "GRIP context",
+              "get_macro_signals",
+              "view=gradient_signal",
+              "2026-06-30",
+              "Fictional TEST data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "test-s12"
+            ]
           ]
         }
-      ]
+      ],
+      "new_page": true
     },
     {
       "title": "Appendix B — Server Metric Methods and Disclosures",
@@ -595,15 +2006,63 @@
         {
           "type": "table",
           "title": "Server Metric Methods",
-          "columns": ["Source", "Quantity", "Method / formula", "Version", "Basis / units / tolerance"],
-          "align": ["n", "l", "l", "n", "l"],
+          "columns": [
+            "Source",
+            "Quantity",
+            "Method / formula",
+            "Version",
+            "Basis / units / tolerance"
+          ],
+          "align": [
+            "n",
+            "l",
+            "l",
+            "n",
+            "l"
+          ],
           "rows": [
-            ["S4", "Returns", "Geometrically linked server periods", "historical-returns-v1", "Net; decimal fraction; returned annualization"],
-            ["S4", "Realized risk", "Historical-return risk bundle", "historical-risk-v1", "Monthly observations; annualized where labelled"],
-            ["S5", "Historical attribution", "Realized Brinson-Fachler; symmetric-Carino linking", "portfolio-attribution-v1", "Percentage points; 1 bp tolerance"],
-            ["S3", "Policy status", "Governed portfolio-policy assessment", "portfolio-policy-v1", "Returned limits, headroom and status"],
-            ["S6", "Exposure", "Server exposure aggregates", "portfolio-exposure-v1", "USD base currency; unfunded excluded"],
-            ["S7", "Forward statistics", "Expected-statistics and allocation chart packs", "chart-contract-v1", "10-year assumptions; context fingerprint retained"]
+            [
+              "S4",
+              "Returns",
+              "Geometrically linked server periods",
+              "historical-returns-v1",
+              "Net; decimal fraction; returned annualization"
+            ],
+            [
+              "S4",
+              "Realized risk",
+              "Historical-return risk bundle",
+              "historical-risk-v1",
+              "Monthly observations; annualized where labelled"
+            ],
+            [
+              "S5",
+              "Historical attribution",
+              "Realized Brinson-Fachler; symmetric-Carino linking",
+              "portfolio-attribution-v1",
+              "Percentage points; 1 bp tolerance"
+            ],
+            [
+              "S3",
+              "Policy status",
+              "Governed portfolio-policy assessment",
+              "portfolio-policy-v1",
+              "Returned limits, headroom and status"
+            ],
+            [
+              "S6",
+              "Exposure",
+              "Server exposure aggregates",
+              "portfolio-exposure-v1",
+              "USD base currency; unfunded excluded"
+            ],
+            [
+              "S7",
+              "Forward statistics",
+              "Expected-statistics and allocation chart packs",
+              "chart-contract-v1",
+              "10-year assumptions; context fingerprint retained"
+            ]
           ]
         },
         {
@@ -617,7 +2076,8 @@
             "This AI-assisted monitoring analysis is not investment, legal or compliance advice."
           ]
         }
-      ]
+      ],
+      "new_page": true
     }
   ]
 }
