@@ -928,7 +928,7 @@ def font_faces():
             if os.path.isfile(fp):
                 data = base64.b64encode(open(fp, "rb").read()).decode()
                 faces.append("@font-face{font-family:Inter;font-style:normal;font-display:block;font-weight:100 900;"
-                             f"src:url(data:font/woff2;base64,{data}) format('woff2');unicode-range:{rng}}}")
+                             f"src:local('Inter'),url(data:font/woff2;base64,{data}) format('woff2');unicode-range:{rng}}}")
         if faces:
             return "<style>" + "".join(faces) + "</style>"
     print("warning: Inter font files not found in assets/fonts; using system fonts", file=sys.stderr)
