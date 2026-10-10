@@ -1,0 +1,14 @@
+{
+  "eyebrow": "GIPS Asset Owner Review",
+  "header_label": "GIPS Review",
+  "subtitle": "Total-fund reporting · SYNTHETIC TEST",
+  "running_head": "Northstar Public Trust (TEST) · GIPS",
+  "data_as_of": "2026-06-30",
+  "confidentiality": "SYNTHETIC TEST DATA — fictional regression fixture",
+  "cover_facts": [["Subject", "Northstar Public Trust (TEST)"], ["Review", "Asset owner"], ["Data through", "2026-06-30"], ["Evidence", "Fictional documents"], ["Prepared for", "Gradient TEST"], ["Review date", "2026-10-09"]],
+  "signal_title": "Overall assessment",
+  "signal": {"level": "follow_ups", "label": "Partial evidence with follow-ups"},
+  "completeness": {"used": 4, "expected": 5, "state": "partial"},
+  "meter_title": "Requirements evidenced",
+  "executive": {"label": "Bottom line", "bottom_line": "Total-fund return and benchmark evidence is present, while benchmark-change and policy documentation remain incomplete [S1][S2][S3]."}
+}

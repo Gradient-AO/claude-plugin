@@ -3,34 +3,40 @@
 
 from __future__ import annotations
 
-import json
 import re
 import sys
 from pathlib import Path
-from typing import Any
 
-REQUIRED_SECTION_TITLES = [
-    "Executive Attribution Summary",
-    "Benchmark and Data Basis",
-    "Historical Returns Context",
-    "Historical Attribution",
-    "Governed Ex Ante Attribution",
-    "Historical-versus-Ex-Ante Scope and Comparison",
-    "Diagnostics and Limitations",
-    "Analysis and Considerations",
-    "Coverage",
-    "Appendix A — Sources",
-    "Appendix B — Server Metric Methods and Disclosures",
-]
 
-PROHIBITED_REPORT_PATTERNS = [
+PLUGIN_ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(PLUGIN_ROOT / "tools"))
+
+from report_json_validator import (  # noqa: E402
+    JsonValue,
+    ReportSpec,
+    SectionRule,
+    SlotRule,
+    as_object,
+    block_objects,
+    collect_strings,
+    load_json,
+    section_objects,
+    validate_report,
+)
+
+
+ILLUSTRATIVE_LABEL = (
+    "Illustrative, Gradient Maintained — demo data, "
+    "not the client's holdings or managers"
+)
+PROHIBITED_REPORT_PATTERNS = (
     r"\bsimulated attribution\b",
     r"\bprojected attribution\b",
     r"\bforward attribution\b",
     r"\[Calc(?:\s+C(?:\d+|#))?\]",
-]
+)
 
-PROHIBITED_ANALYSIS_PATTERNS = [
+PROHIBITED_ANALYSIS_PATTERNS = (
     r"\bwe recommend\b",
     r"\brecommend(?:ed|ation|ations)?\b",
     r"\bshould\b",
@@ -41,187 +47,173 @@ PROHIBITED_ANALYSIS_PATTERNS = [
     r"\bapprove\b",
     r"\bincrease (?:the )?allocation\b",
     r"\breduce (?:the )?allocation\b",
-]
+)
+
+SPEC = ReportSpec(
+    name="portfolio attribution report",
+    section_rules=tuple(
+        SectionRule(title, title)
+        for title in (
+            "Executive Attribution Summary",
+            "Benchmark and Data Basis",
+            "Historical Returns Context",
+            "Historical Attribution",
+            "Governed Ex Ante Attribution",
+            "Historical-versus-Ex-Ante Scope and Comparison",
+            "Diagnostics and Limitations",
+            "Analysis and Considerations",
+            "Coverage",
+            "Appendix A — Sources",
+            "Appendix B — Server Metric Methods and Disclosures",
+        )
+    ),
+    appendix_pattern=r"Appendix A — Sources",
+    signal_levels=frozenset({"watch", "satisfactory", "insufficient"}),
+    completeness_states=frozenset({"complete", "partial"}),
+    slot_rules=(
+        SlotRule(
+            r"Historical Returns Context",
+            frozenset({"line", "chart"}),
+            "historical-context visual",
+        ),
+        SlotRule(
+            r"Historical Attribution",
+            frozenset({"table"}),
+            "historical-attribution evidence",
+        ),
+        SlotRule(
+            r"Historical Attribution",
+            frozenset({"bars", "waterfall", "chart"}),
+            "historical-attribution visual",
+        ),
+        SlotRule(
+            r"Governed Ex Ante Attribution",
+            frozenset({"table"}),
+            "ex-ante-attribution evidence",
+        ),
+        SlotRule(
+            r"Governed Ex Ante Attribution",
+            frozenset({"bars", "waterfall", "chart"}),
+            "ex-ante-attribution visual",
+        ),
+        SlotRule(
+            r"Diagnostics and Limitations",
+            frozenset({"table"}),
+            "diagnostics evidence",
+        ),
+        SlotRule(r"Coverage", frozenset({"coverage"}), "coverage block"),
+        SlotRule(r"Appendix A — Sources", frozenset({"table"}), "sources table"),
+    ),
+    forbidden_body_patterns=PROHIBITED_REPORT_PATTERNS,
+    illustrative_label=ILLUSTRATIVE_LABEL,
+    analysis_section_patterns=(r"Analysis and Considerations",),
+    analysis_minimum=3,
+    analysis_maximum=6,
+    require_analysis_structure=True,
+    analysis_title_word_limit=6,
+    executive_tile_labels=(
+        "Historical active return",
+        "Largest historical effect",
+        "Ex ante active return",
+        "Ex ante residual",
+    ),
+    require_tile_sources=True,
+    allowed_tones=frozenset(
+        {"", "good", "watch", "bad", "info", "warning"}
+    ),
+)
 
 
-def collect_strings(value: Any) -> list[str]:
-    if isinstance(value, str):
-        return [value]
-    if isinstance(value, list):
-        return [
-            item
-            for child in value
-            for item in collect_strings(child)
-        ]
-    if isinstance(value, dict):
-        return [
-            item
-            for child in value.values()
-            for item in collect_strings(child)
-        ]
-    return []
+def validate(document: JsonValue) -> list[str]:
+    """Apply the shared contract and attribution-specific invariants."""
+    errors = validate_report(document, SPEC)
+    root = as_object(document)
+    if root is None:
+        return errors
 
-
-def section_by_title(
-    sections: list[dict[str, Any]],
-    title: str,
-) -> dict[str, Any] | None:
-    return next(
-        (section for section in sections if section.get("title") == title),
-        None,
-    )
-
-
-def listed_source_tags(
-    source_section: dict[str, Any] | None,
-) -> set[str]:
-    if source_section is None:
-        return set()
-    tags: set[str] = set()
-    for block in source_section.get("blocks", []):
-        if not isinstance(block, dict) or block.get("type") != "table":
-            continue
-        for row in block.get("rows", []):
-            if not isinstance(row, list) or not row:
-                continue
-            match = re.fullmatch(r"\[?S(\d+)\]?", str(row[0]).strip())
-            if match:
-                tags.add(match.group(1))
-    return tags
-
-
-def validate(path: Path) -> list[str]:
-    try:
-        document = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as error:
-        return [f"Unable to read valid JSON: {error}"]
-    if not isinstance(document, dict):
-        return ["Report root must be a JSON object"]
-
-    errors: list[str] = []
-    if document.get("attribution_report_mode") != "standard":
+    if root.get("attribution_report_mode") != "standard":
         errors.append("Root attribution_report_mode must be 'standard'")
-    meta = document.get("meta")
-    if not isinstance(meta, dict):
-        errors.append("Missing meta object")
-        meta = {}
-    for field in (
-        "title",
-        "eyebrow",
-        "header_label",
-        "subtitle",
-        "data_as_of",
-        "cover_facts",
-    ):
-        if not meta.get(field):
-            errors.append(f"Missing meta.{field}")
-    if meta.get("eyebrow") != "Portfolio Attribution Report":
+
+    meta = as_object(root.get("meta"))
+    if meta is not None and meta.get("eyebrow") != "Portfolio Attribution Report":
         errors.append("meta.eyebrow must be 'Portfolio Attribution Report'")
 
-    sections_value = document.get("sections")
-    if not isinstance(sections_value, list):
-        return errors + ["Missing sections array"]
-    sections = [
-        section for section in sections_value
-        if isinstance(section, dict)
-    ]
-    titles = [str(section.get("title", "")) for section in sections]
-    positions: list[int] = []
-    for title in REQUIRED_SECTION_TITLES:
-        count = titles.count(title)
-        if count == 0:
-            errors.append(f"Missing section: {title}")
-            continue
-        if count > 1:
-            errors.append(f"Section appears {count} times: {title}")
-        positions.append(titles.index(title))
-    if positions != sorted(positions):
-        errors.append("Required sections are out of order")
-
-    executive = section_by_title(
-        sections,
-        "Executive Attribution Summary",
-    )
+    sections = section_objects(root)
+    by_title = {
+        str(section.get("title", "")): section
+        for section in sections
+    }
+    executive = by_title.get("Executive Attribution Summary")
     if executive is not None and executive.get("id") != "executive":
+        errors.append("Executive Attribution Summary must use id 'executive'")
+
+    historical = by_title.get("Historical Attribution")
+    if historical is not None and not block_objects(historical):
+        errors.append("Historical Attribution must retain at least one evidence block")
+
+    ex_ante = by_title.get("Governed Ex Ante Attribution")
+    if ex_ante is not None and not block_objects(ex_ante):
         errors.append(
-            "Executive Attribution Summary must use id 'executive'"
+            "Governed Ex Ante Attribution must retain evidence or typed unavailability"
         )
 
-    all_text = "\n".join(collect_strings(document))
+    all_text = "\n".join(collect_strings(root))
     for pattern in PROHIBITED_REPORT_PATTERNS:
         match = re.search(pattern, all_text, re.IGNORECASE)
-        if match:
-            errors.append(
-                f"Prohibited report phrase or tag: '{match.group(0)}'"
-            )
+        shared_error = (
+            f"Prohibited report language: '{match.group(0)}'"
+            if match is not None
+            else ""
+        )
+        if match is not None and shared_error not in errors:
+            errors.append(f"Prohibited report phrase or tag: '{match.group(0)}'")
 
-    analysis = section_by_title(sections, "Analysis and Considerations")
+    analysis = by_title.get("Analysis and Considerations")
     if analysis is not None:
         analysis_text = "\n".join(collect_strings(analysis))
-        callouts = [
-            block
-            for block in analysis.get("blocks", [])
-            if isinstance(block, dict) and block.get("type") == "callout"
-        ]
-        if not 3 <= len(callouts) <= 6:
-            errors.append(
-                "Analysis and Considerations must have 3–6 callouts"
-            )
         for pattern in PROHIBITED_ANALYSIS_PATTERNS:
             match = re.search(pattern, analysis_text, re.IGNORECASE)
-            if match:
+            if match is not None:
+                errors.append(f"Prescriptive language in analysis: '{match.group(0)}'")
+        for block in block_objects(analysis):
+            if block.get("type") == "callout" and block.get("role") != "analysis":
                 errors.append(
-                    f"Prescriptive language in analysis: '{match.group(0)}'"
+                    "Analysis and Considerations callouts must use role 'analysis'"
                 )
 
-    for title in ("Historical Attribution", "Governed Ex Ante Attribution"):
-        section = section_by_title(sections, title)
-        if section is None or not section.get("blocks"):
-            errors.append(f"{title} must retain at least one evidence block")
-
-    appendix = section_by_title(sections, "Appendix A — Sources")
-    appendix_position = (
-        titles.index("Appendix A — Sources")
-        if "Appendix A — Sources" in titles
-        else len(sections)
-    )
-    body_text = "\n".join(
-        collect_strings(sections[:appendix_position])
-    )
-    cited = set(re.findall(r"\[S(\d+)\]", body_text))
-    listed = listed_source_tags(appendix)
-    for tag in sorted(cited - listed, key=int):
-        errors.append(f"[S{tag}] cited but missing from Appendix A")
-    for tag in sorted(listed - cited, key=int):
-        errors.append(f"S{tag} listed in Appendix A but never cited")
-
-    if re.search(r"<[^<>\n]{2,80}>", all_text):
-        errors.append("Report contains an unresolved <placeholder>")
-    if re.search(r"\billustrative\b", all_text, re.IGNORECASE):
-        label = (
-            "Illustrative, Gradient Maintained — demo data, "
-            "not the client's holdings or managers"
-        )
-        if label not in str(meta.get("confidentiality", "")):
+    for section in sections:
+        if section is analysis:
+            continue
+        if any(block.get("role") == "analysis" for block in block_objects(section)):
             errors.append(
-                f"Illustrative evidence requires '{label}' in confidentiality"
+                "role 'analysis' blocks are allowed only in Analysis and Considerations"
             )
+
     return errors
 
 
-def main() -> int:
-    if len(sys.argv) != 2:
-        print("usage: validate_attribution.py <report.json>")
+def main(argv: list[str]) -> int:
+    """Run portfolio-attribution validation."""
+    if len(argv) != 2:
+        print(f"usage: {Path(argv[0]).name} <report.json>")
         return 2
-    errors = validate(Path(sys.argv[1]))
+    document, load_error = load_json(Path(argv[1]))
+    if load_error is not None:
+        print(f"ERROR — {load_error}")
+        return 2
+    if document is None:
+        print("ERROR — JSON document unexpectedly resolved to null")
+        return 2
+
+    errors = validate(document)
     if errors:
-        print(f"FAIL — {len(errors)} issue(s):")
+        print(f"FAIL — {SPEC.name}: {len(errors)} issue(s)")
         for error in errors:
             print(f"  - {error}")
         return 1
-    print("PASS — portfolio attribution report matches the template.")
+    print(f"PASS — {SPEC.name} JSON contract is valid.")
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(sys.argv))

@@ -13,6 +13,20 @@ Keep every section title and the order exactly as shown. Missing evidence become
 - `executive.bottom_line`: recommendation, requested committee action, principal evidence and largest risk.
 - Four tiles: Real-assets weight, Marketable share, Unfunded commitments, Policy status.
 
+## Committee-memo visual and analysis contract
+
+- Apply ODD-quality polish: exact hierarchy, concise copy, aligned tables and decision-useful graphics.
+- Render exactly the four named tiles. Source `executive.bottom_line` and every tile with `[S#]`.
+- In Target Sub-Segment Structure, Inflation, Commodity and Diversification Context, and Forward Return and
+  Risk, include 1–3 sourced `callout` blocks with `role: analysis`. Keep titles to six words and text to 80
+  words. Each text must use, in order: `Observation:`, `Why it matters:`, `Uncertainty:`, and
+  `What would change the view:`. Analysis supports, but never changes, the fixed Committee Action Requested.
+- Include graphics for current allocation, factor/diversification, forward risk/return and
+  commitments/liquidity. Only unavailable governed evidence may use a `callout` reading
+  `Not available — <reason>` in place of a required visual.
+- A clean validator result is a delivery blocker. After rendering, inspect every PDF page for clipping,
+  overflow, weak hierarchy, orphaned headings, illegible charts and excessive whitespace.
+
 ## Sections
 
 ### 1. Executive Decision

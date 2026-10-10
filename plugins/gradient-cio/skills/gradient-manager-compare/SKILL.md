@@ -231,16 +231,29 @@ Writing rules: lead with the finding; every figure carries a unit, a date and an
 dates; $B/$M with 1–2 decimals; percentages to 1 dp. Use `discretionary_raum_share` and
 `thirteen_f_total_to_adv_raum_ratio` exactly as returned; do not derive ratios locally. No "strong",
 "robust", "best-in-class", "top-tier".
+Every analytical or key-judgment callout must include an `[S#]` tag. The Next steps table is limited to the
+three existing choices in Step 4, and every row's Why cell cites `[S#]`; do not introduce a hire, fire,
+termination, redemption or allocation recommendation. Add one to three `callout` blocks with
+`role: "analysis"` to **Operational flags**, stating the comparison, diligence implication, uncertainty, and
+evidence that would change the view without ranking manager quality.
 
-Render:
+Validate before rendering:
+
+```
+python <this skill's directory>/scripts/validate_manager_compare.py compare.json
+```
+
+Fix every error and re-run until it passes. Do not render a report that fails validation. Then render:
 
 ```
 python <this skill's directory>/scripts/gradient_report.py compare.json "<Mandate> - Manager Comparison <YYYY-MM-DD>.pdf"
 ```
 
-Then follow "Check and deliver" in `references/report-style.md` (rasterize, check each page, spot-check
-numbers against the saved results, save to `/mnt/user-data/outputs/` and any connected folder). The wide
-side-by-side table is the usual overflow: with 4–5 managers, shorten row labels and use $B values.
+Then follow "Check and deliver" in `references/report-style.md` (rasterize, inspect every page, fix clipping,
+overflow, orphaned headings and unreadable visuals, re-render and repeat page QA, spot-check numbers against
+the saved results, save to `/mnt/user-data/outputs/` and any connected folder). Delivery is blocked until
+page QA and fact checks pass. The wide side-by-side table is the usual overflow: with 4–5 managers, shorten
+row labels and use $B values.
 
 ## Step 6 — Offer follow-ups (never without confirmation)
 

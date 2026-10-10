@@ -2,6 +2,27 @@
 
 Keep these modules separate in tool calls, analysis, sources, and report language.
 
+## Capability and validation semantics
+
+Use `product_entitlements` only for commercial licensing. Require and interpret
+`capability_access_modes` as the capability-level access basis: `live`, `illustrative`, or `unavailable`.
+`effective_capabilities` must agree with whether that mode is usable, while each tool row's `available` and
+`access_mode` remain the final invocation decision. A false entitlement with an illustrative mode is bounded
+evaluation access, never live client access.
+
+In validation, `not_applicable` means a check does not apply to the requested mode or returned evidence.
+`not_run` means the check was applicable but lacked the requested evidence or could not execute. Neither is
+a pass. Compact envelopes may omit passed checks, `not_applicable` checks, and advisory `not_run` checks;
+preserve the separate `not_applicable`, `not_run`, and `checks_omitted` counts, and never infer that an
+omitted check passed.
+
+When a skill uses GRIP through `get_macro_signals`, check `sources.grip.availability.status` before using
+current values or empty history. Preserve `availability.reasons`, `indexMetadata.degradationReasons`, and
+`outlookMetadata.reason`; never turn unavailable history or outlook into zero or no change. For The Read,
+preserve `coverage.sections.visuals`, `coverage.unavailable_visuals`, and
+`coverage.omitted_visual_reasons`. Missing visuals are a typed evidence gap, not evidence that markets did not
+move and not, by themselves, evidence that the publication is unavailable.
+
 ## Portfolio Analytics
 
 Portfolio Analytics answers questions about a saved portfolio or Gradient's canonical illustrative portfolio.
@@ -40,11 +61,15 @@ the request:
 `alternatives`, and `cash`. Never pass title-case display labels or rely on case-insensitive alias handling.
 `page_totals` covers only the returned page. Use `portfolio_totals` for the filtered portfolio and only treat
 it as complete when `complete: true`; classification rows live in `aggregates_by_asset_classification`.
+Classification aggregates declare `scope: filtered_portfolio`. Interpret their `coverage.status` as
+`available`, `partial`, or `unavailable`, retain `missing_reasons`, and do not infer complete coverage from
+non-empty aggregate rows.
 For fixed-income duration, spread duration, and yield, use the governed `fixed_income_metrics` on
 `portfolio_totals` or the Fixed Income classification row when its `weighting_basis` is
-`current_holding_nav_base`; zero spread duration is a valid observation. Never equal-weight exposure rows.
+`current_holding_nav_base`; the two fixed-income-only aggregates should reconcile, and
+zero spread duration is a valid observation. Never equal-weight exposure rows.
 For null `as_of_date`, `market_value_base`, or `nav_base`, preserve the matching `null_reasons` value and do
-not infer the missing channel from another field.
+not infer the missing channel from another field or treat a typed not-applicable reason as missing data.
 
 ## Strategy Lab
 

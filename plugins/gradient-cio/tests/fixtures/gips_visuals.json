@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "executive_tiles": [
+    {"label": "Met", "value": "4", "sub": "Four requirements evidenced", "tone": "good"},
+    {"label": "Partially met", "value": "2", "sub": "Verification and fee disclosure", "tone": "watch"},
+    {"label": "Not met", "value": "1", "sub": "DDQ asset inconsistency", "tone": "bad"},
+    {"label": "Not found", "value": "1", "sub": "Composite descriptions list", "tone": "watch"}
+  ],
+  "sections": {
+    "1. Summary": {
+      "before": [
+        {
+          "type": "coverage",
+          "title": "Evidence status",
+          "items": [
+            {"name": "GIPS Composite Report", "status": "available", "note": "Data through 2025-12-31 [S1]"},
+            {"name": "Verification letter", "status": "available", "note": "Coverage through 2024-12-31 [S2]"},
+            {"name": "DDQ", "status": "degraded", "note": "Composite assets conflict with the report [S3]"}
+          ]
+        }
+      ],
+      "after": [
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Asset evidence needs reconciliation",
+          "text": "**Observation:** The DDQ and GIPS Report differ on composite assets [S1, S3]. **Why it matters:** the inconsistency limits reliance on the reported composite scale. **Uncertainty:** the effective date of any asset change is not documented. **What would change the view:** evidence closing follow-up request 1.",
+          "follow_up_refs": [1]
+        }
+      ]
+    },
+    "2. Performance Integrity & GIPS": {
+      "before": [],
+      "after": []
+    },
+    "3. Findings Checklist": {
+      "before": [
+        {
+          "type": "bars",
+          "title": "Findings by severity",
+          "items": [
+            {"label": "High", "value": 0, "display": "0"},
+            {"label": "Medium", "value": 2, "display": "2"},
+            {"label": "Low", "value": 1, "display": "1"}
+          ]
+        }
+      ],
+      "after": [
+        {
+          "type": "findings",
+          "title": "Priority findings",
+          "items": [
+            {"severity": "medium", "title": "Composite assets conflict", "detail": "The DDQ reports $2.4B while the GIPS Report reports $2.1B [S1, S3]."},
+            {"severity": "medium", "title": "Fee schedule incomplete", "detail": "The reviewed fee schedule omits the performance fee [S1]."},
+            {"severity": "low", "title": "Verification period gap", "detail": "Verification evidence ends at 2024-12-31 [S2]."}
+          ],
+          "empty_title": "No findings returned",
+          "empty_text": "No High, Medium, or Low findings were identified."
+        }
+      ]
+    },
+    "4. Follow-up Requests": {
+      "before": [],
+      "after": []
+    },
+    "Appendix A — Sources": {
+      "before": [],
+      "after": []
+    },
+    "Appendix B — Method & Disclaimer": {
+      "before": [],
+      "after": []
+    }
+  }
+}

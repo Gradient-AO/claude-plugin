@@ -66,6 +66,7 @@
       "kicker": "Proposed long-run program",
       "blocks": [
         {"type": "table", "title": "Current versus target", "columns": ["Segment", "Current", "Target", "Change", "Range / constraint", "Rationale"], "rows": [["Private equity", "12.0%", "11.0%", "-1.0pp", "8.0%–16.0%", "Use slower new pacing [S3][S6]"], ["Private credit", "7.0%", "7.0%", "0.0pp", "4.0%–10.0%", "Maintain income role [S5][S7]"], ["Infrastructure", "4.0%", "6.0%", "+2.0pp", "3.0%–8.0%", "Direct new commitments here [S5][S6]"], ["Secondaries", "0.0%", "1.0%", "+1.0pp", "At or below 3.0%", "Add vintage diversification [S6][S7]"]]},
+        {"type": "callout", "role": "analysis", "tone": "info", "title": "Structure shifts gradually", "text": "Observation: New pacing shifts exposure toward infrastructure and secondaries [S6]. Why it matters: The mix broadens while total private-markets exposure stays within policy [S3]. Uncertainty: Manager selection remains incomplete [S7]. What would change the view: Weaker liquidity coverage or completed diligence that does not support the proposed roles [S3][S7]."},
         {"type": "text", "text": "Targets are a committee proposal from the fictional mandate and returned policy headroom; they are not changes saved to GradientCIO [S3][S7]."}
       ]
     },
@@ -75,6 +76,7 @@
       "blocks": [
         {"type": "kv", "rows": [["Assumption set", "2026 Strategic CMA (TEST)", "S5"], ["Regime", "Baseline", "S5"], ["Horizon", "10 years", "S5"], ["Currency", "USD", "S5"], ["Context fingerprint", "test-pm-forward-2026", "S5"]]},
         {"type": "chart", "chart": {"chart_id": "test-pm-forward", "title": "Private-market forward assumptions (TEST)", "status": "ok", "currency": "USD", "columns": [{"key": "segment", "title": "Segment", "format": "text", "decimals": null}, {"key": "return", "title": "Expected return", "format": "percentage", "decimals": 1}, {"key": "volatility", "title": "Expected volatility", "format": "percentage", "decimals": 1}], "rows": [["Private equity", 0.096, 0.185], ["Private credit", 0.071, 0.092], ["Infrastructure", 0.078, 0.118]], "truncated": false, "render_hint": {"block": "table", "x": "segment", "y": []}}},
+        {"type": "callout", "role": "analysis", "tone": "info", "title": "Assumptions frame tradeoffs", "text": "Observation: Private equity carries the highest expected return and volatility in the selected assumptions [S5]. Why it matters: Segment sizing trades return potential against risk. Uncertainty: These are long-horizon assumptions, not forecasts. What would change the view: A refreshed governed assumption set with materially different relative return or volatility [S5]."},
         {"type": "text", "text": "The figures are long-horizon assumptions under the selected context, not forecasts or guarantees [S5]."}
       ]
     },
@@ -92,6 +94,7 @@
       "blocks": [
         {"type": "table", "title": "Liquidity profile", "columns": ["Bucket", "% NAV", "Amount", "Requirement", "Status"], "rows": [["Daily to quarterly", "44.0%", "$440.0M", "At least 25.0%", {"chip": "Compliant", "status": "compliant"}], ["Over two years / locked", "23.0%", "$230.0M", "At or below 30.0%", {"chip": "Compliant", "status": "compliant"}]]},
         {"type": "kv", "rows": [["Liquid assets", "$440.0M", "S3"], ["Unfunded commitments", "$92.0M", "S4"], ["Base coverage", "4.8x", "S3"], ["Near-term projected calls", "$48.0M", "S6"]]},
+        {"type": "callout", "role": "analysis", "tone": "info", "title": "Coverage supports pacing", "text": "Observation: Base liquid coverage is 4.8x against unfunded commitments [S3][S4]. Why it matters: Current resources support the staged pacing case. Uncertainty: No governed denominator stress result is available. What would change the view: Lower liquid resources, higher calls, or a returned stress result below the policy threshold [S3][S6]."},
         {"type": "table", "title": "Supported scenarios", "columns": ["Scenario", "Liquid resources", "Funding need", "Coverage", "Status"], "rows": [["Governed base case", "$440.0M", "$92.0M", "4.8x", {"chip": "Compliant", "status": "compliant"}], ["Denominator stress", "Not available — no governed stress result", "Not available", "Not available", {"chip": "Not assessed", "status": "not_assessed"}]]}
       ]
     },

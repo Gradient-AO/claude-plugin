@@ -9,10 +9,16 @@ Modules (from `list_organizations.licensed_modules` and `capabilities`): `firmFu
 `macroDesk`, `gradientSignals`, `portfolio`, `strategyLab`, `peerIntelligence`.
 
 Before rating any skill, validate the top-level `minimum_connector_contract` in `contracts.json`. The
-connector must advertise service version 0.9.0 or newer, compatibility epoch 2 and every required tool, and
-the contract's required probes must remain internally valid. A connector-contract failure is **Not ready**:
-stop before running skills or probes, request a connector update or reconnect, and do not substitute local
-calculations.
+connector must advertise service version 0.9.0 or newer, compatibility epoch 3, every required tool, and a
+coherent `capability_access_modes` map. The contract's required probes must remain internally valid. A
+connector-contract failure is **Not ready**: stop before running skills or probes, request a connector update
+or reconnect, and do not substitute local calculations.
+
+Interpret access in this order: `product_entitlements` reports the commercial license,
+`capability_access_modes` reports each capability's `live`, `illustrative`, or `unavailable` access basis,
+and `effective_capabilities` must equal whether that mode is not `unavailable`. The matching tool row's
+`available` and `access_mode` remain the final invocation decision. A false entitlement with
+`capability_access_modes.<capability>: "illustrative"` is evaluation access, not live licensed access.
 
 | Skill | Produces | Required tools | Optional tools | Module(s) |
 |---|---|---|---|---|

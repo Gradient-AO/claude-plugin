@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "executive_tiles": [
+    {"label": "Met", "value": "3", "sub": "Returns, benchmark and description", "tone": "good"},
+    {"label": "Partially met", "value": "1", "sub": "Fee disclosure", "tone": "watch"},
+    {"label": "Not met", "value": "1", "sub": "Significant-event date", "tone": "bad"},
+    {"label": "Not found", "value": "0", "sub": "No unlocated requirements", "tone": "watch"}
+  ],
+  "sections": {
+    "1. Summary": {
+      "before": [
+        {"type": "coverage", "title": "Evidence status", "items": [
+          {"name": "Composite report", "status": "available", "note": "Performance evidence [S1]"},
+          {"name": "Disclosure schedule", "status": "degraded", "note": "Fee wording incomplete [S2]"}
+        ]}
+      ],
+      "after": [
+        {"type": "callout", "role": "analysis", "tone": "watch", "title": "Disclosure timing unclear", "text": "**Observation:** The significant event is named without an effective date [S1]. **Why it matters:** readers cannot place the event within the presented record. **Uncertainty:** the date may exist in evidence not supplied. **What would change the view:** No additional follow-up beyond request 1.", "follow_up_refs": []}
+      ]
+    },
+    "2. Performance Integrity & GIPS": {"before": [], "after": []},
+    "3. Findings Checklist": {
+      "before": [
+        {"type": "bars", "title": "Findings by severity", "items": [
+          {"label": "High", "value": 0, "display": "0"},
+          {"label": "Medium", "value": 2, "display": "2"},
+          {"label": "Low", "value": 1, "display": "1"}
+        ]}
+      ],
+      "after": [
+        {"type": "findings", "title": "Priority findings", "items": [
+          {"severity": "medium", "title": "Event date absent", "detail": "The report does not date the significant event [S1]."},
+          {"severity": "medium", "title": "Fee wording incomplete", "detail": "The schedule does not clearly state the performance fee [S2]."},
+          {"severity": "low", "title": "Schedule lags report", "detail": "The disclosure schedule post-dates the report year-end [S1][S2]."}
+        ]}
+      ]
+    },
+    "4. Follow-up Requests": {"before": [], "after": []},
+    "Appendix A — Sources": {"before": [], "after": []},
+    "Appendix B — Method & Disclaimer": {"before": [], "after": []}
+  }
+}

@@ -183,6 +183,13 @@ Rules:
 
 ## Step 4 — Write report.json
 
+Set root `report_mode` to `full` (or `roster_summary` for Step 1B). Every analytical or key-judgment callout
+must state the evidence and include an `[S#]` tag. Recommendations are out of scope: the report may carry only
+the governed or analyst follow-up questions and open items already supported by a concrete evidence gap; it
+must not propose hiring, firing, terminating, redeeming from or allocating to a manager. Add one to three
+`callout` blocks with `role: "analysis"` to **Peer positioning**, covering the observation, diligence
+implication, uncertainty, and evidence that would change the view.
+
 Standard sections, in this order and with these titles (keep a section even if its data is missing, and show
 the gap in it):
 
@@ -209,15 +216,8 @@ use ISO dates; show currency in $B or $M with 1–2 decimals; show percentages t
 "best-in-class" or other adjectives Gradient data can't support. Scaling and rounding for display are allowed;
 do not derive report values locally.
 
-**Block types** (each object has `type`):
-`text {text}` · `bullets {items}` · `kv {title?, rows:[[k, v, srcTag?]]}` ·
-`table {title?, columns, rows, align? (l|r|c|n=nowrap), note?}` (a cell can be `{"chip": label, "status": s}`) ·
-`tiles {tiles:[{label, value, sub, tone: good|watch|bad}]}` ·
-`bars {title?, items:[{label, value, display}], max?, narrow?, all_accent?, note?}` ·
-`percentiles {title?, items:[{label, percentile, value_display}], threshold, note?}` ·
-`callout {tone: good|watch|bad|info, title?, text}` · `coverage {title?, items:[{name, status, note}]}` ·
-`findings {items:[{severity, title, detail}], empty_title, empty_text}` · `questions {items:[{q, why}]}` ·
-`two_col {left:[blocks], right:[blocks]}` · `pagebreak {}`.
+Use only the block schemas in `references/report-style.md`; use `align: "n"` for nowrap identifiers and
+dates, and preserve unchanged returned chart items inside `chart` blocks.
 Chip statuses: available, passed, aligned (lime); degraded, advisory, partial (amber); unavailable, failed,
 missing (coral); not_applicable, not_run, not_assessed (slate). Text fields support `**bold**`, `` `code` `` and
 source tags.
@@ -241,15 +241,18 @@ Every section starts on a new page; set `"new_page": false` on a section to cont
 
 ## Step 5 — Render, check, deliver
 
-1. Run `python <this skill's directory>/scripts/gradient_report.py report.json "<Subject> - ODD Report.pdf"`.
+1. Run `python <this skill's directory>/scripts/validate_odd_report.py report.json`. Fix every error and
+   re-run until it passes. Do not render a report that fails validation.
+2. Run `python <this skill's directory>/scripts/gradient_report.py report.json "<Subject> - ODD Report.pdf"`.
    Requirements and troubleshooting are in `references/report-style.md`. Never write a separate renderer or
    change the styling.
-2. Rasterize with `pdftoppm -r 60 -png` and look at every page. Fix any page holding only a short tail of
+3. Rasterize with `pdftoppm -r 60 -png` and look at every page. Fix any page holding only a short tail of
    overflow (shorten notes or bullets, or set `new_page: false`), any squashed chart in a column (set
-   `narrow: true`), and any wrapped dates or digests (align `n`). Re-render.
-3. Fact-check: reconcile each server-returned numeric comparison within its stated tolerance, and spot-check
+   `narrow: true`), and any wrapped dates or digests (align `n`). Re-render and repeat the full page review.
+   Delivery is blocked until no clipping, overflow, orphaned heading or unreadable visual remains.
+4. Fact-check: reconcile each server-returned numeric comparison within its stated tolerance, and spot-check
    every table value against the saved JSON.
-4. Save the PDF under `/mnt/user-data/outputs/`. If a folder is connected, also write it there. In chat, give a
+5. Save the PDF under `/mnt/user-data/outputs/`. If a folder is connected, also write it there. In chat, give a
    three-line summary (signal and completeness, the top concern, the number of open items) and the file. Don't
    repeat the report in chat. For several reports (Step 1C), use the closing table instead of a three-line
    summary per fund.

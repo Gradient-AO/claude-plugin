@@ -75,6 +75,14 @@ Lab diagnostics are optional. An entitlement block is `Not licensed`; do not ret
 Use JSON block mode and follow `references/construction-template.md` exactly. Put the recommendation and
 requested committee action first. Every number carries an `[S#]` tag. Embed returned chart items unchanged.
 
+Match ODD-quality report polish. Use exactly the four template tiles; source the bottom line, tiles and
+analysis. Add the template-required charts/graphics and 1–3 structured `role: analysis` callouts in each
+named analytical section. A required visual may be replaced only when governed evidence is unavailable,
+using a `callout` with `Not available — <reason>`. Analysis explains evidence supporting the fixed Committee
+Action Requested; it must not introduce another recommendation or action. Validation failure blocks
+delivery. After rendering, inspect every PDF page for clipping, overflow, hierarchy, chart legibility,
+orphaned headings and excess whitespace.
+
 Run until clean:
 
 ```text

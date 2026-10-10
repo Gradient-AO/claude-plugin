@@ -45,7 +45,7 @@ Rules that matter here:
 | `references/writing-standards.md` | Before drafting — sourced analysis, considerations and prohibited recommendations. |
 | `references/report-style.md` | Before rendering — shared style, block types, meta fields, "Check and deliver". |
 | `scripts/gradient_report.py` | Renders the JSON blocks into the branded PDF. Never restyle. |
-| `scripts/validate_review.py` | Comprehensive mode — validates structure, source tags and analysis boundaries. |
+| `scripts/validate_review.py` | Both modes — validates exact layout, required evidence slots, source parity and monitoring-only language. |
 
 ## 1. Scope (ask at most one question)
 
@@ -207,10 +207,12 @@ Sections:
    licensed or unavailable, one `callout` saying so (no table).
 5. **Risk** (`new_page: false`) — `kv`: volatility, maximum drawdown with dates, best and worst month,
    positive months, beta, tracking error, information ratio (each with its tag).
-6. **Outlook** (optional, `new_page: false`) — one short paragraph: The Read headline and date plus
+6. **Outlook** (`new_page: false`) — when requested, one short paragraph: The Read headline and date plus
    `check_portfolio_policy.return_objective.assessment.observed` when its evidence basis is the governed
    root-allocation weighted expected return. Preserve the returned assumption basis and currency. Say
    "assumptions, not forecasts". Omit the expected return when unavailable; never weight CMA rows locally.
+   When outlook was not requested, keep the section in place with a typed `Not run — optional outlook not
+   requested` callout.
 7. **Coverage** (`new_page: false`) — `coverage` block: every source with status (`available`, `degraded`,
    `unavailable`, `not licensed`) and a note (as-of, rows, error code and request ID on failure).
 8. **Appendix A — Sources and method** — tag table (Tag, Evidence, Tool / view, As of, Validation), server
@@ -218,21 +220,32 @@ Sections:
    not investment, legal or compliance advice; past performance does not predict future returns; Form 13F is
    manager-reported and lagged".
 
+Every analytical or key-judgment callout uses a concrete observation and an `[S#]` tag. Keep the review
+neutral: considerations may identify a question for discussion, but the JSON must not recommend a trade,
+allocation change, manager action or vote. In brief mode, include one to three `callout` blocks with
+`role: "analysis"` in **Summary**; each states the observation, monitoring implication, uncertainty, and
+evidence that would change the view. Comprehensive mode keeps its required Analysis and Considerations
+section.
+
 ### Comprehensive mode
 
 Read and follow `references/review-template.md` exactly. Keep all sections in the defined order, including
 Historical Attribution, Realized Risk and Decomposition, Projected Return and Risk Decomposition, Liquidity
 and Commitments, and Analysis and Considerations. A missing source becomes a typed unavailable block; it does
 not remove the section. Target 15–20 pages when evidence supports the full report, but never add filler or
-repeat evidence to reach the target.
+repeat evidence to reach the target. Apply ODD-quality editorial and visual polish with evidence-led,
+publication-ready charts. Use exactly the four sourced executive tiles in the template. Analysis and
+Considerations contains three to six sourced `role: "analysis"` callouts with six-word-or-shorter titles and
+the exact four-part sequence `Observation:`, `Why it matters:`, `Uncertainty:`,
+`What would change the view:`.
 
-Before rendering, run:
+Before rendering either mode, set root `review_mode` to `brief` or `comprehensive`, then run:
 
 ```
 python <this skill's directory>/scripts/validate_review.py review.json
 ```
 
-Fix every error and re-run until it passes.
+Fix every error and re-run until it passes. Do not render a report that fails validation.
 
 Render:
 
@@ -240,8 +253,10 @@ Render:
 python <this skill's directory>/scripts/gradient_report.py review.json "<Portfolio> - Portfolio Review <YYYY-MM-DD>.pdf"
 ```
 
-Then follow "Check and deliver" in `references/report-style.md`: look at every page, reconcile every returned
-metric within its stated tolerance, and check every figure against the saved results. Chat summary (three lines): status signal, the top item (e.g.
+Then follow "Check and deliver" in `references/report-style.md`: rasterize and inspect every page, fix
+overflow, clipping, orphaned headings and unreadable visuals, re-render after any fix, reconcile every returned
+metric within its stated tolerance, and check every figure against the saved results. Delivery is blocked
+until page QA and fact checks pass. Chat summary (three lines): status signal, the top item (e.g.
 "Alternatives 1.4pp below the upper limit"), and the number of items to watch — plus the file.
 
 ## 5. Hand-off and repeat runs

@@ -87,14 +87,28 @@ Sections:
 5. **Appendix A — Sources and method** — tag table (tool, view, as-of, validation, payload digest), the window,
    severity rules above, and the disclaimer.
 
-Render:
+Every analytical or key-judgment callout must include an `[S#]` tag. Recommended actions are limited to the
+existing action list in section 3 and must be triggered by an item already present in the digest; every
+Needs-attention row cites `[S#]`. Do not add a hire, fire, termination, redemption or allocation
+recommendation. Add one to three `callout` blocks with `role: "analysis"` to **Changes and alerts**, stating
+the observation, monitoring implication, uncertainty, and evidence that would change the view.
+
+Validate before rendering:
+
+```
+python <this skill's directory>/scripts/validate_monitor_digest.py digest.json
+```
+
+Fix every error and re-run until it passes. Do not render a digest that fails validation. Then render:
 
 ```
 python <this skill's directory>/scripts/gradient_report.py digest.json "<Org> - Manager Monitoring Digest <date>.pdf"
 ```
 
-Then follow "Check and deliver" in `references/report-style.md`. Chat summary: signal, the top item, and the
-number of subjects needing action.
+Then follow "Check and deliver" in `references/report-style.md`: rasterize and inspect every page, fix
+clipping, overflow, orphaned headings and unreadable visuals, re-render and repeat page QA, then spot-check
+the JSON against saved evidence. Delivery is blocked until page QA and fact checks pass. Chat summary:
+signal, the top item, and the number of subjects needing action.
 
 ## 5. Follow-up actions (only when the user asks)
 

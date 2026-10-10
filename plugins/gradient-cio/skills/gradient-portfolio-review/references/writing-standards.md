@@ -16,6 +16,10 @@ Use this sequence for every analytical paragraph or consideration:
 Tables and charts present the evidence first. Interpretation follows and is limited to three sentences per
 analytical section. The dedicated Analysis and Considerations section may contain three to six short callouts.
 
+In comprehensive mode, those callouts use `role: "analysis"`, have sourced titles of no more than six words,
+stay within 80 words, and use `Observation:`, `Why it matters:`, `Uncertainty:`, and
+`What would change the view:` in that exact order. Analysis-role callouts appear nowhere else.
+
 ## Voice and tone
 
 - Plain, neutral and precise. Use third person: `The portfolio`, `The policy benchmark`, `The Committee`.
@@ -78,3 +82,7 @@ managers** on the cover and at first use. Refer to `the illustrative portfolio`,
 
 For unavailable evidence, write `Not available — <reason>`. For degraded evidence, state what is covered and
 what is not. Do not fill gaps from memory, general market knowledge or local calculations.
+
+Comprehensive reports use ODD-quality editorial and visual polish. Charts must advance the evidence, retain
+readable labels, legends, units and bases, and survive PDF rendering without clipping or overflow. Pass the
+validator before rendering and inspect every PDF page before delivery.

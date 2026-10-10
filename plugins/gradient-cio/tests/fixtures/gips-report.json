@@ -1,0 +1,232 @@
+{
+  "report_type": "gips_analytical_report",
+  "schema_version": "1.0",
+  "visuals_schema_version": "1.0",
+  "source_title": "Northfield Example Capital — GIPS Manager Diligence",
+  "meta": {
+    "eyebrow": "GIPS Manager Diligence",
+    "header_label": "GIPS Review",
+    "subtitle": "Global Value Equity Composite · data through 2025-12-31 · synthetic example",
+    "running_head": "Northfield · GIPS",
+    "data_as_of": "2025-12-31",
+    "confidentiality": "SYNTHETIC EXAMPLE — layout test",
+    "cover_facts": [
+      [
+        "Subject",
+        "Northfield Example Capital"
+      ],
+      [
+        "Document reviewed",
+        "GIPS Composite Report"
+      ],
+      [
+        "Data through",
+        "2025-12-31"
+      ],
+      [
+        "Verifier",
+        "Example Verifier LLP"
+      ],
+      [
+        "Prepared for",
+        "Gradient"
+      ],
+      [
+        "Review date",
+        "2026-10-04"
+      ]
+    ],
+    "signal_title": "Overall assessment",
+    "signal": {
+      "level": "follow_ups",
+      "label": "Satisfactory with follow-ups"
+    },
+    "completeness": {
+      "used": 7,
+      "expected": 8,
+      "state": "partial"
+    },
+    "meter_title": "Requirements evidenced",
+    "title": "Northfield Example Capital — GIPS Manager Diligence"
+  },
+  "executive": {
+    "label": "Bottom line",
+    "bottom_line": "The firm-wide GIPS claim is correctly worded and verified through 2024 [S1] [S2]. Two Medium findings need answers before approval: composite assets in the DDQ do not match the GIPS Report, and the fee schedule omits the performance fee [S1] [S3].",
+    "tiles": [
+      {
+        "label": "Met",
+        "value": "4",
+        "sub": "Four requirements evidenced",
+        "tone": "good"
+      },
+      {
+        "label": "Partially met",
+        "value": "2",
+        "sub": "Verification and fee disclosure",
+        "tone": "watch"
+      },
+      {
+        "label": "Not met",
+        "value": "1",
+        "sub": "DDQ asset inconsistency",
+        "tone": "bad"
+      },
+      {
+        "label": "Not found",
+        "value": "1",
+        "sub": "Composite descriptions list",
+        "tone": "watch"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "title": "Summary",
+      "source_heading": "1. Summary",
+      "new_page": false,
+      "blocks": [
+        {
+          "type": "coverage",
+          "title": "Evidence status",
+          "items": [
+            {
+              "name": "GIPS Composite Report",
+              "status": "available",
+              "note": "Data through 2025-12-31 [S1]"
+            },
+            {
+              "name": "Verification letter",
+              "status": "available",
+              "note": "Coverage through 2024-12-31 [S2]"
+            },
+            {
+              "name": "DDQ",
+              "status": "degraded",
+              "note": "Composite assets conflict with the report [S3]"
+            }
+          ]
+        },
+        {
+          "type": "markdown",
+          "text": "> SYNTHETIC EXAMPLE for layout testing. Basis: GIPS Composite Report (Global Value Equity, data through 2025-12-31), verification letter dated 2026-03-15 and DDQ section 7. Diligence review against the 2020 GIPS standards; not a verification or legal opinion.\n\n\n\n- **Overall assessment:** Satisfactory with follow-ups.\n- Firm-wide compliance claim uses the required wording (4.C.1) and is verified through 2024-12-31.\n- **Medium:** the DDQ states composite assets of $2.4B; the GIPS Report shows $2.1B at 2025-12-31 (1.A.7).\n- **Medium:** the fee schedule disclosure omits the performance fee (4.C.11)."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Asset evidence needs reconciliation",
+          "text": "**Observation:** The DDQ and GIPS Report differ on composite assets [S1, S3]. **Why it matters:** the inconsistency limits reliance on the reported composite scale. **Uncertainty:** the effective date of any asset change is not documented. **What would change the view:** evidence closing follow-up request 1.",
+          "follow_up_refs": [
+            1
+          ]
+        }
+      ],
+      "num": "01",
+      "id": "executive"
+    },
+    {
+      "title": "Performance Integrity & GIPS",
+      "source_heading": "2. Performance Integrity & GIPS",
+      "new_page": false,
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "### Performance Integrity & GIPS\n\n**Overall assessment:** Satisfactory with follow-ups\n\n**GIPS status:** Northfield claims compliance with the GIPS standards. Verified by Example Verifier LLP for 2015-01-01 to 2024-12-31. No performance examination of the composite. Report reviewed: Global Value Equity Composite, data through 2025-12-31.\n\n**Key findings**\n- [Medium] DDQ composite assets differ from the GIPS Report by $0.3B (1.A.7)\n- [Medium] Fee schedule omits the performance fee (4.C.11)\n- [Low] Verification gap of 12 months to the latest year-end\n\n**Track record notes:** 11 years of annual returns, net of actual fees; global value equity benchmark; 14 portfolios; no carve-outs or portability.\n\n**Follow-ups before approval**\n1. Reconcile composite assets between the DDQ and the GIPS Report.\n2. Provide the full fee schedule including the performance fee."
+        }
+      ],
+      "num": "02"
+    },
+    {
+      "title": "Findings Checklist",
+      "source_heading": "3. Findings Checklist",
+      "new_page": false,
+      "blocks": [
+        {
+          "type": "bars",
+          "title": "Findings by severity",
+          "items": [
+            {
+              "label": "High",
+              "value": 0,
+              "display": "0"
+            },
+            {
+              "label": "Medium",
+              "value": 2,
+              "display": "2"
+            },
+            {
+              "label": "Low",
+              "value": 1,
+              "display": "1"
+            }
+          ]
+        },
+        {
+          "type": "markdown",
+          "text": "### Claim & verification\n\n| Area | Requirement | Provision | Status | Evidence | Finding / follow-up |\n|---|---|---|---|---|---|\n| Claim | Compliance statement wording | 4.C.1 | Met | GIPS Report p.2 | — |\n| Claim | Firm-wide claim | 1.A.1 | Met | GIPS Report p.2 | — |\n| Verification | Verification covers recent periods | Verification | Partially met | Letter 2026-03-15 | 2025 not yet verified |\n\n### Report numbers & disclosures\n\n| Area | Requirement | Provision | Status | Evidence | Finding / follow-up |\n|---|---|---|---|---|---|\n| Numbers | Composite assets each year | 4.A.1 | Met | GIPS Report p.1 | — |\n| Consistency | DDQ agrees with GIPS Report | 1.A.7 | Not met | DDQ 7.3 vs Report p.1 | $2.4B vs $2.1B |\n| Disclosures | Fee schedule | 4.C.11 | Partially met | GIPS Report p.3 | Performance fee missing |\n| Disclosures | Benchmark description | 4.C.32 | Met | GIPS Report p.3 | — |\n| Policies | List of composite descriptions available | 4.C.15 | Not found | — | Request |"
+        },
+        {
+          "type": "findings",
+          "title": "Priority findings",
+          "items": [
+            {
+              "severity": "medium",
+              "title": "Composite assets conflict",
+              "detail": "The DDQ reports $2.4B while the GIPS Report reports $2.1B [S1, S3]."
+            },
+            {
+              "severity": "medium",
+              "title": "Fee schedule incomplete",
+              "detail": "The reviewed fee schedule omits the performance fee [S1]."
+            },
+            {
+              "severity": "low",
+              "title": "Verification period gap",
+              "detail": "Verification evidence ends at 2024-12-31 [S2]."
+            }
+          ],
+          "empty_title": "No findings returned",
+          "empty_text": "No High, Medium, or Low findings were identified."
+        }
+      ],
+      "num": "03"
+    },
+    {
+      "title": "Follow-up Requests",
+      "source_heading": "4. Follow-up Requests",
+      "new_page": false,
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "1. Composite asset reconciliation between DDQ 7.3 and the GIPS Report (1.A.7).\n2. Full fee schedule including the performance fee (4.C.11).\n3. List of composite descriptions (4.C.15)."
+        }
+      ],
+      "num": "04"
+    },
+    {
+      "title": "Appendix — Sources",
+      "source_heading": "Appendix A — Sources",
+      "new_page": true,
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "| Tag | Source | Detail | As of | Validation |\n|---|---|---|---|---|\n| S1 | GIPS Composite Report | Global Value Equity, pp.1–3 | 2025-12-31 | Document |\n| S2 | Verification letter | Example Verifier LLP | 2026-03-15 | Document |\n| S3 | DDQ | Section 7 | 2026-06-30 | Document |"
+        }
+      ],
+      "num": "A"
+    },
+    {
+      "title": "Appendix — Method & Disclaimer",
+      "source_heading": "Appendix B — Method & Disclaimer",
+      "new_page": false,
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "Ratings follow the High/Medium/Low scale and overall-assessment rules in the Gradient GIPS output format. This is a diligence review against the published 2020 GIPS standards, not a verification, compliance certification or legal opinion."
+        }
+      ],
+      "num": "B"
+    }
+  ]
+}

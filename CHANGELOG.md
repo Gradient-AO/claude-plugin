@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.4.0
+- Added a validated visual and sourced Claude-analysis layer for IC memos, including required executive tiles, portfolio charts, semantic visual slots and fail-closed JSON composition.
+- Added deterministic JSON validators and analysis boundaries for brief portfolio reviews, ODD reports, DDQ reconciliations, equity notes, manager comparisons and manager-monitoring digests.
+- Brought all five portfolio-construction packs, portfolio attribution and comprehensive portfolio reviews onto the same four-tile, visual-slot and sourced four-part analysis contract, with shared construction validation and fail-closed delivery gates.
+- Added shared GIPS visual composition and validation for asset-owner, manager-diligence, policies-gap and report-review workflows while preserving their paste-ready markdown handoffs.
+- Expanded fictional render and negative-contract fixtures for missing visuals, invalid source tags, signed values, prohibited recommendations, all four GIPS handoff variants and failed-composition output safety.
+
+## 2.3.4
+- Required coherent capability-level access modes in connector validation and readiness guidance.
+- Strengthened exposure probes for aggregate scope and status, fixed-income reconciliation and typed null reasons.
+- Distinguished compact `not_applicable` and `not_run` validation outcomes without treating omitted checks as passed.
+- Aligned canonical CMA allocation checks and fund-scope DDQ aliases with their current contracts.
+- Preserved typed GRIP degradation and outlook reasons plus The Read visual-unavailability reasons.
+
 ## 2.3.3
 - Corrected the sample fixed-income exposure probe to use the required lowercase filter and actual `portfolio_totals` response path.
 - Required exact lowercase exposure-classification inputs across shared and portfolio-review guidance.

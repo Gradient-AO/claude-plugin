@@ -69,6 +69,7 @@
         "subject_scope",
         "claim_set_scope",
         "claims",
+        "claims[0].extraction_reason_codes[0]",
         "extraction_warnings"
       ],
       "get_benchmarks": [
@@ -78,6 +79,8 @@
       ],
       "get_cma_consensus_check": [
         "mode",
+        "resolved_allocation",
+        "portfolio.coverage.positive_weight_asset_class_count",
         "positioning",
         "raw_cited_figures",
         "warnings"
@@ -99,11 +102,16 @@
         "effective_capabilities.strategyLab",
         "product_entitlements.portfolio",
         "product_entitlements.strategyLab",
+        "capability_access_modes.portfolio",
+        "capability_access_modes.strategyLab",
         "tools"
       ],
       "get_the_read": [
         "coverage.status",
         "coverage.missing_series",
+        "coverage.sections.visuals.status",
+        "coverage.sections.visuals.missing_fields",
+        "coverage.sections.visuals.degradation_reasons",
         "coverage.unavailable_visuals",
         "coverage.omitted_visual_reasons"
       ],
@@ -150,7 +158,10 @@
         "portfolio_totals.fixed_income_metrics.effective_duration",
         "portfolio_totals.fixed_income_metrics.spread_duration",
         "portfolio_totals.fixed_income_metrics.yield_to_maturity_decimal",
+        "aggregates_by_asset_classification.scope",
+        "aggregates_by_asset_classification.basis",
         "aggregates_by_asset_classification.coverage.status",
+        "aggregates_by_asset_classification.rows[0].fixed_income_metrics.weighting_basis",
         "methodology"
       ],
       "get_portfolio_historical_returns": [
@@ -305,6 +316,9 @@
         "product_entitlements",
         "product_entitlements.portfolio",
         "product_entitlements.strategyLab",
+        "capability_access_modes",
+        "capability_access_modes.portfolio",
+        "capability_access_modes.strategyLab",
         "tools",
         "coverage"
       ],
@@ -452,6 +466,9 @@
         "publication.resolved_as_of_date",
         "coverage.status",
         "coverage.missing_series",
+        "coverage.sections.visuals.status",
+        "coverage.sections.visuals.missing_fields",
+        "coverage.sections.visuals.degradation_reasons",
         "coverage.unavailable_visuals",
         "coverage.omitted_visual_reasons"
       ],
@@ -723,7 +740,11 @@
       },
       "required": [
         "signal.composite_score",
-        "signal.driver_scores"
+        "signal.driver_scores",
+        "sources.grip.availability.status",
+        "sources.grip.availability.reasons",
+        "sources.grip.indexMetadata.degradationReasons",
+        "sources.grip.outlookMetadata.reason"
       ]
     },
     {
@@ -804,6 +825,18 @@
       "equals": {
         "mode": "allocation",
         "portfolio.coverage.positive_weight_asset_class_count": 2
+      },
+      "approx": {
+        "resolved_allocation.public_equity": {
+          "expected": 0.6,
+          "absolute_tolerance": 1e-12,
+          "unit": "allocation_weight"
+        },
+        "resolved_allocation.fixed_income": {
+          "expected": 0.4,
+          "absolute_tolerance": 1e-12,
+          "unit": "allocation_weight"
+        }
       }
     },
     {
@@ -869,16 +902,51 @@
         "portfolio_totals.fixed_income_metrics.effective_duration",
         "portfolio_totals.fixed_income_metrics.spread_duration",
         "portfolio_totals.fixed_income_metrics.yield_to_maturity_decimal",
+        "aggregates_by_asset_classification.scope",
+        "aggregates_by_asset_classification.basis",
         "aggregates_by_asset_classification.coverage.status",
+        "aggregates_by_asset_classification.rows[0].asset_classification",
+        "aggregates_by_asset_classification.rows[0].fixed_income_metrics.weighting_basis",
+        "aggregates_by_asset_classification.rows[0].fixed_income_metrics.effective_duration",
+        "aggregates_by_asset_classification.rows[0].fixed_income_metrics.spread_duration",
+        "aggregates_by_asset_classification.rows[0].fixed_income_metrics.yield_to_maturity_decimal",
         "has_more",
         "methodology"
       ],
       "equals": {
+        "exposures[0].null_reasons.as_of_date": null,
+        "exposures[0].null_reasons.market_value_base": null,
+        "exposures[0].null_reasons.nav_base": "nav_not_applicable_for_marketable",
         "page_totals.scope": "current_page",
         "portfolio_totals.scope": "filtered_portfolio",
         "portfolio_totals.complete": true,
-        "portfolio_totals.fixed_income_metrics.weighting_basis": "current_holding_nav_base"
-      }
+        "portfolio_totals.fixed_income_metrics.weighting_basis": "current_holding_nav_base",
+        "aggregates_by_asset_classification.scope": "filtered_portfolio",
+        "aggregates_by_asset_classification.basis": "current_holding_market_value_or_drawdown_nav_excluding_unfunded",
+        "aggregates_by_asset_classification.coverage.status": "available",
+        "aggregates_by_asset_classification.rows[0].asset_classification": "Fixed Income",
+        "aggregates_by_asset_classification.rows[0].fixed_income_metrics.weighting_basis": "current_holding_nav_base"
+      },
+      "reconciles": [
+        {
+          "left": "portfolio_totals.fixed_income_metrics.effective_duration",
+          "right": "aggregates_by_asset_classification.rows[0].fixed_income_metrics.effective_duration",
+          "absolute_tolerance": 1e-12,
+          "unit": "years"
+        },
+        {
+          "left": "portfolio_totals.fixed_income_metrics.spread_duration",
+          "right": "aggregates_by_asset_classification.rows[0].fixed_income_metrics.spread_duration",
+          "absolute_tolerance": 1e-12,
+          "unit": "years"
+        },
+        {
+          "left": "portfolio_totals.fixed_income_metrics.yield_to_maturity_decimal",
+          "right": "aggregates_by_asset_classification.rows[0].fixed_income_metrics.yield_to_maturity_decimal",
+          "absolute_tolerance": 1e-12,
+          "unit": "decimal_fraction"
+        }
+      ]
     },
     {
       "id": "portfolio_policy",
@@ -1601,10 +1669,13 @@
         "claims",
         "claims[0].field",
         "claims[0].raw_value",
+        "claims[0].extraction_reason_codes[0]",
         "claims[4].field",
         "claims[4].raw_value",
+        "claims[4].extraction_reason_codes[0]",
         "claims[7].field",
         "claims[7].raw_value",
+        "claims[7].extraction_reason_codes[0]",
         "extraction_warnings"
       ],
       "equals": {
@@ -1612,10 +1683,13 @@
         "claim_set_scope": "complete_checklist",
         "claims[0].field": "auditor_name",
         "claims[0].raw_value": "Example Audit LLP",
+        "claims[0].extraction_reason_codes[0]": "reviewed_alias_match",
         "claims[4].field": "administrator_name",
         "claims[4].raw_value": "Example Fund Services",
+        "claims[4].extraction_reason_codes[0]": "reviewed_alias_match",
         "claims[7].field": "custodian_name",
-        "claims[7].raw_value": "Example Trust"
+        "claims[7].raw_value": "Example Trust",
+        "claims[7].extraction_reason_codes[0]": "reviewed_alias_match"
       },
       "envelope": false
     },

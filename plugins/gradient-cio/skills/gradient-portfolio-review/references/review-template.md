@@ -42,7 +42,8 @@ Use JSON block mode. Set:
 - `executive.bottom_line`: three to five sourced sentences covering performance, attribution, policy,
   realized risk, forward assumptions and liquidity.
 - `executive.tiles`: Trailing 1Y, Active return for the review period, Realized volatility and Liquid share.
-  An unavailable tile displays `n/a` and the reason.
+  Use exactly these four tiles in that order and cite an `[S#]` tag in each. An unavailable tile displays
+  `n/a`, the sourced reason and its tag.
 
 ## Sections
 
@@ -144,13 +145,11 @@ Use JSON block mode. Set:
 
 ### 11. Analysis and Considerations
 
-- Three to six `callout` blocks. Sort by materiality: policy breach, policy watch, performance / attribution,
-  risk, liquidity, exposure / concentration, forward assumptions.
-- Each callout has:
-  1. **Observation** — a dated, sourced fact.
-  2. **Why it matters** — the monitoring implication supported by the same evidence.
-  3. **Uncertainty** — coverage, basis, staleness or model limitation.
-  4. **Consideration for discussion** — a neutral question or item to monitor.
+- Three to six sourced `callout` blocks with `role: "analysis"`. Analysis-role blocks appear only here. Sort
+  by materiality: policy breach, policy watch, performance / attribution, risk, liquidity, exposure /
+  concentration, forward assumptions.
+- Titles contain no more than six words. Text is no more than 80 words and uses these labels exactly, in
+  order: `Observation:`, `Why it matters:`, `Uncertainty:`, `What would change the view:`.
 - Do not state a recommendation, action, trade, allocation change, manager decision or vote.
 
 ### 12. Coverage
@@ -178,3 +177,10 @@ Use JSON block mode. Set:
   - Private-market and Form 13F valuation / filing lags where applicable.
   - Portfolio Analytics and Strategy Lab are separate analytical scopes.
   - AI-assisted monitoring analysis; not investment, legal or compliance advice.
+
+## Comprehensive delivery gate
+
+Apply ODD-quality editorial and visual polish: evidence-led charts, readable labels and units, disciplined
+spacing and no decorative filler. The JSON must pass `validate_review.py`, then the rendered PDF must pass
+page-by-page QA for clipping, overflow, orphaned headings and unreadable graphics. Delivery is blocked until
+validator, source reconciliation and PDF page QA all pass.

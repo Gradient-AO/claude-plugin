@@ -2,7 +2,7 @@
 name: gradient-gips-policies-gap-check
 description: "This skill should be used when the user asks to \"review GIPS policies and procedures\", \"gap check our GIPS manual\", \"what's missing from this GIPS P&P\", \"review a manager's GIPS policies\", or wants a firm's or asset owner's GIPS policies and procedures document compared against the 2020 GIPS standards to find missing or weak policies. Delivers a branded PDF review in the Gradient house style.\n"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # GIPS Policies & Procedures Gap Check
@@ -12,7 +12,7 @@ asset owners) to document, and identify gaps.
 
 Shared references live in `${CLAUDE_PLUGIN_ROOT}/skills/gradient-gips-standards/references/` (fallback:
 `../gradient-gips-standards/references/`). Load `firms-fundamentals.md` (or `asset-owners.md`), `output-format.md`,
-and `firms-report-checklist.md` for the report-preparation policies.
+`report-layout.md`, and `firms-report-checklist.md` for the report-preparation policies.
 
 ## Policy areas the document must cover
 
@@ -48,13 +48,18 @@ ex ante rule.
 3. For Partially met items, quote the weak passage and state what is missing.
 4. Add recent Guidance Statements that apply to the firm's business (OCIO portfolios, fiduciary management,
    trade error policies once finalized) and check whether the P&P addresses them.
-5. Produce the findings checklist using `output-format.md` and deliver the branded PDF (see Output), with:
-   - If reviewing the user's own firm: a prioritized remediation list.
+5. Produce the deterministic markdown checklist and separate visual layer using `output-format.md` and
+   `report-layout.md`, then deliver the branded PDF (see Output), with:
+   - If reviewing the user's own firm: a prioritized list limited to the existing follow-up requests.
    - If reviewing a manager in due diligence: the memo section, noting policy gaps that weaken reliance on
      the track record.
+   Keep analysis non-prescriptive. Require evidence-status tiles, evidence coverage, findings and severity
+   summaries, sourced analysis, and typed unavailable blocks where expected evidence is missing.
 
 ## Output
 
-Always deliver the review as a branded PDF: follow "Delivery — branded PDF" in
-`gradient-gips-standards/references/output-format.md`, rendering with this skill's
-`scripts/gradient_report.py` (style rules in this skill's `references/report-style.md`).
+Always deliver the review as a branded PDF. Write `review.md`, `visuals.json` and `meta.json`; validate and
+compose them with the shared scripts in `gradient-gips-standards/scripts`, then render `review.json` in JSON
+block mode with this skill's `scripts/gradient_report.py`. Preserve any investment-memo handoff markdown
+unchanged. Market charts are not required. Follow `output-format.md`, `report-layout.md` and this skill's
+`references/report-style.md`.

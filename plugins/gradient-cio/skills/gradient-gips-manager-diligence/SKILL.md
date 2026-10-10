@@ -2,7 +2,7 @@
 name: gradient-gips-manager-diligence
 description: "This skill should be used when the user asks to \"check a manager's GIPS compliance\", \"verify GIPS claims\", \"review GIPS in the DDQ\", \"is this manager GIPS verified\", \"GIPS check for the investment memo\", \"performance integrity review\", or when operational or investment due diligence on a manager or fund needs a GIPS assessment. It cross-checks the manager's GIPS claim, verification, GIPS Report and marketing figures, using GradientCIO ODD and DDQ data when available, and produces a findings checklist plus a section ready to insert into an investment memo. Delivers a branded PDF review in the Gradient house style.\n"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # GIPS Manager Diligence
@@ -13,7 +13,8 @@ Assess whether a manager's GIPS claim is valid and whether its track record can 
 Shared references live in `${CLAUDE_PLUGIN_ROOT}/skills/gradient-gips-standards/references/` (if the variable is not
 expanded, use `../gradient-gips-standards/references/` relative to this skill). Load `red-flags.md`,
 `verification.md` and `output-format.md` at the start; load `firms-report-checklist.md` when a GIPS Report is
-available and `advertising-and-marketing-rule.md` when marketing materials are in scope.
+available and `advertising-and-marketing-rule.md` when marketing materials are in scope. Load
+`report-layout.md` before building the report.
 
 ## Step 1 — Identify the subject and gather evidence
 
@@ -80,12 +81,16 @@ advisers, also apply the Marketing Rule checks in `advertising-and-marketing-rul
 
 1. Rate each finding High/Medium/Low using `red-flags.md`; set the overall assessment with the rules in
    `output-format.md`.
-2. Produce the findings checklist, then the memo section using the template in `output-format.md`.
-3. Build and deliver the branded PDF (see Output below). Put the memo section first in the reply so it can be
-   pasted into the investment memo; the checklist and follow-up requests are in the PDF.
-4. If an investment memo is being built in the same session, hand over the memo section and the High/Medium
+2. Produce the authoritative markdown checklist and memo section using `output-format.md`. Keep the memo
+   handoff unchanged through composition.
+3. Build `visuals.json` using `report-layout.md`: evidence-status tiles, evidence coverage, findings and
+   severity summaries, sourced analysis, and typed unavailable blocks where expected evidence is missing.
+   Analysis may refer only to existing numbered follow-up requests and does not prescribe an action.
+4. Validate, compose and deliver the branded PDF (see Output below). Put the unchanged memo section first in
+   the reply so it can be pasted into the investment memo; the checklist and follow-up requests are in the PDF.
+5. If an investment memo is being built in the same session, hand over the memo section and the High/Medium
    findings for the memo's risk section.
-5. Close with the basis statement: a diligence review against the 2020 GIPS standards, not a verification or
+6. Close with the basis statement: a diligence review against the 2020 GIPS standards, not a verification or
    legal opinion.
 
 ## Judgment notes
@@ -97,6 +102,7 @@ advisers, also apply the Marketing Rule checks in `advertising-and-marketing-rul
 
 ## Output
 
-Always deliver the review as a branded PDF: follow "Delivery — branded PDF" in
-`gradient-gips-standards/references/output-format.md`, rendering with this skill's
-`scripts/gradient_report.py` (style rules in this skill's `references/report-style.md`).
+Always deliver the review as a branded PDF. Write `review.md`, `visuals.json` and `meta.json`; validate and
+compose them with the shared scripts in `gradient-gips-standards/scripts`, then render `review.json` in JSON
+block mode with this skill's `scripts/gradient_report.py`. Market charts are not required. Follow
+`output-format.md`, `report-layout.md` and this skill's `references/report-style.md`.

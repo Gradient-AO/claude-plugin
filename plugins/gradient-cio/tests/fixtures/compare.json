@@ -27,9 +27,9 @@
    {"type": "table", "title": "Shortlist at a glance", "columns": ["Manager", "CRD", "RAUM", "Flags", "Next step"],
     "align": ["l", "n", "r", "l", "l"],
     "rows": [
-     ["Ridgeview Example Advisors (TEST)", "999901", "$12.40B", {"chip": "No flags", "status": "available"}, "Run ODD report"],
-     ["Harbor Example Capital (TEST)", "999902", "$4.85B", {"chip": "Medium", "status": "medium"}, "Reconcile DDQ"],
-     ["Northfield Example Capital (TEST)", "999903", "$1.92B", {"chip": "Medium", "status": "medium"}, "Run ODD report"]],
+     ["Ridgeview Example Advisors (TEST)", "999901", "$12.40B", {"chip": "No flags", "status": "available"}, "Run ODD report [S1]"],
+     ["Harbor Example Capital (TEST)", "999902", "$4.85B", {"chip": "Medium", "status": "medium"}, "Reconcile DDQ [S2]"],
+     ["Northfield Example Capital (TEST)", "999903", "$1.92B", {"chip": "Medium", "status": "medium"}, "Run ODD report [S3]"]],
     "note": "Order follows the user's list. Flags are evidence for follow-up, not a verdict on the manager."}
   ]},
   {"title": "Side-by-side comparison", "kicker": "Form ADV Part 1A and Schedule D, report 2026-10-01; Form 13F 2026-06-30", "blocks": [
@@ -65,7 +65,8 @@
    {"type": "findings", "items": [
      {"severity": "medium", "title": "Northfield Example Capital (TEST): custody through a related person", "detail": "Item 9 reports a related person with custody of client assets; independent verification answer not found in the returned data [S3]."},
      {"severity": "low", "title": "Northfield Example Capital (TEST): not in diligence catalog", "detail": "No catalog firm ID, so 13F, consistency, events and findings are not available [S3]."}],
-    "empty_title": "", "empty_text": ""}
+    "empty_title": "", "empty_text": ""},
+   {"type": "callout", "role": "analysis", "tone": "watch", "title": "Analysis — Evidence gaps differ", "text": "Harbor has incomplete administrator evidence while Northfield has related-person custody and no catalog evidence [S2][S3]. These are different follow-up needs, not a quality ranking. Completed DDQ and catalog evidence would change the comparison."}
   ]},
   {"title": "Form 13F overlap", "kicker": "Same-period, complete Form 13F filings only", "blocks": [
    {"type": "table", "title": "Weighted overlap (period 2026-06-30)", "columns": ["", "Ridgeview (TEST)", "Harbor (TEST)", "Northfield (TEST)"],
@@ -110,7 +111,7 @@
      ["Northfield (TEST)", {"chip": "Run ODD report", "status": "ready"}, "Related-person custody [S3]", "gradient-odd-report"]]},
    {"type": "text", "text": "Optional, only on request and after a previewed dry run: add managers to the research watchlist or start Form ADV monitoring."}
   ]},
-  {"title": "Appendix — Sources and method", "num": "A", "blocks": [
+  {"title": "Appendix A — Sources and method", "num": "A", "blocks": [
    {"type": "table", "title": "Sources", "columns": ["Tag", "Evidence", "Tool / view", "As of", "Validation", "Digest"],
     "align": ["n", "l", "l", "n", "n", "n"],
     "rows": [

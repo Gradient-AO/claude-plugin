@@ -2,7 +2,7 @@
 name: gradient-gips-asset-owner-review
 description: "This skill should be used when the user asks to \"review a GIPS Asset Owner Report\", \"check a pension fund's GIPS compliance\", \"is this endowment's board report GIPS compliant\", \"check total fund performance reporting against GIPS\", or wants a pension fund, endowment, foundation, sovereign wealth fund or similar asset owner's total fund or composite performance report checked against the 2020 GIPS standards for asset owners. Delivers a branded PDF review in the Gradient house style.\n"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # GIPS Asset Owner Review
@@ -11,7 +11,8 @@ Check an asset owner's GIPS Asset Owner Report (total fund and any additional co
 GIPS standards for asset owners.
 
 Shared references live in `${CLAUDE_PLUGIN_ROOT}/skills/gradient-gips-standards/references/` (fallback:
-`../gradient-gips-standards/references/`). Load `asset-owners.md`, `verification.md` and `output-format.md`.
+`../gradient-gips-standards/references/`). Load `asset-owners.md`, `verification.md`, `output-format.md` and
+`report-layout.md`.
 
 ## Step 1 — Confirm the right standards apply
 
@@ -48,13 +49,17 @@ Asset owner reports serve fiduciaries, so also note:
 
 ## Step 5 — Report
 
-Produce the findings checklist and a summary using `output-format.md`, delivered as the branded PDF (see Output). Replace the investment-memo section with
-an **Oversight body summary**: overall assessment, key findings with provisions, and recommended changes to
-the next report. If the review supports a memo (for example, evaluating an OCIO or a peer asset owner), use the
-standard memo section instead.
+Produce the deterministic markdown, findings checklist and visual layer defined by `output-format.md` and
+`report-layout.md`. Replace the investment-memo section with an **Oversight body summary**: overall
+assessment, key findings with provisions, and the existing follow-up requests for the next report. Keep the
+analysis non-prescriptive and do not add actions beyond those requests. If the review supports a memo (for
+example, evaluating an OCIO or a peer asset owner), use the standard memo section and preserve it unchanged.
 
 ## Output
 
-Always deliver the review as a branded PDF: follow "Delivery — branded PDF" in
-`gradient-gips-standards/references/output-format.md`, rendering with this skill's
-`scripts/gradient_report.py` (style rules in this skill's `references/report-style.md`).
+Always deliver the review as a branded PDF. Write `review.md`, `visuals.json` and `meta.json`; validate and
+compose them with the shared scripts in `gradient-gips-standards/scripts`, then render the resulting
+`review.json` in JSON block mode with this skill's `scripts/gradient_report.py`. Require evidence-status
+tiles, evidence coverage, findings and severity summaries, sourced analysis, and typed unavailable blocks
+when expected evidence is missing. Market charts are not required. Follow `output-format.md`,
+`report-layout.md` and this skill's `references/report-style.md`.

@@ -18,9 +18,9 @@
     "label": "Recommendation",
     "bottom_line": "We recommend retaining the 12.0% marketable-alternatives allocation while shifting 2.0 percentage points from equity long/short to macro and relative-value roles [S3][S4]. Committee action requested: approve the target structure and staged manager review, subject to verified redemption terms and completed diligence [S3][S7][S8].",
     "tiles": [
-      {"label": "Alternatives weight", "value": "12.0%", "sub": "Policy target 12.0% [S3]", "tone": "good"},
+      {"label": "Marketable-alternatives weight", "value": "12.0%", "sub": "Policy target 12.0% [S3]", "tone": "good"},
       {"label": "Active weight", "value": "0.0pp", "sub": "Total-fund target [S3]", "tone": "good"},
-      {"label": "Trailing 1Y", "value": "6.4%", "sub": "Benchmark 5.8% [S5]", "tone": "good"},
+      {"label": "Relative return", "value": "+0.6pp", "sub": "Trailing 1Y versus benchmark [S5]", "tone": "good"},
       {"label": "Liquid share", "value": "8.0%", "sub": "Monthly or better as % NAV [S3]", "tone": "watch"}
     ]
   },
@@ -53,6 +53,7 @@
       "title": "Target Strategy and Manager Structure",
       "blocks": [
         {"type": "table", "title": "Current versus target", "columns": ["Strategy / role", "Current", "Target", "Change", "Range / constraint", "Rationale"], "rows": [["Equity long/short", "5.0%", "3.0%", "-2.0pp", "2.0%–6.0%", "Reduce largest strategy concentration [S3][S4]"], ["Macro", "2.5%", "3.5%", "+1.0pp", "2.0%–5.0%", "Increase diversifying role subject to diligence [S7][S8]"], ["Relative value", "1.5%", "2.5%", "+1.0pp", "1.0%–4.0%", "Broaden strategy mix subject to terms [S7][S8]"], ["Multi-strategy", "3.0%", "3.0%", "0.0pp", "2.0%–4.0%", "Maintain current role [S3][S4]"]]},
+        {"type": "callout", "role": "analysis", "tone": "info", "title": "Strategy mix broadens", "text": "Observation: The target reallocates 2.0 percentage points from equity long/short to macro and relative value [S3][S4]. Why it matters: The largest strategy concentration declines. Uncertainty: Proposed manager diligence and terms remain incomplete [S7][S8]. What would change the view: Verified terms or diligence that do not support the new roles [S7][S8]."},
         {"type": "text", "text": "The target is a committee proposal and is not a saved portfolio change [S3][S8]."}
       ]
     },
@@ -69,6 +70,7 @@
       "blocks": [
         {"type": "chart", "chart": {"chart_id": "test-ma-factor", "title": "Model-implied factor exposures (TEST)", "status": "ok", "columns": [{"key": "factor", "title": "Factor", "format": "text", "decimals": null}, {"key": "exposure", "title": "Exposure", "format": "number", "decimals": 2}], "rows": [["Equity", 0.31], ["Rates", -0.08], ["Credit", 0.14], ["USD", 0.09]], "truncated": false, "render_hint": {"block": "bars", "x": "factor", "y": ["exposure"]}}},
         {"type": "table", "title": "Governed concentration", "columns": ["Axis", "Observed", "Limit", "Status", "Source"], "rows": [["Largest manager", "4.0% of NAV", "4.0%", {"chip": "Watch", "status": "watch"}, "[S3][S4]"], ["Largest strategy", "5.0% of NAV", "6.0%", {"chip": "Compliant", "status": "compliant"}, "[S3][S4]"], ["13F equity subset", "Not available — manager identifiers incomplete", "Not assessed", {"chip": "Not assessed", "status": "not_assessed"}, "[S7]"]]},
+        {"type": "callout", "role": "analysis", "tone": "info", "title": "Manager limit is binding", "text": "Observation: The largest manager is at the 4.0% policy limit [S3][S4]. Why it matters: New funding should not increase that concentration. Uncertainty: Model-implied factors and incomplete look-through do not reveal the full hedge-fund book [S7]. What would change the view: Complete exposure evidence showing lower aggregate concentration [S4][S7]."},
         {"type": "callout", "tone": "info", "title": "Look-through limitation", "text": "Any Form 13F evidence is lagged, long-only US-listed equity, excludes shorts, derivatives, cash and non-US listings, and is not a complete hedge-fund exposure view [S7]."}
       ]
     },
@@ -77,6 +79,7 @@
       "blocks": [
         {"type": "kv", "rows": [["Assumption set", "2026 Strategic CMA (TEST)", "S6"], ["Regime", "Baseline", "S6"], ["Horizon", "5 years", "S6"], ["Currency", "USD", "S6"], ["Context fingerprint", "test-ma-forward-2026", "S6"]]},
         {"type": "chart", "chart": {"chart_id": "test-ma-forward", "title": "Marketable-alternatives forward assumptions (TEST)", "status": "ok", "currency": "USD", "columns": [{"key": "class", "title": "Class", "format": "text", "decimals": null}, {"key": "return", "title": "Expected return", "format": "percentage", "decimals": 1}, {"key": "volatility", "title": "Expected volatility", "format": "percentage", "decimals": 1}], "rows": [["Hedge funds", 0.061, 0.089], ["Absolute return", 0.055, 0.071]], "truncated": false, "render_hint": {"block": "table", "x": "class", "y": []}}},
+        {"type": "callout", "role": "analysis", "tone": "info", "title": "Assumptions show tradeoff", "text": "Observation: Hedge funds carry higher expected return and volatility than absolute return in the selected assumptions [S6]. Why it matters: The target mix should preserve role diversification rather than maximize one measure. Uncertainty: These are class assumptions, not manager forecasts. What would change the view: A refreshed governed context with materially different relative measures [S6]."},
         {"type": "text", "text": "These figures are assumptions under the selected context, not forecasts or guarantees [S6]."}
       ]
     },

@@ -31,7 +31,8 @@ supports the full report. Missing evidence keeps its section and becomes
   core result is unavailable.
 - Executive label: `Attribution conclusion`.
 - Tiles: Historical active return, Largest historical effect, Ex ante active
-  return, Ex ante residual.
+  return, Ex ante residual, in that order. Use exactly these four tiles and
+  cite an `[S#]` tag in each tile.
 
 ## Sections
 
@@ -64,7 +65,8 @@ supports the full report. Missing evidence keeps its section and becomes
 - `table` **Historical total effects**: Effect, Contribution, Source.
 - `table` **Historical segment effects**: Segment, Allocation, Selection,
   Interaction, Total.
-- `bars` or `waterfall` from returned segment totals without recalculation.
+- At least one polished `bars`, `waterfall` or returned `chart` visual from
+  segment totals without recalculation.
 - `kv` **Historical reconciliation and method**: active return, total effects,
   residual, tolerance, method, linking, period, basis, currency.
 - `text` identifying the largest positive and negative returned effects.
@@ -76,7 +78,8 @@ supports the full report. Missing evidence keeps its section and becomes
 - `table` **Ex ante segment effects**: Segment, Portfolio weight, Benchmark
   weight, Portfolio expected return, Benchmark expected return, Allocation,
   Selection, Interaction, Total.
-- `bars` or `waterfall` from returned segment totals without recalculation.
+- At least one polished `bars`, `waterfall` or returned `chart` visual from
+  segment totals without recalculation.
 - `kv` **Ex ante reconciliation and method**: expected active return, total
   effects, residual, tolerance, method, formula version, horizon, basis,
   currency, return sources, assumption set and regime.
@@ -101,9 +104,11 @@ supports the full report. Missing evidence keeps its section and becomes
 
 ### 8. Analysis and Considerations
 
-- Three to six `callout` blocks, sorted by materiality.
-- Each contains Observation, Why it matters, Uncertainty, and Consideration
-  for discussion.
+- Three to six sourced `callout` blocks with `role: "analysis"`, sorted by
+  materiality. Analysis-role blocks appear only in this section.
+- Titles contain no more than six words. Text is no more than 80 words and
+  uses these labels exactly, in order: `Observation:`, `Why it matters:`,
+  `Uncertainty:`, `What would change the view:`.
 - No recommendation, trade, rebalance, manager action or vote.
 
 ### 9. Coverage
@@ -128,3 +133,10 @@ supports the full report. Missing evidence keeps its section and becomes
   - Missing evidence is not zero.
   - AI-assisted monitoring analysis; not investment, legal or compliance
     advice.
+
+## Delivery gate
+
+The report must include polished, readable graphics; pass
+`validate_attribution.py`; and pass page-by-page PDF QA for clipping,
+overflow, orphaned headings and unreadable visuals. Delivery remains blocked
+until source reconciliation and page QA pass.

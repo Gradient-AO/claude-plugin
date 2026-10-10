@@ -7,6 +7,12 @@ then explain why it matters, then state the uncertainty or basis limitation.
 Use `positive`, `negative`, `largest`, `smallest`, `reconciled` and
 `unavailable` only when the returned evidence supports them.
 
+The dedicated Analysis and Considerations section contains three to six
+`role: "analysis"` callouts only. Each has a sourced, six-word-or-shorter
+title and uses `Observation:`, `Why it matters:`, `Uncertainty:`, and
+`What would change the view:` in that exact order. Keep each callout to 80
+words or fewer.
+
 ## Historical attribution
 
 Call it `historical`, `realized` or `period attribution`. Name
@@ -64,3 +70,8 @@ Missing means `Not available — <reason>`, never zero or none. Preserve all
 returned reason codes in Coverage. Illustrative evidence uses the exact
 standard banner and is never described as the user's holdings, managers or
 performance.
+
+Use evidence-led, publication-quality graphics rather than decorative
+visuals. Labels, legends, units and historical versus ex ante bases must
+remain readable in the final PDF. Validate the JSON first, then inspect every
+rendered page before delivery.

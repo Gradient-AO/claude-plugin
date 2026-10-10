@@ -130,9 +130,10 @@
     },
     {
      "type": "callout",
+     "role": "analysis",
      "tone": "info",
-     "title": "Decision for the committee",
-     "text": "This review proposes no change. If the committee wants to act on the Alternatives overweight, a rebalance memo can be prepared with gradient-ic-memo."
+     "title": "Analysis — Policy watch",
+     "text": "All allocation bands remain compliant, while Alternatives has the smallest remaining headroom [S2]. This is a monitoring observation, not a recommendation. Updated valuations or a changed policy limit would alter the watch item."
     }
    ]
   },

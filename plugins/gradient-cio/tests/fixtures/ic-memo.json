@@ -1,0 +1,919 @@
+{
+  "meta": {
+    "eyebrow": "Investment Committee Memo",
+    "header_label": "Investment Committee Memo",
+    "title": "Rebalance: Gradient Global Growth III",
+    "subtitle": "Example Foundation · Prepared for the Investment Committee · Meeting 2026-10-15",
+    "running_head": "IC Memo · Global Growth III rebalance",
+    "data_as_of": "2026-09-30",
+    "confidentiality": "DRAFT — for committee review · Illustrative data",
+    "cover_facts": [
+      [
+        "Memo type",
+        "Rebalance"
+      ],
+      [
+        "Meeting date",
+        "2026-10-15"
+      ],
+      [
+        "Data as of",
+        "2026-09-30"
+      ],
+      [
+        "Base currency",
+        "USD"
+      ],
+      [
+        "Assumption set",
+        "ICAPM Q3 2026"
+      ],
+      [
+        "Status",
+        "Draft"
+      ]
+    ],
+    "signal_title": "IPS status",
+    "signal": {
+      "level": "breach",
+      "label": "2 breaches · 1 watch · 3 not assessed"
+    }
+  },
+  "sections": [
+    {
+      "title": "Recommendation and Decision Requested",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "> **ILLUSTRATIVE DATA** — Figures marked [S#] use the scope\n> \"Illustrative, Gradient Maintained — demo data, not the client's holdings or managers.\""
+        },
+        {
+          "type": "statement",
+          "title": "Recommendation",
+          "text": "Reduce public equity by 400 bps and fund fixed income and cash.",
+          "sub": "Decision requested: approve the 30-day rebalance [S1]"
+        },
+        {
+          "type": "markdown",
+          "text": "| Field | Value |\n|---|---|\n| Memo type | Rebalance |\n| Portfolio | Gradient Global Growth III (example-portfolio-id; Illustrative, Gradient Maintained — demo data, not the client's holdings or managers) |\n| Organization | Example Foundation |\n| Prepared for | Investment Committee |\n| Meeting date | 2026-10-15 |\n| Data as of | 2026-09-30 |\n| Assumption set | Gradient ICAPM Global Baseline, Q3 2026 (USD) — CMA release Q3-2026-policy-v2.1 (2026-09-11) |\n| Base currency | USD |\n| Status | DRAFT — for committee review |\n| Data quality | Illustrative |\n\n**Recommendation:** Reduce public equity by 400 bps to 48.0% and add 400 bps to cash (200 bps) and fixed income (200 bps) to cure two IPS band breaches.\n\n**Decision requested:** The Committee is asked to approve the rebalance in Section 13.1, executed over 30 days.\n\n**Rationale (three points, most important first):**\n1. Fixed income (19.0%) and cash (1.0%) are below their IPS minimums [S1].\n2. Cash at 1.0% leaves no operating buffer for 12-month calls of USD 180.0m [S1] [S9].\n3. The change lowers expected volatility by 60 bps with a 15 bps reduction in expected return [S3].\n\n**Key risks (three points, most material first):**\n1. Risk-limit compliance is not assessed because the persisted thresholds do not specify a governed observation horizon and return basis [S1].\n2. Expected return remains 28 bps below the CPI + 4.5% objective [S1] [S3].\n3. Gradient's real estate assumption is 499 bps above consensus [S4].\n\n**Conditions to approval:**\n1. Confirm the inflation assumption used for the real return objective (Section 15, item 1)."
+        }
+      ],
+      "new_page": false,
+      "num": "01",
+      "id": "executive"
+    },
+    {
+      "title": "Executive Summary",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "- **Positioning:** Public equity is 700 bps overweight and fixed income 600 bps underweight versus policy [S1].\n- **IPS:** 6 constraints Compliant, 1 Watch, 2 Breach, 3 Not assessed. Breaches: fixed income band and cash band.\n- **Performance:** 1Y return 6.9% versus 6.4% for the policy benchmark (+49 bps). Governed attribution is unavailable for the selected period [S2].\n- **Outlook:** Expected return 6.7% versus a 7.0% objective, volatility 13.1%, 44.0% probability of meeting the objective [S3].\n- **Liquidity & diligence:** Stress coverage 2.61 on the liquidity model; zero High diligence findings [S1] [S5] [S9]."
+        },
+        {
+          "type": "callout",
+          "tone": "bad",
+          "title": "Key judgment — Policy drives the decision",
+          "text": "Two allocation bands are in Breach [S1]. The proposed rebalance directly cures both. Risk-limit observations remain unavailable, so aligned risk evidence would change the implementation view."
+        },
+        {
+          "type": "callout",
+          "tone": "good",
+          "title": "Key judgment — Liquidity supports implementation",
+          "text": "T1 liquidity is 44.6% against a 15.0% minimum [S1]. This provides implementation capacity. Private valuations lag, so an updated liquidity schedule would change confidence in that conclusion."
+        },
+        {
+          "type": "callout",
+          "tone": "watch",
+          "title": "Key judgment — Return tradeoff is modest",
+          "text": "The proposed case lowers expected return by 15 bps and volatility by 60 bps [S3]. The tradeoff supports curing the breaches. These are assumptions; a refreshed CMA would change the view."
+        }
+      ],
+      "new_page": false,
+      "num": "02"
+    },
+    {
+      "title": "Portfolio Snapshot",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "| Item | Value | Source |\n|---|---|---|\n| Total NAV | USD 3375.0m | [S1] |\n| Unfunded commitments | USD 420.0m | [S1] |\n| Number of holdings / commitments | 56 | [S1] |\n| Number of managers | 18 | [S1] |\n| Valuation date(s) | 2026-09-30; private funds 2026-06-30 (one quarter lag) | [S1] |"
+        },
+        {
+          "type": "markdown",
+          "text": "| Asset class | Current weight | Policy target | Range (min–max) | Active (bps) | Status |\n|---|---|---|---|---|---|\n| public_equity | 52.0% | 45.0% | 35.0%–55.0% | +700 bps | Compliant |\n| fixed_income | 19.0% | 25.0% | 20.0%–30.0% | −600 bps | Breach |\n| private_equity | 17.0% | 15.0% | 10.0%–20.0% | +200 bps | Compliant |\n| real_estate | 11.0% | 10.0% | 5.0%–12.0% | +100 bps | Compliant |\n| cash | 1.0% | 5.0% | 2.0%–8.0% | −400 bps | Breach |\n| Total | 100.0% | 100.0% | | | |"
+        },
+        {
+          "type": "two_col",
+          "left": [
+            {
+              "type": "bars",
+              "title": "Current weight by asset class",
+              "narrow": true,
+              "items": [
+                {
+                  "label": "Public equity",
+                  "value": 52.0,
+                  "display": "52.0%"
+                },
+                {
+                  "label": "Fixed income",
+                  "value": 19.0,
+                  "display": "19.0%"
+                },
+                {
+                  "label": "Private equity",
+                  "value": 17.0,
+                  "display": "17.0%"
+                },
+                {
+                  "label": "Real estate",
+                  "value": 11.0,
+                  "display": "11.0%"
+                },
+                {
+                  "label": "Cash",
+                  "value": 1.0,
+                  "display": "1.0%"
+                }
+              ]
+            }
+          ],
+          "right": [
+            {
+              "type": "bars",
+              "title": "Active weight vs policy (bps)",
+              "narrow": true,
+              "all_accent": false,
+              "items": [
+                {
+                  "label": "Public equity",
+                  "value": 700,
+                  "display": "+700 bps",
+                  "color": "#B5E52A"
+                },
+                {
+                  "label": "Fixed income",
+                  "value": 600,
+                  "display": "−600 bps",
+                  "color": "#E8735A"
+                },
+                {
+                  "label": "Private equity",
+                  "value": 200,
+                  "display": "+200 bps",
+                  "color": "#B5E52A"
+                },
+                {
+                  "label": "Real estate",
+                  "value": 100,
+                  "display": "+100 bps",
+                  "color": "#B5E52A"
+                },
+                {
+                  "label": "Cash",
+                  "value": 400,
+                  "display": "−400 bps",
+                  "color": "#E8735A"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "bad",
+          "title": "Analysis — Two sleeves need correction",
+          "text": "Fixed income and cash sit below their policy minimums [S1]. The breach, rather than total NAV, drives the decision. Updated valuations could alter weights and would change the required trade sizes."
+        }
+      ],
+      "new_page": false,
+      "num": "03"
+    },
+    {
+      "title": "IPS Compliance",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "| # | Constraint | IPS requirement | Current | Status | Source |\n|---|---|---|---|---|---|\n| 1 | Allocation — public_equity | 35.0%–55.0% | 52.0% | Compliant | IPS §4.1 |\n| 2 | Allocation — fixed_income | 20.0%–30.0% | 19.0% | Breach | IPS §4.1 |\n| 3 | Allocation — private_equity | 10.0%–20.0% | 17.0% | Compliant | IPS §4.1 |\n| 4 | Allocation — real_estate | 5.0%–12.0% | 11.0% | Compliant | IPS §4.1 |\n| 5 | Allocation — cash | 2.0%–8.0% | 1.0% | Breach | IPS §4.1 |\n| 6 | Return objective | CPI + 4.5% | 6.7% | Watch | IPS §3.1 |\n| 7 | Expected volatility | ≤ 14.0% | Not available — observation basis unaligned | Not assessed | IPS §3.2 |\n| 8 | Expected max drawdown | ≤ 35.0% | Not available — observation basis unaligned | Not assessed | IPS §3.2 |\n| 9 | T1 liquidity (% NAV) | ≥ 15.0% | 21.0% | Compliant | IPS §5.1 |\n| 10 | Liquidity coverage ratio | ≥ 1.50 | 2.61 | Compliant | IPS §5.3 |\n| 11 | Largest single manager (% NAV) | ≤ 10.0% | 8.5% | Compliant | IPS §6.1 |\n| 12 | No direct tobacco holdings | prohibited | n/a | Not assessed | IPS §7.1 |"
+        },
+        {
+          "type": "coverage",
+          "title": "Policy constraint status",
+          "items": [
+            {
+              "name": "Allocation",
+              "status": "breach",
+              "note": "Two breached bands [S1]"
+            },
+            {
+              "name": "Return",
+              "status": "watch",
+              "note": "Objective gap [S1]"
+            },
+            {
+              "name": "Risk",
+              "status": "not_assessed",
+              "note": "Observation basis unavailable [S1]"
+            },
+            {
+              "name": "Liquidity",
+              "status": "compliant",
+              "note": "Minimum met [S1]"
+            },
+            {
+              "name": "Concentration",
+              "status": "compliant",
+              "note": "Manager cap met [S1]"
+            }
+          ]
+        },
+        {
+          "type": "markdown",
+          "text": "**Summary:** 6 Compliant, 1 Watch, 2 Breach, 3 Not assessed.\n**Breaches and required actions:** Fixed income and cash bands — cured by the Section 13 rebalance."
+        },
+        {
+          "type": "bars",
+          "title": "Concentration vs limit",
+          "items": [
+            {
+              "label": "Largest manager",
+              "value": 8.5,
+              "display": "8.5%",
+              "note": "10.0% limit"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "bad",
+          "title": "Analysis — Compliance evidence is mixed",
+          "text": "Allocation has two Breaches while risk is Not assessed [S1]. The committee can address the allocation issue now, but aligned risk observations could change the overall policy conclusion."
+        }
+      ],
+      "new_page": false,
+      "num": "04"
+    },
+    {
+      "title": "Performance & Attribution",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "**5.1 Returns**"
+        },
+        {
+          "type": "markdown",
+          "text": "| Period | Portfolio | Policy benchmark | Excess (bps) | Basis |\n|---|---|---|---|---|\n| QTD | 1.8% | 1.6% | +20 bps | Net |\n| YTD | 5.2% | 4.9% | +30 bps | Net |\n| 1Y | 6.9% | 6.4% | +49 bps | Net |\n| 3Y ann. | 7.4% | 7.1% | +30 bps | Net |\n| 5Y ann. | n/a | n/a | n/a | Net |\n| Since inception ann. | 7.0% | 6.8% | +20 bps | Net |\n\n**5.2 Attribution — 1Y**\n\nNot available — `get_portfolio_attribution` returned `coverage.status: unavailable` with\n`no_weight_cohorts`; no local attribution was derived [S2].\n\n**5.3 Top contributors and detractors**\n\n| Rank | Contributors | Contribution (bps) | Detractors | Contribution (bps) |\n|---|---|---|---|---|\n| 1 | Manager A (public equity) | +31 bps | Manager F (buyout) | −14 bps |\n| 2 | Manager B (public equity) | +12 bps | Manager G (core bonds) | −6 bps |"
+        },
+        {
+          "type": "line",
+          "title": "Growth of 100",
+          "decimals": 0,
+          "ref": {
+            "value": 100,
+            "label": "Base 100"
+          },
+          "series": [
+            {
+              "name": "Portfolio",
+              "points": [
+                [
+                  "2025-09-30",
+                  100.0
+                ],
+                [
+                  "2026-03-31",
+                  103.1
+                ],
+                [
+                  "2026-09-30",
+                  106.9
+                ]
+              ]
+            },
+            {
+              "name": "Policy benchmark",
+              "points": [
+                [
+                  "2025-09-30",
+                  100.0
+                ],
+                [
+                  "2026-03-31",
+                  102.8
+                ],
+                [
+                  "2026-09-30",
+                  106.4
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bars",
+          "title": "Calendar-year returns",
+          "all_accent": false,
+          "items": [
+            {
+              "label": "2025",
+              "value": 6.2,
+              "display": "+6.2%",
+              "color": "#B5E52A"
+            },
+            {
+              "label": "2026 (9 mo)",
+              "value": 5.2,
+              "display": "+5.2%",
+              "color": "#B5E52A"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "watch",
+          "title": "1Y attribution — total effect by asset class (bps)",
+          "text": "Not available — the governed attribution result returned no weight cohorts [S2]"
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Analysis — Relative return stayed positive",
+          "text": "The portfolio exceeded the policy benchmark by 49 bps over one year [S2]. That supports context, not causation. Attribution is unavailable, and a reconciled effect decomposition would change the interpretation."
+        }
+      ],
+      "new_page": true,
+      "num": "05"
+    },
+    {
+      "title": "Factor Exposures & Concentration",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "**6.1 Factor exposures**"
+        },
+        {
+          "type": "markdown",
+          "text": "| Factor | Exposure | Benchmark exposure | Active | Units | Source |\n|---|---|---|---|---|---|\n| Equity market | 0.78 | 0.70 | 0.08 | beta | [S6] |\n| Duration | 1.90 | 2.40 | −0.50 | years | [S6] |\n\n**6.2 Concentration and diversification**\n\n| Metric | Value | IPS limit | Status | Source |\n|---|---|---|---|---|\n| Largest single manager (% NAV) | 8.5% | 10.0% | Compliant | [S1] |\n| Top 5 managers (% NAV) | 34.0% | n/a | Not assessed | [S1] |\n| Largest single holding look-through (% NAV) | n/a | n/a | Not assessed | Not available — no look-through data |\n| Effective number of positions | 14.20 | n/a | n/a | [S6] |\n| Diversification ratio | 1.32 | n/a | n/a | [S6] |\n| Equity beta to global equities | 0.78 | n/a | Not assessed | [S6] |"
+        },
+        {
+          "type": "chart",
+          "chart": {
+            "chart_id": "test-factor-currency-exposure",
+            "title": "Factor and currency exposure (TEST)",
+            "status": "ok",
+            "columns": [
+              {
+                "key": "factor",
+                "title": "Factor",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "exposure",
+                "title": "Exposure",
+                "format": "number",
+                "decimals": 2
+              }
+            ],
+            "rows": [
+              [
+                "Equity market",
+                0.78
+              ],
+              [
+                "Duration",
+                1.9
+              ]
+            ],
+            "truncated": false,
+            "render_hint": {
+              "block": "bars",
+              "x": "factor",
+              "y": [
+                "exposure"
+              ]
+            }
+          }
+        },
+        {
+          "type": "callout",
+          "tone": "good",
+          "title": "Analysis — Concentration remains within limit",
+          "text": "The largest manager is 8.5% of NAV against a 10.0% limit [S1]. The available evidence is manager-level; completed look-through holdings could change the concentration assessment."
+        }
+      ],
+      "new_page": false,
+      "num": "06"
+    },
+    {
+      "title": "Expected Return & Risk",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "**Assumptions:** Gradient ICAPM Global Baseline Q3 2026, CMA release Q3-2026-policy-v2.1, 10-year horizon, USD, unhedged."
+        },
+        {
+          "type": "markdown",
+          "text": "**7.1 Portfolio expected statistics**\n\n| Metric | Current | Proposed | Policy portfolio | IPS objective / limit | Status |\n|---|---|---|---|---|---|\n| Expected return (nominal, ann.) | 6.7% | 6.6% | 6.5% | 7.0% | Watch |\n| Expected excess return over cash | 2.9% | 2.8% | 2.7% | n/a | n/a |\n| Expected volatility (ann.) | 13.1% | 12.5% | 12.0% | 14.0% | Watch |\n| Sharpe ratio | 0.22 | 0.22 | 0.23 | n/a | n/a |\n| Expected max drawdown | 38.0% | 36.5% | 35.0% | 35.0% | Breach |\n| 95% CVaR (1-year) | 21.0% | 20.0% | 19.5% | n/a | Not assessed |\n| Probability of meeting return objective | 44.0% | 42.0% | 40.0% | n/a | n/a |\n\n**7.2 Consensus check**\n\n| Asset class | Gradient expected excess | Consensus reference | Gap (bps) | Comparability | Source |\n|---|---|---|---|---|---|\n| public_equity | 4.7% | 5.1% | −34 bps | proxy | [S4] |\n| real_estate | 7.6% | 2.6% | +499 bps | direct | [S4] |\n\n**Allocation-implied return:** Gradient 8.2% vs consensus 6.7% (Example consultant CMA survey, 2025-12-31) [S4].\n**Assumption quality:** quality receipt unvalidated; repeated higher moments flagged for two equity factors [S4].\n\n**7.3 Regime overlay**\n\n**Current regime:** GRIP 76 (Defensive), as of 2026-10-01, coverage 0.95, degraded (one lagging input) [S7].\n**Effect on expectations:** Regime adjustment not available — baseline shown."
+        },
+        {
+          "type": "bars",
+          "title": "Gradient vs consensus gap (bps)",
+          "all_accent": false,
+          "items": [
+            {
+              "label": "Public equity",
+              "value": 34,
+              "display": "−34 bps",
+              "color": "#E8735A"
+            },
+            {
+              "label": "Real estate",
+              "value": 499,
+              "display": "+499 bps",
+              "color": "#B5E52A"
+            }
+          ],
+          "note": "Example consultant CMA survey, 2025-12-31 [S4]"
+        },
+        {
+          "type": "tiles",
+          "title": "Forward context",
+          "tiles": [
+            {
+              "label": "GRIP",
+              "value": "76",
+              "sub": "Defensive [S7]",
+              "tone": "watch"
+            },
+            {
+              "label": "Policy expected return",
+              "value": "6.5%",
+              "sub": "Baseline [S3]",
+              "tone": "watch"
+            },
+            {
+              "label": "Return objective",
+              "value": "7.0%",
+              "sub": "IPS [S1]",
+              "tone": "info"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "watch",
+          "title": "Analysis — Assumption gap needs review",
+          "text": "The real-estate assumption is 499 bps above consensus [S4]. This is material to the forward case. Publisher dates and model basis differ, and aligned assumptions would change the comparison."
+        }
+      ],
+      "new_page": true,
+      "num": "07"
+    },
+    {
+      "title": "Stress Tests & Scenarios",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "| Scenario | Type | Portfolio impact | Policy impact | Liquidity coverage after | Source |\n|---|---|---|---|---|---|\n| 2008 global financial crisis | Historical | −24.0% | −21.0% | 2.61 | [S8] |\n| 5th percentile, 1 year | Simulated percentile | −14.0% | −12.5% | 3.80 | [S8] |\n\n**Robustness:** Results are stable across start dates within ±80 bps of expected return [S8]."
+        }
+      ],
+      "new_page": false,
+      "num": "08"
+    },
+    {
+      "title": "Liquidity",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "**9.1 Liquidity tiers**"
+        },
+        {
+          "type": "markdown",
+          "text": "| Tier | Definition | % NAV | Amount (USD m) | Source |\n|---|---|---|---|---|\n| T1 | Daily to weekly | 44.6% | 1505.0 | [S1] |\n| T2 | Monthly to quarterly | 11.9% | 400.0 | [S1] |\n| T3 | Semi-annual to 2 years | 11.9% | 400.0 | [S1] |\n| T4 | Over 2 years / locked / private | 31.7% | 1070.0 | [S1] |\n| Total | | 100.0% | 3375.0 | |\n\n**9.2 Coverage**\n\n| Metric | Base case | Stress case | IPS minimum | Status | Source |\n|---|---|---|---|---|---|\n| T1 liquidity (% NAV) | 44.6% | 42.4% | 15.0% | Compliant | [S1] [S11] |\n| Unfunded commitments (USD m) | 420.0 | 420.0 | n/a | n/a | [S1] |\n| 12-month spending / distributions (USD m) | 150.0 | 150.0 | n/a | n/a | [S1] |\n| Liquidity coverage ratio | 5.77 | 2.61 | 1.50 | Compliant | [S1] [S11] |\n| Private markets % NAV (incl. unfunded) | 36.1% | 36.1% | 40.0% | Watch | [S1] |\n\n- HF B placed in T4 (gated).\n\n**Pacing:** Projected 12-month calls USD 180.0m against distributions of USD 95.0m [S9]."
+        },
+        {
+          "type": "bars",
+          "title": "Liquidity tiers (% NAV)",
+          "items": [
+            {
+              "label": "T1",
+              "value": 44.6,
+              "display": "44.6%"
+            },
+            {
+              "label": "T2",
+              "value": 11.9,
+              "display": "11.9%"
+            },
+            {
+              "label": "T3",
+              "value": 11.9,
+              "display": "11.9%"
+            },
+            {
+              "label": "T4",
+              "value": 31.7,
+              "display": "31.7%"
+            }
+          ]
+        },
+        {
+          "type": "chart",
+          "chart": {
+            "chart_id": "commitments-liquidity-scorecard",
+            "title": "Commitments liquidity scorecard (TEST)",
+            "status": "ok",
+            "columns": [
+              {
+                "key": "metric",
+                "title": "Metric",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "value",
+                "title": "Value",
+                "format": "number",
+                "decimals": 2
+              }
+            ],
+            "rows": [
+              [
+                "Stress coverage",
+                2.61
+              ]
+            ],
+            "truncated": false,
+            "render_hint": {
+              "block": "table",
+              "x": "metric",
+              "y": [
+                "value"
+              ]
+            }
+          }
+        },
+        {
+          "type": "chart",
+          "chart": {
+            "chart_id": "commitments-pacing",
+            "title": "Commitment pacing (TEST)",
+            "status": "ok",
+            "columns": [
+              {
+                "key": "period",
+                "title": "Period",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "calls",
+                "title": "Calls",
+                "format": "currency",
+                "decimals": 0
+              }
+            ],
+            "rows": [
+              [
+                "Next 12 months",
+                180000000
+              ]
+            ],
+            "truncated": false,
+            "render_hint": {
+              "block": "table",
+              "x": "period",
+              "y": [
+                "calls"
+              ]
+            }
+          }
+        },
+        {
+          "type": "chart",
+          "chart": {
+            "chart_id": "commitments-cashflow",
+            "title": "Commitment cash flow (TEST)",
+            "status": "ok",
+            "columns": [
+              {
+                "key": "period",
+                "title": "Period",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "distributions",
+                "title": "Distributions",
+                "format": "currency",
+                "decimals": 0
+              }
+            ],
+            "rows": [
+              [
+                "Next 12 months",
+                95000000
+              ]
+            ],
+            "truncated": false,
+            "render_hint": {
+              "block": "table",
+              "x": "period",
+              "y": [
+                "distributions"
+              ]
+            }
+          }
+        },
+        {
+          "type": "callout",
+          "tone": "good",
+          "title": "Analysis — Liquidity clears the minimum",
+          "text": "Stress liquidity coverage is 2.61 against a 1.50 minimum [S1][S11]. The result supports implementation. Pacing relies on projected calls, and an updated commitment schedule would change the cushion."
+        }
+      ],
+      "new_page": false,
+      "num": "09"
+    },
+    {
+      "title": "Manager & Operational Diligence",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "| Manager | Strategy | Exposure (% NAV) | ODD red flags | Open findings (H/M/L) | Monitor alerts | GIPS status | Last review | Source |\n|---|---|---|---|---|---|---|---|---|\n| Manager A | Global equity | 8.5% | 0 | 0/1/0 | 0 | Claims, verified | 2026-06-30 | [S5] |\n| Other (17 managers) | Various | 91.5% | n/a | 0/2/3 | 0 | n/a | n/a | [S5] |"
+        },
+        {
+          "type": "markdown",
+          "text": "**Exposure-weighted findings:** No active High findings [S5].\n**Attention queue:** None overdue [S5]."
+        },
+        {
+          "type": "findings",
+          "title": "Exposure-weighted diligence findings",
+          "items": [
+            {
+              "severity": "medium",
+              "title": "Verification follow-up",
+              "detail": "Manager A verification report remains open at 8.5% exposure [S5]."
+            }
+          ],
+          "empty_title": "No active findings returned",
+          "empty_text": "No active findings were returned by Gradient."
+        },
+        {
+          "type": "callout",
+          "tone": "watch",
+          "title": "Analysis — No high findings returned",
+          "text": "No active High diligence findings were returned [S5]. This reduces immediate operational concern but does not close the verification follow-up; receipt of that report would change completeness."
+        }
+      ],
+      "new_page": false,
+      "num": "10"
+    },
+    {
+      "title": "Performance Integrity & GIPS",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "### 11.1 Total fund\nNot assessed — no GIPS Asset Owner Report provided.\n\n### 11.2 Manager A\n**Overall assessment:** Satisfactory with follow-ups. Verification report for the latest year not yet received."
+        }
+      ],
+      "new_page": false,
+      "num": "11"
+    },
+    {
+      "title": "Market Context",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "- **Regime:** GRIP 76, Defensive; rates and cross-asset pillars are the main pressure [S7].\n- **Key indicators:** Core PCE index rose 0.3% over three months [S10].\n- **Current thesis:** Diesel margins carry the Gulf energy premium; confirm above USD 102/bbl crack [S10].\n- **Upcoming catalysts:** US CPI on 2026-10-14; FOMC on 2026-10-28 [S10]."
+        },
+        {
+          "type": "tiles",
+          "title": "Macro readings",
+          "tiles": [
+            {
+              "label": "GRIP",
+              "value": "76",
+              "sub": "2026-10-01 [S7]",
+              "tone": "watch"
+            },
+            {
+              "label": "Core PCE",
+              "value": "+0.3%",
+              "sub": "3 months [S10]",
+              "tone": "info"
+            },
+            {
+              "label": "Next CPI",
+              "value": "Oct 14",
+              "sub": "2026 [S10]",
+              "tone": "info"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "watch",
+          "title": "Analysis — Macro context is defensive",
+          "text": "GRIP is 76 and Defensive as of 2026-10-01 [S7]. This informs pacing, not the breach decision. One lagging input degrades coverage; a refreshed signal would change the context."
+        }
+      ],
+      "new_page": false,
+      "num": "12"
+    },
+    {
+      "title": "Proposed Changes & Impact",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "**13.1 Allocation change**"
+        },
+        {
+          "type": "markdown",
+          "text": "| Asset class / manager | Current | Proposed | Change (bps) | Funding source | IPS status after |\n|---|---|---|---|---|---|\n| public_equity | 52.0% | 48.0% | −400 bps | Index fund | Compliant |\n| fixed_income | 19.0% | 21.0% | +200 bps | Public equity | Compliant |\n| cash | 1.0% | 3.0% | +200 bps | Public equity | Compliant |\n\n**13.2 Impact summary**\n\n| Measure | Current | Proposed | Change | Source |\n|---|---|---|---|---|\n| Expected return | 6.7% | 6.6% | −15 bps | [S3] |\n| Expected volatility | 13.1% | 12.5% | −60 bps | [S3] |\n| Sharpe ratio | 0.22 | 0.22 | 0.00 | [S3] |\n| T1 liquidity (% NAV) | 44.6% | 46.6% | +200 bps | [S11] |\n| Liquidity coverage ratio | 2.61 | 2.70 | 0.09 | [S11] |\n| IPS breaches | 2 | 0 | −2 | [S11] |\n| Estimated transaction cost (bps) | n/a | 3 bps | +3 bps | [S11] |\n\n**Implementation:** Sell the index fund in two tranches over 30 days; buy core bonds and Treasury bills [S11].\n**Alternatives considered:** No change — rejected because two band breaches and the coverage breach would remain. Full rebalance to policy — rejected because it would sell 700 bps of equity into a Defensive regime in one step."
+        },
+        {
+          "type": "two_col",
+          "title": "Current vs proposed weights",
+          "left": [
+            {
+              "type": "bars",
+              "title": "Current weights",
+              "narrow": true,
+              "items": [
+                {
+                  "label": "Public equity",
+                  "value": 52,
+                  "display": "52.0%"
+                },
+                {
+                  "label": "Fixed income",
+                  "value": 19,
+                  "display": "19.0%"
+                },
+                {
+                  "label": "Cash",
+                  "value": 1,
+                  "display": "1.0%"
+                }
+              ]
+            }
+          ],
+          "right": [
+            {
+              "type": "bars",
+              "title": "Proposed weights",
+              "narrow": true,
+              "items": [
+                {
+                  "label": "Public equity",
+                  "value": 48,
+                  "display": "48.0%"
+                },
+                {
+                  "label": "Fixed income",
+                  "value": 21,
+                  "display": "21.0%"
+                },
+                {
+                  "label": "Cash",
+                  "value": 3,
+                  "display": "3.0%"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "good",
+          "title": "Analysis — Proposal cures both breaches",
+          "text": "The proposed weights reduce IPS breaches from two to zero [S11]. This directly supports Section 1. Transaction costs and market movement remain uncertain; an updated implementation estimate would change sizing."
+        }
+      ],
+      "new_page": false,
+      "num": "13"
+    },
+    {
+      "title": "Risks & Mitigants",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "| # | Risk | Rating | Evidence | Mitigant | Owner |\n|---|---|---|---|---|---|\n| 1 | Risk-limit compliance not assessed | Medium | Persisted thresholds lack a governed observation horizon and return basis [S1] | Approve an observation basis before evaluating volatility, drawdown or CVaR compliance | CIO |\n| 2 | Real estate CMA well above consensus | Medium | +499 bps gap [S4] | Run Section 7 with consensus real estate assumption before the next review | Analyst |\n| 3 | Return objective shortfall | Low | −28 bps [S3] | Revisit spending policy at the annual review | Committee |"
+        },
+        {
+          "type": "tiles",
+          "title": "Risk count by rating",
+          "tiles": [
+            {
+              "label": "High",
+              "value": "0",
+              "sub": "No High risks [S1]",
+              "tone": "bad"
+            },
+            {
+              "label": "Medium",
+              "value": "2",
+              "sub": "Basis and CMA [S1][S4]",
+              "tone": "watch"
+            },
+            {
+              "label": "Low",
+              "value": "1",
+              "sub": "Objective gap [S3]",
+              "tone": "good"
+            }
+          ]
+        }
+      ],
+      "new_page": true,
+      "num": "14"
+    },
+    {
+      "title": "Open Items & Conditions",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "| # | Item | Reason | Timing | Owner |\n|---|---|---|---|---|\n| 1 | Confirm inflation assumption for real return objective | IPS does not state one | Before approval | CIO |\n| 2 | Provide look-through holdings | Not available | Next review | Operations |\n| 3 | Obtain Manager A verification report | GIPS follow-up | Within 30 days | Analyst |\n| 4 | Provide GIPS Asset Owner Report | Not provided | Next review | Operations |\n| 5 | Define the governed policy-risk observation horizon and return basis | Risk rows are not assessed without aligned observations | Next review | CIO |"
+        }
+      ],
+      "new_page": false,
+      "num": "15"
+    },
+    {
+      "title": "Approvals",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "| Role | Name | Decision | Date |\n|---|---|---|---|\n| Prepared by | | n/a | |\n| Reviewed by (CIO) | | | |\n| Committee chair | | | |\n\n---"
+        }
+      ],
+      "new_page": false,
+      "num": "16"
+    },
+    {
+      "title": "Appendix — Sources",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "| Ref | Source | Parameters | As of | Data scope | Validation | Digest |\n|---|---|---|---|---|---|---|\n| S1 | get_portfolio_exposure; get_portfolio_structure; check_portfolio_policy | portfolio_id=example; governed policy and exposure views | 2026-09-30 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | passed | n/a |\n| S2 | get_portfolio_historical_returns; get_portfolio_attribution | portfolio_id=example; policy benchmark; performance available; attribution unavailable (`no_weight_cohorts`) | 2026-09-30 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | partial | n/a |\n| S3 | check_portfolio_policy; user document | return_objective; forward-analysis.pdf | 2026-09-11 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | passed | n/a |\n| S4 | get_cma_consensus_check | mode=allocation | 2026-06-30 | Mixed — Illustrative, Gradient Maintained — demo data, not the client's holdings or managers + User-Authorized Live | passed | n/a |\n| S5 | get_manager_diligence_findings | view=exposure_weighted | 2026-10-02 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | advisory | n/a |\n| S6 | get_chart_data | portfolio_id=example; analysis_type=allocations | 2026-09-30 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | passed | n/a |\n| S7 | get_macro_signals | view=gradient_signal (sources.grip) | 2026-10-01 | User-Authorized Live | passed | n/a |\n| S8 | Illustrative scenario assumptions | 2008 historical; 5th percentile | 2026-09-30 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | not applicable | n/a |\n| S9 | get_chart_data | portfolio_id=example; analysis_type=commitments | 2026-06-30 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | passed | n/a |\n| S10 | get_macro_conditions; get_the_read; get_macro_calendar | theme=inflation; am edition; 30 days | 2026-10-02 | User-Authorized Live | passed | n/a |\n| S11 | Server-returned illustrative proposed-case analysis | target weights and implementation estimate per Section 13.1 | 2026-09-30 | Illustrative, Gradient Maintained — demo data, not the client's holdings or managers | passed | n/a |"
+        }
+      ],
+      "new_page": true,
+      "num": "A"
+    },
+    {
+      "title": "Appendix — Server Metric Methods",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "| Source | Quantity | Method / formula ID | Version | Basis and tolerance |\n|---|---|---|---|---|\n| S1 | IPS status, active weights, liquidity and concentration | check_portfolio_policy | 2026-10-05.v1 | Governed inputs only; preserve returned thresholds and coverage |\n| S2 | Realized returns and risk | get_portfolio_historical_returns | as returned | Preserve period labels, annualization, benchmark basis, units and coverage |\n| S2 | Realized attribution | Not available | n/a | `no_weight_cohorts`; no formula or result asserted |\n| S6 | Effective number of positions | Portfolio Analytics allocations metric | as returned | Preserve chart-pack basis and fingerprint |\n| S11 | Proposed-case impacts | Portfolio Analytics proposed-case analysis | as returned | Same basis as current case |"
+        }
+      ],
+      "new_page": false,
+      "num": "B"
+    },
+    {
+      "title": "Appendix — Methodology & Disclosures",
+      "blocks": [
+        {
+          "type": "markdown",
+          "text": "- Expected returns and risk are forward-looking assumptions from Gradient ICAPM Global Baseline Q3 2026, not forecasts or guarantees. Actual results will differ.\n- Performance is shown net of manager fees. Periods over one year are annualized.\n- Attribution is unavailable for this example because no governed segment-weight cohort was returned; no local fallback is used. Factor model: Portfolio Analytics factor/currency exposure.\n- Private-markets valuations may lag by 3 months; values as of 2026-06-30.\n- Data sources and retrieval dates are listed in Appendix A. Sections using illustrative data are marked; they do not describe the organization's holdings.\n- GIPS assessments are diligence reviews against the 2020 GIPS standards, not verifications or legal opinions.\n- This memo was prepared with AI assistance from structured data and reviewed by the preparer."
+        }
+      ],
+      "new_page": false,
+      "num": "C"
+    }
+  ],
+  "executive": {
+    "label": "Recommendation",
+    "bottom_line": "Reduce public equity by 400 bps to 48.0% and add 400 bps to cash (200 bps) and fixed income (200 bps) to cure two IPS band breaches [S1]. The Committee is asked to approve the rebalance in Section 13.1, executed over 30 days.",
+    "tiles": [
+      {
+        "label": "Trailing 1Y vs benchmark",
+        "value": "+49 bps",
+        "sub": "6.9% net return [S2]",
+        "tone": "good"
+      },
+      {
+        "label": "IPS breaches",
+        "value": "2",
+        "sub": "1 additional Watch [S1]",
+        "tone": "bad"
+      },
+      {
+        "label": "Expected return vs objective",
+        "value": "−28 bps",
+        "sub": "6.7% vs 7.0% [S3]",
+        "tone": "watch"
+      },
+      {
+        "label": "T1 liquidity",
+        "value": "44.6%",
+        "sub": "15.0% minimum [S1]",
+        "tone": "good"
+      }
+    ]
+  }
+}

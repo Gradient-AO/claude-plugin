@@ -356,6 +356,55 @@ def validate_connector(argv):
             f"{actual_epoch!r} does not equal required {required_epoch}"
         )
         return 1
+    product_entitlements = capabilities.get("product_entitlements")
+    effective_capabilities = capabilities.get("effective_capabilities")
+    capability_access_modes = capabilities.get("capability_access_modes")
+    if (
+        not isinstance(product_entitlements, dict)
+        or not isinstance(effective_capabilities, dict)
+        or not isinstance(capability_access_modes, dict)
+        or not capability_access_modes
+    ):
+        print(
+            "FAIL connector: capabilities must include product_entitlements, "
+            "effective_capabilities, and capability_access_modes"
+        )
+        return 1
+    required_capabilities = set(product_entitlements) | set(effective_capabilities)
+    missing_access_modes = required_capabilities - set(capability_access_modes)
+    if missing_access_modes:
+        print(
+            "FAIL connector: capability_access_modes missing "
+            + ", ".join(sorted(missing_access_modes))
+        )
+        return 1
+    invalid_access_modes = {
+        capability: mode
+        for capability, mode in capability_access_modes.items()
+        if mode not in {"live", "illustrative", "unavailable"}
+    }
+    if invalid_access_modes:
+        print(
+            "FAIL connector: invalid capability_access_modes "
+            + ", ".join(
+                f"{capability}={mode!r}"
+                for capability, mode in sorted(invalid_access_modes.items())
+            )
+        )
+        return 1
+    inconsistent_effective_capabilities = {
+        capability
+        for capability, effective in effective_capabilities.items()
+        if not isinstance(effective, bool)
+        or effective != (capability_access_modes[capability] != "unavailable")
+    }
+    if inconsistent_effective_capabilities:
+        print(
+            "FAIL connector: effective_capabilities disagree with "
+            "capability_access_modes for "
+            + ", ".join(sorted(inconsistent_effective_capabilities))
+        )
+        return 1
     tool_rows = capabilities.get("tools", [])
     advertised_tools = {
         row.get("name")
@@ -371,7 +420,8 @@ def validate_connector(argv):
         return 1
     print(
         f"PASS connector (service {actual_version}, compatibility epoch "
-        f"{actual_epoch}, {len(contract['required_tools'])} required tools)"
+        f"{actual_epoch}, {len(contract['required_tools'])} required tools, "
+        f"{len(capability_access_modes)} capability access modes)"
     )
     return 0
 

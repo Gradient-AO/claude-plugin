@@ -1,0 +1,14 @@
+{
+  "eyebrow": "GIPS Policies Gap Check",
+  "header_label": "GIPS Review",
+  "subtitle": "Policies and procedures · SYNTHETIC TEST",
+  "running_head": "Meridian Example Advisers (TEST) · GIPS",
+  "data_as_of": "2026-06-30",
+  "confidentiality": "SYNTHETIC TEST DATA — fictional regression fixture",
+  "cover_facts": [["Subject", "Meridian Example Advisers (TEST)"], ["Review", "Policies gap check"], ["Manual date", "2025-12-31"], ["Evidence", "Fictional documents"], ["Prepared for", "Gradient TEST"], ["Review date", "2026-10-09"]],
+  "signal_title": "Overall assessment",
+  "signal": {"level": "material_concern", "label": "Material policy gaps"},
+  "completeness": {"used": 5, "expected": 6, "state": "partial"},
+  "meter_title": "Requirements evidenced",
+  "executive": {"label": "Bottom line", "bottom_line": "Core governance exists, but current approval, error thresholds and supporting inventories are incomplete [S1][S2]."}
+}

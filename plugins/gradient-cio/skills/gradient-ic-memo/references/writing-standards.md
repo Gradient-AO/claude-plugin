@@ -8,8 +8,9 @@ the Section 4 summary knows what is being asked, why, and what could go wrong.
 1. **Bottom line up front.** The recommendation and the vote requested come before any analysis.
 2. **One claim, one source.** Every factual sentence carries an `[S#]` evidence tag. If a claim has no
    server result or user-document source, delete it.
-3. **Facts before judgment.** In each section, show the data first (tables), then at most three sentences of
-   interpretation labeled as such where helpful ("Interpretation:").
+3. **Facts before judgment.** In each section, show the data first (tables and charts), then the Claude
+   analysis callouts defined in `report-layout.md` (one to three per analytical section; three to five Key
+   judgments in Section 2).
 4. **Show the downside.** Every recommendation names its key risks, the worst stress-test result, and the
    liquidity coverage after the change.
 5. **Name the alternative.** Section 13 always includes at least one alternative considered and why it was not
@@ -51,3 +52,17 @@ the Section 4 summary knows what is being asked, why, and what could go wrong.
 - **Section 10:** Report diligence facts; do not characterize a manager's skill.
 - **Section 14:** Each risk has a concrete mitigant (a limit, a monitoring trigger, a phased implementation),
   not "monitor closely".
+
+## Claude analysis
+
+Each analysis callout (rendered as `Analysis — <title>`) follows this sequence:
+
+1. **Observation** — a dated, sourced figure or governed status with its `[S#]` tag.
+2. **Why it matters** — the implication for the committee's decision, without claiming causation the evidence
+   does not establish.
+3. **Uncertainty** — coverage, staleness, basis, or model limits that qualify the observation.
+4. **What would change the view** — a threshold, data item, or event, from Gradient evidence where possible.
+
+Allowed: comparing and ranking sourced figures, linking findings across sections, and naming the trigger to
+revisit. Not allowed: new metrics computed locally, forecasts, characterizing manager skill, recommending an
+action not already stated in Section 1, or unsupported adjectives.

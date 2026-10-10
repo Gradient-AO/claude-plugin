@@ -36,7 +36,7 @@
      ["Monitor alerts on this filing", "0 alerts; 912 registered-adviser events classified across the market, none for monitored CRDs", "S3"],
      ["Red-flag concerns", "None (manager ADV: no qualifying red flags)", "S2"],
      ["Open findings", "None", "S4"]]},
-   {"type": "callout", "tone": "info", "title": "Why this is medium, not high", "text": "A new ADV filing is a change to review, not a finding. The monitor's tier rules found no assets, custody, disclosure, personnel, ownership or service-provider change that meets an alert threshold [S3]. Form ADV is adviser-reported, not SEC-verified."}
+   {"type": "callout", "role": "analysis", "tone": "info", "title": "Analysis — Why this is medium", "text": "A new ADV filing is a change to review, not a finding. The monitor's tier rules found no assets, custody, disclosure, personnel, ownership or service-provider change that meets an alert threshold [S3]. Form ADV is adviser-reported, not SEC-verified."}
   ]},
   {"title": "Review calendar", "kicker": "Last and next reviews per roster subject", "new_page": false, "blocks": [
    {"type": "table", "columns": ["Subject", "Last review", "Next due", "Status"], "align": ["l", "n", "n", "l"],
@@ -53,7 +53,7 @@
      {"name": "Firm and fund events", "status": "unavailable", "note": "Event publication not ready — absence is not evidence [S5]"},
      {"name": "Research watchlist", "status": "available", "note": "No watchlist items selected [S6]"}]}
   ]},
-  {"title": "Appendix — Sources and method", "num": "A", "blocks": [
+  {"title": "Appendix A — Sources and method", "num": "A", "blocks": [
    {"type": "table", "columns": ["Tag", "Evidence", "Tool / view", "As of", "Validation"], "align": ["n", "l", "l", "n", "l"],
     "rows": [["S1", "Diligence Roster and capacity", "get_diligence_roster_funds", "2026-10-04", {"chip": "passed", "status": "passed"}],
              ["S2", "Attention queue, changes since review, red flags", "get_manager_diligence_attention_queue (3 views)", "2026-10-04", {"chip": "passed", "status": "passed"}],

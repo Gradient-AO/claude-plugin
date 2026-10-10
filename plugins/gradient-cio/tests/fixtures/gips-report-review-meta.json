@@ -1,0 +1,14 @@
+{
+  "eyebrow": "GIPS Report Review",
+  "header_label": "GIPS Review",
+  "subtitle": "Composite presentation · SYNTHETIC TEST",
+  "running_head": "Alder Ridge Composite (TEST) · GIPS",
+  "data_as_of": "2025-12-31",
+  "confidentiality": "SYNTHETIC TEST DATA — fictional regression fixture",
+  "cover_facts": [["Subject", "Alder Ridge Composite (TEST)"], ["Review", "Composite report"], ["Data through", "2025-12-31"], ["Evidence", "Fictional documents"], ["Prepared for", "Gradient TEST"], ["Review date", "2026-10-09"]],
+  "signal_title": "Overall assessment",
+  "signal": {"level": "follow_ups", "label": "Satisfactory with follow-ups"},
+  "completeness": {"used": 5, "expected": 5, "state": "complete"},
+  "meter_title": "Requirements evidenced",
+  "executive": {"label": "Bottom line", "bottom_line": "Performance history and benchmark evidence are present, while fee and significant-event disclosures need clarification [S1][S2]."}
+}

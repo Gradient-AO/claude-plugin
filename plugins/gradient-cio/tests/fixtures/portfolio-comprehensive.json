@@ -514,27 +514,31 @@
       "blocks": [
         {
           "type": "callout",
+          "role": "analysis",
           "tone": "watch",
           "title": "Recent relative performance",
-          "text": "Observation: The portfolio trails the policy benchmark over QTD, YTD and 1Y [S4]. Why it matters: the pattern spans three overlapping monitoring periods. Uncertainty: the periods are not independent. Consideration for discussion: which next full-year or attribution observation would distinguish persistence from a temporary result?"
+          "text": "Observation: The portfolio trails the policy benchmark over QTD, YTD and 1Y [S4]. Why it matters: the pattern spans three overlapping monitoring periods. Uncertainty: the periods are not independent. What would change the view: a full-year or attribution observation that distinguishes persistence from a temporary result."
         },
         {
           "type": "callout",
+          "role": "analysis",
           "tone": "watch",
           "title": "Attribution concentration",
-          "text": "Observation: Public-equity selection accounts for -0.31pp of the -0.40pp active result [S5]. Why it matters: one segment explains most of the returned relative shortfall. Uncertainty: the residual is outside the stated tolerance. Consideration for discussion: what manager-level evidence would clarify whether the effect is broad or concentrated?"
+          "text": "Observation: Public-equity selection accounts for -0.31pp of the -0.40pp active result [S5]. Why it matters: one segment explains most of the returned relative shortfall. Uncertainty: the residual is outside the stated tolerance. What would change the view: manager-level evidence clarifying whether the effect is broad or concentrated."
         },
         {
           "type": "callout",
+          "role": "analysis",
           "tone": "watch",
           "title": "Private-assets headroom",
-          "text": "Observation: Private Assets is 28.2% of NAV with 1.8pp of upper-band headroom [S3]. Why it matters: valuation movement or net calls can change headroom without a policy-target change. Uncertainty: private valuations lag public-market observations. Consideration for discussion: what pacing and valuation trigger merits review before the next quarter-end?"
+          "text": "Observation: Private Assets is 28.2% of NAV with 1.8pp of upper-band headroom [S3]. Why it matters: valuation movement or net calls can change headroom without a policy-target change. Uncertainty: private valuations lag public-market observations. What would change the view: updated pacing or valuations that materially increase or reduce headroom."
         },
         {
           "type": "callout",
+          "role": "analysis",
           "tone": "info",
           "title": "Forward assumption sensitivity",
-          "text": "Observation: The forward expected return is 6.2% with expected volatility of 10.4% [S7][S8]. Why it matters: the return assumption exceeds the 5.5% policy objective under the selected context. Uncertainty: model outputs depend on the assumption set, horizon and regime. Consideration for discussion: which alternative assumption context is most informative for the next monitoring cycle?"
+          "text": "Observation: The forward expected return is 6.2% with expected volatility of 10.4% [S7][S8]. Why it matters: the return assumption exceeds the 5.5% policy objective under the selected context. Uncertainty: model outputs depend on the assumption set, horizon and regime. What would change the view: a materially different result under an alternative governed assumption context."
         }
       ]
     },

@@ -209,16 +209,24 @@ Sections, in this order (keep each section even when its data is missing, and sh
 Blocks and chips are listed in `references/report-style.md`. Use `align: "n"` for dates, accessions and
 digests. Every reported metric must come from cited Gradient or source-document evidence. Preserve
 server-returned metric identity, version, basis and source facts; do not derive a fallback locally.
+Every analytical or key-judgment callout must state the filed observation and include an `[S#]` tag. The JSON
+must contain no security recommendation: no price target, fair value, rating, buy/sell/hold,
+overweight/underweight, valuation adjective or forecast return. Add one to three `callout` blocks with
+`role: "analysis"` to **Fundamentals and changes since the last filing**, stating the observation, research
+implication, uncertainty, and evidence that would change the view.
 
 ## Step 5 — Render, check, deliver
 
-1. `python <this skill's directory>/scripts/gradient_report.py report.json "<TICKER> - Equity Research Note <YYYY-MM-DD>.pdf"`
+1. Run `python <this skill's directory>/scripts/validate_equity_note.py report.json`. Fix every error and
+   re-run until it passes. Do not render a report that fails validation.
+2. `python <this skill's directory>/scripts/gradient_report.py report.json "<TICKER> - Equity Research Note <YYYY-MM-DD>.pdf"`
    (report date). Never write a separate renderer.
-2. Rasterize (`pdftoppm -r 60 -png`) and look at every page; fix short overflow tails, squashed charts and
-   wrapped IDs; re-render. Then follow "Check and deliver" in `references/report-style.md`.
-3. Language check before delivery: search the JSON for "target", "rating", "buy", "sell", "overweight",
+3. Rasterize (`pdftoppm -r 60 -png`) and look at every page; fix short overflow tails, squashed charts,
+   wrapped IDs, clipping and orphaned headings; re-render and repeat the full page review. Delivery is blocked
+   until page QA and fact checks pass. Then follow "Check and deliver" in `references/report-style.md`.
+4. Language check before delivery: search the JSON for "target", "rating", "buy", "sell", "overweight",
    "undervalued", "cheap", "upside", "will" and rewrite any hit that is not a quoted filing.
-4. In chat: three lines (review-flags signal and completeness, the largest filed change, the top open item)
+5. In chat: three lines (review-flags signal and completeness, the largest filed change, the top open item)
    and the file.
 
 ## Step 6 — Offer the watchlist (only on explicit confirmation)
