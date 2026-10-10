@@ -19,6 +19,8 @@
     "get_firm_13f_portfolio_review",
     "get_firm_entity_facts",
     "get_firm_fund_events",
+    "get_fund_diligence_monitoring",
+    "get_fund_diligence_review",
     "get_gradient_capabilities",
     "get_gradient_coverage",
     "get_macro_calendar",

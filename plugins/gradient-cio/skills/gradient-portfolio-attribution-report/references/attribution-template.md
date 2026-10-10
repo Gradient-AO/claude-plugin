@@ -4,6 +4,9 @@ Keep the titles and order exactly as shown. Target 10–14 pages when evidence
 supports the full report. Missing evidence keeps its section and becomes
 `Not available — <reason>`.
 
+Before delivery, run `python scripts/check_layout.py "<Portfolio> - Portfolio Attribution Report.pdf"
+--min-pages 10 --max-pages 14`. If it fails, condense or repair the report, then re-render and rerun the check.
+
 ## Page budget
 
 1. Cover and evidence status — 1 page.

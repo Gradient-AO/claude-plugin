@@ -77,4 +77,6 @@ Section 1. Titles are six words or fewer, text is about 60 words or fewer, and t
 ## Page flow
 
 Sections flow by default. Section 1 opens after the cover; Sections 5, 7, and 14 and Appendix A start on new
-pages. Target 14–18 pages without adding filler. Use `narrow: true` for bars inside `two_col`.
+pages. Target 14–18 pages without adding filler. Use `narrow: true` for bars inside `two_col`. Before delivery,
+run `python scripts/check_layout.py "<Portfolio> - IC Memo.pdf" --min-pages 14 --max-pages 18`; if it fails,
+condense or repair the report, then re-render and rerun the check.

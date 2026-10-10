@@ -107,18 +107,3 @@ organization. This review uses portfolio evidence only.`
 Benchmark: use the one identified by `benchmark_relative`. If that section is unavailable, ask the user which
 catalog benchmark is the policy benchmark (do not guess from the catalog; there are ~180 system series,
 mostly proxies). Without one, report absolute returns only and say "No benchmark designated".
-
-## Known issues (revalidated 2026-10-05)
-
-| Symptom | Workaround |
-|---|---|
-| Benchmark series can include a `period_date` after today (a month that has not ended) | Use the bounded historical-return sections, which exclude future periods; do not recompute from raw benchmark points |
-| `get_benchmarks` with `asset_class: multi_asset` → `response_contract_invalid`; other `asset_class` values (e.g. `equity`) return an empty list with an advisory "empty primary list has no explicit reason" | Look up by `benchmark_id`, or page the catalog without filters |
-| `get_cross_domain_research` `portfolio_13f_lookthrough` / `roster_macro_exposure` → `entitlement_required` (`ANALYST_PORTFOLIO_CAPABILITY_REQUIRED`, 403) without the portfolio module, even for the illustrative portfolio | Coverage "Not licensed"; look-through section is one callout. Do not retry |
-| `get_peer_allocation_intelligence` → `PEER_INTELLIGENCE_PREMIUM_REQUIRED` / `entitlement_required` | Coverage "Not licensed"; omit peer comparisons, add the required peer-skip callout and complete from portfolio evidence. Do not retry |
-| `roster_macro_exposure` without `portfolio_id` → `tool_input_invalid` | Always pass `portfolio_id` |
-| `allocation_tree` child `target_weight` and limits are within-parent shares; `actual_weight` is a total-portfolio share | Use `target_weight_total_portfolio` and `allocation_policy`; do not convert locally |
-| `get_portfolio_exposure` value channels | `value_basis: market_value` intentionally has `nav_base: null`; `value_basis: nav` intentionally has `market_value_base: null`. When both values and `as_of_date` are null, show "no current value"; never count it as zero NAV |
-| Illustrative `portfolio_13f_lookthrough` rows | Canonical demo managers can use synthetic holdings with `provenance.data_scope.kind: illustrative`; label them “Illustrative, Gradient Maintained,” never manager-reported SEC filings |
-
-Report new failures with the error code and request ID, and check gradient-setup `references/contract-checks.md`.

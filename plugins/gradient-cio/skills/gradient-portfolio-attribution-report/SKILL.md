@@ -1,168 +1,88 @@
 ---
 name: gradient-portfolio-attribution-report
-description: "Produce a polished historical and governed ex ante attribution report for any saved Gradient portfolio, with Brinson-Fachler allocation, selection and interaction effects, reconciliation diagnostics, assumptions, limitations and sourced analysis. Use for attribution reports, performance attribution, Brinson analysis, manager or asset-allocation contribution analysis, and historical-versus-expected attribution reviews. For a broad portfolio review use gradient-portfolio-review; for a recommendation or vote use gradient-ic-memo."
+description: "Create a branded historical and governed ex ante attribution report. Triggers: 'attribution report', 'Brinson analysis', 'sources of active return'. Hands broad monitoring to portfolio review and decisions to IC memo."
 ---
 
-# Portfolio Attribution Report
+# Portfolio attribution report
 
-Use when the user asks for an attribution report, Brinson analysis,
-historical attribution, ex ante attribution, sources of active return, or a
-focused performance-attribution pack for a saved portfolio.
+Use for a focused saved-portfolio historical and governed ex ante attribution
+pack. Deliver **"<Portfolio> - Portfolio Attribution Report <YYYY-MM-DD>"**,
+normally 10–14 PDF pages. This is monitoring, not a recommendation.
 
-The deliverable is a branded report with base name
-**"<Portfolio> - Portfolio Attribution Report <YYYY-MM-DD>"**. Its PDF form is normally 10–14 pages. It is a
-monitoring report, not a recommendation or decision memo.
+## Non-negotiable rules
 
-Rules:
-- Historical attribution comes only from `get_portfolio_attribution`.
-- Ex ante attribution comes only from `get_portfolio_ex_ante_attribution`.
-- Expected-statistics charts and Strategy Lab results are not attribution.
-- Every number carries an `[S#]` tag. Scaling and rounding are allowed; local
-  effect calculations are not.
-- Historical and ex ante results have different weight, return, period and
-  linking bases. Never present them as directly interchangeable.
-- Missing or incompatible evidence is `Not available — <returned reason>`.
-- Expected returns and ex ante effects are assumptions, not forecasts.
-- Illustrative evidence uses the exact label **Illustrative, Gradient
-  Maintained — demo data, not the client's holdings or managers**.
-
-## Files
-
-| File | Read when |
-|---|---|
-| `references/data-map.md` | Always — tools, arguments, fields and fallbacks. |
-| `references/attribution-template.md` | Always — exact section order and page budget. |
-| `references/writing-standards.md` | Before drafting — interpretation and prohibited claims. |
-| `references/module-scope.md` | Always — Portfolio Analytics versus Strategy Lab boundary. |
-| `references/chart-data.md` | Before using report charts. |
-| `references/report-style.md` | Before rendering. |
-| `scripts/validate_attribution.py` | Validate the JSON report. |
-| `scripts/render.py` | Render validated `report.json` to PDF, PPTX or both. |
+- Historical attribution comes only from `get_portfolio_attribution`; ex ante
+  attribution comes only from `get_portfolio_ex_ante_attribution`.
+- Strategy Lab, expected-statistics charts, local Brinson, and return points
+  never substitute for governed attribution.
+- Every figure carries `[S#]`. Preserve returned effects, methods, linking,
+  formulas, periods, weights, currency, residuals, diagnostics, coverage, and
+  reasons; do not locally recalculate effects.
+- Historical and ex ante bases are not interchangeable. Expected values are
+  assumptions, not forecasts.
+- Missing evidence is typed unavailable, never zero. Illustrative evidence
+  uses the exact standard illustrative label.
+- This skill reads only and never recommends a trade, rebalance, manager
+  action, allocation, or vote.
 
 ## 1. Scope
 
-1. Call `list_organizations`; ask only if several are available and none was
-   named.
-2. Call `get_gradient_capabilities` once. Read Portfolio Analytics access and
-   readiness for both attribution tools.
-3. Call `list_portfolios`; match the requested saved portfolio. Ask one
-   focused question only when several user portfolios remain plausible.
-4. Default benchmark role to `policy` and parent to `root`. Ask only if the
-   user explicitly references a different benchmark role or sub-allocation
-   without identifying it.
-5. Default historical period to the latest complete trailing 12 months ending
-   at the latest available month-end. Preserve partial coverage.
-6. Audience changes tone only; the report structure does not change.
+Resolve organization, Portfolio Analytics capability, saved portfolio,
+benchmark role (default policy), parent cohort (default root), historical
+period (default latest complete trailing 12 months), and audience. Ask one
+focused question only for unresolved ambiguity.
 
-This skill is read-only. Never create, update, save or log a Gradient record.
+Read `references/module-scope.md` before tool selection.
 
 ## 2. Collect
 
-Follow `references/data-map.md`. Save each raw response and a source row with
-tool, key arguments, as-of date, data scope, validation status and payload
-digest.
+Immediately before calls read `references/data-map.md#required-calls`. Save
+each response and source row with key arguments, as-of date, data scope,
+validation, and digest. Collect capabilities, portfolio, allocation tree,
+projected historical-return context, both attribution lanes, relevant manager
+findings, and macro regime context.
 
-Required:
-- `list_portfolios`
-- `get_portfolio_structure` with `view: allocation_tree`
-- `get_portfolio_historical_returns` for context, with a `fields` projection
-  containing `portfolio`, `filters`, `coverage`, `display` and only the
-  requested return sections, and `limit: 100`
-- `get_portfolio_attribution` for the selected month-end period
-- `get_portfolio_ex_ante_attribution` for the same portfolio, benchmark role
-  and parent cohort
-
-Optional:
-- `get_benchmarks` only to label benchmark IDs returned by the governed
-  results when a name is not already present.
-
-Retry only once when `retryable: true`. Entitlement blocks are `Not licensed`;
-validation failures are `Not available — validation failed (<check id>)`.
-State partial historical-return coverage as a report gap. For
-`no_subject_returns`, state that the selected portfolio has no subject return
-history and do not substitute another series.
-Treat `not_yet_funded` commitments as having no funded return history, not a
-zero return. Identify returned partial 2016 and 2026 calendar years from their
-`month_count`, `partial`, `coverage_status`, and `missing_reason`, and do not
-present either as a full-year return. Disclose the returned count if the
-100-row commitment response is unexpectedly truncated.
+Retry only once when `retryable: true`; entitlement is Not licensed. Preserve
+partial return coverage, `no_subject_returns`, `not_yet_funded`, partial 2016
+and 2026 calendar years, and unexpected 100-row truncation exactly as returned.
 
 ## 3. Assess
 
-Historical:
-- Preserve Brinson-Fachler allocation, selection and interaction effects,
-  symmetric-Carino linking, period coverage, basis, currency, residual,
-  formula metadata and diagnostics.
-- Use returned segment effects. Do not rebuild effects from weights or
-  returns.
+Read the Historical attribution, Governed ex ante attribution, Compatibility
+gate, Unsupported substitutes, and Failure handling sections of
+`references/data-map.md` just before analysis.
 
-Ex ante:
-- Preserve single-period expected Brinson-Fachler effects, current and
-  benchmark weight bases, annualized expected-return basis, one-year horizon,
-  assumption sources, formula version, normalization diagnostics, currency
-  and residual.
-- If the result is unavailable, keep the section and show all returned
-  missing reason codes.
+Identify returned positive/negative effects, allocation-versus-selection
+dominance, reconciliation, assumptions, and coverage limits. Compare only
+sign, rank, and concentration after all compatibility gates pass. Never
+subtract lanes or describe differences as improvement, deterioration, alpha,
+or forecast. Manager findings and regime are context, not causal attribution.
 
-Comparison:
-- Compare direction and concentration only when both results use the same
-  portfolio, benchmark role, parent cohort and calculation currency.
-- State the basis difference before interpreting any change in sign or rank.
-- Do not subtract historical and ex ante effects or label the difference an
-  improvement, deterioration, forecast or expected alpha.
+## 4. Build and deliver
 
-Analysis:
-- Identify the largest positive and negative returned effects, whether each
-  result reconciles, where allocation versus selection dominates, and which
-  assumptions or coverage limitations matter.
-- Use one to three sourced `role: "analysis"` callouts beside the evidence in
-  each analytical section. Start titles with `Analysis —`, keep the message to six words and use `Observation:`, `Why it
-  matters:`, `Uncertainty:`, and `What would change the view:` in order.
-- Link the largest detractor segment to open findings for its resolved managers and the returned macro regime
-  over the historical period; label both as context, never as causal attribution.
-- Use neutral considerations for discussion; do not prescribe trades,
-  rebalances, manager actions or votes.
+Read `references/attribution-template.md`,
+`references/writing-standards.md`, `references/chart-data.md`, and
+`references/report-style.md` only before drafting/rendering. Follow the exact
+section order, four executive tiles, required visuals, sourced analysis, and
+typed unavailable states.
 
-## 4. Build, validate and render
-
-Use JSON block mode and follow `references/attribution-template.md` exactly.
-Build polished, evidence-led graphics with readable labels and units. Tables
-and bars/waterfalls use returned effect values directly. Use exactly the four
-ordered executive tiles in the template and source every tile.
-Page 2 contains three to five sourced `Key judgment —` callouts. Analytical sections use message-first
-kickers and lead with signed segment `bars`, an allocation-selection-interaction `waterfall`, a segment ×
-lane `heat`, returned chart or typed unavailable state before the first table. Put the historical
-reconciliation `kv` beside its waterfall in `two_col`. Never place more than two tables consecutively.
-
-Validate:
+Validate and render the same report source:
 
 ```text
 python <skill>/scripts/validate_attribution.py report.json
-```
-
-Fix every error and re-run until the validator passes. A failed validator blocks delivery. Select PDF by
-default; select PPTX when the request says `PowerPoint`,
-`deck`, `slides` or `.pptx`; select both when it says `both` or `board pack`. Both formats must come from the
-same validated `report.json`.
-
-```text
 python <skill>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Portfolio Attribution Report <YYYY-MM-DD>"
 ```
 
-Follow “Check and deliver” in `references/report-style.md`: inspect every requested output, fix clipping,
-overflow, orphaned headings and unreadable graphics, then re-render. Reconcile each displayed value to its source,
-verify that historical and ex ante labels are unambiguous, and confirm no
-unsupported attribution claim appears. PDF page QA and fact checks must pass
-before delivery.
-
-Reply with three lines: historical attribution conclusion, governed ex ante conclusion, and the number of
-coverage or diagnostic items to monitor, plus the requested file(s).
+PDF is default; explicit slide wording selects PPTX; `both`/`board pack`
+selects both. Inspect every output, reconcile every displayed value to its
+source, and verify lane labels and limitations. QA/fact-check failures block
+delivery. Reply with historical conclusion, ex ante conclusion, monitored
+diagnostic count, and files.
 
 ## 5. Handoffs
 
-- Broad performance, allocation, risk and liquidity monitoring:
+- Broad performance, allocation, risk, or liquidity monitoring →
   `gradient-portfolio-review`.
-- A trade, rebalance, allocation change or committee vote:
-  `gradient-ic-memo`.
-- Asset-class portfolio construction:
-  the relevant `gradient-*-portfolio-construction` skill.
+- A trade, rebalance, allocation change, or vote → `gradient-ic-memo`.
+- Asset-class construction → the relevant
+  `gradient-*-portfolio-construction` skill.

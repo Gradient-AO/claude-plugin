@@ -1,6 +1,6 @@
 ---
 name: gradient-macro-brief
-description: "Build a branded investment-committee macro briefing from GradientCIO evidence: The Read, rates and credit conditions, Gradient macro signals and GRIP, the 30-day event calendar and capital market assumptions, with sources and what would change the view."
+description: "Produce an IC macro briefing from The Read, rates, credit, signals, GRIP, events, and CMAs. Use for macro brief, market outlook, rates and credit, or IC macro deck. For a portfolio decision use gradient-ic-memo."
 ---
 
 # Macro briefing deck

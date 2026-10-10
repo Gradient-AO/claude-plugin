@@ -187,6 +187,14 @@ def connector_cutover():
                 == {"sentinel": True},
                 f"IC memo composer rejects {label} without replacing output",
             )
+            if label == "missing required visual slot":
+                message = invalid_result.stderr or invalid_result.stdout
+                check(
+                    'Section 1 is missing "Recommendation"' in message
+                    and "Add a statement with that title" in message
+                    and "missing statement slot" not in message,
+                    "IC memo composer explains how to repair missing content",
+                )
     with tempfile.TemporaryDirectory() as gips_tmp:
         tmp_dir = pathlib.Path(gips_tmp)
         for label, prefix, _minimum, _maximum, _must in GIPS_VARIANTS:
@@ -844,3 +852,11 @@ def connector_cutover():
                 errors="replace",
             )
             check(rejected.returncode == 1, f"validator rejects {label}")
+            if "missing visual" in label:
+                message = rejected.stderr or rejected.stdout
+                check(
+                    "is missing" in message
+                    and "Not available — <reason>" in message
+                    and " slot" not in message,
+                    f"validator gives an actionable repair for {label}",
+                )

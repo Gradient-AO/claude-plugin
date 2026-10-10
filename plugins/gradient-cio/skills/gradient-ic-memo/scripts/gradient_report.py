@@ -236,7 +236,9 @@ def b_chart(b):
     }) > 1
     if block in ("bars", "pie") and not mixed_units and x_key in keys and y_keys and y_keys[0] in keys:
         xi, yi = keys.index(x_key), keys.index(y_keys[0])
-        items = [{"label": row[xi], "value": row[yi],
+        items = [{"label": row[xi],
+                  "value": (_chart_plot_value(columns[yi], row[yi])
+                            if block == "bars" else row[yi]),
                   "display": _chart_format(columns[yi], row[yi], c.get("currency"))}
                  for row in c["rows"] if len(row) > max(xi, yi) and isinstance(row[yi], (int, float))]
         if items:
@@ -623,12 +625,38 @@ def _xval(x):
         return float(x)
     return float(datetime.date.fromisoformat(str(x)[:10]).toordinal())
 
+def _line_x_axis(series):
+    """Return an x-value converter, formatter and date flag for numeric, date or categorical axes."""
+    raw = [point[0] for item in series for point in item["points"]]
+    if all(isinstance(value, (int, float)) for value in raw):
+        return (lambda value: float(value)), (lambda value: f"{value:g}"), False
+    try:
+        parsed = {
+            str(value): float(datetime.date.fromisoformat(str(value)[:10]).toordinal())
+            for value in raw
+        }
+    except (TypeError, ValueError):
+        categories = list(dict.fromkeys(str(value) for value in raw))
+        positions = {label: float(index) for index, label in enumerate(categories)}
+        labels = {float(index): label for index, label in enumerate(categories)}
+        return (
+            lambda value: positions[str(value)],
+            lambda value: labels[value],
+            False,
+        )
+    return (
+        lambda value: parsed[str(value)],
+        lambda value: datetime.date.fromordinal(int(value)).strftime("%b %Y"),
+        True,
+    )
+
 def b_line(b, W=640, H=None):
-    """Line chart. series: [{name, points: [[date|x, value], ...]}]; y_suffix ("%"), decimals, ref {value, label}."""
+    """Line chart. series: [{name, points: [[date|category|x, value], ...]}]."""
     series = [sr for sr in b["series"] if sr.get("points")]
     H = H or b.get("height", 220)
     pl, pr, pt, pb = 46, 16 + (8 if b.get("end_labels", True) else 0), 14, 26
-    xs = [_xval(p[0]) for sr in series for p in sr["points"]]; ys = [float(p[1]) for sr in series for p in sr["points"]]
+    xval, xformat, is_date = _line_x_axis(series)
+    xs = [xval(p[0]) for sr in series for p in sr["points"]]; ys = [float(p[1]) for sr in series for p in sr["points"]]
     if b.get("ref") is not None: ys.append(float(b["ref"]["value"]))
     x0, x1 = min(xs), max(xs); y0, y1 = min(ys), max(ys)
     pad = (y1 - y0) * 0.08 or abs(y1) * 0.1 or 1; y0 -= pad; y1 += pad
@@ -653,17 +681,15 @@ def b_line(b, W=640, H=None):
                  f'<text x="{pl+iw-2:.1f}" y="{ry-4:.1f}" text-anchor="end" class="ax" fill="{CORAL}">{esc(b["ref"].get("label",""))}</text>')
     allx = sorted(set(xs)); n = min(5, len(allx))
     tx = [allx[round(k * (len(allx) - 1) / max(n - 1, 1))] for k in range(n)]
-    is_date = not isinstance(series[0]["points"][0][0], (int, float))
-    fmt = lambda xv, f: datetime.date.fromordinal(int(xv)).strftime(f) if is_date else f"{xv:g}"
-    labs = [fmt(xv, "%b %Y") for xv in tx]
-    if len(set(labs)) < len(labs):
-        labs = [fmt(xv, "%d %b %Y") for xv in tx]
+    labs = [xformat(xv) for xv in tx]
+    if is_date and len(set(labs)) < len(labs):
+        labs = [datetime.date.fromordinal(int(xv)).strftime("%d %b %Y") for xv in tx]
     for k, (xv, lab) in enumerate(zip(tx, labs)):
         anchor = "start" if k == 0 else ("end" if k == n - 1 else "middle")
         o.append(f'<text x="{sx(xv):.1f}" y="{H-8}" text-anchor="{anchor}" class="ax">{lab}</text>')
     for j, sr in enumerate(series):
         col = sr.get("color") or SERIES[j % len(SERIES)]
-        pts = sorted((_xval(p[0]), float(p[1])) for p in sr["points"])
+        pts = sorted((xval(p[0]), float(p[1])) for p in sr["points"])
         d = " ".join(f'{"M" if k == 0 else "L"}{sx(x):.1f},{sy(y):.1f}' for k, (x, y) in enumerate(pts))
         o.append(f'<path d="{d}" fill="none" stroke="{col}" stroke-width="{2.2 if j == 0 else 1.8}" stroke-linejoin="round"/>')
         lx, ly = pts[-1]

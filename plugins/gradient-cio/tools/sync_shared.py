@@ -6,6 +6,7 @@ Run after any change to a file listed in FILES:
     python tools/sync_shared.py --check  # exit 1 if any copy differs (use before packaging)
 """
 import hashlib, pathlib, shutil, sys
+import re
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 FILES = {"shared/gradient_report.py": "scripts/gradient_report.py",
@@ -18,6 +19,14 @@ FILES = {"shared/gradient_report.py": "scripts/gradient_report.py",
          "shared/chart-data.md": "references/chart-data.md",
          "shared/module-scope.md": "references/module-scope.md"}
 
+CHAT_DELIVERY = re.compile(r"^\s+delivery:\s*chat\s*$", re.MULTILINE)
+
+
+def is_chat_only(skill):
+    """Return whether a skill deliberately produces only an in-chat response."""
+    return bool(CHAT_DELIVERY.search((skill / "SKILL.md").read_text(encoding="utf-8")))
+
+
 def digest(p):
     return hashlib.sha256(p.read_bytes()).hexdigest()[:12]
 
@@ -26,6 +35,8 @@ def main():
     bad = 0
     for skill in sorted((ROOT / "skills").iterdir()):
         if not (skill / "SKILL.md").exists():
+            continue
+        if is_chat_only(skill):
             continue
         for src, rel in FILES.items():
             s, d = ROOT / src, skill / rel

@@ -331,9 +331,9 @@ def validate_slots(
             count = sum(block_type in rule.block_types for block_type in block_types)
             if count < rule.minimum and not has_typed_unavailable(section):
                 title = str(section.get("title", ""))
-                types = ", ".join(sorted(rule.block_types))
                 errors.append(
-                    f"{title} needs {rule.label} ({types}) or a typed unavailable block"
+                    f'Section "{title}" is missing {rule.label}. Add it, or add '
+                    'a watch callout whose text begins "Not available — <reason>".'
                 )
     return errors
 

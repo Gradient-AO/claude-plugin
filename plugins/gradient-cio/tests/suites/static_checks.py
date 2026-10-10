@@ -22,11 +22,30 @@ def static(allow_branded):
     for s in skills:
         text = (s / "SKILL.md").read_text(encoding="utf-8"); fm = frontmatter(text)
         check(fm.get("name") == s.name and s.name.startswith("gradient-"), f"{s.name}: name matches folder and starts with gradient-")
-        check(bool(fm.get("description")), f"{s.name}: has description")
-        check((s / "scripts" / "gradient_report.py").exists(), f"{s.name}: has renderer copy")
+        description = fm.get("description", "")
+        chat_only = fm.get("delivery") == "chat"
+        check(bool(description), f"{s.name}: has description")
+        check(
+            len(description) <= 250,
+            f"{s.name}: description at most 250 characters ({len(description)})",
+        )
+        check(
+            chat_only or (s / "scripts" / "gradient_report.py").exists(),
+            f"{s.name}: has renderer copy unless chat-only",
+        )
         body = text + "".join(p.read_text(encoding="utf-8") for p in (s / "references").glob("*.md")) if (s / "references").exists() else text
-        check(".pdf" in body.lower() or "pdf" in fm.get("description", "").lower(), f"{s.name}: declares PDF output")
-        check(len(text.split()) < 3000, f"{s.name}: SKILL.md under 3,000 words ({len(text.split())})")
+        check(
+            chat_only or ".pdf" in body.lower() or "pdf" in description.lower(),
+            f"{s.name}: declares PDF output unless chat-only",
+        )
+        check(
+            len(text.splitlines()) <= 160,
+            f"{s.name}: SKILL.md at most 160 lines ({len(text.splitlines())})",
+        )
+        check(
+            len(text.split()) <= 1800,
+            f"{s.name}: SKILL.md at most 1,800 words ({len(text.split())})",
+        )
     stale = []
     for p in ROOT.rglob("*"):
         if p.is_file() and p.suffix in (".md", ".py", ".json") and "tests" not in p.parts and STALE.search(p.read_text(encoding="utf-8", errors="ignore")):
@@ -34,6 +53,21 @@ def static(allow_branded):
     check(not stale, "no stale skill names" + (f": {stale}" if stale else ""))
     r = subprocess.run([sys.executable, str(ROOT / "tools" / "sync_shared.py"), "--check"], capture_output=True, text=True, encoding="utf-8", errors="replace")
     check(r.returncode == 0, "shared renderer and style guide in sync in every skill")
+    r = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "tools" / "generate_skill_catalog.py"),
+            "--check",
+        ],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    check(
+        r.returncode == 0,
+        "README, menu and readiness requirements match installed skills",
+    )
     py311 = shutil.which("python3.11")
     if py311:
         r = subprocess.run([py311, "-m", "py_compile", str(RENDER)], capture_output=True, text=True, encoding="utf-8", errors="replace")

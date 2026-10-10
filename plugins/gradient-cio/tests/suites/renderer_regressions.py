@@ -122,6 +122,63 @@ def chart_renderer():
         and 'class="chart donut"' not in pacing_table,
         "mixed-unit commitment pacing metrics remain a table",
     )
+    categorical_line = _renderer_module.b_chart({"chart": {
+        "chart_id": "categorical-line-test",
+        "title": "Quarterly signal",
+        "status": "ok",
+        "columns": [
+            {"key": "quarter", "title": "Quarter", "format": "text", "decimals": None},
+            {"key": "score", "title": "Score", "format": "number", "decimals": 1},
+        ],
+        "rows": [["2026 Q1", 1.2], ["2026 Q2", 1.5], ["2026 Q3", 1.1]],
+        "render_hint": {"block": "line", "x": "quarter", "y": ["score"]},
+    }})
+    check(
+        "<svg" in categorical_line
+        and "<path" in categorical_line
+        and all(quarter in categorical_line for quarter in ("2026 Q1", "2026 Q2", "2026 Q3"))
+        and "<table" not in categorical_line,
+        "categorical-x chart hints render as labelled lines",
+    )
+    signed_bars = _renderer_module.b_chart({"chart": {
+        "chart_id": "signed-bars-test",
+        "title": "Attribution effects",
+        "status": "ok",
+        "columns": [
+            {"key": "effect", "title": "Effect", "format": "text", "decimals": None},
+            {"key": "return", "title": "Return", "format": "percentage", "decimals": 1},
+        ],
+        "rows": [["Selection", 0.004], ["Allocation", -0.006]],
+        "render_hint": {"block": "bars", "x": "effect", "y": ["return"]},
+    }})
+    check(
+        "<svg" in signed_bars
+        and "0.4%" in signed_bars
+        and "-0.6%" in signed_bars
+        and _renderer_module.LIME in signed_bars
+        and _renderer_module.CORAL in signed_bars
+        and "<table" not in signed_bars,
+        "negative chart hints render as signed bars",
+    )
+    forty_row_table = _renderer_module.b_chart({"chart": {
+        "chart_id": "forty-row-table-test",
+        "title": "Complete returned rows",
+        "status": "ok",
+        "columns": [
+            {"key": "holding", "title": "Holding", "format": "text", "decimals": None},
+            {"key": "weight", "title": "Weight", "format": "percentage", "decimals": 1},
+        ],
+        "rows": [[f"Fictional Holding {index:02d} (TEST)", index / 1000]
+                 for index in range(1, 41)],
+        "truncated": False,
+        "render_hint": {"block": "table", "x": None, "y": []},
+    }})
+    check(
+        forty_row_table.count("<tr>") == 41
+        and "Fictional Holding 01 (TEST)" in forty_row_table
+        and "Fictional Holding 40 (TEST)" in forty_row_table,
+        "chart tables preserve all 40 returned rows",
+    )
 
 def render(keep):
     print("Render checks")

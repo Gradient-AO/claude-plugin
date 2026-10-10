@@ -20,6 +20,8 @@ jobs:
           PY
       - name: Shared-file sync check
         run: python plugins/gradient-cio/tools/sync_shared.py --check
+      - name: Generated catalog check
+        run: python plugins/gradient-cio/tools/generate_skill_catalog.py --check
       - name: Install system renderers
         run: |
           sudo apt-get update

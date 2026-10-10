@@ -21,7 +21,7 @@ This repo is a **public** Claude plugin marketplace. Clients install from it dir
    - `python plugins/gradient-cio/tools/release_quality_gate.py` (runs `tests/run_tests.py`; skips Claude validation only when the CLI is unavailable)
    - `claude plugin validate .` (required before release even when CI reports that the CLI was unavailable)
    - for deterministic visual review artifacts: `python plugins/gradient-cio/tools/generate_golden_example.py --out <temporary-directory>`
-   - if the change adds or changes which GradientCIO tools a skill calls: update `skills/gradient-setup/references/contracts.json` and `skill-requirements.md`, then run the gradient-setup full self-test against the live connector and update its known-issues table.
+   - if the change adds or changes which GradientCIO tools a skill calls: update `skills/gradient-setup/references/contracts.json` and `skill-requirements.md`, then run the gradient-setup full self-test against the live connector and record any reproducible failure as a plain finding with its error code, HTTP status and request ID.
    - a secrets scan: `git diff main --stat` plus `grep -rInE "(api[_-]?key|secret|token|password|bearer)" plugins/ | grep -v -i "no credentials"` and review any hits.
 6. Commit with a clear message, push the branch, open a PR, wait for the `validate` check to pass, then merge to `main` (squash). If the owner asks to publish directly, push to `main` only after step 5 passes.
 7. Tag the release: `git tag v<version> && git push origin v<version>`, and create a GitHub release with the changelog entry (`gh release create v<version> --notes-from-tag` or paste the notes).

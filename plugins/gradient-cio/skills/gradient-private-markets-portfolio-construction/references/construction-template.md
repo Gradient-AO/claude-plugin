@@ -3,6 +3,9 @@
 Keep every section title and the order exactly as shown. Missing evidence becomes
 `Not available — <returned reason>`; never remove a section. Target 10–14 pages without filler.
 
+Before delivery, run `python scripts/check_layout.py "<Portfolio> - Private Markets Construction.pdf"
+--min-pages 10 --max-pages 14`. If it fails, condense or repair the report, then re-render and rerun the check.
+
 ## Metadata and executive band
 
 - Root `construction_mode`: `private_markets`.

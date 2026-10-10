@@ -1,13 +1,14 @@
 ---
 name: gradient-setup
-description: "Start here for Gradient CIO: checks the GradientCIO connection, organization, licensed modules and data readiness, runs a contract self-test, and delivers a branded readiness report showing which Gradient skills are ready to use."
+description: "Check GradientCIO connection, organization, entitlements, data readiness, and connector contracts; produces a readiness report. Use for setup, connection check, or what is ready. For a command catalog use gradient-menu."
 ---
 
 # Gradient setup and readiness check
 
 Use when the user is new to the Gradient skills, says "set up Gradient", "get started", "is Gradient connected",
-"what can I do with Gradient", "check my access", "health check", "self-test", or when another Gradient skill
-fails because the connector is missing, unauthorized or returning errors. Also use after a plugin update.
+"what is ready for my organization", "check my access", "health check", "self-test", or when another Gradient
+skill fails because the connector is missing, unauthorized or returning errors. For only "what can I do?" or
+"show commands", use `gradient-menu`. Also use this readiness check after a plugin update.
 
 The deliverable is a short branded **"Gradient Readiness Report"**, plus a three-line chat summary and two or
 three prompts the user can try next. Keep the language plain: the reader may not be technical.
@@ -53,9 +54,9 @@ report them as separate modules; never use the canonical illustrative portfolio 
    failure, and tell the user to update or reconnect GradientCIO. Do not replace missing connector
    calculations with local calculations.
 3. Map tools to skills with `references/skill-requirements.md`. A skill is **ready** when every required tool is
-   entitled, available and healthy; **partial** when only optional tools are missing or a required tool has a
-   known issue with a workaround; **not available** when a required tool is not entitled (name the module the
-   client would need to license). When `entitled` is false but `available` is true with
+   entitled, available and healthy; **partial** when optional tools are missing or a degradable call failure
+   leaves independent evidence available; **not available** when a required tool is not entitled (name the
+   module the client would need to license). When `entitled` is false but `available` is true with
    `access_mode: "illustrative"`, report
    **Evaluation — Illustrative, Gradient Maintained — demo data, not the client's holdings or managers**,
    not Ready or Not licensed.
@@ -69,7 +70,7 @@ check or self-test, or after a plugin update. The separate **writes** set is 8 d
 monitoring, review and Strategy Lab scenario previews plus one batch-preview contract and one DDQ upload
 preview, and must never commit. The **DDQ save-preview** set is 3 calls: it intentionally persists one fictional test
 document and one immutable reconciliation test run so that document identity and the chained save can be
-tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 68 calls.
+tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 70 calls.
 
 For each probe, record pass, fail (with error code and HTTP status) or not run (not entitled), and the
 response `as_of`. Resolve `depends_on` arguments with `check_contract.py --resolve-args`; do not manually
@@ -78,9 +79,8 @@ copy or invent chained IDs.
 For a saved response file you can check required paths with
 `python <this skill's directory>/scripts/check_contract.py <this skill's directory>/references/contracts.json <probe_id> <response.json>`.
 
-Compare any failure with the known-issues table in `references/contract-checks.md`. If it matches a known issue,
-mark it "known issue — workaround in skill" rather than a new fault. A new failure is a finding: quote the error
-code, HTTP status and request ID so the user can send it to Gradient support.
+Treat every failed probe as a finding: quote the error code, HTTP status and request ID so the user can send
+it to Gradient support. Do not replace a failed result with a local calculation or infer an empty result.
 
 ## 4. Branding
 
@@ -111,15 +111,15 @@ Meta: `eyebrow` "Setup & Readiness", `header_label` "Readiness Check", `title` t
 `cover_facts`: Organization, Role, Licensed modules (count), Roster funds, MCP version, Checked (date).
 
 Signal: `ready` (connected, all core skills ready, no new failures) · `partial` (connected, but some skills
-partial or not licensed, or known issues present) · `not_ready` (not connected, auth failed, or any core skill
-not available).
+partial or not licensed, or degradable failures are present) · `not_ready` (not connected, auth failed, or any
+core skill not available).
 
 Sections (keep to 4–5 pages):
 
 1. **Summary** (`id: executive`) — bottom line in 3 sentences; tiles: Skills ready, Partial, Not licensed,
    Checks passed.
 2. **Skills you can use** — table: Skill, What it produces, Status (chip: Ready / Partial / Not licensed),
-   Note (what is missing or the workaround). For the IC memo, show Portfolio Analytics core readiness and
+   Note (what is missing or unavailable). For the IC memo, show Portfolio Analytics core readiness and
    `Strategy Lab supplement: <Ready / Not licensed (optional) / Unavailable (optional)>` separately. A
    missing Strategy Lab supplement makes the combined IC memo status Partial, not Not licensed.
 3. **Access and data** — `coverage` block for the data domains (status and as-of); kv block for organization,
@@ -132,7 +132,9 @@ Sections (keep to 4–5 pages):
    Thursday's committee".
 6. **Appendix A — Sources** — tool, as-of, validation status, payload digest for each call.
 
-Then follow "Check and deliver" in `references/report-style.md`.
+Then follow "Check and deliver" in `references/report-style.md`. Before delivery, run
+`python scripts/check_layout.py "<Organization> - GradientCIO Readiness.pdf" --min-pages 4 --max-pages 5`;
+if it fails, condense or repair the report, then re-render and rerun the check.
 
 ## 6. Offer next steps
 

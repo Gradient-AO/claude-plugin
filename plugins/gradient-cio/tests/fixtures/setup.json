@@ -45,12 +45,12 @@
   ]
  },
  "executive": {
-  "bottom_line": "GradientCIO is connected and healthy for organization Gradient [S1][S2]. Nine of eleven skills are ready; the macro briefing is ready with one view unavailable, and the IC memo needs the Portfolio and Strategy Lab modules for live portfolio data [S2]. 13 of 14 contract checks passed; the one failure (macro regime state, HTTP 500) is a known issue the skills work around [S3].",
+  "bottom_line": "GradientCIO is connected and healthy for organization Gradient [S1][S2]. Nineteen of twenty-one skills are ready; the macro briefing has one unavailable view, and the IC memo needs the Portfolio and Strategy Lab modules for live portfolio data [S2]. 13 of 14 contract checks passed; macro regime state returned Not available (HTTP 500) [S3].",
   "tiles": [
    {
     "label": "Skills ready",
-    "value": "9",
-    "sub": "of 11",
+    "value": "19",
+    "sub": "of 21",
     "tone": "good"
    },
    {
@@ -68,7 +68,7 @@
    {
     "label": "Checks passed",
     "value": "13 / 14",
-    "sub": "1 known issue",
+    "sub": "1 unavailable check",
     "tone": "good"
    }
   ]
@@ -398,7 +398,7 @@
        "regime_state",
        "get_macro_signals",
        {
-        "chip": "Known issue",
+        "chip": "Not available",
         "status": "watch"
        },
        "\u2014",
@@ -412,7 +412,7 @@
         "status": "passed"
        },
        "2026-10-04",
-       "Risk-free fresh; receipt unvalidated (known)"
+       "Risk-free fresh; receipt validation unavailable"
       ],
       [
        "watchlist",
@@ -430,7 +430,7 @@
      "type": "findings",
      "items": [],
      "empty_title": "No new failures",
-     "empty_text": "Every failure matched the known-issues list. Since the last list: the CMA baseline now returns a fresh risk-free rate (previously HTTP 422)."
+     "empty_text": "All probes completed without a new failure. The CMA baseline returns a fresh risk-free rate."
     }
    ],
    "new_page": false

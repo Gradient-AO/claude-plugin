@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.6.0
+- Added a lightweight grouped skill menu and generated README catalog while preserving existing public command names.
+- Shortened routing descriptions, clarified the five asset-class construction routes, and moved heavy workflow detail into step-specific references.
+- Added actionable unavailable outcomes and validator repair messages, plus enforced report page-budget checks before delivery.
+- Removed resolved connector issue registries and workaround references from shared and skill-specific guidance.
+- Documented chart row limits, targeted chart IDs and truncation handling for portfolio reports.
+- Added categorical-line, signed-bar and 40-row table renderer regressions, plus explicit unavailable states for unresolved manager subjects.
+- Added governed fund diligence monitoring/review reads to setup verification, manager monitoring, and ODD guidance, including exclusive firm-or-fund review logging safety.
+
 ## 2.5.2
 - Removed superseded connector workarounds from shared portfolio guidance, DDQ reconciliation, and setup contract checks.
 - Kept the supported connector-boundary registry while removing the stale known-issues section.

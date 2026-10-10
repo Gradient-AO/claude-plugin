@@ -13,8 +13,95 @@ def contract_manifest():
         for name in ("standard", "full", "writes", "ddq-save-preview")
     }
     check(
-        counts == {"standard": 8, "full": 47, "writes": 8, "ddq-save-preview": 3},
+        counts == {"standard": 8, "full": 49, "writes": 8, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
+    )
+    full_read_count = counts["standard"] + counts["full"]
+    setup_guidance = SETUP_SKILL.read_text(encoding="utf-8")
+    check(
+        f"full read** set is {full_read_count} reads "
+        f"(the {counts['standard']} standard plus {counts['full']} full probes)"
+        in setup_guidance,
+        "setup full-read count is derived from the contract manifest",
+    )
+    case_budgets = {
+        name: (minimum, maximum)
+        for name, _args, minimum, maximum, _required_text in CASES
+    }
+    documented_budgets = {
+        "gips_note": (
+            ROOT / "skills" / "gradient-gips-standards" / "SKILL.md"
+        ),
+        "setup": SETUP_SKILL,
+        "ic_memo": (
+            ROOT
+            / "skills"
+            / "gradient-ic-memo"
+            / "references"
+            / "report-layout.md"
+        ),
+        "portfolio_comprehensive": PORTFOLIO_REVIEW_TEMPLATE,
+        "portfolio_attribution_report": (
+            ROOT
+            / "skills"
+            / "gradient-portfolio-attribution-report"
+            / "references"
+            / "attribution-template.md"
+        ),
+        "construction_private_markets": (
+            ROOT
+            / "skills"
+            / "gradient-private-markets-portfolio-construction"
+            / "references"
+            / "construction-template.md"
+        ),
+        "construction_fixed_income": (
+            ROOT
+            / "skills"
+            / "gradient-fixed-income-portfolio-construction"
+            / "references"
+            / "construction-template.md"
+        ),
+        "construction_global_public_equity": (
+            ROOT
+            / "skills"
+            / "gradient-global-public-equity-portfolio-construction"
+            / "references"
+            / "construction-template.md"
+        ),
+        "construction_marketable_alternatives": (
+            ROOT
+            / "skills"
+            / "gradient-marketable-alternatives-portfolio-construction"
+            / "references"
+            / "construction-template.md"
+        ),
+        "construction_real_assets": (
+            ROOT
+            / "skills"
+            / "gradient-real-assets-portfolio-construction"
+            / "references"
+            / "construction-template.md"
+        ),
+    }
+    budget_errors = []
+    for case_name, guidance_path in documented_budgets.items():
+        minimum, maximum = case_budgets[case_name]
+        guidance = " ".join(
+            guidance_path.read_text(encoding="utf-8").split()
+        )
+        expected = (
+            f"--min-pages {minimum} --max-pages {maximum}"
+        )
+        if "scripts/check_layout.py" not in guidance or expected not in guidance:
+            budget_errors.append(
+                f"{case_name}: expected {expected} in "
+                f"{guidance_path.relative_to(ROOT)}"
+            )
+    check(
+        not budget_errors,
+        "documented delivery page budgets match rendered regression ranges"
+        + (f": {budget_errors}" if budget_errors else ""),
     )
 
     public_tool_catalog = json.loads(PUBLIC_TOOLS.read_text(encoding="utf-8"))
@@ -23,9 +110,9 @@ def contract_manifest():
         public_tool_catalog.get("generated") is True
         and public_tool_catalog.get("source")
         == "@gradientcio/contracts canonical MCP tool catalog"
-        and len(public_tools) == 64
+        and len(public_tools) == 66
         and public_tools == sorted(set(public_tools)),
-        "public-tool catalog has generated 64-tool canonical parity",
+        "public-tool catalog has generated 66-tool canonical parity",
     )
     minimum = contracts.get("minimum_connector_contract", {})
     response_path_tools = set(minimum.get("required_response_field_paths", {}))
@@ -50,6 +137,8 @@ def contract_manifest():
         "get_cma_consensus_check",
         "get_diligence_roster_funds",
         "get_firm_entity_facts",
+        "get_fund_diligence_monitoring",
+        "get_fund_diligence_review",
         "get_gradient_capabilities",
         "get_manager_diligence_brief",
         "get_manager_odd_profile",
@@ -91,6 +180,8 @@ def contract_manifest():
             "portfolio_allocations",
             "portfolio_commitments",
             "entity_facts",
+            "fund_diligence_monitoring",
+            "fund_diligence_review",
             "cma_consensus",
             "cma_consensus_allocation",
             "strategy_benchmarks",
@@ -260,6 +351,31 @@ def contract_manifest():
         and diligence_brief.get("equals", {}).get("section_order")
         == diligence_sections,
         "manager-diligence brief probe covers section and evidence contracts",
+    )
+    fund_monitoring = by_id["fund_diligence_monitoring"]
+    fund_review = by_id["fund_diligence_review"]
+    check(
+        fund_monitoring["tool"] == "get_fund_diligence_monitoring"
+        and fund_monitoring["args"].get("fund_ids")
+        == ["<roster:funds[0].fund_id>"]
+        and {"status", "monitoring", "item_count"}
+        <= set(fund_monitoring.get("required", []))
+        and fund_review["tool"] == "get_fund_diligence_review"
+        and fund_review["args"].get("fund_id")
+        == "<roster:funds[0].fund_id>"
+        and fund_review["args"].get("history_limit") == 10
+        and {
+            "status",
+            "fund_id",
+            "review",
+            "history.events",
+            "history.pagination.limit",
+            "history.pagination.next_cursor",
+            "history.pagination.has_more",
+            "history.pagination.total_count",
+            "history.pagination.truncated",
+        } <= set(fund_review.get("required", [])),
+        "fund-diligence read probes use canonical roster fund IDs",
     )
     the_read = by_id["the_read"]
     check(
@@ -491,13 +607,13 @@ def contract_manifest():
     check(
         "| get_the_read" not in contract_guidance
         and "get_the_read with `asOfDate`" not in contract_guidance,
-        "known-issues table omits resolved The Read failures",
+        "setup contract guidance omits resolved The Read failures",
     )
     check(
         "get_portfolio_historical_returns | 500" not in contract_guidance
         and "ownership_weights` | `response_contract_invalid" not in contract_guidance
         and "data_scope.kind: live" not in contract_guidance,
-        "known-issues table omits resolved portfolio failures",
+        "setup contract guidance omits resolved portfolio failures",
     )
     check(
         "`get_the_read.asOfDate` is optional" in macro_guidance
@@ -549,7 +665,7 @@ def contract_manifest():
         and "`coverage.status` as" in scope_guidance,
         "shared module guidance distinguishes access, validation, and aggregate status",
     )
-    portfolio_review_guidance = PORTFOLIO_REVIEW_SKILL.read_text(
+    portfolio_review_skill = PORTFOLIO_REVIEW_SKILL.read_text(
         encoding="utf-8",
     )
     portfolio_review_template = PORTFOLIO_REVIEW_TEMPLATE.read_text(
@@ -557,6 +673,13 @@ def contract_manifest():
     )
     portfolio_review_data_map = PORTFOLIO_REVIEW_DATA_MAP.read_text(
         encoding="utf-8",
+    )
+    portfolio_review_guidance = "\n".join(
+        (
+            portfolio_review_skill,
+            portfolio_review_template,
+            portfolio_review_data_map,
+        )
     )
     normalized_portfolio_review_guidance = re.sub(
         r"\s+",
@@ -600,6 +723,7 @@ def contract_manifest():
         path
         for path in (ROOT / "skills").iterdir()
         if (path / "SKILL.md").exists()
+        and (path / "references" / "report-style.md").exists()
     )
     normalized_report_style = re.sub(
         r"\s+",
@@ -768,10 +892,10 @@ def contract_manifest():
         all(
             "snake_case" in text
             and "do not quote `fixed_income_metrics`" in text
-            and "P-25" in text
+            and "P-25" not in text
             for text in non_fixed_income_guidance
         ),
-        "non-fixed-income exposure guidance ignores P-25 metric leakage",
+        "non-fixed-income exposure guidance uses the current field contract",
     )
     classification_guidance = {
         "gradient-private-markets-portfolio-construction":
@@ -807,11 +931,11 @@ def contract_manifest():
         "exposure-reading skills use governed totals and preserve null reasons",
     )
     check(
-        "`get_peer_allocation_intelligence`" in portfolio_review_guidance
-        and "`capabilities.peerIntelligence`" in portfolio_review_guidance
-        and "`peerIntelligence` is unavailable" in portfolio_review_guidance
+        "`get_peer_allocation_intelligence`" in normalized_portfolio_review_guidance
+        and "`capabilities.peerIntelligence`" in normalized_portfolio_review_guidance
+        and "`peerIntelligence` is unavailable" in normalized_portfolio_review_guidance
         and "Never treat this optional entitlement as a report failure"
-        in portfolio_review_guidance,
+        in normalized_portfolio_review_guidance,
         "portfolio review gates unlicensed peer context without failing",
     )
     peer_skip_text = (
@@ -819,8 +943,7 @@ def contract_manifest():
         "is not available for this organization"
     )
     check(
-        peer_skip_text in normalized_portfolio_review_guidance
-        and peer_skip_text in normalized_portfolio_review_data_map
+        peer_skip_text in normalized_portfolio_review_data_map
         and peer_skip_text in normalized_portfolio_review_template
         and "Peer allocation intelligence" in portfolio_review_template
         and "Peer allocation context: Not licensed (optional)"
@@ -904,7 +1027,9 @@ def contract_manifest():
         "credit-spreads probe passes only its view",
     )
     check(
-        all(issue_id in contract_guidance for issue_id in ("P-23", "P-25"))
+        "## Supported contract boundaries" not in contract_guidance
+        and "P-23" not in contract_guidance
+        and "P-25" not in contract_guidance
         and "P-01" not in contract_guidance
         and "P-07" not in contract_guidance
         and "P-12" not in contract_guidance
@@ -920,14 +1045,58 @@ def contract_manifest():
             "#1502",
         ))
         and "CMA receipt unvalidated" not in contract_guidance,
-        "known-issues table contains the current issue set",
+        "setup contract checks omit resolved issue registries",
+    )
+    retired_issue_scaffolding = re.compile(
+        r"##\s+(?:Known issues|Supported contract boundaries)"
+        r"|\bUntil P-\d+\b|\bP-\d+\b|\bknown[- ]issues?\b",
+        re.IGNORECASE,
+    )
+    stale_issue_docs = [
+        str(path.relative_to(ROOT))
+        for path in (ROOT / "skills").rglob("*")
+        if path.is_file()
+        and path.suffix in {".md", ".json"}
+        and retired_issue_scaffolding.search(
+            path.read_text(encoding="utf-8", errors="ignore")
+        )
+    ]
+    check(
+        not stale_issue_docs,
+        "skill guidance omits retired issue registries"
+        + (f": {stale_issue_docs}" if stale_issue_docs else ""),
     )
     shared_chart_guidance = SHARED_CHART_DATA.read_text(encoding="utf-8")
     check(
         "two supported packs" in shared_chart_guidance
         and "`allocations` and `commitments`" in shared_chart_guidance
+        and "`max_rows` defaults to 40" in shared_chart_guidance
+        and "cannot exceed 100" in shared_chart_guidance
+        and "at most four explicit `chart_ids`" in shared_chart_guidance
         and "`run_strategy_lab_expected_statistics`" in shared_chart_guidance,
-        "shared chart guidance enforces P-07 while preserving Strategy Lab",
+        "shared chart guidance documents current packs, selectors and row limits",
+    )
+    chart_skill_names = (
+        "gradient-portfolio-review",
+        "gradient-fixed-income-portfolio-construction",
+        "gradient-global-public-equity-portfolio-construction",
+        "gradient-marketable-alternatives-portfolio-construction",
+        "gradient-private-markets-portfolio-construction",
+        "gradient-real-assets-portfolio-construction",
+    )
+    chart_skill_guidance = [
+        (ROOT / "skills" / skill_name / "SKILL.md").read_text(encoding="utf-8")
+        for skill_name in chart_skill_names
+    ]
+    check(
+        all(
+            "`max_rows` defaults to 40" in text
+            and re.search(r"capped at\s+100", text)
+            and "`chart_ids`" in text
+            and "`truncated: true`" in text
+            for text in chart_skill_guidance
+        ),
+        "portfolio report skills document chart selectors, row limits and truncation",
     )
     check(
         by_id["events"]["args"].get("view") == "subject"
@@ -1006,7 +1175,7 @@ def contract_manifest():
             "CMA receipt unvalidated",
             "empty-findings validator",
         )),
-        "known-issues table omits the resolved issue set",
+        "setup contract checks omit resolved issue text",
     )
     removed_tool_pattern = re.compile(
         r"\b(?:run_strategy_lab_(?:factor_loads|optimization|rebalance|"
@@ -1124,14 +1293,81 @@ def contract_manifest():
         in odd_requirements,
         "ODD readiness requires the composite diligence brief",
     )
+    manager_monitor_contract = (
+        ROOT
+        / "skills"
+        / "gradient-manager-monitor"
+        / "references"
+        / "monitoring-contract.md"
+    ).read_text(encoding="utf-8")
+    odd_execution_contract = (
+        ROOT
+        / "skills"
+        / "gradient-odd-report"
+        / "references"
+        / "odd-execution-contract.md"
+    ).read_text(encoding="utf-8")
+    check(
+        all(
+            "get_fund_diligence_monitoring" in text
+            and "get_fund_diligence_review" in text
+            and "exactly one canonical" in text
+            and "`firm_id` or `fund_id`" in text
+            and "never both" in text
+            and "`dry_run: true`" in text
+            and "`dry_run: false`" in text
+            for text in (manager_monitor_contract, odd_execution_contract)
+        ),
+        "fund diligence guidance uses governed reads and exclusive review subjects",
+    )
+    resolution_guidance = [
+        ODD_REPORT_SKILL.read_text(encoding="utf-8")
+        + (
+            ROOT
+            / "skills"
+            / "gradient-odd-report"
+            / "references"
+            / "odd-execution-contract.md"
+        ).read_text(encoding="utf-8"),
+        (
+            ROOT
+            / "skills"
+            / "gradient-manager-monitor"
+            / "SKILL.md"
+        ).read_text(encoding="utf-8")
+        + (
+            ROOT
+            / "skills"
+            / "gradient-manager-monitor"
+            / "references"
+            / "monitoring-contract.md"
+        ).read_text(encoding="utf-8"),
+    ]
+    check(
+        all(
+            "`subject_resolution_unavailable`" in text
+            and "`Not available — subject_resolution_unavailable`" in text
+            and "independent evidence" in text
+            and "zero" in text
+            and "returns not entitled" in text
+            and "`Not available — <tool> is not entitled for this organization.`"
+            in text
+            and "do not expose a traceback" in text
+            for text in resolution_guidance
+        ),
+        "manager evidence skills preserve plain unavailable outcomes",
+    )
     evidence_wording = [
         ODD_REPORT_SKILL.read_text(encoding="utf-8"),
         GIPS_MANAGER_DILIGENCE_SKILL.read_text(encoding="utf-8"),
         IC_MEMO_DATA_MAP.read_text(encoding="utf-8"),
     ]
     check(
-        all("server-derived evidence signals" in text for text in evidence_wording)
-        and "They are not report-ready" in evidence_wording[0]
+        all(
+            "server-derived evidence signals" in text.lower()
+            for text in evidence_wording
+        )
+        and "not report-ready" in evidence_wording[0].lower()
         and "do not use them as a GIPS" in evidence_wording[1]
         and "not an IC" in evidence_wording[2],
         "diligence skills keep server evidence separate from plugin conclusions",

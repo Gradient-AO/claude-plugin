@@ -64,9 +64,9 @@ Classification aggregates declare `scope: filtered_portfolio`. Interpret their `
 `available`, `partial`, or `unavailable`, retain `missing_reasons`, and do not infer complete coverage from
 non-empty aggregate rows.
 For fixed-income duration, spread duration, and yield, use the governed `fixed_income_metrics` on
-`portfolio_totals` or the Fixed Income classification row when its `weighting_basis` is
-`current_holding_nav_base`; the two fixed-income-only aggregates should reconcile, and
-zero spread duration is a valid observation. Never equal-weight exposure rows.
+complete `portfolio_totals` or the Fixed Income classification row when its `weighting_basis` is
+`current_holding_nav_base`; zero spread duration is a valid observation. Do not read
+`fixed_income_metrics` from non-fixed-income classification rows.
 For null `as_of_date`, `market_value_base`, or `nav_base`, preserve the matching `null_reasons` value and do
 not infer the missing channel from another field or treat a typed not-applicable reason as missing data.
 

@@ -1,6 +1,6 @@
 ---
 name: gradient-gips-standards
-description: "This skill should be used when the user asks \"what does GIPS require\", \"is this GIPS compliant\", \"what is the GIPS compliance statement\", \"what has to be in a GIPS Report\", \"explain GIPS verification\", \"GIPS vs the SEC Marketing Rule\", or any question about the 2020 Global Investment Performance Standards (GIPS) for firms or asset owners. It holds the shared GIPS reference checklists, the finding-rating scale and the output format used by the other Gradient GIPS skills. Answers are delivered as a branded GIPS briefing note in the Gradient house style.\n"
+description: "Produce a sourced GIPS requirements briefing. Use for what does GIPS require, compliance statement, verification, required disclosures, or GIPS vs SEC Marketing Rule. For a document review use the matching gradient-gips-* skill."
 metadata:
   version: "1.1.0"
 ---
@@ -77,7 +77,9 @@ reports follow `references/report-layout.md`.
    both when it says `both` or `board pack`. Both formats come from the same validated `report.json`.
 5. Render with
    `python scripts/render.py report.json --format <pdf|pptx|both> --out "<Short title> - GIPS Briefing Note"`,
-   inspect every requested output, and deliver. Style rules: `references/report-style.md`.
+   then run `python scripts/check_layout.py "<Short title> - GIPS Briefing Note.pdf" --min-pages 1
+   --max-pages 3` for PDF output. Inspect every requested output, repair and rerender any failed check, and
+   deliver. Style rules: `references/report-style.md`.
 
 Review requests (a report, a manager, a policy manual) go to the workflow skills above, which deliver their
 own branded reviews.

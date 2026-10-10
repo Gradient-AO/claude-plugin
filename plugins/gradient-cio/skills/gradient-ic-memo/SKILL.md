@@ -1,223 +1,100 @@
 ---
 name: gradient-ic-memo
-description: Write a deterministic, fully sourced investment committee (IC) memo for a portfolio, total fund, allocation change, rebalance, or manager hire/fire, using GradientCIO Portfolio Analytics, CMAs, liquidity and manager-diligence evidence, with optional Strategy Lab analysis of separately selected return series, plus the gradient-gips-* skills. Delivers a branded memo in the Gradient house style. Use this skill whenever the user asks for an IC memo, investment committee memo, board memo, investment memo, committee paper, allocation recommendation, rebalance proposal, a portfolio review that ends in a decision or vote, IPS compliance review, or a client or trustee memo about a portfolio — even if they don't say "IC memo". Also use it when another skill (such as gradient-gips-manager-diligence) hands over a section "for the investment memo". For a periodic performance report with no decision requested, use gradient-portfolio-review instead.
+description: "Create a deterministic, sourced IC decision memo. Triggers: 'IC memo', 'board memo', 'allocation recommendation', 'rebalance proposal', 'manager hire/fire', 'committee vote'. Accepts handoffs from portfolio, diligence, and GIPS skills."
 metadata:
   version: "0.3.0"
 ---
 
-# Gradient IC Memo
+# Gradient IC memo
 
-Produce an investment committee memo that is **deterministic** (same inputs → same structure, same tables, same
-wording rules), **fully attributed** (every number traces to a Gradient tool result, a user document, or a
-documented calculation), and **decision-ready** (the recommendation and the vote requested come first).
+Use when a portfolio, allocation, rebalance, manager, commitment, or policy
+review must end in a recommendation and requested vote. For periodic
+monitoring without a decision, route to `gradient-portfolio-review`.
 
-The memo is written by Claude from structured data. The GradientCIO MCP supplies the data; this skill supplies
-the structure and the rules. Never fill a number from memory or general knowledge.
+The memo is deterministic, fully attributed, and decision-ready. Never fill a
+number from memory. `memo.md` holds validated text; `visuals.json` and
+`meta.json` hold the validated visual layer; composition creates the sole
+`report.json`.
 
-The delivered memo is a **visually polished report in the same house style as the ODD report**: executive
-band with tiles, charts in every analytical section, and sourced **Claude analysis** callouts. The memo text stays
-deterministic (`memo.md`, validated); visuals and analysis are a separate, validated layer (`visuals.json`)
-merged by `scripts/compose_memo_json.py` into the single validated report source.
+## 1. Scope
 
-## Files in this skill
+Infer memo type, portfolio/subject, audience, IPS source, and as-of date. Memo
+type is one of Portfolio Review, Allocation Change, Rebalance, Manager Hire,
+Manager Termination, or New Commitment. Ask one focused question only when the
+portfolio is ambiguous. Without an IPS, retain every row as
+`Not assessed — IPS not provided`.
 
-| File | Read when |
-|---|---|
-| `references/memo-template.md` | Always — the exact memo structure. Follow it verbatim. |
-| `references/data-map.md` | Always — which Gradient tool feeds each section, and the fallback when data is missing. |
-| `references/module-scope.md` | Always — hard boundary between saved-portfolio evidence and Strategy Lab return-series analysis. |
-| `references/chart-data.md` | Always — dashboard chart discovery, basis rules and generic report block. |
-| `references/ips-schema.md` | When an IPS is supplied or needed — how to capture IPS constraints as structured input. |
-| `references/calculations.md` | Before drafting figures — display formats and the server-owned metric methods to preserve. |
-| `references/writing-standards.md` | Before drafting prose — IC memo best practices and banned phrasing. |
-| `scripts/validate_memo.py` | After drafting — confirms every section is present, in order, with no unresolved placeholders. |
-| `assets/example-memo.md` | When unsure how a section should look — a complete worked example that passes validation. |
-| `references/report-style.md` | Before rendering — the shared Gradient report style, `meta` fields and delivery rules. |
-| `references/report-layout.md` | Before Step 5b — required visuals per section, signed-bar convention, Claude analysis rules. |
-| `scripts/compose_memo_json.py` | Merges validated `memo.md` + `visuals.json` + `meta.json` into `report.json`; validates visuals, analysis and tags. |
-| `scripts/render.py` | Renders the validated report source to PDF, PPTX or both. Run it; never restyle. |
+Read `references/ips-schema.md` only when an IPS must be captured.
 
-## Workflow
+## 2. Collect
 
-### Step 1 — Scope the memo (ask at most one question)
+Before selecting tools read `references/module-scope.md`; then read
+`references/data-map.md` section by section as evidence is collected. Resolve
+organization, assumption set, and portfolio first and record one source row
+per result.
 
-Determine, from the request and conversation:
+Portfolio Analytics owns saved-portfolio evidence. Optional Strategy Lab uses
+separately selected `return_series_ids` and the loaded tool's benchmark field;
+do not also pass a `strategy_lab_session` stub and never pass `portfolio_id`.
+Preserve illustrative labels, typed failures, validation, coverage, methods,
+formula versions, bases, currency, periods, and missing reasons.
 
-1. **Memo type** — one of: `Portfolio Review`, `Allocation Change`, `Rebalance`, `Manager Hire`,
-   `Manager Termination`, `New Commitment`. The type changes only Section 1's decision wording and which
-   optional rows in Section 13 apply; every section still appears.
-2. **Subject** — portfolio (or total fund) and, if relevant, the manager or fund.
-3. **Audience** — IC / board / trustees / client. Audience changes tone only, never structure.
-4. **IPS** — attached document, pasted text, or a known IPS in the conversation. If none exists, continue and
-   mark every IPS row `Not assessed — IPS not provided` (do not invent limits).
-5. **As-of date** — default: the latest common date across the data returned. State it in the header.
+Call `check_portfolio_policy` for governed allocation, objective, risk,
+liquidity, and concentration. Prefer `get_portfolio_attribution` for realized
+effects. `Local Brinson fallback` is allowed only with complete same-period
+saved evidence and must be labeled/cited as specified in
+`references/calculations.md`; it is not server-validated or Carino-linked.
 
-If the portfolio itself is ambiguous, ask one question. Otherwise proceed and state assumptions in the header.
+## 3. GIPS and evidence boundaries
 
-### Step 2 — Gather data from GradientCIO
+Always retain Performance Integrity & GIPS. Use
+`gradient-gips-asset-owner-review` for total-fund reporting and
+`gradient-gips-manager-diligence` for managers at least 5% exposure and every
+hire candidate. Carry High/Medium findings and follow-ups into memo risk/open
+items. If unavailable, mark Not assessed and preserve the gap.
 
-Follow `references/data-map.md` section by section. Key rules:
+Expected returns are assumptions, not forecasts. Strategy Lab relative return
+is not saved-portfolio attribution. Policy `not_assessed` is never inferred
+from historical risk. Missing subject returns, unfunded commitments, partial
+calendar years, truncation, and incomplete fixed-income aggregates retain
+their governed meanings.
 
-- Load deferred Gradient tools with `tool_search` before calling them; use the parameter names from the
-  loaded schema, never guessed ones.
-- If the user has more than one organization, confirm which before calling org-scoped tools. Call
-  `list_assumption_sets` and state the organization and selected assumption set in the memo header.
-- Read `references/module-scope.md` before selecting tools. Portfolio questions use Portfolio
-  Analytics. Strategy Lab is optional and uses separately selected `return_series_ids` plus the required
-  benchmark field. Do not also send a `strategy_lab_session` stub; the connector builds the selected-series
-  session. Never pass a Portfolio Analytics `portfolio_id` to a Strategy Lab tool.
-- Use `envelope: "compact"` and optional `fields` only on research-read tools whose loaded schema offers
-  them. Do not pass either parameter to any `run_strategy_lab_*` tool.
-- Use `get_chart_data` after portfolio selection: check availability, then request one relevant pack at a time.
-  Only `allocations` and `commitments` are supported. Preserve `basis` and `context.fingerprint`, skip
-  unavailable charts with their reason, and never compare different bases as though they were the same
-  scenario. Use governed policy and CMA evidence for saved-portfolio forward assumptions; keep
-  `run_strategy_lab_expected_statistics` limited to separately selected Strategy Lab return series.
-- For Section 5 visuals, make a **second** `get_portfolio_historical_returns` call with `limit: 100`,
-  `sections: [cumulative_growth, calendar_years]` and `fields: [portfolio, filters, coverage, display,
-  cumulative_growth, calendar_years]`; cite it as its own source row.
-- For Section 9 visuals, request the `commitments` chart items (`commitments-liquidity-scorecard`,
-  `commitments-pacing`, `commitments-cashflow`) and keep each returned item unchanged.
-- For every result, record a **source row**: tool, key parameters, `provenance.as_of`,
-  `provenance.data_scope.label`, `validation.status`, and `payload_digest` if present. These rows become the
-  Appendix A source table and the `[S#]` tags in the text.
-- **Illustrative data:** if any `data_scope.kind` is `illustrative`, the memo header must carry the
-  illustrative banner from the template, and no sentence may describe that data as the user's holdings.
-- **Validation:** a `validation.status` of `failed` with a blocking check means the value is not used; record
-  the section as `Not available — validation failed (<check id>)`. Advisory failures may be used with a
-  footnote.
-- A tool error, entitlement block, or empty result is never silently skipped. It becomes a
-  `Not available — <reason>` line in that section and an item in Section 15 (Open items).
+## 4. Draft
 
-### Step 3 — Run the GIPS workflow
+Immediately before drafting read `references/memo-template.md`,
+`references/calculations.md`, and `references/writing-standards.md`. Keep all
+16 sections and appendices in exact order, with exact headings, columns, sort
+rules, statuses, formats, and `[S#]` tags. Missing values remain in place as
+`Not available — <reason>`.
 
-The memo always contains Section 11, *Performance Integrity & GIPS*.
+Before visual construction read `references/report-layout.md`,
+`references/chart-data.md`, and `references/report-style.md`. Visual data must
+come from cited saved results; returned chart items pass through unchanged.
+Analysis may explain uncertainty but introduces no action beyond Section 1.
 
-- **Total fund / portfolio performance reported to the committee** → use the **gradient-gips-asset-owner-review** skill
-  on the performance report if one is available.
-- **Each manager in Section 10 with ≥ 5% of portfolio exposure, and any manager being hired** → use the
-  **gradient-gips-manager-diligence** skill.
-- Paste each returned memo section into Section 11 unchanged, ordered by exposure (descending). Carry every
-  High or Medium GIPS finding into Section 14 (Risks) and every follow-up into Section 15.
-- If the gradient-gips-* skills are not installed, write `Not assessed — Gradient GIPS skills unavailable`
-  and add the GIPS review to Section 15.
+## 5. Validate, compose, render
 
-### Step 4 — Use governed server metrics
+Run each gate until clean:
 
-Call `check_portfolio_policy` for allocation bands, return objective, risk limits, liquidity and concentration.
-Prefer `get_portfolio_attribution` for realized Brinson-Fachler effects and symmetric-Carino linking. Local
-Brinson is the attribution fallback only when complete, same-period portfolio weights, benchmark weights,
-portfolio segment returns, and benchmark segment returns are available from saved evidence. Label it
-`Local Brinson fallback`, cite every input, and do not claim server validation or symmetric-Carino linking.
-Use `get_portfolio_historical_returns` with `limit: 100` for portfolio, benchmark-relative and risk metrics. Preserve each
-call's `fields` projection (`portfolio`, `filters`, `coverage`, `display` and only the requested result
-sections) and each tool's methodology, formula version, basis, period, currency, coverage and missing
-reasons. State partial coverage as a report gap. For `no_subject_returns`, state that the selected portfolio
-has no subject return history and do not substitute benchmark, commitment or Strategy Lab returns. Other
-governed results remain unavailable when their server method is unavailable.
-State `not_yet_funded` commitment comparisons as having no funded return history, not zero return. Identify
-returned partial 2016 and 2026 calendar years from their `month_count`, `partial`, `coverage_status`, and
-`missing_reason`; never present either as full-year performance. If 100 commitment rows are unexpectedly
-insufficient, disclose truncation and the returned count.
-Page `get_portfolio_exposure` with `limit` / `cursor` and use returned display names or snake_case
-classification aliases.
-Use fixed-income duration, spread-duration, and yield-to-maturity only from complete governed
-`portfolio_totals.fixed_income_metrics` or the Fixed Income classification aggregate; preserve coverage and
-never recompute or equal-weight rows.
-When policy risk rows are `not_assessed`, historical-return risk metrics remain separate observations: do not
-compare them with persisted thresholds or infer compliance unless `check_portfolio_policy` returns the status.
-When risk rows are assessed, preserve `risk_limits.observation_basis` and the returned magnitude comparison
-rule so the report states the governed horizon, effective date, frequency, return basis and currency.
+```text
+python scripts/validate_memo.py memo.md
+python scripts/compose_memo_json.py memo.md visuals.json meta.json report.json
+python scripts/render.py report.json --format <pdf|pptx|both> --out "<Portfolio> - IC Memo"
+```
 
-Strategy Lab relative return applies only to selected lab return series and does not provide saved-portfolio
-Brinson decomposition.
+Never edit composed JSON directly. PDF is default; explicit slide wording
+selects PPTX; `both`/`board pack` selects both. Inspect every requested output,
+fix source layers, re-compose, and re-render. QA and fact checks block
+delivery. Return three lines (recommendation, IPS status, open-item count) plus
+files.
 
-### Step 5 — Draft the memo
+## 6. Handoffs and optional save
 
-Write the memo exactly as `references/memo-template.md` specifies, applying `references/writing-standards.md`.
-Determinism rules (summary — the template is authoritative):
+- Monitoring-only performance/allocation report → `gradient-portfolio-review`.
+- Candidate comparison before Manager Hire → `gradient-manager-compare`.
 
-1. All 16 sections plus the appendices, in order, with the exact headings. Never add, remove, rename or reorder.
-2. Every table uses the template's columns, in order, with the template's sort rule.
-3. Missing data → `Not available — <reason>` in place of the value; the row stays.
-4. Number formats follow `references/calculations.md` (percentages 1 dp, active weights and spreads in bps,
-   currency in millions with 1 dp, ISO dates).
-5. Every number in the text or a table carries an `[S#]` tag for the Gradient result or user document that
-   supplied it. Scaling and rounding for display are allowed; deriving report values locally is not.
-6. Status words are only those defined in the template (for example `Compliant`, `Watch`, `Breach`,
-   `Not assessed`). No synonyms.
-
-### Step 5b — Build the visual and analysis layer
-
-Follow `references/report-layout.md` exactly. Write `visuals.json` with, for each section, the required
-`before` / `after` blocks (charts, tiles, findings, coverage) and the Claude `analysis` callouts:
-
-- Visual data comes only from saved Gradient results already cited in `memo.md`; `chart` blocks pass the
-  returned `get_chart_data` item unchanged. Signed quantities use the signed-bar convention.
-- Analysis callouts follow Observation [S#] → Why it matters → Uncertainty → What would change the view
-  (`writing-standards.md`, "Claude analysis"). Section 2 carries 3–5 **Key judgments** that connect findings
-  across sections. Analysis never introduces an action beyond Section 1.
-- Add the four `executive.tiles` defined in `report-layout.md` to `meta.json`.
-
-### Step 6 — Validate, render and deliver
-
-1. Save the draft as markdown and run `python scripts/validate_memo.py <file.md>`. Fix every error it reports
-   and re-run until it passes.
-2. Write `meta.json` for the cover and executive band (field reference: `references/report-style.md`):
-
-   ```json
-   {"eyebrow": "Investment Committee Memo", "header_label": "Investment Committee Memo",
-    "title": "<Memo type>: <Portfolio>", "subtitle": "<Organization> · Prepared for <audience> · Meeting <date>",
-    "running_head": "IC Memo · <short subject>", "data_as_of": "<as-of date>",
-    "confidentiality": "Confidential — prepared for <organization> <audience> use",
-    "cover_facts": [["Memo type","…"],["Meeting date","…"],["Data as of","…"],["Base currency","…"],["Assumption set","…"],["Status","Draft"]],
-    "signal_title": "IPS status",
-    "signal": {"level": "compliant|watch|breach|not_assessed", "label": "<e.g. 3 breaches · 2 watch>"},
-    "executive": {"label": "Recommendation", "bottom_line": "<Section 1 recommendation and decision requested, with tags>"}}
-   ```
-
-   Signal level: `breach` if any IPS row is Breach; else `watch` if any is Watch; else `compliant`;
-   `not_assessed` when no IPS was provided. If any data is illustrative, say so in `confidentiality`.
-3. Compose: `python scripts/compose_memo_json.py memo.md visuals.json meta.json report.json`. Fix every error
-   and re-run until it passes. A failed composition does not write or replace `report.json`; never edit the
-   composed JSON directly.
-4. Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select
-   both when it says `both` or `board pack`. Both formats must come from the same validated `report.json`;
-   preserve `memo.md` unchanged through composition.
-5. Render with
-   `python scripts/render.py report.json --format <pdf|pptx|both> --out "<Portfolio> - IC Memo"`.
-   Inspect every requested output: rasterize PDFs with `pdftoppm -r 60 -png`, and run the shared slide
-   rendering/layout check for PPTX. Fix `visuals.json`, re-compose and re-render until there are no squashed
-   charts, overflow tails or wrapped IDs.
-6. Deliver the requested file(s) to `/mnt/user-data/outputs/` and any connected folder. Offer an editable
-   Claude Doc copy built from the same markdown when the committee secretary needs to edit it.
-7. In the reply, give a three-line summary (recommendation, IPS status, number of open items) and the
-   document(s). Do not repeat the memo in chat.
-
-### Step 7 — Save the scenario (only when the user asks)
-
-For an Allocation Change or Rebalance memo, offer to save a proposed scenario only when Section 13 used a
-real Strategy Lab return-series basket or matching active lab session. Use `save_strategy_lab_scenario`
-(`domain` `simulation` or `relative`, `name` "<subject> - <memo type> <meeting date>", and
-the lab `form` and basket used in Section 13). Never convert a saved portfolio ID into a Strategy Lab
-scenario. Call with `dry_run: true` first, show the preview, then repeat with `dry_run: false` and
-`confirmation_receipt_id` set to the preview receipt only after the user confirms. Unavailable on
-illustrative access: say so instead.
-
-## Related skills
-
-- A periodic performance and allocation report with no decision requested → `gradient-portfolio-review`.
-- Choosing between candidate managers before a Manager Hire memo → `gradient-manager-compare`.
-
-## Judgment notes
-
-- **The memo recommends; the committee decides.** Section 1 states a clear recommendation and the vote
-  requested, but the memo never says a decision "has been made".
-- **Expected return and risk are assumptions, not forecasts.** Always name the CMA release and assumption set,
-  and show the CMA consensus comparison next to Gradient's figures.
-- **Uncertainty is shown, not hidden.** If data is illustrative, stale, or degraded, the reader must see that
-  in the header and the affected section, not only in the appendix.
-- **Attribution must reconcile.** Allocation + selection + interaction must sum to total active return within
-  1 bp (or the residual is shown as its own row). If it doesn't reconcile, say so.
-- **Liquidity is assessed under stress, not only today.** Always show coverage of unfunded commitments plus
-  12 months of projected spending under the base case and the stress case the data supports.
+Only when asked, an Allocation Change/Rebalance based on a real matching
+Strategy Lab basket may preview `save_strategy_lab_scenario`. Show the preview
+and commit only after explicit confirmation using its receipt. Never convert a
+saved portfolio ID into a Strategy Lab scenario; illustrative access cannot
+save.

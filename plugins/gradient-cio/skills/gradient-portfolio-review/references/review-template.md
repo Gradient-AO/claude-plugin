@@ -8,6 +8,9 @@ The target is 15–20 pages when the available evidence supports the full review
 to reach a page count. Keep every section when evidence is unavailable and replace its analytical blocks with
 `Not available — <returned reason>`.
 
+Before delivery, run `python scripts/check_layout.py "<Portfolio> - Portfolio Review.pdf" --min-pages 15
+--max-pages 20`. If it fails, condense or repair the report, then re-render and rerun the check.
+
 ## Page budget
 
 1. Cover and evidence status — 1 page.
