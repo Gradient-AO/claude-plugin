@@ -78,9 +78,9 @@ copy or invent chained IDs.
 For a saved response file you can check required paths with
 `python <this skill's directory>/scripts/check_contract.py <this skill's directory>/references/contracts.json <probe_id> <response.json>`.
 
-Compare any failure with the known-issues table in `references/contract-checks.md`. If it matches a known issue,
-mark it "known issue — workaround in skill" rather than a new fault. A new failure is a finding: quote the error
-code, HTTP status and request ID so the user can send it to Gradient support.
+Compare any failure with the supported contract boundaries in `references/contract-checks.md`. If a documented
+boundary applies, identify that limitation and use its stated handling. Otherwise the failure is a finding:
+quote the error code, HTTP status and request ID so the user can send it to Gradient support.
 
 ## 4. Branding
 
@@ -111,8 +111,8 @@ Meta: `eyebrow` "Setup & Readiness", `header_label` "Readiness Check", `title` t
 `cover_facts`: Organization, Role, Licensed modules (count), Roster funds, MCP version, Checked (date).
 
 Signal: `ready` (connected, all core skills ready, no new failures) · `partial` (connected, but some skills
-partial or not licensed, or known issues present) · `not_ready` (not connected, auth failed, or any core skill
-not available).
+partial or not licensed, or documented contract limitations affect readiness) · `not_ready` (not connected,
+auth failed, or any core skill not available).
 
 Sections (keep to 4–5 pages):
 

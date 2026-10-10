@@ -177,6 +177,35 @@ def b_table(b):
     note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
     return f'{title}<table class="grid">{colgroup}<thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>{note}'
 
+CHART_TABLE_ROW_CAP = 12
+
+def _display_rows(rows, cap=CHART_TABLE_ROW_CAP):
+    """Return a deterministic display sample with endpoints and interior coverage."""
+    values = list(rows)
+    total = len(values)
+    if total <= cap:
+        return values, total
+    indices = [
+        round(index * (total - 1) / (cap - 1))
+        for index in range(cap)
+    ]
+    return [values[index] for index in indices], total
+
+def _chart_table(c, columns):
+    rows, total = _display_rows(c["rows"])
+    notes = []
+    if len(rows) < total:
+        notes.append(f"Showing {len(rows)} of {total} rows")
+    if c.get("truncated"):
+        notes.append("Source output truncated")
+    return b_table({
+        "title": c.get("title"),
+        "columns": [column.get("title", column.get("key", "")) for column in columns],
+        "rows": [[_chart_format(column, value, c.get("currency"))
+                  for column, value in zip(columns, row)] for row in rows],
+        "note": ". ".join(notes),
+    })
+
 def _chart_format(column, value, currency=None):
     if value is None:
         return "—"
@@ -245,13 +274,7 @@ def b_chart(b):
                     if len([item for item in items if item["value"] > 0]) <= len(PIE):
                         return b_pie({"title": c.get("title"), "items": items})
                     return b_bars({"title": c.get("title"), "items": items})
-                return b_table({
-                    "title": c.get("title"),
-                    "columns": [column.get("title", column.get("key", "")) for column in columns],
-                    "rows": [[_chart_format(column, value, c.get("currency"))
-                              for column, value in zip(columns, row)] for row in c["rows"]],
-                    "note": "Truncated output" if c.get("truncated") else "",
-                })
+                return _chart_table(c, columns)
             return b_bars({"title": c.get("title"), "items": items})
     if block == "pie" and x_key in keys and y_keys and y_keys[0] in keys:
         xi, yi = keys.index(x_key), keys.index(y_keys[0])
@@ -266,11 +289,7 @@ def b_chart(b):
                 and all(math.isfinite(item["value"]) and item["value"] >= 0 for item in items)
                 and sum(item["value"] for item in items) > 0):
             return b_pie({"title": c.get("title"), "items": items})
-    return b_table({"title": c.get("title"),
-                    "columns": [column.get("title", column.get("key", "")) for column in columns],
-                    "rows": [[_chart_format(column, value, c.get("currency"))
-                              for column, value in zip(columns, row)] for row in c["rows"]],
-                    "note": "Truncated output" if c.get("truncated") else ""})
+    return _chart_table(c, columns)
 
 def b_tiles(b, dark=False):
     out = []
@@ -292,6 +311,20 @@ def _svg_start(width, height, title, description, css_class="chart"):
         f'<desc>{esc(detail)}</desc>'
     )
 
+def _svg_text_width(value, bold=False):
+    """Estimate rendered Inter width in SVG pixels for layout gutters."""
+    width = 0.0
+    for character in str(value):
+        if character in "MW@%&":
+            width += 8.7
+        elif character in "ilI1.,:;|!'":
+            width += 3.2
+        elif character.isspace():
+            width += 3.4
+        else:
+            width += 6.1
+    return width * (1.04 if bold else 1.0)
+
 def b_bars(b):
     items = b["items"]
     values = [float(i["value"]) for i in items]
@@ -305,8 +338,23 @@ def b_bars(b):
         high = max(high, float(b["max"]))
     if low == high:
         high = low + 1
-    W, lw, rw, rh = (360, 128, 92, 22) if b.get("narrow") else (640, 210, 90, 22)
-    rw = max(rw, 14 + 6.6 * max(len(str(i.get("display", i["value"]))) for i in items))   # never clip value labels
+    narrow = bool(b.get("narrow"))
+    W, rh = (360, 22) if narrow else (640, 22)
+    category_width = max(_svg_text_width(i["label"]) for i in items)
+    negative_width = max(
+        (_svg_text_width(i.get("display", i["value"]), bold=True)
+         for i, value in zip(items, values) if value < 0),
+        default=0,
+    )
+    positive_width = max(
+        (_svg_text_width(i.get("display", i["value"]), bold=True)
+         for i, value in zip(items, values) if value >= 0),
+        default=0,
+    )
+    negative_gutter = math.ceil(negative_width) + 16 if negative_width else 0
+    lw = math.ceil(category_width) + negative_gutter + 18
+    rw = max(24, math.ceil(positive_width) + 16)
+    W = max(W, lw + rw + (90 if narrow else 180))
     if DECK_MODE:
         rh = 34 if len(items) <= 9 else 26
     H = rh * len(items) + 8
@@ -325,9 +373,10 @@ def b_bars(b):
         x = min(zero, end)
         w = max(1.5, abs(end - zero))
         col = i.get("color") or (LIME if value >= 0 else CORAL)
-        label_x = min(W - rw + 8, end + 8) if value >= 0 else max(lw + 2, end - 8)
+        label_x = min(W - rw + 8, end + 8) if value >= 0 else end - 8
         anchor = "start" if value >= 0 else "end"
-        svg.append(f'<text x="{lw-10}" y="{y+14}" text-anchor="end" class="cl">{esc(i["label"])}</text>'
+        category_x = lw - negative_gutter - 10
+        svg.append(f'<text x="{category_x}" y="{y+14}" text-anchor="end" class="cl">{esc(i["label"])}</text>'
                    f'<rect x="{x0}" y="{y+3}" width="{x1-x0}" height="{rh-8}" rx="2" fill="{WASH}"/>'
                    f'<rect x="{x:.1f}" y="{y+3}" width="{w:.1f}" height="{rh-8}" rx="2" fill="{col}"/>'
                    f'<text x="{label_x:.1f}" y="{y+14}" text-anchor="{anchor}" class="cv">{esc(i.get("display", i["value"]))}</text>')
@@ -618,17 +667,53 @@ def b_two_col(b):
 
 def b_pagebreak(b): return '<div class="pb"></div>'
 
-def _xval(x):
-    if isinstance(x, (int, float)):
-        return float(x)
-    return float(datetime.date.fromisoformat(str(x)[:10]).toordinal())
+STRICT_ISO_DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
+
+def _strict_iso_date(value):
+    if not isinstance(value, str) or not STRICT_ISO_DATE.fullmatch(value):
+        return None
+    try:
+        return datetime.date.fromisoformat(value)
+    except ValueError:
+        return None
+
+def _line_x_kind(values):
+    if all(
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and math.isfinite(float(value))
+        for value in values
+    ):
+        return "numeric"
+    if all(_strict_iso_date(value) is not None for value in values):
+        return "date"
+    return "category"
+
+def _category_key(value):
+    return type(value).__name__, str(value)
 
 def b_line(b, W=640, H=None):
     """Line chart. series: [{name, points: [[date|x, value], ...]}]; y_suffix ("%"), decimals, ref {value, label}."""
     series = [sr for sr in b["series"] if sr.get("points")]
     H = H or b.get("height", 220)
     pl, pr, pt, pb = 46, 16 + (8 if b.get("end_labels", True) else 0), 14, 26
-    xs = [_xval(p[0]) for sr in series for p in sr["points"]]; ys = [float(p[1]) for sr in series for p in sr["points"]]
+    raw_xs = [p[0] for sr in series for p in sr["points"]]
+    x_kind = _line_x_kind(raw_xs)
+    category_labels = []
+    category_positions = {}
+    if x_kind == "category":
+        for value in raw_xs:
+            key = _category_key(value)
+            if key not in category_positions:
+                category_positions[key] = float(len(category_labels))
+                category_labels.append(str(value))
+    def x_value(value):
+        if x_kind == "numeric":
+            return float(value)
+        if x_kind == "date":
+            return float(_strict_iso_date(value).toordinal())
+        return category_positions[_category_key(value)]
+    xs = [x_value(value) for value in raw_xs]; ys = [float(p[1]) for sr in series for p in sr["points"]]
     if b.get("ref") is not None: ys.append(float(b["ref"]["value"]))
     x0, x1 = min(xs), max(xs); y0, y1 = min(ys), max(ys)
     pad = (y1 - y0) * 0.08 or abs(y1) * 0.1 or 1; y0 -= pad; y1 += pad
@@ -653,17 +738,20 @@ def b_line(b, W=640, H=None):
                  f'<text x="{pl+iw-2:.1f}" y="{ry-4:.1f}" text-anchor="end" class="ax" fill="{CORAL}">{esc(b["ref"].get("label",""))}</text>')
     allx = sorted(set(xs)); n = min(5, len(allx))
     tx = [allx[round(k * (len(allx) - 1) / max(n - 1, 1))] for k in range(n)]
-    is_date = not isinstance(series[0]["points"][0][0], (int, float))
-    fmt = lambda xv, f: datetime.date.fromordinal(int(xv)).strftime(f) if is_date else f"{xv:g}"
-    labs = [fmt(xv, "%b %Y") for xv in tx]
-    if len(set(labs)) < len(labs):
-        labs = [fmt(xv, "%d %b %Y") for xv in tx]
+    if x_kind == "date":
+        labs = [datetime.date.fromordinal(int(xv)).strftime("%b %Y") for xv in tx]
+        if len(set(labs)) < len(labs):
+            labs = [datetime.date.fromordinal(int(xv)).strftime("%d %b %Y") for xv in tx]
+    elif x_kind == "category":
+        labs = [category_labels[int(xv)] for xv in tx]
+    else:
+        labs = [f"{xv:g}" for xv in tx]
     for k, (xv, lab) in enumerate(zip(tx, labs)):
         anchor = "start" if k == 0 else ("end" if k == n - 1 else "middle")
         o.append(f'<text x="{sx(xv):.1f}" y="{H-8}" text-anchor="{anchor}" class="ax">{lab}</text>')
     for j, sr in enumerate(series):
         col = sr.get("color") or SERIES[j % len(SERIES)]
-        pts = sorted((_xval(p[0]), float(p[1])) for p in sr["points"])
+        pts = sorted((x_value(p[0]), float(p[1])) for p in sr["points"])
         d = " ".join(f'{"M" if k == 0 else "L"}{sx(x):.1f},{sy(y):.1f}' for k, (x, y) in enumerate(pts))
         o.append(f'<path d="{d}" fill="none" stroke="{col}" stroke-width="{2.2 if j == 0 else 1.8}" stroke-linejoin="round"/>')
         lx, ly = pts[-1]

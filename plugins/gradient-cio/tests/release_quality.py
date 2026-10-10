@@ -295,7 +295,12 @@ def run_source_checks(check: Check) -> None:
         any("page count 2 is below 3" in failure for failure in failures)
         and any("page 2 is 15% full" in failure for failure in failures)
         and any("ends with heading" in failure for failure in failures)
-        and layout.parse_pages("1,3-4") == {1, 3, 4},
+        and layout.parse_pages("1,3-4") == {1, 3, 4}
+        and layout.is_heading_line("09 Liquidity", "Liquidity")
+        and not layout.is_heading_line(
+            "Liquidity & diligence: stress coverage remains adequate",
+            "Liquidity",
+        ),
         "layout checker catches page count, sparse pages, and orphan headings",
     )
 

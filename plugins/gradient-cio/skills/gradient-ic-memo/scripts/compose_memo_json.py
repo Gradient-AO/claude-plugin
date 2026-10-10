@@ -76,7 +76,7 @@ REQUIRED_SLOTS: dict[str, list[tuple[str, str]]] = {
         ("bars", "Calendar-year returns"),
         ("bars", "1Y attribution — total effect by asset class (bps)"),
     ],
-    "6": [("chart", "Factor and currency exposure")],
+    "6": [("chart", "bar-portfolio-factor-currency-exposure")],
     "7": [
         ("bars", "Gradient vs consensus gap (bps)"),
         ("tiles", "Forward context"),
@@ -131,7 +131,12 @@ def block_identity(block: dict[str, Any]) -> str:
     return str(block.get("title", ""))
 
 
-def unavailable_for(blocks: list[dict[str, Any]], title: str) -> bool:
+def unavailable_for(
+    blocks: list[dict[str, Any]],
+    title: str,
+    *,
+    exact: bool = False,
+) -> bool:
     """Return whether a specific required slot has a reasoned unavailable callout."""
     title_lower = title.lower()
     for block in blocks:
@@ -139,7 +144,8 @@ def unavailable_for(blocks: list[dict[str, Any]], title: str) -> bool:
             continue
         identity = str(block.get("title", "")).lower()
         text = str(block.get("text", ""))
-        if title_lower in identity and re.match(r"^Not available — \S", text):
+        identity_matches = identity == title_lower if exact else title_lower in identity
+        if identity_matches and re.match(r"^Not available — \S", text):
             return True
     return False
 
@@ -147,12 +153,20 @@ def unavailable_for(blocks: list[dict[str, Any]], title: str) -> bool:
 def validate_slots(section: str, blocks: list[dict[str, Any]], errors: list[str]) -> None:
     """Validate required visual types and semantic titles for one section."""
     for block_type, title in REQUIRED_SLOTS.get(section, []):
-        matched = any(
-            block.get("type") == block_type
-            and title.lower() in block_identity(block).lower()
-            for block in blocks
-        )
-        if not matched and not unavailable_for(blocks, title):
+        if section == "6":
+            matched = any(
+                block.get("type") == "chart"
+                and isinstance(block.get("chart"), dict)
+                and block["chart"].get("chart_id") == title
+                for block in blocks
+            )
+        else:
+            matched = any(
+                block.get("type") == block_type
+                and title.lower() in block_identity(block).lower()
+                for block in blocks
+            )
+        if not matched and not unavailable_for(blocks, title, exact=section == "6"):
             errors.append(
                 f"Section {section}: missing {block_type} slot '{title}' "
                 "or its titled Not available callout"
