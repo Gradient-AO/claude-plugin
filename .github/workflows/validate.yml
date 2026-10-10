@@ -54,6 +54,13 @@ jobs:
             python plugins/gradient-cio/shared/check_layout.py "$report" \
               --min-fill 0.40 --exclude 1
           done
+      - name: Upload generated examples after visual failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-examples
+          path: /tmp/gradient-examples
+          retention-days: 3
       - name: Claude plugin validation when available
         run: |
           if command -v claude >/dev/null 2>&1; then
