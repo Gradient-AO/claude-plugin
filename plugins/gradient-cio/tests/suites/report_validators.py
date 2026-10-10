@@ -126,11 +126,17 @@ def connector_cutover():
             encoding="utf-8",
             errors="replace",
         )
+        composed_document = (
+            json.loads(composed_path.read_text(encoding="utf-8"))
+            if composed_path.exists()
+            else {}
+        )
+        expected_document = json.loads(
+            (FIX / "ic-memo.json").read_text(encoding="utf-8")
+        )
         check(
             composed.returncode == 0
-            and composed_path.exists()
-            and json.loads(composed_path.read_text(encoding="utf-8"))
-            == json.loads((FIX / "ic-memo.json").read_text(encoding="utf-8")),
+            and composed_document == expected_document,
             "IC memo composer produces the canonical validated JSON fixture"
             + (
                 f": {(composed.stderr or composed.stdout).strip()}"
@@ -138,15 +144,68 @@ def connector_cutover():
                 else ""
             ),
         )
+        source_factor_chart = json.loads(
+            (FIX / "ic_visuals.json").read_text(encoding="utf-8")
+        )["6"]["before"][0]["chart"]
+        composed_factor_chart = next((
+            block["chart"]
+            for section in composed_document.get("sections", [])
+            if section.get("num") == "06"
+            for block in section.get("blocks", [])
+            if block.get("type") == "chart"
+        ), {})
+        check(
+            source_factor_chart["chart_id"]
+            == "bar-portfolio-factor-currency-exposure"
+            and composed_factor_chart == source_factor_chart,
+            "IC memo preserves the exact factor-currency chart payload and title",
+        )
 
         base_visuals = json.loads(
             (FIX / "ic_visuals.json").read_text(encoding="utf-8")
+        )
+        unavailable_factor = json.loads(json.dumps(base_visuals))
+        unavailable_factor["6"]["before"] = [{
+            "type": "callout",
+            "tone": "watch",
+            "title": "bar-portfolio-factor-currency-exposure",
+            "text": "Not available — fictional connector gap",
+        }]
+        unavailable_path = tmp_dir / "unavailable-factor.json"
+        unavailable_path.write_text(
+            json.dumps(unavailable_factor),
+            encoding="utf-8",
+        )
+        unavailable_output = tmp_dir / "unavailable-factor-output.json"
+        unavailable_result = subprocess.run(
+            [
+                sys.executable,
+                str(IC_MEMO_COMPOSER),
+                str(FIX / "ic.md"),
+                str(unavailable_path),
+                str(FIX / "ic_meta.json"),
+                str(unavailable_output),
+            ],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        check(
+            unavailable_result.returncode == 0 and unavailable_output.exists(),
+            "IC memo accepts exact chart-ID unavailable matching",
         )
         invalid_cases = []
 
         missing_slot = json.loads(json.dumps(base_visuals))
         missing_slot["1"]["before"] = []
         invalid_cases.append(("missing required visual slot", missing_slot))
+
+        wrong_factor_chart = json.loads(json.dumps(base_visuals))
+        wrong_factor_chart["6"]["before"][0]["chart"]["chart_id"] = (
+            "test-factor-currency-exposure"
+        )
+        invalid_cases.append(("wrong factor-currency chart ID", wrong_factor_chart))
 
         bad_tag = json.loads(json.dumps(base_visuals))
         bad_tag["2"]["analysis"][0]["text"] += " [S999]"

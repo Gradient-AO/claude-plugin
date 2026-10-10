@@ -491,13 +491,13 @@ def contract_manifest():
     check(
         "| get_the_read" not in contract_guidance
         and "get_the_read with `asOfDate`" not in contract_guidance,
-        "known-issues table omits resolved The Read failures",
+        "supported boundary registry omits resolved The Read failures",
     )
     check(
         "get_portfolio_historical_returns | 500" not in contract_guidance
         and "ownership_weights` | `response_contract_invalid" not in contract_guidance
         and "data_scope.kind: live" not in contract_guidance,
-        "known-issues table omits resolved portfolio failures",
+        "supported boundary registry omits resolved portfolio failures",
     )
     check(
         "`get_the_read.asOfDate` is optional" in macro_guidance
@@ -920,7 +920,7 @@ def contract_manifest():
             "#1502",
         ))
         and "CMA receipt unvalidated" not in contract_guidance,
-        "known-issues table contains the current issue set",
+        "supported boundary registry contains the current limitations",
     )
     shared_chart_guidance = SHARED_CHART_DATA.read_text(encoding="utf-8")
     check(
@@ -1006,7 +1006,7 @@ def contract_manifest():
             "CMA receipt unvalidated",
             "empty-findings validator",
         )),
-        "known-issues table omits the resolved issue set",
+        "supported boundary registry omits resolved limitations",
     )
     removed_tool_pattern = re.compile(
         r"\b(?:run_strategy_lab_(?:factor_loads|optimization|rebalance|"

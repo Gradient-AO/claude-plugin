@@ -29,7 +29,7 @@ coverage and do not present lab results as the portfolio.
 | 4 | IPS compliance | `check_portfolio_policy` governed allocation bands, return objective, risk limits with observation basis, liquidity and concentration | Not assessed — governed policy or observation unavailable |
 | 5.1 | Returns vs benchmark | Portfolio Analytics: `get_portfolio_historical_returns` (`limit: 100`; `sections: standard_periods, calendar_years, risk_metrics, benchmark_relative`; `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`; keep partial-period labels and coverage states; identify `not_yet_funded` gaps and partial 2016 / 2026 calendar years from their returned coverage metadata; disclose any unexpected truncation) | User performance report; else Not available |
 | 5 (visuals) | Growth of 100, calendar years | Second `get_portfolio_historical_returns` call: `limit: 100`; `sections: [cumulative_growth, calendar_years]`; `fields: [portfolio, filters, coverage, display, cumulative_growth, calendar_years]` | Not available callout |
-| 5.2 | Attribution | `get_portfolio_attribution` for the governed saved portfolio and policy benchmark | User attribution report quoted as a document; else Not available |
+| 5.2 | Attribution | `get_portfolio_attribution` for the governed saved portfolio and policy benchmark; display the returned benchmark name and comparison basis with the effects | User attribution report quoted as a document; else Not available |
 | 5.3 | Contributors / detractors | Governed holding or asset-class contribution data from a user report | Not available |
 | 6.1 | Factor exposures | Portfolio Analytics: `get_chart_data` `analysis_type: allocations`, using the returned factor/currency exposure item and preserving its basis | Not available |
 | 6.2 | Concentration, diversification | Portfolio Analytics: `get_chart_data` allocations pack + `get_portfolio_structure` + `get_portfolio_exposure`; issuer look-through from `get_cross_domain_research` `view: portfolio_13f_lookthrough` (lagged, long-only 13F estimate — label it so) | Concentration rows from exposure only; model-derived diversification rows Not available |
@@ -44,6 +44,10 @@ coverage and do not present lab results as the portfolio.
 | 12 | Market context | `get_macro_signals` (`gradient_signal`; GRIP from `sources.grip.current`), `get_macro_conditions` (indicators, themes relevant to holdings), `get_the_read`, `get_macro_calendar` (scheduled_events, 30 days) | Omit unavailable bullets' content but keep the bullet with Not available |
 | 13 | Proposed change and impact | Use governed current-policy results and a server-returned proposed-case analysis only when available on the same basis | Optional Strategy Lab comparison only when the user selected a lab return-series basket representing the proposal; label it as a separate lab basis. Otherwise mark proposed policy impacts Not available |
 
+For every trailing 12M return or comparison, use exactly 12 inclusive month-end observations ending at the
+selected period end. Do not treat the two endpoints as an extra thirteenth month and do not use 11 intervals
+as a substitute for 12 returned month-end observations.
+
 ## Manager-level rules (Section 10)
 
 - Build the manager list from `exposure_weighted` findings scope or `get_portfolio_exposure`, not from memory.
@@ -57,6 +61,8 @@ coverage and do not present lab results as the portfolio.
 - The brief's `synthesis` and `differentiated_analytics` are server-derived evidence signals, not an IC
   conclusion or memo-ready prose. Preserve evidence paths, thresholds, source vintages and completeness; the
   plugin owns the manager assessment, portfolio implication and all narrative.
+- When manager evidence returns `record_kind: demo`, label it **Synthetic manager evidence — demo data** in
+  the manager row and source appendix. Never describe demo evidence as manager-reported or live diligence.
 
 ## Data quality flags (header "Data quality")
 

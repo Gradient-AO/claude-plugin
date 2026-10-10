@@ -28,6 +28,25 @@ def chart_renderer():
         "<svg" in percentage_line and "%" in percentage_line,
         "chart renderer keeps same-unit percentage series as a line",
     )
+    category_line = _renderer_module.b_chart({"chart": {
+        "title": "Category line",
+        "status": "ok",
+        "columns": [
+            {"key": "period", "title": "Period", "format": "text", "decimals": None},
+            {"key": "value", "title": "Value", "format": "number", "decimals": 1},
+        ],
+        "rows": [["2026", 1.0], ["Base case", 1.5], ["2027", 2.0]],
+        "render_hint": {"block": "line", "x": "period", "y": ["value"]},
+    }})
+    check(
+        _renderer_module._line_x_kind([1, 2.5]) == "numeric"
+        and _renderer_module._line_x_kind(["2026-01-31", "2026-02-28"]) == "date"
+        and _renderer_module._line_x_kind(["2026", "2027"]) == "category"
+        and "2026" in category_line
+        and "Base case" in category_line
+        and "<svg" in category_line,
+        "line charts distinguish numeric, strict ISO date, and category axes",
+    )
     mixed_line = _renderer_module.b_chart({"chart": {
         "title": "Mixed units",
         "status": "ok",
@@ -121,6 +140,60 @@ def chart_renderer():
         "<table" in pacing_table and "Pacing gap" in pacing_table
         and 'class="chart donut"' not in pacing_table,
         "mixed-unit commitment pacing metrics remain a table",
+    )
+    long_pacing_table = _renderer_module.b_chart({"chart": {
+        "chart_id": "commitments-pacing",
+        "title": "Commitments pacing",
+        "status": "ok",
+        "columns": [
+            {"key": "period", "title": "Period", "format": "text", "decimals": None},
+            {"key": "value", "title": "Value", "format": "number", "decimals": 1},
+            {"key": "unit", "title": "Unit", "format": "text", "decimals": None},
+        ],
+        "rows": [[f"Month {index:02d}", index, "USD" if index % 2 else "%"]
+                 for index in range(30)],
+        "render_hint": {"block": "table", "x": None, "y": []},
+    }})
+    check(
+        "Showing 12 of 30 rows" in long_pacing_table
+        and long_pacing_table.count("<tr>") == 13
+        and "Month 00" in long_pacing_table
+        and "Month 16" in long_pacing_table
+        and "Month 29" in long_pacing_table,
+        "mixed-unit fallback tables retain endpoints and representative rows",
+    )
+    narrow_signed = _renderer_module.b_bars({
+        "title": "Narrow signed bars",
+        "narrow": True,
+        "items": [
+            {
+                "label": "Long fictional category label",
+                "value": -4.0,
+                "display": "-4.0%",
+            },
+            {"label": "Positive", "value": 2.0, "display": "+2.0%"},
+        ],
+    })
+    negative_bar = re.search(
+        rf'<rect x="([\d.]+)"[^>]+fill="{_renderer_module.CORAL}"/>',
+        narrow_signed,
+    )
+    negative_label = re.search(
+        r'<text x="([\d.]+)"[^>]+class="cv">-4\.0%</text>',
+        narrow_signed,
+    )
+    category_label = re.search(
+        r'<text x="([\d.]+)"[^>]+class="cl">Long fictional category label</text>',
+        narrow_signed,
+    )
+    check(
+        negative_bar is not None
+        and negative_label is not None
+        and float(negative_label.group(1)) < float(negative_bar.group(1))
+        and category_label is not None
+        and float(category_label.group(1))
+        >= _renderer_module._svg_text_width("Long fictional category label"),
+        "narrow signed bars reserve gutters and place negative labels outside endpoints",
     )
 
 def render(keep):

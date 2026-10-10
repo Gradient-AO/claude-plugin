@@ -349,7 +349,7 @@
       {
         "type": "chart",
         "chart": {
-          "chart_id": "test-factor-currency-exposure",
+          "chart_id": "bar-portfolio-factor-currency-exposure",
           "title": "Factor and currency exposure (TEST)",
           "status": "ok",
           "columns": [

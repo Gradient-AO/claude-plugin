@@ -153,7 +153,7 @@ Record a source row per call: tag `S#`, evidence, tool and view, `provenance.as_
 accession numbers. **Validation:** `not_run` on a profile call means a check (e.g. the red-flag projection)
 was not requested, not that the data failed. A blocking `failed` check means the value is not used; an
 advisory failure (e.g. `pcaob_registry_freshness` unavailable) is used and disclosed. If a call errors, quote
-`error.code` and `request_id`, check the known-issues table in gradient-setup
+`error.code` and `request_id`, consult gradient-setup's supported contract boundaries
 (`references/contract-checks.md`), record it in coverage and keep going.
 
 ## Step 4 — Assess (flags, not a verdict)

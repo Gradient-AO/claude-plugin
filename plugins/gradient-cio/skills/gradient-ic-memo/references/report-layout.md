@@ -42,7 +42,7 @@ The composer validates these semantic slots by block type and title.
 | 5 | `line` **Growth of 100** | Use the separate `cumulative_growth` result; multiply returned index values by 100 only for display; `ref` is 100. |
 | 5 | `bars` **Calendar-year returns** | Signed bars; preserve partial-year month labels. |
 | 5 | `bars` **1Y attribution — total effect by asset class (bps)** | Signed bars ordered by absolute returned total effect descending. |
-| 6 | `chart` **Factor and currency exposure** | Pass the returned `get_chart_data` item unchanged. |
+| 6 | `chart` with exact `chart_id` **bar-portfolio-factor-currency-exposure** | Pass the complete returned `get_chart_data` item unchanged, including its title and payload. If unavailable, use that exact chart ID as the `callout` title. |
 | 7 | `bars` **Gradient vs consensus gap (bps)** and `tiles` **Forward context** | Signed bars; tiles show GRIP score/stance, policy expected return, and return objective. |
 | 9 | `bars` **Liquidity tiers (% NAV)** plus returned commitments charts | Pass liquidity-scorecard, pacing, and cash-flow chart items unchanged when available. |
 | 10 | `findings` **Exposure-weighted diligence findings** | Include severity, exposure, and due date; use `empty_title` when none are returned. |

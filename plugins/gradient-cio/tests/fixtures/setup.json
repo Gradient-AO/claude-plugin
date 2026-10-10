@@ -430,7 +430,7 @@
      "type": "findings",
      "items": [],
      "empty_title": "No new failures",
-     "empty_text": "Every failure matched the known-issues list. Since the last list: the CMA baseline now returns a fresh risk-free rate (previously HTTP 422)."
+     "empty_text": "Every failure matched a supported contract boundary. Since the last check: the CMA baseline now returns a fresh risk-free rate (previously HTTP 422)."
     }
    ],
    "new_page": false

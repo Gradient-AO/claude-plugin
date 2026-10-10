@@ -15,7 +15,7 @@ Read `module-scope.md` first; every saved-portfolio call in this map is Portfoli
 | `get_portfolio_structure` | `view: ownership_weights`, `portfolio_id` | `by_owner[].weights[]` (optional) |
 | `get_portfolio_historical_returns` | `portfolio_id`, `end_date` = period end, `limit: 100`; first request `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` and `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`, then separate projected calls for `points` and `cumulative_growth`; disclose the returned count if the 100-row response is unexpectedly truncated | Each projected section as returned, with its coverage state, partial-period label, missing reason, display unit and `record_kind` |
 | `check_portfolio_policy` | `portfolio_id` | Governed-only `overall_status`; `allocation_bands`; `return_objective`; `risk_limits.{observation_basis, rows, coverage}`; `liquidity.{buckets, locked_share, unfunded_commitment_ratio, coverage}`; `concentration.groups`; comparison semantics, methodology and provenance |
-| `get_portfolio_attribution` | `portfolio_id`, `benchmark_role: policy`, `parent_allocation_id: root`, month-end `start_date` / `end_date`, `sections: [summary, segments, diagnostics]` | Coverage and typed missing reasons; realized Brinson-Fachler allocation, selection and interaction; symmetric-Carino linked summary; segment effects; residual and diagnostics; period, basis, currency, formula version and tolerance |
+| `get_portfolio_attribution` | `portfolio_id`, `benchmark_role: policy`, `parent_allocation_id: root`, month-end `start_date` / `end_date`, `sections: [summary, segments, diagnostics]` | Coverage and typed missing reasons; returned benchmark name and comparison basis displayed with the attribution; realized Brinson-Fachler allocation, selection and interaction; symmetric-Carino linked summary; segment effects; residual and diagnostics; period, basis, currency, formula version and tolerance |
 | `get_return_series` | `series_kind: portfolio` or `benchmark`, `series_id` (portfolio or benchmark UUID), `trailing_months` / `start_date` / `end_date` | `series.{name, record_kind}`, `availability.{status, reason}`, `coverage.{source_point_count, source_start_date, source_end_date, selected_*}`, `display.return_unit` (`decimal_fraction`), `points[].{period_date, return}` |
 | `get_benchmarks` | `view: catalog`, `benchmark_id` (preferred) or `limit` + `cursor` | `benchmarks[].{benchmark_id, name, record_kind, asset_class, geo_class, sector_class, base_currency}`, `total_count`, `next_cursor` |
 | `get_portfolio_exposure` | `portfolio_id`, a returned display name or snake_case `asset_classification` alias when filtering, `limit` 100, `cursor` = `next_cursor` until `has_more` is false | `as_of_date`, `exposures[].{commitment_name, manager_name, fund_name, asset_classification, currency, as_of_date, value_basis, market_value_base, nav_base, null_reasons, commitment_amount, unfunded_base}`, page-scoped `page_totals`, filtered `portfolio_totals`, and `aggregates_by_asset_classification`; use governed fixed-income metrics only from complete `portfolio_totals` or the Fixed Income aggregate |
@@ -30,6 +30,10 @@ Read `module-scope.md` first; every saved-portfolio call in this map is Portfoli
 
 Amounts in exposure are strings in base currency units (e.g. `"58484093"`); convert to $M with 1 dp.
 Return points are decimal fractions; show percentages to 1 dp.
+For every trailing 12M return or comparison, use exactly 12 inclusive month-end observations ending at the
+selected period end. Do not count both endpoints as a thirteenth month or substitute 11 return observations.
+When manager evidence returns `record_kind: demo`, label it **Synthetic manager evidence — demo data** in
+the relevant row and source appendix; never present it as manager-reported or live diligence.
 
 ## Comprehensive mode collection
 
@@ -108,7 +112,7 @@ Benchmark: use the one identified by `benchmark_relative`. If that section is un
 catalog benchmark is the policy benchmark (do not guess from the catalog; there are ~180 system series,
 mostly proxies). Without one, report absolute returns only and say "No benchmark designated".
 
-## Known issues (revalidated 2026-10-05)
+## Current connector boundaries (revalidated 2026-10-05)
 
 | Symptom | Workaround |
 |---|---|
@@ -121,4 +125,5 @@ mostly proxies). Without one, report absolute returns only and say "No benchmark
 | `get_portfolio_exposure` value channels | `value_basis: market_value` intentionally has `nav_base: null`; `value_basis: nav` intentionally has `market_value_base: null`. When both values and `as_of_date` are null, show "no current value"; never count it as zero NAV |
 | Illustrative `portfolio_13f_lookthrough` rows | Canonical demo managers can use synthetic holdings with `provenance.data_scope.kind: illustrative`; label them “Illustrative, Gradient Maintained,” never manager-reported SEC filings |
 
-Report new failures with the error code and request ID, and check gradient-setup `references/contract-checks.md`.
+Report new failures with the error code and request ID, and consult gradient-setup
+`references/contract-checks.md` for supported contract boundaries.

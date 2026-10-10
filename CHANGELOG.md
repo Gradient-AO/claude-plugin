@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.5.3
+- Required the IC memo factor-and-currency visual by its exact connector chart ID while preserving the returned chart title and payload.
+- Hardened shared PDF chart rendering for category/date/numeric line axes, signed-bar label gutters, and deterministic 12-row mixed-unit table fallbacks.
+- Clarified trailing-12M, attribution-basis, and synthetic manager-evidence guidance and replaced obsolete known-issues-table references with supported contract-boundary guidance.
+
 ## 2.5.2
 - Removed superseded connector workarounds from shared portfolio guidance, DDQ reconciliation, and setup contract checks.
 - Kept the supported connector-boundary registry while removing the stale known-issues section.
