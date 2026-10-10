@@ -27,13 +27,18 @@ def contract_manifest():
         and public_tools == sorted(set(public_tools)),
         "public-tool catalog has generated 64-tool canonical parity",
     )
-    manifest_errors = validate_contract_manifest(contracts, public_tools)
+    minimum = contracts.get("minimum_connector_contract", {})
+    response_path_tools = set(minimum.get("required_response_field_paths", {}))
+    validation_contracts = json.loads(json.dumps(contracts))
+    validation_contracts["minimum_connector_contract"]["required_tools"] = sorted(
+        response_path_tools
+    )
+    manifest_errors = validate_contract_manifest(validation_contracts, public_tools)
     check(
         not manifest_errors,
-        "contract dependencies, placeholders, and public tools are valid"
+        "contract dependencies, placeholders, response paths, and public tools are valid"
         + (f": {manifest_errors}" if manifest_errors else ""),
     )
-    minimum = contracts.get("minimum_connector_contract", {})
     expected_minimum_tools = {
         "analyze_strategy_lab_compare",
         "batch_reconcile_manager_ddq_claims",
@@ -66,9 +71,7 @@ def contract_manifest():
         "run_strategy_lab_relative_return",
         "save_strategy_lab_scenario",
         "search_managers",
-        "update_diligence_roster",
         "update_manager_monitoring",
-        "update_watchlist",
         "upload_ddq_document",
     }
     minimum_probe_ids = set(minimum.get("required_probe_ids", []))
@@ -105,15 +108,15 @@ def contract_manifest():
             "manager_diligence_brief",
             "write_create_finding",
             "write_watchlist_manager",
+            "write_manager_monitoring",
+            "write_diligence_review",
             "write_roster",
-            "write_monitoring",
-            "write_review",
-            "write_scenario",
+            "write_strategy_scenario",
             "write_upload_ddq",
         } <= minimum_probe_ids
-        and set(minimum.get("required_response_field_paths", {}))
-        == expected_minimum_tools,
-        "minimum connector contract owns response paths and required probes",
+        and response_path_tools
+        == expected_minimum_tools | {"update_diligence_roster", "update_watchlist"},
+        "minimum connector contract owns required probes and dry-run write response paths",
     )
     capability_paths = set(
         minimum.get("required_response_field_paths", {}).get(
@@ -735,18 +738,44 @@ def contract_manifest():
         / "data-map.md"
     ).read_text(encoding="utf-8")
     check(
-        "`fixed_income`" in fixed_income_guidance
-        and "Fixed Income" in fixed_income_guidance
-        and "`portfolio_totals.fixed_income_metrics`" in fixed_income_guidance
-        and "is null for a mixed portfolio" in fixed_income_guidance
+        "`Fixed Income`" in fixed_income_guidance
+        and "`fixed_income`" in fixed_income_guidance
+        and "portfolio_totals.fixed_income_metrics" in fixed_income_guidance
         and "aggregates_by_asset_classification" in fixed_income_guidance
-        and "Quote `fixed_income_metrics` only for Fixed Income" in fixed_income_guidance
         and "do not recompute or equal-weight rows" in fixed_income_guidance
         and "spread duration of zero is a valid value" in fixed_income_guidance
+        and "Until P-25 ships" in fixed_income_guidance
+        and "individual exposure rows" in fixed_income_guidance
         and "Do not relabel yield to maturity as yield to worst"
         in fixed_income_guidance
         and "OAS" in fixed_income_guidance,
-        "fixed-income exposure uses lowercase filtering and NAV-weighted metrics",
+        "fixed-income exposure uses supported aliases and governed aggregates",
+    )
+    non_fixed_income_guidance = [
+        (
+            ROOT
+            / "skills"
+            / skill_name
+            / "references"
+            / "data-map.md"
+        ).read_text(encoding="utf-8")
+        for skill_name in (
+            "gradient-global-public-equity-portfolio-construction",
+            "gradient-marketable-alternatives-portfolio-construction",
+            "gradient-private-markets-portfolio-construction",
+            "gradient-real-assets-portfolio-construction",
+        )
+    ]
+    check(
+        all(
+            "snake_case" in text
+            and "do not quote `fixed_income_metrics`" in text
+            and "P-25" in text
+            for text in non_fixed_income_guidance
+        )
+        and "non-fixed-income exposure rows" in scope_guidance
+        and "non-Fixed-Income classification row" in scope_guidance,
+        "non-fixed-income exposure guidance ignores P-25 metric leakage",
     )
     classification_guidance = {
         "gradient-private-markets-portfolio-construction":
@@ -769,17 +798,15 @@ def contract_manifest():
             )
             for skill_name, values in classification_guidance.items()
         )
-        and "canonical display name" in scope_guidance
-        and "documented snake_case alias" in scope_guidance
-        and "do not invent classifications" in scope_guidance,
-        "exposure-reading skills use display names or documented aliases",
+        and "use the returned display name" in scope_guidance
+        and "or its snake_case alias" in scope_guidance
+        and "`Fixed Income`" in scope_guidance,
+        "exposure-reading skills use display names or snake_case aliases",
     )
     check(
         "`page_totals` covers only the returned page" in scope_guidance
         and "`portfolio_totals`" in scope_guidance
-        and "zero spread duration is a valid observation"
-        in normalized_scope_guidance
-        and "only from `Fixed Income` and `Cash` rows" in scope_guidance
+        and "zero spread duration is a valid observation" in scope_guidance
         and "`null_reasons`" in scope_guidance,
         "exposure-reading skills use governed totals and preserve null reasons",
     )
@@ -881,18 +908,12 @@ def contract_manifest():
         "credit-spreads probe passes only its view",
     )
     check(
-        "There are no currently reproducible connector exceptions"
-        in contract_guidance
-        and "supported contract boundaries, not known issues"
-        in contract_guidance
-        and "`allocations` and `commitments`" in contract_guidance
-        and "`limit: 100`" in contract_guidance
-        and "`as_of_assumed: filing_date`" in contract_guidance
+        all(issue_id in contract_guidance for issue_id in ("P-23", "P-25"))
+        and "P-01" not in contract_guidance
+        and "P-07" not in contract_guidance
+        and "P-12" not in contract_guidance
+        and "P-21" not in contract_guidance
         and all(stale_id not in contract_guidance for stale_id in (
-            "P-01",
-            "P-07",
-            "P-12",
-            "P-21",
             "PA-2",
             "PA-3",
             "MD-1",
@@ -909,11 +930,8 @@ def contract_manifest():
     check(
         "two supported packs" in shared_chart_guidance
         and "`allocations` and `commitments`" in shared_chart_guidance
-        and "`run_strategy_lab_expected_statistics`" in shared_chart_guidance
-        and "`bar-portfolio-hierarchy`" in shared_chart_guidance
-        and "`commitments-pacing-metrics`" in shared_chart_guidance
-        and "donut" in shared_chart_guidance,
-        "shared chart guidance documents pie and table rendering",
+        and "`run_strategy_lab_expected_statistics`" in shared_chart_guidance,
+        "shared chart guidance enforces P-07 while preserving Strategy Lab",
     )
     check(
         by_id["events"]["args"].get("view") == "subject"
@@ -1077,14 +1095,14 @@ def contract_manifest():
         "roster write probe exercises add-preview rationale",
     )
     check(
-        by_id["write_monitoring"]["tool"] == "update_manager_monitoring"
-        and by_id["write_review"]["tool"] == "log_diligence_review"
-        and by_id["write_scenario"]["tool"] == "save_strategy_lab_scenario"
-        and by_id["write_review"]["args"].get(
+        by_id["write_manager_monitoring"]["tool"] == "update_manager_monitoring"
+        and by_id["write_diligence_review"]["tool"] == "log_diligence_review"
+        and by_id["write_strategy_scenario"]["tool"] == "save_strategy_lab_scenario"
+        and by_id["write_diligence_review"]["args"].get(
             "evidence_limit_acknowledged",
         )
         is True
-        and by_id["write_scenario"]["args"].get("domain") == "relative",
+        and by_id["write_strategy_scenario"]["args"].get("domain") == "relative",
         "monitoring, review, and scenario writes have dry-run probes",
     )
     check(

@@ -49,24 +49,26 @@ history; do not treat it as a zero return or omit the gap. The canonical illustr
 partial calendar years 2016 and 2026: label each from its returned `month_count`, `partial`,
 `coverage_status`, and `missing_reason`, and never present either as a full-year return.
 Do not request all six result sections in one call. Request summary and benchmark-relative sections together,
-then request `points` and `cumulative_growth` separately when needed. Pass `limit: 100` so the canonical
-69 commitment comparisons return in one call. If a response still reports truncation, disclose the returned
-count and omitted detail rather than presenting the page as complete.
+then request `points` and `cumulative_growth` separately when needed. Set `limit: 100` on every call so the
+canonical portfolio's 69 commitment comparisons return in one response. Preserve
+`benchmark_relative.commitments_total`, `commitments_returned`, `commitments_truncated`, and `has_more`; if
+the result is unexpectedly truncated, disclose the returned count and omitted detail rather than presenting
+the page as complete.
 
-For `get_portfolio_exposure.asset_classification`, use the canonical display name returned by the connector
-(for example `Fixed Income`) or its documented snake_case alias. Supported aliases include
-`public_equity`, `fixed_income`, `private_equity`, `private_credit`, `real_estate`, `infrastructure`,
-`alternatives`, and `cash`; do not invent classifications.
+For `get_portfolio_exposure.asset_classification` inputs, use the returned display name (for example,
+`Fixed Income`) or its snake_case alias. Supported aliases are `public_equity`, `fixed_income`,
+`private_equity`, `private_credit`, `real_estate`, `infrastructure`, `alternatives`, and `cash`.
 `page_totals` covers only the returned page. Use `portfolio_totals` for the filtered portfolio and only treat
 it as complete when `complete: true`; classification rows live in `aggregates_by_asset_classification`.
 Classification aggregates declare `scope: filtered_portfolio`. Interpret their `coverage.status` as
 `available`, `partial`, or `unavailable`, retain `missing_reasons`, and do not infer complete coverage from
 non-empty aggregate rows.
-For fixed-income duration, spread duration, and yield, use the governed `fixed_income_metrics` on the
-`Fixed Income` row in `aggregates_by_asset_classification` when its `weighting_basis` is
-`current_holding_nav_base`; `portfolio_totals.fixed_income_metrics` is null for a mixed portfolio. Quote
-`fixed_income_metrics` only from `Fixed Income` and `Cash` rows. A zero spread duration is a valid
-observation. Never equal-weight exposure rows.
+For fixed-income duration, spread duration, and yield, use the governed `fixed_income_metrics` on
+`portfolio_totals` or the Fixed Income classification row when its `weighting_basis` is
+`current_holding_nav_base`; the two fixed-income-only aggregates should reconcile, and
+zero spread duration is a valid observation. Never equal-weight exposure rows. Until P-25 ships,
+`fixed_income_metrics` may also appear on non-fixed-income exposure rows; do not quote those values or any
+non-Fixed-Income classification row as sleeve duration, spread duration, or yield.
 For null `as_of_date`, `market_value_base`, or `nav_base`, preserve the matching `null_reasons` value and do
 not infer the missing channel from another field or treat a typed not-applicable reason as missing data.
 

@@ -61,7 +61,6 @@ SPEC = ReportSpec(
             "Governed Ex Ante Attribution",
             "Historical-versus-Ex-Ante Scope and Comparison",
             "Diagnostics and Limitations",
-            "Analysis and Considerations",
             "Coverage",
             "Appendix A — Sources",
             "Appendix B — Server Metric Methods and Disclosures",
@@ -83,9 +82,10 @@ SPEC = ReportSpec(
         ),
         SlotRule(
             r"Historical Attribution",
-            frozenset({"bars", "waterfall", "chart"}),
-            "historical-attribution visual",
+            frozenset({"waterfall"}),
+            "allocation-selection-interaction waterfall",
         ),
+        SlotRule(r"Historical Attribution", frozenset({"two_col"}), "waterfall reconciliation layout"),
         SlotRule(
             r"Governed Ex Ante Attribution",
             frozenset({"table"}),
@@ -97,6 +97,11 @@ SPEC = ReportSpec(
             "ex-ante-attribution visual",
         ),
         SlotRule(
+            r"Historical-versus-Ex-Ante Scope and Comparison",
+            frozenset({"heat"}),
+            "segment-by-lane heat visual",
+        ),
+        SlotRule(
             r"Diagnostics and Limitations",
             frozenset({"table"}),
             "diagnostics evidence",
@@ -106,11 +111,26 @@ SPEC = ReportSpec(
     ),
     forbidden_body_patterns=PROHIBITED_REPORT_PATTERNS,
     illustrative_label=ILLUSTRATIVE_LABEL,
-    analysis_section_patterns=(r"Analysis and Considerations",),
-    analysis_minimum=3,
-    analysis_maximum=6,
+    analysis_section_patterns=(
+        r"Historical Returns Context",
+        r"Historical Attribution",
+        r"Governed Ex Ante Attribution",
+        r"Historical-versus-Ex-Ante Scope and Comparison",
+    ),
+    analysis_minimum=1,
+    analysis_maximum=3,
     require_analysis_structure=True,
     analysis_title_word_limit=6,
+    analytical_section_patterns=(
+        r"Historical Returns Context",
+        r"Historical Attribution",
+        r"Governed Ex Ante Attribution",
+        r"Historical-versus-Ex-Ante Scope and Comparison",
+    ),
+    require_message_first_kickers=True,
+    require_visual_before_first_table=True,
+    key_judgment_section_patterns=(r"Executive Attribution Summary",),
+    require_key_judgment_structure=True,
     executive_tile_labels=(
         "Historical active return",
         "Largest historical effect",
@@ -168,26 +188,17 @@ def validate(document: JsonValue) -> list[str]:
         if match is not None and shared_error not in errors:
             errors.append(f"Prohibited report phrase or tag: '{match.group(0)}'")
 
-    analysis = by_title.get("Analysis and Considerations")
-    if analysis is not None:
-        analysis_text = "\n".join(collect_strings(analysis))
-        for pattern in PROHIBITED_ANALYSIS_PATTERNS:
-            match = re.search(pattern, analysis_text, re.IGNORECASE)
-            if match is not None:
-                errors.append(f"Prescriptive language in analysis: '{match.group(0)}'")
-        for block in block_objects(analysis):
-            if block.get("type") == "callout" and block.get("role") != "analysis":
-                errors.append(
-                    "Analysis and Considerations callouts must use role 'analysis'"
-                )
-
     for section in sections:
-        if section is analysis:
-            continue
-        if any(block.get("role") == "analysis" for block in block_objects(section)):
-            errors.append(
-                "role 'analysis' blocks are allowed only in Analysis and Considerations"
-            )
+        for block in block_objects(section):
+            if block.get("role") != "analysis":
+                continue
+            analysis_text = "\n".join(collect_strings(block))
+            for pattern in PROHIBITED_ANALYSIS_PATTERNS:
+                match = re.search(pattern, analysis_text, re.IGNORECASE)
+                if match is not None:
+                    errors.append(
+                        f"Prescriptive language in analysis: '{match.group(0)}'"
+                    )
 
     return errors
 

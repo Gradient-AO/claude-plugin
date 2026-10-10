@@ -1,4 +1,4 @@
-"""Chart and PDF renderer regression checks."""
+"""Chart, PDF, PPTX, layout, and artifact regression checks."""
 
 from suites.harness import *
 from suites.harness import _renderer_module
@@ -49,6 +49,41 @@ def chart_renderer():
         "<table" in mixed_line and "<svg" not in mixed_line,
         "chart renderer falls back to a table for mixed-unit lines",
     )
+    pie_chart = _renderer_module.b_chart({"chart": {
+        "title": "Allocation pie",
+        "status": "ok",
+        "columns": [
+            {"key": "sleeve", "title": "Sleeve", "format": "text", "decimals": None},
+            percentage_column,
+        ],
+        "rows": [["Public", 0.6], ["Private", 0.3], ["Liquidity", 0.1]],
+        "render_hint": {"block": "pie", "x": "sleeve", "y": ["ratio"]},
+    }})
+    check(
+        "<svg" in pie_chart
+        and "<path" in pie_chart
+        and "60.0%" in pie_chart
+        and _renderer_module.BLOCKS.get("pie") is _renderer_module.b_pie,
+        "chart renderer supports pie hints and direct pie blocks",
+    )
+    mixed_pie = _renderer_module.b_chart({"chart": {
+        "title": "Mixed-unit pie",
+        "status": "ok",
+        "columns": [
+            {"key": "sleeve", "title": "Sleeve", "format": "text", "decimals": None},
+            {"key": "value", "title": "Value", "format": "number", "decimals": 0},
+            {"key": "unit", "title": "Unit", "format": "text", "decimals": None},
+        ],
+        "rows": [["Public", 60, "%"], ["Private", 30, "USD"]],
+        "render_hint": {"block": "pie", "x": "sleeve", "y": ["value"]},
+    }})
+    check(
+        "<svg" in mixed_pie
+        and "<path" in mixed_pie
+        and "Public" in mixed_pie
+        and "<table" not in mixed_pie,
+        "chart renderer uses the selected numeric series for pie hints",
+    )
     allocation_donut = _renderer_module.b_chart({"chart": {
         "chart_id": "bar-portfolio-hierarchy",
         "title": "Portfolio Weights by Hierarchy",
@@ -61,8 +96,10 @@ def chart_renderer():
         "render_hint": {"block": "pie", "x": "name", "y": ["weight"]},
     }})
     check(
-        'class="chart donut"' in allocation_donut
-        and "<circle" in allocation_donut
+        "<svg" in allocation_donut
+        and "<path" in allocation_donut
+        and "A95,95" in allocation_donut
+        and "55.0%" in allocation_donut
         and "<table" not in allocation_donut,
         "allocation hierarchy pie hint renders as a donut",
     )
@@ -215,5 +252,5 @@ def render(keep):
             f"GIPS {label}: contains {must}"
             + (f" — missing {missing}" if missing else ""),
         )
+    run_artifact_checks(check, out)
     print(f"PDFs in {out}")
-

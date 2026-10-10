@@ -1,13 +1,13 @@
 ---
 name: gradient-ddq-reconcile
-description: "Reconcile a manager's DDQ answers against Form ADV and Schedule D filings with GradientCIO and deliver a branded PDF discrepancy report with follow-up questions and previewed diligence findings."
+description: "Reconcile a manager's DDQ answers against Form ADV and Schedule D filings with GradientCIO and deliver a branded discrepancy report with follow-up questions and previewed diligence findings."
 ---
 
 # DDQ vs Form ADV reconciliation
 
 Use when the user shares a due diligence questionnaire (DDQ, AIMA, ILPA, RFI, manager questionnaire; PDF, Word, Excel, text) and wants it checked, verified, cross-checked or reconciled against what the manager filed with the SEC, or asks "does this DDQ match the ADV".
 
-The deliverable is a branded PDF report: every checkable DDQ statement is marked corroborated, contradicted, needs review or unverifiable, with the DDQ quote beside the filed value, plus follow-up questions and previewed findings. DDQ values are always the manager's assertions; only the filed side is governed evidence. Form ADV is adviser-reported, not SEC-verified — say so.
+The deliverable is a branded report: every checkable DDQ statement is marked corroborated, contradicted, needs review or unverifiable, with the DDQ quote beside the filed value, plus follow-up questions and previewed findings. DDQ values are always the manager's assertions; only the filed side is governed evidence. Form ADV is adviser-reported, not SEC-verified — say so.
 
 ## 1. Identify the subject
 
@@ -29,15 +29,18 @@ such as `Auditor`, `Administrator`, `Custodian`, `Prime broker`, `GAV` and `RAUM
 8 firm checklist fields; fund scope returns the complete 21-field firm-plus-fund checklist used by
 reconciliation. Alias matches carry `reviewed_alias_match`. Narrative prose still requires
 `transcribed_claims`: run extraction once, keep its quote-backed matches, and transcribe the rest.
+When the DDQ contains an auditor, administrator, custodian, or prime-broker label, call
+`extract_ddq_claims` with `subject_scope: "fund"` even when firm claims are also present; firm scope checks
+only the 8 firm fields and would omit those fund-provider claims.
 
 Work from one canonical text of the DDQ:
 - Text/Markdown: the file as-is. PDF/DOCX/XLSX: extract text (pdf/docx/xlsx skills or `pdftotext`, `python-docx`, `openpyxl`) and save it; note page, sheet and cell for each answer.
 - Compute `file_sha256` of the ORIGINAL uploaded file (`sha256sum`).
 - For each claim, copy the sentence verbatim as `quote`, and compute `source_locator.start/end` (character offsets) and `line_start/line_end` in the canonical text with a short Python script (`text.index(quote)`). Add `page`, `sheet` or `cell_range` when known. Never estimate offsets by eye.
 - `raw_value` is the value as written (`$12.4 billion`, `1,240`, `Yes`) — the comparator parses billions, commas and yes/no. Multiple names: separate with `; `.
-- `asserted_as_of`: include the DDQ's stated as-of date (YYYY-MM-DD) when present; otherwise omit it or pass
-  null. Do not invent a date. The server compares an undated assertion with the filing date and returns
-  `as_of_assumed: filing_date`.
+- Until P-23 ships, every transcribed claim must set `asserted_as_of` to the DDQ's stated as-of date
+  (YYYY-MM-DD). If the document has no applicable date, ask the user for one before reconciliation; never
+  invent a date or send a transcribed claim with `asserted_as_of: null`.
 - `claim_status`: `asserted` when stated; `ambiguous` when the DDQ hedges or gives a range; `not_found` when the DDQ doesn't answer. `extraction_reason_codes: []` for normal assertions.
 
 Checkable fields (map DDQ questions to these):
@@ -81,9 +84,12 @@ For 2–5 managers, `batch_reconcile_manager_ddq_claims` may be used when all su
 
 If a fund cannot be resolved to a catalog `fund_id`, list its claims as not assessed with reason `canonical_fund_id_unavailable`. Do not synthesize a verdict, numeric gap, or replacement reconciliation from `get_manager_odd_profile`.
 
-## 4. Report — branded PDF (default deliverable)
+## 4. Report
 
-Every run ends with a polished, branded PDF in the shared Gradient house style (see `references/report-style.md`). Claude writes a structured `report.json`; `scripts/gradient_report.py` turns it into the PDF. Also give a 3-line chat summary (result, top discrepancy, count of follow-ups). Only skip the PDF if the user explicitly asks for chat-only.
+Every run ends with a polished, branded report in the shared Gradient house style (see
+`references/report-style.md`). Claude writes one structured `report.json`. Also give a 3-line chat summary
+(result, top discrepancy, count of follow-ups). Only skip the report if the user explicitly asks for
+chat-only.
 
 ### Severity and follow-up questions
 
@@ -116,7 +122,7 @@ Follow-up questions are concrete and neutral, quote both sides with dates, and a
 
 Verdict chips: `{"chip": "corroborated"|"consistent"|"contradicted"|"needs review"|"unverifiable", "status": "<same, underscores ok>"}` → lime / coral / amber / slate. Other statuses: available, partial, not_assessed, not_run, passed, failed.
 
-Block types (full reference in `references/report-style.md`): `text {text}` · `bullets {items}` · `kv {title?, rows:[[k, v, srcTag?]]}` · `table {title?, columns, rows, align? (l|r|c|n=nowrap), note?}` · `tiles {tiles:[{label, value, sub, tone: good|watch|bad}]}` · `callout {tone: good|watch|bad|info, title?, text}` · `coverage {title?, items:[{name, status, note}]}` · `findings {items:[{severity, title, detail}], empty_title, empty_text}` · `questions {items:[{q, why}]}` · `two_col {left, right}` · `bars {title?, items:[{label, value, display}], max?, narrow?}` · `percentiles {title?, items:[{label, percentile, value_display}], threshold}` · `pagebreak {}`. Text supports `**bold**`, `` `code` `` and `[S#]` evidence tags. Every section starts on a new page; set `"new_page": false` to continue on the same page.
+Block types (full reference in `references/report-style.md`): `text {text}` · `bullets {items}` · `kv {title?, rows:[[k, v, srcTag?]]}` · `table {title?, columns, rows, align? (l|r|c|n=nowrap), note?}` · `tiles {tiles:[{label, value, sub, tone: good|watch|bad}]}` · `callout {tone: good|watch|bad|info, title?, text}` · `coverage {title?, items:[{name, status, note}]}` · `findings {items:[{severity, title, detail}], empty_title, empty_text}` · `questions {items:[{q, why}]}` · `two_col {left, right}` · `bars {title?, items:[{label, value, display}], max?, narrow?}` · `percentiles {title?, items:[{label, percentile, value_display}], threshold}` · `pagebreak {}`. Text supports `**bold**`, `` `code` `` and `[S#]` evidence tags. Sections flow by default; keep the findings and questions together and set `"new_page": true` only for a major part or the first appendix.
 
 Every filed value carries a tag and its ADV item or Schedule D reference; every DDQ value carries its line or page. Use each reconciliation row's server-returned `numeric_gap` for absolute and percentage gaps; do not derive them locally. Money in $B/$M with 1–2 decimals; ISO dates. No adjectives the data can't support.
 
@@ -124,21 +130,31 @@ Every analytical or key-judgment callout must contain an `[S#]` tag. Follow-up q
 recommendation-like content permitted: each must address a contradicted, needs-review or explicitly
 unavailable item already in the report, and its `why` must cite `[S#]`. Do not propose hiring, firing,
 terminating, redeeming from or allocating to a manager. Add one to three `callout` blocks with
-`role: "analysis"` to **Discrepancies & follow-up questions**, stating the observation, diligence
-implication, uncertainty, and which existing question would change the view.
+`role: "analysis"` and `Analysis —` titles to **Discrepancies & follow-up questions**; use the four-part
+structure in `../../shared/writing-standards.md` and stay within 60 words. Page 2 contains three to five sourced
+`Key judgment —` callouts with `role: "key_judgment"`. Use a message-first kicker and lead the discrepancy
+section with a status `bars`/`stacked` visual, or `Not available — <reason>`, before the first table. Never
+place more than two tables consecutively.
 
 ### Render, check, deliver
 
 1. Run `python <this skill's directory>/scripts/validate_ddq_report.py report.json`. Fix every error and
    re-run until it passes. Do not render a report that fails validation.
-2. Run `python <this skill's directory>/scripts/gradient_report.py report.json "<Subject> - DDQ Reconciliation.pdf"`. Requirements and troubleshooting are in `references/report-style.md`. Never write a separate renderer or change the styling.
-3. Rasterize with `pdftoppm -r 60 -png` and look at every page. Fix overflow tails, wrapped dates or chips
-   (align `n`), then re-render and repeat the full page review. Delivery is blocked until no clipping,
-   overflow, orphaned heading or unreadable visual remains. Typical length: 5–7 pages.
-4. Spot-check every table value against the saved reconciliation JSON and preserve each numeric comparison's
+2. Select output from the user's wording: PDF by default; PPTX for `PowerPoint`, `deck`, `slides` or `.pptx`;
+   both for `both` or `board pack`. Both formats must come from the same validated `report.json`; never branch
+   or rewrite content by format.
+3. Render with
+   `python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Subject> - DDQ Reconciliation"`.
+   Never write a separate renderer or change the styling.
+4. Inspect every requested output. For PDF, rasterize with `pdftoppm -r 60 -png`; for PPTX, use the shared
+   slide rendering/layout check. Fix overflow tails, wrapped dates or chips, then re-render and repeat the full
+   review. Delivery is blocked until no clipping, overflow, orphaned heading or unreadable visual remains.
+   Typical PDF length: 5–7 pages.
+5. Spot-check every table value against the saved reconciliation JSON and preserve each numeric comparison's
    formula version, unit, basis and unavailable reason.
-5. Save to `/mnt/user-data/outputs/` (and the connected folder if one exists). Reply with the 3-line summary and the file; don't repeat the report in chat.
-6. If the user wants an editable version too, also create a Claude Doc with the same sections.
+6. Save to `/mnt/user-data/outputs/` (and the connected folder if one exists). Reply with the 3-line summary
+   and requested file(s); don't repeat the report in chat.
+7. If the user wants an editable version too, also create a Claude Doc with the same sections.
 
 A `report.json` skeleton is in the appendix of this skill; copy its shape.
 

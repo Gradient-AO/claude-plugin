@@ -42,7 +42,7 @@ and `effective_capabilities` must equal whether that mode is not `unavailable`. 
 | gradient-gips-asset-owner-review | GIPS review PDF | none (documents) | — | — |
 | gradient-gips-policies-gap-check | GIPS review PDF | none (documents) | — | — |
 | gradient-gips-standards | GIPS briefing note PDF | none | — | — |
-| gradient-setup | Readiness PDF | list_organizations, get_gradient_capabilities | all probes in contract-checks.md, including sample-portfolio exposure, structure, historical returns, historical and ex ante attribution, policy and chart packs; direct-ID IDD Strategy Lab tools; dry-run watchlist, monitoring, review, finding, roster, scenario and upload writes; persisted extract_ddq_claims document identity and DDQ save preview | — |
+| gradient-setup | Readiness PDF | list_organizations, get_gradient_capabilities | all probes in contract-checks.md, including sample-portfolio exposure, structure, historical returns, historical and ex ante attribution, policy and chart packs; session-bound IDD Strategy Lab tools; dry-run watchlist, monitoring, review, finding, roster, scenario and upload writes; persisted extract_ddq_claims document identity and DDQ save preview | — |
 
 Core skills (any one **Not licensed** or blocked makes the overall signal `not_ready` only if the client
 licensed the module it needs): gradient-odd-report, gradient-ddq-reconcile, gradient-manager-monitor,

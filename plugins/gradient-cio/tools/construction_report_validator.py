@@ -17,6 +17,7 @@ from report_json_validator import (
     as_object,
     block_objects,
     collect_strings,
+    direct_block_objects,
     load_json,
     section_objects,
     validate_report,
@@ -44,7 +45,10 @@ ANALYSIS_ACTION_PATTERN = re.compile(
     re.IGNORECASE,
 )
 TYPED_VISUAL_UNAVAILABLE_PATTERN = re.compile(
-    r"\bNot available — \S.{2,}", re.IGNORECASE
+    r"\b(?:Not available|Not applicable) — \S.{2,}", re.IGNORECASE
+)
+CONSTRUCTION_VISUALS = frozenset(
+    {"chart", "line", "bars", "percentiles", "waterfall", "band", "stacked", "heat"}
 )
 
 
@@ -85,6 +89,13 @@ def _spec(
         analysis_minimum=1,
         analysis_maximum=3,
         require_analysis_structure=True,
+        analytical_section_patterns=tuple(
+            re.escape(section) for section in analysis_sections
+        ),
+        require_message_first_kickers=True,
+        require_visual_before_first_table=True,
+        key_judgment_section_patterns=(re.escape("Executive Decision"),),
+        require_key_judgment_structure=True,
         executive_tile_labels=tiles,
         require_tile_sources=True,
         allowed_tones=frozenset({"", "accent", "good", "watch", "bad", "info"}),
@@ -127,23 +138,25 @@ CONTRACTS = {
             slots=(
                 SlotRule(
                     r"Current Private Markets Portfolio",
-                    frozenset({"chart", "bars"}),
+                    CONSTRUCTION_VISUALS,
                     "current-allocation visual",
                 ),
+                SlotRule(r"Target Portfolio Structure", frozenset({"band"}), "target policy-band visual"),
+                SlotRule(r"Target Portfolio Structure", frozenset({"stacked"}), "current/target mix visual"),
                 SlotRule(
                     r"Forward Return and Risk",
-                    frozenset({"chart", "bars", "line"}),
+                    CONSTRUCTION_VISUALS,
                     "forward risk/return visual",
                 ),
                 SlotRule(
                     r"Commitments, Pacing and Cash Flow",
-                    frozenset({"chart", "bars", "line"}),
-                    "commitments visual",
+                    frozenset({"line"}),
+                    "commitment-pacing line",
                 ),
                 SlotRule(
                     r"Liquidity and Denominator Risk",
-                    frozenset({"chart", "bars", "kv"}),
-                    "liquidity visual",
+                    frozenset({"bars"}),
+                    "scenario bars",
                 ),
             ),
         ),
@@ -183,24 +196,28 @@ CONTRACTS = {
             slots=(
                 SlotRule(
                     r"Current Fixed Income Portfolio",
-                    frozenset({"chart", "bars"}),
+                    CONSTRUCTION_VISUALS,
                     "current-allocation visual",
                 ),
+                SlotRule(r"Target Portfolio Structure", frozenset({"band"}), "target policy-band visual"),
+                SlotRule(r"Target Portfolio Structure", frozenset({"stacked"}), "current/target mix visual"),
                 SlotRule(
                     r"Rates and Credit Context",
-                    frozenset({"chart", "bars", "line"}),
+                    CONSTRUCTION_VISUALS,
                     "rates/credit visual",
                 ),
+                SlotRule(r"Rates and Credit Context", frozenset({"tiles"}), "duration and spread tiles"),
                 SlotRule(
                     r"Forward Return and Risk",
-                    frozenset({"chart", "bars", "line"}),
+                    CONSTRUCTION_VISUALS,
                     "forward risk/return visual",
                 ),
                 SlotRule(
                     r"Policy Risk, Liquidity and Tradability",
-                    frozenset({"chart", "bars", "table"}),
+                    CONSTRUCTION_VISUALS,
                     "liquidity visual",
                 ),
+                SlotRule(r"Scenarios and Robustness", frozenset({"bars"}), "scenario bars"),
             ),
             forbidden=(
                 r"\brates will (?:rise|fall)\b",
@@ -244,19 +261,22 @@ CONTRACTS = {
             slots=(
                 SlotRule(
                     r"Current Global Public Equity Portfolio",
-                    frozenset({"chart", "bars"}),
+                    CONSTRUCTION_VISUALS,
                     "current-allocation visual",
                 ),
+                SlotRule(r"Target Portfolio Structure", frozenset({"band"}), "target policy-band visual"),
+                SlotRule(r"Target Portfolio Structure", frozenset({"stacked"}), "current/target mix visual"),
                 SlotRule(
                     r"Factor Exposures and Concentration",
-                    frozenset({"chart", "bars", "line"}),
+                    CONSTRUCTION_VISUALS,
                     "factor/concentration visual",
                 ),
                 SlotRule(
                     r"Forward Return and Risk",
-                    frozenset({"chart", "bars", "line"}),
+                    CONSTRUCTION_VISUALS,
                     "forward risk/return visual",
                 ),
+                SlotRule(r"Scenarios and Robustness", frozenset({"bars"}), "scenario bars"),
             ),
         ),
     ),
@@ -296,24 +316,27 @@ CONTRACTS = {
             slots=(
                 SlotRule(
                     r"Current Hedge Fund Portfolio",
-                    frozenset({"chart", "bars"}),
+                    CONSTRUCTION_VISUALS,
                     "current-allocation visual",
                 ),
+                SlotRule(r"Target Strategy and Manager Structure", frozenset({"band"}), "target policy-band visual"),
+                SlotRule(r"Target Strategy and Manager Structure", frozenset({"stacked"}), "current/target mix visual"),
                 SlotRule(
                     r"Factor, Currency and Concentration Evidence",
-                    frozenset({"chart", "bars", "line"}),
+                    CONSTRUCTION_VISUALS,
                     "factor/concentration visual",
                 ),
                 SlotRule(
                     r"Forward Return and Risk",
-                    frozenset({"chart", "bars", "line"}),
+                    CONSTRUCTION_VISUALS,
                     "forward risk/return visual",
                 ),
                 SlotRule(
                     r"Liquidity, Redemption and Operational Terms",
-                    frozenset({"chart", "bars", "table"}),
+                    frozenset({"stacked"}),
                     "liquidity/redemption visual",
                 ),
+                SlotRule(r"Scenarios and Robustness", frozenset({"bars"}), "scenario bars"),
             ),
             forbidden=(
                 r"\bcommitments (?:cash flow|pacing)\b",
@@ -358,24 +381,32 @@ CONTRACTS = {
             slots=(
                 SlotRule(
                     r"Current Real Assets Portfolio",
-                    frozenset({"chart", "bars"}),
+                    CONSTRUCTION_VISUALS,
                     "current-allocation visual",
                 ),
+                SlotRule(r"Target Sub-Segment Structure", frozenset({"band"}), "target policy-band visual"),
+                SlotRule(r"Target Sub-Segment Structure", frozenset({"stacked"}), "current/target mix visual"),
                 SlotRule(
                     r"Inflation, Commodity and Diversification Context",
-                    frozenset({"chart", "bars", "line"}),
+                    CONSTRUCTION_VISUALS,
                     "factor/diversification visual",
                 ),
                 SlotRule(
+                    r"Inflation, Commodity and Diversification Context",
+                    frozenset({"tiles"}),
+                    "inflation-context tiles",
+                ),
+                SlotRule(
                     r"Forward Return and Risk",
-                    frozenset({"chart", "bars", "line"}),
+                    CONSTRUCTION_VISUALS,
                     "forward risk/return visual",
                 ),
                 SlotRule(
                     r"Commitments, Liquidity and Valuation",
-                    frozenset({"chart", "bars", "line"}),
+                    CONSTRUCTION_VISUALS,
                     "commitments/liquidity visual",
                 ),
+                SlotRule(r"Scenarios and Robustness", frozenset({"bars"}), "scenario bars"),
             ),
             forbidden=(
                 r"\bcommodities (?:are|as) (?:a )?(?:canonical )?CMA class\b",
@@ -407,22 +438,42 @@ def _validate_visual_substitutions(
             title = str(section.get("title", ""))
             if re.fullmatch(rule.section_pattern, title) is None:
                 continue
+            top_level = direct_block_objects(section)
+            first_table = next(
+                (
+                    index
+                    for index, block in enumerate(top_level)
+                    if block.get("type") == "table"
+                ),
+                len(top_level),
+            )
+            before_table = {
+                id(block)
+                for top_block in top_level[:first_table]
+                for block in block_objects({"blocks": [top_block]})
+            }
             blocks = block_objects(section)
             visual_count = sum(
-                str(block.get("type", "")) in rule.block_types for block in blocks
+                str(block.get("type", "")) in rule.block_types
+                and id(block) in before_table
+                for block in blocks
             )
             if visual_count >= rule.minimum:
                 continue
             substitutes = [
                 block
                 for block in blocks
-                if block.get("type") == "callout"
-                and TYPED_VISUAL_UNAVAILABLE_PATTERN.search(_text(block))
+                if id(block) in before_table
+                and block.get("type") in {"callout", "unavailable"}
+                and (
+                    block.get("type") == "unavailable"
+                    or TYPED_VISUAL_UNAVAILABLE_PATTERN.search(_text(block))
+                )
             ]
             if not substitutes:
                 errors.append(
-                    f"{title} needs {rule.label} or a callout stating "
-                    "'Not available — <reason>'"
+                    f"{title} needs {rule.label} or a typed unavailable block "
+                    "before its first table"
                 )
     return errors
 

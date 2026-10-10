@@ -46,12 +46,21 @@ SPEC = ReportSpec(
             "side-by-side table",
         ),
         SlotRule(
+            r"Side-by-side comparison",
+            frozenset({"bars"}),
+            "RAUM, clients, disclosures and percentile strips",
+            minimum=4,
+        ),
+        SlotRule(
             r"Operational flags", frozenset({"findings"}), "per-manager findings"
         ),
         SlotRule(
+            r"Operational flags", frozenset({"bars"}), "flag severity bars"
+        ),
+        SlotRule(
             r"Form 13F overlap",
-            frozenset({"table"}),
-            "overlap table",
+            frozenset({"heat"}),
+            "overlap heat matrix",
         ),
         SlotRule(
             r"ADV–13F consistency and events",
@@ -71,7 +80,28 @@ SPEC = ReportSpec(
         r"\b(?:hire|fire|terminate|redeem from|allocate to)\b",
     ),
     require_action_row_sources=True,
-    analysis_section_patterns=(r"Operational flags",),
+    analysis_section_patterns=(
+        r"Side-by-side comparison",
+        r"Operational flags",
+        r"Form 13F overlap",
+        r"ADV–13F consistency and events",
+    ),
+    analytical_section_patterns=(
+        r"Side-by-side comparison",
+        r"Operational flags",
+        r"Form 13F overlap",
+        r"ADV–13F consistency and events",
+    ),
+    require_message_first_kickers=True,
+    require_visual_before_first_table=True,
+    key_judgment_section_patterns=(r"Executive summary",),
+    executive_tile_labels=(
+        "Managers compared",
+        "Managers with flags",
+        "13F overlap pairs",
+        "Item 11 disclosures",
+    ),
+    require_tile_sources=True,
 )
 
 

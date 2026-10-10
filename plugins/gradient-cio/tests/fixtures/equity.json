@@ -1,72 +1,804 @@
-{"meta": {"eyebrow": "Equity Research Note", "header_label": "Equity Research Note", "signal_title": "Review flags (not a rating)", "meter_title": "Evidence completeness",
-  "title": "Example Industrial Corp. (TEST)", "subtitle": "EXIC · Example Exchange · Industrial machinery · FY ends 12-31 · RENDER TEST",
-  "running_head": "EXIC · Equity note (render test)", "data_as_of": "2026-08-05 (10-Q); 2026-08-14 (Form 13F)",
-  "confidentiality": "RENDER TEST — fictional issuer and figures · Not investment advice",
-  "cover_facts": [["Ticker", "EXIC"], ["CIK", "0000000000"], ["Latest filing", "10-Q, 2026-08-05"], ["Fiscal year end", "12-31"], ["Prepared for", "Example Allocator (TEST)"], ["Report date", "2026-10-04"]],
-  "signal": {"level": "watch", "label": "2 items to review"},
-  "completeness": {"used": 8, "expected": 10, "state": "degraded"}},
- "executive": {"bottom_line": "Example Industrial reported FY2025 revenue of $12.40B, up 6.2% year over year, with operating margin of 14.8% versus 16.1% a year earlier [S1]. Capital expenditures rose 58.0% to $1.32B while free cash flow margin fell to 5.1% [S1][S2], and the latest 10-Q added 3 risk-factor passages [S3]. 18 of 29 cohort hedge funds held the stock at 2026-06-30 [S9]. Sector signal context was unavailable, so completeness is degraded.",
-  "tiles": [{"label": "Revenue growth", "value": "+6.2%", "sub": "FY2025 vs FY2024, 10-K [S1]", "tone": "good"},
-            {"label": "Operating margin", "value": "14.8%", "sub": "16.1% prior year [S1]", "tone": "watch"},
-            {"label": "Net debt / EBITDA", "value": "1.9x", "sub": "FY2025 [S1]", "tone": "good"},
-            {"label": "Latest filing", "value": "10-Q", "sub": "Filed 2026-08-05 [S5]", "tone": "good"}]},
- "sections": [
-  {"id": "executive", "title": "Executive summary", "kicker": "Render test with fictional data — not a real issuer", "blocks": [
-    {"type": "two_col",
-     "left": [{"type": "bullets", "items": ["Revenue $12.40B in FY2025, up 6.2% [S1]", "Operating margin down 1.3 pts to 14.8% [S1]", "3 risk passages added in the 2026-08-05 10-Q [S3]"]}],
-     "right": [{"type": "bullets", "items": ["Capex up 58.0% with FCF margin down — check funding [S2]", "Held by 62.1% of the hedge-fund cohort (13F, delayed) [S9]", "Sector signal context unavailable (validation 422)"]}]},
-    {"type": "coverage", "title": "Evidence coverage", "items": [
-      {"name": "Fundamentals", "status": "available", "note": "FY2025 10-K facts [S1]"},
-      {"name": "Change report", "status": "available", "note": "8 ranked changes [S2]"},
-      {"name": "Filing changes (10-Q vs 10-Q)", "status": "partial", "note": "1 input missing [S3]"},
-      {"name": "Peer comparison", "status": "partial", "note": "2 peers, some metrics incomparable [S4]"},
-      {"name": "Risk findings", "status": "available", "note": "12 findings [S6]"},
-      {"name": "Industry structure", "status": "partial", "note": "2 of 5 forces evidenced [S7]"},
-      {"name": "Earnings release", "status": "available", "note": "8-K 2026-07-30 [S8]"},
-      {"name": "Hedge-fund crowding", "status": "available", "note": "2026-06-30 panel [S9]"},
-      {"name": "Sector equity signal", "status": "unavailable", "note": "equity_signal_stale_contributors"},
-      {"name": "Roster holdings", "status": "unavailable", "note": "CUSIP not available"}]}]},
-  {"title": "Fundamentals and changes since the last filing", "kicker": "SEC XBRL facts, FY2025 10-K and 2026 10-Qs", "blocks": [
-    {"type": "table", "title": "Annual changes (FY2025 vs FY2024, 10-K)", "columns": ["Metric", "FY2025", "FY2024", "Change", "Source"], "align": ["l", "r", "r", "r", "n"],
-     "rows": [["Revenue", "$12.40B", "$11.68B", "+6.2%", "S1"], ["Operating income", "$1.84B", "$1.88B", "-2.1%", "S1"], ["Operating cash flow", "$1.95B", "$1.90B", "+2.6%", "S1"], ["Capital expenditures", "$1.32B", "$0.84B", "+58.0%", "S2"], ["Diluted EPS", "$4.12", "$4.20", "-1.9%", "S1"]],
-     "note": "All values as first filed; no revisions or amendments flagged [S1]."},
-    {"type": "two_col",
-     "left": [{"type": "bars", "title": "Operating margin by fiscal year", "narrow": true, "items": [{"label": "FY2022", "value": 15.2, "display": "15.2%"}, {"label": "FY2023", "value": 15.9, "display": "15.9%"}, {"label": "FY2024", "value": 16.1, "display": "16.1%"}, {"label": "FY2025", "value": 14.8, "display": "14.8%"}]}],
-     "right": [{"type": "kv", "title": "Cash and capital allocation (FY2025)", "rows": [["Free cash flow margin", "5.1%", "S1"], ["Earnings cash conversion", "1.24x", "S1"], ["Dividends", "$0.31B", "S1"], ["Repurchases", "$0.22B", "S2"], ["Liabilities / equity", "1.42x", "S2"]]}]},
-    {"type": "table", "title": "Latest 10-Q vs prior 10-Q", "columns": ["Form", "Current filed", "Prior filed", "Passages added", "Passages removed"], "align": ["l", "n", "n", "r", "r"], "rows": [["10-Q", "2026-08-05", "2026-05-06", "3", "0"]], "note": "Counts of disclosure passages from the filing diff [S3]."},
-    {"type": "callout", "role": "analysis", "tone": "watch", "title": "Analysis — Cash conversion weakened", "text": "Capital expenditures rose 58.0% while free-cash-flow margin fell to 5.1% [S1][S2]. This is a filed change to investigate and does not direct an investment action. The filing evidence does not establish persistence; the next filing would change the view."}]},
-  {"title": "Peers", "kicker": "User-selected peers; period-aligned metrics only", "new_page": false, "blocks": [
-    {"type": "table", "columns": ["Metric", "EXIC", "PEER1", "PEER2", "Peer median", "EXIC rank"], "align": ["l", "r", "r", "r", "r", "c"],
-     "rows": [["Gross margin", "31.4%", "28.9%", "34.0%", "31.5%", "2 of 3"], ["FCF margin", "5.1%", "9.8%", "7.2%", "8.5%", "3 of 3"], ["Net debt / EBITDA", "1.9x", "2.6x", "1.1x", "1.9x", "2 of 3"]],
-     "note": "Annual periods ending 2025-12-31 [S4]. Rank 1 = most favourable per rank_direction."}]},
-  {"title": "Risk factors and industry structure", "kicker": "Item 1A excerpts, 10-K 2026-02-20 and 10-Q 2026-08-05", "blocks": [
-    {"type": "table", "title": "Risk-factor findings", "columns": ["Category", "Filing language (excerpt)", "Filing", "Freshness"], "align": ["l", "l", "n", "c"],
-     "rows": [["Supply chain", "\"Disruptions at single-source suppliers could delay shipments.\"", "10-Q 2026-08-05", {"chip": "new", "status": "new"}], ["Competitive", "\"We face competition from larger, diversified manufacturers.\"", "10-K 2026-02-20", {"chip": "available", "status": "available"}]],
-     "note": "Fictional sample sentences [S6]."},
-    {"type": "table", "title": "Industry structure (disclosure evidence)", "columns": ["Force", "Evidence", "Basis"], "align": ["l", "l", "c"],
-     "rows": [["Rivalry", "Competition disclosure in Item 1A [S7]", {"chip": "available", "status": "available"}], ["Supplier power", "Single-source supplier disclosure [S7]", {"chip": "available", "status": "available"}], ["Buyer power", "No matching sentence retrieved", {"chip": "missing", "status": "missing"}]]},
-    {"type": "callout", "tone": "info", "title": "How to read this", "text": "Filing sentences are issuer disclosures, not measurements of industry force strength or moat durability [S7]."}]},
-  {"title": "Latest earnings release", "kicker": "Form 8-K Item 2.02, EX-99.1", "new_page": false, "blocks": [
-    {"type": "kv", "rows": [["Filed", "2026-07-30", "S8"], ["Items", "2.02, 9.01", "S8"], ["Guidance changes", "None extracted", "S8"]]},
-    {"type": "bullets", "items": ["Quarterly revenue $3.21B, up 4.0% (GAAP) [S8]", "One-time item: none returned [S8]"]}]},
-  {"title": "Positioning and crowding", "kicker": "Hedge-fund 13F cohort, period 2026-06-30", "blocks": [
-    {"type": "kv", "title": "EXIC in the crowding panels", "rows": [["Consensus rank", "14 of 25 shown", "S9"], ["Holders", "18 of 29 filers (62.1%)", "S9"], ["Median weight (holders)", "0.84%", "S9"], ["Building / unwinding", "Not in either top-25 panel", "S9"]]},
-    {"type": "callout", "tone": "watch", "title": "How to read 13F crowding", "text": "13F filings are delayed (49 days at the report date), cover long U.S.-listed positions only, omit shorts and most non-U.S. exposure, and do not show intent [S9]."}]},
-  {"title": "Who holds it on the roster", "kicker": "Firm-level Form 13F", "new_page": false, "blocks": [
-    {"type": "callout", "tone": "info", "title": "Not run", "text": "No CUSIP was available for the issuer, so roster holdings were not checked. This is not evidence that no rostered manager holds it."}]},
-  {"title": "Appendix — sources and method", "blocks": [
-    {"type": "table", "title": "Sources", "columns": ["Tag", "Evidence", "Tool / view", "As of", "Validation", "Digest"], "align": ["n", "l", "l", "n", "n", "n"],
-     "rows": [["S1", "Fundamentals", "fundamentals / fundamentals", "2026-10-04", {"chip": "not_run", "status": "not_run"}, "aa11bb22"],
-              ["S2", "Change report", "fundamentals / change_report", "2026-10-04", {"chip": "passed", "status": "passed"}, "cc33dd44"],
-              ["S3", "Filing changes", "fundamentals / changes", "2026-10-04", {"chip": "passed", "status": "passed"}, "ee55ff66"],
-              ["S4", "Peer comparison", "fundamentals / peer_comparison", "2026-08-05", {"chip": "advisory", "status": "advisory"}, "11223344"],
-              ["S5", "Filing inventory", "filing_evidence / filings", "2026-10-04", {"chip": "passed", "status": "passed"}, "55667788"],
-              ["S6", "Risk findings", "filing_evidence / risk_findings", "2026-10-04", {"chip": "passed", "status": "passed"}, "99aabbcc"],
-              ["S7", "Industry structure", "filing_evidence / industry_structure", "2026-10-04", {"chip": "passed", "status": "passed"}, "ddeeff00"],
-              ["S8", "Earnings release", "filing_evidence / earnings_release", "2026-07-30", {"chip": "passed", "status": "passed"}, "0a1b2c3d"],
-              ["S9", "Hedge-fund crowding", "market_positioning / hedge_fund_crowding", "2026-10-02", {"chip": "passed", "status": "passed"}, "4e5f6a7b"]]},
-    {"type": "table", "title": "Server Metric Methods", "columns": ["Source", "Metric", "Server method / basis"], "align": ["n", "l", "l"],
-     "rows": [["S1", "Net debt / EBITDA", "get_public_equity_fundamentals.leverage_metric; preserve returned formula_id, formula_version, period_basis, units and source facts"], ["S2", "Liabilities / equity", "get_public_equity_change_report.leverage_metric; preserve returned formula_id, formula_version, period_basis, units and source facts"]]},
-    {"type": "bullets", "items": ["Review flags: elevated = negative annual operating income or OCF, revised or amended facts, net debt / EBITDA ≥ 3.0x, or filed impairment / restatement / going-concern items; watch = revenue down, operating margin down ≥ 2.0 pts, capex up ≥ 50% with FCF margin down, risk passages added or removed, or ≥ 50% cohort holder share; clear = none; insufficient = fundamentals unavailable.", "Sector mapping is SEC SIC to a Gradient sector, not GICS."]},
-    {"type": "callout", "tone": "info", "title": "Disclaimer", "text": "This note summarizes public SEC filings and Gradient-normalized data as of the dates shown. It is not investment, legal, tax or accounting advice, not a recommendation to buy, sell or hold any security, and contains no price target or rating. Filed figures are issuer-reported; Form 13F data is delayed and incomplete. Verify against the source filings before relying on any figure."}]}
- ]}
+{
+  "meta": {
+    "eyebrow": "Equity Research Note",
+    "header_label": "Equity Research Note",
+    "signal_title": "Review flags (not a rating)",
+    "meter_title": "Evidence completeness",
+    "title": "Example Industrial Corp. (TEST)",
+    "subtitle": "EXIC · Example Exchange · Industrial machinery · FY ends 12-31 · RENDER TEST",
+    "running_head": "EXIC · Equity note (render test)",
+    "data_as_of": "2026-08-05 (10-Q); 2026-08-14 (Form 13F)",
+    "confidentiality": "RENDER TEST — fictional issuer and figures · Not investment advice",
+    "cover_facts": [
+      [
+        "Ticker",
+        "EXIC"
+      ],
+      [
+        "CIK",
+        "0000000000"
+      ],
+      [
+        "Latest filing",
+        "10-Q, 2026-08-05"
+      ],
+      [
+        "Fiscal year end",
+        "12-31"
+      ],
+      [
+        "Prepared for",
+        "Example Allocator (TEST)"
+      ],
+      [
+        "Report date",
+        "2026-10-04"
+      ]
+    ],
+    "signal": {
+      "level": "watch",
+      "label": "2 items to review"
+    },
+    "completeness": {
+      "used": 8,
+      "expected": 10,
+      "state": "degraded"
+    }
+  },
+  "executive": {
+    "bottom_line": "Example Industrial reported FY2025 revenue of $12.40B, up 6.2% year over year, with operating margin of 14.8% versus 16.1% a year earlier [S1]. Capital expenditures rose 58.0% to $1.32B while free cash flow margin fell to 5.1% [S1][S2], and the latest 10-Q added 3 risk-factor passages [S3]. 18 of 29 cohort hedge funds held the stock at 2026-06-30 [S9]. Sector signal context was unavailable, so completeness is degraded.",
+    "tiles": [
+      {
+        "label": "Revenue growth",
+        "value": "+6.2%",
+        "sub": "FY2025 vs FY2024, 10-K [S1]",
+        "tone": "good"
+      },
+      {
+        "label": "Operating margin",
+        "value": "14.8%",
+        "sub": "16.1% prior year [S1]",
+        "tone": "watch"
+      },
+      {
+        "label": "Net debt / EBITDA",
+        "value": "1.9x",
+        "sub": "FY2025 [S1]",
+        "tone": "good"
+      },
+      {
+        "label": "Latest filing",
+        "value": "10-Q",
+        "sub": "Filed 2026-08-05 [S5]",
+        "tone": "good"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "executive",
+      "title": "Executive summary",
+      "kicker": "Render test with fictional data — not a real issuer",
+      "blocks": [
+        {
+          "type": "two_col",
+          "left": [
+            {
+              "type": "bullets",
+              "items": [
+                "Revenue $12.40B in FY2025, up 6.2% [S1]",
+                "Operating margin down 1.3 pts to 14.8% [S1]",
+                "3 risk passages added in the 2026-08-05 10-Q [S3]"
+              ]
+            }
+          ],
+          "right": [
+            {
+              "type": "bullets",
+              "items": [
+                "Capex up 58.0% with FCF margin down — check funding [S2]",
+                "Held by 62.1% of the hedge-fund cohort (13F, delayed) [S9]",
+                "Sector signal context unavailable (validation 422)"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "coverage",
+          "title": "Evidence coverage",
+          "items": [
+            {
+              "name": "Fundamentals",
+              "status": "available",
+              "note": "FY2025 10-K facts [S1]"
+            },
+            {
+              "name": "Change report",
+              "status": "available",
+              "note": "8 ranked changes [S2]"
+            },
+            {
+              "name": "Filing changes (10-Q vs 10-Q)",
+              "status": "partial",
+              "note": "1 input missing [S3]"
+            },
+            {
+              "name": "Peer comparison",
+              "status": "partial",
+              "note": "2 peers, some metrics incomparable [S4]"
+            },
+            {
+              "name": "Risk findings",
+              "status": "available",
+              "note": "12 findings [S6]"
+            },
+            {
+              "name": "Industry structure",
+              "status": "partial",
+              "note": "2 of 5 forces evidenced [S7]"
+            },
+            {
+              "name": "Earnings release",
+              "status": "available",
+              "note": "8-K 2026-07-30 [S8]"
+            },
+            {
+              "name": "Hedge-fund crowding",
+              "status": "available",
+              "note": "2026-06-30 panel [S9]"
+            },
+            {
+              "name": "Sector equity signal",
+              "status": "unavailable",
+              "note": "equity_signal_stale_contributors"
+            },
+            {
+              "name": "Roster holdings",
+              "status": "unavailable",
+              "note": "CUSIP not available"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — headline signal",
+          "text": "Observation: The fictional TEST report carries a 2 items to review signal [S1]. Why it matters: The signal frames the review. Uncertainty: Evidence coverage is bounded. What would change the view: New governed evidence that changes the signal."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "info",
+          "title": "Key judgment — primary measure",
+          "text": "Observation: Revenue growth is +6.2% in the TEST evidence [S2]. Why it matters: This measure anchors the executive view. Uncertainty: The fixture is deliberately compact. What would change the view: A refreshed source with a materially different value."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "info",
+          "title": "Key judgment — monitoring priority",
+          "text": "Observation: Latest filing is 10-Q in the TEST evidence [S3]. Why it matters: It identifies a monitoring priority. Uncertainty: Supporting detail is limited. What would change the view: Corroborated evidence that resolves or reverses the item."
+        }
+      ]
+    },
+    {
+      "title": "Fundamentals, filing changes and risk factors",
+      "kicker": "SEC XBRL facts, FY2025 10-K and 2026 10-Qs",
+      "blocks": [
+        {
+          "type": "two_col",
+          "left": [
+            {
+              "type": "line",
+              "title": "Revenue (USD billions)",
+              "series": [
+                {"name": "Revenue", "points": [["2022-12-31", 9.8], ["2023-12-31", 10.7], ["2024-12-31", 11.68], ["2025-12-31", 12.4]]}
+              ],
+              "note": "First-filed annual facts [S1]."
+            }
+          ],
+          "right": [
+            {
+              "type": "line",
+              "title": "Operating margin",
+              "series": [
+                {"name": "Margin", "points": [["2022-12-31", 15.2], ["2023-12-31", 15.9], ["2024-12-31", 16.1], ["2025-12-31", 14.8]]}
+              ],
+              "y_suffix": "%",
+              "note": "Calculated by the governed fundamentals result [S1]."
+            }
+          ]
+        },
+        {
+          "type": "heat",
+          "title": "Filing-change intensity",
+          "columns": ["Added", "Removed"],
+          "rows": [
+            {"label": "10-Q 2026-08-05", "values": [3, 0]},
+            {"label": "Risk factors", "values": [1, 0]}
+          ],
+          "decimals": 0,
+          "note": "Returned disclosure and risk-factor change counts [S3][S6]."
+        },
+        {
+          "type": "table",
+          "title": "Annual changes (FY2025 vs FY2024, 10-K)",
+          "columns": [
+            "Metric",
+            "FY2025",
+            "FY2024",
+            "Change",
+            "Source"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "r",
+            "n"
+          ],
+          "rows": [
+            [
+              "Revenue",
+              "$12.40B",
+              "$11.68B",
+              "+6.2%",
+              "S1"
+            ],
+            [
+              "Operating income",
+              "$1.84B",
+              "$1.88B",
+              "-2.1%",
+              "S1"
+            ],
+            [
+              "Operating cash flow",
+              "$1.95B",
+              "$1.90B",
+              "+2.6%",
+              "S1"
+            ],
+            [
+              "Capital expenditures",
+              "$1.32B",
+              "$0.84B",
+              "+58.0%",
+              "S2"
+            ],
+            [
+              "Diluted EPS",
+              "$4.12",
+              "$4.20",
+              "-1.9%",
+              "S1"
+            ]
+          ],
+          "note": "All values as first filed; no revisions or amendments flagged [S1]."
+        },
+        {
+          "type": "two_col",
+          "left": [
+            {
+              "type": "bars",
+              "title": "Operating margin by fiscal year",
+              "narrow": true,
+              "items": [
+                {
+                  "label": "FY2022",
+                  "value": 15.2,
+                  "display": "15.2%"
+                },
+                {
+                  "label": "FY2023",
+                  "value": 15.9,
+                  "display": "15.9%"
+                },
+                {
+                  "label": "FY2024",
+                  "value": 16.1,
+                  "display": "16.1%"
+                },
+                {
+                  "label": "FY2025",
+                  "value": 14.8,
+                  "display": "14.8%"
+                }
+              ]
+            }
+          ],
+          "right": [
+            {
+              "type": "kv",
+              "title": "Cash and capital allocation (FY2025)",
+              "rows": [
+                [
+                  "Free cash flow margin",
+                  "5.1%",
+                  "S1"
+                ],
+                [
+                  "Earnings cash conversion",
+                  "1.24x",
+                  "S1"
+                ],
+                [
+                  "Dividends",
+                  "$0.31B",
+                  "S1"
+                ],
+                [
+                  "Repurchases",
+                  "$0.22B",
+                  "S2"
+                ],
+                [
+                  "Liabilities / equity",
+                  "1.42x",
+                  "S2"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Latest 10-Q vs prior 10-Q",
+          "columns": [
+            "Form",
+            "Current filed",
+            "Prior filed",
+            "Passages added",
+            "Passages removed"
+          ],
+          "align": [
+            "l",
+            "n",
+            "n",
+            "r",
+            "r"
+          ],
+          "rows": [
+            [
+              "10-Q",
+              "2026-08-05",
+              "2026-05-06",
+              "3",
+              "0"
+            ]
+          ],
+          "note": "Counts of disclosure passages from the filing diff [S3]."
+        },
+        {
+          "type": "table",
+          "title": "Risk-factor findings",
+          "columns": [
+            "Category",
+            "Filing language (excerpt)",
+            "Filing",
+            "Freshness"
+          ],
+          "align": ["l", "l", "n", "c"],
+          "rows": [
+            [
+              "Supply chain",
+              "\"Disruptions at single-source suppliers could delay shipments.\"",
+              "10-Q 2026-08-05",
+              {"chip": "new", "status": "new"}
+            ],
+            [
+              "Competitive",
+              "\"We face competition from larger, diversified manufacturers.\"",
+              "10-K 2026-02-20",
+              {"chip": "available", "status": "available"}
+            ]
+          ],
+          "note": "Fictional sample sentences [S6]."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Filing changes sharpen review",
+          "text": "Observation: Revenue rose while margin fell and a new supply-chain passage appeared [S1][S3][S6]. Why it matters: Holders should distinguish growth from operating and disclosure changes. Uncertainty: Filing language does not quantify impact. What would change the view: Later filings showing margin recovery or removal of the cited risk."
+        }
+      ]
+    },
+    {
+      "title": "Peers",
+      "kicker": "User-selected peers; period-aligned metrics only",
+      "new_page": false,
+      "blocks": [
+        {
+          "type": "bars",
+          "title": "Crowding measures",
+          "suffix": "%",
+          "items": [
+            {"label": "Filer ownership", "value": 62.1, "source": "S9"},
+            {"label": "Median holder weight", "value": 0.84, "source": "S9"},
+            {"label": "Consensus percentile", "value": 44.0, "source": "S9"}
+          ],
+          "note": "Percentages use distinct governed denominators; compare direction, not magnitude [S9]."
+        },
+        {
+          "type": "table",
+          "columns": [
+            "Metric",
+            "EXIC",
+            "PEER1",
+            "PEER2",
+            "Peer median",
+            "EXIC rank"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "r",
+            "r",
+            "c"
+          ],
+          "rows": [
+            [
+              "Gross margin",
+              "31.4%",
+              "28.9%",
+              "34.0%",
+              "31.5%",
+              "2 of 3"
+            ],
+            [
+              "FCF margin",
+              "5.1%",
+              "9.8%",
+              "7.2%",
+              "8.5%",
+              "3 of 3"
+            ],
+            [
+              "Net debt / EBITDA",
+              "1.9x",
+              "2.6x",
+              "1.1x",
+              "1.9x",
+              "2 of 3"
+            ]
+          ],
+          "note": "Annual periods ending 2025-12-31 [S4]. Rank 1 = most favourable per rank_direction."
+        }
+      ]
+    },
+    {
+      "title": "Industry structure",
+      "kicker": "Supplier concentration is the clearest disclosed structural pressure",
+      "blocks": [
+        {
+          "type": "tiles",
+          "tiles": [
+            {"label": "Forces evidenced", "value": "2 of 3", "source": "S7"},
+            {"label": "Single-source risk", "value": "Disclosed", "source": "S7", "tone": "watch"},
+            {"label": "Buyer power", "value": "Not found", "source": "S7"},
+            {"label": "Evidence basis", "value": "SEC text", "source": "S7"}
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Industry structure (disclosure evidence)",
+          "columns": [
+            "Force",
+            "Evidence",
+            "Basis"
+          ],
+          "align": [
+            "l",
+            "l",
+            "c"
+          ],
+          "rows": [
+            [
+              "Rivalry",
+              "Competition disclosure in Item 1A [S7]",
+              {
+                "chip": "available",
+                "status": "available"
+              }
+            ],
+            [
+              "Supplier power",
+              "Single-source supplier disclosure [S7]",
+              {
+                "chip": "available",
+                "status": "available"
+              }
+            ],
+            [
+              "Buyer power",
+              "No matching sentence retrieved",
+              {
+                "chip": "missing",
+                "status": "missing"
+              }
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "How to read this",
+          "text": "Filing sentences are issuer disclosures, not measurements of industry force strength or moat durability [S7]."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Supplier dependence is the clearest disclosed pressure",
+          "text": "Observation: Supplier concentration is evidenced while buyer power is not retrieved [S7]. Why it matters: Disclosed dependency can constrain operating resilience. Uncertainty: Filing text does not measure probability or loss. What would change the view: Diversification evidence or quantified supplier exposure in a later filing."
+        }
+      ]
+    },
+    {
+      "title": "Latest earnings release",
+      "kicker": "Form 8-K Item 2.02, EX-99.1",
+      "new_page": false,
+      "blocks": [
+        {
+          "type": "kv",
+          "rows": [
+            [
+              "Filed",
+              "2026-07-30",
+              "S8"
+            ],
+            [
+              "Items",
+              "2.02, 9.01",
+              "S8"
+            ],
+            [
+              "Guidance changes",
+              "None extracted",
+              "S8"
+            ]
+          ]
+        },
+        {
+          "type": "bullets",
+          "items": [
+            "Quarterly revenue $3.21B, up 4.0% (GAAP) [S8]",
+            "One-time item: none returned [S8]"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Positioning and crowding",
+      "kicker": "Hedge-fund 13F cohort, period 2026-06-30",
+      "blocks": [
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Visual evidence",
+          "text": "Not available — No governed visual was returned for this fictional TEST fixture."
+        },
+        {
+          "type": "kv",
+          "title": "EXIC in the crowding panels",
+          "rows": [
+            [
+              "Consensus rank",
+              "14 of 25 shown",
+              "S9"
+            ],
+            [
+              "Holders",
+              "18 of 29 filers (62.1%)",
+              "S9"
+            ],
+            [
+              "Median weight (holders)",
+              "0.84%",
+              "S9"
+            ],
+            [
+              "Building / unwinding",
+              "Not in either top-25 panel",
+              "S9"
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "watch",
+          "title": "How to read 13F crowding",
+          "text": "13F filings are delayed (49 days at the report date), cover long U.S.-listed positions only, omit shorts and most non-U.S. exposure, and do not show intent [S9]."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Ownership is broad but not a directional signal",
+          "text": "Observation: 18 of 29 filers report the issuer, but it is absent from building and unwinding panels [S9]. Why it matters: Breadth alone does not establish momentum. Uncertainty: 13F data are delayed and omit shorts. What would change the view: A governed panel showing a sustained build or unwind."
+        }
+      ]
+    },
+    {
+      "title": "Who holds it on the roster",
+      "kicker": "Firm-level Form 13F",
+      "new_page": false,
+      "blocks": [
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Not run",
+          "text": "No CUSIP was available for the issuer, so roster holdings were not checked. This is not evidence that no rostered manager holds it."
+        }
+      ]
+    },
+    {
+      "title": "Appendix — sources and method",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Sources",
+          "columns": [
+            "Tag",
+            "Evidence",
+            "Tool / view",
+            "As of",
+            "Validation",
+            "Digest"
+          ],
+          "align": [
+            "n",
+            "l",
+            "l",
+            "n",
+            "n",
+            "n"
+          ],
+          "rows": [
+            [
+              "S1",
+              "Fundamentals",
+              "fundamentals / fundamentals",
+              "2026-10-04",
+              {
+                "chip": "not_run",
+                "status": "not_run"
+              },
+              "aa11bb22"
+            ],
+            [
+              "S2",
+              "Change report",
+              "fundamentals / change_report",
+              "2026-10-04",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "cc33dd44"
+            ],
+            [
+              "S3",
+              "Filing changes",
+              "fundamentals / changes",
+              "2026-10-04",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "ee55ff66"
+            ],
+            [
+              "S4",
+              "Peer comparison",
+              "fundamentals / peer_comparison",
+              "2026-08-05",
+              {
+                "chip": "advisory",
+                "status": "advisory"
+              },
+              "11223344"
+            ],
+            [
+              "S5",
+              "Filing inventory",
+              "filing_evidence / filings",
+              "2026-10-04",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "55667788"
+            ],
+            [
+              "S6",
+              "Risk findings",
+              "filing_evidence / risk_findings",
+              "2026-10-04",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "99aabbcc"
+            ],
+            [
+              "S7",
+              "Industry structure",
+              "filing_evidence / industry_structure",
+              "2026-10-04",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "ddeeff00"
+            ],
+            [
+              "S8",
+              "Earnings release",
+              "filing_evidence / earnings_release",
+              "2026-07-30",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "0a1b2c3d"
+            ],
+            [
+              "S9",
+              "Hedge-fund crowding",
+              "market_positioning / hedge_fund_crowding",
+              "2026-10-02",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "4e5f6a7b"
+            ]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Server Metric Methods",
+          "columns": [
+            "Source",
+            "Metric",
+            "Server method / basis"
+          ],
+          "align": [
+            "n",
+            "l",
+            "l"
+          ],
+          "rows": [
+            [
+              "S1",
+              "Net debt / EBITDA",
+              "get_public_equity_fundamentals.leverage_metric; preserve returned formula_id, formula_version, period_basis, units and source facts"
+            ],
+            [
+              "S2",
+              "Liabilities / equity",
+              "get_public_equity_change_report.leverage_metric; preserve returned formula_id, formula_version, period_basis, units and source facts"
+            ]
+          ]
+        },
+        {
+          "type": "bullets",
+          "items": [
+            "Review flags: elevated = negative annual operating income or OCF, revised or amended facts, net debt / EBITDA ≥ 3.0x, or filed impairment / restatement / going-concern items; watch = revenue down, operating margin down ≥ 2.0 pts, capex up ≥ 50% with FCF margin down, risk passages added or removed, or ≥ 50% cohort holder share; clear = none; insufficient = fundamentals unavailable.",
+            "Sector mapping is SEC SIC to a Gradient sector, not GICS."
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Disclaimer",
+          "text": "This note summarizes public SEC filings and Gradient-normalized data as of the dates shown. It is not investment, legal, tax or accounting advice, not a recommendation to buy, sell or hold any security, and contains no price target or rating. Filed figures are issuer-reported; Form 13F data is delayed and incomplete. Verify against the source filings before relying on any figure."
+        }
+      ]
+    }
+  ]
+}

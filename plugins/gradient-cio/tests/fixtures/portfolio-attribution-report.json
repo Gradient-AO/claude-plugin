@@ -9,12 +9,30 @@
     "data_as_of": "2026-06-30 historical; 2026-10-08 ex ante",
     "confidentiality": "TEST DATA — fictional portfolio for rendering tests only",
     "cover_facts": [
-      ["Historical period", "2025-07-31 to 2026-06-30"],
-      ["Ex ante as of", "2026-10-08"],
-      ["Base currency", "USD"],
-      ["Benchmark role", "Policy"],
-      ["Parent cohort", "Root"],
-      ["Data scope", "Fictional TEST data"]
+      [
+        "Historical period",
+        "2025-07-31 to 2026-06-30"
+      ],
+      [
+        "Ex ante as of",
+        "2026-10-08"
+      ],
+      [
+        "Base currency",
+        "USD"
+      ],
+      [
+        "Benchmark role",
+        "Policy"
+      ],
+      [
+        "Parent cohort",
+        "Root"
+      ],
+      [
+        "Data scope",
+        "Fictional TEST data"
+      ]
     ],
     "signal_title": "Attribution evidence",
     "signal": {
@@ -67,14 +85,57 @@
         {
           "type": "table",
           "title": "At a glance",
-          "columns": ["Area", "Evidence-based finding", "Status"],
-          "align": ["l", "l", "l"],
+          "columns": [
+            "Area",
+            "Evidence-based finding",
+            "Status"
+          ],
+          "align": [
+            "l",
+            "l",
+            "l"
+          ],
           "rows": [
-            ["Historical result", "Active return was -0.6pp; public-equity selection was the largest negative effect [S4].", {"chip": "Available", "status": "available"}],
-            ["Ex ante result", "Expected active return is +0.4pp; fixed-income selection is the largest positive effect [S5].", {"chip": "Available", "status": "available"}],
-            ["Reconciliation", "Both total effects reconcile to their returned active return within tolerance [S4][S5].", {"chip": "Passed", "status": "passed"}],
-            ["Assumptions", "Ex ante effects use persisted base-currency expected returns and current cohort weights [S5].", {"chip": "Assumption", "status": "watch"}],
-            ["Coverage", "All required fictional TEST sources are available [S1][S2][S3][S4][S5].", {"chip": "Complete", "status": "available"}]
+            [
+              "Historical result",
+              "Active return was -0.6pp; public-equity selection was the largest negative effect [S4].",
+              {
+                "chip": "Available",
+                "status": "available"
+              }
+            ],
+            [
+              "Ex ante result",
+              "Expected active return is +0.4pp; fixed-income selection is the largest positive effect [S5].",
+              {
+                "chip": "Available",
+                "status": "available"
+              }
+            ],
+            [
+              "Reconciliation",
+              "Both total effects reconcile to their returned active return within tolerance [S4][S5].",
+              {
+                "chip": "Passed",
+                "status": "passed"
+              }
+            ],
+            [
+              "Assumptions",
+              "Ex ante effects use persisted base-currency expected returns and current cohort weights [S5].",
+              {
+                "chip": "Assumption",
+                "status": "watch"
+              }
+            ],
+            [
+              "Coverage",
+              "All required fictional TEST sources are available [S1][S2][S3][S4][S5].",
+              {
+                "chip": "Complete",
+                "status": "available"
+              }
+            ]
           ]
         },
         {
@@ -82,6 +143,27 @@
           "tone": "info",
           "title": "Scope",
           "text": "This is a monitoring analysis, not an investment recommendation or forecast. Ex ante expected returns and effects are assumptions, not guarantees."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — headline signal",
+          "text": "Observation: The fictional TEST report carries a Both lanes reconcile signal [S1]. Why it matters: The signal frames the review. Uncertainty: Evidence coverage is bounded. What would change the view: New governed evidence that changes the signal."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "info",
+          "title": "Key judgment — primary measure",
+          "text": "Observation: Historical active return is -0.6pp in the TEST evidence [S2]. Why it matters: This measure anchors the executive view. Uncertainty: The fixture is deliberately compact. What would change the view: A refreshed source with a materially different value."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "info",
+          "title": "Key judgment — monitoring priority",
+          "text": "Observation: Ex ante residual is 0.0bp in the TEST evidence [S3]. Why it matters: It identifies a monitoring priority. Uncertainty: Supporting detail is limited. What would change the view: Corroborated evidence that resolves or reverses the item."
         }
       ]
     },
@@ -93,24 +175,84 @@
         {
           "type": "kv",
           "rows": [
-            ["Portfolio", "Example Attribution Portfolio (TEST)", "S2"],
-            ["Period", "2025-07-31 to 2026-06-30", "S4"],
-            ["Parent cohort", "Root", "S2"],
-            ["Benchmark role", "Policy", "S4"],
-            ["Base currency", "USD", "S2"],
-            ["Historical basis", "Monthly total returns; beginning-of-period weights", "S4"],
-            ["Ex ante basis", "One-year expected returns; current normalized cohort weights", "S5"],
-            ["Data scope", "Fictional TEST data", "S1"]
+            [
+              "Portfolio",
+              "Example Attribution Portfolio (TEST)",
+              "S2"
+            ],
+            [
+              "Period",
+              "2025-07-31 to 2026-06-30",
+              "S4"
+            ],
+            [
+              "Parent cohort",
+              "Root",
+              "S2"
+            ],
+            [
+              "Benchmark role",
+              "Policy",
+              "S4"
+            ],
+            [
+              "Base currency",
+              "USD",
+              "S2"
+            ],
+            [
+              "Historical basis",
+              "Monthly total returns; beginning-of-period weights",
+              "S4"
+            ],
+            [
+              "Ex ante basis",
+              "One-year expected returns; current normalized cohort weights",
+              "S5"
+            ],
+            [
+              "Data scope",
+              "Fictional TEST data",
+              "S1"
+            ]
           ]
         },
         {
           "type": "table",
           "title": "Method boundary",
-          "columns": ["Lane", "Weights", "Returns", "Horizon / linking", "Method version", "Source"],
-          "align": ["l", "l", "l", "l", "l", "n"],
+          "columns": [
+            "Lane",
+            "Weights",
+            "Returns",
+            "Horizon / linking",
+            "Method version",
+            "Source"
+          ],
+          "align": [
+            "l",
+            "l",
+            "l",
+            "l",
+            "l",
+            "n"
+          ],
           "rows": [
-            ["Historical", "Beginning of period", "Realized total return", "12 monthly periods / symmetric Carino", "realized_brinson_fachler", "[S4]"],
-            ["Ex ante", "Current actual and persisted policy weights, normalized", "Annualized expected return", "One expected period / no linker", "1.0.0", "[S5]"]
+            [
+              "Historical",
+              "Beginning of period",
+              "Realized total return",
+              "12 monthly periods / symmetric Carino",
+              "realized_brinson_fachler",
+              "[S4]"
+            ],
+            [
+              "Ex ante",
+              "Current actual and persisted policy weights, normalized",
+              "Annualized expected return",
+              "One expected period / no linker",
+              "1.0.0",
+              "[S5]"
+            ]
           ]
         }
       ]
@@ -121,19 +263,6 @@
       "kicker": "Observed performance provides context, not causal attribution",
       "blocks": [
         {
-          "type": "table",
-          "title": "Standard periods to 2026-06-30",
-          "columns": ["Period", "Portfolio", "Benchmark", "Excess", "Coverage"],
-          "align": ["l", "r", "r", "r", "l"],
-          "rows": [
-            ["QTD", "2.8%", "3.2%", "-0.4pp", {"chip": "Complete", "status": "available"}],
-            ["YTD", "4.6%", "5.1%", "-0.5pp", {"chip": "Complete", "status": "available"}],
-            ["1Y", "8.4%", "9.0%", "-0.6pp", {"chip": "Complete", "status": "available"}],
-            ["3Y (ann.)", "7.1%", "7.5%", "-0.4pp", {"chip": "Complete", "status": "available"}]
-          ],
-          "note": "Returned labels, annualization and coverage are preserved [S3]."
-        },
-        {
           "type": "chart",
           "chart": {
             "chart_id": "test-attribution-growth-context",
@@ -141,24 +270,130 @@
             "status": "ok",
             "currency": "USD",
             "columns": [
-              {"key": "date", "title": "Date", "format": "date", "decimals": null},
-              {"key": "portfolio", "title": "Portfolio", "format": "number", "decimals": 1},
-              {"key": "benchmark", "title": "Benchmark", "format": "number", "decimals": 1}
+              {
+                "key": "date",
+                "title": "Date",
+                "format": "date",
+                "decimals": null
+              },
+              {
+                "key": "portfolio",
+                "title": "Portfolio",
+                "format": "number",
+                "decimals": 1
+              },
+              {
+                "key": "benchmark",
+                "title": "Benchmark",
+                "format": "number",
+                "decimals": 1
+              }
             ],
             "rows": [
-              ["2025-07-31", 100.0, 100.0],
-              ["2025-10-31", 102.4, 102.7],
-              ["2026-01-31", 104.6, 105.0],
-              ["2026-04-30", 106.3, 106.8],
-              ["2026-06-30", 108.4, 109.0]
+              [
+                "2025-07-31",
+                100.0,
+                100.0
+              ],
+              [
+                "2025-10-31",
+                102.4,
+                102.7
+              ],
+              [
+                "2026-01-31",
+                104.6,
+                105.0
+              ],
+              [
+                "2026-04-30",
+                106.3,
+                106.8
+              ],
+              [
+                "2026-06-30",
+                108.4,
+                109.0
+              ]
             ],
             "truncated": false,
-            "render_hint": {"block": "line", "x": "date", "y": ["portfolio", "benchmark"]}
+            "render_hint": {
+              "block": "line",
+              "x": "date",
+              "y": [
+                "portfolio",
+                "benchmark"
+              ]
+            }
           }
         },
         {
-          "type": "text",
-          "text": "The portfolio trailed the policy benchmark over the quarter, year to date and trailing year [S3]. The attribution section, rather than these return totals, identifies the returned active-effect sources [S4]."
+          "type": "table",
+          "title": "Standard periods to 2026-06-30",
+          "columns": [
+            "Period",
+            "Portfolio",
+            "Benchmark",
+            "Excess",
+            "Coverage"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "r",
+            "l"
+          ],
+          "rows": [
+            [
+              "QTD",
+              "2.8%",
+              "3.2%",
+              "-0.4pp",
+              {
+                "chip": "Complete",
+                "status": "available"
+              }
+            ],
+            [
+              "YTD",
+              "4.6%",
+              "5.1%",
+              "-0.5pp",
+              {
+                "chip": "Complete",
+                "status": "available"
+              }
+            ],
+            [
+              "1Y",
+              "8.4%",
+              "9.0%",
+              "-0.6pp",
+              {
+                "chip": "Complete",
+                "status": "available"
+              }
+            ],
+            [
+              "3Y (ann.)",
+              "7.1%",
+              "7.5%",
+              "-0.4pp",
+              {
+                "chip": "Complete",
+                "status": "available"
+              }
+            ]
+          ],
+          "note": "Returned labels, annualization and coverage are preserved [S3]."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Relative returns trailed recently",
+          "text": "Observation: The portfolio trailed over QTD, YTD and 1Y [S3]. Why it matters: The pattern establishes context for attribution. Uncertainty: Return totals do not identify causes. What would change the view: A complete later period with sustained positive excess return."
         }
       ]
     },
@@ -168,28 +403,34 @@
       "kicker": "Realized Brinson-Fachler effects with symmetric-Carino linking",
       "blocks": [
         {
-          "type": "table",
-          "title": "Historical total effects",
-          "columns": ["Effect", "Contribution", "Source"],
-          "align": ["l", "r", "n"],
-          "rows": [
-            ["Allocation", "+0.1pp", "[S4]"],
-            ["Selection", "-0.8pp", "[S4]"],
-            ["Interaction", "+0.1pp", "[S4]"],
-            ["Total attribution", "-0.6pp", "[S4]"]
-          ]
-        },
-        {
-          "type": "table",
-          "title": "Historical segment effects",
-          "columns": ["Segment", "Allocation", "Selection", "Interaction", "Total"],
-          "align": ["l", "r", "r", "r", "r"],
-          "rows": [
-            ["Public equity", "+0.1pp", "-0.8pp", "+0.1pp", "-0.6pp"],
-            ["Fixed income", "+0.1pp", "+0.2pp", "0.0pp", "+0.3pp"],
-            ["Private assets", "-0.1pp", "-0.2pp", "0.0pp", "-0.3pp"]
+          "type": "two_col",
+          "left": [
+            {
+              "type": "waterfall",
+              "title": "Allocation → selection → interaction",
+              "items": [
+                {"label": "Allocation", "value": 0.1, "display": "+0.1pp"},
+                {"label": "Selection", "value": -0.8, "display": "-0.8pp"},
+                {"label": "Interaction", "value": 0.1, "display": "+0.1pp"}
+              ],
+              "note": "Returned linked effects [S4]."
+            }
           ],
-          "note": "Rows are returned effects and are not recalculated [S4]."
+          "right": [
+            {
+              "type": "kv",
+              "title": "Historical reconciliation and method",
+              "rows": [
+                ["Active return", "-0.6pp", "S4"],
+                ["Total effects", "-0.6pp", "S4"],
+                ["Residual", "0.0bp", "S4"],
+                ["Tolerance", "0.00000001pp", "S4"],
+                ["Method", "Realized Brinson-Fachler", "S4"],
+                ["Linking", "Symmetric Carino", "S4"],
+                ["Currency", "USD", "S4"]
+              ]
+            }
+          ]
         },
         {
           "type": "chart",
@@ -198,30 +439,127 @@
             "title": "Historical segment total effects (TEST)",
             "status": "ok",
             "columns": [
-              {"key": "segment", "title": "Segment", "format": "text", "decimals": null},
-              {"key": "effect", "title": "Effect", "format": "percentage", "decimals": 1}
+              {
+                "key": "segment",
+                "title": "Segment",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "effect",
+                "title": "Effect",
+                "format": "percentage",
+                "decimals": 1
+              }
             ],
-            "rows": [["Public equity", -0.006], ["Fixed income", 0.003], ["Private assets", -0.003]],
+            "rows": [
+              [
+                "Public equity",
+                -0.006
+              ],
+              [
+                "Fixed income",
+                0.003
+              ],
+              [
+                "Private assets",
+                -0.003
+              ]
+            ],
             "truncated": false,
-            "render_hint": {"block": "bars", "x": "segment", "y": ["effect"]}
+            "render_hint": {
+              "block": "bars",
+              "x": "segment",
+              "y": [
+                "effect"
+              ]
+            }
           }
         },
         {
-          "type": "kv",
-          "title": "Historical reconciliation and method",
+          "type": "table",
+          "title": "Historical total effects",
+          "columns": [
+            "Effect",
+            "Contribution",
+            "Source"
+          ],
+          "align": [
+            "l",
+            "r",
+            "n"
+          ],
           "rows": [
-            ["Active return", "-0.6pp", "S4"],
-            ["Total effects", "-0.6pp", "S4"],
-            ["Residual", "0.0bp", "S4"],
-            ["Tolerance", "0.00000001pp", "S4"],
-            ["Method", "Realized Brinson-Fachler", "S4"],
-            ["Linking", "Symmetric Carino", "S4"],
-            ["Currency", "USD", "S4"]
+            [
+              "Allocation",
+              "+0.1pp",
+              "[S4]"
+            ],
+            [
+              "Selection",
+              "-0.8pp",
+              "[S4]"
+            ],
+            [
+              "Interaction",
+              "+0.1pp",
+              "[S4]"
+            ],
+            [
+              "Total attribution",
+              "-0.6pp",
+              "[S4]"
+            ]
           ]
         },
         {
-          "type": "text",
-          "text": "Public-equity selection was the largest negative returned effect, while fixed income was the largest positive segment effect [S4]. The result reconciles within the returned tolerance [S4]."
+          "type": "table",
+          "title": "Historical segment effects",
+          "columns": [
+            "Segment",
+            "Allocation",
+            "Selection",
+            "Interaction",
+            "Total"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "r",
+            "r"
+          ],
+          "rows": [
+            [
+              "Public equity",
+              "+0.1pp",
+              "-0.8pp",
+              "+0.1pp",
+              "-0.6pp"
+            ],
+            [
+              "Fixed income",
+              "+0.1pp",
+              "+0.2pp",
+              "0.0pp",
+              "+0.3pp"
+            ],
+            [
+              "Private assets",
+              "-0.1pp",
+              "-0.2pp",
+              "0.0pp",
+              "-0.3pp"
+            ]
+          ],
+          "note": "Rows are returned effects and are not recalculated [S4]."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Equity selection drove detractor",
+          "text": "Observation: Public-equity selection is the largest detractor, and its resolved managers have one open finding [S4][S6]. Why it matters: The effect and diligence context concentrate oversight. Uncertainty: The balanced macro regime is contextual, not causal [S7]. What would change the view: Closed findings or refreshed attribution showing a different leading effect."
         }
       ]
     },
@@ -231,6 +569,50 @@
       "kicker": "Single-period expected effects from persisted assumptions",
       "blocks": [
         {
+          "type": "chart",
+          "chart": {
+            "chart_id": "test-ex-ante-attribution-effects",
+            "title": "Governed ex ante segment total effects (TEST)",
+            "status": "ok",
+            "columns": [
+              {
+                "key": "segment",
+                "title": "Segment",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "effect",
+                "title": "Effect",
+                "format": "percentage",
+                "decimals": 1
+              }
+            ],
+            "rows": [
+              [
+                "Public equity",
+                0.003
+              ],
+              [
+                "Fixed income",
+                0.003
+              ],
+              [
+                "Private assets",
+                -0.002
+              ]
+            ],
+            "truncated": false,
+            "render_hint": {
+              "block": "bars",
+              "x": "segment",
+              "y": [
+                "effect"
+              ]
+            }
+          }
+        },
+        {
           "type": "callout",
           "tone": "warning",
           "title": "Assumptions, not forecasts",
@@ -239,55 +621,153 @@
         {
           "type": "table",
           "title": "Ex ante total effects",
-          "columns": ["Effect", "Contribution", "Source"],
-          "align": ["l", "r", "n"],
+          "columns": [
+            "Effect",
+            "Contribution",
+            "Source"
+          ],
+          "align": [
+            "l",
+            "r",
+            "n"
+          ],
           "rows": [
-            ["Allocation", "+0.1pp", "[S5]"],
-            ["Selection", "+0.2pp", "[S5]"],
-            ["Interaction", "+0.1pp", "[S5]"],
-            ["Total attribution", "+0.4pp", "[S5]"]
+            [
+              "Allocation",
+              "+0.1pp",
+              "[S5]"
+            ],
+            [
+              "Selection",
+              "+0.2pp",
+              "[S5]"
+            ],
+            [
+              "Interaction",
+              "+0.1pp",
+              "[S5]"
+            ],
+            [
+              "Total attribution",
+              "+0.4pp",
+              "[S5]"
+            ]
           ]
         },
         {
           "type": "table",
           "title": "Ex ante segment effects",
-          "columns": ["Segment", "Portfolio wt.", "Benchmark wt.", "Portfolio exp. return", "Benchmark exp. return", "Allocation", "Selection", "Interaction", "Total"],
-          "align": ["l", "r", "r", "r", "r", "r", "r", "r", "r"],
+          "columns": [
+            "Segment",
+            "Portfolio wt.",
+            "Benchmark wt.",
+            "Portfolio exp. return",
+            "Benchmark exp. return",
+            "Allocation",
+            "Selection",
+            "Interaction",
+            "Total"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r"
+          ],
           "rows": [
-            ["Public equity", "55.0%", "50.0%", "7.8%", "7.5%", "+0.1pp", "+0.2pp", "0.0pp", "+0.3pp"],
-            ["Fixed income", "30.0%", "35.0%", "4.8%", "4.1%", "+0.1pp", "+0.2pp", "0.0pp", "+0.3pp"],
-            ["Private assets", "15.0%", "15.0%", "8.0%", "9.3%", "0.0pp", "-0.2pp", "0.0pp", "-0.2pp"]
+            [
+              "Public equity",
+              "55.0%",
+              "50.0%",
+              "7.8%",
+              "7.5%",
+              "+0.1pp",
+              "+0.2pp",
+              "0.0pp",
+              "+0.3pp"
+            ],
+            [
+              "Fixed income",
+              "30.0%",
+              "35.0%",
+              "4.8%",
+              "4.1%",
+              "+0.1pp",
+              "+0.2pp",
+              "0.0pp",
+              "+0.3pp"
+            ],
+            [
+              "Private assets",
+              "15.0%",
+              "15.0%",
+              "8.0%",
+              "9.3%",
+              "0.0pp",
+              "-0.2pp",
+              "0.0pp",
+              "-0.2pp"
+            ]
           ],
           "note": "Inputs and effects are returned by the governed ex ante contract [S5]."
-        },
-        {
-          "type": "chart",
-          "chart": {
-            "chart_id": "test-ex-ante-attribution-effects",
-            "title": "Governed ex ante segment total effects (TEST)",
-            "status": "ok",
-            "columns": [
-              {"key": "segment", "title": "Segment", "format": "text", "decimals": null},
-              {"key": "effect", "title": "Effect", "format": "percentage", "decimals": 1}
-            ],
-            "rows": [["Public equity", 0.003], ["Fixed income", 0.003], ["Private assets", -0.002]],
-            "truncated": false,
-            "render_hint": {"block": "bars", "x": "segment", "y": ["effect"]}
-          }
         },
         {
           "type": "kv",
           "title": "Ex ante reconciliation and method",
           "rows": [
-            ["Expected active return", "+0.4pp", "S5"],
-            ["Total effects", "+0.4pp", "S5"],
-            ["Residual", "0.0bp", "S5"],
-            ["Method / version", "Expected Brinson-Fachler / 1.0.0", "S5"],
-            ["Horizon / linking", "One year / none", "S5"],
-            ["Return sources", "Allocation and benchmark expected return base", "S5"],
-            ["Assumption set / regime", "Not linked / Not linked", "S5"],
-            ["Currency", "USD", "S5"]
+            [
+              "Expected active return",
+              "+0.4pp",
+              "S5"
+            ],
+            [
+              "Total effects",
+              "+0.4pp",
+              "S5"
+            ],
+            [
+              "Residual",
+              "0.0bp",
+              "S5"
+            ],
+            [
+              "Method / version",
+              "Expected Brinson-Fachler / 1.0.0",
+              "S5"
+            ],
+            [
+              "Horizon / linking",
+              "One year / none",
+              "S5"
+            ],
+            [
+              "Return sources",
+              "Allocation and benchmark expected return base",
+              "S5"
+            ],
+            [
+              "Assumption set / regime",
+              "Not linked / Not linked",
+              "S5"
+            ],
+            [
+              "Currency",
+              "USD",
+              "S5"
+            ]
           ]
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Assumption lineage remains incomplete",
+          "text": "Observation: Ex ante active return is +0.4pp, but no assumption set or regime is linked [S5]. Why it matters: Persisted inputs cannot be tied to a named release. Uncertainty: Input dates may differ by segment. What would change the view: A named release and regime linked to every segment input."
         }
       ]
     },
@@ -297,6 +777,19 @@
       "kicker": "Directional comparison with explicit basis separation",
       "blocks": [
         {
+          "type": "heat",
+          "title": "Segment effects by attribution lane",
+          "columns": ["Historical", "Ex ante"],
+          "rows": [
+            {"label": "Public equity", "values": [-0.6, 0.3]},
+            {"label": "Fixed income", "values": [0.3, 0.3]},
+            {"label": "Private assets", "values": [-0.3, -0.2]}
+          ],
+          "format": "percentage points",
+          "decimals": 1,
+          "note": "Returned effects; lanes use different bases [S4][S5]."
+        },
+        {
           "type": "callout",
           "tone": "warning",
           "title": "Basis difference",
@@ -305,17 +798,59 @@
         {
           "type": "table",
           "title": "Directional comparison",
-          "columns": ["Segment", "Historical total effect", "Ex ante total effect", "Direction", "Basis note"],
-          "align": ["l", "r", "r", "l", "l"],
+          "columns": [
+            "Segment",
+            "Historical total effect",
+            "Ex ante total effect",
+            "Direction",
+            "Basis note"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "l",
+            "l"
+          ],
           "rows": [
-            ["Public equity", "-0.6pp", "+0.3pp", {"chip": "Changed sign", "status": "watch"}, "Realized linked vs expected single period [S4][S5]"],
-            ["Fixed income", "+0.3pp", "+0.3pp", {"chip": "Same sign", "status": "available"}, "Realized linked vs expected single period [S4][S5]"],
-            ["Private assets", "-0.3pp", "-0.2pp", {"chip": "Same sign", "status": "available"}, "Realized linked vs expected single period [S4][S5]"]
+            [
+              "Public equity",
+              "-0.6pp",
+              "+0.3pp",
+              {
+                "chip": "Changed sign",
+                "status": "watch"
+              },
+              "Realized linked vs expected single period [S4][S5]"
+            ],
+            [
+              "Fixed income",
+              "+0.3pp",
+              "+0.3pp",
+              {
+                "chip": "Same sign",
+                "status": "available"
+              },
+              "Realized linked vs expected single period [S4][S5]"
+            ],
+            [
+              "Private assets",
+              "-0.3pp",
+              "-0.2pp",
+              {
+                "chip": "Same sign",
+                "status": "available"
+              },
+              "Realized linked vs expected single period [S4][S5]"
+            ]
           ]
         },
         {
-          "type": "text",
-          "text": "Public equity changes sign between the returned lanes, while fixed income and private assets retain their direction [S4][S5]. Historical effects are concentrated in public-equity selection; ex ante positive effects are shared by public equity and fixed income [S4][S5]. These observations describe returned sign and rank only."
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Public equity changes sign",
+          "text": "Observation: Public equity is -0.6pp historically and +0.3pp ex ante [S4][S5]. Why it matters: The sign change separates realized experience from expectations. Uncertainty: The lanes use different periods and weight bases. What would change the view: Refreshed persisted expectations on the intended policy basis."
         }
       ]
     },
@@ -327,11 +862,45 @@
         {
           "type": "table",
           "title": "Reconciliation diagnostics",
-          "columns": ["Lane", "Coverage", "Residual", "Tolerance", "Within tolerance", "Warnings"],
-          "align": ["l", "l", "r", "r", "l", "l"],
+          "columns": [
+            "Lane",
+            "Coverage",
+            "Residual",
+            "Tolerance",
+            "Within tolerance",
+            "Warnings"
+          ],
+          "align": [
+            "l",
+            "l",
+            "r",
+            "r",
+            "l",
+            "l"
+          ],
           "rows": [
-            ["Historical", "Available", "0.0bp", "0.00000001pp", {"chip": "Yes", "status": "passed"}, "None [S4]"],
-            ["Ex ante", "Available", "0.0bp", "0.00000001pp", {"chip": "Yes", "status": "passed"}, "Assumption set and regime IDs are null [S5]"]
+            [
+              "Historical",
+              "Available",
+              "0.0bp",
+              "0.00000001pp",
+              {
+                "chip": "Yes",
+                "status": "passed"
+              },
+              "None [S4]"
+            ],
+            [
+              "Ex ante",
+              "Available",
+              "0.0bp",
+              "0.00000001pp",
+              {
+                "chip": "Yes",
+                "status": "passed"
+              },
+              "Assumption set and regime IDs are null [S5]"
+            ]
           ]
         },
         {
@@ -347,34 +916,6 @@
       ]
     },
     {
-      "title": "Analysis and Considerations",
-      "new_page": true,
-      "kicker": "Neutral items for committee discussion",
-      "blocks": [
-        {
-          "type": "callout",
-          "role": "analysis",
-          "tone": "warning",
-          "title": "Public-equity effect direction",
-          "text": "Observation: public equity is -0.6pp historically and +0.3pp ex ante [S4][S5]. Why it matters: the sign change separates realized experience from current expectations. Uncertainty: the lanes use different periods and weight bases. What would change the view: a refreshed persisted public-equity expectation on the intended policy basis."
-        },
-        {
-          "type": "callout",
-          "role": "analysis",
-          "tone": "info",
-          "title": "Selection concentration",
-          "text": "Observation: historical selection is the largest total negative component [S4]. Why it matters: active return was concentrated in one effect type. Uncertainty: segment attribution does not by itself identify security or manager skill. What would change the view: underlying evidence showing whether the returned selection effect is broad or concentrated."
-        },
-        {
-          "type": "callout",
-          "role": "analysis",
-          "tone": "info",
-          "title": "Assumption lineage",
-          "text": "Observation: the ex ante result has no linked assumption-set or regime identifier [S5]. Why it matters: the persisted inputs cannot be tied to a named release in this report. Uncertainty: input dates may differ by segment. What would change the view: a named assumption release and regime linked to every segment input."
-        }
-      ]
-    },
-    {
       "title": "Coverage",
       "new_page": true,
       "kicker": "Availability of every expected source",
@@ -382,11 +923,41 @@
         {
           "type": "coverage",
           "items": [
-            {"name": "Capabilities", "status": "available", "note": "Portfolio Analytics live fictional TEST access [S1]"},
-            {"name": "Portfolio and structure", "status": "available", "note": "Root cohort; three segments [S2]"},
-            {"name": "Historical returns context", "status": "available", "note": "Complete through 2026-06-30 [S3]"},
-            {"name": "Historical attribution", "status": "available", "note": "12 monthly periods; residual within tolerance [S4]"},
-            {"name": "Governed ex ante attribution", "status": "available", "note": "One-year expected basis; residual within tolerance [S5]"}
+            {
+              "name": "Capabilities",
+              "status": "available",
+              "note": "Portfolio Analytics live fictional TEST access [S1]"
+            },
+            {
+              "name": "Portfolio and structure",
+              "status": "available",
+              "note": "Root cohort; three segments [S2]"
+            },
+            {
+              "name": "Historical returns context",
+              "status": "available",
+              "note": "Complete through 2026-06-30 [S3]"
+            },
+            {
+              "name": "Historical attribution",
+              "status": "available",
+              "note": "12 monthly periods; residual within tolerance [S4]"
+            },
+            {
+              "name": "Governed ex ante attribution",
+              "status": "available",
+              "note": "One-year expected basis; residual within tolerance [S5]"
+            },
+            {
+              "name": "Largest-detractor manager findings",
+              "status": "available",
+              "note": "One open finding for resolved public-equity managers [S6]"
+            },
+            {
+              "name": "Macro regime",
+              "status": "available",
+              "note": "Balanced regime context for the historical period [S7]"
+            }
           ]
         }
       ]
@@ -398,14 +969,118 @@
       "blocks": [
         {
           "type": "table",
-          "columns": ["Tag", "Evidence", "Tool / view", "Key parameters", "As of", "Data scope", "Validation", "Digest"],
-          "align": ["n", "l", "l", "l", "n", "l", "l", "n"],
+          "columns": [
+            "Tag",
+            "Evidence",
+            "Tool / view",
+            "Key parameters",
+            "As of",
+            "Data scope",
+            "Validation",
+            "Digest"
+          ],
+          "align": [
+            "n",
+            "l",
+            "l",
+            "l",
+            "n",
+            "l",
+            "l",
+            "n"
+          ],
           "rows": [
-            ["S1", "Capabilities", "get_gradient_capabilities", "detail=full", "2026-10-08", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s1"],
-            ["S2", "Portfolio and root cohort", "list_portfolios; get_portfolio_structure", "view=allocation_tree", "2026-10-08", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s2"],
-            ["S3", "Historical returns context", "get_portfolio_historical_returns", "five sections", "2026-06-30", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s3"],
-            ["S4", "Historical attribution", "get_portfolio_attribution", "policy; root; all sections", "2026-06-30", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s4"],
-            ["S5", "Governed ex ante attribution", "get_portfolio_ex_ante_attribution", "policy; root; all sections", "2026-10-08", "Fictional TEST data", {"chip": "passed", "status": "passed"}, "test-s5"]
+            [
+              "S1",
+              "Capabilities",
+              "get_gradient_capabilities",
+              "detail=full",
+              "2026-10-08",
+              "Fictional TEST data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "test-s1"
+            ],
+            [
+              "S2",
+              "Portfolio and root cohort",
+              "list_portfolios; get_portfolio_structure",
+              "view=allocation_tree",
+              "2026-10-08",
+              "Fictional TEST data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "test-s2"
+            ],
+            [
+              "S3",
+              "Historical returns context",
+              "get_portfolio_historical_returns",
+              "five sections",
+              "2026-06-30",
+              "Fictional TEST data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "test-s3"
+            ],
+            [
+              "S4",
+              "Historical attribution",
+              "get_portfolio_attribution",
+              "policy; root; all sections",
+              "2026-06-30",
+              "Fictional TEST data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "test-s4"
+            ],
+            [
+              "S5",
+              "Governed ex ante attribution",
+              "get_portfolio_ex_ante_attribution",
+              "policy; root; all sections",
+              "2026-10-08",
+              "Fictional TEST data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "test-s5"
+            ],
+            [
+              "S6",
+              "Largest-detractor manager findings",
+              "get_manager_diligence_findings",
+              "view=open; public-equity managers",
+              "2026-06-30",
+              "Fictional TEST data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "test-s6"
+            ],
+            [
+              "S7",
+              "Macro regime",
+              "get_macro_signals",
+              "view=gradient_signal; regime_state",
+              "2026-06-30",
+              "Fictional TEST data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "test-s7"
+            ]
           ]
         }
       ]
@@ -418,11 +1093,35 @@
         {
           "type": "table",
           "title": "Server Metric Methods",
-          "columns": ["Lane", "Quantity", "Method / formula", "Version", "Basis / units / tolerance"],
-          "align": ["l", "l", "l", "l", "l"],
+          "columns": [
+            "Lane",
+            "Quantity",
+            "Method / formula",
+            "Version",
+            "Basis / units / tolerance"
+          ],
+          "align": [
+            "l",
+            "l",
+            "l",
+            "l",
+            "l"
+          ],
           "rows": [
-            ["Historical", "Allocation, selection, interaction", "Realized Brinson-Fachler with symmetric Carino", "governed-portfolio-attribution-v1", "Monthly total return; decimal fraction; 1e-10 [S4]"],
-            ["Ex ante", "Allocation, selection, interaction", "Single-period expected Brinson-Fachler", "1.0.0", "Annualized expected return; decimal fraction; 1e-10 [S5]"]
+            [
+              "Historical",
+              "Allocation, selection, interaction",
+              "Realized Brinson-Fachler with symmetric Carino",
+              "governed-portfolio-attribution-v1",
+              "Monthly total return; decimal fraction; 1e-10 [S4]"
+            ],
+            [
+              "Ex ante",
+              "Allocation, selection, interaction",
+              "Single-period expected Brinson-Fachler",
+              "1.0.0",
+              "Annualized expected return; decimal fraction; 1e-10 [S5]"
+            ]
           ]
         },
         {

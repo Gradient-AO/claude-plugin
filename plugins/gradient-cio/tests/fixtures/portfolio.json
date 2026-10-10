@@ -1,1261 +1,1316 @@
 {
- "meta": {
-  "eyebrow": "Portfolio Review",
-  "header_label": "Portfolio Review",
-  "title": "Example Endowment Portfolio (TEST)",
-  "subtitle": "Quarterly review · period to 2026-07-31 · prepared for the Investment Committee (TEST)",
-  "running_head": "Example Endowment (TEST) · period to 2026-07-31",
-  "data_as_of": "2026-07-31 (returns, holdings); 2026-06-30 (Form 13F)",
-  "confidentiality": "TEST DATA — fictional portfolio for rendering tests only",
-  "cover_facts": [
-   [
-    "Period end",
-    "2026-07-31"
-   ],
-   [
-    "Base currency",
-    "USD"
-   ],
-   [
-    "Total NAV",
-    "$1,250.0M"
-   ],
-   [
-    "Benchmark",
-    "Policy benchmark (TEST)"
-   ],
-   [
-    "Inception",
-    "2021-08-01"
-   ],
-   [
-    "Data scope",
-    "Fictional TEST data"
-   ]
-  ],
-  "signal_title": "Portfolio status",
-  "signal": {
-   "level": "watch",
-   "label": "1 asset class on watch"
+  "meta": {
+    "eyebrow": "Portfolio Review",
+    "header_label": "Portfolio Review",
+    "title": "Example Endowment Portfolio (TEST)",
+    "subtitle": "Quarterly review · period to 2026-07-31 · prepared for the Investment Committee (TEST)",
+    "running_head": "Example Endowment (TEST) · period to 2026-07-31",
+    "data_as_of": "2026-07-31 (returns, holdings); 2026-06-30 (Form 13F)",
+    "confidentiality": "TEST DATA — fictional portfolio for rendering tests only",
+    "cover_facts": [
+      [
+        "Period end",
+        "2026-07-31"
+      ],
+      [
+        "Base currency",
+        "USD"
+      ],
+      [
+        "Total NAV",
+        "$1,250.0M"
+      ],
+      [
+        "Benchmark",
+        "Policy benchmark (TEST)"
+      ],
+      [
+        "Inception",
+        "2021-08-01"
+      ],
+      [
+        "Data scope",
+        "Fictional TEST data"
+      ]
+    ],
+    "signal_title": "Portfolio status",
+    "signal": {
+      "level": "watch",
+      "label": "1 asset class on watch"
+    },
+    "completeness": {
+      "used": 7,
+      "expected": 8,
+      "state": "partial"
+    },
+    "meter_title": "Evidence completeness"
   },
-  "completeness": {
-   "used": 7,
-   "expected": 8,
-   "state": "partial"
+  "executive": {
+    "bottom_line": "The portfolio returned 11.5% over the year to 2026-07-31, 0.2pp behind its policy benchmark [S3][S4], and 3.1% a year since inception, 0.6pp ahead [S3][S4]. Alternatives are 23.6% of NAV against a 20.0% target, 1.4pp below the 25% upper limit, so they are on watch [S2]. Annualized volatility was 8.7% against 10.3% for the benchmark, and the deepest drawdown (-13.1%, 2022-01 to 2023-10) was recovered by 2025-04 [S3][S4]. Form 13F look-through puts the five largest public-equity issuers at 6.7% of NAV, from lagged long-only filings [S6].",
+    "tiles": [
+      {
+        "label": "Trailing 1Y",
+        "value": "11.5%",
+        "sub": "Benchmark 11.7% [S3][S4]",
+        "tone": "watch"
+      },
+      {
+        "label": "Since inception (ann.)",
+        "value": "3.1%",
+        "sub": "+0.6pp vs benchmark [S3][S4]",
+        "tone": "good"
+      },
+      {
+        "label": "Volatility (ann.)",
+        "value": "8.7%",
+        "sub": "Benchmark 10.3% [S3][S4]",
+        "tone": "good"
+      },
+      {
+        "label": "Max drawdown",
+        "value": "-13.1%",
+        "sub": "2022-01 to 2023-10, recovered [S3][S4]",
+        "tone": "watch"
+      }
+    ]
   },
-  "meter_title": "Evidence completeness"
- },
- "executive": {
-  "bottom_line": "The portfolio returned 11.5% over the year to 2026-07-31, 0.2pp behind its policy benchmark [S3][S4], and 3.1% a year since inception, 0.6pp ahead [S3][S4]. Alternatives are 23.6% of NAV against a 20.0% target, 1.4pp below the 25% upper limit, so they are on watch [S2]. Annualized volatility was 8.7% against 10.3% for the benchmark, and the deepest drawdown (-13.1%, 2022-01 to 2023-10) was recovered by 2025-04 [S3][S4]. Form 13F look-through puts the five largest public-equity issuers at 6.7% of NAV, from lagged long-only filings [S6].",
-  "tiles": [
-   {
-    "label": "Trailing 1Y",
-    "value": "11.5%",
-    "sub": "Benchmark 11.7% [S3][S4]",
-    "tone": "watch"
-   },
-   {
-    "label": "Since inception (ann.)",
-    "value": "3.1%",
-    "sub": "+0.6pp vs benchmark [S3][S4]",
-    "tone": "good"
-   },
-   {
-    "label": "Volatility (ann.)",
-    "value": "8.7%",
-    "sub": "Benchmark 10.3% [S3][S4]",
-    "tone": "good"
-   },
-   {
-    "label": "Max drawdown",
-    "value": "-13.1%",
-    "sub": "2022-01 to 2023-10, recovered [S3][S4]",
-    "tone": "watch"
-   }
+  "sections": [
+    {
+      "id": "executive",
+      "title": "Summary",
+      "kicker": "Performance, allocation and risk to 2026-07-31",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "At a glance",
+          "columns": [
+            "Area",
+            "Finding",
+            "Status"
+          ],
+          "align": [
+            "l",
+            "l",
+            "l"
+          ],
+          "rows": [
+            [
+              "Performance",
+              "1Y −0.2pp, 3Y −0.9pp a year, since inception +0.6pp a year vs benchmark [S3][S4]",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              }
+            ],
+            [
+              "Allocation",
+              "All five asset classes inside policy ranges; Alternatives 1.4pp from the upper limit [S2]",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              }
+            ],
+            [
+              "Risk",
+              "Volatility 8.7% vs 10.3% benchmark; beta 0.83; tracking error 2.6% [S3][S4]",
+              {
+                "chip": "Within range",
+                "status": "available"
+              }
+            ],
+            [
+              "Look-through",
+              "Top five 13F issuers 6.7% of NAV; 13F data as of 2026-06-30 [S6]",
+              {
+                "chip": "Advisory",
+                "status": "advisory"
+              }
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Analysis — Policy watch",
+          "text": "Observation: The fictional TEST evidence supports the analysis — policy watch finding [S2]. Why it matters: It focuses review on the principal evidence gap. Uncertainty: The compact fixture omits some corroborating detail. What would change the view: Updated governed evidence that contradicts the finding."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — headline signal",
+          "text": "Observation: The fictional TEST report carries a 1 asset class on watch signal [S1]. Why it matters: The signal frames the review. Uncertainty: Evidence coverage is bounded. What would change the view: New governed evidence that changes the signal."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "info",
+          "title": "Key judgment — primary measure",
+          "text": "Observation: Trailing 1Y is 11.5% in the TEST evidence [S2]. Why it matters: This measure anchors the executive view. Uncertainty: The fixture is deliberately compact. What would change the view: A refreshed source with a materially different value."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "info",
+          "title": "Key judgment — monitoring priority",
+          "text": "Observation: Max drawdown is -13.1% in the TEST evidence [S3]. Why it matters: It identifies a monitoring priority. Uncertainty: Supporting detail is limited. What would change the view: Corroborated evidence that resolves or reverses the item."
+        }
+      ]
+    },
+    {
+      "title": "Performance",
+      "kicker": "Returns versus the policy benchmark",
+      "blocks": [
+        {
+          "type": "line",
+          "title": "Growth of 100 since inception (TEST)",
+          "decimals": 0,
+          "series": [
+            {
+              "name": "Portfolio",
+              "points": [
+                [
+                  "2021-07-31",
+                  100.0
+                ],
+                [
+                  "2021-08-31",
+                  100.25
+                ],
+                [
+                  "2021-09-30",
+                  100.07
+                ],
+                [
+                  "2021-10-31",
+                  98.27
+                ],
+                [
+                  "2021-11-30",
+                  101.66
+                ],
+                [
+                  "2021-12-31",
+                  104.88
+                ],
+                [
+                  "2022-01-31",
+                  106.55
+                ],
+                [
+                  "2022-02-28",
+                  103.46
+                ],
+                [
+                  "2022-03-31",
+                  105.58
+                ],
+                [
+                  "2022-04-30",
+                  100.8
+                ],
+                [
+                  "2022-05-31",
+                  98.94
+                ],
+                [
+                  "2022-06-30",
+                  96.21
+                ],
+                [
+                  "2022-07-31",
+                  97.56
+                ],
+                [
+                  "2022-08-31",
+                  99.04
+                ],
+                [
+                  "2022-09-30",
+                  95.09
+                ],
+                [
+                  "2022-10-31",
+                  97.55
+                ],
+                [
+                  "2022-11-30",
+                  96.21
+                ],
+                [
+                  "2022-12-31",
+                  95.89
+                ],
+                [
+                  "2023-01-31",
+                  98.0
+                ],
+                [
+                  "2023-02-28",
+                  96.93
+                ],
+                [
+                  "2023-03-31",
+                  96.97
+                ],
+                [
+                  "2023-04-30",
+                  95.78
+                ],
+                [
+                  "2023-05-31",
+                  96.42
+                ],
+                [
+                  "2023-06-30",
+                  97.81
+                ],
+                [
+                  "2023-07-31",
+                  93.47
+                ],
+                [
+                  "2023-08-31",
+                  93.29
+                ],
+                [
+                  "2023-09-30",
+                  94.87
+                ],
+                [
+                  "2023-10-31",
+                  92.55
+                ],
+                [
+                  "2023-11-30",
+                  95.06
+                ],
+                [
+                  "2023-12-31",
+                  99.04
+                ],
+                [
+                  "2024-01-31",
+                  99.1
+                ],
+                [
+                  "2024-02-29",
+                  100.73
+                ],
+                [
+                  "2024-03-31",
+                  99.43
+                ],
+                [
+                  "2024-04-30",
+                  97.37
+                ],
+                [
+                  "2024-05-31",
+                  99.7
+                ],
+                [
+                  "2024-06-30",
+                  96.93
+                ],
+                [
+                  "2024-07-31",
+                  101.13
+                ],
+                [
+                  "2024-08-31",
+                  95.58
+                ],
+                [
+                  "2024-09-30",
+                  96.49
+                ],
+                [
+                  "2024-10-31",
+                  95.02
+                ],
+                [
+                  "2024-11-30",
+                  98.12
+                ],
+                [
+                  "2024-12-31",
+                  99.48
+                ],
+                [
+                  "2025-01-31",
+                  104.17
+                ],
+                [
+                  "2025-02-28",
+                  106.37
+                ],
+                [
+                  "2025-03-31",
+                  103.8
+                ],
+                [
+                  "2025-04-30",
+                  107.06
+                ],
+                [
+                  "2025-05-31",
+                  102.21
+                ],
+                [
+                  "2025-06-30",
+                  103.71
+                ],
+                [
+                  "2025-07-31",
+                  104.45
+                ],
+                [
+                  "2025-08-31",
+                  102.78
+                ],
+                [
+                  "2025-09-30",
+                  104.6
+                ],
+                [
+                  "2025-10-31",
+                  106.38
+                ],
+                [
+                  "2025-11-30",
+                  108.0
+                ],
+                [
+                  "2025-12-31",
+                  106.63
+                ],
+                [
+                  "2026-01-31",
+                  109.87
+                ],
+                [
+                  "2026-02-28",
+                  108.79
+                ],
+                [
+                  "2026-03-31",
+                  112.89
+                ],
+                [
+                  "2026-04-30",
+                  109.71
+                ],
+                [
+                  "2026-05-31",
+                  109.73
+                ],
+                [
+                  "2026-06-30",
+                  113.32
+                ],
+                [
+                  "2026-07-31",
+                  116.48
+                ]
+              ]
+            },
+            {
+              "name": "Benchmark",
+              "points": [
+                [
+                  "2021-07-31",
+                  100.0
+                ],
+                [
+                  "2021-08-31",
+                  99.83
+                ],
+                [
+                  "2021-09-30",
+                  99.75
+                ],
+                [
+                  "2021-10-31",
+                  97.7
+                ],
+                [
+                  "2021-11-30",
+                  101.28
+                ],
+                [
+                  "2021-12-31",
+                  104.78
+                ],
+                [
+                  "2022-01-31",
+                  106.51
+                ],
+                [
+                  "2022-02-28",
+                  102.13
+                ],
+                [
+                  "2022-03-31",
+                  104.14
+                ],
+                [
+                  "2022-04-30",
+                  99.78
+                ],
+                [
+                  "2022-05-31",
+                  97.84
+                ],
+                [
+                  "2022-06-30",
+                  94.33
+                ],
+                [
+                  "2022-07-31",
+                  96.22
+                ],
+                [
+                  "2022-08-31",
+                  97.58
+                ],
+                [
+                  "2022-09-30",
+                  91.43
+                ],
+                [
+                  "2022-10-31",
+                  93.36
+                ],
+                [
+                  "2022-11-30",
+                  92.25
+                ],
+                [
+                  "2022-12-31",
+                  91.87
+                ],
+                [
+                  "2023-01-31",
+                  94.0
+                ],
+                [
+                  "2023-02-28",
+                  93.34
+                ],
+                [
+                  "2023-03-31",
+                  92.5
+                ],
+                [
+                  "2023-04-30",
+                  90.91
+                ],
+                [
+                  "2023-05-31",
+                  92.5
+                ],
+                [
+                  "2023-06-30",
+                  93.13
+                ],
+                [
+                  "2023-07-31",
+                  88.39
+                ],
+                [
+                  "2023-08-31",
+                  88.61
+                ],
+                [
+                  "2023-09-30",
+                  90.34
+                ],
+                [
+                  "2023-10-31",
+                  87.13
+                ],
+                [
+                  "2023-11-30",
+                  89.24
+                ],
+                [
+                  "2023-12-31",
+                  93.33
+                ],
+                [
+                  "2024-01-31",
+                  94.16
+                ],
+                [
+                  "2024-02-29",
+                  96.3
+                ],
+                [
+                  "2024-03-31",
+                  95.61
+                ],
+                [
+                  "2024-04-30",
+                  93.54
+                ],
+                [
+                  "2024-05-31",
+                  97.43
+                ],
+                [
+                  "2024-06-30",
+                  93.99
+                ],
+                [
+                  "2024-07-31",
+                  98.31
+                ],
+                [
+                  "2024-08-31",
+                  93.62
+                ],
+                [
+                  "2024-09-30",
+                  95.07
+                ],
+                [
+                  "2024-10-31",
+                  92.61
+                ],
+                [
+                  "2024-11-30",
+                  95.98
+                ],
+                [
+                  "2024-12-31",
+                  97.17
+                ],
+                [
+                  "2025-01-31",
+                  102.04
+                ],
+                [
+                  "2025-02-28",
+                  104.08
+                ],
+                [
+                  "2025-03-31",
+                  100.08
+                ],
+                [
+                  "2025-04-30",
+                  103.31
+                ],
+                [
+                  "2025-05-31",
+                  98.17
+                ],
+                [
+                  "2025-06-30",
+                  101.02
+                ],
+                [
+                  "2025-07-31",
+                  101.06
+                ],
+                [
+                  "2025-08-31",
+                  97.9
+                ],
+                [
+                  "2025-09-30",
+                  99.95
+                ],
+                [
+                  "2025-10-31",
+                  101.41
+                ],
+                [
+                  "2025-11-30",
+                  102.31
+                ],
+                [
+                  "2025-12-31",
+                  100.98
+                ],
+                [
+                  "2026-01-31",
+                  104.48
+                ],
+                [
+                  "2026-02-28",
+                  102.48
+                ],
+                [
+                  "2026-03-31",
+                  107.25
+                ],
+                [
+                  "2026-04-30",
+                  103.69
+                ],
+                [
+                  "2026-05-31",
+                  103.83
+                ],
+                [
+                  "2026-06-30",
+                  108.49
+                ],
+                [
+                  "2026-07-31",
+                  112.91
+                ]
+              ]
+            }
+          ],
+          "note": "Month-end growth of 100 from 2021-07-31 to 2026-07-31 for the portfolio and its policy benchmark, returned by the historical-return contract [S3][S4]."
+        },
+        {
+          "type": "table",
+          "title": "Standard periods to 2026-07-31",
+          "columns": [
+            "Period",
+            "Portfolio",
+            "Benchmark",
+            "Excess",
+            "Coverage"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "r",
+            "l"
+          ],
+          "rows": [
+            [
+              "3M",
+              "6.2%",
+              "8.9%",
+              "-2.7pp",
+              {
+                "chip": "Complete",
+                "status": "available"
+              }
+            ],
+            [
+              "YTD",
+              "9.2%",
+              "11.8%",
+              "-2.6pp",
+              {
+                "chip": "Complete",
+                "status": "available"
+              }
+            ],
+            [
+              "1Y",
+              "11.5%",
+              "11.7%",
+              "-0.2pp",
+              {
+                "chip": "Complete",
+                "status": "available"
+              }
+            ],
+            [
+              "3Y (ann.)",
+              "7.6%",
+              "8.5%",
+              "-0.9pp",
+              {
+                "chip": "Complete",
+                "status": "available"
+              }
+            ],
+            [
+              "5Y (ann.)",
+              "3.1%",
+              "2.5%",
+              "+0.6pp",
+              {
+                "chip": "Complete",
+                "status": "available"
+              }
+            ],
+            [
+              "10Y (ann.)",
+              "Not available",
+              "Not available",
+              "Not available",
+              {
+                "chip": "Insufficient history",
+                "status": "not_applicable"
+              }
+            ],
+            [
+              "Since inception (ann.)",
+              "3.1%",
+              "2.5%",
+              "+0.6pp",
+              {
+                "chip": "Complete",
+                "status": "available"
+              }
+            ]
+          ],
+          "note": "Returned by get_portfolio_historical_returns [S3][S4]. Periods over 12 months are annualized only as labelled; excess is in percentage points. 10Y: the series starts 2021-08 [S3]."
+        },
+        {
+          "type": "table",
+          "title": "Calendar years",
+          "columns": [
+            "Year",
+            "Portfolio",
+            "Benchmark",
+            "Excess",
+            "Coverage"
+          ],
+          "align": [
+            "n",
+            "r",
+            "r",
+            "r",
+            "l"
+          ],
+          "rows": [
+            [
+              "2021 partial (2021-08 to 2021-12)",
+              "4.9%",
+              "4.8%",
+              "+0.1pp",
+              {
+                "chip": "Partial year",
+                "status": "partial"
+              }
+            ],
+            [
+              "2022",
+              "-8.6%",
+              "-12.3%",
+              "+3.7pp",
+              {
+                "chip": "Full year",
+                "status": "available"
+              }
+            ],
+            [
+              "2023",
+              "3.3%",
+              "1.6%",
+              "+1.7pp",
+              {
+                "chip": "Full year",
+                "status": "available"
+              }
+            ],
+            [
+              "2024",
+              "0.4%",
+              "4.1%",
+              "-3.7pp",
+              {
+                "chip": "Full year",
+                "status": "available"
+              }
+            ],
+            [
+              "2025",
+              "7.2%",
+              "3.9%",
+              "+3.3pp",
+              {
+                "chip": "Full year",
+                "status": "available"
+              }
+            ],
+            [
+              "2026 partial (2026-01 to 2026-07)",
+              "9.2%",
+              "11.8%",
+              "-2.6pp",
+              {
+                "chip": "Partial year",
+                "status": "partial"
+              }
+            ]
+          ],
+          "note": "Partial years are cumulative for the months shown and are not annualized [S3]."
+        }
+      ]
+    },
+    {
+      "title": "Allocation",
+      "kicker": "Policy targets, actual weights and exposure",
+      "blocks": [
+        {
+          "type": "bars",
+          "title": "Market value by asset class ($M)",
+          "items": [
+            {
+              "label": "Public equity",
+              "value": 590.0,
+              "display": "$590.0M · 47.2%"
+            },
+            {
+              "label": "Alternatives",
+              "value": 295.0,
+              "display": "$295.0M · 23.6%"
+            },
+            {
+              "label": "Fixed income",
+              "value": 267.5,
+              "display": "$267.5M · 21.4%"
+            },
+            {
+              "label": "Real assets",
+              "value": 62.5,
+              "display": "$62.5M · 5.0%"
+            },
+            {
+              "label": "Cash",
+              "value": 35.0,
+              "display": "$35.0M · 2.8%"
+            }
+          ],
+          "note": "Server aggregate across 42 commitments, $1,250.0M; $142.0M of unfunded commitments is not included [S5]."
+        },
+        {
+          "type": "table",
+          "title": "Asset class versus policy (share of total NAV)",
+          "columns": [
+            "Asset class",
+            "Target",
+            "Actual",
+            "Active",
+            "Range",
+            "Status"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "r",
+            "n",
+            "l"
+          ],
+          "rows": [
+            [
+              "Public Equity",
+              "45.0%",
+              "47.2%",
+              "+2.2pp",
+              "35–55%",
+              {
+                "chip": "Within range",
+                "status": "available"
+              }
+            ],
+            [
+              "Fixed Income",
+              "25.0%",
+              "21.4%",
+              "-3.6pp",
+              "15–35%",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              }
+            ],
+            [
+              "Alternatives",
+              "20.0%",
+              "23.6%",
+              "+3.6pp",
+              "10–25%",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              }
+            ],
+            [
+              "Real Assets",
+              "7.0%",
+              "5.0%",
+              "-2.0pp",
+              "3–12%",
+              {
+                "chip": "Within range",
+                "status": "available"
+              }
+            ],
+            [
+              "Cash & Liquidity",
+              "3.0%",
+              "2.8%",
+              "-0.2pp",
+              "0–8%",
+              {
+                "chip": "Within range",
+                "status": "available"
+              }
+            ]
+          ],
+          "note": "Targets, ranges and actual weights from the allocation tree as of 2026-07-31 [S2]. Watch = active weight of 3.0pp or more, or within 2.0pp of a range limit."
+        }
+      ]
+    },
+    {
+      "title": "Look-through concentration",
+      "kicker": "Largest public-equity issuers across managers (Form 13F)",
+      "new_page": false,
+      "blocks": [
+        {
+          "type": "heat",
+          "title": "Concentration watch matrix (TEST)",
+          "columns": [
+            "Exposure",
+            "Weight"
+          ],
+          "rows": [
+            {
+              "label": "Largest issuer",
+              "values": [
+                2.4
+              ]
+            },
+            {
+              "label": "Top five issuers",
+              "values": [
+                8.7
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "columns": [
+            "Issuer",
+            "Managers holding",
+            "Look-through NAV",
+            "Share of NAV"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "r"
+          ],
+          "rows": [
+            [
+              "Example Issuer A (TEST)",
+              "4",
+              "$24.8M",
+              "2.0%"
+            ],
+            [
+              "Example Issuer B (TEST)",
+              "3",
+              "$18.6M",
+              "1.5%"
+            ],
+            [
+              "Example Issuer C (TEST)",
+              "3",
+              "$15.0M",
+              "1.2%"
+            ],
+            [
+              "Example Issuer D (TEST)",
+              "2",
+              "$13.1M",
+              "1.0%"
+            ],
+            [
+              "Example Issuer E (TEST)",
+              "2",
+              "$13.0M",
+              "1.0%"
+            ]
+          ],
+          "note": "Manager NAV allocated by normalized Form 13F weights as of 2026-06-30 [S6]."
+        },
+        {
+          "type": "callout",
+          "tone": "watch",
+          "title": "Read with care",
+          "text": "Form 13F is filed up to 45 days after quarter end and covers long US-listed equity positions only: no shorts, cash, non-US listings or private holdings. Reported USD values are not FX-converted [S6]."
+        }
+      ]
+    },
+    {
+      "title": "Risk",
+      "kicker": "Realized risk from monthly returns",
+      "new_page": false,
+      "blocks": [
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Visual evidence",
+          "text": "Not available — No governed visual was returned for this fictional TEST fixture."
+        },
+        {
+          "type": "kv",
+          "rows": [
+            [
+              "Annualized volatility",
+              "8.7% (benchmark 10.3%)",
+              "S3/S4"
+            ],
+            [
+              "Maximum drawdown",
+              "-13.1%: peak 2022-01, trough 2023-10, recovered 2025-04",
+              "S3/S4"
+            ],
+            [
+              "Best / worst month",
+              "4.7% / -5.5%",
+              "S3/S4"
+            ],
+            [
+              "Positive months",
+              "35 of 60",
+              "S3/S4"
+            ],
+            [
+              "Beta to benchmark",
+              "0.83",
+              "S3/S4"
+            ],
+            [
+              "Tracking error",
+              "2.6%",
+              "S3/S4"
+            ],
+            [
+              "Information ratio",
+              "0.24",
+              "S3/S4"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Outlook",
+      "kicker": "Forward-looking context: assumptions, not forecasts",
+      "new_page": false,
+      "blocks": [
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Visual evidence",
+          "text": "Not available — No governed visual was returned for this fictional TEST fixture."
+        },
+        {
+          "type": "text",
+          "text": "House macro view (TEST): policy rates are expected to hold [S7]. The governed policy check returns a 6.4% expected return over 10 years for the TEST assumption set [S8]. These are assumptions, not forecasts of this portfolio's return."
+        }
+      ]
+    },
+    {
+      "title": "Coverage",
+      "kicker": "What each source covered",
+      "new_page": false,
+      "blocks": [
+        {
+          "type": "coverage",
+          "items": [
+            {
+              "name": "Portfolio list",
+              "status": "available",
+              "note": "User portfolio; record_kind user [S1]"
+            },
+            {
+              "name": "Allocation tree",
+              "status": "available",
+              "note": "5 asset classes, 18 sub-allocations [S2]"
+            },
+            {
+              "name": "Historical returns",
+              "status": "degraded",
+              "note": "Summary section unavailable; raw points are charted without local metric computation [S3]"
+            },
+            {
+              "name": "Benchmark",
+              "status": "available",
+              "note": "Policy benchmark (TEST), 60 monthly points [S4]"
+            },
+            {
+              "name": "Exposure",
+              "status": "available",
+              "note": "42 commitments as of 2026-07-31 [S5]"
+            },
+            {
+              "name": "13F look-through",
+              "status": "available",
+              "note": "Form 13F as of 2026-06-30 [S6]"
+            },
+            {
+              "name": "Outlook (The Read, CMAs)",
+              "status": "available",
+              "note": "Context only [S7][S8]"
+            },
+            {
+              "name": "Strategy Lab attribution",
+              "status": "not licensed",
+              "note": "Attribution not available"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Appendix — Sources and method",
+      "num": "A",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Tag",
+            "Evidence",
+            "Tool / view",
+            "As of",
+            "Validation"
+          ],
+          "align": [
+            "n",
+            "l",
+            "l",
+            "n",
+            "l"
+          ],
+          "rows": [
+            [
+              "S1",
+              "Portfolio record",
+              "list_portfolios",
+              "2026-07-31",
+              {
+                "chip": "passed",
+                "status": "passed"
+              }
+            ],
+            [
+              "S2",
+              "Allocation targets, ranges, weights",
+              "get_portfolio_structure (allocation_tree)",
+              "2026-07-31",
+              {
+                "chip": "passed",
+                "status": "passed"
+              }
+            ],
+            [
+              "S3",
+              "Portfolio returns and risk metrics",
+              "get_portfolio_historical_returns (standard_periods, calendar_years, risk_metrics, benchmark_relative, cumulative_growth, points)",
+              "2026-07-31",
+              {
+                "chip": "passed",
+                "status": "passed"
+              }
+            ],
+            [
+              "S4",
+              "Benchmark identity and monthly returns",
+              "get_benchmarks (catalog); get_return_series (benchmark)",
+              "2026-07-31",
+              {
+                "chip": "passed",
+                "status": "passed"
+              }
+            ],
+            [
+              "S5",
+              "Holdings and market value",
+              "get_portfolio_exposure",
+              "2026-07-31",
+              {
+                "chip": "passed",
+                "status": "passed"
+              }
+            ],
+            [
+              "S6",
+              "13F look-through issuers",
+              "get_cross_domain_research (portfolio_13f_lookthrough)",
+              "2026-06-30",
+              {
+                "chip": "advisory",
+                "status": "advisory"
+              }
+            ],
+            [
+              "S7",
+              "House macro view",
+              "get_the_read",
+              "2026-10-03",
+              {
+                "chip": "passed",
+                "status": "passed"
+              }
+            ],
+            [
+              "S8",
+              "Capital market assumptions",
+              "get_capital_market_assumptions (baseline)",
+              "2026-09-30",
+              {
+                "chip": "passed",
+                "status": "passed"
+              }
+            ]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Server Metric Methods",
+          "columns": [
+            "Source",
+            "Metric",
+            "Server method / basis"
+          ],
+          "align": [
+            "n",
+            "l",
+            "l"
+          ],
+          "rows": [
+            [
+              "S3",
+              "Returns and benchmark-relative performance",
+              "get_portfolio_historical_returns; preserve returned period labels, annualization, benchmark values, excess values and coverage"
+            ],
+            [
+              "S3",
+              "Risk metrics",
+              "get_portfolio_historical_returns.risk_metrics; preserve returned volatility, drawdown, beta, tracking error, information ratio, dates, units and basis"
+            ],
+            [
+              "S5",
+              "Asset-class exposure",
+              "get_portfolio_exposure; preserve server aggregate totals, shares, coverage and truncation"
+            ],
+            [
+              "S2",
+              "Policy weights",
+              "get_portfolio_structure; preserve returned total-portfolio weight basis and coverage without multiplying hierarchy weights"
+            ]
+          ]
+        },
+        {
+          "type": "bullets",
+          "items": [
+            "All data in this fixture is fictional and marked (TEST).",
+            "Absence is not evidence: an unavailable source is reported as unavailable, never as zero.",
+            "This review is a monitoring aid for the committee, not investment, legal or compliance advice. Past performance does not predict future returns."
+          ]
+        }
+      ]
+    }
   ]
- },
- "sections": [
-  {
-   "id": "executive",
-   "title": "Summary",
-   "kicker": "Performance, allocation and risk to 2026-07-31",
-   "blocks": [
-    {
-     "type": "table",
-     "title": "At a glance",
-     "columns": [
-      "Area",
-      "Finding",
-      "Status"
-     ],
-     "align": [
-      "l",
-      "l",
-      "l"
-     ],
-     "rows": [
-      [
-       "Performance",
-       "1Y −0.2pp, 3Y −0.9pp a year, since inception +0.6pp a year vs benchmark [S3][S4]",
-       {
-        "chip": "Watch",
-        "status": "watch"
-       }
-      ],
-      [
-       "Allocation",
-       "All five asset classes inside policy ranges; Alternatives 1.4pp from the upper limit [S2]",
-       {
-        "chip": "Watch",
-        "status": "watch"
-       }
-      ],
-      [
-       "Risk",
-       "Volatility 8.7% vs 10.3% benchmark; beta 0.83; tracking error 2.6% [S3][S4]",
-       {
-        "chip": "Within range",
-        "status": "available"
-       }
-      ],
-      [
-       "Look-through",
-       "Top five 13F issuers 6.7% of NAV; 13F data as of 2026-06-30 [S6]",
-       {
-        "chip": "Advisory",
-        "status": "advisory"
-       }
-      ]
-     ]
-    },
-    {
-     "type": "callout",
-     "role": "analysis",
-     "tone": "info",
-     "title": "Analysis — Policy watch",
-     "text": "All allocation bands remain compliant, while Alternatives has the smallest remaining headroom [S2]. This is a monitoring observation, not a recommendation. Updated valuations or a changed policy limit would alter the watch item."
-    }
-   ]
-  },
-  {
-   "title": "Performance",
-   "kicker": "Returns versus the policy benchmark",
-   "blocks": [
-    {
-     "type": "table",
-     "title": "Standard periods to 2026-07-31",
-     "columns": [
-      "Period",
-      "Portfolio",
-      "Benchmark",
-      "Excess",
-      "Coverage"
-     ],
-     "align": [
-      "l",
-      "r",
-      "r",
-      "r",
-      "l"
-     ],
-     "rows": [
-      [
-       "3M",
-       "6.2%",
-       "8.9%",
-       "-2.7pp",
-       {
-        "chip": "Complete",
-        "status": "available"
-       }
-      ],
-      [
-       "YTD",
-       "9.2%",
-       "11.8%",
-       "-2.6pp",
-       {
-        "chip": "Complete",
-        "status": "available"
-       }
-      ],
-      [
-       "1Y",
-       "11.5%",
-       "11.7%",
-       "-0.2pp",
-       {
-        "chip": "Complete",
-        "status": "available"
-       }
-      ],
-      [
-       "3Y (ann.)",
-       "7.6%",
-       "8.5%",
-       "-0.9pp",
-       {
-        "chip": "Complete",
-        "status": "available"
-       }
-      ],
-      [
-       "5Y (ann.)",
-       "3.1%",
-       "2.5%",
-       "+0.6pp",
-       {
-        "chip": "Complete",
-        "status": "available"
-       }
-      ],
-      [
-       "10Y (ann.)",
-       "Not available",
-       "Not available",
-       "Not available",
-       {
-        "chip": "Insufficient history",
-        "status": "not_applicable"
-       }
-      ],
-      [
-       "Since inception (ann.)",
-       "3.1%",
-       "2.5%",
-       "+0.6pp",
-       {
-        "chip": "Complete",
-        "status": "available"
-       }
-      ]
-     ],
-     "note": "Returned by get_portfolio_historical_returns [S3][S4]. Periods over 12 months are annualized only as labelled; excess is in percentage points. 10Y: the series starts 2021-08 [S3]."
-    },
-    {
-     "type": "table",
-     "title": "Calendar years",
-     "columns": [
-      "Year",
-      "Portfolio",
-      "Benchmark",
-      "Excess",
-      "Coverage"
-     ],
-     "align": [
-      "n",
-      "r",
-      "r",
-      "r",
-      "l"
-     ],
-     "rows": [
-      [
-       "2021 partial (2021-08 to 2021-12)",
-       "4.9%",
-       "4.8%",
-       "+0.1pp",
-       {
-        "chip": "Partial year",
-        "status": "partial"
-       }
-      ],
-      [
-       "2022",
-       "-8.6%",
-       "-12.3%",
-       "+3.7pp",
-       {
-        "chip": "Full year",
-        "status": "available"
-       }
-      ],
-      [
-       "2023",
-       "3.3%",
-       "1.6%",
-       "+1.7pp",
-       {
-        "chip": "Full year",
-        "status": "available"
-       }
-      ],
-      [
-       "2024",
-       "0.4%",
-       "4.1%",
-       "-3.7pp",
-       {
-        "chip": "Full year",
-        "status": "available"
-       }
-      ],
-      [
-       "2025",
-       "7.2%",
-       "3.9%",
-       "+3.3pp",
-       {
-        "chip": "Full year",
-        "status": "available"
-       }
-      ],
-      [
-       "2026 partial (2026-01 to 2026-07)",
-       "9.2%",
-       "11.8%",
-       "-2.6pp",
-       {
-        "chip": "Partial year",
-        "status": "partial"
-       }
-      ]
-     ],
-     "note": "Partial years are cumulative for the months shown and are not annualized [S3]."
-    },
-    {
-     "type": "line",
-     "title": "Growth of 100 since inception (TEST)",
-     "decimals": 0,
-     "series": [
-      {
-       "name": "Portfolio",
-       "points": [
-        [
-         "2021-07-31",
-         100.0
-        ],
-        [
-         "2021-08-31",
-         100.25
-        ],
-        [
-         "2021-09-30",
-         100.07
-        ],
-        [
-         "2021-10-31",
-         98.27
-        ],
-        [
-         "2021-11-30",
-         101.66
-        ],
-        [
-         "2021-12-31",
-         104.88
-        ],
-        [
-         "2022-01-31",
-         106.55
-        ],
-        [
-         "2022-02-28",
-         103.46
-        ],
-        [
-         "2022-03-31",
-         105.58
-        ],
-        [
-         "2022-04-30",
-         100.8
-        ],
-        [
-         "2022-05-31",
-         98.94
-        ],
-        [
-         "2022-06-30",
-         96.21
-        ],
-        [
-         "2022-07-31",
-         97.56
-        ],
-        [
-         "2022-08-31",
-         99.04
-        ],
-        [
-         "2022-09-30",
-         95.09
-        ],
-        [
-         "2022-10-31",
-         97.55
-        ],
-        [
-         "2022-11-30",
-         96.21
-        ],
-        [
-         "2022-12-31",
-         95.89
-        ],
-        [
-         "2023-01-31",
-         98.0
-        ],
-        [
-         "2023-02-28",
-         96.93
-        ],
-        [
-         "2023-03-31",
-         96.97
-        ],
-        [
-         "2023-04-30",
-         95.78
-        ],
-        [
-         "2023-05-31",
-         96.42
-        ],
-        [
-         "2023-06-30",
-         97.81
-        ],
-        [
-         "2023-07-31",
-         93.47
-        ],
-        [
-         "2023-08-31",
-         93.29
-        ],
-        [
-         "2023-09-30",
-         94.87
-        ],
-        [
-         "2023-10-31",
-         92.55
-        ],
-        [
-         "2023-11-30",
-         95.06
-        ],
-        [
-         "2023-12-31",
-         99.04
-        ],
-        [
-         "2024-01-31",
-         99.1
-        ],
-        [
-         "2024-02-29",
-         100.73
-        ],
-        [
-         "2024-03-31",
-         99.43
-        ],
-        [
-         "2024-04-30",
-         97.37
-        ],
-        [
-         "2024-05-31",
-         99.7
-        ],
-        [
-         "2024-06-30",
-         96.93
-        ],
-        [
-         "2024-07-31",
-         101.13
-        ],
-        [
-         "2024-08-31",
-         95.58
-        ],
-        [
-         "2024-09-30",
-         96.49
-        ],
-        [
-         "2024-10-31",
-         95.02
-        ],
-        [
-         "2024-11-30",
-         98.12
-        ],
-        [
-         "2024-12-31",
-         99.48
-        ],
-        [
-         "2025-01-31",
-         104.17
-        ],
-        [
-         "2025-02-28",
-         106.37
-        ],
-        [
-         "2025-03-31",
-         103.8
-        ],
-        [
-         "2025-04-30",
-         107.06
-        ],
-        [
-         "2025-05-31",
-         102.21
-        ],
-        [
-         "2025-06-30",
-         103.71
-        ],
-        [
-         "2025-07-31",
-         104.45
-        ],
-        [
-         "2025-08-31",
-         102.78
-        ],
-        [
-         "2025-09-30",
-         104.6
-        ],
-        [
-         "2025-10-31",
-         106.38
-        ],
-        [
-         "2025-11-30",
-         108.0
-        ],
-        [
-         "2025-12-31",
-         106.63
-        ],
-        [
-         "2026-01-31",
-         109.87
-        ],
-        [
-         "2026-02-28",
-         108.79
-        ],
-        [
-         "2026-03-31",
-         112.89
-        ],
-        [
-         "2026-04-30",
-         109.71
-        ],
-        [
-         "2026-05-31",
-         109.73
-        ],
-        [
-         "2026-06-30",
-         113.32
-        ],
-        [
-         "2026-07-31",
-         116.48
-        ]
-       ]
-      },
-      {
-       "name": "Benchmark",
-       "points": [
-        [
-         "2021-07-31",
-         100.0
-        ],
-        [
-         "2021-08-31",
-         99.83
-        ],
-        [
-         "2021-09-30",
-         99.75
-        ],
-        [
-         "2021-10-31",
-         97.7
-        ],
-        [
-         "2021-11-30",
-         101.28
-        ],
-        [
-         "2021-12-31",
-         104.78
-        ],
-        [
-         "2022-01-31",
-         106.51
-        ],
-        [
-         "2022-02-28",
-         102.13
-        ],
-        [
-         "2022-03-31",
-         104.14
-        ],
-        [
-         "2022-04-30",
-         99.78
-        ],
-        [
-         "2022-05-31",
-         97.84
-        ],
-        [
-         "2022-06-30",
-         94.33
-        ],
-        [
-         "2022-07-31",
-         96.22
-        ],
-        [
-         "2022-08-31",
-         97.58
-        ],
-        [
-         "2022-09-30",
-         91.43
-        ],
-        [
-         "2022-10-31",
-         93.36
-        ],
-        [
-         "2022-11-30",
-         92.25
-        ],
-        [
-         "2022-12-31",
-         91.87
-        ],
-        [
-         "2023-01-31",
-         94.0
-        ],
-        [
-         "2023-02-28",
-         93.34
-        ],
-        [
-         "2023-03-31",
-         92.5
-        ],
-        [
-         "2023-04-30",
-         90.91
-        ],
-        [
-         "2023-05-31",
-         92.5
-        ],
-        [
-         "2023-06-30",
-         93.13
-        ],
-        [
-         "2023-07-31",
-         88.39
-        ],
-        [
-         "2023-08-31",
-         88.61
-        ],
-        [
-         "2023-09-30",
-         90.34
-        ],
-        [
-         "2023-10-31",
-         87.13
-        ],
-        [
-         "2023-11-30",
-         89.24
-        ],
-        [
-         "2023-12-31",
-         93.33
-        ],
-        [
-         "2024-01-31",
-         94.16
-        ],
-        [
-         "2024-02-29",
-         96.3
-        ],
-        [
-         "2024-03-31",
-         95.61
-        ],
-        [
-         "2024-04-30",
-         93.54
-        ],
-        [
-         "2024-05-31",
-         97.43
-        ],
-        [
-         "2024-06-30",
-         93.99
-        ],
-        [
-         "2024-07-31",
-         98.31
-        ],
-        [
-         "2024-08-31",
-         93.62
-        ],
-        [
-         "2024-09-30",
-         95.07
-        ],
-        [
-         "2024-10-31",
-         92.61
-        ],
-        [
-         "2024-11-30",
-         95.98
-        ],
-        [
-         "2024-12-31",
-         97.17
-        ],
-        [
-         "2025-01-31",
-         102.04
-        ],
-        [
-         "2025-02-28",
-         104.08
-        ],
-        [
-         "2025-03-31",
-         100.08
-        ],
-        [
-         "2025-04-30",
-         103.31
-        ],
-        [
-         "2025-05-31",
-         98.17
-        ],
-        [
-         "2025-06-30",
-         101.02
-        ],
-        [
-         "2025-07-31",
-         101.06
-        ],
-        [
-         "2025-08-31",
-         97.9
-        ],
-        [
-         "2025-09-30",
-         99.95
-        ],
-        [
-         "2025-10-31",
-         101.41
-        ],
-        [
-         "2025-11-30",
-         102.31
-        ],
-        [
-         "2025-12-31",
-         100.98
-        ],
-        [
-         "2026-01-31",
-         104.48
-        ],
-        [
-         "2026-02-28",
-         102.48
-        ],
-        [
-         "2026-03-31",
-         107.25
-        ],
-        [
-         "2026-04-30",
-         103.69
-        ],
-        [
-         "2026-05-31",
-         103.83
-        ],
-        [
-         "2026-06-30",
-         108.49
-        ],
-        [
-         "2026-07-31",
-         112.91
-        ]
-       ]
-      }
-     ],
-     "note": "Month-end growth of 100 from 2021-07-31 to 2026-07-31 for the portfolio and its policy benchmark, returned by the historical-return contract [S3][S4]."
-    }
-   ]
-  },
-  {
-   "title": "Allocation",
-   "kicker": "Policy targets, actual weights and exposure",
-   "blocks": [
-    {
-     "type": "table",
-     "title": "Asset class versus policy (share of total NAV)",
-     "columns": [
-      "Asset class",
-      "Target",
-      "Actual",
-      "Active",
-      "Range",
-      "Status"
-     ],
-     "align": [
-      "l",
-      "r",
-      "r",
-      "r",
-      "n",
-      "l"
-     ],
-     "rows": [
-      [
-       "Public Equity",
-       "45.0%",
-       "47.2%",
-       "+2.2pp",
-       "35–55%",
-       {
-        "chip": "Within range",
-        "status": "available"
-       }
-      ],
-      [
-       "Fixed Income",
-       "25.0%",
-       "21.4%",
-       "-3.6pp",
-       "15–35%",
-       {
-        "chip": "Watch",
-        "status": "watch"
-       }
-      ],
-      [
-       "Alternatives",
-       "20.0%",
-       "23.6%",
-       "+3.6pp",
-       "10–25%",
-       {
-        "chip": "Watch",
-        "status": "watch"
-       }
-      ],
-      [
-       "Real Assets",
-       "7.0%",
-       "5.0%",
-       "-2.0pp",
-       "3–12%",
-       {
-        "chip": "Within range",
-        "status": "available"
-       }
-      ],
-      [
-       "Cash & Liquidity",
-       "3.0%",
-       "2.8%",
-       "-0.2pp",
-       "0–8%",
-       {
-        "chip": "Within range",
-        "status": "available"
-       }
-      ]
-     ],
-     "note": "Targets, ranges and actual weights from the allocation tree as of 2026-07-31 [S2]. Watch = active weight of 3.0pp or more, or within 2.0pp of a range limit."
-    },
-    {
-     "type": "bars",
-     "title": "Market value by asset class ($M)",
-     "items": [
-      {
-       "label": "Public equity",
-       "value": 590.0,
-       "display": "$590.0M · 47.2%"
-      },
-      {
-       "label": "Alternatives",
-       "value": 295.0,
-       "display": "$295.0M · 23.6%"
-      },
-      {
-       "label": "Fixed income",
-       "value": 267.5,
-       "display": "$267.5M · 21.4%"
-      },
-      {
-       "label": "Real assets",
-       "value": 62.5,
-       "display": "$62.5M · 5.0%"
-      },
-      {
-       "label": "Cash",
-       "value": 35.0,
-       "display": "$35.0M · 2.8%"
-      }
-     ],
-     "note": "Server aggregate across 42 commitments, $1,250.0M; $142.0M of unfunded commitments is not included [S5]."
-    }
-   ]
-  },
-  {
-   "title": "Look-through concentration",
-   "kicker": "Largest public-equity issuers across managers (Form 13F)",
-   "new_page": false,
-   "blocks": [
-    {
-     "type": "table",
-     "columns": [
-      "Issuer",
-      "Managers holding",
-      "Look-through NAV",
-      "Share of NAV"
-     ],
-     "align": [
-      "l",
-      "r",
-      "r",
-      "r"
-     ],
-     "rows": [
-      [
-       "Example Issuer A (TEST)",
-       "4",
-       "$24.8M",
-       "2.0%"
-      ],
-      [
-       "Example Issuer B (TEST)",
-       "3",
-       "$18.6M",
-       "1.5%"
-      ],
-      [
-       "Example Issuer C (TEST)",
-       "3",
-       "$15.0M",
-       "1.2%"
-      ],
-      [
-       "Example Issuer D (TEST)",
-       "2",
-       "$13.1M",
-       "1.0%"
-      ],
-      [
-       "Example Issuer E (TEST)",
-       "2",
-       "$13.0M",
-       "1.0%"
-      ]
-     ],
-     "note": "Manager NAV allocated by normalized Form 13F weights as of 2026-06-30 [S6]."
-    },
-    {
-     "type": "callout",
-     "tone": "watch",
-     "title": "Read with care",
-     "text": "Form 13F is filed up to 45 days after quarter end and covers long US-listed equity positions only: no shorts, cash, non-US listings or private holdings. Reported USD values are not FX-converted [S6]."
-    }
-   ]
-  },
-  {
-   "title": "Risk",
-   "kicker": "Realized risk from monthly returns",
-   "new_page": false,
-   "blocks": [
-    {
-     "type": "kv",
-     "rows": [
-      [
-       "Annualized volatility",
-       "8.7% (benchmark 10.3%)",
-       "S3/S4"
-      ],
-      [
-       "Maximum drawdown",
-       "-13.1%: peak 2022-01, trough 2023-10, recovered 2025-04",
-       "S3/S4"
-      ],
-      [
-       "Best / worst month",
-       "4.7% / -5.5%",
-       "S3/S4"
-      ],
-      [
-       "Positive months",
-       "35 of 60",
-       "S3/S4"
-      ],
-      [
-       "Beta to benchmark",
-       "0.83",
-       "S3/S4"
-      ],
-      [
-       "Tracking error",
-       "2.6%",
-       "S3/S4"
-      ],
-      [
-       "Information ratio",
-       "0.24",
-       "S3/S4"
-      ]
-     ]
-    }
-   ]
-  },
-  {
-   "title": "Outlook",
-   "kicker": "Forward-looking context: assumptions, not forecasts",
-   "new_page": false,
-   "blocks": [
-    {
-     "type": "text",
-     "text": "House macro view (TEST): policy rates are expected to hold [S7]. The governed policy check returns a 6.4% expected return over 10 years for the TEST assumption set [S8]. These are assumptions, not forecasts of this portfolio's return."
-    }
-   ]
-  },
-  {
-   "title": "Coverage",
-   "kicker": "What each source covered",
-   "new_page": false,
-   "blocks": [
-    {
-     "type": "coverage",
-     "items": [
-      {
-       "name": "Portfolio list",
-       "status": "available",
-       "note": "User portfolio; record_kind user [S1]"
-      },
-      {
-       "name": "Allocation tree",
-       "status": "available",
-       "note": "5 asset classes, 18 sub-allocations [S2]"
-      },
-      {
-       "name": "Historical returns",
-       "status": "degraded",
-       "note": "Summary section unavailable; raw points are charted without local metric computation [S3]"
-      },
-      {
-       "name": "Benchmark",
-       "status": "available",
-       "note": "Policy benchmark (TEST), 60 monthly points [S4]"
-      },
-      {
-       "name": "Exposure",
-       "status": "available",
-       "note": "42 commitments as of 2026-07-31 [S5]"
-      },
-      {
-       "name": "13F look-through",
-       "status": "available",
-       "note": "Form 13F as of 2026-06-30 [S6]"
-      },
-      {
-       "name": "Outlook (The Read, CMAs)",
-       "status": "available",
-       "note": "Context only [S7][S8]"
-      },
-      {
-       "name": "Strategy Lab attribution",
-       "status": "not licensed",
-       "note": "Attribution not available"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "title": "Appendix — Sources and method",
-   "num": "A",
-   "blocks": [
-    {
-     "type": "table",
-     "columns": [
-      "Tag",
-      "Evidence",
-      "Tool / view",
-      "As of",
-      "Validation"
-     ],
-     "align": [
-      "n",
-      "l",
-      "l",
-      "n",
-      "l"
-     ],
-     "rows": [
-      [
-       "S1",
-       "Portfolio record",
-       "list_portfolios",
-       "2026-07-31",
-       {
-        "chip": "passed",
-        "status": "passed"
-       }
-      ],
-      [
-       "S2",
-       "Allocation targets, ranges, weights",
-       "get_portfolio_structure (allocation_tree)",
-       "2026-07-31",
-       {
-        "chip": "passed",
-        "status": "passed"
-       }
-      ],
-      [
-       "S3",
-       "Portfolio returns and risk metrics",
-       "get_portfolio_historical_returns (standard_periods, calendar_years, risk_metrics, benchmark_relative, cumulative_growth, points)",
-       "2026-07-31",
-       {
-        "chip": "passed",
-        "status": "passed"
-       }
-      ],
-      [
-       "S4",
-       "Benchmark identity and monthly returns",
-       "get_benchmarks (catalog); get_return_series (benchmark)",
-       "2026-07-31",
-       {
-        "chip": "passed",
-        "status": "passed"
-       }
-      ],
-      [
-       "S5",
-       "Holdings and market value",
-       "get_portfolio_exposure",
-       "2026-07-31",
-       {
-        "chip": "passed",
-        "status": "passed"
-       }
-      ],
-      [
-       "S6",
-       "13F look-through issuers",
-       "get_cross_domain_research (portfolio_13f_lookthrough)",
-       "2026-06-30",
-       {
-        "chip": "advisory",
-        "status": "advisory"
-       }
-      ],
-      [
-       "S7",
-       "House macro view",
-       "get_the_read",
-       "2026-10-03",
-       {
-        "chip": "passed",
-        "status": "passed"
-       }
-      ],
-      [
-       "S8",
-       "Capital market assumptions",
-       "get_capital_market_assumptions (baseline)",
-       "2026-09-30",
-       {
-        "chip": "passed",
-        "status": "passed"
-       }
-      ]
-     ]
-    },
-    {
-     "type": "table",
-     "title": "Server Metric Methods",
-     "columns": [
-      "Source",
-      "Metric",
-      "Server method / basis"
-     ],
-     "align": [
-      "n",
-      "l",
-      "l"
-     ],
-     "rows": [
-      [
-       "S3",
-       "Returns and benchmark-relative performance",
-       "get_portfolio_historical_returns; preserve returned period labels, annualization, benchmark values, excess values and coverage"
-      ],
-      [
-       "S3",
-       "Risk metrics",
-       "get_portfolio_historical_returns.risk_metrics; preserve returned volatility, drawdown, beta, tracking error, information ratio, dates, units and basis"
-      ],
-      [
-       "S5",
-       "Asset-class exposure",
-       "get_portfolio_exposure; preserve server aggregate totals, shares, coverage and truncation"
-      ],
-      [
-       "S2",
-       "Policy weights",
-       "get_portfolio_structure; preserve returned total-portfolio weight basis and coverage without multiplying hierarchy weights"
-      ]
-     ]
-    },
-    {
-     "type": "bullets",
-     "items": [
-      "All data in this fixture is fictional and marked (TEST).",
-      "Absence is not evidence: an unavailable source is reported as unavailable, never as zero.",
-      "This review is a monitoring aid for the committee, not investment, legal or compliance advice. Past performance does not predict future returns."
-     ]
-    }
-   ]
-  }
- ]
 }

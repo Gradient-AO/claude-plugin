@@ -1,39 +1,65 @@
-# Writing Standards — Real Assets Construction
+# Gradient analytical writing standards
 
-## Decision language
+These standards apply to client-facing analytical reports and decision packs. They do not apply to the
+`gradient-setup` readiness report or to the `gradient-gips-standards` reference answer. A family-specific skill
+may narrow the voice, required sections or permitted decision language, but it may not weaken evidence,
+availability or presentation rules.
 
-- Lead with `We recommend <action>, subject to <conditions>` and a separate `Committee action requested`.
-- State sizing, structure, timing and funding source only when cited.
-- Distinguish recommendation, committee approval, implementation and later monitoring.
-- Never say a committee decision has been made before approval.
+## Message first
 
-## Evidence discipline
+- Write section kickers as the conclusion a reader should retain, not as a topic label. Prefer
+  `Private-assets headroom is narrow` to `Allocation and policy`.
+- Lead each analytical section with a decision-useful visual. When the governed evidence cannot support that
+  visual, put a typed `Not available — <reason>` callout in the visual position.
+- Put the visual or typed unavailable state before the first table. Never open an analytical section with a
+  stack of tables.
+- Do not place more than two table blocks consecutively. Break a longer sequence with a visual, sourced
+  interpretation, typed unavailable state or a new section.
 
-- Every number carries `[S#]`; display scaling and rounding are allowed, unsupported derivation is not.
-- Preserve returned status, value basis, units, as-of date, valuation date, coverage and missing reason.
-- Write `Not available — <reason>`, never zero or “none,” for absent evidence.
-- Forward values are assumptions, not forecasts or guarantees.
+## Executive pages
 
-## Real-assets commentary
+- Use the four-tile executive band when the family specification defines four decision-useful measures.
+  Preserve the family labels and source every tile with `[S#]`.
+- Page 2 carries three to five **Key judgment —** callouts when the family specification calls for a judgment
+  page. Each judgment is sourced, no more than 60 words and subordinate to the report's stated decision or
+  monitoring purpose.
+- Do not invent a fourth measure. If a required tile is unavailable, retain the tile and show the typed state
+  and reason.
 
-- Separate marketable exposures from drawdown NAV, commitments and unfunded amounts.
-- State valuation dates and lags near every private real-assets interpretation.
-- Do not claim inflation protection, commodity sensitivity or diversification from an asset label alone.
-- Do not invent a CMA mapping for commodities or inflation-linked assets.
-- Apply commitments and pacing evidence only to closed-end or drawdown sleeves.
-- Macro and CFTC evidence is context, not a return forecast or performance explanation.
-- Diligence evidence supports conditions and follow-up questions, not claims of manager quality or skill.
+## Analysis callouts
 
-## Recommendation test
+- Use one to three `Analysis — <message>` callouts in each analytical section named by the family
+  specification. Keep each callout to 60 words or fewer and cite at least one `[S#]`.
+- Where the family specification requires structured analysis, use these four parts in order:
+  `Observation:`, `Why it matters:`, `Uncertainty:`, and `What would change the view:`.
+- Observation states returned evidence. Why it matters states the decision or monitoring implication.
+  Uncertainty names coverage, staleness, basis or model limitations. What would change the view names a
+  measurable trigger, evidence item or event.
+- Analysis may compare and rank sourced values. It may not introduce an unsourced metric, causal claim,
+  forecast, rating or action beyond the report's authorized scope.
 
-For each proposed action include:
+## Evidence and availability
 
-1. sourced observation;
-2. why it matters to the real-assets mandate;
-3. uncertainty, valuation lag or mapping limitation;
-4. proposed action, size, structure and phase;
-5. approval condition or monitoring trigger.
+- Every factual number, governed status and analytical judgment carries an `[S#]` tag.
+- Preserve returned dates, units, bases, formula identity and version, coverage, validation state and
+  unavailable reason.
+- Absence is not zero, no exposure, no event or no issue. Write `Not available — <reason>`.
+- A visual may use only returned values, user-supplied evidence or allowed display-only scaling and rounding.
+  Never calculate a replacement series locally.
 
-Avoid `inflation hedge`, `guaranteed`, `safe`, `uncorrelated`, `real return certainty`, `best-in-class` and
-unsupported superlatives. Do not use `simulated attribution`, `projected attribution`, legacy local-calculation tags or
-uncited local calculations.
+## Visual grammar
+
+- Prefer the smallest visual that answers the section's question. Supported analytical blocks include
+  `chart`, `line`, `bars`, `pie`, `percentiles`, `waterfall`, `band`, `stacked`, `heat`, `timeline`, `tiles`, `coverage` and
+  `findings`.
+- Bars and other quantitative marks accept signed finite values. Preserve the sign in `value` and in the
+  display label; do not convert negative values to absolute magnitudes.
+- Nested blocks are valid. Apply source, availability, table-sequencing and numeric rules inside every
+  `two_col` branch and other nested block list.
+- Titles and labels state the measure, unit, period and comparison basis where those are not already obvious.
+
+## Family authority
+
+The skill's template, writing standards and validator remain authoritative for section order, tile labels,
+required visual slots, analysis locations, decision language and hand-offs. Tool names in source appendices
+must match calls actually made; never add a tool call to satisfy a layout requirement.

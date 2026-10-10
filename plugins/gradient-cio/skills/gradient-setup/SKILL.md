@@ -1,6 +1,6 @@
 ---
 name: gradient-setup
-description: "Start here for Gradient CIO: checks the GradientCIO connection, organization, licensed modules and data readiness, runs a contract self-test, and delivers a branded readiness PDF showing which Gradient skills are ready to use."
+description: "Start here for Gradient CIO: checks the GradientCIO connection, organization, licensed modules and data readiness, runs a contract self-test, and delivers a branded readiness report showing which Gradient skills are ready to use."
 ---
 
 # Gradient setup and readiness check
@@ -9,7 +9,7 @@ Use when the user is new to the Gradient skills, says "set up Gradient", "get st
 "what can I do with Gradient", "check my access", "health check", "self-test", or when another Gradient skill
 fails because the connector is missing, unauthorized or returning errors. Also use after a plugin update.
 
-The deliverable is a short branded PDF, **"Gradient Readiness Report"**, plus a three-line chat summary and two or
+The deliverable is a short branded **"Gradient Readiness Report"**, plus a three-line chat summary and two or
 three prompts the user can try next. Keep the language plain: the reader may not be technical.
 
 Read `references/module-scope.md` before checking Portfolio Analytics or Strategy Lab. Test and
@@ -65,10 +65,11 @@ report them as separate modules; never use the canonical illustrative portfolio 
 
 Run the probes in `references/contract-checks.md`. The **standard** set is 8 quick reads (default). The
 **full read** set is 57 reads (the 8 standard plus 49 full probes); run it when the user asks for a health
-check or self-test, or after a plugin update. The separate **writes** set is 5 dry-run previews, including
-one batch-preview contract and one DDQ upload preview, and must never commit. The **DDQ save-preview** set is 3 calls: it intentionally persists one fictional test
+check or self-test, or after a plugin update. The separate **writes** set is 8 dry-run previews, including
+monitoring, review and Strategy Lab scenario previews plus one batch-preview contract and one DDQ upload
+preview, and must never commit. The **DDQ save-preview** set is 3 calls: it intentionally persists one fictional test
 document and one immutable reconciliation test run so that document identity and the chained save can be
-tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 65 calls.
+tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 68 calls.
 
 For each probe, record pass, fail (with error code and HTTP status) or not run (not entitled), and the
 response `as_of`. Resolve `depends_on` arguments with `check_contract.py --resolve-args`; do not manually
@@ -92,10 +93,16 @@ and the skill renders with `--brand`.
 
 ## 5. Build the report
 
-Write `report.json` (JSON block mode, see `references/report-style.md`) and render:
+Write and validate `report.json` (JSON block mode, see `references/report-style.md`). Select PDF by default;
+select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select both when it says `both`
+or `board pack`. Both formats must come from the same validated `report.json`.
+
+The readiness report is operational, not analytical. It is exempt from the four-tile analytical-band labels,
+page-2 key judgments, visual-before-table rule and `Analysis —` callout requirement. Keep its established
+readiness tiles and diagnostic flow.
 
 ```
-python <this skill's directory>/scripts/gradient_report.py report.json "Gradient Readiness Report - <Org>.pdf"
+python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "Gradient Readiness Report - <Org>"
 ```
 
 Meta: `eyebrow` "Setup & Readiness", `header_label` "Readiness Check", `title` the organization name,

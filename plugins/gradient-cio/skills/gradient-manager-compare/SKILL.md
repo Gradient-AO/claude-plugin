@@ -1,6 +1,6 @@
 ---
 name: gradient-manager-compare
-description: "Find and compare candidate managers for a mandate: screen the Form ADV adviser index or compare 2–5 named managers side by side (RAUM, clients, custody, auditor and administrator, disclosures, Form 13F, overlap, events), delivered as a branded PDF shortlist that feeds the ODD report and IC memo."
+description: "Find and compare candidate managers for a mandate: screen the Form ADV adviser index or compare 2–5 named managers side by side (RAUM, clients, custody, auditor and administrator, disclosures, Form 13F, overlap, events), delivered as a branded shortlist that feeds the ODD report and IC memo."
 ---
 
 # Manager comparison and shortlist
@@ -9,9 +9,10 @@ Use when the user asks to "find managers for a mandate", "screen advisers", "sho
 these managers", "side by side", "manager search", "who else runs this strategy", "how much do these managers
 overlap", or names 2–5 managers and wants them compared.
 
-The deliverable is a 5–8 page branded PDF, **"<Mandate or first manager> - Manager Comparison <YYYY-MM-DD>.pdf"**,
-built with the shared renderer (`scripts/gradient_report.py`, house style in `references/report-style.md`). It
-is an evidence comparison, not a ranking. It ends with a recommended next step per manager, so it feeds
+The deliverable is a branded report with base name
+**"<Mandate or first manager> - Manager Comparison <YYYY-MM-DD>"**; its PDF form is normally 5–8 pages. It
+uses the house style in `references/report-style.md` and is an evidence comparison, not a ranking. It ends
+with a recommended next step per manager, so it feeds
 `gradient-odd-report` (one full ODD report per chosen manager) and `gradient-ic-memo` (manager hire section).
 
 Rules that matter here:
@@ -199,19 +200,20 @@ Sections (titles fixed; keep a section even when its data is missing and show th
 
 1. **Executive summary** (`id: "executive"`) — `executive.bottom_line` 3–5 sentences with tags: what was
    compared, the main differences in scale and structure, the flags that need follow-up, and what is missing.
-   `executive.tiles` (up to 4), e.g. Managers compared, Managers with flags, 13F overlap available (pairs),
-   Open findings. Then a `table` "Shortlist at a glance": Manager, CRD, RAUM, Flags (chip), Next step.
-2. **Side-by-side comparison** — one `table`, managers as columns and rows: Legal name, CRD / SEC no.,
+   `executive.tiles` exactly: Managers compared, Managers with flags, 13F overlap pairs, Item 11 disclosures.
+   Then a `table` "Shortlist at a glance": Manager, CRD, RAUM, Flags (chip), Next step.
+2. **Side-by-side comparison** — side-by-side `bars` for RAUM, client count and Item 11 disclosures, followed
+   by one `table`, managers as columns and rows: Legal name, CRD / SEC no.,
    Registration (`source_kind`), State, RAUM, Discretionary share, Clients, Main client type (5.D), Employees,
    Private funds / gross assets, Custody (Item 9 and amount), Auditor named (n/N funds), Administrator named
    (n/N), Custodian named (n/N), Item 11 disclosures, Form ADV 'yes' responses, 13F total / positions,
    Latest ADV filing, Latest 13F period. Align date and ID columns `n`. Add a note that percentiles are within
-   each adviser's own cohort, then a compact per-manager `kv` or `table` of cohort metrics (cohort name and
-   size shown).
+   each adviser's own cohort, then compact 0–100 percentile-strip `bars` per manager with cohort name and
+   size shown. State a sourced criterion-by-criterion rationale without treating percentile as quality.
 3. **Operational flags** — per manager a `findings` block (severity high/medium/low, title, detail with tag),
    `empty_title` "No flags identified", `empty_text` stating which evidence was checked and what was not
    available.
-4. **Form 13F overlap** — a `table` matrix (managers × managers, cells = weighted overlap % or "n/a — <reason>")
+4. **Form 13F overlap** — a `heat` matrix (managers × managers, cells = weighted overlap % or "n/a — <reason>")
    and a `table` of top shared positions (issuer, CUSIP, value per manager). Then a callout with the
    `coverage_statement` and the 13F caveat. If fewer than two managers have 13F, show the per-manager status
    table and the callout only.
@@ -234,19 +236,27 @@ dates; $B/$M with 1–2 decimals; percentages to 1 dp. Use `discretionary_raum_s
 Every analytical or key-judgment callout must include an `[S#]` tag. The Next steps table is limited to the
 three existing choices in Step 4, and every row's Why cell cites `[S#]`; do not introduce a hire, fire,
 termination, redemption or allocation recommendation. Add one to three `callout` blocks with
-`role: "analysis"` to **Operational flags**, stating the comparison, diligence implication, uncertainty, and
-evidence that would change the view without ranking manager quality.
+`role: "analysis"` and `Analysis —` titles to **Operational flags**, using the four-part structure in
+`../../shared/writing-standards.md` and no more than 60 words. Page 2 contains three to five sourced
+`Key judgment —` callouts with `role: "key_judgment"`. One gives the **best fit for the stated mandate**
+based only on the user's diligence criteria and names the trade-offs; it is not a performance claim or hire
+recommendation. Use message-first kickers. Lead side-by-side evidence with the required comparison bars and
+percentile strips, operational flags with severity `bars`, and overlap with a returned `heat` matrix, or
+place typed unavailability before the first table. Organize page flow by comparison theme, never one page
+per manager. Never place more than two tables consecutively.
 
 Validate before rendering:
 
 ```
-python <this skill's directory>/scripts/validate_manager_compare.py compare.json
+python <this skill's directory>/scripts/validate_manager_compare.py report.json
 ```
 
-Fix every error and re-run until it passes. Do not render a report that fails validation. Then render:
+Fix every error and re-run until it passes. Do not render a report that fails validation. Select PDF by
+default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select both when it
+says `both` or `board pack`. Both formats must come from the same validated `report.json`.
 
 ```
-python <this skill's directory>/scripts/gradient_report.py compare.json "<Mandate> - Manager Comparison <YYYY-MM-DD>.pdf"
+python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Mandate> - Manager Comparison <YYYY-MM-DD>"
 ```
 
 Then follow "Check and deliver" in `references/report-style.md` (rasterize, inspect every page, fix clipping,
@@ -257,7 +267,8 @@ row labels and use $B values.
 
 ## Step 6 — Offer follow-ups (never without confirmation)
 
-Chat reply: three lines (managers compared and signal, the top flag, next steps count) plus the file. Then
+Chat reply: three lines (managers compared and signal, the top flag, next steps count) plus the requested
+file(s). Then
 **offer**, without doing it:
 
 - Run `gradient-odd-report` for the managers marked "Run ODD report".

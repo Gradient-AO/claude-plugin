@@ -1,136 +1,878 @@
 {
- "meta": {
-  "eyebrow": "Manager Comparison",
-  "header_label": "Manager Comparison",
-  "title": "Global Macro Mandate (TEST)",
-  "subtitle": "3 managers · named by user · RENDER TEST",
-  "running_head": "Global Macro (TEST) · comparison",
-  "data_as_of": "2026-10-01 (Form ADV); 2026-06-30 (Form 13F)",
-  "confidentiality": "RENDER TEST — fictional managers, not a real comparison",
-  "signal_title": "Comparison evidence",
-  "signal": {"level": "review", "label": "2 of 3 managers with flags"},
-  "meter_title": "Evidence completeness",
-  "completeness": {"used": 11, "expected": 13, "state": "partial"},
-  "cover_facts": [["Managers compared", "3"], ["Screen basis", "Named by user"], ["In diligence catalog", "2 of 3"], ["Form ADV as of", "2026-10-01"], ["Latest 13F period", "2026-06-30"], ["Report date", "2026-10-04"]]
- },
- "executive": {
-  "bottom_line": "Three advisers were compared for the global macro mandate: Ridgeview reports $12.40B regulatory AUM, Harbor $4.85B and Northfield $1.92B [S1][S2][S3]. None reports an Item 11 disciplinary disclosure [S1][S2][S3]. Harbor has 2 of 9 private funds with no administrator named and Northfield reports custody through a related person, so both carry medium flags [S2][S3]. Weighted 13F overlap between Ridgeview and Harbor is 18.4% for the 2026-06-30 period [S6]; Northfield is not in the diligence catalog, so it has no 13F, consistency or events evidence. This is an evidence comparison, not a ranking.",
-  "tiles": [
-   {"label": "Managers compared", "value": "3", "sub": "Named by user", "tone": "good"},
-   {"label": "Managers with flags", "value": "2", "sub": "Medium only [S2][S3]", "tone": "watch"},
-   {"label": "13F overlap pairs", "value": "1 of 3", "sub": "Same-period filings [S6]", "tone": "watch"},
-   {"label": "Item 11 disclosures", "value": "0", "sub": "All three advisers [S1–S3]", "tone": "good"}
+  "meta": {
+    "eyebrow": "Manager Comparison",
+    "header_label": "Manager Comparison",
+    "title": "Global Macro Mandate (TEST)",
+    "subtitle": "3 managers · named by user · RENDER TEST",
+    "running_head": "Global Macro (TEST) · comparison",
+    "data_as_of": "2026-10-01 (Form ADV); 2026-06-30 (Form 13F)",
+    "confidentiality": "RENDER TEST — fictional managers, not a real comparison",
+    "signal_title": "Comparison evidence",
+    "signal": {
+      "level": "review",
+      "label": "2 of 3 managers with flags"
+    },
+    "meter_title": "Evidence completeness",
+    "completeness": {
+      "used": 11,
+      "expected": 13,
+      "state": "partial"
+    },
+    "cover_facts": [
+      [
+        "Managers compared",
+        "3"
+      ],
+      [
+        "Screen basis",
+        "Named by user"
+      ],
+      [
+        "In diligence catalog",
+        "2 of 3"
+      ],
+      [
+        "Form ADV as of",
+        "2026-10-01"
+      ],
+      [
+        "Latest 13F period",
+        "2026-06-30"
+      ],
+      [
+        "Report date",
+        "2026-10-04"
+      ]
+    ]
+  },
+  "executive": {
+    "bottom_line": "Three advisers were compared for the global macro mandate: Ridgeview reports $12.40B regulatory AUM, Harbor $4.85B and Northfield $1.92B [S1][S2][S3]. None reports an Item 11 disciplinary disclosure [S1][S2][S3]. Harbor has 2 of 9 private funds with no administrator named and Northfield reports custody through a related person, so both carry medium flags [S2][S3]. Weighted 13F overlap between Ridgeview and Harbor is 18.4% for the 2026-06-30 period [S6]; Northfield is not in the diligence catalog, so it has no 13F, consistency or events evidence. This is an evidence comparison, not a ranking.",
+    "tiles": [
+      {
+        "label": "Managers compared",
+        "value": "3",
+        "sub": "Named by user [S1]",
+        "tone": "good"
+      },
+      {
+        "label": "Managers with flags",
+        "value": "2",
+        "sub": "Medium only [S2][S3]",
+        "tone": "watch"
+      },
+      {
+        "label": "13F overlap pairs",
+        "value": "1 of 3",
+        "sub": "Same-period filings [S6]",
+        "tone": "watch"
+      },
+      {
+        "label": "Item 11 disclosures",
+        "value": "0",
+        "sub": "All three advisers [S1–S3] [S4]",
+        "tone": "good"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "executive",
+      "title": "Executive summary",
+      "kicker": "What differs, what needs follow-up, what is missing",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Shortlist at a glance",
+          "columns": [
+            "Manager",
+            "CRD",
+            "RAUM",
+            "Flags",
+            "Next step"
+          ],
+          "align": [
+            "l",
+            "n",
+            "r",
+            "l",
+            "l"
+          ],
+          "rows": [
+            [
+              "Ridgeview Example Advisors (TEST)",
+              "999901",
+              "$12.40B",
+              {
+                "chip": "No flags",
+                "status": "available"
+              },
+              "Run ODD report [S1]"
+            ],
+            [
+              "Harbor Example Capital (TEST)",
+              "999902",
+              "$4.85B",
+              {
+                "chip": "Medium",
+                "status": "medium"
+              },
+              "Reconcile DDQ [S2]"
+            ],
+            [
+              "Northfield Example Capital (TEST)",
+              "999903",
+              "$1.92B",
+              {
+                "chip": "Medium",
+                "status": "medium"
+              },
+              "Run ODD report [S3]"
+            ]
+          ],
+          "note": "Order follows the user's list. Flags are evidence for follow-up, not a verdict on the manager."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — headline signal",
+          "text": "Observation: The fictional TEST report carries a 2 of 3 managers with flags signal [S1]. Why it matters: The signal frames the review. Uncertainty: Evidence coverage is bounded. What would change the view: New governed evidence that changes the signal."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "info",
+          "title": "Key judgment — primary measure",
+          "text": "Observation: Managers compared is 3 in the TEST evidence [S2]. Why it matters: This measure anchors the executive view. Uncertainty: The fixture is deliberately compact. What would change the view: A refreshed source with a materially different value."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "info",
+          "title": "Key judgment — monitoring priority",
+          "text": "Observation: Item 11 disclosures is 0 in the TEST evidence [S3]. Why it matters: It identifies a monitoring priority. Uncertainty: Supporting detail is limited. What would change the view: Corroborated evidence that resolves or reverses the item."
+        }
+      ]
+    },
+    {
+      "title": "Side-by-side comparison",
+      "kicker": "Form ADV Part 1A and Schedule D, report 2026-10-01; Form 13F 2026-06-30",
+      "blocks": [
+        {
+          "type": "bars",
+          "title": "Regulatory assets under management",
+          "prefix": "$",
+          "suffix": "B",
+          "items": [
+            {"label": "Ridgeview", "value": 12.4, "source": "S1"},
+            {"label": "Harbor", "value": 4.85, "source": "S2"},
+            {"label": "Northfield", "value": 1.92, "source": "S3"}
+          ]
+        },
+        {
+          "type": "bars",
+          "title": "Client count",
+          "items": [
+            {"label": "Ridgeview", "value": 41, "source": "S1"},
+            {"label": "Harbor", "value": 28, "source": "S2"},
+            {"label": "Northfield", "value": 12, "source": "S3"}
+          ]
+        },
+        {
+          "type": "bars",
+          "title": "Item 11 disclosures",
+          "items": [
+            {"label": "Ridgeview", "value": 0, "source": "S1"},
+            {"label": "Harbor", "value": 0, "source": "S2"},
+            {"label": "Northfield", "value": 0, "source": "S3"}
+          ]
+        },
+        {
+          "type": "bars",
+          "title": "RAUM cohort percentile strips",
+          "suffix": "%",
+          "items": [
+            {"label": "Ridgeview (n=214)", "value": 78, "source": "S7"},
+            {"label": "Harbor (n=187)", "value": 59, "source": "S7"},
+            {"label": "Northfield (n=96)", "value": 42, "source": "S7"}
+          ],
+          "note": "Each percentile uses the adviser's own Gradient-selected cohort [S7]."
+        },
+        {
+          "type": "table",
+          "columns": [
+            "Item",
+            "Ridgeview (TEST)",
+            "Harbor (TEST)",
+            "Northfield (TEST)"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "r"
+          ],
+          "rows": [
+            [
+              "CRD / SEC no.",
+              "999901 / 801-00001",
+              "999902 / 801-00002",
+              "999903 / 801-00003"
+            ],
+            [
+              "Registration",
+              "Registered",
+              "Registered",
+              "Registered"
+            ],
+            [
+              "State",
+              "ST",
+              "ST",
+              "ST"
+            ],
+            [
+              "RAUM",
+              "$12.40B [S1]",
+              "$4.85B [S2]",
+              "$1.92B [S3]"
+            ],
+            [
+              "Discretionary share",
+              "100.0% [S1]",
+              "96.2% [S2]",
+              "100.0% [S3]"
+            ],
+            [
+              "Clients / main type",
+              "41 / pooled vehicles",
+              "28 / pooled vehicles",
+              "12 / pension plans"
+            ],
+            [
+              "Employees",
+              "212",
+              "64",
+              "19"
+            ],
+            [
+              "Private funds / gross assets",
+              "11 / $10.86B",
+              "9 / $4.10B",
+              "3 / $1.15B"
+            ],
+            [
+              "Custody (Item 9)",
+              "Yes, $10.86B",
+              "Yes, $4.10B",
+              "Related person"
+            ],
+            [
+              "Auditor named",
+              "11 of 11",
+              "9 of 9",
+              "3 of 3"
+            ],
+            [
+              "Administrator named",
+              "11 of 11",
+              "7 of 9",
+              "3 of 3"
+            ],
+            [
+              "Custodian named",
+              "11 of 11",
+              "9 of 9",
+              "3 of 3"
+            ],
+            [
+              "Item 11 disclosures",
+              "0",
+              "0",
+              "0"
+            ],
+            [
+              "Form ADV 'yes' responses",
+              "9",
+              "11",
+              "8"
+            ],
+            [
+              "13F total / positions",
+              "$3.21B / 184 [S4]",
+              "$1.07B / 96 [S5]",
+              "n/a — not in catalog"
+            ],
+            [
+              "Latest ADV filing",
+              "2026-09-12",
+              "2026-08-28",
+              "2026-03-30"
+            ],
+            [
+              "Latest 13F period",
+              "2026-06-30",
+              "2026-06-30",
+              "n/a"
+            ]
+          ],
+          "note": "Auditor, administrator and custodian counts are private funds with a provider named in Schedule D 7.B.1, out of funds returned. 'Yes' responses count affirmative Form ADV answers, not disciplinary events."
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Cohort percentiles are not comparable across managers",
+          "text": "Each adviser is positioned within its own Gradient-selected cohort (Ridgeview: 214 advisers; Harbor: 187; Northfield: 96) [S7]. Percentiles are positioning, not a quality ranking."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Scale differs without deciding mandate fit",
+          "text": "Observation: Ridgeview reports the most RAUM and clients; all three report zero Item 11 disclosures [S1][S2][S3]. Why it matters: Scale affects operating context, not quality. Uncertainty: Cohorts differ. What would change the view: User criteria that privilege a specific operating scale."
+        }
+      ]
+    },
+    {
+      "title": "Operational flags",
+      "kicker": "Evidence that needs follow-up, per manager",
+      "blocks": [
+        {
+          "type": "bars",
+          "title": "Open flags by severity",
+          "items": [
+            {"label": "High", "value": 0, "source": "S8"},
+            {"label": "Medium", "value": 2, "source": "S8"},
+            {"label": "Low", "value": 2, "source": "S8"}
+          ]
+        },
+        {
+          "type": "findings",
+          "items": [],
+          "empty_title": "Ridgeview Example Advisors (TEST): no flags identified",
+          "empty_text": "Checked: Form ADV profile, Schedule D service providers, 13F, ADV–13F consistency, open findings [S1][S4][S8][S9]. Events not published [S10]."
+        },
+        {
+          "type": "findings",
+          "items": [
+            {
+              "severity": "medium",
+              "title": "Harbor Example Capital (TEST): 2 of 9 private funds name no administrator",
+              "detail": "Schedule D 7.B.1 rows for Harbor Example Opportunities Fund (TEST) and Harbor Example Credit Fund (TEST) leave the administrator blank [S2]. Ask who prepares investor statements."
+            },
+            {
+              "severity": "low",
+              "title": "Harbor Example Capital (TEST): PCAOB registry check unavailable",
+              "detail": "Auditor Example Audit LLP is named on all funds; Gradient's PCAOB registry evidence was unavailable (advisory) [S2]."
+            }
+          ],
+          "empty_title": "",
+          "empty_text": ""
+        },
+        {
+          "type": "findings",
+          "items": [
+            {
+              "severity": "medium",
+              "title": "Northfield Example Capital (TEST): custody through a related person",
+              "detail": "Item 9 reports a related person with custody of client assets; independent verification answer not found in the returned data [S3]."
+            },
+            {
+              "severity": "low",
+              "title": "Northfield Example Capital (TEST): not in diligence catalog",
+              "detail": "No catalog firm ID, so 13F, consistency, events and findings are not available [S3]."
+            }
+          ],
+          "empty_title": "",
+          "empty_text": ""
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Evidence gaps differ",
+          "text": "Observation: The fictional TEST evidence supports the evidence gaps differ finding [S2][S3]. Why it matters: It focuses review on the principal evidence gap. Uncertainty: The compact fixture omits some corroborating detail. What would change the view: Updated governed evidence that contradicts the finding."
+        }
+      ]
+    },
+    {
+      "title": "Form 13F overlap",
+      "kicker": "Same-period, complete Form 13F filings only",
+      "blocks": [
+        {
+          "type": "heat",
+          "title": "Weighted 13F overlap matrix",
+          "columns": ["Ridgeview", "Harbor"],
+          "rows": [
+            {"label": "Ridgeview", "values": [100, 18.4]},
+            {"label": "Harbor", "values": [18.4, 100]}
+          ],
+          "suffix": "%",
+          "note": "Northfield is excluded because its catalog CIK is missing [S6]."
+        },
+        {
+          "type": "table",
+          "title": "Weighted overlap (period 2026-06-30)",
+          "columns": [
+            "",
+            "Ridgeview (TEST)",
+            "Harbor (TEST)",
+            "Northfield (TEST)"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "r"
+          ],
+          "rows": [
+            [
+              "Ridgeview (TEST)",
+              "—",
+              "18.4% [S6]",
+              "n/a — cik_missing"
+            ],
+            [
+              "Harbor (TEST)",
+              "18.4% [S6]",
+              "—",
+              "n/a — cik_missing"
+            ],
+            [
+              "Northfield (TEST)",
+              "n/a — cik_missing",
+              "n/a — cik_missing",
+              "—"
+            ]
+          ],
+          "note": "Ridgeview–Harbor: 31 common positions [S6]."
+        },
+        {
+          "type": "table",
+          "title": "Top shared positions",
+          "columns": [
+            "Issuer",
+            "CUSIP",
+            "Ridgeview",
+            "Harbor"
+          ],
+          "align": [
+            "l",
+            "n",
+            "r",
+            "r"
+          ],
+          "rows": [
+            [
+              "Example Index ETF (TEST)",
+              "000000AA1",
+              "$412.5M",
+              "$138.2M"
+            ],
+            [
+              "Example Semiconductor Corp (TEST)",
+              "000000BB2",
+              "$96.1M",
+              "$41.7M"
+            ],
+            [
+              "Example Software Inc (TEST)",
+              "000000CC3",
+              "$71.8M",
+              "$22.9M"
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "watch",
+          "title": "How to read this",
+          "text": "Overlap uses same-period, complete SEC Form 13F reported long positions. It excludes shorts, cash, many non-US securities and confidential-treatment holdings, and does not imply manager intent [S6]. 13F is firm-level and lagged; it is not the mandate's portfolio."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Reported overlap is limited",
+          "text": "Observation: Ridgeview and Harbor have 18.4% weighted overlap across 31 positions [S6]. Why it matters: Their reported long books are not interchangeable. Uncertainty: Northfield lacks usable 13F identity. What would change the view: Complete same-period filings showing materially different overlap."
+        }
+      ]
+    },
+    {
+      "title": "ADV–13F consistency and events",
+      "kicker": "Identity, recency and scope flags — not a diligence conclusion",
+      "new_page": false,
+      "blocks": [
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Visual evidence",
+          "text": "Not available — No governed visual was returned for this fictional TEST fixture."
+        },
+        {
+          "type": "table",
+          "columns": [
+            "Manager",
+            "ADV RAUM",
+            "13F total",
+            "13F / RAUM",
+            "13F age",
+            "Identity",
+            "Flags"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "r",
+            "n",
+            "l",
+            "l"
+          ],
+          "rows": [
+            [
+              "Ridgeview (TEST)",
+              "$12.40B",
+              "$3.21B",
+              "25.9% [S8]",
+              "96 days",
+              "Unconfirmed",
+              "13F subset of RAUM [S8]"
+            ],
+            [
+              "Harbor (TEST)",
+              "$4.85B",
+              "$1.07B",
+              "22.1% [S11]",
+              "96 days",
+              "Unconfirmed",
+              "13F subset of RAUM [S11]"
+            ],
+            [
+              "Northfield (TEST)",
+              "$1.92B",
+              "n/a",
+              "n/a",
+              "n/a",
+              "n/a",
+              "Not in catalog"
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Events",
+          "text": "No published events are available for Ridgeview or Harbor because event publication is not ready [S10]. Absence is not evidence of no events."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Identity and coverage gaps govern interpretation",
+          "text": "Observation: Ridgeview and Harbor have usable consistency checks, while Northfield is outside the catalog [S8][S11][S3]. Why it matters: Evidence depth differs by manager. Uncertainty: Events are unpublished. What would change the view: Catalog resolution and published event coverage for Northfield."
+        }
+      ]
+    },
+    {
+      "title": "Coverage",
+      "kicker": "What each source returned",
+      "new_page": false,
+      "blocks": [
+        {
+          "type": "coverage",
+          "items": [
+            {
+              "name": "Form ADV profiles (3)",
+              "status": "available",
+              "note": "Report 2026-10-01 [S1][S2][S3]"
+            },
+            {
+              "name": "Cohort comparison",
+              "status": "available",
+              "note": "Each adviser in its own cohort [S7]"
+            },
+            {
+              "name": "Form 13F (2 of 3)",
+              "status": "partial",
+              "note": "Northfield not in catalog [S4][S5]"
+            },
+            {
+              "name": "13F overlap",
+              "status": "partial",
+              "note": "1 of 3 pairs [S6]"
+            },
+            {
+              "name": "ADV–13F consistency",
+              "status": "partial",
+              "note": "Identity unconfirmed [S8][S11]"
+            },
+            {
+              "name": "Firm events",
+              "status": "unavailable",
+              "note": "event_publication_not_ready [S10]"
+            },
+            {
+              "name": "Open findings",
+              "status": "available",
+              "note": "Ridgeview only (rostered): none [S9]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Next steps",
+      "kicker": "Recommended per manager — offers, not actions taken",
+      "new_page": false,
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Manager",
+            "Next step",
+            "Why",
+            "Skill"
+          ],
+          "align": [
+            "l",
+            "l",
+            "l",
+            "l"
+          ],
+          "rows": [
+            [
+              "Ridgeview (TEST)",
+              {
+                "chip": "Run ODD report",
+                "status": "ready"
+              },
+              "Under consideration; no flags [S1]",
+              "gradient-odd-report"
+            ],
+            [
+              "Harbor (TEST)",
+              {
+                "chip": "Reconcile DDQ",
+                "status": "watch"
+              },
+              "Administrator gap on 2 funds [S2]",
+              "gradient-ddq-reconcile"
+            ],
+            [
+              "Northfield (TEST)",
+              {
+                "chip": "Run ODD report",
+                "status": "ready"
+              },
+              "Related-person custody [S3]",
+              "gradient-odd-report"
+            ]
+          ]
+        },
+        {
+          "type": "text",
+          "text": "Optional, only on request and after a previewed dry run: add managers to the research watchlist or start Form ADV monitoring."
+        }
+      ]
+    },
+    {
+      "title": "Appendix A — Sources and method",
+      "num": "A",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Sources",
+          "columns": [
+            "Tag",
+            "Evidence",
+            "Tool / view",
+            "As of",
+            "Validation",
+            "Digest"
+          ],
+          "align": [
+            "n",
+            "l",
+            "l",
+            "n",
+            "n",
+            "n"
+          ],
+          "rows": [
+            [
+              "S1",
+              "Form ADV profile — Ridgeview (TEST)",
+              "get_manager_odd_profile",
+              "2026-10-01",
+              {
+                "chip": "not_run",
+                "status": "not_run"
+              },
+              "a1b2c3d4"
+            ],
+            [
+              "S2",
+              "Form ADV profile — Harbor (TEST)",
+              "get_manager_odd_profile",
+              "2026-10-01",
+              {
+                "chip": "advisory",
+                "status": "advisory"
+              },
+              "b2c3d4e5"
+            ],
+            [
+              "S3",
+              "Form ADV profile — Northfield (TEST)",
+              "get_manager_odd_profile",
+              "2026-10-01",
+              {
+                "chip": "not_run",
+                "status": "not_run"
+              },
+              "c3d4e5f6"
+            ],
+            [
+              "S4",
+              "13F snapshot — Ridgeview (TEST)",
+              "get_firm_13f_portfolio_review",
+              "2026-08-14",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "d4e5f6a7"
+            ],
+            [
+              "S5",
+              "13F snapshot — Harbor (TEST)",
+              "get_firm_13f_portfolio_review",
+              "2026-08-13",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "e5f6a7b8"
+            ],
+            [
+              "S6",
+              "13F overlap",
+              "get_multi_manager_13f_overlap",
+              "2026-08-14",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "f6a7b8c9"
+            ],
+            [
+              "S7",
+              "Cohort comparison",
+              "get_manager_odd_profile (comparison)",
+              "2026-10-01",
+              {
+                "chip": "not_run",
+                "status": "not_run"
+              },
+              "a7b8c9d0"
+            ],
+            [
+              "S8",
+              "ADV–13F consistency — Ridgeview",
+              "get_cross_domain_research",
+              "2026-10-01",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "b8c9d0e1"
+            ],
+            [
+              "S9",
+              "Open findings — Ridgeview",
+              "get_manager_diligence_findings",
+              "2026-10-04",
+              {
+                "chip": "advisory",
+                "status": "advisory"
+              },
+              "c9d0e1f2"
+            ],
+            [
+              "S10",
+              "Firm events",
+              "get_firm_fund_events",
+              "2026-10-04",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "d0e1f2a3"
+            ],
+            [
+              "S11",
+              "ADV–13F consistency — Harbor",
+              "get_cross_domain_research",
+              "2026-10-01",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
+              "e1f2a3b4"
+            ]
+          ]
+        },
+        {
+          "type": "two_col",
+          "left": [
+            {
+              "type": "kv",
+              "title": "Server Metric Methods",
+              "rows": [
+                [
+                  "Discretionary share",
+                  "Use discretionary_raum_share exactly as returned by get_manager_odd_profile [S1][S2][S3]"
+                ],
+                [
+                  "13F / ADV RAUM",
+                  "Use thirteen_f_total_to_adv_raum_ratio exactly as returned by get_cross_domain_research [S8][S11]"
+                ]
+              ]
+            }
+          ],
+          "right": [
+            {
+              "type": "kv",
+              "title": "Signal rubric",
+              "rows": [
+                [
+                  "Elevated",
+                  "Any High flag"
+                ],
+                [
+                  "Review",
+                  "Any Medium flag"
+                ],
+                [
+                  "Clear",
+                  "No flags identified"
+                ],
+                [
+                  "Insufficient",
+                  "<2 usable ADV profiles"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Disclaimer",
+          "text": "Not investment, legal or compliance advice. No manager is ranked or recommended. Form ADV is adviser-reported, not SEC-verified. Form 13F is lagged, long-only reportable exposure. Percentiles are Gradient cohort positioning, not a quality ranking. All names and figures in this render test are fictional."
+        }
+      ]
+    }
   ]
- },
- "sections": [
-  {"id": "executive", "title": "Executive summary", "kicker": "What differs, what needs follow-up, what is missing", "blocks": [
-   {"type": "table", "title": "Shortlist at a glance", "columns": ["Manager", "CRD", "RAUM", "Flags", "Next step"],
-    "align": ["l", "n", "r", "l", "l"],
-    "rows": [
-     ["Ridgeview Example Advisors (TEST)", "999901", "$12.40B", {"chip": "No flags", "status": "available"}, "Run ODD report [S1]"],
-     ["Harbor Example Capital (TEST)", "999902", "$4.85B", {"chip": "Medium", "status": "medium"}, "Reconcile DDQ [S2]"],
-     ["Northfield Example Capital (TEST)", "999903", "$1.92B", {"chip": "Medium", "status": "medium"}, "Run ODD report [S3]"]],
-    "note": "Order follows the user's list. Flags are evidence for follow-up, not a verdict on the manager."}
-  ]},
-  {"title": "Side-by-side comparison", "kicker": "Form ADV Part 1A and Schedule D, report 2026-10-01; Form 13F 2026-06-30", "blocks": [
-   {"type": "table", "columns": ["Item", "Ridgeview (TEST)", "Harbor (TEST)", "Northfield (TEST)"],
-    "align": ["l", "r", "r", "r"],
-    "rows": [
-     ["CRD / SEC no.", "999901 / 801-00001", "999902 / 801-00002", "999903 / 801-00003"],
-     ["Registration", "Registered", "Registered", "Registered"],
-     ["State", "ST", "ST", "ST"],
-     ["RAUM", "$12.40B [S1]", "$4.85B [S2]", "$1.92B [S3]"],
-     ["Discretionary share", "100.0% [S1]", "96.2% [S2]", "100.0% [S3]"],
-     ["Clients / main type", "41 / pooled vehicles", "28 / pooled vehicles", "12 / pension plans"],
-     ["Employees", "212", "64", "19"],
-     ["Private funds / gross assets", "11 / $10.86B", "9 / $4.10B", "3 / $1.15B"],
-     ["Custody (Item 9)", "Yes, $10.86B", "Yes, $4.10B", "Related person"],
-     ["Auditor named", "11 of 11", "9 of 9", "3 of 3"],
-     ["Administrator named", "11 of 11", "7 of 9", "3 of 3"],
-     ["Custodian named", "11 of 11", "9 of 9", "3 of 3"],
-     ["Item 11 disclosures", "0", "0", "0"],
-     ["Form ADV 'yes' responses", "9", "11", "8"],
-     ["13F total / positions", "$3.21B / 184 [S4]", "$1.07B / 96 [S5]", "n/a — not in catalog"],
-     ["Latest ADV filing", "2026-09-12", "2026-08-28", "2026-03-30"],
-     ["Latest 13F period", "2026-06-30", "2026-06-30", "n/a"]],
-    "note": "Auditor, administrator and custodian counts are private funds with a provider named in Schedule D 7.B.1, out of funds returned. 'Yes' responses count affirmative Form ADV answers, not disciplinary events."},
-   {"type": "callout", "tone": "info", "title": "Cohort percentiles are not comparable across managers", "text": "Each adviser is positioned within its own Gradient-selected cohort (Ridgeview: 214 advisers; Harbor: 187; Northfield: 96) [S7]. Percentiles are positioning, not a quality ranking."}
-  ]},
-  {"title": "Operational flags", "kicker": "Evidence that needs follow-up, per manager", "blocks": [
-   {"type": "findings", "items": [], "empty_title": "Ridgeview Example Advisors (TEST): no flags identified", "empty_text": "Checked: Form ADV profile, Schedule D service providers, 13F, ADV–13F consistency, open findings [S1][S4][S8][S9]. Events not published [S10]."},
-   {"type": "findings", "items": [
-     {"severity": "medium", "title": "Harbor Example Capital (TEST): 2 of 9 private funds name no administrator", "detail": "Schedule D 7.B.1 rows for Harbor Example Opportunities Fund (TEST) and Harbor Example Credit Fund (TEST) leave the administrator blank [S2]. Ask who prepares investor statements."},
-     {"severity": "low", "title": "Harbor Example Capital (TEST): PCAOB registry check unavailable", "detail": "Auditor Example Audit LLP is named on all funds; Gradient's PCAOB registry evidence was unavailable (advisory) [S2]."}],
-    "empty_title": "", "empty_text": ""},
-   {"type": "findings", "items": [
-     {"severity": "medium", "title": "Northfield Example Capital (TEST): custody through a related person", "detail": "Item 9 reports a related person with custody of client assets; independent verification answer not found in the returned data [S3]."},
-     {"severity": "low", "title": "Northfield Example Capital (TEST): not in diligence catalog", "detail": "No catalog firm ID, so 13F, consistency, events and findings are not available [S3]."}],
-    "empty_title": "", "empty_text": ""},
-   {"type": "callout", "role": "analysis", "tone": "watch", "title": "Analysis — Evidence gaps differ", "text": "Harbor has incomplete administrator evidence while Northfield has related-person custody and no catalog evidence [S2][S3]. These are different follow-up needs, not a quality ranking. Completed DDQ and catalog evidence would change the comparison."}
-  ]},
-  {"title": "Form 13F overlap", "kicker": "Same-period, complete Form 13F filings only", "blocks": [
-   {"type": "table", "title": "Weighted overlap (period 2026-06-30)", "columns": ["", "Ridgeview (TEST)", "Harbor (TEST)", "Northfield (TEST)"],
-    "align": ["l", "r", "r", "r"],
-    "rows": [
-     ["Ridgeview (TEST)", "—", "18.4% [S6]", "n/a — cik_missing"],
-     ["Harbor (TEST)", "18.4% [S6]", "—", "n/a — cik_missing"],
-     ["Northfield (TEST)", "n/a — cik_missing", "n/a — cik_missing", "—"]],
-    "note": "Ridgeview–Harbor: 31 common positions [S6]."},
-   {"type": "table", "title": "Top shared positions", "columns": ["Issuer", "CUSIP", "Ridgeview", "Harbor"],
-    "align": ["l", "n", "r", "r"],
-    "rows": [
-     ["Example Index ETF (TEST)", "000000AA1", "$412.5M", "$138.2M"],
-     ["Example Semiconductor Corp (TEST)", "000000BB2", "$96.1M", "$41.7M"],
-     ["Example Software Inc (TEST)", "000000CC3", "$71.8M", "$22.9M"]]},
-   {"type": "callout", "tone": "watch", "title": "How to read this", "text": "Overlap uses same-period, complete SEC Form 13F reported long positions. It excludes shorts, cash, many non-US securities and confidential-treatment holdings, and does not imply manager intent [S6]. 13F is firm-level and lagged; it is not the mandate's portfolio."}
-  ]},
-  {"title": "ADV–13F consistency and events", "kicker": "Identity, recency and scope flags — not a diligence conclusion", "new_page": false, "blocks": [
-   {"type": "table", "columns": ["Manager", "ADV RAUM", "13F total", "13F / RAUM", "13F age", "Identity", "Flags"],
-    "align": ["l", "r", "r", "r", "n", "l", "l"],
-    "rows": [
-     ["Ridgeview (TEST)", "$12.40B", "$3.21B", "25.9% [S8]", "96 days", "Unconfirmed", "13F subset of RAUM [S8]"],
-     ["Harbor (TEST)", "$4.85B", "$1.07B", "22.1% [S11]", "96 days", "Unconfirmed", "13F subset of RAUM [S11]"],
-     ["Northfield (TEST)", "$1.92B", "n/a", "n/a", "n/a", "n/a", "Not in catalog"]]},
-   {"type": "callout", "tone": "info", "title": "Events", "text": "No published events are available for Ridgeview or Harbor because event publication is not ready [S10]. Absence is not evidence of no events."}
-  ]},
-  {"title": "Coverage", "kicker": "What each source returned", "new_page": false, "blocks": [
-   {"type": "coverage", "items": [
-     {"name": "Form ADV profiles (3)", "status": "available", "note": "Report 2026-10-01 [S1][S2][S3]"},
-     {"name": "Cohort comparison", "status": "available", "note": "Each adviser in its own cohort [S7]"},
-     {"name": "Form 13F (2 of 3)", "status": "partial", "note": "Northfield not in catalog [S4][S5]"},
-     {"name": "13F overlap", "status": "partial", "note": "1 of 3 pairs [S6]"},
-     {"name": "ADV–13F consistency", "status": "partial", "note": "Identity unconfirmed [S8][S11]"},
-     {"name": "Firm events", "status": "unavailable", "note": "event_publication_not_ready [S10]"},
-     {"name": "Open findings", "status": "available", "note": "Ridgeview only (rostered): none [S9]"}]}
-  ]},
-  {"title": "Next steps", "kicker": "Recommended per manager — offers, not actions taken", "new_page": false, "blocks": [
-   {"type": "table", "columns": ["Manager", "Next step", "Why", "Skill"], "align": ["l", "l", "l", "l"],
-    "rows": [
-     ["Ridgeview (TEST)", {"chip": "Run ODD report", "status": "ready"}, "Under consideration; no flags [S1]", "gradient-odd-report"],
-     ["Harbor (TEST)", {"chip": "Reconcile DDQ", "status": "watch"}, "Administrator gap on 2 funds [S2]", "gradient-ddq-reconcile"],
-     ["Northfield (TEST)", {"chip": "Run ODD report", "status": "ready"}, "Related-person custody [S3]", "gradient-odd-report"]]},
-   {"type": "text", "text": "Optional, only on request and after a previewed dry run: add managers to the research watchlist or start Form ADV monitoring."}
-  ]},
-  {"title": "Appendix A — Sources and method", "num": "A", "blocks": [
-   {"type": "table", "title": "Sources", "columns": ["Tag", "Evidence", "Tool / view", "As of", "Validation", "Digest"],
-    "align": ["n", "l", "l", "n", "n", "n"],
-    "rows": [
-     ["S1", "Form ADV profile — Ridgeview (TEST)", "get_manager_odd_profile", "2026-10-01", {"chip": "not_run", "status": "not_run"}, "a1b2c3d4"],
-     ["S2", "Form ADV profile — Harbor (TEST)", "get_manager_odd_profile", "2026-10-01", {"chip": "advisory", "status": "advisory"}, "b2c3d4e5"],
-     ["S3", "Form ADV profile — Northfield (TEST)", "get_manager_odd_profile", "2026-10-01", {"chip": "not_run", "status": "not_run"}, "c3d4e5f6"],
-     ["S4", "13F snapshot — Ridgeview (TEST)", "get_firm_13f_portfolio_review", "2026-08-14", {"chip": "passed", "status": "passed"}, "d4e5f6a7"],
-     ["S5", "13F snapshot — Harbor (TEST)", "get_firm_13f_portfolio_review", "2026-08-13", {"chip": "passed", "status": "passed"}, "e5f6a7b8"],
-     ["S6", "13F overlap", "get_multi_manager_13f_overlap", "2026-08-14", {"chip": "passed", "status": "passed"}, "f6a7b8c9"],
-     ["S7", "Cohort comparison", "get_manager_odd_profile (comparison)", "2026-10-01", {"chip": "not_run", "status": "not_run"}, "a7b8c9d0"],
-     ["S8", "ADV–13F consistency — Ridgeview", "get_cross_domain_research", "2026-10-01", {"chip": "passed", "status": "passed"}, "b8c9d0e1"],
-     ["S9", "Open findings — Ridgeview", "get_manager_diligence_findings", "2026-10-04", {"chip": "advisory", "status": "advisory"}, "c9d0e1f2"],
-     ["S10", "Firm events", "get_firm_fund_events", "2026-10-04", {"chip": "passed", "status": "passed"}, "d0e1f2a3"],
-     ["S11", "ADV–13F consistency — Harbor", "get_cross_domain_research", "2026-10-01", {"chip": "passed", "status": "passed"}, "e1f2a3b4"]]},
-   {"type": "two_col", "left": [
-     {"type": "kv", "title": "Server Metric Methods", "rows": [["Discretionary share", "Use discretionary_raum_share exactly as returned by get_manager_odd_profile [S1][S2][S3]"], ["13F / ADV RAUM", "Use thirteen_f_total_to_adv_raum_ratio exactly as returned by get_cross_domain_research [S8][S11]"]]}],
-    "right": [
-     {"type": "kv", "title": "Signal rubric", "rows": [["Elevated", "Any High flag"], ["Review", "Any Medium flag"], ["Clear", "No flags identified"], ["Insufficient", "<2 usable ADV profiles"]]}]},
-   {"type": "callout", "tone": "info", "title": "Disclaimer", "text": "Not investment, legal or compliance advice. No manager is ranked or recommended. Form ADV is adviser-reported, not SEC-verified. Form 13F is lagged, long-only reportable exposure. Percentiles are Gradient cohort positioning, not a quality ranking. All names and figures in this render test are fictional."}
-  ]}
- ]
 }

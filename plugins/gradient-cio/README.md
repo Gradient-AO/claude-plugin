@@ -67,7 +67,7 @@ contracts live in `tools/report_json_validator.py`, and construction contracts l
 `tools/construction_report_validator.py`. Skill-local validators retain their small `parents[3]` path
 bootstrap so they can be invoked directly from a skill while importing the plugin-level tools.
 
-`tests/run_tests.py` is the dependency-free test entry point. It orchestrates the focused modules under
-`tests/suites/`; use `--static` for the fast contract and validator lane, or run it without flags for the
-complete PDF-render regression suite. CI checks manifest version parity and shared-file sync before installing
-the heavier renderer dependencies.
+`tests/run_tests.py` is the test entry point. It orchestrates the focused modules under `tests/suites/`; use
+`--static` for the fast contract and validator lane, or run it without flags for the complete PDF, PowerPoint,
+layout and release-quality regression suite. CI checks manifest version parity and shared-file sync before
+installing the heavier renderer dependencies.

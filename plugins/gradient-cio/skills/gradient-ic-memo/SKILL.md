@@ -1,8 +1,8 @@
 ---
 name: gradient-ic-memo
-description: Write a deterministic, fully sourced investment committee (IC) memo for a portfolio, total fund, allocation change, rebalance, or manager hire/fire, using GradientCIO Portfolio Analytics, CMAs, liquidity and manager-diligence evidence, with optional Strategy Lab analysis of separately selected return series, plus the gradient-gips-* skills. Delivers a branded PDF memo in the Gradient house style. Use this skill whenever the user asks for an IC memo, investment committee memo, board memo, investment memo, committee paper, allocation recommendation, rebalance proposal, a portfolio review that ends in a decision or vote, IPS compliance review, or a client or trustee memo about a portfolio — even if they don't say "IC memo". Also use it when another skill (such as gradient-gips-manager-diligence) hands over a section "for the investment memo". For a periodic performance report with no decision requested, use gradient-portfolio-review instead.
+description: Write a deterministic, fully sourced investment committee (IC) memo for a portfolio, total fund, allocation change, rebalance, or manager hire/fire, using GradientCIO Portfolio Analytics, CMAs, liquidity and manager-diligence evidence, with optional Strategy Lab analysis of separately selected return series, plus the gradient-gips-* skills. Delivers a branded memo in the Gradient house style. Use this skill whenever the user asks for an IC memo, investment committee memo, board memo, investment memo, committee paper, allocation recommendation, rebalance proposal, a portfolio review that ends in a decision or vote, IPS compliance review, or a client or trustee memo about a portfolio — even if they don't say "IC memo". Also use it when another skill (such as gradient-gips-manager-diligence) hands over a section "for the investment memo". For a periodic performance report with no decision requested, use gradient-portfolio-review instead.
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # Gradient IC Memo
@@ -14,10 +14,10 @@ documented calculation), and **decision-ready** (the recommendation and the vote
 The memo is written by Claude from structured data. The GradientCIO MCP supplies the data; this skill supplies
 the structure and the rules. Never fill a number from memory or general knowledge.
 
-The delivered PDF is a **visually polished report in the same house style as the ODD report**: executive band
-with tiles, charts in every analytical section, and sourced **Claude analysis** callouts. The memo text stays
+The delivered memo is a **visually polished report in the same house style as the ODD report**: executive
+band with tiles, charts in every analytical section, and sourced **Claude analysis** callouts. The memo text stays
 deterministic (`memo.md`, validated); visuals and analysis are a separate, validated layer (`visuals.json`)
-merged by `scripts/compose_memo_json.py` and rendered in JSON block mode.
+merged by `scripts/compose_memo_json.py` into the single validated report source.
 
 ## Files in this skill
 
@@ -34,8 +34,8 @@ merged by `scripts/compose_memo_json.py` and rendered in JSON block mode.
 | `assets/example-memo.md` | When unsure how a section should look — a complete worked example that passes validation. |
 | `references/report-style.md` | Before rendering — the shared Gradient report style, `meta` fields and delivery rules. |
 | `references/report-layout.md` | Before Step 5b — required visuals per section, signed-bar convention, Claude analysis rules. |
-| `scripts/compose_memo_json.py` | Merges validated `memo.md` + `visuals.json` + `meta.json` into `memo.json`; validates visuals, analysis and tags. |
-| `scripts/gradient_report.py` | Renders the validated markdown memo into the branded PDF. Run it; never restyle. |
+| `scripts/compose_memo_json.py` | Merges validated `memo.md` + `visuals.json` + `meta.json` into `report.json`; validates visuals, analysis and tags. |
+| `scripts/render.py` | Renders the validated report source to PDF, PPTX or both. Run it; never restyle. |
 
 ## Workflow
 
@@ -73,7 +73,7 @@ Follow `references/data-map.md` section by section. Key rules:
   unavailable charts with their reason, and never compare different bases as though they were the same
   scenario. Use governed policy and CMA evidence for saved-portfolio forward assumptions; keep
   `run_strategy_lab_expected_statistics` limited to separately selected Strategy Lab return series.
-- For Section 5 visuals, make a **second** `get_portfolio_historical_returns` call with
+- For Section 5 visuals, make a **second** `get_portfolio_historical_returns` call with `limit: 100`,
   `sections: [cumulative_growth, calendar_years]` and `fields: [portfolio, filters, coverage, display,
   cumulative_growth, calendar_years]`; cite it as its own source row.
 - For Section 9 visuals, request the `commitments` chart items (`commitments-liquidity-scorecard`,
@@ -109,21 +109,22 @@ Prefer `get_portfolio_attribution` for realized Brinson-Fachler effects and symm
 Brinson is the attribution fallback only when complete, same-period portfolio weights, benchmark weights,
 portfolio segment returns, and benchmark segment returns are available from saved evidence. Label it
 `Local Brinson fallback`, cite every input, and do not claim server validation or symmetric-Carino linking.
-Use `get_portfolio_historical_returns` for portfolio, benchmark-relative and risk metrics. Preserve each
+Use `get_portfolio_historical_returns` with `limit: 100` for portfolio, benchmark-relative and risk metrics. Preserve each
 call's `fields` projection (`portfolio`, `filters`, `coverage`, `display` and only the requested result
 sections) and each tool's methodology, formula version, basis, period, currency, coverage and missing
 reasons. State partial coverage as a report gap. For `no_subject_returns`, state that the selected portfolio
 has no subject return history and do not substitute benchmark, commitment or Strategy Lab returns. Other
 governed results remain unavailable when their server method is unavailable.
 State `not_yet_funded` commitment comparisons as having no funded return history, not zero return. Identify
-returned partial 2016 and 2026 calendar years with their month counts. Pass `limit: 100` and disclose any
-remaining truncation.
-Page `get_portfolio_exposure` with `limit` / `cursor` and use canonical display names or documented
-snake_case aliases for classification filters. Use fixed-income duration, spread-duration, and
-yield-to-maturity only from the complete governed Fixed Income classification aggregate;
-`portfolio_totals.fixed_income_metrics` is null for a mixed portfolio. Quote `fixed_income_metrics` only for
-Fixed Income and Cash rows. Preserve weighting basis, coverage, and a valid zero spread duration; never
-equal-weight rows or substitute unsupported yield-to-worst / OAS.
+returned partial 2016 and 2026 calendar years from their `month_count`, `partial`, `coverage_status`, and
+`missing_reason`; never present either as full-year performance. If 100 commitment rows are unexpectedly
+insufficient, disclose truncation and the returned count.
+Page `get_portfolio_exposure` with `limit` / `cursor` and use returned display names or snake_case
+classification aliases.
+Use fixed-income duration, spread-duration, and yield-to-maturity only from complete governed
+`portfolio_totals.fixed_income_metrics` or the Fixed Income classification aggregate; preserve coverage and
+never recompute or equal-weight rows. Until P-25 ships, do not quote `fixed_income_metrics` from exposure rows
+or non-Fixed-Income classification aggregates.
 When policy risk rows are `not_assessed`, historical-return risk metrics remain separate observations: do not
 compare them with persisted thresholds or infer compliance unless `check_portfolio_policy` returns the status.
 When risk rows are assessed, preserve `risk_limits.observation_basis` and the returned magnitude comparison
@@ -178,16 +179,21 @@ Follow `references/report-layout.md` exactly. Write `visuals.json` with, for eac
 
    Signal level: `breach` if any IPS row is Breach; else `watch` if any is Watch; else `compliant`;
    `not_assessed` when no IPS was provided. If any data is illustrative, say so in `confidentiality`.
-3. Compose: `python scripts/compose_memo_json.py memo.md visuals.json meta.json memo.json`. Fix every error
-   and re-run until it passes. A failed composition does not write or replace `memo.json`.
-4. Render in JSON block mode: `python scripts/gradient_report.py memo.json "<Portfolio> - IC Memo.pdf"`.
-   Check every page (`pdftoppm -r 60 -png`): no squashed charts (use `narrow: true` inside `two_col`), no page
-   holding only an overflow tail, no wrapped IDs. Fix `visuals.json` and re-compose; never edit `memo.json`.
-   The markdown-only render (`--md`) is a fallback for when visuals cannot be built; say so in the reply.
-5. Deliver the PDF (save to `/mnt/user-data/outputs/`, and to the connected folder if there is one). Offer an
-   editable Claude Doc copy built from the same markdown when the committee secretary needs to edit it.
-6. In the reply, give a three-line summary (recommendation, IPS status, number of open items) and the
-   document. Do not repeat the memo in chat.
+3. Compose: `python scripts/compose_memo_json.py memo.md visuals.json meta.json report.json`. Fix every error
+   and re-run until it passes. A failed composition does not write or replace `report.json`; never edit the
+   composed JSON directly.
+4. Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select
+   both when it says `both` or `board pack`. Both formats must come from the same validated `report.json`;
+   preserve `memo.md` unchanged through composition.
+5. Render with
+   `python scripts/render.py report.json --format <pdf|pptx|both> --out "<Portfolio> - IC Memo"`.
+   Inspect every requested output: rasterize PDFs with `pdftoppm -r 60 -png`, and run the shared slide
+   rendering/layout check for PPTX. Fix `visuals.json`, re-compose and re-render until there are no squashed
+   charts, overflow tails or wrapped IDs.
+6. Deliver the requested file(s) to `/mnt/user-data/outputs/` and any connected folder. Offer an editable
+   Claude Doc copy built from the same markdown when the committee secretary needs to edit it.
+7. In the reply, give a three-line summary (recommendation, IPS status, number of open items) and the
+   document(s). Do not repeat the memo in chat.
 
 ### Step 7 — Save the scenario (only when the user asks)
 

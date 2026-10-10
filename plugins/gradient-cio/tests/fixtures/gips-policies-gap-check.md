@@ -11,7 +11,12 @@
 
 The fictional manual defines the firm and composite creation process [S1]. The change log supports one annual review, but no signed current-period approval is included [S2].
 
-## 3. Findings Checklist
+## 3. Follow-up Requests
+
+1. Provide approved error-correction materiality thresholds.
+2. Provide current sign-off and the supplemental-information inventory.
+
+## Appendix A — Findings Checklist
 
 | Area | Requirement | Provision | Status | Evidence | Finding / follow-up |
 |---|---|---|---|---|---|
@@ -22,18 +27,13 @@ The fictional manual defines the firm and composite creation process [S1]. The c
 | Review | Current approval evidence | Policy governance | Not met | Change log [S2] | No current sign-off |
 | Records | Supplemental-information inventory | 1.A.6 | Not found | — | Request |
 
-## 4. Follow-up Requests
-
-1. Provide approved error-correction materiality thresholds.
-2. Provide current sign-off and the supplemental-information inventory.
-
-## Appendix A — Sources
+## Appendix B — Sources
 
 | Tag | Source | Detail | As of | Validation |
 |---|---|---|---|---|
 | S1 | GIPS policies manual (TEST) | Fictional sections 2–11 | 2025-12-31 | Synthetic document |
 | S2 | Policy change log (TEST) | Fictional approvals | 2026-06-30 | Synthetic document |
 
-## Appendix B — Method & Disclaimer
+## Appendix C — Method & Disclaimer
 
 This fictional policies gap check tests the shared GIPS handoff contract. It is not verification, certification, legal advice or an assessment of any real firm.

@@ -17,13 +17,20 @@ Keep every section title and the order exactly as shown. Missing evidence become
 
 - Apply ODD-quality polish: exact hierarchy, concise copy, aligned tables and decision-useful graphics.
 - Render exactly the four named tiles. Source `executive.bottom_line` and every tile with `[S#]`.
+- Page 2 contains 3–5 sourced `callout` blocks with `role: key_judgment` and titles beginning
+  `Key judgment —`. Keep each to 60 words and use the four-part analysis structure below.
 - In Target Sub-Segment Structure, Inflation, Commodity and Diversification Context, and Forward Return and
-  Risk, include 1–3 sourced `callout` blocks with `role: analysis`. Keep titles to six words and text to 80
-  words. Each text must use, in order: `Observation:`, `Why it matters:`, `Uncertainty:`, and
+  Risk, include 1–3 sourced `callout` blocks with `role: analysis` and titles beginning `Analysis —`. Keep
+  the title message to six words and text to 60 words. Each text must use, in order: `Observation:`,
+  `Why it matters:`, `Uncertainty:`, and
   `What would change the view:`. Analysis supports, but never changes, the fixed Committee Action Requested.
 - Include graphics for current allocation, factor/diversification, forward risk/return and
   commitments/liquidity. Only unavailable governed evidence may use a `callout` reading
-  `Not available — <reason>` in place of a required visual.
+  `Not available — <reason>` in place of a required visual. Every analytical section has a message-first
+  kicker and puts its visual or unavailable substitute before the first table. Use signed finite values;
+  never place more than two tables consecutively.
+- Prefer `stacked` for sourced sub-segment/structure composition, `band` for policy or valuation ranges,
+  `heat` for returned inflation/commodity sensitivities and signed `waterfall` for governed attribution.
 - A clean validator result is a delivery blocker. After rendering, inspect every PDF page for clipping,
   overflow, weak hierarchy, orphaned headings, illegible charts and excessive whitespace.
 
@@ -51,9 +58,13 @@ Keep every section title and the order exactly as shown. Missing evidence become
 
 ### 4. Target Sub-Segment Structure
 
+- `band` **Current weight versus policy range** for every sub-segment, with the proposed target marker.
+- `stacked` **Current and target mix** with one bar for each mix.
 - `table` **Current versus target**: Sub-segment, Current, Target, Change, Range / constraint, Rationale.
 - Optional structure, geography, manager, factor and currency tables only when sourced.
 - Numeric targets and the marketable/drawdown mix must trace to a source.
+- Include an `Analysis — Why this target` judgment that ties the fixed proposal to returned CMA consensus,
+  macro regime and open manager findings; name any unavailable context rather than filling the gap.
 
 ### 5. Historical Performance and Attribution
 
@@ -64,6 +75,7 @@ Keep every section title and the order exactly as shown. Missing evidence become
 
 ### 6. Inflation, Commodity and Diversification Context
 
+- Lead with four inflation-context tiles populated only from returned observations and availability reasons.
 - `table` **Returned context**: Indicator / exposure, Observation, Change / sensitivity, As of, Source.
 - Embed unchanged factor, currency or allocation charts where relevant.
 - Macro context does not establish inflation protection or explain performance.
@@ -93,6 +105,7 @@ Keep every section title and the order exactly as shown. Missing evidence become
 
 ### 10. Scenarios and Robustness
 
+- Lead with signed `bars` for every governed scenario result.
 - `table` **Supported scenarios**: Scenario, Return / loss, Liquidity effect, Basis, Source.
 - Optional selected-series Strategy Lab results carry the sandbox label.
 - Do not invent inflation, commodity, denominator or valuation shocks.

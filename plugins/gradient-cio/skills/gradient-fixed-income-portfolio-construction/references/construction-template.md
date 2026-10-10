@@ -17,12 +17,19 @@ Keep every section title and the order exactly as shown. Missing evidence become
 
 - Apply ODD-quality polish: exact hierarchy, concise copy, aligned tables and decision-useful graphics.
 - Render exactly the four named tiles. Source `executive.bottom_line` and every tile with `[S#]`.
+- Page 2 contains 3–5 sourced `callout` blocks with `role: key_judgment` and titles beginning
+  `Key judgment —`. Keep each to 60 words and use the four-part analysis structure below.
 - In Target Portfolio Structure, Rates and Credit Context, and Forward Return and Risk, include 1–3 sourced
-  `callout` blocks with `role: analysis`. Keep titles to six words and text to 80 words. Each text must use,
-  in order: `Observation:`, `Why it matters:`, `Uncertainty:`, and `What would change the view:`. Analysis
-  supports, but never changes, the fixed Committee Action Requested.
+  `callout` blocks with `role: analysis` and titles beginning `Analysis —`. Keep the title message to six
+  words and text to 60 words. Each text must use, in order: `Observation:`, `Why it matters:`,
+  `Uncertainty:`, and `What would change the view:`. Analysis supports, but never changes, the fixed
+  Committee Action Requested.
 - Include graphics for current allocation, rates/credit, forward risk/return and liquidity. Only unavailable
   governed evidence may use a `callout` reading `Not available — <reason>` in place of a required visual.
+  Every analytical section has a message-first kicker and puts its visual or unavailable substitute before
+  the first table. Use signed finite values; never place more than two tables consecutively.
+- Prefer `band` for sourced policy, duration or spread ranges, `heat` for returned quality/key-rate matrices,
+  and signed `waterfall` for governed attribution. Do not infer unavailable security analytics.
 - A clean validator result is a delivery blocker. After rendering, inspect every PDF page for clipping,
   overflow, weak hierarchy, orphaned headings, illegible charts and excessive whitespace.
 
@@ -50,9 +57,13 @@ Keep every section title and the order exactly as shown. Missing evidence become
 
 ### 4. Target Portfolio Structure
 
+- `band` **Current weight versus policy range** for every segment, with the proposed target marker.
+- `stacked` **Current and target mix** with one bar for each mix.
 - `table` **Current versus target**: Segment, Current, Target, Change, Range / constraint, Rationale.
 - Optional quality, duration, geography and currency tables only when returned or user-supplied.
 - Numeric targets must trace to a source.
+- Include an `Analysis — Why this target` judgment that ties the fixed proposal to returned CMA consensus,
+  macro regime and open manager findings; name any unavailable context rather than filling the gap.
 
 ### 5. Historical Performance and Attribution
 
@@ -64,6 +75,8 @@ Keep every section title and the order exactly as shown. Missing evidence become
 ### 6. Rates and Credit Context
 
 - Use `get_macro_conditions` with exactly `{"view": "credit_spreads"}`.
+- Lead with duration and spread tiles using governed values; use typed unavailable tiles for unsupported
+  yield-to-worst, OAS or key-rate measures.
 - `table` **Credit-spread conditions** using only returned fields.
 - Optional The Read facts in no more than two short paragraphs.
 - Context does not explain portfolio performance without attribution evidence.
@@ -86,6 +99,7 @@ Keep every section title and the order exactly as shown. Missing evidence become
 
 ### 9. Scenarios and Robustness
 
+- Lead with signed `bars` for every governed scenario result.
 - `table` **Supported scenarios**: Scenario, Return / loss, Risk measure, Basis, Source.
 - Optional selected-series Strategy Lab results carry the sandbox label.
 - Never invent rate or spread shocks.

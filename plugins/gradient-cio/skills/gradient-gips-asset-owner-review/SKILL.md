@@ -1,8 +1,8 @@
 ---
 name: gradient-gips-asset-owner-review
-description: "This skill should be used when the user asks to \"review a GIPS Asset Owner Report\", \"check a pension fund's GIPS compliance\", \"is this endowment's board report GIPS compliant\", \"check total fund performance reporting against GIPS\", or wants a pension fund, endowment, foundation, sovereign wealth fund or similar asset owner's total fund or composite performance report checked against the 2020 GIPS standards for asset owners. Delivers a branded PDF review in the Gradient house style.\n"
+description: "This skill should be used when the user asks to \"review a GIPS Asset Owner Report\", \"check a pension fund's GIPS compliance\", \"is this endowment's board report GIPS compliant\", \"check total fund performance reporting against GIPS\", or wants a pension fund, endowment, foundation, sovereign wealth fund or similar asset owner's total fund or composite performance report checked against the 2020 GIPS standards for asset owners. Delivers a branded review in the Gradient house style.\n"
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # GIPS Asset Owner Review
@@ -57,9 +57,17 @@ example, evaluating an OCIO or a peer asset owner), use the standard memo sectio
 
 ## Output
 
-Always deliver the review as a branded PDF. Write `review.md`, `visuals.json` and `meta.json`; validate and
-compose them with the shared scripts in `gradient-gips-standards/scripts`, then render the resulting
-`review.json` in JSON block mode with this skill's `scripts/gradient_report.py`. Require evidence-status
+Always deliver a branded review. Write `review.md`, `visuals.json` and `meta.json`; preserve the authoritative
+markdown and validate and compose them with the shared scripts in `gradient-gips-standards/scripts`, writing
+the resulting validated JSON as `report.json`. Require evidence-status
 tiles, evidence coverage, findings and severity summaries, sourced analysis, and typed unavailable blocks
 when expected evidence is missing. Market charts are not required. Follow `output-format.md`,
 `report-layout.md` and this skill's `references/report-style.md`.
+
+Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select
+both when it says `both` or `board pack`. Both formats must come from the same validated `report.json`; the
+markdown checklist and memo handoff remain unchanged through composition.
+
+```text
+python <this skill's directory>/scripts/render.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Asset Owner Review"
+```

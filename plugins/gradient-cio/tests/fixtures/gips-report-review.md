@@ -11,7 +11,11 @@
 
 The fictional composite report presents annual gross and net returns with benchmark returns [S1]. The disclosure schedule identifies the composite, but its fee wording and significant-event timing are incomplete [S2].
 
-## 3. Findings Checklist
+## 3. Follow-up Requests
+
+1. Clarify the complete fee schedule and significant-event date.
+
+## Appendix A — Findings Checklist
 
 | Area | Requirement | Provision | Status | Evidence | Finding / follow-up |
 |---|---|---|---|---|---|
@@ -21,17 +25,13 @@ The fictional composite report presents annual gross and net returns with benchm
 | Fees | Fee disclosure | 4.C.11 | Partially met | Schedule [S2] | Performance fee unclear |
 | Events | Significant-event disclosure | 4.C.19 | Not met | Report [S1] | Event date absent |
 
-## 4. Follow-up Requests
-
-1. Clarify the complete fee schedule and significant-event date.
-
-## Appendix A — Sources
+## Appendix B — Sources
 
 | Tag | Source | Detail | As of | Validation |
 |---|---|---|---|---|
 | S1 | Composite report (TEST) | Fictional pages 1–4 | 2025-12-31 | Synthetic document |
 | S2 | Disclosure schedule (TEST) | Fictional fee and composite notes | 2026-03-31 | Synthetic document |
 
-## Appendix B — Method & Disclaimer
+## Appendix C — Method & Disclaimer
 
 This fictional report review tests the shared GIPS handoff contract. It is not verification, certification, legal advice or an assessment of any real product.

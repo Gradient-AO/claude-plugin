@@ -8,20 +8,72 @@
     "running_head": "Northstar Real Assets Portfolio (TEST)",
     "data_as_of": "2026-06-30",
     "confidentiality": "TEST DATA — fictional portfolio for rendering tests only",
-    "cover_facts": [["As of", "2026-06-30"], ["Base currency", "USD"], ["Total NAV", "$1,000.0M"], ["Real-assets weight", "15.0%"], ["Unfunded commitments", "$28.0M"], ["Data scope", "Fictional TEST data"]],
+    "cover_facts": [
+      [
+        "As of",
+        "2026-06-30"
+      ],
+      [
+        "Base currency",
+        "USD"
+      ],
+      [
+        "Total NAV",
+        "$1,000.0M"
+      ],
+      [
+        "Real-assets weight",
+        "15.0%"
+      ],
+      [
+        "Unfunded commitments",
+        "$28.0M"
+      ],
+      [
+        "Data scope",
+        "Fictional TEST data"
+      ]
+    ],
     "signal_title": "Real-assets portfolio status",
-    "signal": {"level": "watch", "label": "Valuation lag and structure mix on watch"},
-    "completeness": {"used": 8, "expected": 9, "state": "partial"},
+    "signal": {
+      "level": "watch",
+      "label": "Valuation lag and structure mix on watch"
+    },
+    "completeness": {
+      "used": 8,
+      "expected": 9,
+      "state": "partial"
+    },
     "meter_title": "Evidence completeness"
   },
   "executive": {
     "label": "Recommendation",
     "bottom_line": "We recommend retaining the 15.0% real-assets allocation while shifting 2.0 percentage points from listed real estate to infrastructure and natural resources across marketable and drawdown sleeves [S3][S4]. Committee action requested: approve the target structure and phased implementation, subject to valuation refresh, manager diligence and liquidity tests [S3][S7][S8].",
     "tiles": [
-      {"label": "Real-assets weight", "value": "15.0%", "sub": "Policy target 15.0% [S3]", "tone": "good"},
-      {"label": "Marketable share", "value": "8.0%", "sub": "53.3% of real assets [S4]", "tone": "good"},
-      {"label": "Unfunded commitments", "value": "$28.0M", "sub": "2.8% of NAV [S4]", "tone": "watch"},
-      {"label": "Policy status", "value": "Watch", "sub": "Private valuation lag [S3][S4]", "tone": "watch"}
+      {
+        "label": "Real-assets weight",
+        "value": "15.0%",
+        "sub": "Policy target 15.0% [S3]",
+        "tone": "good"
+      },
+      {
+        "label": "Marketable share",
+        "value": "8.0%",
+        "sub": "53.3% of real assets [S4]",
+        "tone": "good"
+      },
+      {
+        "label": "Unfunded commitments",
+        "value": "$28.0M",
+        "sub": "2.8% of NAV [S4]",
+        "tone": "watch"
+      },
+      {
+        "label": "Policy status",
+        "value": "Watch",
+        "sub": "Private valuation lag [S3][S4]",
+        "tone": "watch"
+      }
     ]
   },
   "sections": [
@@ -29,110 +81,1332 @@
       "id": "executive",
       "title": "Executive Decision",
       "blocks": [
-        {"type": "callout", "tone": "accent", "title": "Recommendation and action requested", "text": "We recommend a 2.0 percentage-point shift from listed real estate to infrastructure and natural resources while holding the 15.0% total allocation. Committee action requested: approve the target and staged implementation [S3][S4][S8]."},
-        {"type": "table", "title": "Decision summary", "columns": ["Decision element", "Proposed action", "Evidence", "Status"], "rows": [["Total allocation", "Hold at 15.0%", "[S3]", {"chip": "Compliant", "status": "compliant"}], ["Listed real estate", "Reduce from 5.0% to 3.0%", "[S3][S4]", {"chip": "Proposed", "status": "watch"}], ["Infrastructure and natural resources", "Increase from 6.0% to 8.0%", "[S3][S4]", {"chip": "Proposed", "status": "watch"}]]},
-        {"type": "callout", "tone": "watch", "title": "Conditions and limits", "text": "Refresh private valuations, confirm the commodity and inflation-linked mandate mappings, and complete manager diligence before funding [S7][S8]."}
+        {
+          "type": "callout",
+          "tone": "accent",
+          "title": "Recommendation and action requested",
+          "text": "We recommend a 2.0 percentage-point shift from listed real estate to infrastructure and natural resources while holding the 15.0% total allocation. Committee action requested: approve the target and staged implementation [S3][S4][S8]."
+        },
+        {
+          "type": "table",
+          "title": "Decision summary",
+          "columns": [
+            "Decision element",
+            "Proposed action",
+            "Evidence",
+            "Status"
+          ],
+          "rows": [
+            [
+              "Total allocation",
+              "Hold at 15.0%",
+              "[S3]",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              }
+            ],
+            [
+              "Listed real estate",
+              "Reduce from 5.0% to 3.0%",
+              "[S3][S4]",
+              {
+                "chip": "Proposed",
+                "status": "watch"
+              }
+            ],
+            [
+              "Infrastructure and natural resources",
+              "Increase from 6.0% to 8.0%",
+              "[S3][S4]",
+              {
+                "chip": "Proposed",
+                "status": "watch"
+              }
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "watch",
+          "title": "Conditions and limits",
+          "text": "Refresh private valuations, confirm the commodity and inflation-linked mandate mappings, and complete manager diligence before funding [S7][S8]."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — headline signal",
+          "text": "Observation: The fictional TEST report carries a Valuation lag and structure mix on watch signal [S1]. Why it matters: The signal frames the review. Uncertainty: Evidence coverage is bounded. What would change the view: New governed evidence that changes the signal."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "info",
+          "title": "Key judgment — primary measure",
+          "text": "Observation: Real-assets weight is 15.0% in the TEST evidence [S2]. Why it matters: This measure anchors the executive view. Uncertainty: The fixture is deliberately compact. What would change the view: A refreshed source with a materially different value."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "info",
+          "title": "Key judgment — monitoring priority",
+          "text": "Observation: Policy status is Watch in the TEST evidence [S3]. Why it matters: It identifies a monitoring priority. Uncertainty: Supporting detail is limited. What would change the view: Corroborated evidence that resolves or reverses the item."
+        }
       ]
     },
     {
       "title": "Mandate, Inflation Objective and Data Basis",
       "blocks": [
-        {"type": "kv", "rows": [["Portfolio", "Northstar Total Fund (TEST)", "S2"], ["Mandate", "Broad real-assets diversification", "S8"], ["Inflation objective", "Participate in inflation-sensitive cash flows without a guaranteed outcome", "S8"], ["Horizon", "10 years", "S6"], ["Base currency", "USD", "S2"], ["Data scope", "Fictional TEST data [S1]", "S1"]]},
-        {"type": "table", "title": "Governed framework", "columns": ["Area", "Objective or limit", "Observed", "Status", "Source"], "rows": [["Real assets", "10.0%–20.0%", "15.0%", {"chip": "Compliant", "status": "compliant"}, "[S3]"], ["Locked assets", "At or below 10.0% of NAV", "7.0%", {"chip": "Compliant", "status": "compliant"}, "[S3][S4]"], ["Private valuation age", "At most 90 days", "91 days", {"chip": "Watch", "status": "watch"}, "[S3][S4]"]]}
+        {
+          "type": "kv",
+          "rows": [
+            [
+              "Portfolio",
+              "Northstar Total Fund (TEST)",
+              "S2"
+            ],
+            [
+              "Mandate",
+              "Broad real-assets diversification",
+              "S8"
+            ],
+            [
+              "Inflation objective",
+              "Participate in inflation-sensitive cash flows without a guaranteed outcome",
+              "S8"
+            ],
+            [
+              "Horizon",
+              "10 years",
+              "S6"
+            ],
+            [
+              "Base currency",
+              "USD",
+              "S2"
+            ],
+            [
+              "Data scope",
+              "Fictional TEST data [S1]",
+              "S1"
+            ]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Governed framework",
+          "columns": [
+            "Area",
+            "Objective or limit",
+            "Observed",
+            "Status",
+            "Source"
+          ],
+          "rows": [
+            [
+              "Real assets",
+              "10.0%–20.0%",
+              "15.0%",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              },
+              "[S3]"
+            ],
+            [
+              "Locked assets",
+              "At or below 10.0% of NAV",
+              "7.0%",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              },
+              "[S3][S4]"
+            ],
+            [
+              "Private valuation age",
+              "At most 90 days",
+              "91 days",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              },
+              "[S3][S4]"
+            ]
+          ]
+        }
       ]
     },
     {
       "title": "Current Real Assets Portfolio",
       "blocks": [
-        {"type": "table", "title": "Current sleeve", "columns": ["Sub-segment / exposure", "Structure", "Value", "Unfunded", "% portfolio", "As of"], "rows": [["Listed real estate", "Marketable", "$50.0M", "n/a", "5.0%", "2026-06-30 [S4]"], ["Listed infrastructure", "Marketable", "$30.0M", "n/a", "3.0%", "2026-06-30 [S4]"], ["Private real estate", "Drawdown", "$30.0M", "$12.0M", "3.0%", "2026-03-31 [S4]"], ["Private infrastructure", "Drawdown", "$25.0M", "$10.0M", "2.5%", "2026-03-31 [S4]"], ["Natural resources", "Mixed", "$10.0M", "$6.0M", "1.0%", "2026-03-31 [S4]"], ["Commodity securities", "Marketable", "$5.0M", "n/a", "0.5%", "2026-06-30 [S4]"]]},
-        {"type": "chart", "chart": {"chart_id": "test-ra-allocation", "title": "Real-assets allocation by sub-segment (TEST)", "status": "ok", "currency": "USD", "columns": [{"key": "segment", "title": "Sub-segment", "format": "text", "decimals": null}, {"key": "value", "title": "Value", "format": "currency", "decimals": 0}], "rows": [["Listed real estate", 50000000], ["Listed infrastructure", 30000000], ["Private real estate", 30000000], ["Private infrastructure", 25000000], ["Natural resources", 10000000], ["Commodity securities", 5000000]], "truncated": false, "render_hint": {"block": "bars", "x": "segment", "y": ["value"]}}},
-        {"type": "text", "text": "Marketable exposures use returned market value; drawdown exposures use NAV. Unfunded commitments are shown separately and are not added to NAV [S4]."}
+        {
+          "type": "chart",
+          "chart": {
+            "chart_id": "test-ra-allocation",
+            "title": "Real-assets allocation by sub-segment (TEST)",
+            "status": "ok",
+            "currency": "USD",
+            "columns": [
+              {
+                "key": "segment",
+                "title": "Sub-segment",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "value",
+                "title": "Value",
+                "format": "currency",
+                "decimals": 0
+              }
+            ],
+            "rows": [
+              [
+                "Listed real estate",
+                50000000
+              ],
+              [
+                "Listed infrastructure",
+                30000000
+              ],
+              [
+                "Private real estate",
+                30000000
+              ],
+              [
+                "Private infrastructure",
+                25000000
+              ],
+              [
+                "Natural resources",
+                10000000
+              ],
+              [
+                "Commodity securities",
+                5000000
+              ]
+            ],
+            "truncated": false,
+            "render_hint": {
+              "block": "bars",
+              "x": "segment",
+              "y": [
+                "value"
+              ]
+            }
+          }
+        },
+        {
+          "type": "table",
+          "title": "Current sleeve",
+          "columns": [
+            "Sub-segment / exposure",
+            "Structure",
+            "Value",
+            "Unfunded",
+            "% portfolio",
+            "As of"
+          ],
+          "rows": [
+            [
+              "Listed real estate",
+              "Marketable",
+              "$50.0M",
+              "n/a",
+              "5.0%",
+              "2026-06-30 [S4]"
+            ],
+            [
+              "Listed infrastructure",
+              "Marketable",
+              "$30.0M",
+              "n/a",
+              "3.0%",
+              "2026-06-30 [S4]"
+            ],
+            [
+              "Private real estate",
+              "Drawdown",
+              "$30.0M",
+              "$12.0M",
+              "3.0%",
+              "2026-03-31 [S4]"
+            ],
+            [
+              "Private infrastructure",
+              "Drawdown",
+              "$25.0M",
+              "$10.0M",
+              "2.5%",
+              "2026-03-31 [S4]"
+            ],
+            [
+              "Natural resources",
+              "Mixed",
+              "$10.0M",
+              "$6.0M",
+              "1.0%",
+              "2026-03-31 [S4]"
+            ],
+            [
+              "Commodity securities",
+              "Marketable",
+              "$5.0M",
+              "n/a",
+              "0.5%",
+              "2026-06-30 [S4]"
+            ]
+          ]
+        },
+        {
+          "type": "text",
+          "text": "Marketable exposures use returned market value; drawdown exposures use NAV. Unfunded commitments are shown separately and are not added to NAV [S4]."
+        }
       ]
     },
     {
       "title": "Target Sub-Segment Structure",
       "blocks": [
-        {"type": "table", "title": "Current versus target", "columns": ["Sub-segment", "Current", "Target", "Change", "Range / constraint", "Rationale"], "rows": [["Listed real estate", "5.0%", "3.0%", "-2.0pp", "2.0%–6.0%", "Reduce largest sub-segment [S3][S4]"], ["Listed infrastructure", "3.0%", "4.0%", "+1.0pp", "2.0%–5.0%", "Increase marketable infrastructure role [S3][S4]"], ["Private real estate", "3.0%", "3.0%", "0.0pp", "2.0%–5.0%", "Maintain while valuations refresh [S4][S8]"], ["Private infrastructure", "2.5%", "3.0%", "+0.5pp", "2.0%–4.0%", "Phase after diligence [S7][S8]"], ["Natural resources", "1.0%", "1.5%", "+0.5pp", "0.0%–2.0%", "Broaden sub-segment mix [S3][S7]"], ["Commodity securities", "0.5%", "0.5%", "0.0pp", "Mandate-specific", "Maintain pending mapping review [S8]"]]},
-        {"type": "callout", "role": "analysis", "tone": "info", "title": "Structure becomes broader", "text": "Observation: The target shifts 2.0 percentage points from listed real estate toward infrastructure and natural resources [S3][S4]. Why it matters: The mix reduces the largest sub-segment while retaining marketable and drawdown roles. Uncertainty: Private valuations and mandate mappings need refresh [S4][S8]. What would change the view: Updated valuations or mappings that weaken the diversification case [S4][S8]."},
-        {"type": "text", "text": "The target is a committee proposal and is not a saved portfolio change [S3][S8]."}
-      ]
+        {
+          "type": "band",
+          "title": "Current weight versus policy range",
+          "items": [
+            {"label": "Listed real estate", "value": 5.0, "low": 2.0, "high": 6.0, "target": 3.0, "display": "5.0% → 3.0%"},
+            {"label": "Listed infrastructure", "value": 3.0, "low": 2.0, "high": 5.0, "target": 4.0, "display": "3.0% → 4.0%"},
+            {"label": "Private real estate", "value": 3.0, "low": 2.0, "high": 5.0, "target": 3.0, "display": "3.0% → 3.0%"},
+            {"label": "Private infrastructure", "value": 2.5, "low": 2.0, "high": 4.0, "target": 3.0, "display": "2.5% → 3.0%"},
+            {"label": "Natural resources", "value": 1.0, "low": 0.0, "high": 2.0, "target": 1.5, "display": "1.0% → 1.5%"}
+          ]
+        },
+        {
+          "type": "stacked",
+          "title": "Current and target mix",
+          "items": [
+            {"label": "Current", "segments": [
+              {"label": "Listed real estate", "value": 5.0},
+              {"label": "Listed infrastructure", "value": 3.0},
+              {"label": "Private real estate", "value": 3.0},
+              {"label": "Private infrastructure", "value": 2.5},
+              {"label": "Natural resources", "value": 1.0},
+              {"label": "Commodity securities", "value": 0.5}
+            ]},
+            {"label": "Target", "segments": [
+              {"label": "Listed real estate", "value": 3.0},
+              {"label": "Listed infrastructure", "value": 4.0},
+              {"label": "Private real estate", "value": 3.0},
+              {"label": "Private infrastructure", "value": 3.0},
+              {"label": "Natural resources", "value": 1.5},
+              {"label": "Commodity securities", "value": 0.5}
+            ]}
+          ]
+        },
+        {
+          "type": "waterfall",
+          "title": "Target allocation changes (percentage points)",
+          "items": [
+            {
+              "label": "Listed real estate",
+              "value": -2.0,
+              "display": "-2.0pp"
+            },
+            {
+              "label": "Listed infrastructure",
+              "value": 1.0,
+              "display": "+1.0pp"
+            },
+            {
+              "label": "Private infrastructure",
+              "value": 0.5,
+              "display": "+0.5pp"
+            },
+            {
+              "label": "Natural resources",
+              "value": 0.5,
+              "display": "+0.5pp"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Current versus target",
+          "columns": [
+            "Sub-segment",
+            "Current",
+            "Target",
+            "Change",
+            "Range / constraint",
+            "Rationale"
+          ],
+          "rows": [
+            [
+              "Listed real estate",
+              "5.0%",
+              "3.0%",
+              "-2.0pp",
+              "2.0%–6.0%",
+              "Reduce largest sub-segment [S3][S4]"
+            ],
+            [
+              "Listed infrastructure",
+              "3.0%",
+              "4.0%",
+              "+1.0pp",
+              "2.0%–5.0%",
+              "Increase marketable infrastructure role [S3][S4]"
+            ],
+            [
+              "Private real estate",
+              "3.0%",
+              "3.0%",
+              "0.0pp",
+              "2.0%–5.0%",
+              "Maintain while valuations refresh [S4][S8]"
+            ],
+            [
+              "Private infrastructure",
+              "2.5%",
+              "3.0%",
+              "+0.5pp",
+              "2.0%–4.0%",
+              "Phase after diligence [S7][S8]"
+            ],
+            [
+              "Natural resources",
+              "1.0%",
+              "1.5%",
+              "+0.5pp",
+              "0.0%–2.0%",
+              "Broaden sub-segment mix [S3][S7]"
+            ],
+            [
+              "Commodity securities",
+              "0.5%",
+              "0.5%",
+              "0.0pp",
+              "Mandate-specific",
+              "Maintain pending mapping review [S8]"
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Why this target",
+          "text": "Observation: The target shifts 2.0 percentage points from listed real estate toward infrastructure and natural resources [S3][S4]. Why it matters: The largest sub-segment falls. Uncertainty: CMA consensus, macro regime, findings, valuations and mappings are incomplete [S8]. What would change the view: Completed context that weakens the diversification case [S4][S8]."
+        },
+        {
+          "type": "text",
+          "text": "The target is a committee proposal and is not a saved portfolio change [S3][S8]."
+        }
+      ],
+      "kicker": "Infrastructure and natural resources broaden the real-assets mix"
     },
     {
       "title": "Historical Performance and Attribution",
       "blocks": [
-        {"type": "table", "title": "Standard periods", "columns": ["Period", "Portfolio / sleeve", "Benchmark", "Excess", "Coverage"], "rows": [["1Y real-assets sleeve", "4.9%", "5.4%", "-0.5pp", "Complete [S5]"], ["3Y real-assets sleeve (ann.)", "5.6%", "5.2%", "+0.4pp", "Complete [S5]"], ["5Y real-assets sleeve (ann.)", "Not available — valuation-linked history incomplete", "Not available", "Not available", "Unavailable [S5]"]]},
-        {"type": "table", "title": "Attribution effects", "columns": ["Effect", "Contribution", "Source"], "rows": [["Allocation", "-0.12pp", "[S5]"], ["Selection", "-0.36pp", "[S5]"], ["Interaction", "-0.02pp", "[S5]"], ["Residual", "0.00pp", "[S5]"]]},
-        {"type": "kv", "rows": [["Method", "Brinson-Fachler", "S5"], ["Linking", "Symmetric Carino", "S5"], ["Basis", "Net, monthly linked", "S5"], ["Tolerance", "1 bp; reconciled", "S5"]]}
+        {
+          "type": "table",
+          "title": "Standard periods",
+          "columns": [
+            "Period",
+            "Portfolio / sleeve",
+            "Benchmark",
+            "Excess",
+            "Coverage"
+          ],
+          "rows": [
+            [
+              "1Y real-assets sleeve",
+              "4.9%",
+              "5.4%",
+              "-0.5pp",
+              "Complete [S5]"
+            ],
+            [
+              "3Y real-assets sleeve (ann.)",
+              "5.6%",
+              "5.2%",
+              "+0.4pp",
+              "Complete [S5]"
+            ],
+            [
+              "5Y real-assets sleeve (ann.)",
+              "Not available — valuation-linked history incomplete",
+              "Not available",
+              "Not available",
+              "Unavailable [S5]"
+            ]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Attribution effects",
+          "columns": [
+            "Effect",
+            "Contribution",
+            "Source"
+          ],
+          "rows": [
+            [
+              "Allocation",
+              "-0.12pp",
+              "[S5]"
+            ],
+            [
+              "Selection",
+              "-0.36pp",
+              "[S5]"
+            ],
+            [
+              "Interaction",
+              "-0.02pp",
+              "[S5]"
+            ],
+            [
+              "Residual",
+              "0.00pp",
+              "[S5]"
+            ]
+          ]
+        },
+        {
+          "type": "kv",
+          "rows": [
+            [
+              "Method",
+              "Brinson-Fachler",
+              "S5"
+            ],
+            [
+              "Linking",
+              "Symmetric Carino",
+              "S5"
+            ],
+            [
+              "Basis",
+              "Net, monthly linked",
+              "S5"
+            ],
+            [
+              "Tolerance",
+              "1 bp; reconciled",
+              "S5"
+            ]
+          ]
+        }
       ]
     },
     {
       "title": "Inflation, Commodity and Diversification Context",
       "blocks": [
-        {"type": "table", "title": "Returned context", "columns": ["Indicator / exposure", "Observation", "Change / sensitivity", "As of", "Source"], "rows": [["Headline inflation", "2.8%", "-0.4pp year over year", "2026-06-30", "[S7]"], ["Energy positioning", "Net long index at 58th percentile", "CFTC context only", "2026-06-23", "[S7]"], ["Portfolio inflation sensitivity", "Not available — no governed sensitivity result", "Not assessed", "2026-06-30", "[S8]"]]},
-        {"type": "chart", "chart": {"chart_id": "test-ra-factor", "title": "Model-implied real-assets factors (TEST)", "status": "ok", "columns": [{"key": "factor", "title": "Factor", "format": "text", "decimals": null}, {"key": "exposure", "title": "Exposure", "format": "number", "decimals": 2}], "rows": [["Growth", 0.27], ["Inflation", 0.32], ["Rates", -0.18], ["Commodity", 0.11]], "truncated": false, "render_hint": {"block": "bars", "x": "factor", "y": ["exposure"]}}},
-        {"type": "callout", "role": "analysis", "tone": "info", "title": "Context is not protection", "text": "Observation: The model shows positive inflation and commodity exposures [S7]. Why it matters: These signals describe diversification context, not a guaranteed hedge. Uncertainty: Governed portfolio inflation sensitivity is unavailable [S8]. What would change the view: A returned sensitivity result or explicit mandate mapping that contradicts the contextual exposure [S7][S8]."},
-        {"type": "text", "text": "Macro and positioning evidence is context only; it does not establish inflation protection or explain portfolio performance [S5][S7]."}
-      ]
+        {
+          "type": "tiles",
+          "tiles": [
+            {"label": "Headline inflation", "value": "2.8%", "sub": "2026-06-30 [S7]", "tone": "info"},
+            {"label": "Inflation exposure", "value": "0.32", "sub": "Model-implied [S7]", "tone": "good"},
+            {"label": "Rates exposure", "value": "-0.18", "sub": "Model-implied [S7]", "tone": "watch"},
+            {"label": "Inflation sensitivity", "value": "Not available", "sub": "No governed result [S8]", "tone": "watch"}
+          ]
+        },
+        {
+          "type": "chart",
+          "chart": {
+            "chart_id": "test-ra-factor",
+            "title": "Model-implied real-assets factors (TEST)",
+            "status": "ok",
+            "columns": [
+              {
+                "key": "factor",
+                "title": "Factor",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "exposure",
+                "title": "Exposure",
+                "format": "number",
+                "decimals": 2
+              }
+            ],
+            "rows": [
+              [
+                "Growth",
+                0.27
+              ],
+              [
+                "Inflation",
+                0.32
+              ],
+              [
+                "Rates",
+                -0.18
+              ],
+              [
+                "Commodity",
+                0.11
+              ]
+            ],
+            "truncated": false,
+            "render_hint": {
+              "block": "bars",
+              "x": "factor",
+              "y": [
+                "exposure"
+              ]
+            }
+          }
+        },
+        {
+          "type": "table",
+          "title": "Returned context",
+          "columns": [
+            "Indicator / exposure",
+            "Observation",
+            "Change / sensitivity",
+            "As of",
+            "Source"
+          ],
+          "rows": [
+            [
+              "Headline inflation",
+              "2.8%",
+              "-0.4pp year over year",
+              "2026-06-30",
+              "[S7]"
+            ],
+            [
+              "Energy positioning",
+              "Net long index at 58th percentile",
+              "CFTC context only",
+              "2026-06-23",
+              "[S7]"
+            ],
+            [
+              "Portfolio inflation sensitivity",
+              "Not available — no governed sensitivity result",
+              "Not assessed",
+              "2026-06-30",
+              "[S8]"
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Context is not protection",
+          "text": "Observation: The model shows positive inflation and commodity exposures [S7]. Why it matters: These signals describe diversification context, not a guaranteed hedge. Uncertainty: Governed portfolio inflation sensitivity is unavailable [S8]. What would change the view: A returned sensitivity result or explicit mandate mapping that contradicts the contextual exposure [S7][S8]."
+        },
+        {
+          "type": "text",
+          "text": "Macro and positioning evidence is context only; it does not establish inflation protection or explain portfolio performance [S5][S7]."
+        }
+      ],
+      "kicker": "Positive sensitivities provide context, not guaranteed protection"
     },
     {
       "title": "Forward Return and Risk",
       "blocks": [
-        {"type": "kv", "rows": [["Assumption set", "2026 Strategic CMA (TEST)", "S6"], ["Regime", "Baseline", "S6"], ["Horizon", "10 years", "S6"], ["Currency", "USD", "S6"], ["Context fingerprint", "test-ra-forward-2026", "S6"]]},
-        {"type": "chart", "chart": {"chart_id": "test-ra-forward", "title": "Real-assets forward assumptions (TEST)", "status": "ok", "currency": "USD", "columns": [{"key": "class", "title": "Class", "format": "text", "decimals": null}, {"key": "return", "title": "Expected return", "format": "percentage", "decimals": 1}, {"key": "volatility", "title": "Expected volatility", "format": "percentage", "decimals": 1}], "rows": [["Real estate", 0.069, 0.142], ["Infrastructure", 0.072, 0.118], ["Natural resources", 0.075, 0.168]], "truncated": false, "render_hint": {"block": "table", "x": "class", "y": []}}},
-        {"type": "callout", "role": "analysis", "tone": "info", "title": "Infrastructure balances risk", "text": "Observation: Infrastructure has lower expected volatility than real estate and natural resources in the selected assumptions [S6]. Why it matters: Its larger target role balances the broader mix. Uncertainty: Commodity securities lack a standalone governed mapping [S8]. What would change the view: Revised assumptions or a mandate mapping with materially different risk-return evidence [S6][S8]."},
-        {"type": "table", "title": "Forward assumptions", "columns": ["Sub-segment", "Expected return", "Expected volatility", "Mapping status", "Source"], "rows": [["Real estate", "6.9%", "14.2%", "Governed class", "[S6]"], ["Infrastructure", "7.2%", "11.8%", "Governed class", "[S6]"], ["Natural resources", "7.5%", "16.8%", "Governed class", "[S6]"], ["Commodity securities", "Not assessed — mapping not provided", "Not assessed", "No standalone CMA class", "[S8]"], ["Inflation-linked assets", "Not assessed — mapping not provided", "Not assessed", "No standalone CMA class", "[S8]"]]},
-        {"type": "text", "text": "These figures are assumptions under the selected context, not forecasts or guarantees [S6]."}
-      ]
+        {
+          "type": "kv",
+          "rows": [
+            [
+              "Assumption set",
+              "2026 Strategic CMA (TEST)",
+              "S6"
+            ],
+            [
+              "Regime",
+              "Baseline",
+              "S6"
+            ],
+            [
+              "Horizon",
+              "10 years",
+              "S6"
+            ],
+            [
+              "Currency",
+              "USD",
+              "S6"
+            ],
+            [
+              "Context fingerprint",
+              "test-ra-forward-2026",
+              "S6"
+            ]
+          ]
+        },
+        {
+          "type": "chart",
+          "chart": {
+            "chart_id": "test-ra-forward",
+            "title": "Real-assets forward assumptions (TEST)",
+            "status": "ok",
+            "currency": "USD",
+            "columns": [
+              {
+                "key": "class",
+                "title": "Class",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "return",
+                "title": "Expected return",
+                "format": "percentage",
+                "decimals": 1
+              },
+              {
+                "key": "volatility",
+                "title": "Expected volatility",
+                "format": "percentage",
+                "decimals": 1
+              }
+            ],
+            "rows": [
+              [
+                "Real estate",
+                0.069,
+                0.142
+              ],
+              [
+                "Infrastructure",
+                0.072,
+                0.118
+              ],
+              [
+                "Natural resources",
+                0.075,
+                0.168
+              ]
+            ],
+            "truncated": false,
+            "render_hint": {
+              "block": "table",
+              "x": "class",
+              "y": []
+            }
+          }
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Infrastructure balances risk",
+          "text": "Observation: Infrastructure has lower expected volatility than real estate and natural resources in the selected assumptions [S6]. Why it matters: Its larger target role balances the broader mix. Uncertainty: Commodity securities lack a standalone governed mapping [S8]. What would change the view: Revised assumptions or a mandate mapping with materially different risk-return evidence [S6][S8]."
+        },
+        {
+          "type": "table",
+          "title": "Forward assumptions",
+          "columns": [
+            "Sub-segment",
+            "Expected return",
+            "Expected volatility",
+            "Mapping status",
+            "Source"
+          ],
+          "rows": [
+            [
+              "Real estate",
+              "6.9%",
+              "14.2%",
+              "Governed class",
+              "[S6]"
+            ],
+            [
+              "Infrastructure",
+              "7.2%",
+              "11.8%",
+              "Governed class",
+              "[S6]"
+            ],
+            [
+              "Natural resources",
+              "7.5%",
+              "16.8%",
+              "Governed class",
+              "[S6]"
+            ],
+            [
+              "Commodity securities",
+              "Not assessed — mapping not provided",
+              "Not assessed",
+              "No standalone CMA class",
+              "[S8]"
+            ],
+            [
+              "Inflation-linked assets",
+              "Not assessed — mapping not provided",
+              "Not assessed",
+              "No standalone CMA class",
+              "[S8]"
+            ]
+          ]
+        },
+        {
+          "type": "text",
+          "text": "These figures are assumptions under the selected context, not forecasts or guarantees [S6]."
+        }
+      ],
+      "kicker": "Governed assumptions frame tradeoffs rather than forecasts"
     },
     {
       "title": "Commitments, Liquidity and Valuation",
       "blocks": [
-        {"type": "chart", "chart": {"chart_id": "test-ra-pacing", "title": "Drawdown real-assets calls and distributions (TEST)", "status": "ok", "currency": "USD", "columns": [{"key": "period", "title": "Period", "format": "text", "decimals": null}, {"key": "calls", "title": "Calls", "format": "currency", "decimals": 0}, {"key": "distributions", "title": "Distributions", "format": "currency", "decimals": 0}], "rows": [["2026 H2", 9000000, 5000000], ["2027 H1", 8000000, 6000000], ["2027 H2", 6000000, 7000000]], "truncated": false, "render_hint": {"block": "table", "x": "period", "y": []}}},
-        {"type": "table", "title": "Liquidity and valuation", "columns": ["Sub-segment", "Structure", "Liquidity / unfunded", "Valuation date", "Status"], "rows": [["Listed real estate", "Marketable", "Daily", "2026-06-30 [S4]", {"chip": "Available", "status": "available"}], ["Listed infrastructure", "Marketable", "Daily", "2026-06-30 [S4]", {"chip": "Available", "status": "available"}], ["Private real estate", "Drawdown", "$12.0M unfunded", "2026-03-31 [S4]", {"chip": "Watch", "status": "watch"}], ["Private infrastructure", "Drawdown", "$10.0M unfunded", "2026-03-31 [S4]", {"chip": "Watch", "status": "watch"}], ["Natural resources", "Mixed", "$6.0M unfunded", "2026-03-31 [S4]", {"chip": "Watch", "status": "watch"}]]},
-        {"type": "kv", "rows": [["Marketable share", "8.0% of NAV", "S4"], ["Locked share", "7.0% of NAV", "S3"], ["Unfunded ratio", "2.8% of NAV", "S3"], ["Private valuation lag", "91 days", "S4"], ["Base liquidity coverage", "6.2x", "S3"]]}
+        {
+          "type": "chart",
+          "chart": {
+            "chart_id": "test-ra-pacing",
+            "title": "Drawdown real-assets calls and distributions (TEST)",
+            "status": "ok",
+            "currency": "USD",
+            "columns": [
+              {
+                "key": "period",
+                "title": "Period",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "calls",
+                "title": "Calls",
+                "format": "currency",
+                "decimals": 0
+              },
+              {
+                "key": "distributions",
+                "title": "Distributions",
+                "format": "currency",
+                "decimals": 0
+              }
+            ],
+            "rows": [
+              [
+                "2026 H2",
+                9000000,
+                5000000
+              ],
+              [
+                "2027 H1",
+                8000000,
+                6000000
+              ],
+              [
+                "2027 H2",
+                6000000,
+                7000000
+              ]
+            ],
+            "truncated": false,
+            "render_hint": {
+              "block": "table",
+              "x": "period",
+              "y": []
+            }
+          }
+        },
+        {
+          "type": "table",
+          "title": "Liquidity and valuation",
+          "columns": [
+            "Sub-segment",
+            "Structure",
+            "Liquidity / unfunded",
+            "Valuation date",
+            "Status"
+          ],
+          "rows": [
+            [
+              "Listed real estate",
+              "Marketable",
+              "Daily",
+              "2026-06-30 [S4]",
+              {
+                "chip": "Available",
+                "status": "available"
+              }
+            ],
+            [
+              "Listed infrastructure",
+              "Marketable",
+              "Daily",
+              "2026-06-30 [S4]",
+              {
+                "chip": "Available",
+                "status": "available"
+              }
+            ],
+            [
+              "Private real estate",
+              "Drawdown",
+              "$12.0M unfunded",
+              "2026-03-31 [S4]",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              }
+            ],
+            [
+              "Private infrastructure",
+              "Drawdown",
+              "$10.0M unfunded",
+              "2026-03-31 [S4]",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              }
+            ],
+            [
+              "Natural resources",
+              "Mixed",
+              "$6.0M unfunded",
+              "2026-03-31 [S4]",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              }
+            ]
+          ]
+        },
+        {
+          "type": "kv",
+          "rows": [
+            [
+              "Marketable share",
+              "8.0% of NAV",
+              "S4"
+            ],
+            [
+              "Locked share",
+              "7.0% of NAV",
+              "S3"
+            ],
+            [
+              "Unfunded ratio",
+              "2.8% of NAV",
+              "S3"
+            ],
+            [
+              "Private valuation lag",
+              "91 days",
+              "S4"
+            ],
+            [
+              "Base liquidity coverage",
+              "6.2x",
+              "S3"
+            ]
+          ]
+        }
       ]
     },
     {
       "title": "Manager and Fund Diligence",
       "blocks": [
-        {"type": "table", "title": "Manager evidence", "columns": ["Manager / fund", "Sub-segment", "Exposure", "Diligence status", "Open findings", "Next step"], "rows": [["Example Real Estate Manager (TEST)", "Private real estate", "$30.0M", "Current [S7]", "1 Medium [S7]", "Close valuation follow-up"], ["Example Infrastructure Manager (TEST)", "Private infrastructure", "$25.0M", "Current [S7]", "No High findings [S7]", "Refresh annual ODD"], ["Proposed Natural Resources Manager (TEST)", "Natural resources", "Not funded", "Not assessed [S7]", "Not assessed", "Run comparison and ODD"]]},
-        {"type": "callout", "tone": "watch", "title": "Diligence condition", "text": "The proposed natural-resources manager requires comparison, operational diligence and performance-integrity review before funding [S7]."}
+        {
+          "type": "table",
+          "title": "Manager evidence",
+          "columns": [
+            "Manager / fund",
+            "Sub-segment",
+            "Exposure",
+            "Diligence status",
+            "Open findings",
+            "Next step"
+          ],
+          "rows": [
+            [
+              "Example Real Estate Manager (TEST)",
+              "Private real estate",
+              "$30.0M",
+              "Current [S7]",
+              "1 Medium [S7]",
+              "Close valuation follow-up"
+            ],
+            [
+              "Example Infrastructure Manager (TEST)",
+              "Private infrastructure",
+              "$25.0M",
+              "Current [S7]",
+              "No High findings [S7]",
+              "Refresh annual ODD"
+            ],
+            [
+              "Proposed Natural Resources Manager (TEST)",
+              "Natural resources",
+              "Not funded",
+              "Not assessed [S7]",
+              "Not assessed",
+              "Run comparison and ODD"
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "watch",
+          "title": "Diligence condition",
+          "text": "The proposed natural-resources manager requires comparison, operational diligence and performance-integrity review before funding [S7]."
+        }
       ]
     },
     {
       "title": "Scenarios and Robustness",
       "new_page": false,
       "blocks": [
-        {"type": "table", "title": "Supported scenarios", "columns": ["Scenario", "Return / loss", "Liquidity effect", "Basis", "Source"], "rows": [["Baseline assumptions", "6.9% expected return", "Base coverage 6.2x", "Proposed sleeve", "[S3][S6]"], ["Inflation shock", "Not available — no governed shock result", "Not available", "Unavailable", "[S8]"], ["Denominator stress", "Not available — no governed stress result", "Not available", "Unavailable", "[S8]"]]},
-        {"type": "callout", "tone": "info", "title": "Selected-series sandbox — not saved-portfolio analytics", "text": "Not available — no Strategy Lab return series selected [S8]."}
+        {
+          "type": "bars",
+          "title": "Governed scenario results",
+          "items": [
+            {"label": "Baseline expected return", "value": 6.9, "display": "+6.9%"}
+          ],
+          "note": "Inflation and denominator shocks are unavailable [S8]."
+        },
+        {
+          "type": "table",
+          "title": "Supported scenarios",
+          "columns": [
+            "Scenario",
+            "Return / loss",
+            "Liquidity effect",
+            "Basis",
+            "Source"
+          ],
+          "rows": [
+            [
+              "Baseline assumptions",
+              "6.9% expected return",
+              "Base coverage 6.2x",
+              "Proposed sleeve",
+              "[S3][S6]"
+            ],
+            [
+              "Inflation shock",
+              "Not available — no governed shock result",
+              "Not available",
+              "Unavailable",
+              "[S8]"
+            ],
+            [
+              "Denominator stress",
+              "Not available — no governed stress result",
+              "Not available",
+              "Unavailable",
+              "[S8]"
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Selected-series sandbox — not saved-portfolio analytics",
+          "text": "Not available — no Strategy Lab return series selected [S8]."
+        }
       ]
     },
     {
       "title": "Implementation Plan",
       "blocks": [
-        {"type": "table", "title": "Implementation steps", "columns": ["Phase", "Action", "Size", "Funding source", "Condition", "Owner"], "rows": [["1", "Reduce listed real estate", "2.0pp", "Marketable sleeve", "Transition review", "Investment staff"], ["2", "Increase listed infrastructure", "1.0pp", "Sale proceeds", "Policy recheck", "CIO"], ["3", "Commit to private infrastructure", "0.5pp", "Sale proceeds and distributions", "ODD and valuation refresh", "Committee"], ["4", "Add natural resources", "0.5pp", "Sale proceeds", "Manager approved", "Committee"]]},
-        {"type": "table", "title": "Alternatives considered", "columns": ["Alternative", "Benefit", "Cost / risk", "Reason not selected"], "rows": [["No change", "No transition", "Listed real-estate concentration remains", "Does not address structure objective [S3][S4]"], ["Drawdown-only shift", "Potential long-duration exposure", "Higher lock-up and pacing risk", "Marketable balance preferred [S3][S4]"]]}
+        {
+          "type": "table",
+          "title": "Implementation steps",
+          "columns": [
+            "Phase",
+            "Action",
+            "Size",
+            "Funding source",
+            "Condition",
+            "Owner"
+          ],
+          "rows": [
+            [
+              "1",
+              "Reduce listed real estate",
+              "2.0pp",
+              "Marketable sleeve",
+              "Transition review",
+              "Investment staff"
+            ],
+            [
+              "2",
+              "Increase listed infrastructure",
+              "1.0pp",
+              "Sale proceeds",
+              "Policy recheck",
+              "CIO"
+            ],
+            [
+              "3",
+              "Commit to private infrastructure",
+              "0.5pp",
+              "Sale proceeds and distributions",
+              "ODD and valuation refresh",
+              "Committee"
+            ],
+            [
+              "4",
+              "Add natural resources",
+              "0.5pp",
+              "Sale proceeds",
+              "Manager approved",
+              "Committee"
+            ]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Alternatives considered",
+          "columns": [
+            "Alternative",
+            "Benefit",
+            "Cost / risk",
+            "Reason not selected"
+          ],
+          "rows": [
+            [
+              "No change",
+              "No transition",
+              "Listed real-estate concentration remains",
+              "Does not address structure objective [S3][S4]"
+            ],
+            [
+              "Drawdown-only shift",
+              "Potential long-duration exposure",
+              "Higher lock-up and pacing risk",
+              "Marketable balance preferred [S3][S4]"
+            ]
+          ]
+        }
       ]
     },
     {
       "title": "Risks, Open Items and Approvals",
       "blocks": [
-        {"type": "table", "title": "Decision risks", "columns": ["Priority", "Risk", "Evidence", "Mitigation / condition", "Owner"], "rows": [["High", "Private valuation lag", "91 days [S4]", "Refresh valuations before commitment", "Operations"], ["Medium", "Commodity and linker mapping", "Not assessed [S8]", "Document IPS taxonomy", "CIO"], ["Medium", "Proposed manager diligence", "Not assessed [S7]", "Complete comparison and ODD", "Investment staff"]]},
-        {"type": "table", "title": "Open items and approvals", "columns": ["Timing", "Item", "Required evidence", "Owner", "Status"], "rows": [["Before approval", "Refresh private valuations", "2026 Q2 NAVs", "Operations", "Open [S4]"], ["Before approval", "Confirm mandate mappings", "IPS addendum", "CIO", "Open [S8]"], ["Within 30 days", "Select natural-resources manager", "Comparison and ODD", "Investment staff", "Open [S7]"], ["Next review", "Refresh pacing", "Returned commitments pack", "Private markets team", "Open [S6]"]]}
+        {
+          "type": "table",
+          "title": "Decision risks",
+          "columns": [
+            "Priority",
+            "Risk",
+            "Evidence",
+            "Mitigation / condition",
+            "Owner"
+          ],
+          "rows": [
+            [
+              "High",
+              "Private valuation lag",
+              "91 days [S4]",
+              "Refresh valuations before commitment",
+              "Operations"
+            ],
+            [
+              "Medium",
+              "Commodity and linker mapping",
+              "Not assessed [S8]",
+              "Document IPS taxonomy",
+              "CIO"
+            ],
+            [
+              "Medium",
+              "Proposed manager diligence",
+              "Not assessed [S7]",
+              "Complete comparison and ODD",
+              "Investment staff"
+            ]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Open items and approvals",
+          "columns": [
+            "Timing",
+            "Item",
+            "Required evidence",
+            "Owner",
+            "Status"
+          ],
+          "rows": [
+            [
+              "Before approval",
+              "Refresh private valuations",
+              "2026 Q2 NAVs",
+              "Operations",
+              "Open [S4]"
+            ],
+            [
+              "Before approval",
+              "Confirm mandate mappings",
+              "IPS addendum",
+              "CIO",
+              "Open [S8]"
+            ],
+            [
+              "Within 30 days",
+              "Select natural-resources manager",
+              "Comparison and ODD",
+              "Investment staff",
+              "Open [S7]"
+            ],
+            [
+              "Next review",
+              "Refresh pacing",
+              "Returned commitments pack",
+              "Private markets team",
+              "Open [S6]"
+            ]
+          ]
+        }
       ]
     },
     {
       "title": "Coverage",
       "new_page": false,
       "blocks": [
-        {"type": "coverage", "items": [{"name": "Portfolio and allocation", "status": "available", "note": "Fictional TEST data [S2]"}, {"name": "Policy", "status": "available", "note": "Allocation, liquidity and valuation-age rules [S3]"}, {"name": "Exposure", "status": "available", "note": "Market value, NAV and unfunded [S4]"}, {"name": "Returns and attribution", "status": "degraded", "note": "Five-year sleeve period unavailable [S5]"}, {"name": "Forward assumptions and pacing", "status": "available", "note": "Governed classes and drawdown charts [S6]"}, {"name": "Context and diligence", "status": "degraded", "note": "Proposed manager not assessed [S7]"}, {"name": "Mandate mappings and scenarios", "status": "unavailable", "note": "Commodity, linker and shock mappings not returned [S8]"}]}
+        {
+          "type": "coverage",
+          "items": [
+            {
+              "name": "Portfolio and allocation",
+              "status": "available",
+              "note": "Fictional TEST data [S2]"
+            },
+            {
+              "name": "Policy",
+              "status": "available",
+              "note": "Allocation, liquidity and valuation-age rules [S3]"
+            },
+            {
+              "name": "Exposure",
+              "status": "available",
+              "note": "Market value, NAV and unfunded [S4]"
+            },
+            {
+              "name": "Returns and attribution",
+              "status": "degraded",
+              "note": "Five-year sleeve period unavailable [S5]"
+            },
+            {
+              "name": "Forward assumptions and pacing",
+              "status": "available",
+              "note": "Governed classes and drawdown charts [S6]"
+            },
+            {
+              "name": "Context and diligence",
+              "status": "degraded",
+              "note": "Proposed manager not assessed [S7]"
+            },
+            {
+              "name": "Mandate mappings and scenarios",
+              "status": "unavailable",
+              "note": "Commodity, linker and shock mappings not returned [S8]"
+            }
+          ]
+        }
       ]
     },
     {
       "title": "Appendix A — Sources",
       "num": "A",
       "blocks": [
-        {"type": "table", "columns": ["Tag", "Evidence", "Tool / view", "Key parameters", "As of", "Data scope", "Validation", "Digest"], "rows": [["S1", "Organization and capabilities", "list_organizations; get_gradient_capabilities", "organization=test", "2026-06-30", "Fictional TEST data", "passed", "ra-s1"], ["S2", "Portfolio and allocation", "list_portfolios; get_portfolio_structure", "allocation_tree", "2026-06-30", "Fictional TEST data", "passed", "ra-s2"], ["S3", "Policy assessment", "check_portfolio_policy", "portfolio=test", "2026-06-30", "Fictional TEST data", "passed", "ra-s3"], ["S4", "Real-assets exposure", "get_portfolio_exposure", "all pages", "2026-06-30", "Fictional TEST data", "passed", "ra-s4"], ["S5", "Returns and attribution", "get_portfolio_historical_returns; get_portfolio_attribution", "all sections", "2026-06-30", "Fictional TEST data", "degraded", "ra-s5"], ["S6", "Forward assumptions and pacing", "get_chart_data; get_capital_market_assumptions", "commitments; baseline", "2026-06-15", "Fictional TEST data", "passed", "ra-s6"], ["S7", "Macro context and diligence", "get_macro_conditions; diligence tools", "fictional", "2026-06-30", "Fictional TEST data", "degraded", "ra-s7"], ["S8", "Mandate mappings and gaps", "User document; coverage record", "fictional", "2026-06-30", "Fictional TEST data", "advisory", "ra-s8"]]}
+        {
+          "type": "table",
+          "columns": [
+            "Tag",
+            "Evidence",
+            "Tool / view",
+            "Key parameters",
+            "As of",
+            "Data scope",
+            "Validation",
+            "Digest"
+          ],
+          "rows": [
+            [
+              "S1",
+              "Organization and capabilities",
+              "list_organizations; get_gradient_capabilities",
+              "organization=test",
+              "2026-06-30",
+              "Fictional TEST data",
+              "passed",
+              "ra-s1"
+            ],
+            [
+              "S2",
+              "Portfolio and allocation",
+              "list_portfolios; get_portfolio_structure",
+              "allocation_tree",
+              "2026-06-30",
+              "Fictional TEST data",
+              "passed",
+              "ra-s2"
+            ],
+            [
+              "S3",
+              "Policy assessment",
+              "check_portfolio_policy",
+              "portfolio=test",
+              "2026-06-30",
+              "Fictional TEST data",
+              "passed",
+              "ra-s3"
+            ],
+            [
+              "S4",
+              "Real-assets exposure",
+              "get_portfolio_exposure",
+              "all pages",
+              "2026-06-30",
+              "Fictional TEST data",
+              "passed",
+              "ra-s4"
+            ],
+            [
+              "S5",
+              "Returns and attribution",
+              "get_portfolio_historical_returns; get_portfolio_attribution",
+              "all sections",
+              "2026-06-30",
+              "Fictional TEST data",
+              "degraded",
+              "ra-s5"
+            ],
+            [
+              "S6",
+              "Forward assumptions and pacing",
+              "get_chart_data; get_capital_market_assumptions",
+              "commitments; baseline",
+              "2026-06-15",
+              "Fictional TEST data",
+              "passed",
+              "ra-s6"
+            ],
+            [
+              "S7",
+              "Macro context and diligence",
+              "get_macro_conditions; diligence tools",
+              "fictional",
+              "2026-06-30",
+              "Fictional TEST data",
+              "degraded",
+              "ra-s7"
+            ],
+            [
+              "S8",
+              "Mandate mappings and gaps",
+              "User document; coverage record",
+              "fictional",
+              "2026-06-30",
+              "Fictional TEST data",
+              "advisory",
+              "ra-s8"
+            ]
+          ]
+        }
       ]
     },
     {
@@ -140,8 +1414,58 @@
       "num": "B",
       "new_page": false,
       "blocks": [
-        {"type": "table", "title": "Server Metric Methods", "columns": ["Source", "Quantity", "Method / formula", "Version", "Basis / units / tolerance"], "rows": [["S3", "Policy status", "Governed assessment", "portfolio-policy-v1", "Returned status"], ["S4", "Exposure", "Server exposure aggregation", "portfolio-exposure-v1", "Market value or NAV; unfunded separate"], ["S5", "Returns and attribution", "Linked returns; Brinson-Fachler", "portfolio-attribution-v1", "Net; 1 bp tolerance"], ["S6", "Forward statistics and pacing", "Returned chart packs", "chart-contract-v1", "10-year assumptions; projected drawdown flows"]]},
-        {"type": "bullets", "items": ["Private real-assets valuations may lag the report date [S4].", "Forward values are assumptions, not forecasts or guarantees [S6].", "Commodity and inflation-linked CMA mappings are not provided [S8].", "Drawdown charts apply only to closed-end sleeves [S6].", "Portfolio Analytics and Strategy Lab are separate analytical scopes.", "This AI-assisted construction analysis is not investment, legal or compliance advice."]}
+        {
+          "type": "table",
+          "title": "Server Metric Methods",
+          "columns": [
+            "Source",
+            "Quantity",
+            "Method / formula",
+            "Version",
+            "Basis / units / tolerance"
+          ],
+          "rows": [
+            [
+              "S3",
+              "Policy status",
+              "Governed assessment",
+              "portfolio-policy-v1",
+              "Returned status"
+            ],
+            [
+              "S4",
+              "Exposure",
+              "Server exposure aggregation",
+              "portfolio-exposure-v1",
+              "Market value or NAV; unfunded separate"
+            ],
+            [
+              "S5",
+              "Returns and attribution",
+              "Linked returns; Brinson-Fachler",
+              "portfolio-attribution-v1",
+              "Net; 1 bp tolerance"
+            ],
+            [
+              "S6",
+              "Forward statistics and pacing",
+              "Returned chart packs",
+              "chart-contract-v1",
+              "10-year assumptions; projected drawdown flows"
+            ]
+          ]
+        },
+        {
+          "type": "bullets",
+          "items": [
+            "Private real-assets valuations may lag the report date [S4].",
+            "Forward values are assumptions, not forecasts or guarantees [S6].",
+            "Commodity and inflation-linked CMA mappings are not provided [S8].",
+            "Drawdown charts apply only to closed-end sleeves [S6].",
+            "Portfolio Analytics and Strategy Lab are separate analytical scopes.",
+            "This AI-assisted construction analysis is not investment, legal or compliance advice."
+          ]
+        }
       ]
     }
   ]

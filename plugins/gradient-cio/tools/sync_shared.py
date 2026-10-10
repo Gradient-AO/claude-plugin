@@ -9,7 +9,12 @@ import hashlib, pathlib, shutil, sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 FILES = {"shared/gradient_report.py": "scripts/gradient_report.py",
+         "shared/gradient_pptx.py": "scripts/gradient_pptx.py",
+         "shared/render.py": "scripts/render.py",
+         "shared/compose_report.py": "scripts/compose_report.py",
+         "shared/check_layout.py": "scripts/check_layout.py",
          "shared/report-style.md": "references/report-style.md",
+         "shared/writing-standards.md": "references/writing-standards.md",
          "shared/chart-data.md": "references/chart-data.md",
          "shared/module-scope.md": "references/module-scope.md"}
 

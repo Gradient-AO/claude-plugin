@@ -28,7 +28,5 @@ To render a returned item, put it into the report unchanged:
 {"type": "chart", "chart": {"chart_id": "...", "status": "ok", "...": "..."}}
 ```
 
-The shared renderer owns all line/bar/pie/table mapping through `render_hint`. A `pie` hint renders as a
-donut; pass it through unchanged. The allocations pack currently uses that hint for
-`bar-portfolio-hierarchy`, while the mixed-unit `commitments-pacing-metrics` item uses `table`. Skills must
-not branch on chart IDs, recompute rows, or hand-map columns.
+The shared renderer owns all mapping from `render_hint` to line, bars, pie, or table output. Skills must not branch on chart IDs,
+recompute rows, or hand-map columns.

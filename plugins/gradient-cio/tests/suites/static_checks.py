@@ -1,4 +1,4 @@
-"""Dependency-free static repository checks."""
+"""Dependency-free static repository checks and suite ordering."""
 
 from suites.harness import *
 from suites.connector_contracts import (
@@ -7,7 +7,7 @@ from suites.connector_contracts import (
     contract_manifest,
 )
 from suites.renderer_regressions import chart_renderer
-from suites.report_validators import report_validator_regressions
+from suites.report_validators import connector_cutover
 
 def static(allow_branded):
     print("Static checks")
@@ -45,11 +45,29 @@ def static(allow_branded):
         "(use --allow-branded for a private client build)",
     )
     check(b.get("brand") == "gradient", "branding.json declares Gradient as the default brand")
+    template_ok = False
+    if PPTX_TEMPLATE.is_file():
+        with zipfile.ZipFile(PPTX_TEMPLATE) as archive:
+            content_types = archive.read("[Content_Types].xml")
+            layouts = [
+                name
+                for name in archive.namelist()
+                if re.fullmatch(r"ppt/slideLayouts/slideLayout\d+\.xml", name)
+            ]
+            template_ok = (
+                b'typeface="Inter"' in archive.read("ppt/theme/theme1.xml")
+                and b"presentationml.template.main+xml" in content_types
+                and len(layouts) == 7
+            )
+    check(
+        template_ok,
+        "PowerPoint master is a seven-layout POTX with Inter theme fonts",
+    )
     branded = json.loads((FIX / "branding-test.json").read_text(encoding="utf-8"))
     check(branded.get("brand") == "client", "client branding fixture declares the client brand")
-    report_validator_regressions()
+    run_source_checks(check)
+    connector_cutover()
     chart_renderer()
     contract_manifest()
     contract_checker_static_edges()
     contract_checker()
-

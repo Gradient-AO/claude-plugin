@@ -81,17 +81,17 @@ Write `review.md` with these headings exactly:
 ## 2. Performance Integrity & GIPS
 <Memo handoff, Oversight body summary or prioritized fix list, as directed by the workflow skill.>
 
-## 3. Findings Checklist
-<Checklist tables grouped under `### <Area>` headings.>
-
-## 4. Follow-up Requests
+## 3. Follow-up Requests
 <Numbered list: request, provision and evidence that would close it.>
 
-## Appendix A — Sources
+## Appendix A — Findings Checklist
+<Checklist tables grouped under `### <Area>` headings.>
+
+## Appendix B — Sources
 | Tag | Source | Detail | As of | Validation |
 |---|---|---|---|---|
 
-## Appendix B — Method & Disclaimer
+## Appendix C — Method & Disclaimer
 <Rating rules, items to confirm, limitations and disclaimer.>
 ```
 
@@ -102,11 +102,13 @@ Follow `report-layout.md`. `visuals.json` must contain:
 - four evidence-status executive tiles: Met, Partially met, Not met and Not found;
 - at least one coverage block for material reviewed;
 - one findings block and one High/Medium/Low severity summary;
+- a stacked status bar by checklist area using Met, Partially met, Not met and Not found;
 - sourced analysis callouts using Observation, Why it matters, Uncertainty and What would change the view;
 - a typed `unavailable` block wherever an expected visual or evidence view cannot be supported.
 
 Analysis is non-prescriptive. “What would change the view” may point only to numbered requests already present
-in `## 4. Follow-up Requests`; it must not add a recommendation or action. Market charts are not required.
+in `## 3. Follow-up Requests`; it must not add a recommendation or action. Keep the analytical body to 3–4
+pages; the full checklist begins Appendix A. Market charts are not required.
 
 Write `meta.json` in the existing shape:
 
@@ -131,15 +133,21 @@ Run from `gradient-gips-standards`:
 
 ```text
 python scripts/validate_gips_report.py review.md visuals.json meta.json
-python scripts/compose_gips_report.py review.md visuals.json meta.json review.json
-python scripts/validate_gips_report.py review.json
-python scripts/gradient_report.py review.json "<Subject> - GIPS <Review type>.pdf"
+python scripts/compose_gips_report.py review.md visuals.json meta.json report.json
+python scripts/validate_gips_report.py report.json
 ```
 
-Fix every validation error. A failed composition must not write or replace `review.json`. Rasterize the PDF
-and inspect every page before delivery. When the checklist has more than about 15 rows, also deliver it as an
-`.xlsx` with the same columns.
+Fix every validation error. A failed composition must not write or replace `report.json`. Select PDF by
+default, PPTX for `PowerPoint`, `deck`, `slides` or `.pptx`, and both for `both` or `board pack`; both
+formats come from the same validated `report.json`.
 
-In chat, put the memo handoff first so it remains paste-ready, then provide a one-line summary and the PDF. If
-an investment memo is being built in the same session, hand over the unchanged memo section and High/Medium
-findings rather than repeating the full checklist.
+```text
+python scripts/render.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS <Review type>"
+```
+
+Inspect every requested output before delivery. When the checklist has more than about 15 rows, also deliver
+it as an `.xlsx` with the same columns.
+
+In chat, put the memo handoff first so it remains paste-ready, then provide a one-line summary and requested
+file(s). If an investment memo is being built in the same session, hand over the unchanged memo section and
+High/Medium findings rather than repeating the full checklist.

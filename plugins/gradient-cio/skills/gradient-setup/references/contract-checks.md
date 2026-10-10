@@ -35,7 +35,7 @@ returns Gradient's canonical example first.
 attention, findings, events, events_roster, entity_facts, conditions, credit_spreads, gradient_signal, regime_state,
 cma_baseline, cma_consensus, cma_consensus_allocation, watchlist,
 portfolio_tree, portfolio_exposure, portfolio_policy, portfolio_ownership, portfolio_returns,
-portfolio_attribution, portfolio_series,
+portfolio_attribution, portfolio_ex_ante_attribution, portfolio_series,
 chart_availability, portfolio_allocations, portfolio_commitments,
 strategy_benchmarks, strategy_return_series, two Strategy Lab session builders,
 strategy_expected_statistics, strategy_relative_return, strategy_manager_compare, strategy_date_windows,
@@ -45,22 +45,24 @@ regional_capital_markets, equity_fundamentals, equity_risk_findings, ddq_extract
 ddq_numeric_gap and batch_ddq_preview.
 
 The portfolio policy probe verifies governed-only semantics and the 2% watch boundary. The returns probe
-requests the summary and benchmark-relative sections through an explicit `fields` projection, caps the
-commitment page at 100, checks the risk-free-rate contract approximately, and reconciles the risk-metric month
-count to selected points. It also verifies the canonical 2026 partial calendar-year row; reports must
-separately disclose both partial years (2016 and 2026) and any `not_yet_funded` commitment comparisons. A
-partial result or
-`no_subject_returns` is a reportable coverage gap, not a reason to substitute another series. Attribution
+requests the summary and benchmark-relative sections through an explicit `fields` projection, sets `limit:
+100`, verifies all 69 canonical commitment rows arrive without truncation, checks the risk-free-rate contract
+approximately, and reconciles the risk-metric month count to selected points. It also verifies the canonical
+partial 2016 and 2026 calendar-year rows plus a `not_yet_funded` commitment comparison. Reports must state
+those gaps rather than presenting either partial year as full-year performance or an unfunded commitment as a
+zero return. A partial result or `no_subject_returns` is a reportable coverage gap, not a reason to substitute
+another series. Attribution
 verifies the bounded Brinson-Fachler surface, persisted
 monthly segment basis, linked summary, segment effects and zero-residual reconciliation for the canonical
 example; no numeric attribution may be inferred when the tool reports typed unavailability. Equity fundamentals requires
 the complete leverage contract, including formula identity and period basis. DDQ probes require server-returned
 numeric-gap formula metadata; the batch probe is read-only and must complete both items.
 
-**Writes set (8 dry-run previews):** write_create_finding, write_watchlist_manager, write_roster,
-write_monitoring, write_review, write_scenario, write_batch_preview and write_upload_ddq. Every call must
-retain `dry_run: true`. The finding, watchlist, roster, monitoring, review and scenario action previews
-require `committed: false` and a non-null `receipt_id`; the upload preview instead
+**Writes set (8 dry-run previews):** write_create_finding, write_watchlist_manager,
+write_manager_monitoring, write_diligence_review, write_roster, write_strategy_scenario,
+write_batch_preview and write_upload_ddq. Every call must retain `dry_run: true`. The finding, watchlist,
+monitoring, review, roster and scenario action previews require `committed: false` and a non-null
+`receipt_id`; the upload preview instead
 requires `status: "preview"`, `document_id: null`, a request fingerprint and the complete `would_create`
 description. Never substitute
 `dry_run: false`, and never follow a preview receipt with a commit during a contract self-test. The roster
@@ -75,7 +77,7 @@ The first call persists fictional inline text as a ready subject-bound document 
 save call is still a dry-run preview and must return `outcome: "preview"`, `dry_run: true` and `committed:
 false`.
 
-The complete matrix is 66 calls. Run the standard or full read set without write confirmation. Run the
+The complete matrix is 68 calls. Run the standard or full read set without write confirmation. Run the
 writes set only as previews. Before the DDQ save-preview set, tell the user that its reconciliation call
 persists a test document and immutable test workpaper.
 
@@ -129,16 +131,10 @@ There are no currently reproducible connector exceptions with a client-side work
 
 The following are supported contract boundaries, not known issues:
 
-- `get_chart_data` supports only `allocations` and `commitments`; expected statistics remains a separate
-  Strategy Lab compute tool.
-- Historical-return reads use `limit: 100`, preserve `not_yet_funded`, and disclose partial 2016 / 2026
-  calendar years.
-- Exposure filters accept canonical display names or documented snake_case aliases. Fixed-income duration,
-  spread duration, and yield come from the `Fixed Income` classification aggregate for mixed portfolios.
-- Fund DDQs containing auditor, administrator, custodian, or prime-broker claims use `subject_scope: fund`.
-  Missing `asserted_as_of` is tagged by the server as `as_of_assumed: filing_date`.
-- Selected-series Strategy Lab calls pass IDs and the required benchmark field without a simultaneous
-  `strategy_lab_session` stub.
+| Tool / view | Classification | Ticket, owner, review | Symptom and current workaround | Removal criterion |
+|---|---|---|---|---|
+| DDQ transcribed claim dates | Non-blocking comparison-date limitation | P-23 · Gradient MCP · pending | Reconciliation can choose an unsuitable filing when a transcribed claim omits `asserted_as_of`. Always set `asserted_as_of` from the DDQ's stated date; if absent, ask the user for the applicable date before reconciliation. | P-23 ships and an undated transcribed-claim probe selects and reports the intended comparison basis twice. |
+| Non-fixed-income exposure rows | Non-blocking field-population defect | P-25 · Gradient MCP · pending | `fixed_income_metrics` may be populated on non-fixed-income exposure rows. Do not quote those values. Use complete `portfolio_totals` and the `Fixed Income` classification aggregate for duration, spread duration and yield. | P-25 ships and mixed-classification probes return fixed-income metrics only on the governed portfolio total and Fixed Income aggregate row. |
 
 Re-check this section on every full run and add only a currently reproducible exception with its exact error
 code, request ID, bounded workaround, owner, and removal criterion.

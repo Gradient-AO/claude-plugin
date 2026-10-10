@@ -1,43 +1,192 @@
 {
   "schema_version": "1.0",
   "executive_tiles": [
-    {"label": "Met", "value": "2", "sub": "Return basis and benchmark", "tone": "good"},
-    {"label": "Partially met", "value": "1", "sub": "Benchmark change disclosure", "tone": "watch"},
-    {"label": "Not met", "value": "1", "sub": "Valuation policy evidence", "tone": "bad"},
-    {"label": "Not found", "value": "1", "sub": "Error-correction policy", "tone": "watch"}
+    {
+      "label": "Met",
+      "value": "2",
+      "sub": "Return basis and benchmark",
+      "tone": "good"
+    },
+    {
+      "label": "Partially met",
+      "value": "1",
+      "sub": "Benchmark change disclosure",
+      "tone": "watch"
+    },
+    {
+      "label": "Not met",
+      "value": "1",
+      "sub": "Valuation policy evidence",
+      "tone": "bad"
+    },
+    {
+      "label": "Not found",
+      "value": "1",
+      "sub": "Error-correction policy",
+      "tone": "watch"
+    }
   ],
   "sections": {
     "1. Summary": {
       "before": [
-        {"type": "coverage", "title": "Evidence status", "items": [
-          {"name": "Board report", "status": "available", "note": "Total-fund evidence [S1]"},
-          {"name": "Investment policy", "status": "available", "note": "Benchmark evidence [S2]"},
-          {"name": "Custodian package", "status": "degraded", "note": "Valuation policy absent [S3]"}
-        ]}
+        {
+          "type": "coverage",
+          "title": "Evidence status",
+          "items": [
+            {
+              "name": "Board report",
+              "status": "available",
+              "note": "Total-fund evidence [S1]"
+            },
+            {
+              "name": "Investment policy",
+              "status": "available",
+              "note": "Benchmark evidence [S2]"
+            },
+            {
+              "name": "Custodian package",
+              "status": "degraded",
+              "note": "Valuation policy absent [S3]"
+            }
+          ]
+        }
       ],
       "after": [
-        {"type": "callout", "role": "analysis", "tone": "watch", "title": "Benchmark lineage incomplete", "text": "**Observation:** The benchmark is identified, but its change date is absent [S1, S2]. **Why it matters:** period comparability depends on benchmark lineage. **Uncertainty:** the underlying approval date is not evidenced. **What would change the view:** evidence closing follow-up request 1.", "follow_up_refs": [1]}
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — evidence balance",
+          "text": "Observation: Met is 2 and Not met is 1 [S1]. Why it matters: The evidence is mixed. Uncertainty: The review is document-bound. What would change the view: Additional governed evidence that changes either count."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — partial support",
+          "text": "Observation: Partially met is 1 [S1]. Why it matters: Partial support limits a clean conclusion. Uncertainty: Missing documents may exist. What would change the view: Complete evidence for the partially supported requirements."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "info",
+          "title": "Key judgment — evidence gaps",
+          "text": "Observation: Not found is 1 [S1]. Why it matters: Unlocated evidence remains outside the assessment. Uncertainty: Absence from the supplied record is not proof of absence. What would change the view: A current document resolving the gap."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Benchmark lineage incomplete",
+          "text": "**Observation:** The benchmark is identified, but its change date is absent [S1, S2]. **Why it matters:** period comparability depends on benchmark lineage. **Uncertainty:** the underlying approval date is not evidenced. **What would change the view:** evidence closing follow-up request 1.",
+          "follow_up_refs": [
+            1
+          ]
+        }
       ]
     },
-    "2. Performance Integrity & GIPS": {"before": [], "after": []},
-    "3. Findings Checklist": {
+    "2. Performance Integrity & GIPS": {
       "before": [
-        {"type": "bars", "title": "Findings by severity", "items": [
-          {"label": "High", "value": 0, "display": "0"},
-          {"label": "Medium", "value": 2, "display": "2"},
-          {"label": "Low", "value": 1, "display": "1"}
-        ]}
+        {
+          "type": "heat",
+          "title": "Requirement evidence matrix (TEST)",
+          "columns": [
+            "Requirement",
+            "Evidence score"
+          ],
+          "rows": [
+            {
+              "label": "Performance record",
+              "values": [
+                1.0
+              ]
+            },
+            {
+              "label": "Disclosures",
+              "values": [
+                0.5
+              ]
+            },
+            {
+              "label": "Governance evidence",
+              "values": [
+                -0.5
+              ]
+            }
+          ]
+        }
+      ],
+      "after": []
+    },
+    "Appendix A — Findings Checklist": {
+      "before": [
+        {
+          "type": "stacked",
+          "title": "Checklist status by area",
+          "items": [
+            {"label": "Returns", "segments": [{"label": "Met", "value": 1}, {"label": "Partially met", "value": 0}, {"label": "Not met", "value": 0}, {"label": "Not found", "value": 0}]},
+            {"label": "Benchmark", "segments": [{"label": "Met", "value": 1}, {"label": "Partially met", "value": 1}, {"label": "Not met", "value": 0}, {"label": "Not found", "value": 0}]},
+            {"label": "Valuation", "segments": [{"label": "Met", "value": 0}, {"label": "Partially met", "value": 0}, {"label": "Not met", "value": 1}, {"label": "Not found", "value": 0}]},
+            {"label": "Oversight", "segments": [{"label": "Met", "value": 0}, {"label": "Partially met", "value": 0}, {"label": "Not met", "value": 0}, {"label": "Not found", "value": 1}]}
+          ]
+        },
+        {
+          "type": "bars",
+          "title": "Findings by severity",
+          "items": [
+            {
+              "label": "High",
+              "value": 0,
+              "display": "0"
+            },
+            {
+              "label": "Medium",
+              "value": 2,
+              "display": "2"
+            },
+            {
+              "label": "Low",
+              "value": 1,
+              "display": "1"
+            }
+          ]
+        }
       ],
       "after": [
-        {"type": "findings", "title": "Priority findings", "items": [
-          {"severity": "medium", "title": "Benchmark date absent", "detail": "The report omits the benchmark-change effective date [S1][S2]."},
-          {"severity": "medium", "title": "Valuation policy absent", "detail": "The reviewed package does not include the valuation policy [S3]."},
-          {"severity": "low", "title": "Error policy not found", "detail": "No error-correction policy was supplied [S2][S3]."}
-        ]}
+        {
+          "type": "findings",
+          "title": "Priority findings",
+          "items": [
+            {
+              "severity": "medium",
+              "title": "Benchmark date absent",
+              "detail": "The report omits the benchmark-change effective date [S1][S2]."
+            },
+            {
+              "severity": "medium",
+              "title": "Valuation policy absent",
+              "detail": "The reviewed package does not include the valuation policy [S3]."
+            },
+            {
+              "severity": "low",
+              "title": "Error policy not found",
+              "detail": "No error-correction policy was supplied [S2][S3]."
+            }
+          ]
+        }
       ]
     },
-    "4. Follow-up Requests": {"before": [], "after": []},
-    "Appendix A — Sources": {"before": [], "after": []},
-    "Appendix B — Method & Disclaimer": {"before": [], "after": []}
+    "3. Follow-up Requests": {
+      "before": [],
+      "after": []
+    },
+    "Appendix B — Sources": {
+      "before": [],
+      "after": []
+    },
+    "Appendix C — Method & Disclaimer": {
+      "before": [],
+      "after": []
+    }
   }
 }

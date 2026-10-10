@@ -17,12 +17,19 @@ Keep every section title and the order exactly as shown. Missing evidence become
 
 - Apply ODD-quality polish: exact hierarchy, concise copy, aligned tables and decision-useful graphics.
 - Render exactly the four named tiles. Source `executive.bottom_line` and every tile with `[S#]`.
+- Page 2 contains 3–5 sourced `callout` blocks with `role: key_judgment` and titles beginning
+  `Key judgment —`. Keep each to 60 words and use the four-part analysis structure below.
 - In Target Portfolio Structure, Forward Return and Risk, and Liquidity and Denominator Risk, include 1–3
-  sourced `callout` blocks with `role: analysis`. Keep titles to six words and text to 80 words. Each text
+  sourced `callout` blocks with `role: analysis` and titles beginning `Analysis —`. Keep the title message to
+  six words and text to 60 words. Each text
   must use, in order: `Observation:`, `Why it matters:`, `Uncertainty:`, and
   `What would change the view:`. Analysis supports, but never changes, the fixed Committee Action Requested.
 - Include graphics for current allocation, forward risk/return, commitments and liquidity. Only unavailable
   governed evidence may use a `callout` reading `Not available — <reason>` in place of a required visual.
+  Every analytical section has a message-first kicker and puts its visual or unavailable substitute before
+  the first table. Use signed finite values; never place more than two tables consecutively.
+- Prefer `stacked` for strategy/vintage composition, `waterfall` for sourced calls-minus-distributions cash
+  flow and `band` for policy or liquidity ranges. Use only returned points; otherwise show typed unavailability.
 - A clean validator result is a delivery blocker. After rendering, inspect every PDF page for clipping,
   overflow, weak hierarchy, orphaned headings, illegible charts and excessive whitespace.
 
@@ -57,9 +64,13 @@ Keep every section title and the order exactly as shown. Missing evidence become
 
 ### 5. Target Portfolio Structure
 
+- `band` **Current weight versus policy range** for every segment, with the proposed target marker.
+- `stacked` **Current and target mix** with one bar for each mix.
 - `table` **Current versus target**: Segment, Current, Target, Change, Range / constraint, Rationale.
 - Optional strategy, vintage, geography and manager tables only when returned or user-supplied.
 - Numeric targets must trace to a source; otherwise use `Not available`.
+- Include an `Analysis — Why this target` judgment that ties the fixed proposal to returned CMA consensus,
+  macro regime and open manager findings; name any unavailable context rather than filling the gap.
 
 ### 6. Forward Return and Risk
 
@@ -71,11 +82,13 @@ Keep every section title and the order exactly as shown. Missing evidence become
 ### 7. Commitments, Pacing and Cash Flow
 
 - Embed every usable chart from the `commitments` pack unchanged.
+- Lead with the governed commitment-pacing `line` when returned.
 - `table` **Near-term pacing**: Period, Calls, Distributions, Net cash flow, Basis, Source.
 - `text` identifies timing mismatches without locally projecting missing periods.
 
 ### 8. Liquidity and Denominator Risk
 
+- Lead with signed `bars` for every governed liquidity or denominator scenario.
 - `table` **Liquidity profile**: Bucket, % NAV, Amount, Requirement, Status.
 - `kv`: liquid assets, locked share, unfunded ratio, near-term calls, coverage.
 - `table` **Supported scenarios**: Scenario, Liquid resources, Funding need, Coverage, Status.

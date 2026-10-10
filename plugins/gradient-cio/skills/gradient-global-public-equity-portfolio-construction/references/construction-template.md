@@ -17,12 +17,19 @@ Keep every section title and the order exactly as shown. Missing evidence become
 
 - Apply ODD-quality polish: exact hierarchy, concise copy, aligned tables and decision-useful graphics.
 - Render exactly the four named tiles. Source `executive.bottom_line` and every tile with `[S#]`.
+- Page 2 contains 3–5 sourced `callout` blocks with `role: key_judgment` and titles beginning
+  `Key judgment —`. Keep each to 60 words and use the four-part analysis structure below.
 - In Target Portfolio Structure, Factor Exposures and Concentration, and Forward Return and Risk, include
-  1–3 sourced `callout` blocks with `role: analysis`. Keep titles to six words and text to 80 words. Each
-  text must use, in order: `Observation:`, `Why it matters:`, `Uncertainty:`, and
+  1–3 sourced `callout` blocks with `role: analysis` and titles beginning `Analysis —`. Keep the title
+  message to six words and text to 60 words. Each text must use, in order: `Observation:`,
+  `Why it matters:`, `Uncertainty:`, and
   `What would change the view:`. Analysis supports, but never changes, the fixed Committee Action Requested.
 - Include graphics for current allocation, factor/concentration and forward risk/return. Only unavailable
   governed evidence may use a `callout` reading `Not available — <reason>` in place of a required visual.
+  Every analytical section has a message-first kicker and puts its visual or unavailable substitute before
+  the first table. Use signed finite values; never place more than two tables consecutively.
+- Prefer `heat` for returned factor/geography concentration, `stacked` for sourced regional or manager
+  composition and signed `waterfall` for governed attribution. Issuer evidence remains a flag, not a rating.
 - A clean validator result is a delivery blocker. After rendering, inspect every PDF page for clipping,
   overflow, weak hierarchy, orphaned headings, illegible charts and excessive whitespace.
 
@@ -50,9 +57,13 @@ Keep every section title and the order exactly as shown. Missing evidence become
 
 ### 4. Target Portfolio Structure
 
+- `band` **Current weight versus policy range** for every segment, with the proposed target marker.
+- `stacked` **Current and target mix** with one bar for each mix.
 - `table` **Current versus target**: Segment, Current, Target, Change, Range / constraint, Rationale.
 - Optional region, manager role, factor and currency tables only when sourced.
 - Numeric targets must trace to a source.
+- Include an `Analysis — Why this target` judgment that ties the fixed proposal to returned CMA consensus,
+  macro regime and open manager findings; name any unavailable context rather than filling the gap.
 
 ### 5. Historical Performance and Attribution
 
@@ -62,6 +73,7 @@ Keep every section title and the order exactly as shown. Missing evidence become
 
 ### 6. Factor Exposures and Concentration
 
+- Lead with signed regional allocation `bars` before the factor and concentration tables.
 - Embed unchanged factor, currency, geography, risk-contribution and allocation charts.
 - `table` **Governed concentration**: Axis, Observed, Limit, Status, Source.
 - Optional 13F issuer rows include the full lag, long-only, coverage and FX caveat.
@@ -87,6 +99,7 @@ Keep every section title and the order exactly as shown. Missing evidence become
 
 ### 10. Scenarios and Robustness
 
+- Lead with signed `bars` for every governed scenario result.
 - `table` **Supported scenarios**: Scenario, Return / loss, Risk measure, Basis, Source.
 - Optional selected-series Strategy Lab results carry the sandbox label.
 - Unsupported tracking-error or stress rows remain unavailable.

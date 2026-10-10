@@ -1,10 +1,21 @@
-"""Shared paths, result collection, and dynamic module loaders."""
+"""Shared paths, loaders, fixtures, and result collection."""
 
-import importlib.util, json, pathlib, re, shutil, subprocess, sys, tempfile
+import importlib.util
+import json
+import pathlib
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+import zipfile
+
+from release_quality import run_artifact_checks, run_source_checks
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 FIX = ROOT / "tests" / "fixtures"
 RENDER = ROOT / "shared" / "gradient_report.py"
+PPTX_TEMPLATE = ROOT / "assets" / "gradient-master.potx"
 CONTRACT_CHECKER = ROOT / "skills" / "gradient-setup" / "scripts" / "check_contract.py"
 CONTRACTS = ROOT / "skills" / "gradient-setup" / "references" / "contracts.json"
 CONTRACT_CHECKS = ROOT / "skills" / "gradient-setup" / "references" / "contract-checks.md"
@@ -12,7 +23,6 @@ PUBLIC_TOOLS = ROOT / "skills" / "gradient-setup" / "references" / "public-tools
 SHARED_REPORT_STYLE = ROOT / "shared" / "report-style.md"
 SHARED_MODULE_SCOPE = ROOT / "shared" / "module-scope.md"
 SHARED_CHART_DATA = ROOT / "shared" / "chart-data.md"
-REPORT_CONSTANTS = ROOT / "tools" / "report_constants.py"
 SKILL_REQUIREMENTS = ROOT / "skills" / "gradient-setup" / "references" / "skill-requirements.md"
 MACRO_BRIEF_SKILL = ROOT / "skills" / "gradient-macro-brief" / "SKILL.md"
 IC_MEMO_SKILL = ROOT / "skills" / "gradient-ic-memo" / "SKILL.md"
@@ -166,6 +176,7 @@ CONSTRUCTION_VALIDATORS = [
 ]
 SETUP_SKILL = ROOT / "skills" / "gradient-setup" / "SKILL.md"
 STALE = re.compile(r"(?<!gradient-)\bgips-(compliance|standards|manager-diligence|report-review|asset-owner-review|policies-gap-check)\b|gradient-capabilities")
+REPORT_CONSTANTS = ROOT / "tools" / "report_constants.py"
 
 _report_constants_spec = importlib.util.spec_from_file_location(
     "gradient_report_constants",
@@ -197,9 +208,9 @@ if _renderer_spec is None or _renderer_spec.loader is None:
 _renderer_module = importlib.util.module_from_spec(_renderer_spec)
 _renderer_spec.loader.exec_module(_renderer_module)
 
-# name, args (relative to fixtures; OUT = output pdf), min pages, max pages, must-contain text
+# name, args (relative to fixtures; OUT = output PDF), min pages, max pages, required text
 CASES = [
-    ("odd",      ["odd.json", "OUT"],                                3, 6,  ["Operational Due Diligence"]),
+    ("odd",      ["odd.json", "OUT"],                                8, 9,  ["Operational Due Diligence"]),
     ("ddq",      ["ddq.json", "OUT"],                                3, 8,  ["DDQ Reconciliation"]),
     ("ic_memo",  ["ic-memo.json", "OUT"],                          14, 18, ["Recommendation", "Key judgment", "Growth of 100"]),
     ("gips_note",["--md", "note.md", "--meta", "note_meta.json", "OUT"], 1, 4, ["GIPS"]),
@@ -209,8 +220,8 @@ CASES = [
     ("deck",     ["--deck", "deck.json", "OUT"],                     11, 11, ["Macro Briefing", "Takeaway"]),
     ("branded",  ["--brand", "branding-test.json", "blocks.json", "OUT"], 2, 4, ["Northwind Pension Plan (TEST)", "Powered by GradientCIO.com"]),
     ("portfolio", ["portfolio.json", "OUT"],                         5, 8,  ["Portfolio Review", "Standard periods to", "Growth of 100", "Look-through concentration"]),
-    ("portfolio_comprehensive", ["portfolio-comprehensive.json", "OUT"], 15, 20, ["Comprehensive Portfolio Review", "Historical Attribution", "Projected Return and Risk Decomposition", "Analysis and Considerations"]),
-    ("portfolio_attribution_report", ["portfolio-attribution-report.json", "OUT"], 10, 14, ["Portfolio Attribution Report", "Historical Attribution", "Governed Ex Ante Attribution", "Analysis and Considerations"]),
+    ("portfolio_comprehensive", ["portfolio-comprehensive.json", "OUT"], 14, 19, ["Comprehensive Portfolio Review", "Historical Attribution", "Projected Return and Risk Decomposition", "Analysis —"]),
+    ("portfolio_attribution_report", ["portfolio-attribution-report.json", "OUT"], 10, 14, ["Portfolio Attribution Report", "Historical Attribution", "Governed Ex Ante Attribution", "Analysis —"]),
     ("construction_private_markets", ["construction-private-markets.json", "OUT"], 10, 14, ["Private Markets Portfolio Construction", "Commitments, Pacing and Cash Flow", "Committee action requested"]),
     ("construction_fixed_income", ["construction-fixed-income.json", "OUT"], 10, 14, ["Fixed Income Portfolio Construction", "Rates and Credit Context", "Committee action requested"]),
     ("construction_global_public_equity", ["construction-global-public-equity.json", "OUT"], 10, 14, ["Global Public Equity Portfolio Construction", "Factor Exposures and Concentration", "Committee action requested"]),
@@ -257,4 +268,3 @@ def frontmatter(text):
         if ":" in line:
             k, v = line.split(":", 1); out[k.strip()] = v.strip().strip('"')
     return out
-

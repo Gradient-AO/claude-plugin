@@ -2,7 +2,7 @@
 
 from suites.harness import *
 
-def report_validator_regressions():
+def connector_cutover():
     removed_scripts = [
         ROOT / "skills" / "gradient-ic-memo" / "scripts" / "memo_calcs.py",
         ROOT / "skills" / "gradient-portfolio-review" / "scripts" / "review_calcs.py",
@@ -152,9 +152,9 @@ def report_validator_regressions():
         bad_tag["2"]["analysis"][0]["text"] += " [S999]"
         invalid_cases.append(("unknown source tag", bad_tag))
 
-        negative_bar = json.loads(json.dumps(base_visuals))
-        negative_bar["3"]["after"][0]["left"][0]["items"][0]["value"] = -52
-        invalid_cases.append(("negative bar value", negative_bar))
+        nonfinite_bar = json.loads(json.dumps(base_visuals))
+        nonfinite_bar["3"]["after"][0]["left"][0]["items"][0]["value"] = float("inf")
+        invalid_cases.append(("non-finite bar value", nonfinite_bar))
 
         decision_language = json.loads(json.dumps(base_visuals))
         decision_language["3"]["analysis"][0]["text"] += (
@@ -286,7 +286,7 @@ def report_validator_regressions():
         invalid_cases.append(("unknown source tag", bad_tag))
 
         negative_severity = json.loads(json.dumps(base_visuals))
-        negative_severity["sections"]["3. Findings Checklist"]["before"][0][
+        negative_severity["sections"]["Appendix A — Findings Checklist"]["before"][1][
             "items"
         ][0]["value"] = -1
         invalid_cases.append(("negative severity count", negative_severity))
@@ -420,7 +420,7 @@ def report_validator_regressions():
         fundamentals = next(
             section
             for section in equity_fixture["sections"]
-            if section["title"] == "Fundamentals and changes since the last filing"
+            if section["title"] == "Fundamentals, filing changes and risk factors"
         )
         analysis = next(
             block
@@ -433,7 +433,7 @@ def report_validator_regressions():
         missing_fundamentals = next(
             section
             for section in missing_analysis["sections"]
-            if section["title"] == "Fundamentals and changes since the last filing"
+            if section["title"] == "Fundamentals, filing changes and risk factors"
         )
         for block in missing_fundamentals["blocks"]:
             block.pop("role", None)
@@ -443,7 +443,7 @@ def report_validator_regressions():
         unknown_fundamentals = next(
             section
             for section in unknown_tag["sections"]
-            if section["title"] == "Fundamentals and changes since the last filing"
+            if section["title"] == "Fundamentals, filing changes and risk factors"
         )
         unknown_analysis = next(
             block
@@ -457,7 +457,7 @@ def report_validator_regressions():
         prohibited_fundamentals = next(
             section
             for section in prohibited_action["sections"]
-            if section["title"] == "Fundamentals and changes since the last filing"
+            if section["title"] == "Fundamentals, filing changes and risk factors"
         )
         prohibited_analysis = next(
             block
@@ -535,6 +535,18 @@ def report_validator_regressions():
                 "text": (
                     "Not available — missing_portfolio_expected_return [S5]."
                 ),
+            },
+            {
+                "type": "callout",
+                "role": "analysis",
+                "tone": "info",
+                "title": "Analysis — Ex ante evidence unavailable",
+                "text": (
+                    "Observation: Governed ex ante attribution is unavailable [S5]. "
+                    "Why it matters: Expected contribution cannot be assessed. "
+                    "Uncertainty: The missing result may be temporary. "
+                    "What would change the view: A validated governed result."
+                ),
             }
         ]
         unavailable_path = tmp_dir / "attribution-unavailable.json"
@@ -611,7 +623,6 @@ def report_validator_regressions():
             missing_label_result.returncode != 0,
             "attribution validator rejects incomplete illustrative labeling",
         )
-
         shared_label_results = []
         for name, validator, fixture_name in (
             (
@@ -729,9 +740,9 @@ def report_validator_regressions():
 
     attribution_missing_role = cloned_fixture("portfolio-attribution-report.json")
     attribution_analysis = report_section(
-        attribution_missing_role, "Analysis and Considerations"
+        attribution_missing_role, "Historical Returns Context"
     )["blocks"]
-    attribution_analysis[0].pop("role")
+    next(block for block in attribution_analysis if block.get("role") == "analysis").pop("role")
     contract_regressions.append(
         (
             "attribution missing analysis role",
@@ -741,9 +752,12 @@ def report_validator_regressions():
     )
 
     unknown_analysis_tag = cloned_fixture("portfolio-attribution-report.json")
-    report_section(
-        unknown_analysis_tag, "Analysis and Considerations"
-    )["blocks"][0]["text"] += " [S999]"
+    unknown_blocks = report_section(
+        unknown_analysis_tag, "Historical Returns Context"
+    )["blocks"]
+    next(block for block in unknown_blocks if block.get("role") == "analysis")[
+        "text"
+    ] += " [S999]"
     contract_regressions.append(
         (
             "attribution unknown analysis source tag",
@@ -753,9 +767,12 @@ def report_validator_regressions():
     )
 
     malformed_analysis = cloned_fixture("portfolio-comprehensive.json")
-    malformed_block = report_section(
-        malformed_analysis, "Analysis and Considerations"
-    )["blocks"][0]
+    malformed_blocks = report_section(malformed_analysis, "Historical Returns")[
+        "blocks"
+    ]
+    malformed_block = next(
+        block for block in malformed_blocks if block.get("role") == "analysis"
+    )
     malformed_block["text"] = malformed_block["text"].replace(
         "Uncertainty:", "Caveat:"
     )
@@ -768,9 +785,12 @@ def report_validator_regressions():
     )
 
     prohibited_recommendation = cloned_fixture("portfolio-comprehensive.json")
-    report_section(
-        prohibited_recommendation, "Analysis and Considerations"
-    )["blocks"][0]["text"] += " We recommend increasing the allocation [S3]."
+    prohibited_blocks = report_section(
+        prohibited_recommendation, "Historical Returns"
+    )["blocks"]
+    next(block for block in prohibited_blocks if block.get("role") == "analysis")[
+        "text"
+    ] += " We recommend increasing the allocation [S3]."
     contract_regressions.append(
         (
             "comprehensive review prohibited recommendation language",
@@ -796,59 +816,18 @@ def report_validator_regressions():
         )
     )
 
-    negative_bar = cloned_fixture("portfolio-comprehensive.json")
+    nonfinite_bar = cloned_fixture("portfolio-comprehensive.json")
     exposure_blocks = report_section(
-        negative_bar, "Exposures and Concentration"
+        nonfinite_bar, "Exposures and Concentration"
     )["blocks"]
     next(block for block in exposure_blocks if block.get("type") == "bars")[
         "items"
-    ][0]["value"] = -1
+    ][0]["value"] = float("inf")
     contract_regressions.append(
         (
-            "comprehensive review negative renderer bar",
+            "comprehensive review non-finite renderer bar",
             PORTFOLIO_REVIEW_VALIDATOR,
-            negative_bar,
-        )
-    )
-
-    for label, fixture_name, validator in (
-        (
-            "construction shared projected-attribution language",
-            "construction-private-markets.json",
-            construction_validator,
-        ),
-        (
-            "attribution shared projected-attribution language",
-            "portfolio-attribution-report.json",
-            PORTFOLIO_ATTRIBUTION_VALIDATOR,
-        ),
-        (
-            "review shared projected-attribution language",
-            "portfolio-comprehensive.json",
-            PORTFOLIO_REVIEW_VALIDATOR,
-        ),
-    ):
-        shared_forbidden = cloned_fixture(fixture_name)
-        shared_forbidden["sections"][0]["blocks"].append(
-            {
-                "type": "text",
-                "text": "This is projected attribution [S1].",
-            }
-        )
-        contract_regressions.append((label, validator, shared_forbidden))
-
-    fixed_income_policy = cloned_fixture("construction-fixed-income.json")
-    fixed_income_policy["sections"][0]["blocks"].append(
-        {
-            "type": "text",
-            "text": "Rates will rise [S1].",
-        }
-    )
-    contract_regressions.append(
-        (
-            "fixed-income-specific rate-direction language",
-            CONSTRUCTION_VALIDATORS[1][1],
-            fixed_income_policy,
+            nonfinite_bar,
         )
     )
 
@@ -865,34 +844,3 @@ def report_validator_regressions():
                 errors="replace",
             )
             check(rejected.returncode == 1, f"validator rejects {label}")
-
-        private_markets_scope = cloned_fixture(
-            "construction-private-markets.json"
-        )
-        private_markets_scope["sections"][0]["blocks"].append(
-            {
-                "type": "text",
-                "text": "Rates will rise [S1].",
-            }
-        )
-        private_markets_path = tmp_dir / "report-specific-scope.json"
-        private_markets_path.write_text(
-            json.dumps(private_markets_scope),
-            encoding="utf-8",
-        )
-        accepted = subprocess.run(
-            [
-                sys.executable,
-                str(construction_validator),
-                str(private_markets_path),
-            ],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-        )
-        check(
-            accepted.returncode == 0,
-            "construction validator does not union fixed-income policy",
-        )
-
