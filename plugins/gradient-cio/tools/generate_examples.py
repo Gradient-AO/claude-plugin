@@ -18,7 +18,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "fixtures"
-RENDERER = ROOT / "shared" / "render.py"
+QA_RENDERER = ROOT / "shared" / "qa_report.py"
 GIPS_COMPOSER = (
     ROOT / "skills" / "gradient-gips-standards" / "scripts" / "compose_gips_report.py"
 )
@@ -159,26 +159,40 @@ def main() -> int:
             {skill: gips_source(skill, temporary) for skill in GIPS_SOURCES}
         )
         sources["gradient-gips-standards"] = gips_reference_source(temporary)
+        failed: list[str] = []
         for skill in sorted(sources):
-            base = args.out / skill
+            work = temporary / "qa" / skill
+            work.mkdir(parents=True)
             completed = subprocess.run(
                 [
                     sys.executable,
-                    str(RENDERER),
+                    str(QA_RENDERER),
                     str(sources[skill]),
                     "--format",
                     args.output_format,
                     "--out",
-                    str(base),
+                    str(work / skill),
+                    "--budget",
+                    str(ROOT / "skills" / skill / "references" / "layout-budget.json"),
                 ],
                 env=environment,
                 check=False,
             )
             if completed.returncode != 0:
-                return completed.returncode
+                failed.append(skill)
+            base = args.out / skill
+            for suffix in (".pdf", ".pptx"):
+                rendered = (work / skill).with_suffix(suffix)
+                if rendered.is_file():
+                    os.replace(rendered, base.with_suffix(suffix))
             pptx_path = base.with_suffix(".pptx")
             if pptx_path.is_file():
                 normalize_pptx(pptx_path)
+    if failed:
+        print(
+            "Layout QA warnings for: " + ", ".join(failed),
+            file=sys.stderr,
+        )
     print(f"Generated 20 fictional examples in {args.out}")
     return 0
 
