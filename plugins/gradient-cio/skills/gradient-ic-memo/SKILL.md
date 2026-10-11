@@ -2,6 +2,14 @@
 name: gradient-ic-memo
 description: "Create a deterministic, sourced IC decision memo. Triggers: 'IC memo', 'board memo', 'allocation recommendation', 'rebalance proposal', 'manager hire/fire', 'committee vote'. Accepts handoffs from portfolio, diligence, and GIPS skills."
 metadata:
+  style_contract: "2.1.0"
+  group: "Decision"
+  subject: "investment committee"
+  output: "memo"
+  menu_order: "10"
+  modules: "portfolio,research,strategyLab,firmFundDiligence"
+  contracts: "decision"
+  handoffs: "none"
   version: "0.3.0"
   summary: "Produce a sourced decision memo with recommendation and requested vote."
 ---

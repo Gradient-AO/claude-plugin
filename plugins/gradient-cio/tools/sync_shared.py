@@ -18,10 +18,16 @@ FILES = {"shared/gradient_report.py": "scripts/gradient_report.py",
          "shared/check_layout.py": "scripts/check_layout.py",
          "shared/qa_report.py": "scripts/qa_report.py",
          "shared/analysis_quality.py": "scripts/analysis_quality.py",
+         "shared/validate_handoff.py": "scripts/validate_handoff.py",
+         "shared/validate_idd_report.py": "scripts/validate_idd_report.py",
          "shared/report-style.md": "references/report-style.md",
          "shared/writing-standards.md": "references/writing-standards.md",
          "shared/chart-data.md": "references/chart-data.md",
          "shared/module-scope.md": "references/module-scope.md"}
+
+TREES = {
+    "shared/contracts": "references/contracts",
+}
 
 CHAT_DELIVERY = re.compile(r"^\s+delivery:\s*chat\s*$", re.MULTILINE)
 
@@ -34,6 +40,18 @@ def is_chat_only(skill):
 def digest(p):
     return hashlib.sha256(p.read_bytes()).hexdigest()[:12]
 
+def shared_files():
+    """Yield canonical source/destination pairs, including contract trees."""
+    yield from FILES.items()
+    for source_root, destination_root in TREES.items():
+        for source in sorted((ROOT / source_root).rglob("*")):
+            if source.is_file():
+                relative = source.relative_to(ROOT / source_root)
+                yield (
+                    str(source.relative_to(ROOT)),
+                    str(pathlib.Path(destination_root) / relative),
+                )
+
 def main():
     check = "--check" in sys.argv
     bad = 0
@@ -42,7 +60,7 @@ def main():
             continue
         if is_chat_only(skill):
             continue
-        for src, rel in FILES.items():
+        for src, rel in shared_files():
             s, d = ROOT / src, skill / rel
             if check:
                 if not d.exists() or digest(d) != digest(s):

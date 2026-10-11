@@ -1,7 +1,15 @@
 ---
 name: gradient-manager-compare
-description: "Create a branded evidence comparison for 2–5 managers or screen a mandate. Triggers: 'compare managers', 'shortlist managers', 'screen advisers', 'manager overlap'. Hands off selected managers to gradient-odd-report or gradient-ic-memo."
+description: "Create a branded ODD comparison from Form ADV, service-provider, disclosure, and 13F evidence. Triggers: 'compare advisers', 'compare operational risk', 'screen ADV records'. For return performance use gradient-idd-manager-compare."
 metadata:
+  style_contract: "2.1.0"
+  group: "Operational diligence"
+  subject: "manager"
+  output: "comparison report"
+  menu_order: "20"
+  modules: "firmFundDiligence,research"
+  contracts: "odd-evidence"
+  handoffs: "gradient-odd-report,gradient-ic-memo"
   summary: "Compare managers side by side or screen a mandate shortlist."
 ---
 

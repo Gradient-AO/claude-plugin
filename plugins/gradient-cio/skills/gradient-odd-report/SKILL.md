@@ -2,6 +2,14 @@
 name: gradient-odd-report
 description: "Create a branded, sourced ODD report or roster triage. Triggers: 'ODD report', 'due diligence report', 'run diligence', 'ODD on my roster'. Hands findings to DDQ reconciliation, manager comparison, monitoring, or an IC memo."
 metadata:
+  style_contract: "2.1.0"
+  group: "Operational diligence"
+  subject: "manager or fund"
+  output: "ODD report"
+  menu_order: "10"
+  modules: "firmFundDiligence"
+  contracts: "odd-evidence"
+  handoffs: "gradient-ddq-reconcile,gradient-ic-memo"
   summary: "Produce a sourced operational due diligence report or roster triage."
 ---
 

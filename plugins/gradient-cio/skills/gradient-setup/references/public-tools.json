@@ -55,6 +55,7 @@
     "preview_diligence_changes",
     "reconcile_manager_ddq_claims",
     "run_strategy_lab_date_window_robustness",
+    "run_strategy_lab_diversification",
     "run_strategy_lab_expected_statistics",
     "run_strategy_lab_private_markets_pme",
     "run_strategy_lab_relative_return",

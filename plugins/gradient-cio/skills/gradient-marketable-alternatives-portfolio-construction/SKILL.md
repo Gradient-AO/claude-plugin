@@ -2,6 +2,14 @@
 name: gradient-marketable-alternatives-portfolio-construction
 description: "Build a marketable-alternatives report covering hedge funds, strategy mix, factor risk, redemption terms, and liquidity. Use for hedge fund portfolio, alternatives sleeve, or redemptions. For a committee vote use gradient-ic-memo."
 metadata:
+  style_contract: "2.1.0"
+  group: "Portfolio"
+  subject: "marketable alternatives"
+  output: "construction report"
+  menu_order: "60"
+  modules: "portfolio,research,peerIntelligence,gradientSignals,firmFundDiligence,strategyLab"
+  contracts: "portfolio"
+  handoffs: "gradient-ic-memo"
   summary: "Design a hedge-fund allocation across strategies, factors and liquidity."
 ---
 

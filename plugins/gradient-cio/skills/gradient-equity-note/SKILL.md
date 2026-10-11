@@ -2,6 +2,14 @@
 name: gradient-equity-note
 description: "Create a branded, sourced note on one US-listed issuer. Triggers: 'equity note on a ticker', 'top holding', 'concentrated position', 'what changed in the filing', 'who holds this ticker'. Hands manager diligence to ODD and decisions to IC memo."
 metadata:
+  style_contract: "2.1.0"
+  group: "Research"
+  subject: "public equity"
+  output: "research note"
+  menu_order: "20"
+  modules: "research,gradientSignals"
+  contracts: "research"
+  handoffs: "gradient-odd-report,gradient-ic-memo"
   summary: "Research one public equity issuer with sourced fundamentals and filing changes."
 ---
 

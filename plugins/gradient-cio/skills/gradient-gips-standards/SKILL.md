@@ -2,6 +2,14 @@
 name: gradient-gips-standards
 description: "Produce a sourced GIPS requirements briefing. Use for what does GIPS require, compliance statement, verification, required disclosures, or GIPS vs SEC Marketing Rule. For a document review use the matching gradient-gips-* skill."
 metadata:
+  style_contract: "2.1.0"
+  group: "Compliance"
+  subject: "GIPS standards"
+  output: "briefing"
+  menu_order: "10"
+  modules: "none"
+  contracts: "gips"
+  handoffs: "gradient-gips-report-review"
   version: "1.1.0"
   summary: "Answer GIPS requirements questions in a sourced briefing note."
 ---

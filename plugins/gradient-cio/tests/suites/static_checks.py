@@ -204,6 +204,68 @@ def _strong_examples(markdown):
     return examples
 
 
+def handoff_contract_checks():
+    validator = ROOT / "shared" / "validate_handoff.py"
+    fixture = FIX / "idd-handoff.json"
+    valid = subprocess.run(
+        [sys.executable, str(validator), str(fixture)],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    check(valid.returncode == 0, "canonical IDD handoff passes validation")
+    with tempfile.TemporaryDirectory() as temporary:
+        invalid_path = pathlib.Path(temporary) / "invalid-handoff.json"
+        invalid_path.write_text('{"stage":"idd"}', encoding="utf-8")
+        invalid = subprocess.run(
+            [sys.executable, str(validator), str(invalid_path)],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+    check(invalid.returncode == 1, "incomplete IDD handoff fails validation")
+    preservation = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            (
+                "import json; from compose_report import compose; "
+                f"h=json.load(open(r'{fixture}', encoding='utf-8')); "
+                "m={'title':'Test','eyebrow':'IDD','header_label':'IDD',"
+                "'running_head':'Test','data_as_of':'2025-12-31','handoff':h}; "
+                "r=compose('# Test\\n\\n## 1. Summary\\nEvidence [S1].', {}, m); "
+                "raise SystemExit(0 if r['meta']['handoff']==h else 1)"
+            ),
+        ],
+        cwd=ROOT / "shared",
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    check(
+        preservation.returncode == 0,
+        "report composition preserves the typed handoff unchanged",
+    )
+    report_validation = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "shared" / "validate_idd_report.py"),
+            str(FIX / "idd-report.json"),
+        ],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    check(
+        report_validation.returncode == 0,
+        "canonical IDD report passes its shared validator",
+    )
+
+
 def analysis_example_checks():
     missing_files = []
     coverage_errors = []
@@ -273,12 +335,18 @@ def static(allow_branded):
     mcp = json.loads((ROOT / ".mcp.json").read_text(encoding="utf-8"))
     url = mcp.get("mcpServers", {}).get("GradientCIO", {}).get("url", "")
     check(url.startswith("https://"), f"GradientCIO connector url https ({url})")
+    theme_text = (ROOT / "shared" / "report_theme.py").read_text(encoding="utf-8")
+    theme_match = re.search(r'^THEME_VERSION = "([^"]+)"$', theme_text, re.MULTILINE)
+    theme_version = theme_match.group(1) if theme_match else ""
+    check(bool(theme_version), "shared report theme declares THEME_VERSION")
     skills = sorted(p for p in (ROOT / "skills").iterdir() if (p / "SKILL.md").exists())
     check(len(skills) >= 14, f"{len(skills)} skills found")
+    descriptions_by_name = {}
     for s in skills:
         text = (s / "SKILL.md").read_text(encoding="utf-8"); fm = frontmatter(text)
         check(fm.get("name") == s.name and s.name.startswith("gradient-"), f"{s.name}: name matches folder and starts with gradient-")
         description = fm.get("description", "")
+        descriptions_by_name[s.name] = description
         chat_only = fm.get("delivery") == "chat"
         check(bool(description), f"{s.name}: has description")
         check(
@@ -286,8 +354,47 @@ def static(allow_branded):
             f"{s.name}: description at most 250 characters ({len(description)})",
         )
         check(
+            description.startswith(("Create ", "Produce ", "Build ", "Check ", "Browse ")),
+            f"{s.name}: description starts with its output",
+        )
+        check(
+            any(marker in description for marker in ("Triggers:", "Use for ", "Use when ", "For ")),
+            f"{s.name}: description includes trigger or routing language",
+        )
+        for metadata_key in (
+            "group",
+            "subject",
+            "output",
+            "menu_order",
+            "modules",
+            "contracts",
+            "handoffs",
+        ):
+            check(bool(fm.get(metadata_key)), f"{s.name}: metadata.{metadata_key} is set")
+        check(
+            fm.get("menu_order", "").isdigit(),
+            f"{s.name}: metadata.menu_order is an integer",
+        )
+        check(
             chat_only or (s / "scripts" / "gradient_report.py").exists(),
             f"{s.name}: has renderer copy unless chat-only",
+        )
+        check(
+            chat_only or fm.get("style_contract") == theme_version,
+            f"{s.name}: style contract matches shared theme {theme_version}",
+        )
+        canonical_report_files = (
+            s / "scripts" / "gradient_report.py",
+            s / "scripts" / "gradient_pptx.py",
+            s / "scripts" / "report_theme.py",
+            s / "scripts" / "report_layout.py",
+            s / "scripts" / "render.py",
+            s / "scripts" / "qa_report.py",
+            s / "references" / "report-style.md",
+        )
+        check(
+            chat_only or all(path.is_file() for path in canonical_report_files),
+            f"{s.name}: uses the complete centralized report renderer and style bundle",
         )
         check(
             bool(fm.get("summary")) and len(fm.get("summary", "").split()) <= 12,
@@ -310,6 +417,30 @@ def static(allow_branded):
             len(text.split()) <= 1800,
             f"{s.name}: SKILL.md at most 1,800 words ({len(text.split())})",
         )
+    routing_fixtures = json.loads(
+        (FIX / "skill-routing.json").read_text(encoding="utf-8")
+    )
+    routing_errors = []
+    for fixture in routing_fixtures:
+        expected = fixture["expected"]
+        rejected = fixture["not"]
+        description = descriptions_by_name.get(expected, "")
+        if expected not in descriptions_by_name or rejected not in descriptions_by_name:
+            routing_errors.append(f"{expected}: missing route skill")
+            continue
+        missing_terms = [
+            term
+            for term in fixture["description_terms"]
+            if term.casefold() not in description.casefold()
+        ]
+        if missing_terms:
+            routing_errors.append(f"{expected}: missing {missing_terms}")
+    check(
+        not routing_errors,
+        "ambiguous IDD and ODD prompts have explicit description routes"
+        + (f": {routing_errors}" if routing_errors else ""),
+    )
+    handoff_contract_checks()
     analysis_example_checks()
     stale = []
     for p in ROOT.rglob("*"):

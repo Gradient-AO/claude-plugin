@@ -2019,4 +2019,3 @@ def load_report(path: str | Path) -> JsonObject:
     if not isinstance(value, dict):
         raise RenderValidationError(["report root must be a JSON object"])
     return cast(JsonObject, value)
-

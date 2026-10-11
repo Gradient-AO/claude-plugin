@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 
-THEME_VERSION = "2.0.0"
+THEME_VERSION = "2.1.0"
 FONT_FAMILY = "Inter"
 FONT_FALLBACK = ("Arial", "sans-serif")
 

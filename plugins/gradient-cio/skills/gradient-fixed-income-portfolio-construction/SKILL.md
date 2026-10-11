@@ -2,6 +2,14 @@
 name: gradient-fixed-income-portfolio-construction
 description: "Build a fixed-income allocation report covering bonds, duration, credit, benchmarks, liquidity, and scenarios. Use for bond portfolio, core/core-plus, duration, or credit sleeve. For a cross-portfolio decision use gradient-ic-memo."
 metadata:
+  style_contract: "2.1.0"
+  group: "Portfolio"
+  subject: "fixed income"
+  output: "construction report"
+  menu_order: "40"
+  modules: "portfolio,research,macroDesk"
+  contracts: "portfolio"
+  handoffs: "gradient-ic-memo"
   summary: "Design a fixed-income allocation with risk, liquidity and implementation evidence."
 ---
 

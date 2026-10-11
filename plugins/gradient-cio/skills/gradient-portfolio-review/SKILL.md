@@ -2,6 +2,14 @@
 name: gradient-portfolio-review
 description: "Create a branded brief or comprehensive portfolio monitoring report. Triggers: 'portfolio review', 'quarterly review', 'board performance report', 'policy ranges'. Hands decisions to gradient-ic-memo and focused attribution to its report skill."
 metadata:
+  style_contract: "2.1.0"
+  group: "Portfolio"
+  subject: "total portfolio"
+  output: "review"
+  menu_order: "10"
+  modules: "portfolio,research,peerIntelligence,strategyLab"
+  contracts: "portfolio"
+  handoffs: "gradient-portfolio-attribution-report,gradient-ic-memo"
   summary: "Review portfolio performance, policy, exposures, risk and liquidity."
 ---
 

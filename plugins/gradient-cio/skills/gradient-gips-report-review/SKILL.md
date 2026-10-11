@@ -2,6 +2,14 @@
 name: gradient-gips-report-review
 description: "Produce a line-by-line GIPS report or advertisement review. Use for review this GIPS report, composite presentation, pooled fund report, or advertising guidelines. For general requirements use gradient-gips-standards."
 metadata:
+  style_contract: "2.1.0"
+  group: "Compliance"
+  subject: "GIPS report"
+  output: "review"
+  menu_order: "30"
+  modules: "none"
+  contracts: "gips"
+  handoffs: "gradient-ic-memo"
   version: "1.2.0"
   summary: "Review GIPS reports and advertisements line by line."
 ---

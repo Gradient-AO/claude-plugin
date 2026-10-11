@@ -2,6 +2,14 @@
 name: gradient-gips-manager-diligence
 description: "Produce a GIPS manager-diligence report. Use for verify GIPS claim, manager GIPS review, performance integrity, or GIPS DDQ. For a report or presentation line review use gradient-gips-report-review."
 metadata:
+  style_contract: "2.1.0"
+  group: "Compliance"
+  subject: "GIPS manager"
+  output: "diligence review"
+  menu_order: "20"
+  modules: "firmFundDiligence"
+  contracts: "gips,odd-evidence"
+  handoffs: "gradient-odd-report,gradient-ic-memo"
   version: "1.2.0"
   summary: "Verify manager GIPS claims, verification and performance integrity."
 ---

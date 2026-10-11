@@ -2,6 +2,14 @@
 name: gradient-gips-asset-owner-review
 description: "Produce a GIPS Asset Owner Report review for pensions, endowments, foundations, and sovereign funds. Use for asset owner GIPS, total fund report, or board performance report. For firm reports use gradient-gips-report-review."
 metadata:
+  style_contract: "2.1.0"
+  group: "Compliance"
+  subject: "GIPS asset owner"
+  output: "review"
+  menu_order: "40"
+  modules: "none"
+  contracts: "gips"
+  handoffs: "gradient-ic-memo"
   version: "1.2.0"
   summary: "Review asset-owner performance reporting against the GIPS standards."
 ---

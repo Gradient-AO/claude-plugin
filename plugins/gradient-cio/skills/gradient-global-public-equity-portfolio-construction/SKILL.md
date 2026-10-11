@@ -2,6 +2,14 @@
 name: gradient-global-public-equity-portfolio-construction
 description: "Build a global public-equity allocation report covering regions, managers, factors, concentration, and benchmarks. Use for global equity, active/passive, factor tilt, or manager lineup. For a committee vote use gradient-ic-memo."
 metadata:
+  style_contract: "2.1.0"
+  group: "Portfolio"
+  subject: "global public equity"
+  output: "construction report"
+  menu_order: "50"
+  modules: "portfolio,research"
+  contracts: "portfolio"
+  handoffs: "gradient-ic-memo"
   summary: "Design a global equity allocation across regions, factors and managers."
 ---
 

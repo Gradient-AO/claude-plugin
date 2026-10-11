@@ -13,7 +13,7 @@ def contract_manifest():
         for name in ("standard", "full", "writes", "ddq-save-preview")
     }
     check(
-        counts == {"standard": 8, "full": 49, "writes": 8, "ddq-save-preview": 3},
+        counts == {"standard": 8, "full": 50, "writes": 8, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
     )
     full_read_count = counts["standard"] + counts["full"]
@@ -152,9 +152,9 @@ def contract_manifest():
         public_tool_catalog.get("generated") is True
         and public_tool_catalog.get("source")
         == "@gradientcio/contracts canonical MCP tool catalog"
-        and len(public_tools) == 66
+        and len(public_tools) == 67
         and public_tools == sorted(set(public_tools)),
-        "public-tool catalog has generated 66-tool canonical parity",
+        "public-tool catalog has generated 67-tool canonical parity",
     )
     minimum = contracts.get("minimum_connector_contract", {})
     response_path_tools = set(minimum.get("required_response_field_paths", {}))
@@ -198,6 +198,7 @@ def contract_manifest():
         "log_diligence_review",
         "reconcile_manager_ddq_claims",
         "run_strategy_lab_date_window_robustness",
+        "run_strategy_lab_diversification",
         "run_strategy_lab_expected_statistics",
         "run_strategy_lab_relative_return",
         "save_strategy_lab_scenario",
@@ -232,6 +233,7 @@ def contract_manifest():
             "strategy_expected_statistics",
             "strategy_relative_return",
             "strategy_manager_compare",
+            "strategy_diversification",
             "strategy_date_windows_session",
             "strategy_date_windows",
             "equity_fundamentals",
@@ -1268,10 +1270,10 @@ def contract_manifest():
         "setup contract checks omit resolved issue text",
     )
     removed_tool_pattern = re.compile(
-        r"\b(?:run_strategy_lab_(?:factor_loads|optimization|rebalance|"
-        r"diversification)|synthetic_indicators|bar-optimization-current)\b"
+        r"\b(?:run_strategy_lab_(?:factor_loads|optimization|rebalance)"
+        r"|synthetic_indicators|bar-optimization-current)\b"
         r"|(?:domain|analysis_type)\s*[:=]\s*[`\"']?"
-        r"(?:factor_loads|optimization|rebalance|diversification)\b"
+        r"(?:factor_loads|optimization|rebalance)\b"
         r"|analysis_type\s*[:=]\s*[`\"']?expected-statistics\b",
     )
     removed_tool_references = []

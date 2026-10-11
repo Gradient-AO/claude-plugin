@@ -102,10 +102,15 @@ the supported allocations and commitments chart packs, and policy checking again
 illustrative `portfolio_id`. Strategy Lab separately covers the named demo benchmark catalog, one
 manager/fund return series, and the expected-statistics, relative-return, manager-compare and date-window
 IDD compute tools. Manager compare receives three demo `return_series_ids` plus `benchmark_series_id` and
-must return all three selected series. Relative return receives those same three IDs plus `benchmark_id` and
+must return all three selected series. Diversification receives the same three manager series and must return
+the bounded full correlation matrix and risk-contribution evidence. Relative return receives those same three IDs plus `benchmark_id` and
 must return one `result_rows` entry per series. Neither call also sends a `strategy_lab_session` stub. The
 discovery schema exposes `portfolio_id` as a compatibility field, but selected-series tools reject it.
 Report the two module results separately.
+
+Live IDD workflows may replace the common benchmark shorthand with
+`benchmark_series_ids`, keyed exactly by selected manager return-series ID. Preserve returned benchmark
+mappings, identity rows, rolling evidence, and typed extended-analysis coverage.
 
 For a non-entitled organization, successful Portfolio Analytics and Strategy Lab probes are expected to
 report illustrative access, not live client access. Confirm `record_kind: example`, `access_mode:
