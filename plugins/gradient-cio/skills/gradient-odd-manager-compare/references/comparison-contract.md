@@ -77,7 +77,7 @@ Completeness counts expected applicable evidence; catalog-inapplicable items
 are excluded.
 
 Allowed next steps are only: run `gradient-odd-report`, run
-`gradient-ddq-reconcile`, or drop from the shortlist because a named user
+`gradient-odd-ddq-reconcile`, or drop from the shortlist because a named user
 criterion failed. Never make a hire, fire, allocation, or quality ranking.
 
 ## Report and rendering contract

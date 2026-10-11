@@ -1,6 +1,6 @@
 ---
-name: gradient-idd-manager-compare
-description: "Create a sourced manager-performance comparison report. Triggers: 'compare track records', 'risk and return comparison', 'compare managers to benchmarks'. For operational comparison use gradient-manager-compare."
+name: gradient-idd-manager-performance
+description: "Create a manager performance comparison report using governed return evidence. Triggers: 'compare manager track records', 'assess return performance', 'compare managers to benchmarks'. For operational comparison use gradient-odd-manager-compare."
 metadata:
   version: "0.1.0"
   style_contract: "2.1.0"
@@ -10,7 +10,8 @@ metadata:
   menu_order: "10"
   modules: "strategyLab"
   contracts: "idd-methodology,idd-odd-ic-handoff"
-  handoffs: "gradient-odd-report,gradient-manager-compare,gradient-ic-memo"
+  handoffs: "gradient-odd-report,gradient-odd-manager-compare,gradient-decision-ic-memo"
+  modes: "compare"
   summary: "Compare manager performance with matched benchmarks and reliability evidence."
 ---
 
@@ -44,7 +45,7 @@ Read `references/report-style.md` and `references/writing-standards.md`. Build o
 
 Validate and attach a `gradient-idd-odd-ic-handoff/v1` object using `references/contracts/idd-odd-ic-handoff.schema.json`. Include canonical or advisory identity status, return-series and benchmark IDs, evidence, limitations, and selection rationale.
 
-Selected finalists → `gradient-odd-report`; operational comparison of the same candidates → `gradient-manager-compare`; a hire decision → `gradient-ic-memo`.
+Selected finalists → `gradient-odd-report`; operational comparison of the same candidates → `gradient-odd-manager-compare`; a hire decision → `gradient-decision-ic-memo`.
 
 ## 5. Validate and deliver
 

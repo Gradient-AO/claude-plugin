@@ -1,6 +1,6 @@
 ---
 name: gradient-fixed-income-portfolio-construction
-description: "Build a fixed-income sleeve report covering bonds, duration, credit, benchmarks, liquidity, and scenarios. Use for bond portfolio, core/core-plus, or credit sleeve. For one manager's fit use gradient-idd-manager-portfolio-fit."
+description: "Create a fixed-income construction report for a bond sleeve. Triggers: 'design a bond portfolio', 'review duration and credit', 'build a fixed-income sleeve'. For one manager fit use gradient-idd-manager-portfolio-fit."
 metadata:
   style_contract: "2.1.0"
   group: "Portfolio"
@@ -9,7 +9,7 @@ metadata:
   menu_order: "40"
   modules: "portfolio,research,macroDesk"
   contracts: "portfolio"
-  handoffs: "gradient-ic-memo"
+  handoffs: "gradient-decision-ic-memo"
   summary: "Design a fixed-income allocation with risk, liquidity and implementation evidence."
 ---
 
@@ -119,11 +119,11 @@ recommendation, fixed-income policy status, open-item count, plus the requested 
 
 ## 5. Handoffs
 
-- Candidate-manager returns against benchmarks → `gradient-idd-manager-compare`; return-based mandate
+- Candidate-manager returns against benchmarks → `gradient-idd-manager-performance`; return-based mandate
   shortlist → `gradient-idd-manager-shortlist`.
-- Candidate-manager operations or a Form ADV screen → `gradient-manager-compare`.
+- Candidate-manager operations or a Form ADV screen → `gradient-odd-manager-compare`.
 - One manager's effect on this sleeve's diversification → `gradient-idd-manager-portfolio-fit`.
 - Manager diligence → `gradient-odd-report` and `gradient-gips-manager-diligence`.
-- Broader macro briefing → `gradient-macro-brief`.
-- Formal 16-section vote memo → `gradient-ic-memo` with memo type `Allocation Change` or `Rebalance`.
+- Broader macro briefing → `gradient-research-macro-brief`.
+- Formal 16-section vote memo → `gradient-decision-ic-memo` with memo type `Allocation Change` or `Rebalance`.
 - Ongoing monitoring → `gradient-portfolio-review`.

@@ -58,7 +58,7 @@ Signal is elevated for any High, review for any Medium, otherwise clear.
 Completeness is attention-queue subjects marked complete over roster subjects.
 
 Allowed actions are exactly: No action; Review new ADV filing; Run ODD refresh
-(`gradient-odd-report`); Reconcile latest DDQ (`gradient-ddq-reconcile`);
+(`gradient-odd-report`); Reconcile latest DDQ (`gradient-odd-ddq-reconcile`);
 Close or update finding; Schedule review. Every action cites its trigger.
 Absence is bounded by the processed window and as-of date. An unpublished
 event feed is unavailable, never no events. Form ADV is adviser-reported.

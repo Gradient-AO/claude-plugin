@@ -19,23 +19,23 @@ REQUIREMENTS = (
 )
 
 GROUP_ORDER = (
+    "Start",
     "Research",
     "Investment due diligence",
-    "Operational diligence",
+    "Operational due diligence",
     "Portfolio",
-    "Compliance",
+    "GIPS",
     "Decision",
-    "Admin",
 )
 
 EXAMPLES = {
+    "Start": "Check which GradientCIO workflows are ready.",
     "Research": "Prepare a macro brief for the next IC meeting.",
     "Investment due diligence": "Compare these managers' track records.",
-    "Operational diligence": "Prepare ODD on the finalist.",
+    "Operational due diligence": "Prepare ODD on the finalist.",
     "Portfolio": "Review our total portfolio for the quarter.",
-    "Compliance": "Review this report against the GIPS standards.",
+    "GIPS": "Review this report against the GIPS standards.",
     "Decision": "Draft an IC memo for this allocation change.",
-    "Admin": "Check which GradientCIO workflows are ready.",
 }
 
 README_BEGIN = "<!-- BEGIN GENERATED SKILL CATALOG -->"

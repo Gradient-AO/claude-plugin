@@ -4,7 +4,7 @@ from suites.harness import *
 
 def connector_cutover():
     removed_scripts = [
-        ROOT / "skills" / "gradient-ic-memo" / "scripts" / "memo_calcs.py",
+        ROOT / "skills" / "gradient-decision-ic-memo" / "scripts" / "memo_calcs.py",
         ROOT / "skills" / "gradient-portfolio-review" / "scripts" / "review_calcs.py",
     ]
     check(
@@ -975,7 +975,7 @@ def connector_cutover():
                     str(
                         ROOT
                         / "skills"
-                        / "gradient-equity-note"
+                        / "gradient-research-equity-note"
                         / "scripts"
                         / "validate_equity_note.py"
                     ),

@@ -1,6 +1,6 @@
 ---
 name: gradient-portfolio-review
-description: "Create a branded brief or comprehensive portfolio monitoring report. Triggers: 'portfolio review', 'quarterly review', 'board performance report', 'policy ranges'. Hands decisions to gradient-ic-memo and focused attribution to its report skill."
+description: "Create a portfolio monitoring review for a board or committee. Triggers: 'review our total portfolio', 'prepare a quarterly portfolio review', 'monitor portfolio risks'. For a decision memo use gradient-decision-ic-memo."
 metadata:
   style_contract: "2.1.0"
   group: "Portfolio"
@@ -9,7 +9,8 @@ metadata:
   menu_order: "10"
   modules: "portfolio,research,peerIntelligence,strategyLab"
   contracts: "portfolio"
-  handoffs: "gradient-portfolio-attribution-report,gradient-ic-memo"
+  handoffs: "gradient-portfolio-attribution,gradient-decision-ic-memo"
+  modes: "brief,comprehensive"
   summary: "Review portfolio performance, policy, exposures, risk and liquidity."
 ---
 
@@ -105,8 +106,8 @@ item, watch count) plus files.
 ## 5. Handoffs
 
 - Focused historical and governed ex ante attribution →
-  `gradient-portfolio-attribution-report`.
+  `gradient-portfolio-attribution`.
 - A rebalance, allocation, manager, or committee decision →
-  `gradient-ic-memo`.
+  `gradient-decision-ic-memo`.
 - A recurring quarterly run → offer scheduling only when asked, confirm timing,
   and keep the task read-only.

@@ -1,6 +1,6 @@
 ---
-name: gradient-portfolio-attribution-report
-description: "Create a branded historical and governed ex ante attribution report. Triggers: 'attribution report', 'Brinson analysis', 'sources of active return'. Hands broad monitoring to portfolio review and decisions to IC memo."
+name: gradient-portfolio-attribution
+description: "Create a single-lane attribution report for one saved portfolio. Triggers: 'prepare an attribution report', 'run Brinson analysis', 'show sources of active return'. For broader portfolio monitoring use gradient-portfolio-review."
 metadata:
   style_contract: "2.1.0"
   group: "Portfolio"
@@ -9,7 +9,7 @@ metadata:
   menu_order: "20"
   modules: "portfolio"
   contracts: "portfolio"
-  handoffs: "gradient-portfolio-review,gradient-ic-memo"
+  handoffs: "gradient-portfolio-review,gradient-decision-ic-memo"
   summary: "Explain historical and governed ex ante sources of portfolio return."
 ---
 
@@ -97,6 +97,6 @@ diagnostic count, and files.
 
 - Broad performance, allocation, risk, or liquidity monitoring →
   `gradient-portfolio-review`.
-- A trade, rebalance, allocation change, or vote → `gradient-ic-memo`.
+- A trade, rebalance, allocation change, or vote → `gradient-decision-ic-memo`.
 - Asset-class construction → the relevant
   `gradient-*-portfolio-construction` skill.

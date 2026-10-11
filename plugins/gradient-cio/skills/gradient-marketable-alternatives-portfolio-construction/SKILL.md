@@ -1,6 +1,6 @@
 ---
 name: gradient-marketable-alternatives-portfolio-construction
-description: "Build a marketable-alternatives sleeve report covering hedge funds, strategy mix, factor risk, redemption terms, and liquidity. Use for hedge fund portfolio or redemptions. For one manager's fit use gradient-idd-manager-portfolio-fit."
+description: "Create a marketable-alternatives construction report for a hedge-fund sleeve. Triggers: 'design a hedge fund portfolio', 'review redemption liquidity', 'build an alternatives strategy mix'. For one manager fit use gradient-idd-manager-portfolio-fit."
 metadata:
   style_contract: "2.1.0"
   group: "Portfolio"
@@ -9,7 +9,7 @@ metadata:
   menu_order: "60"
   modules: "portfolio,research,peerIntelligence,gradientSignals,firmFundDiligence,strategyLab"
   contracts: "portfolio"
-  handoffs: "gradient-ic-memo"
+  handoffs: "gradient-decision-ic-memo"
   summary: "Design a hedge-fund allocation across strategies, factors and liquidity."
 ---
 
@@ -114,11 +114,11 @@ recommendation, marketable-alternatives policy status, open-item count, plus the
 
 ## 5. Handoffs
 
-- Candidate-manager returns against benchmarks → `gradient-idd-manager-compare`; return-based mandate
+- Candidate-manager returns against benchmarks → `gradient-idd-manager-performance`; return-based mandate
   shortlist → `gradient-idd-manager-shortlist`.
-- Candidate-manager operations or a Form ADV screen → `gradient-manager-compare`.
+- Candidate-manager operations or a Form ADV screen → `gradient-odd-manager-compare`.
 - One manager's effect on this sleeve's diversification → `gradient-idd-manager-portfolio-fit`.
 - Manager diligence → `gradient-odd-report` and `gradient-gips-manager-diligence`.
 - Drawdown commitment programs → `gradient-private-markets-portfolio-construction`.
-- Formal 16-section vote memo → `gradient-ic-memo` with memo type `Allocation Change` or `Rebalance`.
+- Formal 16-section vote memo → `gradient-decision-ic-memo` with memo type `Allocation Change` or `Rebalance`.
 - Ongoing monitoring → `gradient-portfolio-review`.

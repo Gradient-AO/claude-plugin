@@ -1,15 +1,15 @@
 ---
-name: gradient-manager-monitor
-description: "Create a branded manager-roster digest. Triggers: 'weekly monitoring', 'what changed across managers', 'roster digest', 'any alerts'. Hands flagged subjects to ODD or DDQ reconciliation and can schedule read-only runs."
+name: gradient-odd-manager-monitor
+description: "Create a manager-monitoring digest for a diligence roster. Triggers: 'prepare the weekly manager digest', 'show roster changes', 'review manager alerts'. For a full operational review use gradient-odd-report."
 metadata:
   style_contract: "2.1.0"
-  group: "Operational diligence"
+  group: "Operational due diligence"
   subject: "manager roster"
   output: "monitoring digest"
   menu_order: "40"
   modules: "firmFundDiligence"
   contracts: "odd-evidence"
-  handoffs: "gradient-odd-report,gradient-ddq-reconcile"
+  handoffs: "gradient-odd-report,gradient-odd-ddq-reconcile"
   summary: "Summarize weekly manager changes, alerts, findings and upcoming reviews."
 ---
 
@@ -79,7 +79,7 @@ action-subject count, and files.
 ## 4. Handoffs and writes
 
 - Material subject change or stale review → `gradient-odd-report`.
-- New manager assertion or DDQ conflict → `gradient-ddq-reconcile`.
+- New manager assertion or DDQ conflict → `gradient-odd-ddq-reconcile`.
 
 Only when asked after delivery, read
 `references/monitoring-contract.md#follow-up-writes`. Preview every listed

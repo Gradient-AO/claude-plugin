@@ -1,6 +1,6 @@
 ---
 name: gradient-private-markets-portfolio-construction
-description: "Build a private-markets program report covering PE/private credit, commitments, pacing, cash flows, and liquidity. Use for private markets portfolio, commitment plan, or pacing. For one fund's PME use gradient-idd-private-markets-pme."
+description: "Create a private-markets construction report for an allocation program. Triggers: 'design private equity pacing', 'review private-markets commitments', 'build a private-markets program'. For one manager fit use gradient-idd-manager-portfolio-fit."
 metadata:
   style_contract: "2.1.0"
   group: "Portfolio"
@@ -9,7 +9,7 @@ metadata:
   menu_order: "30"
   modules: "portfolio,research,firmFundDiligence,strategyLab"
   contracts: "portfolio"
-  handoffs: "gradient-ic-memo"
+  handoffs: "gradient-decision-ic-memo"
   summary: "Design private-markets commitments, pacing, diversification and liquidity."
 ---
 
@@ -117,13 +117,13 @@ open-item count, plus the requested file(s).
 
 ## 5. Handoffs
 
-- Candidate-manager returns against benchmarks → `gradient-idd-manager-compare`; return-based mandate
+- Candidate-manager returns against benchmarks → `gradient-idd-manager-performance`; return-based mandate
   shortlist → `gradient-idd-manager-shortlist`.
-- Candidate-manager operations or a Form ADV screen → `gradient-manager-compare`.
+- Candidate-manager operations or a Form ADV screen → `gradient-odd-manager-compare`.
 - One private fund's cash-flow performance against public markets → `gradient-idd-private-markets-pme`.
 - Manager or fund diligence → `gradient-odd-report` and `gradient-gips-manager-diligence`.
 - Hedge-fund or liquid-alternatives construction → `gradient-marketable-alternatives-portfolio-construction`.
 - Broad liquid/illiquid real-assets construction → `gradient-real-assets-portfolio-construction`.
-- Formal 16-section committee memo → `gradient-ic-memo` with memo type `New Commitment` or
+- Formal 16-section committee memo → `gradient-decision-ic-memo` with memo type `New Commitment` or
   `Allocation Change`.
 - Ongoing monitoring after approval → `gradient-portfolio-review`.

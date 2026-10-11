@@ -115,12 +115,12 @@
          "Event feed not published; reports disclose the gap"
         ],
         [
-         "gradient-ddq-reconcile",
+         "gradient-odd-ddq-reconcile",
          "DDQ reconciliation",
          "One subject per call"
         ],
         [
-         "gradient-manager-monitor",
+         "gradient-odd-manager-monitor",
          "Weekly digest",
          "1 roster fund monitored"
         ],
@@ -153,12 +153,12 @@
        ],
        "rows": [
         [
-         "gradient-macro-brief",
+         "gradient-research-macro-brief",
          "Macro deck",
          "Regime state unavailable; uses Gradient signal"
         ],
         [
-         "gradient-ic-memo",
+         "gradient-decision-ic-memo",
          "IC memo",
          "Portfolio core: Not licensed; Strategy Lab supplement: Not licensed (optional). Use supplied holdings"
         ]

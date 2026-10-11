@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate an IC memo (markdown) against the gradient-ic-memo template.
+"""Validate an IC memo (markdown) against the gradient-decision-ic-memo template.
 
 Checks
   1. All required headings present, exactly once, in order.
