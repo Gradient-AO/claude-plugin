@@ -7,7 +7,7 @@
       "name": "gradient-cio",
       "source": "./plugins/gradient-cio",
       "description": "Investment and operational due diligence, portfolio construction and attribution, manager research, portfolio reviews, macro briefings, IC memos and GIPS reviews with centralized branded PDF and PowerPoint styling.",
-      "version": "2.8.1",
+      "version": "2.8.2",
       "homepage": "https://gradientcio.com"
     }
   ]

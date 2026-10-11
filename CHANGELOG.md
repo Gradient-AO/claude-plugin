@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.8.2
+- Refreshed the 20 reference example PDFs and PowerPoints to the current report theme and layouts; they had not been regenerated since the 2.7.0 renderer changes.
+- Reference examples are now generated through the production layout QA with each skill's layout budget, so they include the same page-break repair users receive.
+- Fixed example generation failing with `ModuleNotFoundError: report_theme`, which had blocked the golden example and visual regression CI step.
+- Example page-fill gaps are now reported as CI warnings; the visual comparison against committed examples stays strict.
+
 ## 2.8.1
 - Separated return-based investment diligence from Form ADV operational diligence across skill descriptions, menu summaries and handoffs; `gradient-manager-compare` is now described as the operational comparison and Form ADV screen, and `gradient-idd-manager-shortlist` as the return-based shortlist. Public command IDs are unchanged.
 - Split Manager Hire and candidate-selection handoffs in the ODD report, IC memo and five construction skills into return/benchmark evidence (`gradient-idd-*`) and operational evidence (`gradient-manager-compare`, `gradient-odd-report`).
