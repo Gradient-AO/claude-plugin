@@ -1,0 +1,60 @@
+{
+  "meta": {
+    "title": "Northstar Investment Partners (TEST)",
+    "eyebrow": "Investment Due Diligence",
+    "header_label": "Manager Performance Comparison",
+    "running_head": "Northstar (TEST)",
+    "data_as_of": "2025-12-31",
+    "handoff": {
+      "schema_version": "gradient-idd-odd-ic-handoff/v1",
+      "stage": "idd",
+      "subject": {
+        "name": "Northstar Investment Partners (TEST)",
+        "identity_status": "advisory"
+      },
+      "return_series": [
+        {
+          "return_series_id": "b0000000-0000-0000-0000-000000000001",
+          "benchmark_series_id": "b0000000-0000-0000-0000-000000000003",
+          "benchmark_rationale": "Server-matched mandate benchmark"
+        }
+      ],
+      "evidence": [
+        {
+          "source_tag": "S1",
+          "tool": "analyze_strategy_lab_compare",
+          "as_of": "2025-12-31",
+          "methodology_version": "manager-compare/v1"
+        }
+      ],
+      "limitations": ["Illustrative fixture."],
+      "selection": {
+        "status": "not_assessed",
+        "rationale": "Validator fixture only."
+      }
+    }
+  },
+  "sections": [
+    {
+      "id": "executive",
+      "title": "Executive conclusion",
+      "blocks": [{"type": "text", "text": "Illustrative conclusion [S1]."}]
+    },
+    {
+      "title": "Data and benchmark coverage",
+      "blocks": [{"type": "text", "text": "Coverage is illustrative [S1]."}]
+    },
+    {
+      "title": "Risk and return",
+      "blocks": [{"type": "text", "text": "Metrics are server-returned [S1]."}]
+    },
+    {
+      "title": "Robustness and limitations",
+      "blocks": [{"type": "text", "text": "Limitations remain explicit [S1]."}]
+    },
+    {
+      "title": "Appendix A — Sources and methods",
+      "blocks": [{"type": "text", "text": "S1 — TEST evidence."}]
+    }
+  ]
+}

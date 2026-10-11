@@ -1,0 +1,44 @@
+[
+  {
+    "prompt": "Compare these managers' track records against suitable benchmarks",
+    "expected": "gradient-idd-manager-compare",
+    "not": "gradient-manager-compare",
+    "description_terms": ["performance", "benchmarks"]
+  },
+  {
+    "prompt": "Compare these advisers' Form ADV disclosures and service providers",
+    "expected": "gradient-manager-compare",
+    "not": "gradient-idd-manager-compare",
+    "description_terms": ["ODD", "Form ADV"]
+  },
+  {
+    "prompt": "Is this one manager's performance statistically meaningful?",
+    "expected": "gradient-idd-manager-track-record",
+    "not": "gradient-idd-manager-compare",
+    "description_terms": ["single-manager", "meaningful"]
+  },
+  {
+    "prompt": "Does this result persist across start dates and rolling windows?",
+    "expected": "gradient-idd-manager-robustness",
+    "not": "gradient-idd-manager-track-record",
+    "description_terms": ["persistence", "rolling"]
+  },
+  {
+    "prompt": "What does adding this manager do to portfolio diversification?",
+    "expected": "gradient-idd-manager-portfolio-fit",
+    "not": "gradient-ic-memo",
+    "description_terms": ["portfolio-fit", "diversification"]
+  },
+  {
+    "prompt": "Run a public-market-equivalent analysis on this private fund",
+    "expected": "gradient-idd-private-markets-pme",
+    "not": "gradient-private-markets-portfolio-construction",
+    "description_terms": ["PME", "public market equivalent"]
+  },
+  {
+    "prompt": "Build an investment-diligence shortlist for this manager mandate",
+    "expected": "gradient-idd-manager-shortlist",
+    "not": "gradient-manager-compare",
+    "description_terms": ["shortlist", "mandate"]
+  }
+]

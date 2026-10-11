@@ -1,0 +1,37 @@
+{
+  "schema_version": "gradient-idd-odd-ic-handoff/v1",
+  "stage": "idd",
+  "subject": {
+    "manager_id": "manager-test-001",
+    "firm_id": "11111111-1111-4111-8111-111111111111",
+    "fund_id": null,
+    "name": "Northstar Investment Partners (TEST)",
+    "identity_status": "linked"
+  },
+  "return_series": [
+    {
+      "return_series_id": "b0000000-0000-0000-0000-000000000001",
+      "benchmark_series_id": "b0000000-0000-0000-0000-000000000003",
+      "benchmark_rationale": "Server-matched mandate benchmark",
+      "start_date": "2021-01-31",
+      "end_date": "2025-12-31",
+      "observation_count": 60
+    }
+  ],
+  "evidence": [
+    {
+      "source_tag": "S1",
+      "tool": "analyze_strategy_lab_compare",
+      "as_of": "2025-12-31",
+      "methodology_version": "manager-compare/v1",
+      "digest": "test-digest"
+    }
+  ],
+  "limitations": [
+    "Factor loads were not licensed for this illustrative assessment."
+  ],
+  "selection": {
+    "status": "selected",
+    "rationale": "Advanced to operational diligence subject to stated limitations."
+  }
+}

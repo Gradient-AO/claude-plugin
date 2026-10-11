@@ -2,6 +2,14 @@
 name: gradient-manager-monitor
 description: "Create a branded manager-roster digest. Triggers: 'weekly monitoring', 'what changed across managers', 'roster digest', 'any alerts'. Hands flagged subjects to ODD or DDQ reconciliation and can schedule read-only runs."
 metadata:
+  style_contract: "2.1.0"
+  group: "Operational diligence"
+  subject: "manager roster"
+  output: "monitoring digest"
+  menu_order: "40"
+  modules: "firmFundDiligence"
+  contracts: "odd-evidence"
+  handoffs: "gradient-odd-report,gradient-ddq-reconcile"
   summary: "Summarize weekly manager changes, alerts, findings and upcoming reviews."
 ---
 

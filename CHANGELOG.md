@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.8.0
+- Added six Strategy Lab investment-due-diligence skills for manager comparison, track-record assessment, robustness, portfolio fit, private-markets PME and shortlist construction.
+- Reorganized the generated catalog around Research, IDD, ODD, Portfolio, Compliance, Decision and Admin metadata while preserving existing public command IDs.
+- Enforced the versioned shared report theme, layout and PDF/PowerPoint renderers across every report skill.
+- Added centralized IDD/ODD methodology contracts, a validated IDD-to-ODD-to-IC handoff envelope and common IDD report validation.
+- Added per-manager benchmark mappings, bounded rolling evidence, public diversification/correlation analysis, canonical return-series subject links and explicit factor/peer availability coverage.
+- Expanded setup readiness with the public diversification tool and its full contract probe.
+
 ## 2.7.0
 - Centralized PDF and PowerPoint colors, typography, dimensions, branding and template validation in one versioned report theme.
 - Added an immutable shared layout policy for metadata, chart-table appendices, page-break semantics and versioned cross-format budgets.

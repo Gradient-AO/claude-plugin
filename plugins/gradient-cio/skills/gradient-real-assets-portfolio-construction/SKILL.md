@@ -2,6 +2,14 @@
 name: gradient-real-assets-portfolio-construction
 description: "Build a real-assets allocation report covering real estate, infrastructure, commodities, inflation linkage, and liquidity. Use for real assets portfolio, inflation hedge, or real estate mix. For a committee vote use gradient-ic-memo."
 metadata:
+  style_contract: "2.1.0"
+  group: "Portfolio"
+  subject: "real assets"
+  output: "construction report"
+  menu_order: "70"
+  modules: "portfolio,research,macroDesk,peerIntelligence,gradientSignals,firmFundDiligence,strategyLab"
+  contracts: "portfolio"
+  handoffs: "gradient-ic-memo"
   summary: "Design real-assets allocation for inflation, diversification and liquidity."
 ---
 

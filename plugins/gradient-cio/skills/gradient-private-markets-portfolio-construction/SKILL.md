@@ -2,6 +2,14 @@
 name: gradient-private-markets-portfolio-construction
 description: "Build a private-markets allocation report covering PE/private credit, commitments, pacing, cash flows, and liquidity. Use for private markets portfolio, commitment plan, or pacing. For a committee vote use gradient-ic-memo."
 metadata:
+  style_contract: "2.1.0"
+  group: "Portfolio"
+  subject: "private markets"
+  output: "construction report"
+  menu_order: "30"
+  modules: "portfolio,research,firmFundDiligence,strategyLab"
+  contracts: "portfolio"
+  handoffs: "gradient-ic-memo"
   summary: "Design private-markets commitments, pacing, diversification and liquidity."
 ---
 

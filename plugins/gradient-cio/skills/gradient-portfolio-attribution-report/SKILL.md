@@ -2,6 +2,14 @@
 name: gradient-portfolio-attribution-report
 description: "Create a branded historical and governed ex ante attribution report. Triggers: 'attribution report', 'Brinson analysis', 'sources of active return'. Hands broad monitoring to portfolio review and decisions to IC memo."
 metadata:
+  style_contract: "2.1.0"
+  group: "Portfolio"
+  subject: "portfolio attribution"
+  output: "report"
+  menu_order: "20"
+  modules: "portfolio"
+  contracts: "portfolio"
+  handoffs: "gradient-portfolio-review,gradient-ic-memo"
   summary: "Explain historical and governed ex ante sources of portfolio return."
 ---
 

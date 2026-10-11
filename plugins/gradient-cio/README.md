@@ -9,49 +9,67 @@ status chips, source tags, sources appendix); `gradient-menu` replies in chat wi
 <!-- BEGIN GENERATED SKILL CATALOG -->
 Start with `gradient-menu` to browse commands in chat or `gradient-setup` to check connection and data readiness.
 
-### Review
+### Research
 
-| Skill | Produces / routes |
-|---|---|
-| `gradient-portfolio-review` | Create a branded brief or comprehensive portfolio monitoring report. Triggers: 'portfolio review', 'quarterly review', 'board performance report', 'policy ranges'. Hands decisions to gradient-ic-memo and focused attribution to its report skill. |
-| `gradient-portfolio-attribution-report` | Create a branded historical and governed ex ante attribution report. Triggers: 'attribution report', 'Brinson analysis', 'sources of active return'. Hands broad monitoring to portfolio review and decisions to IC memo. |
-| `gradient-equity-note` | Create a branded, sourced note on one US-listed issuer. Triggers: 'equity note on a ticker', 'top holding', 'concentrated position', 'what changed in the filing', 'who holds this ticker'. Hands manager diligence to ODD and decisions to IC memo. |
-| `gradient-macro-brief` | Produce an IC macro briefing from The Read, rates, credit, signals, GRIP, events, and CMAs. Use for macro brief, market outlook, rates and credit, or IC macro deck. For a portfolio decision use gradient-ic-memo. |
+| Skill | Produces / routes | Modules |
+|---|---|---|
+| `gradient-macro-brief` | Produce an IC macro briefing from The Read, rates, credit, signals, GRIP, events, and CMAs. Use for macro brief, market outlook, rates and credit, or IC macro deck. For a portfolio decision use gradient-ic-memo. | macroDesk,research,gradientSignals |
+| `gradient-equity-note` | Create a branded, sourced note on one US-listed issuer. Triggers: 'equity note on a ticker', 'top holding', 'concentrated position', 'what changed in the filing', 'who holds this ticker'. Hands manager diligence to ODD and decisions to IC memo. | research,gradientSignals |
 
-### Decide
+### Investment due diligence
 
-| Skill | Produces / routes |
-|---|---|
-| `gradient-ic-memo` | Create a deterministic, sourced IC decision memo. Triggers: 'IC memo', 'board memo', 'allocation recommendation', 'rebalance proposal', 'manager hire/fire', 'committee vote'. Accepts handoffs from portfolio, diligence, and GIPS skills. |
-| `gradient-fixed-income-portfolio-construction` | Build a fixed-income allocation report covering bonds, duration, credit, benchmarks, liquidity, and scenarios. Use for bond portfolio, core/core-plus, duration, or credit sleeve. For a cross-portfolio decision use gradient-ic-memo. |
-| `gradient-global-public-equity-portfolio-construction` | Build a global public-equity allocation report covering regions, managers, factors, concentration, and benchmarks. Use for global equity, active/passive, factor tilt, or manager lineup. For a committee vote use gradient-ic-memo. |
-| `gradient-marketable-alternatives-portfolio-construction` | Build a marketable-alternatives report covering hedge funds, strategy mix, factor risk, redemption terms, and liquidity. Use for hedge fund portfolio, alternatives sleeve, or redemptions. For a committee vote use gradient-ic-memo. |
-| `gradient-private-markets-portfolio-construction` | Build a private-markets allocation report covering PE/private credit, commitments, pacing, cash flows, and liquidity. Use for private markets portfolio, commitment plan, or pacing. For a committee vote use gradient-ic-memo. |
-| `gradient-real-assets-portfolio-construction` | Build a real-assets allocation report covering real estate, infrastructure, commodities, inflation linkage, and liquidity. Use for real assets portfolio, inflation hedge, or real estate mix. For a committee vote use gradient-ic-memo. |
+| Skill | Produces / routes | Modules |
+|---|---|---|
+| `gradient-idd-manager-compare` | Create a sourced manager-performance comparison report. Triggers: 'compare track records', 'risk and return comparison', 'compare managers to benchmarks'. For operational evidence use gradient-manager-compare. | strategyLab |
+| `gradient-idd-manager-track-record` | Create a sourced single-manager track-record assessment. Triggers: 'is this track record good', 'assess this manager performance', 'is performance meaningful'. For operational controls use gradient-odd-report. | strategyLab |
+| `gradient-idd-manager-robustness` | Create a sourced manager persistence and robustness report. Triggers: 'does performance persist', 'test start dates', 'rolling performance', 'regime robustness'. For a basic comparison use gradient-idd-manager-compare. | strategyLab |
+| `gradient-idd-manager-portfolio-fit` | Create a sourced manager portfolio-fit and diversification report. Triggers: 'what does adding this manager do', 'portfolio fit', 'diversification impact'. For an allocation vote use gradient-ic-memo. | strategyLab |
+| `gradient-idd-private-markets-pme` | Create a sourced private-markets PME report. Triggers: 'private markets PME', 'public market equivalent', 'direct alpha', 'cash-flow performance'. For operational fund diligence use gradient-odd-report. | strategyLab |
+| `gradient-idd-manager-shortlist` | Create a sourced IDD manager-shortlist report. Triggers: 'build a manager shortlist', 'screen this mandate', 'which managers advance'. For Form ADV-only screening use gradient-manager-compare. | strategyLab |
 
-### Diligence
+### Operational diligence
 
-| Skill | Produces / routes |
-|---|---|
-| `gradient-manager-compare` | Create a branded evidence comparison for 2–5 managers or screen a mandate. Triggers: 'compare managers', 'shortlist managers', 'screen advisers', 'manager overlap'. Hands off selected managers to gradient-odd-report or gradient-ic-memo. |
-| `gradient-odd-report` | Create a branded, sourced ODD report or roster triage. Triggers: 'ODD report', 'due diligence report', 'run diligence', 'ODD on my roster'. Hands findings to DDQ reconciliation, manager comparison, monitoring, or an IC memo. |
-| `gradient-ddq-reconcile` | Create a branded DDQ-versus-Form-ADV discrepancy report. Triggers: 'check this DDQ', 'verify the questionnaire', 'reconcile DDQ', 'does this match the ADV'. Hands confirmed gaps to diligence findings and ODD. |
+| Skill | Produces / routes | Modules |
+|---|---|---|
+| `gradient-odd-report` | Create a branded, sourced ODD report or roster triage. Triggers: 'ODD report', 'due diligence report', 'run diligence', 'ODD on my roster'. Hands findings to DDQ reconciliation, manager comparison, monitoring, or an IC memo. | firmFundDiligence |
+| `gradient-manager-compare` | Create a branded ODD comparison from Form ADV, service-provider, disclosure, and 13F evidence. Triggers: 'compare advisers', 'compare operational risk', 'screen ADV records'. For return performance use gradient-idd-manager-compare. | firmFundDiligence,research |
+| `gradient-ddq-reconcile` | Create a branded DDQ-versus-Form-ADV discrepancy report. Triggers: 'check this DDQ', 'verify the questionnaire', 'reconcile DDQ', 'does this match the ADV'. Hands confirmed gaps to diligence findings and ODD. | firmFundDiligence |
+| `gradient-manager-monitor` | Create a branded manager-roster digest. Triggers: 'weekly monitoring', 'what changed across managers', 'roster digest', 'any alerts'. Hands flagged subjects to ODD or DDQ reconciliation and can schedule read-only runs. | firmFundDiligence |
 
-### Monitor
+### Portfolio
 
-| Skill | Produces / routes |
-|---|---|
-| `gradient-manager-monitor` | Create a branded manager-roster digest. Triggers: 'weekly monitoring', 'what changed across managers', 'roster digest', 'any alerts'. Hands flagged subjects to ODD or DDQ reconciliation and can schedule read-only runs. |
+| Skill | Produces / routes | Modules |
+|---|---|---|
+| `gradient-portfolio-review` | Create a branded brief or comprehensive portfolio monitoring report. Triggers: 'portfolio review', 'quarterly review', 'board performance report', 'policy ranges'. Hands decisions to gradient-ic-memo and focused attribution to its report skill. | portfolio,research,peerIntelligence,strategyLab |
+| `gradient-portfolio-attribution-report` | Create a branded historical and governed ex ante attribution report. Triggers: 'attribution report', 'Brinson analysis', 'sources of active return'. Hands broad monitoring to portfolio review and decisions to IC memo. | portfolio |
+| `gradient-private-markets-portfolio-construction` | Build a private-markets allocation report covering PE/private credit, commitments, pacing, cash flows, and liquidity. Use for private markets portfolio, commitment plan, or pacing. For a committee vote use gradient-ic-memo. | portfolio,research,firmFundDiligence,strategyLab |
+| `gradient-fixed-income-portfolio-construction` | Build a fixed-income allocation report covering bonds, duration, credit, benchmarks, liquidity, and scenarios. Use for bond portfolio, core/core-plus, duration, or credit sleeve. For a cross-portfolio decision use gradient-ic-memo. | portfolio,research,macroDesk |
+| `gradient-global-public-equity-portfolio-construction` | Build a global public-equity allocation report covering regions, managers, factors, concentration, and benchmarks. Use for global equity, active/passive, factor tilt, or manager lineup. For a committee vote use gradient-ic-memo. | portfolio,research |
+| `gradient-marketable-alternatives-portfolio-construction` | Build a marketable-alternatives report covering hedge funds, strategy mix, factor risk, redemption terms, and liquidity. Use for hedge fund portfolio, alternatives sleeve, or redemptions. For a committee vote use gradient-ic-memo. | portfolio,research,peerIntelligence,gradientSignals,firmFundDiligence,strategyLab |
+| `gradient-real-assets-portfolio-construction` | Build a real-assets allocation report covering real estate, infrastructure, commodities, inflation linkage, and liquidity. Use for real assets portfolio, inflation hedge, or real estate mix. For a committee vote use gradient-ic-memo. | portfolio,research,macroDesk,peerIntelligence,gradientSignals,firmFundDiligence,strategyLab |
 
-### GIPS
+### Compliance
 
-| Skill | Produces / routes |
-|---|---|
-| `gradient-gips-standards` | Produce a sourced GIPS requirements briefing. Use for what does GIPS require, compliance statement, verification, required disclosures, or GIPS vs SEC Marketing Rule. For a document review use the matching gradient-gips-* skill. |
-| `gradient-gips-manager-diligence` | Produce a GIPS manager-diligence report. Use for verify GIPS claim, manager GIPS review, performance integrity, or GIPS DDQ. For a report or presentation line review use gradient-gips-report-review. |
-| `gradient-gips-report-review` | Produce a line-by-line GIPS report or advertisement review. Use for review this GIPS report, composite presentation, pooled fund report, or advertising guidelines. For general requirements use gradient-gips-standards. |
-| `gradient-gips-asset-owner-review` | Produce a GIPS Asset Owner Report review for pensions, endowments, foundations, and sovereign funds. Use for asset owner GIPS, total fund report, or board performance report. For firm reports use gradient-gips-report-review. |
-| `gradient-gips-policies-gap-check` | Produce a GIPS policies-and-procedures gap report. Use for review our GIPS manual, policy gap check, missing GIPS policies, or asset-owner P&P. For report disclosures use gradient-gips-report-review. |
+| Skill | Produces / routes | Modules |
+|---|---|---|
+| `gradient-gips-standards` | Produce a sourced GIPS requirements briefing. Use for what does GIPS require, compliance statement, verification, required disclosures, or GIPS vs SEC Marketing Rule. For a document review use the matching gradient-gips-* skill. | none |
+| `gradient-gips-manager-diligence` | Produce a GIPS manager-diligence report. Use for verify GIPS claim, manager GIPS review, performance integrity, or GIPS DDQ. For a report or presentation line review use gradient-gips-report-review. | firmFundDiligence |
+| `gradient-gips-report-review` | Produce a line-by-line GIPS report or advertisement review. Use for review this GIPS report, composite presentation, pooled fund report, or advertising guidelines. For general requirements use gradient-gips-standards. | none |
+| `gradient-gips-asset-owner-review` | Produce a GIPS Asset Owner Report review for pensions, endowments, foundations, and sovereign funds. Use for asset owner GIPS, total fund report, or board performance report. For firm reports use gradient-gips-report-review. | none |
+| `gradient-gips-policies-gap-check` | Produce a GIPS policies-and-procedures gap report. Use for review our GIPS manual, policy gap check, missing GIPS policies, or asset-owner P&P. For report disclosures use gradient-gips-report-review. | none |
+
+### Decision
+
+| Skill | Produces / routes | Modules |
+|---|---|---|
+| `gradient-ic-memo` | Create a deterministic, sourced IC decision memo. Triggers: 'IC memo', 'board memo', 'allocation recommendation', 'rebalance proposal', 'manager hire/fire', 'committee vote'. Accepts handoffs from portfolio, diligence, and GIPS skills. | portfolio,research,strategyLab,firmFundDiligence |
+
+### Admin
+
+| Skill | Produces / routes | Modules |
+|---|---|---|
+| `gradient-setup` | Check GradientCIO connection, organization, entitlements, data readiness, and connector contracts; produces a readiness report. Use for setup, connection check, or what is ready. For a command catalog use gradient-menu. | none |
+| `gradient-menu` | Browse GradientCIO skills by task. Use for what can I do, show commands, help me choose, or skill menu. For connection diagnostics and data-readiness checks use gradient-setup. | none |
 
 <!-- END GENERATED SKILL CATALOG -->
 

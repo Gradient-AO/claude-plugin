@@ -2,6 +2,14 @@
 name: gradient-gips-policies-gap-check
 description: "Produce a GIPS policies-and-procedures gap report. Use for review our GIPS manual, policy gap check, missing GIPS policies, or asset-owner P&P. For report disclosures use gradient-gips-report-review."
 metadata:
+  style_contract: "2.1.0"
+  group: "Compliance"
+  subject: "GIPS policies"
+  output: "gap check"
+  menu_order: "50"
+  modules: "none"
+  contracts: "gips"
+  handoffs: "gradient-ic-memo"
   version: "1.2.0"
   summary: "Gap-check GIPS policies and procedures against required provisions."
 ---

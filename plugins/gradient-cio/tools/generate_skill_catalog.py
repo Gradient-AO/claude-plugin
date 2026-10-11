@@ -13,46 +13,29 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILLS = ROOT / "skills"
 README = ROOT / "README.md"
 MENU = SKILLS / "gradient-menu" / "SKILL.md"
+PLUGIN_MANIFEST = ROOT / ".claude-plugin" / "plugin.json"
 REQUIREMENTS = (
     SKILLS / "gradient-setup" / "references" / "skill-requirements.md"
 )
 
-GROUPS = {
-    "Review": (
-        "gradient-portfolio-review",
-        "gradient-portfolio-attribution-report",
-        "gradient-equity-note",
-        "gradient-macro-brief",
-    ),
-    "Decide": (
-        "gradient-ic-memo",
-        "gradient-fixed-income-portfolio-construction",
-        "gradient-global-public-equity-portfolio-construction",
-        "gradient-marketable-alternatives-portfolio-construction",
-        "gradient-private-markets-portfolio-construction",
-        "gradient-real-assets-portfolio-construction",
-    ),
-    "Diligence": (
-        "gradient-manager-compare",
-        "gradient-odd-report",
-        "gradient-ddq-reconcile",
-    ),
-    "Monitor": ("gradient-manager-monitor",),
-    "GIPS": (
-        "gradient-gips-standards",
-        "gradient-gips-manager-diligence",
-        "gradient-gips-report-review",
-        "gradient-gips-asset-owner-review",
-        "gradient-gips-policies-gap-check",
-    ),
-}
+GROUP_ORDER = (
+    "Research",
+    "Investment due diligence",
+    "Operational diligence",
+    "Portfolio",
+    "Compliance",
+    "Decision",
+    "Admin",
+)
 
 EXAMPLES = {
-    "Review": "Review our total portfolio for the quarter.",
-    "Decide": "Draft an IC memo for this allocation change.",
-    "Diligence": "Compare these managers, then prepare ODD on the finalist.",
-    "Monitor": "Show what changed across our diligence roster this week.",
-    "GIPS": "Review this composite report against the 2020 GIPS standards.",
+    "Research": "Prepare a macro brief for the next IC meeting.",
+    "Investment due diligence": "Compare these managers' track records.",
+    "Operational diligence": "Prepare ODD on the finalist.",
+    "Portfolio": "Review our total portfolio for the quarter.",
+    "Compliance": "Review this report against the GIPS standards.",
+    "Decision": "Draft an IC memo for this allocation change.",
+    "Admin": "Check which GradientCIO workflows are ready.",
 }
 
 README_BEGIN = "<!-- BEGIN GENERATED SKILL CATALOG -->"
@@ -91,24 +74,52 @@ def descriptions() -> dict[str, dict[str, str]]:
         name = data.get("name", "")
         description = data.get("description", "")
         summary = data.get("summary", "")
-        if not name or not description or not summary:
+        required_metadata = (
+            "group",
+            "subject",
+            "output",
+            "menu_order",
+            "modules",
+            "contracts",
+            "handoffs",
+        )
+        if (
+            not name
+            or not description
+            or not summary
+            or any(not data.get(key) for key in required_metadata)
+        ):
             raise ValueError(
-                f"{skill_file}: name, description and metadata.summary are required"
+                f"{skill_file}: catalog metadata is incomplete"
             )
+        if data["group"] not in GROUP_ORDER:
+            raise ValueError(f"{skill_file}: unsupported group {data['group']}")
+        if not data["menu_order"].isdigit():
+            raise ValueError(f"{skill_file}: menu_order must be an integer")
         if len(summary.split()) > 12:
             raise ValueError(
                 f"{skill_file}: metadata.summary exceeds 12 words"
             )
-        result[name] = {"description": description, "summary": summary}
+        result[name] = {
+            "description": description,
+            "summary": summary,
+            **{key: data[key] for key in required_metadata},
+        }
     return result
 
 
-def grouped_names() -> set[str]:
-    return {
-        name
-        for names in GROUPS.values()
-        for name in names
-    } | {"gradient-setup", "gradient-menu"}
+def grouped_items(
+    items: dict[str, dict[str, str]],
+) -> dict[str, list[tuple[str, dict[str, str]]]]:
+    """Group and order skills entirely from their frontmatter metadata."""
+    grouped: dict[str, list[tuple[str, dict[str, str]]]] = {
+        group: [] for group in GROUP_ORDER
+    }
+    for name, item in items.items():
+        grouped[item["group"]].append((name, item))
+    for rows in grouped.values():
+        rows.sort(key=lambda row: (int(row[1]["menu_order"]), row[0]))
+    return grouped
 
 
 def readme_catalog(items: dict[str, dict[str, str]]) -> str:
@@ -119,10 +130,18 @@ def readme_catalog(items: dict[str, dict[str, str]]) -> str:
         "`gradient-setup` to check connection and data readiness.",
         "",
     ]
-    for group, names in GROUPS.items():
-        lines.extend((f"### {group}", "", "| Skill | Produces / routes |", "|---|---|"))
+    for group, rows in grouped_items(items).items():
+        if not rows:
+            continue
+        lines.extend((
+            f"### {group}",
+            "",
+            "| Skill | Produces / routes | Modules |",
+            "|---|---|---|",
+        ))
         lines.extend(
-            f"| `{name}` | {items[name]['description']} |" for name in names
+            f"| `{name}` | {item['description']} | {item['modules']} |"
+            for name, item in rows
         )
         lines.append("")
     lines.append(README_END)
@@ -131,17 +150,29 @@ def readme_catalog(items: dict[str, dict[str, str]]) -> str:
 
 def menu_catalog(items: dict[str, dict[str, str]]) -> str:
     """Build the concise in-chat command menu."""
+    plugin_name = json.loads(
+        PLUGIN_MANIFEST.read_text(encoding="utf-8")
+    )["name"]
     lines = [
         MENU_BEGIN,
         "For connection, entitlement, or data-readiness checks, use "
-        "`/gradient-cio:gradient-setup`.",
+        f"`/{plugin_name}:gradient-setup`.",
         "",
     ]
-    for group, names in GROUPS.items():
+    for group, rows in grouped_items(items).items():
+        if not rows:
+            continue
         lines.append(f"## {group}")
         lines.extend(
-            f"- `/gradient-cio:{name}` — {items[name]['summary']}"
-            for name in names
+            (
+                f"- `/{plugin_name}:{name}` — {item['summary']}"
+                + (
+                    f" Next: {item['handoffs'].replace(',', ', ')}."
+                    if item["handoffs"] != "none"
+                    else ""
+                )
+            )
+            for name, item in rows
         )
         lines.extend(("", f'Example: “{EXAMPLES[group]}”', ""))
     lines.extend(
@@ -186,13 +217,6 @@ def main() -> int:
 
     items = descriptions()
     installed = set(items)
-    grouped = grouped_names()
-    if installed != grouped:
-        missing = sorted(installed - grouped)
-        stale = sorted(grouped - installed)
-        raise SystemExit(
-            f"catalog grouping mismatch; ungrouped={missing}, missing={stale}"
-        )
     required = requirements_names()
     if installed != required:
         raise SystemExit(

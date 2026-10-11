@@ -2,6 +2,14 @@
 name: gradient-ddq-reconcile
 description: "Create a branded DDQ-versus-Form-ADV discrepancy report. Triggers: 'check this DDQ', 'verify the questionnaire', 'reconcile DDQ', 'does this match the ADV'. Hands confirmed gaps to diligence findings and ODD."
 metadata:
+  style_contract: "2.1.0"
+  group: "Operational diligence"
+  subject: "DDQ"
+  output: "reconciliation"
+  menu_order: "30"
+  modules: "firmFundDiligence"
+  contracts: "odd-evidence"
+  handoffs: "gradient-odd-report,gradient-ic-memo"
   summary: "Reconcile DDQ answers against Form ADV and surface discrepancies."
 ---
 
