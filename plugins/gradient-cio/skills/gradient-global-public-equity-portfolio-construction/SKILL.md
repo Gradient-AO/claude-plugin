@@ -1,6 +1,6 @@
 ---
 name: gradient-global-public-equity-portfolio-construction
-description: "Build a global public-equity allocation report covering regions, managers, factors, concentration, and benchmarks. Use for global equity, active/passive, factor tilt, or manager lineup. For a committee vote use gradient-ic-memo."
+description: "Build a global public-equity sleeve report covering regions, managers, factors, concentration, and benchmarks. Use for global equity, active/passive, or manager lineup. For one manager's fit use gradient-idd-manager-portfolio-fit."
 metadata:
   style_contract: "2.1.0"
   group: "Portfolio"
@@ -18,7 +18,8 @@ metadata:
 Produce a deterministic, fully sourced, decision-ready global public-equity construction report. Select an
 existing Gradient portfolio, assess its public-equity sleeve, and recommend a target structure and
 implementation path. The committee decides; this skill never creates, updates or rebalances a portfolio in
-GradientCIO.
+GradientCIO. It designs the whole sleeve; one manager's add-or-replace effect belongs to
+`gradient-idd-manager-portfolio-fit`.
 
 The deliverable is a branded report. Its PDF form is normally 10–14 pages and uses the base name
 `"<Portfolio> - Global Public Equity Portfolio Construction <YYYY-MM-DD>"`.
@@ -113,7 +114,10 @@ recommendation, equity-sleeve policy status, open-item count, plus the requested
 
 ## 5. Handoffs
 
-- Candidate-manager selection → `gradient-manager-compare`.
+- Candidate-manager returns against benchmarks → `gradient-idd-manager-compare`; return-based mandate
+  shortlist → `gradient-idd-manager-shortlist`.
+- Candidate-manager operations or a Form ADV screen → `gradient-manager-compare`.
+- One manager's effect on this sleeve's diversification → `gradient-idd-manager-portfolio-fit`.
 - Manager diligence → `gradient-odd-report` and `gradient-gips-manager-diligence`.
 - Concentrated issuer research → `gradient-equity-note`.
 - Formal 16-section vote memo → `gradient-ic-memo` with memo type `Allocation Change` or `Rebalance`.

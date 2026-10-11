@@ -1,6 +1,6 @@
 ---
 name: gradient-real-assets-portfolio-construction
-description: "Build a real-assets allocation report covering real estate, infrastructure, commodities, inflation linkage, and liquidity. Use for real assets portfolio, inflation hedge, or real estate mix. For a committee vote use gradient-ic-memo."
+description: "Build a real-assets sleeve report covering real estate, infrastructure, commodities, inflation linkage, and liquidity. Use for real assets portfolio, inflation hedge, or real estate mix. For one manager's fit use gradient-idd-manager-portfolio-fit."
 metadata:
   style_contract: "2.1.0"
   group: "Portfolio"
@@ -19,7 +19,8 @@ Produce a deterministic, fully sourced, decision-ready broad real-assets constru
 estate, infrastructure, natural resources, commodities and inflation-linked assets. Select an existing
 Gradient portfolio, separate marketable from drawdown sleeves, and recommend a target structure and
 implementation path. The committee decides; this skill never creates, updates or rebalances a portfolio in
-GradientCIO.
+GradientCIO. It designs the whole sleeve; one manager's add-or-replace effect belongs to
+`gradient-idd-manager-portfolio-fit`.
 
 The deliverable is a branded report. Its PDF form is normally 10–14 pages and uses the base name
 `"<Portfolio> - Real Assets Portfolio Construction <YYYY-MM-DD>"`.
@@ -117,7 +118,10 @@ recommendation, real-assets policy status, open-item count, plus the requested f
 
 - Drawdown pacing or commitment-program depth → `gradient-private-markets-portfolio-construction`.
 - Inflation-linked fixed-income detail → `gradient-fixed-income-portfolio-construction`.
-- Candidate-manager selection → `gradient-manager-compare`.
+- Candidate-manager returns against benchmarks → `gradient-idd-manager-compare`; return-based mandate
+  shortlist → `gradient-idd-manager-shortlist`.
+- Candidate-manager operations or a Form ADV screen → `gradient-manager-compare`.
+- One manager's effect on this sleeve's diversification → `gradient-idd-manager-portfolio-fit`.
 - Manager or fund diligence → `gradient-odd-report` and `gradient-gips-manager-diligence`.
 - Formal 16-section vote memo → `gradient-ic-memo` with memo type `Allocation Change` or `Rebalance`.
 - Ongoing monitoring → `gradient-portfolio-review`.

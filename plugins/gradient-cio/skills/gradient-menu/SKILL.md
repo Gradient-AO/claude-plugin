@@ -28,18 +28,18 @@ For connection, entitlement, or data-readiness checks, use `/gradient-cio:gradie
 Example: “Prepare a macro brief for the next IC meeting.”
 
 ## Investment due diligence
-- `/gradient-cio:gradient-idd-manager-compare` — Compare manager performance with matched benchmarks and reliability evidence. Next: gradient-odd-report, gradient-ic-memo.
+- `/gradient-cio:gradient-idd-manager-compare` — Compare manager performance with matched benchmarks and reliability evidence. Next: gradient-odd-report, gradient-manager-compare, gradient-ic-memo.
 - `/gradient-cio:gradient-idd-manager-track-record` — Assess one manager track record and its statistical reliability. Next: gradient-odd-report, gradient-ic-memo.
 - `/gradient-cio:gradient-idd-manager-robustness` — Test manager persistence across windows, regimes and rolling periods. Next: gradient-odd-report, gradient-ic-memo.
-- `/gradient-cio:gradient-idd-manager-portfolio-fit` — Assess manager portfolio fit, diversification and scenario impact. Next: gradient-odd-report, gradient-ic-memo.
+- `/gradient-cio:gradient-idd-manager-portfolio-fit` — Assess one manager's portfolio fit, diversification and scenario impact. Next: gradient-odd-report, gradient-ic-memo.
 - `/gradient-cio:gradient-idd-private-markets-pme` — Assess private-market performance against public-market equivalents. Next: gradient-odd-report, gradient-ic-memo.
-- `/gradient-cio:gradient-idd-manager-shortlist` — Build an evidence-based manager shortlist for a defined mandate. Next: gradient-odd-report, gradient-ic-memo.
+- `/gradient-cio:gradient-idd-manager-shortlist` — Build a return-based manager shortlist for a defined mandate. Next: gradient-odd-report, gradient-manager-compare, gradient-ic-memo.
 
 Example: “Compare these managers' track records.”
 
 ## Operational diligence
-- `/gradient-cio:gradient-odd-report` — Produce a sourced operational due diligence report or roster triage. Next: gradient-ddq-reconcile, gradient-ic-memo.
-- `/gradient-cio:gradient-manager-compare` — Compare managers side by side or screen a mandate shortlist. Next: gradient-odd-report, gradient-ic-memo.
+- `/gradient-cio:gradient-odd-report` — Produce a sourced operational due diligence report or roster triage. Next: gradient-ddq-reconcile, gradient-manager-monitor, gradient-ic-memo.
+- `/gradient-cio:gradient-manager-compare` — Compare managers' operational evidence or screen Form ADV records. Next: gradient-odd-report, gradient-idd-manager-compare, gradient-ic-memo.
 - `/gradient-cio:gradient-ddq-reconcile` — Reconcile DDQ answers against Form ADV and surface discrepancies. Next: gradient-odd-report, gradient-ic-memo.
 - `/gradient-cio:gradient-manager-monitor` — Summarize weekly manager changes, alerts, findings and upcoming reviews. Next: gradient-odd-report, gradient-ddq-reconcile.
 

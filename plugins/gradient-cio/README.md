@@ -20,19 +20,19 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 
 | Skill | Produces / routes | Modules |
 |---|---|---|
-| `gradient-idd-manager-compare` | Create a sourced manager-performance comparison report. Triggers: 'compare track records', 'risk and return comparison', 'compare managers to benchmarks'. For operational evidence use gradient-manager-compare. | strategyLab |
-| `gradient-idd-manager-track-record` | Create a sourced single-manager track-record assessment. Triggers: 'is this track record good', 'assess this manager performance', 'is performance meaningful'. For operational controls use gradient-odd-report. | strategyLab |
-| `gradient-idd-manager-robustness` | Create a sourced manager persistence and robustness report. Triggers: 'does performance persist', 'test start dates', 'rolling performance', 'regime robustness'. For a basic comparison use gradient-idd-manager-compare. | strategyLab |
-| `gradient-idd-manager-portfolio-fit` | Create a sourced manager portfolio-fit and diversification report. Triggers: 'what does adding this manager do', 'portfolio fit', 'diversification impact'. For an allocation vote use gradient-ic-memo. | strategyLab |
-| `gradient-idd-private-markets-pme` | Create a sourced private-markets PME report. Triggers: 'private markets PME', 'public market equivalent', 'direct alpha', 'cash-flow performance'. For operational fund diligence use gradient-odd-report. | strategyLab |
-| `gradient-idd-manager-shortlist` | Create a sourced IDD manager-shortlist report. Triggers: 'build a manager shortlist', 'screen this mandate', 'which managers advance'. For Form ADV-only screening use gradient-manager-compare. | strategyLab |
+| `gradient-idd-manager-compare` | Create a sourced manager-performance comparison report. Triggers: 'compare track records', 'risk and return comparison', 'compare managers to benchmarks'. For operational comparison use gradient-manager-compare. | strategyLab |
+| `gradient-idd-manager-track-record` | Create a sourced single-manager track-record assessment. Triggers: 'is this track record good', 'assess this manager performance', 'is performance meaningful'. For operational diligence use gradient-odd-report. | strategyLab |
+| `gradient-idd-manager-robustness` | Create a sourced manager persistence and robustness report. Triggers: 'does performance persist', 'test start dates', 'rolling performance', 'regime robustness'. For operational diligence use gradient-odd-report. | strategyLab |
+| `gradient-idd-manager-portfolio-fit` | Create a sourced one-manager portfolio-fit and diversification report. Triggers: 'what does adding this manager do', 'portfolio fit', 'diversification impact'. For whole-sleeve design use a portfolio-construction skill. | strategyLab |
+| `gradient-idd-private-markets-pme` | Create a sourced private-markets PME report. Triggers: 'private markets PME', 'public market equivalent', 'direct alpha', 'cash-flow performance'. For operational diligence use gradient-odd-report. | strategyLab |
+| `gradient-idd-manager-shortlist` | Create a sourced return-based IDD manager-shortlist report. Triggers: 'build a manager shortlist', 'screen this mandate', 'which managers advance'. For a Form ADV-only screen use gradient-manager-compare. | strategyLab |
 
 ### Operational diligence
 
 | Skill | Produces / routes | Modules |
 |---|---|---|
-| `gradient-odd-report` | Create a branded, sourced ODD report or roster triage. Triggers: 'ODD report', 'due diligence report', 'run diligence', 'ODD on my roster'. Hands findings to DDQ reconciliation, manager comparison, monitoring, or an IC memo. | firmFundDiligence |
-| `gradient-manager-compare` | Create a branded ODD comparison from Form ADV, service-provider, disclosure, and 13F evidence. Triggers: 'compare advisers', 'compare operational risk', 'screen ADV records'. For return performance use gradient-idd-manager-compare. | firmFundDiligence,research |
+| `gradient-odd-report` | Create a branded, sourced ODD report or roster triage. Triggers: 'ODD report', 'operational due diligence', 'run diligence', 'ODD on my roster'. For return performance use gradient-idd-manager-track-record. | firmFundDiligence |
+| `gradient-manager-compare` | Create a branded ODD comparison or Form ADV screen from adviser, service-provider, disclosure, and 13F evidence. Triggers: 'compare advisers', 'compare operational risk', 'screen ADV records'. For returns use gradient-idd-manager-compare. | firmFundDiligence,research |
 | `gradient-ddq-reconcile` | Create a branded DDQ-versus-Form-ADV discrepancy report. Triggers: 'check this DDQ', 'verify the questionnaire', 'reconcile DDQ', 'does this match the ADV'. Hands confirmed gaps to diligence findings and ODD. | firmFundDiligence |
 | `gradient-manager-monitor` | Create a branded manager-roster digest. Triggers: 'weekly monitoring', 'what changed across managers', 'roster digest', 'any alerts'. Hands flagged subjects to ODD or DDQ reconciliation and can schedule read-only runs. | firmFundDiligence |
 
@@ -42,11 +42,11 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 |---|---|---|
 | `gradient-portfolio-review` | Create a branded brief or comprehensive portfolio monitoring report. Triggers: 'portfolio review', 'quarterly review', 'board performance report', 'policy ranges'. Hands decisions to gradient-ic-memo and focused attribution to its report skill. | portfolio,research,peerIntelligence,strategyLab |
 | `gradient-portfolio-attribution-report` | Create a branded historical and governed ex ante attribution report. Triggers: 'attribution report', 'Brinson analysis', 'sources of active return'. Hands broad monitoring to portfolio review and decisions to IC memo. | portfolio |
-| `gradient-private-markets-portfolio-construction` | Build a private-markets allocation report covering PE/private credit, commitments, pacing, cash flows, and liquidity. Use for private markets portfolio, commitment plan, or pacing. For a committee vote use gradient-ic-memo. | portfolio,research,firmFundDiligence,strategyLab |
-| `gradient-fixed-income-portfolio-construction` | Build a fixed-income allocation report covering bonds, duration, credit, benchmarks, liquidity, and scenarios. Use for bond portfolio, core/core-plus, duration, or credit sleeve. For a cross-portfolio decision use gradient-ic-memo. | portfolio,research,macroDesk |
-| `gradient-global-public-equity-portfolio-construction` | Build a global public-equity allocation report covering regions, managers, factors, concentration, and benchmarks. Use for global equity, active/passive, factor tilt, or manager lineup. For a committee vote use gradient-ic-memo. | portfolio,research |
-| `gradient-marketable-alternatives-portfolio-construction` | Build a marketable-alternatives report covering hedge funds, strategy mix, factor risk, redemption terms, and liquidity. Use for hedge fund portfolio, alternatives sleeve, or redemptions. For a committee vote use gradient-ic-memo. | portfolio,research,peerIntelligence,gradientSignals,firmFundDiligence,strategyLab |
-| `gradient-real-assets-portfolio-construction` | Build a real-assets allocation report covering real estate, infrastructure, commodities, inflation linkage, and liquidity. Use for real assets portfolio, inflation hedge, or real estate mix. For a committee vote use gradient-ic-memo. | portfolio,research,macroDesk,peerIntelligence,gradientSignals,firmFundDiligence,strategyLab |
+| `gradient-private-markets-portfolio-construction` | Build a private-markets program report covering PE/private credit, commitments, pacing, cash flows, and liquidity. Use for private markets portfolio, commitment plan, or pacing. For one fund's PME use gradient-idd-private-markets-pme. | portfolio,research,firmFundDiligence,strategyLab |
+| `gradient-fixed-income-portfolio-construction` | Build a fixed-income sleeve report covering bonds, duration, credit, benchmarks, liquidity, and scenarios. Use for bond portfolio, core/core-plus, or credit sleeve. For one manager's fit use gradient-idd-manager-portfolio-fit. | portfolio,research,macroDesk |
+| `gradient-global-public-equity-portfolio-construction` | Build a global public-equity sleeve report covering regions, managers, factors, concentration, and benchmarks. Use for global equity, active/passive, or manager lineup. For one manager's fit use gradient-idd-manager-portfolio-fit. | portfolio,research |
+| `gradient-marketable-alternatives-portfolio-construction` | Build a marketable-alternatives sleeve report covering hedge funds, strategy mix, factor risk, redemption terms, and liquidity. Use for hedge fund portfolio or redemptions. For one manager's fit use gradient-idd-manager-portfolio-fit. | portfolio,research,peerIntelligence,gradientSignals,firmFundDiligence,strategyLab |
+| `gradient-real-assets-portfolio-construction` | Build a real-assets sleeve report covering real estate, infrastructure, commodities, inflation linkage, and liquidity. Use for real assets portfolio, inflation hedge, or real estate mix. For one manager's fit use gradient-idd-manager-portfolio-fit. | portfolio,research,macroDesk,peerIntelligence,gradientSignals,firmFundDiligence,strategyLab |
 
 ### Compliance
 
@@ -62,7 +62,7 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 
 | Skill | Produces / routes | Modules |
 |---|---|---|
-| `gradient-ic-memo` | Create a deterministic, sourced IC decision memo. Triggers: 'IC memo', 'board memo', 'allocation recommendation', 'rebalance proposal', 'manager hire/fire', 'committee vote'. Accepts handoffs from portfolio, diligence, and GIPS skills. | portfolio,research,strategyLab,firmFundDiligence |
+| `gradient-ic-memo` | Create a deterministic, sourced IC decision memo. Triggers: 'IC memo', 'board memo', 'allocation recommendation', 'rebalance proposal', 'manager hire/fire', 'committee vote'. Accepts portfolio, IDD, ODD, and GIPS handoffs. | portfolio,research,strategyLab,firmFundDiligence |
 
 ### Admin
 
@@ -74,7 +74,8 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 <!-- END GENERATED SKILL CATALOG -->
 
 The skills work together: the asset-class construction skills select an existing portfolio and produce
-read-only decision packs; manager comparison, ODD and GIPS reviews supply implementation evidence; the IC memo
+read-only decision packs for a whole sleeve; the `gradient-idd-*` skills supply return-based manager evidence,
+while `gradient-manager-compare`, the ODD report and GIPS reviews supply operational evidence; the IC memo
 provides the formal 16-section vote format; and the portfolio review monitors the approved portfolio. The
 portfolio attribution report provides a focused realized-versus-expected effect analysis without prescribing
 portfolio changes. The

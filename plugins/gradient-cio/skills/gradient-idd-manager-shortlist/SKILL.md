@@ -1,6 +1,6 @@
 ---
 name: gradient-idd-manager-shortlist
-description: "Create a sourced IDD manager-shortlist report. Triggers: 'build a manager shortlist', 'screen this mandate', 'which managers advance'. For Form ADV-only screening use gradient-manager-compare."
+description: "Create a sourced return-based IDD manager-shortlist report. Triggers: 'build a manager shortlist', 'screen this mandate', 'which managers advance'. For a Form ADV-only screen use gradient-manager-compare."
 metadata:
   version: "0.1.0"
   style_contract: "2.1.0"
@@ -10,8 +10,8 @@ metadata:
   menu_order: "60"
   modules: "strategyLab"
   contracts: "idd-methodology,idd-odd-ic-handoff"
-  handoffs: "gradient-odd-report,gradient-ic-memo"
-  summary: "Build an evidence-based manager shortlist for a defined mandate."
+  handoffs: "gradient-odd-report,gradient-manager-compare,gradient-ic-memo"
+  summary: "Build a return-based manager shortlist for a defined mandate."
 ---
 
 # Manager Shortlist
@@ -36,7 +36,7 @@ Apply the approved metric and reliability rules in the shared IDD methodology co
 
 ## 3. Build the report
 
-Use these fixed sections: Executive conclusion; Mandate and screening coverage; Candidate evidence; Performance comparison; Advance/reserve/reject rationale; ODD handoff; Appendix A ? Sources and methods. Keep each section even when evidence is unavailable. Every figure carries a unit, date, and `[S#]` source tag.
+Use these fixed sections: Executive conclusion; Mandate and screening coverage; Candidate evidence; Performance comparison; Advance/reserve/reject rationale; ODD handoff; Appendix A — Sources and methods. Keep each section even when evidence is unavailable. Every figure carries a unit, date, and `[S#]` source tag.
 
 Read `references/report-style.md` and `references/writing-standards.md`. Build one validated `report.json`; do not hand-build HTML, Word, PDF, or slides and do not override the shared theme.
 
@@ -44,7 +44,7 @@ Read `references/report-style.md` and `references/writing-standards.md`. Build o
 
 Validate and attach a `gradient-idd-odd-ic-handoff/v1` object using `references/contracts/idd-odd-ic-handoff.schema.json`. Include canonical or advisory identity status, return-series and benchmark IDs, evidence, limitations, and selection rationale.
 
-Advancing managers ? `gradient-odd-report`; shortlist decision ? `gradient-ic-memo`.
+Advancing managers → `gradient-odd-report`; a Form ADV-only operational screen → `gradient-manager-compare`; shortlist decision → `gradient-ic-memo`.
 
 ## 5. Validate and deliver
 

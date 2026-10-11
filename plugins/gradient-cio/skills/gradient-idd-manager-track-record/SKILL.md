@@ -1,6 +1,6 @@
 ---
 name: gradient-idd-manager-track-record
-description: "Create a sourced single-manager track-record assessment. Triggers: 'is this track record good', 'assess this manager performance', 'is performance meaningful'. For operational controls use gradient-odd-report."
+description: "Create a sourced single-manager track-record assessment. Triggers: 'is this track record good', 'assess this manager performance', 'is performance meaningful'. For operational diligence use gradient-odd-report."
 metadata:
   version: "0.1.0"
   style_contract: "2.1.0"
@@ -36,7 +36,7 @@ Apply the approved metric and reliability rules in the shared IDD methodology co
 
 ## 3. Build the report
 
-Use these fixed sections: Executive conclusion; Data and benchmark coverage; Absolute risk and return; Relative performance; Reliability and date-window sensitivity; Follow-ups; Appendix A ? Sources and methods. Keep each section even when evidence is unavailable. Every figure carries a unit, date, and `[S#]` source tag.
+Use these fixed sections: Executive conclusion; Data and benchmark coverage; Absolute risk and return; Relative performance; Reliability and date-window sensitivity; Follow-ups; Appendix A — Sources and methods. Keep each section even when evidence is unavailable. Every figure carries a unit, date, and `[S#]` source tag.
 
 Read `references/report-style.md` and `references/writing-standards.md`. Build one validated `report.json`; do not hand-build HTML, Word, PDF, or slides and do not override the shared theme.
 
@@ -44,7 +44,7 @@ Read `references/report-style.md` and `references/writing-standards.md`. Build o
 
 Validate and attach a `gradient-idd-odd-ic-handoff/v1` object using `references/contracts/idd-odd-ic-handoff.schema.json`. Include canonical or advisory identity status, return-series and benchmark IDs, evidence, limitations, and selection rationale.
 
-A viable manager ? `gradient-odd-report`; an investment decision ? `gradient-ic-memo`.
+A viable manager → `gradient-odd-report`; an investment decision → `gradient-ic-memo`.
 
 ## 5. Validate and deliver
 

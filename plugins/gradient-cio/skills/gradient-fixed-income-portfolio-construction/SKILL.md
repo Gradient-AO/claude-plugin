@@ -1,6 +1,6 @@
 ---
 name: gradient-fixed-income-portfolio-construction
-description: "Build a fixed-income allocation report covering bonds, duration, credit, benchmarks, liquidity, and scenarios. Use for bond portfolio, core/core-plus, duration, or credit sleeve. For a cross-portfolio decision use gradient-ic-memo."
+description: "Build a fixed-income sleeve report covering bonds, duration, credit, benchmarks, liquidity, and scenarios. Use for bond portfolio, core/core-plus, or credit sleeve. For one manager's fit use gradient-idd-manager-portfolio-fit."
 metadata:
   style_contract: "2.1.0"
   group: "Portfolio"
@@ -18,6 +18,8 @@ metadata:
 Produce a deterministic, fully sourced, decision-ready fixed-income construction report. Select an existing
 Gradient portfolio, assess its fixed-income sleeve, and recommend a target structure and implementation
 path. The committee decides; this skill never creates, updates or rebalances a portfolio in GradientCIO.
+It designs the whole sleeve; one manager's add-or-replace effect belongs to
+`gradient-idd-manager-portfolio-fit`.
 
 The deliverable is a branded report. Its PDF form is normally 10–14 pages and uses the base name
 `"<Portfolio> - Fixed Income Portfolio Construction <YYYY-MM-DD>"`.
@@ -117,7 +119,10 @@ recommendation, fixed-income policy status, open-item count, plus the requested 
 
 ## 5. Handoffs
 
-- Candidate-manager selection → `gradient-manager-compare`.
+- Candidate-manager returns against benchmarks → `gradient-idd-manager-compare`; return-based mandate
+  shortlist → `gradient-idd-manager-shortlist`.
+- Candidate-manager operations or a Form ADV screen → `gradient-manager-compare`.
+- One manager's effect on this sleeve's diversification → `gradient-idd-manager-portfolio-fit`.
 - Manager diligence → `gradient-odd-report` and `gradient-gips-manager-diligence`.
 - Broader macro briefing → `gradient-macro-brief`.
 - Formal 16-section vote memo → `gradient-ic-memo` with memo type `Allocation Change` or `Rebalance`.
