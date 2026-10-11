@@ -112,6 +112,8 @@ def gips_source(skill: str, directory: Path) -> Path:
 def gips_reference_source(directory: Path) -> Path:
     """Convert the GIPS reference note to canonical report JSON."""
     renderer_path = ROOT / "shared" / "gradient_report.py"
+    if str(renderer_path.parent) not in sys.path:
+        sys.path.insert(0, str(renderer_path.parent))
     spec = importlib.util.spec_from_file_location("gradient_report_example", renderer_path)
     if spec is None or spec.loader is None:
         raise RuntimeError("Unable to load shared report converter")
