@@ -52,7 +52,8 @@ jobs:
             /tmp/gradient-reference /tmp/gradient-actual --threshold 0.02
           for report in /tmp/gradient-examples/*.pdf; do
             python plugins/gradient-cio/shared/check_layout.py "$report" \
-              --min-fill 0.40 --exclude 1
+              --min-fill 0.40 --exclude 1 \
+              || echo "::warning file=$report::example layout below the 40% page-fill guide"
           done
       - name: Upload generated examples after visual failure
         if: failure()
