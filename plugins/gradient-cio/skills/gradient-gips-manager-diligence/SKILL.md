@@ -1,15 +1,15 @@
 ---
 name: gradient-gips-manager-diligence
-description: "Produce a GIPS manager-diligence report. Use for verify GIPS claim, manager GIPS review, performance integrity, or GIPS DDQ. For a report or presentation line review use gradient-gips-report-review."
+description: "Create a GIPS diligence report for an investment manager. Triggers: 'verify a GIPS claim', 'review manager GIPS compliance', 'assess performance integrity'. For an operational review use gradient-odd-report."
 metadata:
   style_contract: "2.1.0"
-  group: "Compliance"
+  group: "GIPS"
   subject: "GIPS manager"
   output: "diligence review"
   menu_order: "20"
   modules: "firmFundDiligence"
   contracts: "gips,odd-evidence"
-  handoffs: "gradient-odd-report,gradient-ic-memo"
+  handoffs: "gradient-odd-report,gradient-decision-ic-memo"
   version: "1.2.0"
   summary: "Verify manager GIPS claims, verification and performance integrity."
 ---
@@ -43,7 +43,7 @@ available and `advertising-and-marketing-rule.md` when marketing materials are i
    - `list_diligence_documents` to find the DDQ, GIPS Report, verification letter and pitchbook on file.
    - Read the DDQ for its GIPS answers (compliance claim, verifier, verification periods, composite
      definitions, errors) and quote them exactly. For the ADV-checkable DDQ fields (AUM, auditor, administrator,
-     custodian, disciplinary history), follow `gradient-ddq-reconcile`; `get_ddq_reconciliation_history` shows
+     custodian, disciplinary history), follow `gradient-odd-ddq-reconcile`; `get_ddq_reconciliation_history` shows
      earlier discrepancies. Use `subject_scope: "fund"` for the 21-field checklist containing auditor,
      administrator, and custodian. Deterministic aliases handle labeled lines; submit exact quote-backed
      `transcribed_claims` for narrative answers.

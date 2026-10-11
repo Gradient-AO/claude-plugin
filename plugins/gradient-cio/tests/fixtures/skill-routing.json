@@ -1,20 +1,20 @@
 [
   {
     "prompt": "Compare these managers' track records against suitable benchmarks",
-    "expected": "gradient-idd-manager-compare",
-    "not": "gradient-manager-compare",
+    "expected": "gradient-idd-manager-performance",
+    "not": "gradient-odd-manager-compare",
     "description_terms": ["performance", "benchmarks"]
   },
   {
     "prompt": "Compare these advisers' Form ADV disclosures and service providers",
-    "expected": "gradient-manager-compare",
-    "not": "gradient-idd-manager-compare",
-    "description_terms": ["ODD", "Form ADV"]
+    "expected": "gradient-odd-manager-compare",
+    "not": "gradient-idd-manager-performance",
+    "description_terms": ["operational", "Form ADV"]
   },
   {
     "prompt": "Is this one manager's performance statistically meaningful?",
     "expected": "gradient-idd-manager-track-record",
-    "not": "gradient-idd-manager-compare",
+    "not": "gradient-idd-manager-performance",
     "description_terms": ["single-manager", "meaningful"]
   },
   {
@@ -26,32 +26,32 @@
   {
     "prompt": "What does adding this manager do to portfolio diversification?",
     "expected": "gradient-idd-manager-portfolio-fit",
-    "not": "gradient-ic-memo",
+    "not": "gradient-decision-ic-memo",
     "description_terms": ["portfolio-fit", "diversification"]
   },
   {
     "prompt": "Run a public-market-equivalent analysis on this private fund",
     "expected": "gradient-idd-private-markets-pme",
     "not": "gradient-private-markets-portfolio-construction",
-    "description_terms": ["PME", "public market equivalent"]
+    "description_terms": ["private-markets", "PME"]
   },
   {
     "prompt": "Build an investment-diligence shortlist for this manager mandate",
     "expected": "gradient-idd-manager-shortlist",
-    "not": "gradient-manager-compare",
-    "description_terms": ["return-based", "shortlist", "mandate"]
+    "not": "gradient-odd-manager-compare",
+    "description_terms": ["manager shortlist", "mandate"]
   },
   {
     "prompt": "Screen Form ADV records for advisers that could fit this mandate",
-    "expected": "gradient-manager-compare",
+    "expected": "gradient-odd-manager-compare",
     "not": "gradient-idd-manager-shortlist",
-    "description_terms": ["Form ADV screen"]
+    "description_terms": ["operational comparison", "Form ADV"]
   },
   {
     "prompt": "What does adding this hedge fund manager do to our portfolio's diversification?",
     "expected": "gradient-idd-manager-portfolio-fit",
     "not": "gradient-marketable-alternatives-portfolio-construction",
-    "description_terms": ["one-manager", "diversification"]
+    "description_terms": ["prospective manager", "diversification"]
   },
   {
     "prompt": "Design the target strategy mix for our hedge fund sleeve",
@@ -61,9 +61,9 @@
   },
   {
     "prompt": "Compare the operational risk of our two manager-hire finalists",
-    "expected": "gradient-manager-compare",
-    "not": "gradient-idd-manager-compare",
-    "description_terms": ["operational risk"]
+    "expected": "gradient-odd-manager-compare",
+    "not": "gradient-idd-manager-performance",
+    "description_terms": ["operational comparison"]
   },
   {
     "prompt": "Run operational due diligence on this finalist",
@@ -73,8 +73,8 @@
   },
   {
     "prompt": "Draft the IC memo for hiring this manager using the IDD and ODD findings",
-    "expected": "gradient-ic-memo",
-    "not": "gradient-idd-manager-compare",
-    "description_terms": ["manager hire", "IDD", "ODD"]
+    "expected": "gradient-decision-ic-memo",
+    "not": "gradient-idd-manager-performance",
+    "description_terms": ["decision memo", "manager hire"]
   }
 ]

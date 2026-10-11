@@ -1,6 +1,6 @@
 ---
 name: gradient-global-public-equity-portfolio-construction
-description: "Build a global public-equity sleeve report covering regions, managers, factors, concentration, and benchmarks. Use for global equity, active/passive, or manager lineup. For one manager's fit use gradient-idd-manager-portfolio-fit."
+description: "Create a global-equity construction report for a public-markets sleeve. Triggers: 'design global equity', 'review active passive mix', 'build an equity manager lineup'. For one manager fit use gradient-idd-manager-portfolio-fit."
 metadata:
   style_contract: "2.1.0"
   group: "Portfolio"
@@ -9,7 +9,7 @@ metadata:
   menu_order: "50"
   modules: "portfolio,research"
   contracts: "portfolio"
-  handoffs: "gradient-ic-memo"
+  handoffs: "gradient-decision-ic-memo"
   summary: "Design a global equity allocation across regions, factors and managers."
 ---
 
@@ -114,11 +114,11 @@ recommendation, equity-sleeve policy status, open-item count, plus the requested
 
 ## 5. Handoffs
 
-- Candidate-manager returns against benchmarks → `gradient-idd-manager-compare`; return-based mandate
+- Candidate-manager returns against benchmarks → `gradient-idd-manager-performance`; return-based mandate
   shortlist → `gradient-idd-manager-shortlist`.
-- Candidate-manager operations or a Form ADV screen → `gradient-manager-compare`.
+- Candidate-manager operations or a Form ADV screen → `gradient-odd-manager-compare`.
 - One manager's effect on this sleeve's diversification → `gradient-idd-manager-portfolio-fit`.
 - Manager diligence → `gradient-odd-report` and `gradient-gips-manager-diligence`.
-- Concentrated issuer research → `gradient-equity-note`.
-- Formal 16-section vote memo → `gradient-ic-memo` with memo type `Allocation Change` or `Rebalance`.
+- Concentrated issuer research → `gradient-research-equity-note`.
+- Formal 16-section vote memo → `gradient-decision-ic-memo` with memo type `Allocation Change` or `Rebalance`.
 - Ongoing monitoring → `gradient-portfolio-review`.

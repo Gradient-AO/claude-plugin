@@ -1,6 +1,6 @@
 ---
 name: gradient-idd-manager-track-record
-description: "Create a sourced single-manager track-record assessment. Triggers: 'is this track record good', 'assess this manager performance', 'is performance meaningful'. For operational diligence use gradient-odd-report."
+description: "Create a single-manager track-record assessment using governed return evidence. Triggers: 'is this track record good', 'assess one manager performance', 'is performance meaningful'. For operational diligence use gradient-odd-report."
 metadata:
   version: "0.1.0"
   style_contract: "2.1.0"
@@ -10,7 +10,7 @@ metadata:
   menu_order: "20"
   modules: "strategyLab"
   contracts: "idd-methodology,idd-odd-ic-handoff"
-  handoffs: "gradient-odd-report,gradient-ic-memo"
+  handoffs: "gradient-odd-report,gradient-decision-ic-memo"
   summary: "Assess one manager track record and its statistical reliability."
 ---
 
@@ -44,7 +44,7 @@ Read `references/report-style.md` and `references/writing-standards.md`. Build o
 
 Validate and attach a `gradient-idd-odd-ic-handoff/v1` object using `references/contracts/idd-odd-ic-handoff.schema.json`. Include canonical or advisory identity status, return-series and benchmark IDs, evidence, limitations, and selection rationale.
 
-A viable manager → `gradient-odd-report`; an investment decision → `gradient-ic-memo`.
+A viable manager → `gradient-odd-report`; an investment decision → `gradient-decision-ic-memo`.
 
 ## 5. Validate and deliver
 

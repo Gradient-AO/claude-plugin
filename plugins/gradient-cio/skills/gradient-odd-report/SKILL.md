@@ -1,15 +1,16 @@
 ---
 name: gradient-odd-report
-description: "Create a branded, sourced ODD report or roster triage. Triggers: 'ODD report', 'operational due diligence', 'run diligence', 'ODD on my roster'. For return performance use gradient-idd-manager-track-record."
+description: "Create an operational due-diligence report for a manager or fund. Triggers: 'run operational due diligence', 'prepare an ODD report', 'review manager operations'. For return performance use gradient-idd-manager-performance."
 metadata:
   style_contract: "2.1.0"
-  group: "Operational diligence"
+  group: "Operational due diligence"
   subject: "manager or fund"
   output: "ODD report"
   menu_order: "10"
   modules: "firmFundDiligence"
   contracts: "odd-evidence"
-  handoffs: "gradient-ddq-reconcile,gradient-manager-monitor,gradient-ic-memo"
+  handoffs: "gradient-odd-ddq-reconcile,gradient-odd-manager-monitor,gradient-decision-ic-memo"
+  modes: "full,roster-summary"
   summary: "Produce a sourced operational due diligence report or roster triage."
 ---
 
@@ -36,7 +37,7 @@ unspecified subjects are triaged before full reports.
 
 Resolve organization and roster. Ask at most one question. A named single
 subject proceeds to a full report; no subject or multiple funds use triage.
-If a DDQ exists, plan `gradient-ddq-reconcile`; if a GIPS/performance document
+If a DDQ exists, plan `gradient-odd-ddq-reconcile`; if a GIPS/performance document
 exists, use `gradient-gips-manager-diligence`. If a `gradient-idd-*` skill
 supplied a `gradient-idd-odd-ic-handoff/v1` object, read
 `references/contracts/odd-evidence.md` and keep its return and benchmark
@@ -94,14 +95,14 @@ completeness, top concern, open-item count, and files.
 
 ## 5. Handoffs and writes
 
-- Reconcile supplied manager assertions → `gradient-ddq-reconcile`.
+- Reconcile supplied manager assertions → `gradient-odd-ddq-reconcile`.
 - Compare candidates' Form ADV, service-provider, disclosure, or 13F evidence
-  → `gradient-manager-compare`.
+  → `gradient-odd-manager-compare`.
 - Return or benchmark evidence → `gradient-idd-manager-track-record` for one
-  manager or `gradient-idd-manager-compare` for candidates.
-- Ongoing change tracking after the review → `gradient-manager-monitor`.
+  manager or `gradient-idd-manager-performance` for candidates.
+- Ongoing change tracking after the review → `gradient-odd-manager-monitor`.
 - Feed the executive/follow-up sections into a decision memo →
-  `gradient-ic-memo`.
+  `gradient-decision-ic-memo`.
 
 Only when the user requests a post-delivery action, read
 `references/odd-execution-contract.md#writes-after-delivery`. Preview review

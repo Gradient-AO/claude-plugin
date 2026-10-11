@@ -24,14 +24,14 @@ SHARED_REPORT_STYLE = ROOT / "shared" / "report-style.md"
 SHARED_MODULE_SCOPE = ROOT / "shared" / "module-scope.md"
 SHARED_CHART_DATA = ROOT / "shared" / "chart-data.md"
 SKILL_REQUIREMENTS = ROOT / "skills" / "gradient-setup" / "references" / "skill-requirements.md"
-MACRO_BRIEF_SKILL = ROOT / "skills" / "gradient-macro-brief" / "SKILL.md"
-IC_MEMO_SKILL = ROOT / "skills" / "gradient-ic-memo" / "SKILL.md"
-IC_MEMO_DATA_MAP = ROOT / "skills" / "gradient-ic-memo" / "references" / "data-map.md"
-IC_MEMO_CALCULATIONS = ROOT / "skills" / "gradient-ic-memo" / "references" / "calculations.md"
-IC_MEMO_VALIDATOR = ROOT / "skills" / "gradient-ic-memo" / "scripts" / "validate_memo.py"
-IC_MEMO_COMPOSER = ROOT / "skills" / "gradient-ic-memo" / "scripts" / "compose_memo_json.py"
+MACRO_BRIEF_SKILL = ROOT / "skills" / "gradient-research-macro-brief" / "SKILL.md"
+IC_MEMO_SKILL = ROOT / "skills" / "gradient-decision-ic-memo" / "SKILL.md"
+IC_MEMO_DATA_MAP = ROOT / "skills" / "gradient-decision-ic-memo" / "references" / "data-map.md"
+IC_MEMO_CALCULATIONS = ROOT / "skills" / "gradient-decision-ic-memo" / "references" / "calculations.md"
+IC_MEMO_VALIDATOR = ROOT / "skills" / "gradient-decision-ic-memo" / "scripts" / "validate_memo.py"
+IC_MEMO_COMPOSER = ROOT / "skills" / "gradient-decision-ic-memo" / "scripts" / "compose_memo_json.py"
 IC_MEMO_EVIDENCE = FIX / "ic_evidence.json"
-IC_MEMO_EXAMPLE = ROOT / "skills" / "gradient-ic-memo" / "assets" / "example-memo.md"
+IC_MEMO_EXAMPLE = ROOT / "skills" / "gradient-decision-ic-memo" / "assets" / "example-memo.md"
 ODD_REPORT_SKILL = ROOT / "skills" / "gradient-odd-report" / "SKILL.md"
 GIPS_MANAGER_DILIGENCE_SKILL = ROOT / "skills" / "gradient-gips-manager-diligence" / "SKILL.md"
 PORTFOLIO_REVIEW_SKILL = ROOT / "skills" / "gradient-portfolio-review" / "SKILL.md"
@@ -55,7 +55,7 @@ PORTFOLIO_REVIEW_VALIDATOR = (
 PORTFOLIO_ATTRIBUTION_VALIDATOR = (
     ROOT
     / "skills"
-    / "gradient-portfolio-attribution-report"
+    / "gradient-portfolio-attribution"
     / "scripts"
     / "validate_attribution.py"
 )
@@ -94,7 +94,7 @@ ANALYTICAL_REPORT_VALIDATORS = [
         "DDQ reconciliation",
         ROOT
         / "skills"
-        / "gradient-ddq-reconcile"
+        / "gradient-odd-ddq-reconcile"
         / "scripts"
         / "validate_ddq_report.py",
         FIX / "ddq.json",
@@ -103,7 +103,7 @@ ANALYTICAL_REPORT_VALIDATORS = [
         "equity note",
         ROOT
         / "skills"
-        / "gradient-equity-note"
+        / "gradient-research-equity-note"
         / "scripts"
         / "validate_equity_note.py",
         FIX / "equity.json",
@@ -112,7 +112,7 @@ ANALYTICAL_REPORT_VALIDATORS = [
         "manager comparison",
         ROOT
         / "skills"
-        / "gradient-manager-compare"
+        / "gradient-odd-manager-compare"
         / "scripts"
         / "validate_manager_compare.py",
         FIX / "compare.json",
@@ -121,7 +121,7 @@ ANALYTICAL_REPORT_VALIDATORS = [
         "manager monitor",
         ROOT
         / "skills"
-        / "gradient-manager-monitor"
+        / "gradient-odd-manager-monitor"
         / "scripts"
         / "validate_monitor_digest.py",
         FIX / "digest.json",

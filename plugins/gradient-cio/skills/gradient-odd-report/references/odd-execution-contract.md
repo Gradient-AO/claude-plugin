@@ -39,7 +39,7 @@ Call `get_gradient_capabilities`, then:
    Retry one `backend_timeout`; then retry snapshot without `quarters`.
 4. `get_manager_diligence_findings`, `view: open`, for firm and fund.
 5. `get_firm_fund_events`, `include_event_type_counts: true`.
-6. If a DDQ exists, follow `gradient-ddq-reconcile` extraction and
+6. If a DDQ exists, follow `gradient-odd-ddq-reconcile` extraction and
    reconciliation.
 7. `get_cross_domain_research`, `view: adv_13f_consistency`, with parent
    `firm_id`.
