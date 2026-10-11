@@ -1,6 +1,6 @@
 ---
 name: gradient-idd-manager-shortlist
-description: "Create a manager shortlist report for a defined mandate. Triggers: 'build a manager shortlist', 'screen this mandate', 'identify return finalists'. For operational comparison use gradient-odd-manager-compare."
+description: "Create a manager shortlist report with optional Form ADV screening followed by governed performance evidence. Triggers: 'build a manager shortlist', 'screen this mandate', 'identify return finalists'."
 metadata:
   version: "0.1.0"
   style_contract: "2.1.0"
@@ -16,7 +16,7 @@ metadata:
 
 # Manager Shortlist
 
-Build a shortlist only from user-supplied candidates or a server-returned mandate universe; never treat Form ADV fields as an investment-style screen. Deliver a branded PDF by default and PowerPoint only when requested.
+Build a shortlist from user-supplied candidates or a server-returned mandate universe. An optional Form ADV screen may narrow factual criteria, but every advancing candidate must then receive governed return and benchmark evidence. Never treat Form ADV fields as an investment-style conclusion. Deliver a branded PDF by default and PowerPoint only when requested.
 
 ## Non-negotiable rules
 
@@ -28,7 +28,7 @@ Build a shortlist only from user-supplied candidates or a server-returned mandat
 
 ## 1. Resolve and collect
 
-Resolve the organization, selected return-series IDs, canonical entity links, date window, and benchmark mapping. Use `screen_managers`, canonical identity and return-series links, then the tools required by `gradient-idd-manager-performance`. Run independent reads in parallel and save large payloads. If a required public capability is unavailable or not licensed, show that typed status and continue only with independent evidence.
+Resolve the organization and mandate. If requested, use `screen_managers` for factual Form ADV criteria and disclose search limits. Resolve canonical entity and return-series links for every candidate, then use the tools required by `gradient-idd-manager-performance` with separately matched benchmarks. A candidate without governed performance evidence cannot advance. Run independent reads in parallel and save large payloads. If a required capability is unavailable or not licensed, show that typed status.
 
 ## 2. Assess
 
@@ -44,7 +44,7 @@ Read `references/report-style.md` and `references/writing-standards.md`. Build o
 
 Validate and attach a `gradient-idd-odd-ic-handoff/v1` object using `references/contracts/idd-odd-ic-handoff.schema.json`. Include canonical or advisory identity status, return-series and benchmark IDs, evidence, limitations, and selection rationale.
 
-Advancing managers → `gradient-odd-report`; a Form ADV-only operational screen → `gradient-odd-manager-compare`; shortlist decision → `gradient-decision-ic-memo`.
+Advancing managers → `gradient-odd-report`; operational comparison of named finalists → `gradient-odd-manager-compare`; shortlist decision → `gradient-decision-ic-memo`.
 
 ## 5. Validate and deliver
 

@@ -75,7 +75,7 @@ report them as separate modules; never use the canonical illustrative portfolio 
 ## 3. Contract self-test
 
 Run the probes in `references/contract-checks.md`. The **standard** set is 8 quick reads (default). The
-**full read** set is 58 reads (the 8 standard plus 50 full probes); run it when the user asks for a health
+**full read** set is 57 reads (the 8 standard plus 49 full probes); run it when the user asks for a health
 check or self-test, or after a plugin update. The separate **writes** set is 8 dry-run previews, including
 monitoring, review and Strategy Lab scenario previews plus one batch-preview contract and one DDQ upload
 preview, and must never commit. The **DDQ save-preview** set is 3 calls: it intentionally persists one fictional test

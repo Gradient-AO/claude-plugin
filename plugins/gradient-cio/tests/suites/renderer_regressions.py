@@ -204,6 +204,50 @@ def chart_renderer():
         and "Fictional Holding 40 (TEST)" in forty_row_table,
         "chart tables preserve all 40 returned rows",
     )
+    coverage_html = _renderer_module.b_coverage({
+        "items": [{
+            "name": "Long evidence domain",
+            "status": "not_assessed",
+            "note": "A long note wraps independently from the complete status chip.",
+        }]
+    })
+    coverage_document = _renderer_module.body_html({
+        "meta": {
+            "title": "Coverage regression (TEST)",
+            "header_label": "Regression",
+            "data_as_of": "2026-10-11",
+        },
+        "sections": [{"title": "Coverage", "blocks": [{
+            "type": "coverage",
+            "items": [{
+                "name": "Long evidence domain",
+                "status": "not_assessed",
+                "note": "A long note wraps independently from the complete status chip.",
+            }],
+        }]}],
+    })
+    check(
+        "not assessed" in coverage_html
+        and "grid-template-columns:minmax(0,32%) max-content minmax(0,1fr)"
+        in coverage_document
+        and "overflow-wrap:anywhere" in coverage_document,
+        "coverage rows reserve complete chip width while notes wrap",
+    )
+    source_table = _renderer_module.b_table({
+        "columns": ["Tag", "Evidence", "Tool"],
+        "rows": [[f"S{index}", f"Evidence {index}", "test_tool"] for index in range(1, 7)],
+    })
+    source_tail = re.search(
+        r'<tbody class="source-tail">(.*?)</tbody>',
+        source_table,
+        re.DOTALL,
+    )
+    check(
+        source_tail is not None
+        and source_tail.group(1).count("<tr>") == 3
+        and all(f"S{index}" in source_tail.group(1) for index in (4, 5, 6)),
+        "source tables keep their final three rows in one print group",
+    )
     long_pacing_table = _renderer_module.b_chart({"chart": {
         "chart_id": "commitments-pacing",
         "title": "Commitments pacing",

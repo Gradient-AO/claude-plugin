@@ -13,7 +13,7 @@ def contract_manifest():
         for name in ("standard", "full", "writes", "ddq-save-preview")
     }
     check(
-        counts == {"standard": 8, "full": 50, "writes": 8, "ddq-save-preview": 3},
+        counts == {"standard": 8, "full": 49, "writes": 8, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
     )
     full_read_count = counts["standard"] + counts["full"]
@@ -64,42 +64,42 @@ def contract_manifest():
         "construction_private_markets": (
             ROOT
             / "skills"
-            / "gradient-private-markets-portfolio-construction"
+            / "gradient-portfolio-construction"
             / "references"
             / "construction-template.md",
-            ROOT / "skills" / "gradient-private-markets-portfolio-construction" / "references" / "layout-budget.json",
+            ROOT / "skills" / "gradient-portfolio-construction" / "references" / "layout-budget.json",
         ),
         "construction_fixed_income": (
             ROOT
             / "skills"
-            / "gradient-fixed-income-portfolio-construction"
+            / "gradient-portfolio-construction"
             / "references"
             / "construction-template.md",
-            ROOT / "skills" / "gradient-fixed-income-portfolio-construction" / "references" / "layout-budget.json",
+            ROOT / "skills" / "gradient-portfolio-construction" / "references" / "layout-budget.json",
         ),
         "construction_global_public_equity": (
             ROOT
             / "skills"
-            / "gradient-global-public-equity-portfolio-construction"
+            / "gradient-portfolio-construction"
             / "references"
             / "construction-template.md",
-            ROOT / "skills" / "gradient-global-public-equity-portfolio-construction" / "references" / "layout-budget.json",
+            ROOT / "skills" / "gradient-portfolio-construction" / "references" / "layout-budget.json",
         ),
         "construction_marketable_alternatives": (
             ROOT
             / "skills"
-            / "gradient-marketable-alternatives-portfolio-construction"
+            / "gradient-portfolio-construction"
             / "references"
             / "construction-template.md",
-            ROOT / "skills" / "gradient-marketable-alternatives-portfolio-construction" / "references" / "layout-budget.json",
+            ROOT / "skills" / "gradient-portfolio-construction" / "references" / "layout-budget.json",
         ),
         "construction_real_assets": (
             ROOT
             / "skills"
-            / "gradient-real-assets-portfolio-construction"
+            / "gradient-portfolio-construction"
             / "references"
             / "construction-template.md",
-            ROOT / "skills" / "gradient-real-assets-portfolio-construction" / "references" / "layout-budget.json",
+            ROOT / "skills" / "gradient-portfolio-construction" / "references" / "layout-budget.json",
         ),
     }
     budget_errors = []
@@ -114,6 +114,8 @@ def contract_manifest():
             if case_name == "portfolio_comprehensive"
             else "brief" if case_name == "portfolio" else None
         )
+        if case_name.startswith("construction_"):
+            mode = case_name.removeprefix("construction_")
         effective_budget = (
             budget.get("modes", {}).get(mode, {})
             if mode else budget
@@ -152,9 +154,9 @@ def contract_manifest():
         public_tool_catalog.get("generated") is True
         and public_tool_catalog.get("source")
         == "@gradientcio/contracts canonical MCP tool catalog"
-        and len(public_tools) == 67
+        and len(public_tools) == 66
         and public_tools == sorted(set(public_tools)),
-        "public-tool catalog has generated 67-tool canonical parity",
+        "public-tool catalog has generated 66-tool canonical parity",
     )
     minimum = contracts.get("minimum_connector_contract", {})
     response_path_tools = set(minimum.get("required_response_field_paths", {}))
@@ -198,7 +200,6 @@ def contract_manifest():
         "log_diligence_review",
         "reconcile_manager_ddq_claims",
         "run_strategy_lab_date_window_robustness",
-        "run_strategy_lab_diversification",
         "run_strategy_lab_expected_statistics",
         "run_strategy_lab_relative_return",
         "save_strategy_lab_scenario",
@@ -233,7 +234,6 @@ def contract_manifest():
             "strategy_expected_statistics",
             "strategy_relative_return",
             "strategy_manager_compare",
-            "strategy_diversification",
             "strategy_date_windows_session",
             "strategy_date_windows",
             "equity_fundamentals",
@@ -582,11 +582,11 @@ def contract_manifest():
         / "attribution-template.md",
     )
     construction_skill_names = (
-        "gradient-fixed-income-portfolio-construction",
-        "gradient-global-public-equity-portfolio-construction",
-        "gradient-marketable-alternatives-portfolio-construction",
-        "gradient-private-markets-portfolio-construction",
-        "gradient-real-assets-portfolio-construction",
+        "gradient-portfolio-construction",
+        "gradient-portfolio-construction",
+        "gradient-portfolio-construction",
+        "gradient-portfolio-construction",
+        "gradient-portfolio-construction",
     )
     attribution_guidance_paths += tuple(
         ROOT / "skills" / name / "references" / file_name
@@ -949,7 +949,7 @@ def contract_manifest():
     fixed_income_guidance = (
         ROOT
         / "skills"
-        / "gradient-fixed-income-portfolio-construction"
+        / "gradient-portfolio-construction"
         / "references"
         / "data-map.md"
     ).read_text(encoding="utf-8")
@@ -974,10 +974,10 @@ def contract_manifest():
             / "data-map.md"
         ).read_text(encoding="utf-8")
         for skill_name in (
-            "gradient-global-public-equity-portfolio-construction",
-            "gradient-marketable-alternatives-portfolio-construction",
-            "gradient-private-markets-portfolio-construction",
-            "gradient-real-assets-portfolio-construction",
+            "gradient-portfolio-construction",
+            "gradient-portfolio-construction",
+            "gradient-portfolio-construction",
+            "gradient-portfolio-construction",
         )
     ]
     check(
@@ -990,14 +990,14 @@ def contract_manifest():
         "non-fixed-income exposure guidance uses the current field contract",
     )
     classification_guidance = {
-        "gradient-private-markets-portfolio-construction":
+        "gradient-portfolio-construction":
             ("private_equity", "private_credit"),
-        "gradient-fixed-income-portfolio-construction": ("fixed_income",),
-        "gradient-global-public-equity-portfolio-construction":
+        "gradient-portfolio-construction": ("fixed_income",),
+        "gradient-portfolio-construction":
             ("public_equity",),
-        "gradient-marketable-alternatives-portfolio-construction":
+        "gradient-portfolio-construction":
             ("alternatives",),
-        "gradient-real-assets-portfolio-construction":
+        "gradient-portfolio-construction":
             ("real_estate", "infrastructure"),
     }
     check(
@@ -1170,11 +1170,11 @@ def contract_manifest():
     )
     chart_skill_names = (
         "gradient-portfolio-review",
-        "gradient-fixed-income-portfolio-construction",
-        "gradient-global-public-equity-portfolio-construction",
-        "gradient-marketable-alternatives-portfolio-construction",
-        "gradient-private-markets-portfolio-construction",
-        "gradient-real-assets-portfolio-construction",
+        "gradient-portfolio-construction",
+        "gradient-portfolio-construction",
+        "gradient-portfolio-construction",
+        "gradient-portfolio-construction",
+        "gradient-portfolio-construction",
     )
     chart_skill_guidance = [
         (ROOT / "skills" / skill_name / "SKILL.md").read_text(encoding="utf-8")

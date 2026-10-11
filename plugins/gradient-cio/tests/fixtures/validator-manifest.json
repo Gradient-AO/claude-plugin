@@ -1,0 +1,50 @@
+{
+  "gradient-decision-ic-memo": {"validator": "skills/gradient-decision-ic-memo/scripts/validate_memo.py", "fixtures": ["ic.md"]},
+  "gradient-gips-manager-diligence": {"validator": "skills/gradient-gips-manager-diligence/scripts/validate_gips_report.py", "fixtures": ["gips.md", "gips_visuals.json", "gips_meta.json"]},
+  "gradient-gips-policies-gap-check": {"validator": "skills/gradient-gips-policies-gap-check/scripts/validate_gips_report.py", "fixtures": ["gips-policies-gap-check.md", "gips-policies-gap-check-visuals.json", "gips-policies-gap-check-meta.json"]},
+  "gradient-gips-report-review": {
+    "validator": "skills/gradient-gips-report-review/scripts/validate_gips_report.py",
+    "modes": {
+      "firm": ["gips-report-review.md", "gips-report-review-visuals.json", "gips-report-review-meta.json"],
+      "asset-owner": ["gips-asset-owner-review.md", "gips-asset-owner-review-visuals.json", "gips-asset-owner-review-meta.json"]
+    }
+  },
+  "gradient-gips-standards": {"validator": "skills/gradient-gips-standards/scripts/validate_gips_report.py", "fixtures": ["gips.md", "gips_visuals.json", "gips_meta.json"]},
+  "gradient-idd-manager-performance": {
+    "validator": "skills/gradient-idd-manager-performance/scripts/validate_idd_report.py",
+    "modes": {
+      "single": ["idd-manager-performance-single.json"],
+      "compare": ["idd-manager-performance-compare.json"],
+      "robustness": ["idd-manager-performance-robustness.json"]
+    }
+  },
+  "gradient-idd-manager-portfolio-fit": {"validator": "skills/gradient-idd-manager-portfolio-fit/scripts/validate_idd_report.py", "fixtures": ["idd-portfolio-fit.json"]},
+  "gradient-idd-manager-shortlist": {"validator": "skills/gradient-idd-manager-shortlist/scripts/validate_idd_report.py", "fixtures": ["idd-shortlist.json"]},
+  "gradient-idd-private-markets-pme": {"validator": "skills/gradient-idd-private-markets-pme/scripts/validate_idd_report.py", "fixtures": ["idd-private-markets-pme.json"]},
+  "gradient-odd-ddq-reconcile": {"validator": "skills/gradient-odd-ddq-reconcile/scripts/validate_ddq_report.py", "fixtures": ["ddq.json"]},
+  "gradient-odd-manager-compare": {"validator": "skills/gradient-odd-manager-compare/scripts/validate_manager_compare.py", "fixtures": ["compare.json"]},
+  "gradient-odd-manager-monitor": {"validator": "skills/gradient-odd-manager-monitor/scripts/validate_monitor_digest.py", "fixtures": ["digest.json"]},
+  "gradient-odd-report": {"validator": "skills/gradient-odd-report/scripts/validate_odd_report.py", "fixtures": ["odd.json"]},
+  "gradient-portfolio-attribution": {"validator": "skills/gradient-portfolio-attribution/scripts/validate_attribution.py", "fixtures": ["portfolio-attribution-report.json"]},
+  "gradient-portfolio-attribution-compare": {
+    "validator": "skills/gradient-portfolio-attribution-compare/scripts/validate_attribution_compare.py",
+    "modes": {
+      "fallback": ["attribution-compare-fallback.json"],
+      "three_lane": ["attribution-compare-three-lane.json"]
+    }
+  },
+  "gradient-portfolio-construction": {
+    "validator": "skills/gradient-portfolio-construction/scripts/validate_construction.py",
+    "modes": {
+      "private_markets": ["construction-private-markets.json"],
+      "fixed_income": ["construction-fixed-income.json"],
+      "global_public_equity": ["construction-global-public-equity.json"],
+      "marketable_alternatives": ["construction-marketable-alternatives.json"],
+      "real_assets": ["construction-real-assets.json"]
+    }
+  },
+  "gradient-portfolio-review": {"validator": "skills/gradient-portfolio-review/scripts/validate_review.py", "fixtures": ["portfolio.json", "portfolio-comprehensive.json"]},
+  "gradient-research-equity-note": {"validator": "skills/gradient-research-equity-note/scripts/validate_equity_note.py", "fixtures": ["equity.json"]},
+  "gradient-research-macro-brief": {"validator": "skills/gradient-research-macro-brief/scripts/validate_deck.py", "fixtures": ["deck.json"]},
+  "gradient-setup": {"validator": "skills/gradient-setup/scripts/validate_setup.py", "fixtures": ["setup.json"]}
+}

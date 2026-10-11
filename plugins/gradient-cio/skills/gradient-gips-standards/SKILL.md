@@ -59,7 +59,7 @@ All paths are relative to this skill's directory (`${CLAUDE_PLUGIN_ROOT}/skills/
 
 - A manager or fund under due diligence, or a DDQ/ODD question about GIPS → **gradient-gips-manager-diligence**
 - A firm's composite or pooled fund GIPS Report, factsheet or advertisement → **gradient-gips-report-review**
-- A pension, endowment, foundation or sovereign fund report to its board or oversight body → **gradient-gips-asset-owner-review**
+- A pension, endowment, foundation or sovereign fund report to its board or oversight body → **gradient-gips-report-review**
 - A GIPS policies and procedures manual → **gradient-gips-policies-gap-check**
 
 ## Output — GIPS briefing note (always)

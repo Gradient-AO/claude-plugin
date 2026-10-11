@@ -14,6 +14,7 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 REPOSITORY = ROOT.parents[1]
 TESTS = ROOT / "tests" / "run_tests.py"
+ROUTING_EVALUATOR = ROOT / "tools" / "evaluate_skill_routing.py"
 
 
 def main() -> int:
@@ -43,15 +44,35 @@ def main() -> int:
     if tests.returncode != 0:
         return tests.returncode
 
+    routing_command = [sys.executable, str(ROUTING_EVALUATOR)]
+    if args.require_claude:
+        routing_command.append("--require-claude")
+    routing = subprocess.run(
+        routing_command,
+        cwd=REPOSITORY,
+        env=environment,
+        check=False,
+    )
+    if routing.returncode != 0:
+        return routing.returncode
+
     claude = shutil.which("claude")
-    if claude is None:
+    npx = shutil.which("npx")
+    claude_command = (
+        [claude]
+        if claude is not None
+        else [npx, "-y", "@anthropic-ai/claude-code"]
+        if npx is not None
+        else None
+    )
+    if claude_command is None:
         if args.require_claude:
             print("FAIL — Claude CLI is required but unavailable", file=sys.stderr)
             return 2
         print("SKIP — Claude CLI unavailable; run `claude plugin validate .` before release")
         return 0
     validated = subprocess.run(
-        [claude, "plugin", "validate", "."],
+        [*claude_command, "plugin", "validate", "."],
         cwd=REPOSITORY,
         env=environment,
         check=False,

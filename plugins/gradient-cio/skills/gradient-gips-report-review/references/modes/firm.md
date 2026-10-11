@@ -1,0 +1,98 @@
+---
+name: gradient-gips-report-review
+description: "Create a GIPS report review for a composite or pooled fund. Triggers: 'review this GIPS report', 'check a composite presentation', 'review a GIPS advertisement'. For general requirements use gradient-gips-standards."
+metadata:
+  style_contract: "2.1.0"
+  group: "GIPS"
+  subject: "GIPS report"
+  output: "review"
+  menu_order: "30"
+  modules: "none"
+  contracts: "gips"
+  handoffs: "gradient-decision-ic-memo"
+  version: "1.2.0"
+  summary: "Review GIPS reports and advertisements line by line."
+---
+
+# GIPS Report Review
+
+Check a firm's GIPS Composite Report, GIPS Pooled Fund Report or GIPS Advertisement against the 2020 GIPS
+standards for firms, line by line.
+
+Shared references live in `${CLAUDE_PLUGIN_ROOT}/skills/gradient-gips-standards/references/` (fallback:
+`../gradient-gips-standards/references/`). Always load `firms-report-checklist.md`, `output-format.md` and
+`report-layout.md`; before drafting, also load this skill's
+`references/writing-standards.md` and `references/analysis-examples.md`.
+
+## Step 1 — Classify the document
+
+Determine which checklist applies:
+
+| Document | Checklist |
+|---|---|
+| Composite report with annual returns | firms-report-checklist.md, Section A (TWR) |
+| Composite report with since-inception IRR / multiples | Section B (MWR) |
+| Private fund or other limited distribution pooled fund report, annual returns | Section C |
+| Pooled fund report with since-inception IRR / multiples | Section D |
+| Factsheet, website page, pitch page or other advertisement referencing GIPS | advertising-and-marketing-rule.md |
+
+If a report mixes types, apply each relevant section. Note the reporting currency and latest period end.
+
+## Step 2 — Extract the numbers
+
+Read the report (use the pdf or xlsx skills for those file types). Build a table of each annual period with:
+composite/fund return (gross and/or net), benchmark return, number of portfolios, composite assets, total
+firm assets, dispersion, 3-year standard deviation (composite and benchmark). For MWR reports, capture SI-MWR,
+benchmark SI-MWR, committed capital, paid-in capital, distributions and multiples.
+
+## Step 3 — Check required numeric disclosures
+
+Apply the required-numbers table and the "Numeric disclosure checks." Quote the report's disclosed values and
+relationships; do not calculate implied account sizes, fee spreads, performance, multiples or other report
+values locally. If a relationship is not explicitly disclosed or returned by a governed Gradient contract,
+mark that check `Not assessed — governed calculation unavailable` rather than estimating it.
+
+## Step 4 — Check required disclosures
+
+Walk the 4.C list (or the pooled fund and advertising equivalents). Compare the compliance statement against
+the exact required wording; small wording changes are Partially met. Mark disclosures that are conditional
+(e.g., carve-outs, sub-advisors, real estate) as N/A only when the report gives no indication the condition
+applies.
+
+## Step 5 — Check presentation rules
+
+- Periods clearly labeled; gross/net labeled (4.A.3).
+- Single currency throughout (4.A.12).
+- Supplemental information labeled and not contradicting required information (4.A.18).
+- No theoretical performance linked to actual (1.A.27); theoretical shown only as labeled supplemental (4.C.48).
+- Report updated within 12 months of the latest annual period end (1.A.12).
+
+## Step 6 — Report
+
+Produce the authoritative markdown checklist and separate visual layer using `output-format.md` and
+`report-layout.md`, delivered as the branded PDF (see Output). Require evidence-status tiles, evidence
+coverage, findings and severity summaries, sourced analysis, and typed unavailable blocks where expected
+evidence is missing. This workflow always uses `## 3. Preparer Fix List`, ordered Not met, Partially met, then
+Not found. A manager-evaluation memo belongs in `gradient-gips-manager-diligence`, which uses the Performance
+Integrity Memo body. Analysis is non-prescriptive and may point only to existing numbered requests.
+
+State any item resting on a † (to-be-confirmed) reference line as "confirm against the standards" rather than
+a definitive deficiency.
+
+## Output
+
+Always deliver a branded review. Write `review.md`, `visuals.json` and `meta.json`; preserve the authoritative
+markdown and validate and compose them with the shared scripts in `gradient-gips-standards/scripts`, writing
+the resulting validated JSON as `report.json`. Market charts are not required. Follow
+`output-format.md`, `report-layout.md` and this skill's `references/report-style.md`.
+
+Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select
+both when it says `both` or `board pack`. Both formats must come from the same validated `report.json`; any
+memo handoff markdown remains unchanged through composition.
+
+```text
+python <gradient-gips-standards>/scripts/validate_gips_report.py review.md visuals.json meta.json
+python <gradient-gips-standards>/scripts/compose_gips_report.py review.md visuals.json meta.json report.json
+python <gradient-gips-standards>/scripts/validate_gips_report.py report.json
+python <this skill's directory>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Report Review" --budget <this skill's directory>/references/layout-budget.json
+```

@@ -801,6 +801,15 @@ def validate_meta(
     ):
         if not meta.get(field):
             errors.append(f"meta.{field} is required")
+    review_modes = {
+        "GIPS Report Review": "firm",
+        "GIPS Asset Owner Review": "asset-owner",
+    }
+    expected_mode = review_modes.get(str(meta.get("eyebrow", "")))
+    if expected_mode is not None and meta.get("mode") != expected_mode:
+        errors.append(
+            f"meta.mode must be {expected_mode!r} for {meta.get('eyebrow')}"
+        )
     signal = meta.get("signal")
     if isinstance(signal, dict) and signal.get("level") not in {
         "satisfactory",

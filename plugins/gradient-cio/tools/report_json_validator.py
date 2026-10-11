@@ -345,6 +345,37 @@ def validate_slots(
     return errors
 
 
+def validate_required_slot_availability(
+    root: dict[str, JsonValue],
+    sections: list[dict[str, JsonValue]],
+    rules: tuple[SlotRule, ...],
+) -> list[str]:
+    """Require an insufficient signal when most required evidence is unavailable."""
+    required = 0
+    unavailable = 0
+    for rule in rules:
+        for section in sections:
+            if re.fullmatch(rule.section_pattern, str(section.get("title", ""))) is None:
+                continue
+            required += rule.minimum
+            available = sum(
+                str(block.get("type", "")) in rule.block_types
+                for block in block_objects(section)
+            )
+            if available < rule.minimum and has_typed_unavailable(section):
+                unavailable += rule.minimum - available
+    if required == 0 or unavailable * 2 <= required:
+        return []
+    meta = as_object(root.get("meta")) or {}
+    signal = as_object(meta.get("signal")) or {}
+    if signal.get("level") == "insufficient":
+        return []
+    return [
+        "meta.signal.level must be 'insufficient' when more than 50% of "
+        f"required evidence slots are typed unavailable ({unavailable}/{required})"
+    ]
+
+
 def validate_tones_and_statuses(
     value: JsonValue, spec: ReportSpec, path: str = "$"
 ) -> list[str]:
@@ -907,6 +938,7 @@ def validate_report(document: JsonValue, spec: ReportSpec) -> list[str]:
 
     errors.extend(validate_section_order(sections, spec.section_rules))
     errors.extend(validate_slots(sections, spec.slot_rules))
+    errors.extend(validate_required_slot_availability(root, sections, spec.slot_rules))
     errors.extend(validate_tones_and_statuses(root, spec))
     errors.extend(validate_executive_contract(root, spec))
     errors.extend(validate_quantitative_blocks(root))

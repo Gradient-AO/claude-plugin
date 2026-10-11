@@ -11,45 +11,42 @@ from suites.report_validators import connector_cutover
 
 
 ANALYSIS_EXAMPLE_CONTRACTS = {
-    "gradient-private-markets-portfolio-construction": (
+    "gradient-portfolio-construction": (
         True,
         (
             r"Target Portfolio Structure",
             r"Forward Return and Risk",
             r"Liquidity and Denominator Risk",
-        ),
-    ),
-    "gradient-fixed-income-portfolio-construction": (
-        True,
-        (
-            r"Target Portfolio Structure",
             r"Rates and Credit Context",
-            r"Forward Return and Risk",
-        ),
-    ),
-    "gradient-global-public-equity-portfolio-construction": (
-        True,
-        (
-            r"Target Portfolio Structure",
             r"Factor Exposures and Concentration",
-            r"Forward Return and Risk",
             r"Manager and Issuer Concentration",
-        ),
-    ),
-    "gradient-marketable-alternatives-portfolio-construction": (
-        True,
-        (
             r"Target Strategy and Manager Structure",
             r"Factor, Currency and Concentration Evidence",
-            r"Forward Return and Risk",
-        ),
-    ),
-    "gradient-real-assets-portfolio-construction": (
-        True,
-        (
             r"Target Sub-Segment Structure",
             r"Inflation, Commodity and Diversification Context",
-            r"Forward Return and Risk",
+        ),
+    ),
+    "gradient-idd-manager-performance": (
+        True,
+        (
+            r"Absolute risk and return",
+            r"Relative performance",
+            r"Reliability and date-window sensitivity",
+            r"Risk and return",
+            r"Relative performance and capture",
+            r"Correlation and robustness",
+            r"Window sensitivity",
+            r"Rolling evidence",
+            r"Regime evidence",
+        ),
+    ),
+    "gradient-portfolio-attribution-compare": (
+        True,
+        (
+            r"Historical Attribution",
+            r"Governed Ex Ante Attribution",
+            r"Simulated Attribution",
+            r"Cross-Lane Comparison",
         ),
     ),
     "gradient-portfolio-review": (
@@ -142,7 +139,6 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
     ),
     "gradient-gips-manager-diligence": (True, (r"Findings",)),
     "gradient-gips-report-review": (True, (r"Findings",)),
-    "gradient-gips-asset-owner-review": (True, (r"Findings",)),
     "gradient-gips-policies-gap-check": (True, (r"Findings",)),
 }
 ANALYSIS_LABELS = (
@@ -327,6 +323,90 @@ def analysis_example_checks():
     )
 
 
+def registered_json_validator_checks(validator_manifest):
+    positive_errors = []
+    negative_errors = []
+    exercised = 0
+    for skill_name, registration in validator_manifest.items():
+        validator = ROOT / registration["validator"]
+        cases = [
+            (None, fixture_name)
+            for fixture_name in registration.get("fixtures", [])
+        ]
+        cases.extend(
+            (mode, fixture_name)
+            for mode, fixture_names in registration.get("modes", {}).items()
+            for fixture_name in fixture_names
+        )
+        for mode, fixture_name in cases:
+            fixture = FIX / fixture_name
+            if fixture.suffix != ".json" or not fixture.is_file():
+                continue
+            try:
+                document = json.loads(fixture.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                continue
+            if not isinstance(document, dict) or not any(
+                isinstance(document.get(key), list) for key in ("sections", "slides")
+            ):
+                continue
+            exercised += 1
+            valid = subprocess.run(
+                [sys.executable, str(validator), str(fixture)],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+            if valid.returncode != 0:
+                positive_errors.append(
+                    f"{skill_name}/{fixture_name}: {valid.stdout or valid.stderr}"
+                )
+                continue
+            mutated = json.loads(json.dumps(document))
+            if mode is not None:
+                mutated.setdefault("meta", {})["mode"] = "__invalid__"
+                mutation = "invalid mode"
+            else:
+                collection_key = (
+                    "sections"
+                    if isinstance(mutated.get("sections"), list)
+                    else "slides"
+                )
+                collection = mutated[collection_key]
+                if len(collection) < 2:
+                    continue
+                collection[0], collection[1] = collection[1], collection[0]
+                mutation = f"wrong {collection_key} order"
+            with tempfile.TemporaryDirectory() as temporary:
+                invalid_path = pathlib.Path(temporary) / fixture.name
+                invalid_path.write_text(
+                    json.dumps(mutated, ensure_ascii=False),
+                    encoding="utf-8",
+                )
+                invalid = subprocess.run(
+                    [sys.executable, str(validator), str(invalid_path)],
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
+                )
+            if invalid.returncode == 0:
+                negative_errors.append(
+                    f"{skill_name}/{fixture_name}: accepted {mutation}"
+                )
+    check(
+        exercised > 0 and not positive_errors,
+        "registered JSON validators accept every canonical fixture"
+        + (f": {positive_errors}" if positive_errors else ""),
+    )
+    check(
+        exercised > 0 and not negative_errors,
+        "registered JSON validators reject mode or order mutations"
+        + (f": {negative_errors}" if negative_errors else ""),
+    )
+
+
 def static(allow_branded):
     print("Static checks")
     pj = json.loads((ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
@@ -340,8 +420,9 @@ def static(allow_branded):
     theme_version = theme_match.group(1) if theme_match else ""
     check(bool(theme_version), "shared report theme declares THEME_VERSION")
     skills = sorted(p for p in (ROOT / "skills").iterdir() if (p / "SKILL.md").exists())
-    check(len(skills) >= 14, f"{len(skills)} skills found")
+    check(len(skills) == 21, f"exactly 21 target skills found ({len(skills)})")
     descriptions_by_name = {}
+    triggers_by_skill = {}
     for s in skills:
         text = (s / "SKILL.md").read_text(encoding="utf-8"); fm = frontmatter(text)
         check(fm.get("name") == s.name and s.name.startswith("gradient-"), f"{s.name}: name matches folder and starts with gradient-")
@@ -350,8 +431,8 @@ def static(allow_branded):
         chat_only = fm.get("delivery") == "chat"
         check(bool(description), f"{s.name}: has description")
         check(
-            len(description) <= 250,
-            f"{s.name}: description at most 250 characters ({len(description)})",
+            len(description) <= 300,
+            f"{s.name}: description at most 300 characters ({len(description)})",
         )
         check(
             description.startswith(("Create ", "Produce ", "Build ", "Check ", "Browse ")),
@@ -360,6 +441,27 @@ def static(allow_branded):
         check(
             any(marker in description for marker in ("Triggers:", "Use for ", "Use when ", "For ")),
             f"{s.name}: description includes trigger or routing language",
+        )
+        redirects = re.findall(r"\bFor [^.]+ use gradient-[a-z0-9-]+", description)
+        check(
+            len(redirects) <= 1,
+            f"{s.name}: description has at most one redirect",
+        )
+        triggers = tuple(
+            value.casefold()
+            for value in re.findall(r"'([^']+)'", description.partition("Triggers:")[2])
+        )
+        triggers_by_skill[s.name] = triggers
+        check(
+            len(triggers) == len(set(triggers)),
+            f"{s.name}: description triggers are unique within the skill",
+        )
+        modes = tuple(
+            mode.strip() for mode in fm.get("modes", "").split(",") if mode.strip()
+        )
+        check(
+            not modes or len(modes) == len(set(modes)),
+            f"{s.name}: metadata.modes contains unique values",
         )
         for metadata_key in (
             "group",
@@ -440,6 +542,45 @@ def static(allow_branded):
         "ambiguous IDD and ODD prompts have explicit description routes"
         + (f": {routing_errors}" if routing_errors else ""),
     )
+    routing_counts = {
+        name: sum(item.get("expected") == name for item in routing_fixtures)
+        for name in descriptions_by_name
+    }
+    check(
+        all(count >= 5 for count in routing_counts.values()),
+        "routing fixtures include at least five prompts per skill"
+        + (
+            f": {routing_counts}"
+            if any(count < 5 for count in routing_counts.values())
+            else ""
+        ),
+    )
+    validator_manifest = json.loads(
+        (FIX / "validator-manifest.json").read_text(encoding="utf-8")
+    )
+    output_skills = set(descriptions_by_name) - {"gradient-menu"}
+    manifest_errors = []
+    if set(validator_manifest) != output_skills:
+        manifest_errors.append(
+            f"keys differ: missing={sorted(output_skills - set(validator_manifest))}, "
+            f"stale={sorted(set(validator_manifest) - output_skills)}"
+        )
+    for skill_name, registration in validator_manifest.items():
+        validator = ROOT / str(registration.get("validator", ""))
+        if not validator.is_file():
+            manifest_errors.append(f"{skill_name}: missing validator {validator}")
+        fixture_names = list(registration.get("fixtures", []))
+        for mode_fixtures in registration.get("modes", {}).values():
+            fixture_names.extend(mode_fixtures)
+        for fixture_name in fixture_names:
+            if not (FIX / fixture_name).is_file():
+                manifest_errors.append(f"{skill_name}: missing fixture {fixture_name}")
+    check(
+        not manifest_errors,
+        "every output skill has a registered validator and fixture"
+        + (f": {manifest_errors}" if manifest_errors else ""),
+    )
+    registered_json_validator_checks(validator_manifest)
     handoff_contract_checks()
     analysis_example_checks()
     stale = []
@@ -447,6 +588,79 @@ def static(allow_branded):
         if p.is_file() and p.suffix in (".md", ".py", ".json") and "tests" not in p.parts and STALE.search(p.read_text(encoding="utf-8", errors="ignore")):
             stale.append(str(p.relative_to(ROOT)))
     check(not stale, "no stale skill names" + (f": {stale}" if stale else ""))
+    legacy_skill_names = (
+        "gradient-idd-manager-track-record",
+        "gradient-idd-manager-robustness",
+        "gradient-private-markets-portfolio-construction",
+        "gradient-fixed-income-portfolio-construction",
+        "gradient-global-public-equity-portfolio-construction",
+        "gradient-marketable-alternatives-portfolio-construction",
+        "gradient-real-assets-portfolio-construction",
+        "gradient-gips-asset-owner-review",
+    )
+    legacy_hits = []
+    repository_root = ROOT.parents[1]
+    for path in repository_root.rglob("*"):
+        if (
+            not path.is_file()
+            or path.resolve() == pathlib.Path(__file__).resolve()
+            or path.name == "CHANGELOG.md"
+            or path.suffix.lower() not in {".md", ".py", ".json"}
+        ):
+            continue
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        for legacy_name in legacy_skill_names:
+            if legacy_name in text:
+                legacy_hits.append(
+                    f"{path.relative_to(repository_root)}: {legacy_name}"
+                )
+    check(
+        not legacy_hits,
+        "zero consolidated skill names remain outside CHANGELOG.md"
+        + (f": {legacy_hits}" if legacy_hits else ""),
+    )
+    tool_states = json.loads((FIX / "mcp-tools.json").read_text(encoding="utf-8"))
+    public_tools = set(
+        json.loads(PUBLIC_TOOLS.read_text(encoding="utf-8")).get("tools", [])
+    )
+    live_tools = public_tools | set(tool_states.get("live", []))
+    planned_tools = set(tool_states.get("planned", []))
+    tool_pattern = re.compile(
+        r"`((?:get|list|run|analyze|build|check|search|screen|compare|"
+        r"save|update|create|extract|reconcile|batch|upload|preview|log|"
+        r"simulate)_[a-z0-9_]+)`"
+    )
+    unknown_tools = []
+    planned_scope_errors = []
+    for path in (ROOT / "skills").rglob("*.md"):
+        text = path.read_text(encoding="utf-8")
+        for tool_name in tool_pattern.findall(text):
+            if tool_name in planned_tools:
+                relative = path.relative_to(ROOT).as_posix()
+                allowed_scope = (
+                    relative.startswith(
+                        "skills/gradient-portfolio-attribution-compare/references/"
+                    )
+                    or relative.endswith(
+                        "/references/contracts/portfolio-attribution.md"
+                    )
+                )
+                if not allowed_scope or "capabilit" not in text.casefold():
+                    planned_scope_errors.append(f"{relative}: {tool_name}")
+            elif tool_name != "run_id" and tool_name not in live_tools:
+                unknown_tools.append(
+                    f"{path.relative_to(ROOT).as_posix()}: {tool_name}"
+                )
+    check(
+        not unknown_tools,
+        "backticked MCP tools are present in the live tool manifest"
+        + (f": {unknown_tools}" if unknown_tools else ""),
+    )
+    check(
+        not planned_scope_errors,
+        "planned attribution tools appear only in capability-gated references"
+        + (f": {planned_scope_errors}" if planned_scope_errors else ""),
+    )
     r = subprocess.run([sys.executable, str(ROOT / "tools" / "sync_shared.py"), "--check"], capture_output=True, text=True, encoding="utf-8", errors="replace")
     check(r.returncode == 0, "shared renderer and style guide in sync in every skill")
     r = subprocess.run(

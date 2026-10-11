@@ -98,7 +98,7 @@ completeness, top concern, open-item count, and files.
 - Reconcile supplied manager assertions → `gradient-odd-ddq-reconcile`.
 - Compare candidates' Form ADV, service-provider, disclosure, or 13F evidence
   → `gradient-odd-manager-compare`.
-- Return or benchmark evidence → `gradient-idd-manager-track-record` for one
+- Return or benchmark evidence → `gradient-idd-manager-performance` for one
   manager or `gradient-idd-manager-performance` for candidates.
 - Ongoing change tracking after the review → `gradient-odd-manager-monitor`.
 - Feed the executive/follow-up sections into a decision memo →

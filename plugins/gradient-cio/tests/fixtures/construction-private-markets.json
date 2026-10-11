@@ -1,6 +1,6 @@
 {
-  "construction_mode": "private_markets",
   "meta": {
+    "mode": "private_markets",
     "eyebrow": "Private Markets Portfolio Construction",
     "header_label": "Private Markets Portfolio Construction",
     "title": "Northstar Private Markets Program (TEST)",

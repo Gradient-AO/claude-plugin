@@ -1,6 +1,6 @@
 {
-  "construction_mode": "marketable_alternatives",
   "meta": {
+    "mode": "marketable_alternatives",
     "eyebrow": "Marketable Alternatives Portfolio Construction",
     "header_label": "Marketable Alternatives Portfolio Construction",
     "title": "Northstar Hedge Fund Portfolio (TEST)",

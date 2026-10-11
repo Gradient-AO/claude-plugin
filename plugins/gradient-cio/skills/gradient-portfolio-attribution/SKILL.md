@@ -23,6 +23,8 @@ normally 7–10 PDF pages. This is monitoring, not a recommendation.
 
 - Historical attribution comes only from `get_portfolio_attribution`; ex ante
   attribution comes only from `get_portfolio_ex_ante_attribution`.
+- Read `references/contracts/portfolio-attribution.md` and apply its shared
+  compatibility gate before comparing lanes.
 - Strategy Lab, expected-statistics charts, local Brinson, and return points
   never substitute for governed attribution.
 - Every figure carries `[S#]`. Preserve returned effects, methods, linking,
@@ -99,4 +101,6 @@ diagnostic count, and files.
   `gradient-portfolio-review`.
 - A trade, rebalance, allocation change, or vote → `gradient-decision-ic-memo`.
 - Asset-class construction → the relevant
-  `gradient-*-portfolio-construction` skill.
+  mode of `gradient-portfolio-construction`.
+- Multi-lane historical, ex ante and capability-gated simulation comparison →
+  `gradient-portfolio-attribution-compare`.

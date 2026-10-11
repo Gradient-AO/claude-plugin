@@ -579,15 +579,17 @@ def _validate_common_contract(
     expected_mode: str | None,
 ) -> list[str]:
     errors: list[str] = []
-    if root.get("construction_mode") != contract.mode:
-        errors.append(f"Root construction_mode must be '{contract.mode}'")
+    meta = as_object(root.get("meta")) or {}
+    if meta.get("mode") != contract.mode:
+        errors.append(f"meta.mode must be '{contract.mode}'")
+    if "construction_mode" in root:
+        errors.append("Root construction_mode is obsolete; use meta.mode")
     if expected_mode is not None and contract.mode != expected_mode:
         errors.append(
-            f"This validator requires construction_mode '{expected_mode}', "
+            f"This validator requires meta.mode '{expected_mode}', "
             f"not '{contract.mode}'"
         )
 
-    meta = as_object(root.get("meta")) or {}
     if (
         meta.get("eyebrow") != contract.eyebrow
         or meta.get("header_label") != contract.eyebrow
@@ -736,14 +738,15 @@ def _validate_mode_specific(
 def validate_construction_report(
     document: JsonValue, expected_mode: str | None = None
 ) -> tuple[ConstructionContract | None, list[str]]:
-    """Validate one construction report selected by root construction_mode."""
+    """Validate one construction report selected by meta.mode."""
     root = as_object(document)
     if root is None:
         return None, ["Report root must be a JSON object"]
-    mode = root.get("construction_mode")
+    meta = as_object(root.get("meta")) or {}
+    mode = meta.get("mode")
     if not isinstance(mode, str) or mode not in CONTRACTS:
         allowed = ", ".join(sorted(CONTRACTS))
-        return None, [f"construction_mode must be one of: {allowed}"]
+        return None, [f"meta.mode must be one of: {allowed}"]
 
     contract = CONTRACTS[mode]
     errors = validate_report(document, contract.spec)

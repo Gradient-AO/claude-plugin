@@ -10,15 +10,16 @@ metadata:
   modules: "firmFundDiligence,research"
   contracts: "odd-evidence"
   handoffs: "gradient-odd-report,gradient-idd-manager-performance,gradient-decision-ic-memo"
-  summary: "Compare managers' operational evidence or screen Form ADV records."
+  summary: "Compare named managers using operational and regulatory evidence."
 ---
 
-# Operational manager comparison and Form ADV screen
+# Operational manager comparison
 
-Use for Form ADV screening, a 2–5 manager operational comparison, an ADV-based
-shortlist, or 13F overlap. Return, benchmark, or track-record comparison
-belongs to `gradient-idd-manager-performance`; a return-based mandate shortlist
-belongs to `gradient-idd-manager-shortlist`. Deliver **"<Mandate or first manager> - Manager Comparison
+Use for a 2–5 named-manager operational comparison or 13F overlap. Candidate
+discovery and optional Form ADV screening belong to
+`gradient-idd-manager-shortlist`, which must follow screening with governed
+performance evidence. Return, benchmark, or track-record comparison belongs to
+`gradient-idd-manager-performance`. Deliver **"<Mandate or first manager> - Manager Comparison
 <YYYY-MM-DD>"**, normally 5–9 PDF pages. This is evidence comparison, not a
 ranking or investment recommendation.
 
@@ -38,15 +39,12 @@ ranking or investment recommendation.
 Resolve organization first and pass `organization_id` where supported. Ask at
 most one question.
 
-- Form ADV criteria or mandate terms → screen, then shortlist up to five.
 - Two to five named managers → compare directly.
-- One manager → ask for peers or offer a nearby factual screen.
+- One manager → ask for named peers.
 - Six or more → ask which five.
 
-Before screening or resolving IDs, read
+Before resolving IDs, read
 `references/comparison-contract.md#screening-and-identity-resolution`.
-Strategy words cannot be screened as investment styles; disclose name-only
-search limits.
 
 ## 2. Collect
 

@@ -1,0 +1,328 @@
+{
+  "meta": {
+    "mode": "fallback",
+    "eyebrow": "Portfolio Attribution Comparison",
+    "header_label": "Attribution Comparison",
+    "title": "Northstar Attribution Comparison (TEST)",
+    "subtitle": "Historical and ex ante lanes · planned capabilities unavailable",
+    "running_head": "Northstar attribution comparison (TEST)",
+    "data_as_of": "2026-06-30",
+    "cover_facts": [
+      [
+        "Portfolio",
+        "Northstar (TEST)"
+      ],
+      [
+        "Mode",
+        "Fallback"
+      ]
+    ],
+    "signal": {
+      "level": "watch",
+      "label": "Two governed lanes available"
+    },
+    "completeness": {
+      "used": 2,
+      "expected": 4,
+      "state": "partial"
+    }
+  },
+  "executive": {
+    "bottom_line": "Historical and ex ante effects are available, while simulation and server comparison capabilities are not published [S1][S2][S3].",
+    "tiles": [
+      {
+        "label": "Historical lane",
+        "value": "Available",
+        "sub": "Realized effects [S2]"
+      },
+      {
+        "label": "Ex ante lane",
+        "value": "Available",
+        "sub": "Expected effects [S3]"
+      },
+      {
+        "label": "Simulated lane",
+        "value": "Unavailable",
+        "sub": "Capability not published [S1]"
+      },
+      {
+        "label": "Comparison coverage",
+        "value": "Fallback",
+        "sub": "No server metrics [S1]"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "executive",
+      "title": "Executive Comparison",
+      "kicker": "Two governed lanes are available without server comparison metrics",
+      "blocks": [
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — Historical",
+          "text": "Observation: Historical effects are returned [S2]. Why it matters: Realized sources can be described. Uncertainty: One period may not persist. What would change the view: A later governed period."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — Ex ante",
+          "text": "Observation: Ex ante effects are returned [S3]. Why it matters: Expected sources can be described. Uncertainty: Inputs are assumptions. What would change the view: Refreshed governed inputs."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — Comparison",
+          "text": "Observation: Comparison capability is unavailable [S1]. Why it matters: Persistence cannot be assessed. Uncertainty: A future tool may return metrics. What would change the view: Published capability."
+        }
+      ]
+    },
+    {
+      "id": "scope",
+      "title": "Scope and Compatibility",
+      "kicker": "Portfolio, benchmark, cohort and currency identifiers match",
+      "blocks": [
+        {
+          "type": "coverage",
+          "items": [
+            {
+              "name": "Compatibility gate",
+              "status": "available",
+              "note": "Four identifiers match [S2][S3]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "historical",
+      "title": "Historical Attribution",
+      "kicker": "Returned realized effects are shown without recalculation",
+      "blocks": [
+        {
+          "type": "bars",
+          "title": "Historical effects",
+          "items": [
+            {
+              "label": "Selection",
+              "value": -0.8,
+              "display": "-0.8pp"
+            },
+            {
+              "label": "Allocation",
+              "value": 0.2,
+              "display": "+0.2pp"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Selection leads detractors",
+          "text": "Observation: Returned selection is negative [S2]. Why it matters: Selection leads realized detractors. Uncertainty: The evidence covers one linked period. What would change the view: A later historical result."
+        }
+      ]
+    },
+    {
+      "id": "ex-ante",
+      "title": "Governed Ex Ante Attribution",
+      "kicker": "Returned expected effects are shown as assumptions",
+      "blocks": [
+        {
+          "type": "bars",
+          "title": "Ex ante effects",
+          "items": [
+            {
+              "label": "Allocation",
+              "value": 0.4,
+              "display": "+0.4pp"
+            },
+            {
+              "label": "Selection",
+              "value": -0.1,
+              "display": "-0.1pp"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Allocation leads expectations",
+          "text": "Observation: Returned allocation is positive [S3]. Why it matters: Allocation leads expected effects. Uncertainty: Inputs are assumptions. What would change the view: A refreshed ex ante result."
+        }
+      ]
+    },
+    {
+      "id": "simulated",
+      "title": "Simulated Attribution",
+      "kicker": "Simulation capability is not published",
+      "blocks": [
+        {
+          "type": "callout",
+          "title": "Not available",
+          "text": "Not available — simulation capability not published [S1]. No simulated payload, uncertainty interval, or scenario identifier was returned.",
+          "tone": "watch",
+          "role": "availability"
+        },
+        {
+          "type": "coverage",
+          "items": [
+            {
+              "name": "Capability",
+              "status": "unavailable",
+              "note": "Capability-gated before invocation [S1]"
+            },
+            {
+              "name": "Invocation",
+              "status": "unavailable",
+              "note": "Not called because capability is absent [S1]"
+            },
+            {
+              "name": "Lane identity",
+              "status": "unavailable",
+              "note": "No simulated payload [S1]"
+            },
+            {
+              "name": "Uncertainty",
+              "status": "unavailable",
+              "note": "No server uncertainty result [S1]"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Simulation unavailable",
+          "text": "Observation: Simulation is unavailable [S1]. Why it matters: Scenario effects cannot be assessed. Uncertainty: Capability may be added later. What would change the view: A published governed simulation tool."
+        }
+      ],
+      "page_break": "force"
+    },
+    {
+      "id": "comparison",
+      "title": "Cross-Lane Comparison",
+      "kicker": "Server-derived comparison metrics are not published",
+      "blocks": [
+        {
+          "type": "callout",
+          "title": "Not available",
+          "text": "Not available — differences, concentration, persistence, and Sources that persist are unavailable because comparison capability is not published [S1].",
+          "tone": "watch",
+          "role": "availability"
+        },
+        {
+          "type": "coverage",
+          "items": [
+            {
+              "name": "Lane differences",
+              "status": "unavailable",
+              "note": "Requires governed comparison output [S1]"
+            },
+            {
+              "name": "Concentration",
+              "status": "unavailable",
+              "note": "No local aggregation permitted [S1]"
+            },
+            {
+              "name": "Persistence",
+              "status": "unavailable",
+              "note": "No server persistence metric [S1]"
+            },
+            {
+              "name": "Sources that persist",
+              "status": "unavailable",
+              "note": "No governed comparison result [S1]"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Comparison unavailable",
+          "text": "Observation: Server comparison is unavailable [S1]. Why it matters: No persistence claim is supported. Uncertainty: Future metrics may alter context. What would change the view: A governed comparison result."
+        }
+      ],
+      "page_break": "force"
+    },
+    {
+      "id": "coverage",
+      "title": "Coverage and Limitations",
+      "kicker": "Two live lanes and two capability gaps define coverage",
+      "blocks": [
+        {
+          "type": "coverage",
+          "items": [
+            {
+              "name": "Historical",
+              "status": "available",
+              "note": "Governed result [S2]"
+            },
+            {
+              "name": "Ex ante",
+              "status": "available",
+              "note": "Governed result [S3]"
+            },
+            {
+              "name": "Planned tools",
+              "status": "unavailable",
+              "note": "Not published [S1]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "appendix-a",
+      "title": "Appendix A — Sources and Methods",
+      "kicker": "Governed source inventory",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Tag",
+            "Evidence",
+            "Tool"
+          ],
+          "rows": [
+            [
+              "S1",
+              "Capability gate",
+              "get_gradient_capabilities"
+            ],
+            [
+              "S2",
+              "Historical attribution",
+              "get_portfolio_attribution"
+            ],
+            [
+              "S3",
+              "Ex ante attribution",
+              "get_portfolio_ex_ante_attribution"
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Method boundary",
+          "text": "Each lane remains on its returned method, period or horizon, benchmark role, parent cohort and calculation currency. Historical evidence is realized, ex ante evidence is expected, and simulated evidence is scenario-based. Values are displayed without local reconciliation, attribution arithmetic or substitutions [S1][S2][S3]."
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Comparison boundary",
+          "text": "Cross-lane differences, concentration, overlap, reconciliation and persistence are reported only when the governed comparison capability returns them. Capability absence is an evidence limitation, not a zero value or a failed lane. Request IDs, diagnostics, residuals and coverage remain attached to their source payloads [S1]."
+        }
+      ],
+      "page_break": "force"
+    }
+  ]
+}

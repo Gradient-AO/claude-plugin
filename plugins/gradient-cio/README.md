@@ -27,12 +27,10 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 
 | Skill | Produces / routes | Modules |
 |---|---|---|
-| `gradient-idd-manager-performance` | Create a manager performance comparison report using governed return evidence. Triggers: 'compare manager track records', 'assess return performance', 'compare managers to benchmarks'. For operational comparison use gradient-odd-manager-compare. | strategyLab |
-| `gradient-idd-manager-track-record` | Create a single-manager track-record assessment using governed return evidence. Triggers: 'is this track record good', 'assess one manager performance', 'is performance meaningful'. For operational diligence use gradient-odd-report. | strategyLab |
-| `gradient-idd-manager-robustness` | Create a manager robustness report for persistence across windows. Triggers: 'test performance persistence', 'run date-window robustness', 'check rolling consistency'. For operational diligence use gradient-odd-report. | strategyLab |
+| `gradient-idd-manager-performance` | Create a manager performance report for single-manager meaningfulness against benchmarks, comparison, or rolling-window persistence and robustness. Triggers: 'assess one track record', 'compare manager performance', 'test performance persistence'. For operational diligence use gradient-odd-report. | strategyLab |
 | `gradient-idd-manager-portfolio-fit` | Create a portfolio-fit report for one prospective manager. Triggers: 'test manager portfolio fit', 'add this hedge fund manager', 'assess diversification impact'. For whole-sleeve design use gradient-portfolio-construction. | strategyLab |
 | `gradient-idd-private-markets-pme` | Create a private-markets PME report for one fund or manager. Triggers: 'run private-markets PME', 'compare this fund to public markets', 'assess PME performance'. For program construction use gradient-portfolio-construction. | strategyLab |
-| `gradient-idd-manager-shortlist` | Create a manager shortlist report for a defined mandate. Triggers: 'build a manager shortlist', 'screen this mandate', 'identify return finalists'. For operational comparison use gradient-odd-manager-compare. | strategyLab |
+| `gradient-idd-manager-shortlist` | Create a manager shortlist report with optional Form ADV screening followed by governed performance evidence. Triggers: 'build a manager shortlist', 'screen this mandate', 'identify return finalists'. | strategyLab |
 
 ### Operational due diligence
 
@@ -49,11 +47,8 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 |---|---|---|
 | `gradient-portfolio-review` | Create a portfolio monitoring review for a board or committee. Triggers: 'review our total portfolio', 'prepare a quarterly portfolio review', 'monitor portfolio risks'. For a decision memo use gradient-decision-ic-memo. | portfolio,research,peerIntelligence,strategyLab |
 | `gradient-portfolio-attribution` | Create a single-lane attribution report for one saved portfolio. Triggers: 'prepare an attribution report', 'run Brinson analysis', 'show sources of active return'. For broader portfolio monitoring use gradient-portfolio-review. | portfolio |
-| `gradient-private-markets-portfolio-construction` | Create a private-markets construction report for an allocation program. Triggers: 'design private equity pacing', 'review private-markets commitments', 'build a private-markets program'. For one manager fit use gradient-idd-manager-portfolio-fit. | portfolio,research,firmFundDiligence,strategyLab |
-| `gradient-fixed-income-portfolio-construction` | Create a fixed-income construction report for a bond sleeve. Triggers: 'design a bond portfolio', 'review duration and credit', 'build a fixed-income sleeve'. For one manager fit use gradient-idd-manager-portfolio-fit. | portfolio,research,macroDesk |
-| `gradient-global-public-equity-portfolio-construction` | Create a global-equity construction report for a public-markets sleeve. Triggers: 'design global equity', 'review active passive mix', 'build an equity manager lineup'. For one manager fit use gradient-idd-manager-portfolio-fit. | portfolio,research |
-| `gradient-marketable-alternatives-portfolio-construction` | Create a marketable-alternatives construction report for a hedge-fund sleeve. Triggers: 'design a hedge fund portfolio', 'review redemption liquidity', 'build an alternatives strategy mix'. For one manager fit use gradient-idd-manager-portfolio-fit. | portfolio,research,peerIntelligence,gradientSignals,firmFundDiligence,strategyLab |
-| `gradient-real-assets-portfolio-construction` | Create a real-assets construction report for an inflation-sensitive sleeve. Triggers: 'design real estate allocation', 'review infrastructure mix', 'build a real-assets portfolio'. For one manager fit use gradient-idd-manager-portfolio-fit. | portfolio,research,macroDesk,peerIntelligence,gradientSignals,firmFundDiligence,strategyLab |
+| `gradient-portfolio-attribution-compare` | Create a multi-lane portfolio-attribution comparison report. Triggers: 'compare historical and ex ante attribution', 'show persistent attribution sources', 'compare realized expected and simulated effects'. For one lane use gradient-portfolio-attribution. | portfolio |
+| `gradient-portfolio-construction` | Create a portfolio-construction report in private markets, fixed income, global public equity, marketable alternatives, or real assets mode. Triggers: 'design a sleeve strategy mix', 'build an allocation', 'review portfolio construction'. | portfolio,research,macroDesk,peerIntelligence,gradientSignals,firmFundDiligence,strategyLab |
 
 ### GIPS
 
@@ -61,8 +56,7 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 |---|---|---|
 | `gradient-gips-standards` | Create a GIPS standards briefing for a compliance question. Triggers: 'explain GIPS requirements', 'what is the compliance statement', 'compare GIPS and SEC rules'. For a document review use gradient-gips-report-review. | none |
 | `gradient-gips-manager-diligence` | Create a GIPS diligence report for an investment manager. Triggers: 'verify a GIPS claim', 'review manager GIPS compliance', 'assess performance integrity'. For an operational review use gradient-odd-report. | firmFundDiligence |
-| `gradient-gips-report-review` | Create a GIPS report review for a composite or pooled fund. Triggers: 'review this GIPS report', 'check a composite presentation', 'review a GIPS advertisement'. For general requirements use gradient-gips-standards. | none |
-| `gradient-gips-asset-owner-review` | Create a GIPS asset-owner review for a total-fund report. Triggers: 'review an asset-owner report', 'check a board performance report', 'assess total-fund GIPS compliance'. For firm reports use gradient-gips-report-review. | none |
+| `gradient-gips-report-review` | Create a GIPS report review in firm or asset-owner mode. Triggers: 'review this GIPS report', 'check a composite presentation', 'assess an asset-owner total-fund report'. For general requirements use gradient-gips-standards. | none |
 | `gradient-gips-policies-gap-check` | Create a GIPS policies gap report for a compliance manual. Triggers: 'review our GIPS manual', 'check missing GIPS policies', 'gap-check policies and procedures'. For report disclosures use gradient-gips-report-review. | none |
 
 ### Decision
@@ -73,7 +67,7 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 
 <!-- END GENERATED SKILL CATALOG -->
 
-The skills work together: the asset-class construction skills select an existing portfolio and produce
+The skills work together: the portfolio-construction skill selects an existing portfolio and produces
 read-only decision packs for a whole sleeve; the `gradient-idd-*` skills supply return-based manager evidence,
 while `gradient-odd-manager-compare`, the ODD report and GIPS reviews supply operational evidence; the IC memo
 provides the formal 16-section vote format; and the portfolio review monitors the approved portfolio. The

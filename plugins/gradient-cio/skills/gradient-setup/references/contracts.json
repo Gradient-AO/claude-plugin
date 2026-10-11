@@ -33,7 +33,6 @@
       "log_diligence_review",
       "reconcile_manager_ddq_claims",
       "run_strategy_lab_date_window_robustness",
-      "run_strategy_lab_diversification",
       "run_strategy_lab_expected_statistics",
       "run_strategy_lab_relative_return",
       "save_strategy_lab_scenario",
@@ -306,13 +305,6 @@
         "committed",
         "outcome",
         "receipt_id"
-      ],
-      "run_strategy_lab_diversification": [
-        "domain",
-        "names",
-        "matrix",
-        "correlation_summary",
-        "risk_contribution_rows"
       ]
     },
     "required_probe_ids": [
@@ -357,8 +349,7 @@
       "write_diligence_review",
       "write_roster",
       "write_strategy_scenario",
-      "write_upload_ddq",
-      "strategy_diversification"
+      "write_upload_ddq"
     ]
   },
   "envelope": [
@@ -1495,31 +1486,6 @@
         "domain": "manager-compare",
         "selected_series_id_count": 3,
         "selected_series_summary_count": 3
-      }
-    },
-    {
-      "id": "strategy_diversification",
-      "set": "full",
-      "tool": "run_strategy_lab_diversification",
-      "depends_on": [
-        "strategy_benchmarks"
-      ],
-      "args": {
-        "return_series_ids": [
-          "<strategy_benchmarks:demo_set.manager_fund_series[0].series_id>",
-          "<strategy_benchmarks:demo_set.manager_fund_series[1].series_id>",
-          "<strategy_benchmarks:demo_set.manager_fund_series[2].series_id>"
-        ]
-      },
-      "required": [
-        "domain",
-        "names",
-        "matrix",
-        "correlation_summary",
-        "risk_contribution_rows"
-      ],
-      "equals": {
-        "domain": "diversification"
       }
     },
     {
