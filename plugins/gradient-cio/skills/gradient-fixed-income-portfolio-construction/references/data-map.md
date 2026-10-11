@@ -53,7 +53,7 @@ fields, and never compare or conflate the two excess values.
 | Macro regime | `get_macro_signals`; `view: gradient_signal`, plus `view: regime_state` when available | Preserve GRIP availability/degradation reasons and returned regime status; context only, never a forecast |
 | Broader context | `get_the_read`; `visuals: none` | Facts only; at most two short paragraphs |
 | Selected-series diagnostics | `build_strategy_lab_session` for the selected `return_series_ids`, then `run_strategy_lab_expected_statistics`, `run_strategy_lab_relative_return` or `run_strategy_lab_date_window_robustness` with the returned session | Selected-series sandbox; never use portfolio ID |
-| Manager evidence | `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve; use `gradient-manager-compare` / `gradient-odd-report` for deeper work | Preserve entity scope and severity; never infer that an unmatched holding has no findings |
+| Manager evidence | `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve; use `gradient-odd-manager-compare` / `gradient-odd-report` for deeper work | Preserve entity scope and severity; never infer that an unmatched holding has no findings |
 | User documents | IPS, benchmark specification, holdings analytics, transition plan | Tag as user documents with date and scope |
 
 ## Fallbacks

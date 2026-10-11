@@ -48,7 +48,7 @@ fields, and never compare or conflate the two excess values.
 | CMA positioning | `get_cma_consensus_check`; `mode: asset_class`, held private-market classes | Preserve returned positioning and coverage |
 | Macro regime | `get_macro_signals`; `view: gradient_signal`, plus `view: regime_state` when available | Preserve GRIP availability/degradation reasons and returned regime status; context only, never a forecast |
 | Manager evidence | `get_manager_diligence_brief`, `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve | Preserve entity scope and severity; separate server evidence from plugin conclusions |
-| Manager shortlist | Return-based shortlist through `gradient-idd-manager-shortlist`; Form ADV screen (`search_managers`, `screen_managers`) through `gradient-manager-compare` | Handoff rather than duplicating a comparison |
+| Manager shortlist | Return-based shortlist through `gradient-idd-manager-shortlist`; Form ADV screen (`search_managers`, `screen_managers`) through `gradient-odd-manager-compare` | Handoff rather than duplicating a comparison |
 | Selected-series robustness | Pass selected `return_series_ids` directly to a supported `run_strategy_lab_*` tool and add the required benchmark field. Do not also pass a `strategy_lab_session` stub. | Optional sandbox only; never pass `portfolio_id` |
 | User documents | IPS, pacing plan, cash-flow forecast or consultant recommendation | Tag as user document with document date and scope |
 

@@ -1,6 +1,6 @@
 ---
-name: gradient-equity-note
-description: "Create a branded, sourced note on one US-listed issuer. Triggers: 'equity note on a ticker', 'top holding', 'concentrated position', 'what changed in the filing', 'who holds this ticker'. Hands manager diligence to ODD and decisions to IC memo."
+name: gradient-research-equity-note
+description: "Create a sourced equity research note for one US-listed issuer. Triggers: 'research this ticker', 'review our concentrated holding', 'summarize filing changes'. For operational manager diligence use gradient-odd-report."
 metadata:
   style_contract: "2.1.0"
   group: "Research"
@@ -9,7 +9,7 @@ metadata:
   menu_order: "20"
   modules: "research,gradientSignals"
   contracts: "research"
-  handoffs: "gradient-odd-report,gradient-ic-memo"
+  handoffs: "gradient-odd-report,gradient-decision-ic-memo"
   summary: "Research one public equity issuer with sourced fundamentals and filing changes."
 ---
 
@@ -90,7 +90,7 @@ lines (signal/completeness, largest filed change, top open item) plus files.
 ## 5. Handoffs and optional watchlist
 
 - Diligence on a manager holding the issuer → `gradient-odd-report`.
-- A portfolio or security decision → `gradient-ic-memo`.
+- A portfolio or security decision → `gradient-decision-ic-memo`.
 
 Only if the user accepts the post-delivery offer, read
 `references/equity-evidence-contract.md#optional-watchlist-write`. Preview

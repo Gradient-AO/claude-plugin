@@ -1,15 +1,15 @@
 ---
-name: gradient-manager-compare
-description: "Create a branded ODD comparison or Form ADV screen from adviser, service-provider, disclosure, and 13F evidence. Triggers: 'compare advisers', 'compare operational risk', 'screen ADV records'. For returns use gradient-idd-manager-compare."
+name: gradient-odd-manager-compare
+description: "Create an operational comparison report for named managers. Triggers: 'compare manager operations', 'compare Form ADV disclosures', 'review service providers'. For return performance use gradient-idd-manager-performance."
 metadata:
   style_contract: "2.1.0"
-  group: "Operational diligence"
+  group: "Operational due diligence"
   subject: "manager"
   output: "comparison report"
   menu_order: "20"
   modules: "firmFundDiligence,research"
   contracts: "odd-evidence"
-  handoffs: "gradient-odd-report,gradient-idd-manager-compare,gradient-ic-memo"
+  handoffs: "gradient-odd-report,gradient-idd-manager-performance,gradient-decision-ic-memo"
   summary: "Compare managers' operational evidence or screen Form ADV records."
 ---
 
@@ -17,7 +17,7 @@ metadata:
 
 Use for Form ADV screening, a 2–5 manager operational comparison, an ADV-based
 shortlist, or 13F overlap. Return, benchmark, or track-record comparison
-belongs to `gradient-idd-manager-compare`; a return-based mandate shortlist
+belongs to `gradient-idd-manager-performance`; a return-based mandate shortlist
 belongs to `gradient-idd-manager-shortlist`. Deliver **"<Mandate or first manager> - Manager Comparison
 <YYYY-MM-DD>"**, normally 5–9 PDF pages. This is evidence comparison, not a
 ranking or investment recommendation.
@@ -96,9 +96,9 @@ managers/signal, top flag, and next-step count.
 
 - Full diligence on a selected manager → `gradient-odd-report`.
 - Return and benchmark evidence for the same candidates →
-  `gradient-idd-manager-compare`.
-- DDQ conflict or manager response needed → `gradient-ddq-reconcile`.
-- Manager-hire decision paper → `gradient-ic-memo`.
+  `gradient-idd-manager-performance`.
+- DDQ conflict or manager response needed → `gradient-odd-ddq-reconcile`.
+- Manager-hire decision paper → `gradient-decision-ic-memo`.
 
 Only if the user asks after delivery, read
 `references/comparison-contract.md#optional-writes`. Preview one named

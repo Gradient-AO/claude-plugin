@@ -40,10 +40,10 @@ def contract_manifest():
         "ic_memo": (
             ROOT
             / "skills"
-            / "gradient-ic-memo"
+            / "gradient-decision-ic-memo"
             / "references"
             / "report-layout.md",
-            ROOT / "skills" / "gradient-ic-memo" / "references" / "layout-budget.json",
+            ROOT / "skills" / "gradient-decision-ic-memo" / "references" / "layout-budget.json",
         ),
         "portfolio_comprehensive": (
             PORTFOLIO_REVIEW_TEMPLATE,
@@ -56,10 +56,10 @@ def contract_manifest():
         "portfolio_attribution_report": (
             ROOT
             / "skills"
-            / "gradient-portfolio-attribution-report"
+            / "gradient-portfolio-attribution"
             / "references"
             / "attribution-template.md",
-            ROOT / "skills" / "gradient-portfolio-attribution-report" / "references" / "layout-budget.json",
+            ROOT / "skills" / "gradient-portfolio-attribution" / "references" / "layout-budget.json",
         ),
         "construction_private_markets": (
             ROOT
@@ -572,12 +572,12 @@ def contract_manifest():
     attribution_guidance_paths = (
         ROOT
         / "skills"
-        / "gradient-portfolio-attribution-report"
+        / "gradient-portfolio-attribution"
         / "references"
         / "data-map.md",
         ROOT
         / "skills"
-        / "gradient-portfolio-attribution-report"
+        / "gradient-portfolio-attribution"
         / "references"
         / "attribution-template.md",
     )
@@ -646,7 +646,7 @@ def contract_manifest():
     equity_evidence_contract = (
         ROOT
         / "skills"
-        / "gradient-equity-note"
+        / "gradient-research-equity-note"
         / "references"
         / "equity-evidence-contract.md"
     ).read_text(encoding="utf-8")
@@ -1303,8 +1303,8 @@ def contract_manifest():
     )
     requirement_guidance = SKILL_REQUIREMENTS.read_text(encoding="utf-8")
     check(
-        "gradient-ic-memo — Portfolio Analytics core" in requirement_guidance
-        and "gradient-ic-memo — Strategy Lab supplement" in requirement_guidance
+        "gradient-decision-ic-memo — Portfolio Analytics core" in requirement_guidance
+        and "gradient-decision-ic-memo — Strategy Lab supplement" in requirement_guidance
         and "missing makes the memo Partial" in requirement_guidance,
         "IC memo readiness is split by module with optional Strategy Lab",
     )
@@ -1388,7 +1388,7 @@ def contract_manifest():
     manager_monitor_contract = (
         ROOT
         / "skills"
-        / "gradient-manager-monitor"
+        / "gradient-odd-manager-monitor"
         / "references"
         / "monitoring-contract.md"
     ).read_text(encoding="utf-8")
@@ -1424,13 +1424,13 @@ def contract_manifest():
         (
             ROOT
             / "skills"
-            / "gradient-manager-monitor"
+            / "gradient-odd-manager-monitor"
             / "SKILL.md"
         ).read_text(encoding="utf-8")
         + (
             ROOT
             / "skills"
-            / "gradient-manager-monitor"
+            / "gradient-odd-manager-monitor"
             / "references"
             / "monitoring-contract.md"
         ).read_text(encoding="utf-8"),

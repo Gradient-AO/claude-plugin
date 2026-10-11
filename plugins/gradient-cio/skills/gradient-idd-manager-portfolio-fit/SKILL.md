@@ -1,6 +1,6 @@
 ---
 name: gradient-idd-manager-portfolio-fit
-description: "Create a sourced one-manager portfolio-fit and diversification report. Triggers: 'what does adding this manager do', 'portfolio fit', 'diversification impact'. For whole-sleeve design use a portfolio-construction skill."
+description: "Create a portfolio-fit report for one prospective manager. Triggers: 'test manager portfolio fit', 'add this hedge fund manager', 'assess diversification impact'. For whole-sleeve design use gradient-portfolio-construction."
 metadata:
   version: "0.1.0"
   style_contract: "2.1.0"
@@ -10,7 +10,7 @@ metadata:
   menu_order: "40"
   modules: "strategyLab"
   contracts: "idd-methodology,idd-odd-ic-handoff"
-  handoffs: "gradient-odd-report,gradient-ic-memo"
+  handoffs: "gradient-odd-report,gradient-decision-ic-memo"
   summary: "Assess one manager's portfolio fit, diversification and scenario impact."
 ---
 
@@ -46,7 +46,7 @@ Read `references/report-style.md` and `references/writing-standards.md`. Build o
 
 Validate and attach a `gradient-idd-odd-ic-handoff/v1` object using `references/contracts/idd-odd-ic-handoff.schema.json`. Include canonical or advisory identity status, return-series and benchmark IDs, evidence, limitations, and selection rationale.
 
-A viable allocation change → `gradient-ic-memo`; unresolved operations → `gradient-odd-report`; a redesign of the whole sleeve → the matching `gradient-*-portfolio-construction` skill.
+A viable allocation change → `gradient-decision-ic-memo`; unresolved operations → `gradient-odd-report`; a redesign of the whole sleeve → the matching `gradient-*-portfolio-construction` skill.
 
 ## 5. Validate and deliver
 

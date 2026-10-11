@@ -70,7 +70,7 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
             r"Liquidity and Commitments",
         ),
     ),
-    "gradient-portfolio-attribution-report": (
+    "gradient-portfolio-attribution": (
         True,
         (
             r"Historical Returns Context",
@@ -90,7 +90,7 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
             r"Monitoring, findings & DDQ",
         ),
     ),
-    "gradient-equity-note": (
+    "gradient-research-equity-note": (
         False,
         (
             r"Fundamentals trend",
@@ -102,7 +102,7 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
             r"Positioning and crowding",
         ),
     ),
-    "gradient-manager-compare": (
+    "gradient-odd-manager-compare": (
         False,
         (
             r"Side-by-side comparison",
@@ -111,11 +111,11 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
             r"ADV–13F consistency and events",
         ),
     ),
-    "gradient-manager-monitor": (
+    "gradient-odd-manager-monitor": (
         False,
         (r"Changes and alerts", r"Review calendar"),
     ),
-    "gradient-ddq-reconcile": (
+    "gradient-odd-ddq-reconcile": (
         True,
         (
             r"Discrepancies and follow-ups",
@@ -123,7 +123,7 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
             r"Fund reconciliation(?: — .+)?",
         ),
     ),
-    "gradient-ic-memo": (
+    "gradient-decision-ic-memo": (
         True,
         (
             r"Executive Summary",

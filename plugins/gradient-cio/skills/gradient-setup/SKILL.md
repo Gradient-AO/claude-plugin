@@ -1,12 +1,12 @@
 ---
 name: gradient-setup
-description: "Check GradientCIO connection, organization, entitlements, data readiness, and connector contracts; produces a readiness report. Use for setup, connection check, or what is ready. For a command catalog use gradient-menu."
+description: "Create a readiness report for GradientCIO access and data. Triggers: 'check GradientCIO setup', 'test connector readiness', 'which workflows are ready'. For workflow selection use gradient-menu."
 metadata:
   style_contract: "2.1.0"
-  group: "Admin"
+  group: "Start"
   subject: "connection and readiness"
   output: "report"
-  menu_order: "10"
+  menu_order: "20"
   modules: "none"
   contracts: "none"
   handoffs: "gradient-menu"
@@ -153,5 +153,5 @@ canonical QA command's specific repair levers and rerun it until clean.
 ## 6. Offer next steps
 
 - If the user has roster funds and the monitoring skill is ready, offer to set up the weekly monitoring digest
-  as a scheduled task (see gradient-manager-monitor).
+  as a scheduled task (see gradient-odd-manager-monitor).
 - If something is not licensed, say which module unlocks it; do not upsell beyond that.

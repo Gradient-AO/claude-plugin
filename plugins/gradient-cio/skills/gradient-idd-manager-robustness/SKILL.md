@@ -1,6 +1,6 @@
 ---
 name: gradient-idd-manager-robustness
-description: "Create a sourced manager persistence and robustness report. Triggers: 'does performance persist', 'test start dates', 'rolling performance', 'regime robustness'. For operational diligence use gradient-odd-report."
+description: "Create a manager robustness report for persistence across windows. Triggers: 'test performance persistence', 'run date-window robustness', 'check rolling consistency'. For operational diligence use gradient-odd-report."
 metadata:
   version: "0.1.0"
   style_contract: "2.1.0"
@@ -10,7 +10,7 @@ metadata:
   menu_order: "30"
   modules: "strategyLab"
   contracts: "idd-methodology,idd-odd-ic-handoff"
-  handoffs: "gradient-odd-report,gradient-ic-memo"
+  handoffs: "gradient-odd-report,gradient-decision-ic-memo"
   summary: "Test manager persistence across windows, regimes and rolling periods."
 ---
 
@@ -44,7 +44,7 @@ Read `references/report-style.md` and `references/writing-standards.md`. Build o
 
 Validate and attach a `gradient-idd-odd-ic-handoff/v1` object using `references/contracts/idd-odd-ic-handoff.schema.json`. Include canonical or advisory identity status, return-series and benchmark IDs, evidence, limitations, and selection rationale.
 
-A robust finalist → `gradient-odd-report`; a changed conclusion → `gradient-idd-manager-compare`; an investment decision → `gradient-ic-memo`.
+A robust finalist → `gradient-odd-report`; a changed conclusion → `gradient-idd-manager-performance`; an investment decision → `gradient-decision-ic-memo`.
 
 ## 5. Validate and deliver
 

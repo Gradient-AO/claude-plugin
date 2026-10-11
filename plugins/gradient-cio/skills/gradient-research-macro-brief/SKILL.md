@@ -1,6 +1,6 @@
 ---
-name: gradient-macro-brief
-description: "Produce an IC macro briefing from The Read, rates, credit, signals, GRIP, events, and CMAs. Use for macro brief, market outlook, rates and credit, or IC macro deck. For a portfolio decision use gradient-ic-memo."
+name: gradient-research-macro-brief
+description: "Create a macro briefing deck for an investment committee. Triggers: 'prepare a macro brief', 'review rates and credit conditions', 'build an IC macro deck'. For a committee decision use gradient-decision-ic-memo."
 metadata:
   style_contract: "2.1.0"
   group: "Research"
@@ -9,7 +9,7 @@ metadata:
   menu_order: "10"
   modules: "macroDesk,research,gradientSignals"
   contracts: "research"
-  handoffs: "gradient-ic-memo"
+  handoffs: "gradient-decision-ic-memo"
   summary: "Brief investment committees on macro conditions, signals, events and assumptions."
 ---
 

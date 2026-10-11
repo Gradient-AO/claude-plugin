@@ -1,6 +1,6 @@
 ---
-name: gradient-ic-memo
-description: "Create a deterministic, sourced IC decision memo. Triggers: 'IC memo', 'board memo', 'allocation recommendation', 'rebalance proposal', 'manager hire/fire', 'committee vote'. Accepts portfolio, IDD, ODD, and GIPS handoffs."
+name: gradient-decision-ic-memo
+description: "Create a sourced decision memo for an investment committee. Triggers: 'draft an IC memo', 'prepare an allocation vote', 'write a manager hire memo'. For portfolio monitoring use gradient-portfolio-review."
 metadata:
   style_contract: "2.1.0"
   group: "Decision"
@@ -110,10 +110,10 @@ files.
 
 - Monitoring-only performance/allocation report → `gradient-portfolio-review`.
 - Manager Hire candidate returns against benchmarks →
-  `gradient-idd-manager-compare` (one candidate:
+  `gradient-idd-manager-performance` (one candidate:
   `gradient-idd-manager-track-record`).
 - Manager Hire candidate operations (Form ADV, service providers, disclosures,
-  13F) → `gradient-manager-compare`; full finalist review →
+  13F) → `gradient-odd-manager-compare`; full finalist review →
   `gradient-odd-report`.
 
 Only when asked, an Allocation Change/Rebalance based on a real matching
