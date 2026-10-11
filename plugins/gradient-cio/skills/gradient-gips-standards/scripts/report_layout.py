@@ -392,8 +392,11 @@ def resolve_layout_budget(
     modes = budget.get("modes")
     if not isinstance(modes, dict):
         return copy.deepcopy(budget)
+    meta = report.get("meta")
+    meta_mode = meta.get("mode") if isinstance(meta, dict) else None
     mode = str(
-        report.get("review_mode")
+        meta_mode
+        or report.get("review_mode")
         or report.get("report_mode")
         or budget.get("default_mode")
         or ""

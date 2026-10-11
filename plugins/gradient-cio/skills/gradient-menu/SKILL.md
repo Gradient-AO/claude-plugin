@@ -34,9 +34,7 @@ Example: “Check which GradientCIO workflows are ready.”
 Example: “Prepare a macro brief for the next IC meeting.”
 
 ## Investment due diligence
-- `/gradient-cio:gradient-idd-manager-performance` — Compare manager performance with matched benchmarks and reliability evidence. Next: gradient-odd-report, gradient-odd-manager-compare, gradient-decision-ic-memo.
-- `/gradient-cio:gradient-idd-manager-track-record` — Assess one manager track record and its statistical reliability. Next: gradient-odd-report, gradient-decision-ic-memo.
-- `/gradient-cio:gradient-idd-manager-robustness` — Test manager persistence across windows, regimes and rolling periods. Next: gradient-odd-report, gradient-decision-ic-memo.
+- `/gradient-cio:gradient-idd-manager-performance` — Assess manager performance, comparisons and persistence with matched benchmarks. Next: gradient-odd-report, gradient-odd-manager-compare, gradient-decision-ic-memo.
 - `/gradient-cio:gradient-idd-manager-portfolio-fit` — Assess one manager's portfolio fit, diversification and scenario impact. Next: gradient-odd-report, gradient-decision-ic-memo.
 - `/gradient-cio:gradient-idd-private-markets-pme` — Assess private-market performance against public-market equivalents. Next: gradient-odd-report, gradient-decision-ic-memo.
 - `/gradient-cio:gradient-idd-manager-shortlist` — Build a return-based manager shortlist for a defined mandate. Next: gradient-odd-report, gradient-odd-manager-compare, gradient-decision-ic-memo.
@@ -45,7 +43,7 @@ Example: “Compare these managers' track records.”
 
 ## Operational due diligence
 - `/gradient-cio:gradient-odd-report` — Produce a sourced operational due diligence report or roster triage. Next: gradient-odd-ddq-reconcile, gradient-odd-manager-monitor, gradient-decision-ic-memo.
-- `/gradient-cio:gradient-odd-manager-compare` — Compare managers' operational evidence or screen Form ADV records. Next: gradient-odd-report, gradient-idd-manager-performance, gradient-decision-ic-memo.
+- `/gradient-cio:gradient-odd-manager-compare` — Compare named managers using operational and regulatory evidence. Next: gradient-odd-report, gradient-idd-manager-performance, gradient-decision-ic-memo.
 - `/gradient-cio:gradient-odd-ddq-reconcile` — Reconcile DDQ answers against Form ADV and surface discrepancies. Next: gradient-odd-report, gradient-decision-ic-memo.
 - `/gradient-cio:gradient-odd-manager-monitor` — Summarize weekly manager changes, alerts, findings and upcoming reviews. Next: gradient-odd-report, gradient-odd-ddq-reconcile.
 
@@ -54,19 +52,15 @@ Example: “Prepare ODD on the finalist.”
 ## Portfolio
 - `/gradient-cio:gradient-portfolio-review` — Review portfolio performance, policy, exposures, risk and liquidity. Next: gradient-portfolio-attribution, gradient-decision-ic-memo.
 - `/gradient-cio:gradient-portfolio-attribution` — Explain historical and governed ex ante sources of portfolio return. Next: gradient-portfolio-review, gradient-decision-ic-memo.
-- `/gradient-cio:gradient-private-markets-portfolio-construction` — Design private-markets commitments, pacing, diversification and liquidity. Next: gradient-decision-ic-memo.
-- `/gradient-cio:gradient-fixed-income-portfolio-construction` — Design a fixed-income allocation with risk, liquidity and implementation evidence. Next: gradient-decision-ic-memo.
-- `/gradient-cio:gradient-global-public-equity-portfolio-construction` — Design a global equity allocation across regions, factors and managers. Next: gradient-decision-ic-memo.
-- `/gradient-cio:gradient-marketable-alternatives-portfolio-construction` — Design a hedge-fund allocation across strategies, factors and liquidity. Next: gradient-decision-ic-memo.
-- `/gradient-cio:gradient-real-assets-portfolio-construction` — Design real-assets allocation for inflation, diversification and liquidity. Next: gradient-decision-ic-memo.
+- `/gradient-cio:gradient-portfolio-attribution-compare` — Compare compatible historical, ex ante and simulated attribution lanes. Next: gradient-portfolio-review, gradient-decision-ic-memo.
+- `/gradient-cio:gradient-portfolio-construction` — Design portfolio sleeves across five asset-class construction modes. Next: gradient-decision-ic-memo.
 
 Example: “Review our total portfolio for the quarter.”
 
 ## GIPS
 - `/gradient-cio:gradient-gips-standards` — Answer GIPS requirements questions in a sourced briefing note. Next: gradient-gips-report-review.
 - `/gradient-cio:gradient-gips-manager-diligence` — Verify manager GIPS claims, verification and performance integrity. Next: gradient-odd-report, gradient-decision-ic-memo.
-- `/gradient-cio:gradient-gips-report-review` — Review GIPS reports and advertisements line by line. Next: gradient-decision-ic-memo.
-- `/gradient-cio:gradient-gips-asset-owner-review` — Review asset-owner performance reporting against the GIPS standards. Next: gradient-decision-ic-memo.
+- `/gradient-cio:gradient-gips-report-review` — Review firm and asset-owner reports against applicable GIPS requirements. Next: gradient-decision-ic-memo.
 - `/gradient-cio:gradient-gips-policies-gap-check` — Gap-check GIPS policies and procedures against required provisions. Next: gradient-decision-ic-memo.
 
 Example: “Review this report against the GIPS standards.”

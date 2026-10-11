@@ -1,6 +1,6 @@
 {
-  "construction_mode": "real_assets",
   "meta": {
+    "mode": "real_assets",
     "eyebrow": "Real Assets Portfolio Construction",
     "header_label": "Real Assets Portfolio Construction",
     "title": "Northstar Real Assets Portfolio (TEST)",

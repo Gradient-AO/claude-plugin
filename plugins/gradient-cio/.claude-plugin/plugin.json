@@ -1,6 +1,6 @@
 {
   "name": "gradient-cio",
-  "version": "2.8.2",
+  "version": "3.0.0",
   "description": "Gradient CIO client skills: investment and operational due diligence, portfolio construction and attribution, manager research, portfolio reviews, macro briefings, IC memos, and GIPS reviews, delivered through centralized branded PDF and PowerPoint styling. Includes the GradientCIO connector and a setup check.",
   "author": {
     "name": "GradientCIO"
@@ -25,10 +25,12 @@
     "monitoring",
     "portfolio construction",
     "portfolio attribution",
+    "attribution comparison",
     "portfolio review",
     "private markets",
     "real assets",
     "manager comparison",
+    "manager performance",
     "investment due diligence",
     "equity research",
     "setup",

@@ -1,6 +1,6 @@
 {
-  "construction_mode": "global_public_equity",
   "meta": {
+    "mode": "global_public_equity",
     "eyebrow": "Global Public Equity Portfolio Construction",
     "header_label": "Global Public Equity Portfolio Construction",
     "title": "Northstar Global Public Equity Portfolio (TEST)",

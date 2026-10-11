@@ -30,7 +30,7 @@ Scope is one candidate manager added to, or replacing one manager in, a baseline
 
 ## 1. Resolve and collect
 
-Resolve the organization, selected return-series IDs, canonical entity links, date window, and benchmark mapping. Use `run_strategy_lab_expected_statistics`, `run_strategy_lab_diversification`, `run_strategy_lab_simulation`, and `compare_strategy_lab_saved_scenarios`. Run independent reads in parallel and save large payloads. If a required public capability is unavailable or not licensed, show that typed status and continue only with independent evidence.
+Resolve the organization, selected return-series IDs, canonical entity links, date window, and benchmark mapping. Use `run_strategy_lab_expected_statistics`, `run_strategy_lab_simulation`, and `compare_strategy_lab_saved_scenarios`. Run independent reads in parallel and save large payloads. If a required public capability is unavailable or not licensed, show that typed status and continue only with independent evidence. Correlation, covariance, and risk-contribution evidence are typed unavailable unless those governed results return them directly.
 
 ## 2. Assess
 

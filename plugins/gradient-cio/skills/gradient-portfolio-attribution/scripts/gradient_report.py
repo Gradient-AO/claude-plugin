@@ -153,7 +153,7 @@ def b_table(b):
             f'<col style="width:{esc(width)}">' for width in widths
         ) + "</colgroup>"
     head = "".join(f"<th{cls(i)}>{esc(c)}</th>" for i, c in enumerate(b["columns"]))
-    body = ""
+    rendered_rows = []
     for r in b["rows"]:
         cells = []
         for i, c in enumerate(r):
@@ -164,10 +164,24 @@ def b_table(b):
                 cells.append(f"<td{cell_cls}>{chip(c['chip'], c.get('status', c['chip']))}</td>")
             else:
                 cells.append(f"<td{cell_cls}>{rich(c)}</td>")
-        body += "<tr>" + "".join(cells) + "</tr>"
+        rendered_rows.append("<tr>" + "".join(cells) + "</tr>")
+    source_table = bool(b["columns"]) and str(b["columns"][0]).strip().casefold() in {
+        "source",
+        "tag",
+    }
+    if source_table and len(rendered_rows) > 3:
+        body = (
+            "<tbody>"
+            + "".join(rendered_rows[:-3])
+            + '</tbody><tbody class="source-tail">'
+            + "".join(rendered_rows[-3:])
+            + "</tbody>"
+        )
+    else:
+        body = "<tbody>" + "".join(rendered_rows) + "</tbody>"
     title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
     note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
-    return f'{title}<table class="grid">{colgroup}<thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>{note}'
+    return f'{title}<table class="grid">{colgroup}<thead><tr>{head}</tr></thead>{body}</table>{note}'
 
 CHART_TABLE_ROW_CAP = 12
 
@@ -1081,8 +1095,9 @@ thead{{display:table-header-group}} tr{{break-inside:avoid}}
 .chart .ax{{font-size:9px;fill:{MUTED};font-family:GradientInter,Inter,Arial}}
 .callout{{border-left:4px solid var(--c);background:{WASH};padding:10px 13px;border-radius:0 4px 4px 0}}
 .callout .ct{{font-weight:700;margin-bottom:2px}}
-.covwrap{{border-top:1px solid {RULE}}} .cov{{display:grid;grid-template-columns:32% 16% 52%;gap:8px;padding:4px 0;border-bottom:1px solid {RULE};align-items:start}}
-.cn{{font-weight:600}} .cnote{{font-size:7.8pt;color:{INK2}}}
+.covwrap{{border-top:1px solid {RULE}}} .cov{{display:grid;grid-template-columns:minmax(0,32%) max-content minmax(0,1fr);gap:8px;padding:4px 0;border-bottom:1px solid {RULE};align-items:start}}
+.cn{{font-weight:600}} .cnote{{font-size:7.8pt;color:{INK2};min-width:0;overflow-wrap:anywhere}}
+.source-tail{{break-inside:avoid}}
 .finding{{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid {RULE}}}
 .fs{{font-size:6.8pt;font-weight:800;letter-spacing:.08em;color:{INK};background:var(--c);text-align:center;border-radius:3px;padding:3px 0;height:fit-content}}
 .ft{{font-weight:650}} .fd{{color:{INK2};font-size:8.4pt}}

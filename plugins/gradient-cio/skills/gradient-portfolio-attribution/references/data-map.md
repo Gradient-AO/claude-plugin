@@ -77,15 +77,11 @@ market assumptions.
 
 ## Compatibility gate
 
-Historical-versus-ex-ante comparison is allowed only when:
-1. portfolio ID matches;
-2. benchmark role matches;
-3. parent cohort matches;
-4. calculation currency matches.
-
-Even then, compare sign, rank and concentration only. Historical uses realized
-monthly observations and Carino linking; ex ante uses one expected period and
-current normalized weights. Do not subtract the two outputs.
+Use the canonical compatibility and fallback rules in
+`references/contracts/portfolio-attribution.md`. Both attribution skills use
+that shared contract. Historical uses realized monthly observations and
+Carino linking; ex ante uses one expected period and current normalized
+weights.
 
 ## Unsupported substitutes
 

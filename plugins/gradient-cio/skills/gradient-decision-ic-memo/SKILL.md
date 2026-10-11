@@ -62,7 +62,7 @@ saved evidence and must be labeled/cited as specified in
 ## 3. GIPS and evidence boundaries
 
 Always retain Performance Integrity & GIPS. Use
-`gradient-gips-asset-owner-review` for total-fund reporting and
+`gradient-gips-report-review` for total-fund reporting and
 `gradient-gips-manager-diligence` for managers at least 5% exposure and every
 hire candidate. Carry High/Medium findings and follow-ups into memo risk/open
 items. If unavailable, mark Not assessed and preserve the gap.
@@ -111,7 +111,7 @@ files.
 - Monitoring-only performance/allocation report → `gradient-portfolio-review`.
 - Manager Hire candidate returns against benchmarks →
   `gradient-idd-manager-performance` (one candidate:
-  `gradient-idd-manager-track-record`).
+  `gradient-idd-manager-performance`).
 - Manager Hire candidate operations (Form ADV, service providers, disclosures,
   13F) → `gradient-odd-manager-compare`; full finalist review →
   `gradient-odd-report`.

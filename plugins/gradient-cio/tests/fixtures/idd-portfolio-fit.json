@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "eyebrow": "Investment Due Diligence",
+    "header_label": "Manager Performance",
+    "title": "Northstar portfolio-fit report (TEST)",
+    "subtitle": "Governed return evidence",
+    "running_head": "Northstar comparison (TEST)",
+    "data_as_of": "2025-12-31",
+    "cover_facts": [
+      [
+        "Mode",
+        "Compare"
+      ],
+      [
+        "Scope",
+        "Fictional TEST managers"
+      ]
+    ],
+    "signal": {
+      "level": "insufficient",
+      "label": "Insufficient governed evidence"
+    },
+    "completeness": {
+      "used": 1,
+      "expected": 4,
+      "state": "partial"
+    },
+    "handoff": {
+      "schema_version": "gradient-idd-odd-ic-handoff/v1",
+      "stage": "idd",
+      "subject": {
+        "name": "Northstar managers (TEST)",
+        "identity_status": "advisory"
+      }
+    },
+    "report_kind": "portfolio_fit"
+  },
+  "executive": {
+    "bottom_line": "The comparison remains insufficient because required governed results are unavailable [S1].",
+    "tiles": [
+      {
+        "label": "Result",
+        "value": "Insufficient",
+        "sub": "Governed evidence gap [S1]"
+      },
+      {
+        "label": "Benchmark",
+        "value": "Advisory",
+        "sub": "Match not confirmed [S1]"
+      },
+      {
+        "label": "Coverage",
+        "value": "1 / 4",
+        "sub": "Required reads [S1]"
+      },
+      {
+        "label": "Reliability",
+        "value": "Not assessed",
+        "sub": "Window result unavailable [S1]"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "title": "Executive conclusion",
+      "kicker": "Evidence does not support a comparative conclusion",
+      "blocks": [
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — Coverage",
+          "text": "Observation: Coverage is incomplete [S1]. Why it matters: Comparison is constrained. Uncertainty: Missing reads may change results. What would change the view: Governed comparison evidence."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — Benchmarks",
+          "text": "Observation: Benchmark matching is advisory [S1]. Why it matters: Relative evidence is bounded. Uncertainty: Mandate fit is unconfirmed. What would change the view: Canonical matches."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — Reliability",
+          "text": "Observation: Robustness is unavailable [S1]. Why it matters: Persistence is unknown. Uncertainty: Window sensitivity is untested. What would change the view: Governed robustness results."
+        }
+      ]
+    },
+    {
+      "title": "Baseline and proposed scenario",
+      "kicker": "Benchmark identity remains advisory for the test candidates",
+      "blocks": [
+        {
+          "type": "coverage",
+          "items": [
+            {
+              "name": "Benchmark mapping",
+              "status": "unavailable",
+              "note": "Canonical match unavailable [S1]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Correlation and diversification",
+      "kicker": "Risk and return comparison is unavailable",
+      "blocks": [
+        {
+          "type": "callout",
+          "tone": "watch",
+          "role": "availability",
+          "title": "Not available",
+          "text": "Not available — governed comparison result missing [S1]."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Comparison unavailable",
+          "text": "Observation: Comparative metrics are unavailable [S1]. Why it matters: No ranking is supportable. Uncertainty: Missing evidence may differ by manager. What would change the view: A governed comparison result."
+        }
+      ]
+    },
+    {
+      "title": "Return and risk impact",
+      "kicker": "Relative and capture evidence is unavailable",
+      "blocks": [
+        {
+          "type": "callout",
+          "tone": "watch",
+          "role": "availability",
+          "title": "Not available",
+          "text": "Not available — relative-return result missing [S1]."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Relative evidence missing",
+          "text": "Observation: Relative evidence is unavailable [S1]. Why it matters: Benchmark-relative behavior is unknown. Uncertainty: Capture may vary by window. What would change the view: A governed relative-return result."
+        }
+      ]
+    },
+    {
+      "title": "Simulation and stress",
+      "kicker": "Persistence and correlation evidence is unavailable",
+      "blocks": [
+        {
+          "type": "callout",
+          "tone": "watch",
+          "role": "availability",
+          "title": "Not available",
+          "text": "Not available — governed robustness and correlation results missing [S1]."
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Robustness unavailable",
+          "text": "Observation: Robustness evidence is unavailable [S1]. Why it matters: Persistence cannot be assessed. Uncertainty: Results may depend on dates. What would change the view: Governed window tests."
+        }
+      ]
+    },
+    {
+      "title": "Constraints and follow-ups",
+      "kicker": "One governed evidence request remains",
+      "blocks": [
+        {
+          "type": "questions",
+          "items": [
+            {
+              "q": "Return canonical benchmark and comparison evidence.",
+              "why": "Required to assess manager-relative performance [S1]."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Appendix A — Sources and methods",
+      "kicker": "Saved fictional test evidence",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Tag",
+            "Evidence",
+            "Tool"
+          ],
+          "rows": [
+            [
+              "S1",
+              "Typed unavailable test response",
+              "get_gradient_capabilities"
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Governed evidence boundary",
+          "text": "The report preserves the returned subject identity, benchmark mapping, observation window, units, methods, coverage status and request provenance [S1]. Missing performance, correlation, capture, simulation or regime fields remain unavailable. No local statistics, substitutions, rankings or neutral defaults are introduced."
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Decision-use boundary",
+          "text": "Typed unavailability limits the conclusion and drives the insufficient signal where most required slots are absent [S1]. The evidence supports follow-up collection only; operational diligence and committee decisions remain separate handoffs with their own governed evidence and validation contracts. Every unresolved field remains reader-visible in the delivered report."
+        }
+      ]
+    }
+  ]
+}

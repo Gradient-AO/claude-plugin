@@ -28,24 +28,32 @@ ZIP_TIME = (2020, 1, 1, 0, 0, 0)
 DIRECT_SOURCES = {
     "gradient-odd-ddq-reconcile": "ddq.json",
     "gradient-research-equity-note": "equity.json",
-    "gradient-fixed-income-portfolio-construction": "construction-fixed-income.json",
-    "gradient-global-public-equity-portfolio-construction": "construction-global-public-equity.json",
+    "gradient-idd-manager-performance-single": "idd-manager-performance-single.json",
+    "gradient-idd-manager-performance-compare": "idd-manager-performance-compare.json",
+    "gradient-idd-manager-performance-robustness": "idd-manager-performance-robustness.json",
+    "gradient-idd-manager-portfolio-fit": "idd-portfolio-fit.json",
+    "gradient-idd-manager-shortlist": "idd-shortlist.json",
+    "gradient-idd-private-markets-pme": "idd-private-markets-pme.json",
+    "gradient-portfolio-construction-fixed-income": "construction-fixed-income.json",
+    "gradient-portfolio-construction-global-public-equity": "construction-global-public-equity.json",
     "gradient-decision-ic-memo": "ic-memo.json",
     "gradient-research-macro-brief": "deck.json",
     "gradient-odd-manager-compare": "compare.json",
     "gradient-odd-manager-monitor": "digest.json",
-    "gradient-marketable-alternatives-portfolio-construction": "construction-marketable-alternatives.json",
+    "gradient-portfolio-construction-marketable-alternatives": "construction-marketable-alternatives.json",
     "gradient-odd-report": "odd.json",
     "gradient-portfolio-attribution": "portfolio-attribution-report.json",
+    "gradient-portfolio-attribution-compare-fallback": "attribution-compare-fallback.json",
+    "gradient-portfolio-attribution-compare-three-lane": "attribution-compare-three-lane.json",
     "gradient-portfolio-review": "portfolio-comprehensive.json",
-    "gradient-private-markets-portfolio-construction": "construction-private-markets.json",
-    "gradient-real-assets-portfolio-construction": "construction-real-assets.json",
+    "gradient-portfolio-construction-private-markets": "construction-private-markets.json",
+    "gradient-portfolio-construction-real-assets": "construction-real-assets.json",
     "gradient-setup": "setup.json",
 }
 
 GIPS_SOURCES = {
     "gradient-gips-manager-diligence": ("gips.md", "gips_visuals.json", "gips_meta.json"),
-    "gradient-gips-asset-owner-review": (
+    "gradient-gips-report-review-asset-owner": (
         "gips" "-asset-owner-review.md",
         "gips" "-asset-owner-review-visuals.json",
         "gips" "-asset-owner-review-meta.json",
@@ -61,6 +69,19 @@ GIPS_SOURCES = {
         "gips" "-report-review-meta.json",
     ),
 }
+
+
+def skill_for_artifact(artifact: str) -> str:
+    """Resolve a mode-specific example filename to its installed skill."""
+    if artifact.startswith("gradient-portfolio-construction-"):
+        return "gradient-portfolio-construction"
+    if artifact.startswith("gradient-idd-manager-performance-"):
+        return "gradient-idd-manager-performance"
+    if artifact.startswith("gradient-portfolio-attribution-compare-"):
+        return "gradient-portfolio-attribution-compare"
+    if artifact == "gradient-gips-report-review-asset-owner":
+        return "gradient-gips-report-review"
+    return artifact
 
 
 def normalize_pptx(path: Path) -> None:
@@ -173,7 +194,13 @@ def main() -> int:
                     "--out",
                     str(work / skill),
                     "--budget",
-                    str(ROOT / "skills" / skill / "references" / "layout-budget.json"),
+                    str(
+                        ROOT
+                        / "skills"
+                        / skill_for_artifact(skill)
+                        / "references"
+                        / "layout-budget.json"
+                    ),
                 ],
                 env=environment,
                 check=False,
@@ -193,7 +220,7 @@ def main() -> int:
             "Layout QA warnings for: " + ", ".join(failed),
             file=sys.stderr,
         )
-    print(f"Generated 20 fictional examples in {args.out}")
+    print(f"Generated {len(sources)} fictional examples in {args.out}")
     return 0
 
 

@@ -1,6 +1,7 @@
 """Report and composer validator regression checks."""
 
 from suites.harness import *
+from report_layout import resolve_layout_budget
 
 def connector_cutover():
     removed_scripts = [
@@ -326,7 +327,7 @@ def connector_cutover():
             skill_names = {
                 "gips": "gradient-gips-manager-diligence",
                 "gips-report-review": "gradient-gips-report-review",
-                "gips-asset-owner-review": "gradient-gips-asset-owner-review",
+                "gips-asset-owner-review": "gradient-gips-report-review",
                 "gips-policies-gap-check": "gradient-gips-policies-gap-check",
             }
             skill_dir = ROOT / "skills" / skill_names[prefix]
@@ -335,6 +336,7 @@ def connector_cutover():
                     encoding="utf-8"
                 )
             )
+            budget = resolve_layout_budget(budget, composed_document)
             budget_sections = budget.get("content", {}).get("sections", {})
             expected_roles = [
                 "summary",
@@ -1396,15 +1398,15 @@ def connector_cutover():
     }
     construction_skill_names = {
         "private-markets construction":
-            "gradient-private-markets-portfolio-construction",
+            "gradient-portfolio-construction",
         "fixed-income construction":
-            "gradient-fixed-income-portfolio-construction",
+            "gradient-portfolio-construction",
         "global-public-equity construction":
-            "gradient-global-public-equity-portfolio-construction",
+            "gradient-portfolio-construction",
         "marketable-alternatives construction":
-            "gradient-marketable-alternatives-portfolio-construction",
+            "gradient-portfolio-construction",
         "real-assets construction":
-            "gradient-real-assets-portfolio-construction",
+            "gradient-portfolio-construction",
     }
     for label, _validator, fixture in CONSTRUCTION_VALIDATORS:
         expected = construction_expectations[label]
@@ -1432,6 +1434,7 @@ def connector_cutover():
                 encoding="utf-8"
             )
         )
+        budget = resolve_layout_budget(budget, document)
         budget_sections = budget["sections"]
         expected_keys = [
             str(index) for index in range(1, len(expected["sections"]) + 1)
@@ -1493,6 +1496,32 @@ def connector_cutover():
     missing_tile["executive"]["tiles"].pop()
     contract_regressions.append(
         ("construction missing executive tile", construction_validator, missing_tile)
+    )
+
+    mostly_unavailable = cloned_fixture("construction-private-markets.json")
+    mostly_unavailable["meta"]["signal"] = {
+        "level": "watch",
+        "label": "Evidence gaps",
+    }
+    for title in (
+        "Current Private Markets Portfolio",
+        "Historical Performance and Attribution",
+        "Target Portfolio Structure",
+        "Forward Return and Risk",
+        "Commitments, Pacing and Cash Flow",
+        "Liquidity and Denominator Risk",
+    ):
+        report_section(mostly_unavailable, title)["blocks"] = [{
+            "type": "unavailable",
+            "title": "Not available",
+            "text": "Not available — governed evidence missing [S1].",
+        }]
+    contract_regressions.append(
+        (
+            "construction availability threshold without insufficient signal",
+            construction_validator,
+            mostly_unavailable,
+        )
     )
 
     missing_role = cloned_fixture("construction-private-markets.json")
@@ -1719,6 +1748,13 @@ def connector_cutover():
                 errors="replace",
             )
             check(rejected.returncode == 1, f"validator rejects {label}")
+            if "availability threshold" in label:
+                message = rejected.stderr or rejected.stdout
+                check(
+                    "more than 50%" in message
+                    and "meta.signal.level must be 'insufficient'" in message,
+                    "availability threshold failure explains the insufficient signal",
+                )
             if "missing visual" in label:
                 message = rejected.stderr or rejected.stdout
                 check(

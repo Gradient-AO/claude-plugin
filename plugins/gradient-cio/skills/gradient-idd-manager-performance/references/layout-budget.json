@@ -3,7 +3,7 @@
   "design_profile": "analytical",
   "forced_breaks": [],
   "page_target": {
-    "min": 5,
+    "min": 4,
     "max": 9
   },
   "hard_ceiling": 12,
@@ -14,13 +14,13 @@
     "max_visuals": 4
   },
   "sections": {
-    "executive": {
+    "1": {
       "role": "summary",
       "requires_analysis": false
     },
     "2": {
-      "role": "analytical",
-      "requires_analysis": true
+      "role": "reference",
+      "requires_analysis": false
     },
     "3": {
       "role": "analytical",
@@ -38,7 +38,7 @@
       "role": "closing",
       "requires_analysis": false
     },
-    "A": {
+    "7": {
       "role": "appendix",
       "requires_analysis": false
     }

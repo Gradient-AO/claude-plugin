@@ -1,0 +1,15 @@
+{
+  "live": [
+    "get_gradient_capabilities",
+    "get_portfolio_attribution",
+    "get_portfolio_ex_ante_attribution"
+  ],
+  "planned": [
+    "simulate_portfolio_attribution",
+    "compare_portfolio_attribution"
+  ],
+  "planned_scope": {
+    "simulate_portfolio_attribution": "gradient-portfolio-attribution-compare/references",
+    "compare_portfolio_attribution": "gradient-portfolio-attribution-compare/references"
+  }
+}

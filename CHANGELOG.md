@@ -1,5 +1,45 @@
 # Changelog
 
+## 3.0.0
+- Consolidated the public catalog from 27 commands to 21, with mode-driven manager-performance, portfolio-construction and GIPS report-review skills.
+- Added capability-gated portfolio attribution comparison with governed historical, ex ante and simulated lanes; absent server capabilities remain typed unavailable without local derived analytics.
+- Added strict per-skill and per-mode validator registration, golden fixtures, negative contract mutations, expanded routing coverage and Claude-backed release routing evaluation.
+- Removed the retired Strategy Lab diversification tool from public requirements and setup probes; unsupported diversification evidence now uses typed unavailability.
+- Fixed PDF coverage-status wrapping and final-source-row orphaning, with focused renderer regressions.
+
+### Command migration from 2.8.1
+
+| 2.8.1 command | 3.0.0 command or mode |
+|---|---|
+| `gradient-macro-brief` | `gradient-research-macro-brief` |
+| `gradient-equity-note` | `gradient-research-equity-note` |
+| `gradient-idd-manager-compare` | `gradient-idd-manager-performance` with `meta.mode: compare` |
+| `gradient-idd-manager-track-record` | `gradient-idd-manager-performance` with `meta.mode: single` |
+| `gradient-idd-manager-robustness` | `gradient-idd-manager-performance` with `meta.mode: robustness` |
+| `gradient-manager-compare` | `gradient-odd-manager-compare` |
+| `gradient-ddq-reconcile` | `gradient-odd-ddq-reconcile` |
+| `gradient-manager-monitor` | `gradient-odd-manager-monitor` |
+| `gradient-portfolio-attribution-report` | `gradient-portfolio-attribution` |
+| — | `gradient-portfolio-attribution-compare` with `meta.mode: fallback` or `three_lane` |
+| `gradient-private-markets-portfolio-construction` | `gradient-portfolio-construction` with `meta.mode: private_markets` |
+| `gradient-fixed-income-portfolio-construction` | `gradient-portfolio-construction` with `meta.mode: fixed_income` |
+| `gradient-global-public-equity-portfolio-construction` | `gradient-portfolio-construction` with `meta.mode: global_public_equity` |
+| `gradient-gips-manager-diligence` | Unchanged |
+| `gradient-gips-policies-gap-check` | Unchanged |
+| `gradient-marketable-alternatives-portfolio-construction` | `gradient-portfolio-construction` with `meta.mode: marketable_alternatives` |
+| `gradient-real-assets-portfolio-construction` | `gradient-portfolio-construction` with `meta.mode: real_assets` |
+| `gradient-gips-asset-owner-review` | `gradient-gips-report-review` with `meta.mode: asset-owner` |
+| `gradient-gips-report-review` | `gradient-gips-report-review` with `meta.mode: firm` |
+| `gradient-gips-standards` | Unchanged |
+| `gradient-idd-manager-portfolio-fit` | Unchanged |
+| `gradient-idd-manager-shortlist` | Unchanged |
+| `gradient-idd-private-markets-pme` | Unchanged |
+| `gradient-ic-memo` | `gradient-decision-ic-memo` |
+| `gradient-menu` | Unchanged |
+| `gradient-odd-report` | Unchanged |
+| `gradient-portfolio-review` | Unchanged |
+| `gradient-setup` | Unchanged |
+
 ## 2.8.2
 - Refreshed the 20 reference example PDFs and PowerPoints to the current report theme and layouts; they had not been regenerated since the 2.7.0 renderer changes.
 - Reference examples are now generated through the production layout QA with each skill's layout budget, so they include the same page-break repair users receive.

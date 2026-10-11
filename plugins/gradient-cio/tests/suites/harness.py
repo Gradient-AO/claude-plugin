@@ -132,7 +132,7 @@ CONSTRUCTION_VALIDATORS = [
         "private-markets construction",
         ROOT
         / "skills"
-        / "gradient-private-markets-portfolio-construction"
+        / "gradient-portfolio-construction"
         / "scripts"
         / "validate_construction.py",
         FIX / "construction-private-markets.json",
@@ -141,7 +141,7 @@ CONSTRUCTION_VALIDATORS = [
         "fixed-income construction",
         ROOT
         / "skills"
-        / "gradient-fixed-income-portfolio-construction"
+        / "gradient-portfolio-construction"
         / "scripts"
         / "validate_construction.py",
         FIX / "construction-fixed-income.json",
@@ -150,7 +150,7 @@ CONSTRUCTION_VALIDATORS = [
         "global-public-equity construction",
         ROOT
         / "skills"
-        / "gradient-global-public-equity-portfolio-construction"
+        / "gradient-portfolio-construction"
         / "scripts"
         / "validate_construction.py",
         FIX / "construction-global-public-equity.json",
@@ -159,7 +159,7 @@ CONSTRUCTION_VALIDATORS = [
         "marketable-alternatives construction",
         ROOT
         / "skills"
-        / "gradient-marketable-alternatives-portfolio-construction"
+        / "gradient-portfolio-construction"
         / "scripts"
         / "validate_construction.py",
         FIX / "construction-marketable-alternatives.json",
@@ -168,7 +168,7 @@ CONSTRUCTION_VALIDATORS = [
         "real-assets construction",
         ROOT
         / "skills"
-        / "gradient-real-assets-portfolio-construction"
+        / "gradient-portfolio-construction"
         / "scripts"
         / "validate_construction.py",
         FIX / "construction-real-assets.json",
@@ -230,6 +230,14 @@ CASES = [
     ("portfolio", ["portfolio.json", "OUT"],                         5, 8,  ["Portfolio Review", "Standard periods to", "Growth of 100", "Look-through concentration"]),
     ("portfolio_comprehensive", ["portfolio-comprehensive.json", "OUT"], 15, 20, ["Comprehensive Portfolio Review", "Historical Attribution", "Projected Return and Risk Decomposition", "Analysis —"]),
     ("portfolio_attribution_report", ["portfolio-attribution-report.json", "OUT"], 7, 10, ["Portfolio Attribution Report", "Historical Attribution", "Governed Ex Ante Attribution", "Analysis —"]),
+    ("portfolio_attribution_compare_fallback", ["attribution-compare-fallback.json", "OUT"], 6, 10, ["Attribution Comparison", "Historical Attribution", "Cross-Lane Comparison"]),
+    ("portfolio_attribution_compare_three_lane", ["attribution-compare-three-lane.json", "OUT"], 6, 10, ["Attribution Comparison", "Simulated Attribution", "Cross-Lane Comparison"]),
+    ("idd_manager_performance_single", ["idd-manager-performance-single.json", "OUT"], 4, 9, ["Manager Single", "Absolute risk and return", "Reliability and date-window sensitivity"]),
+    ("idd_manager_performance_compare", ["idd-manager-performance-compare.json", "OUT"], 4, 9, ["Manager Comparison", "Relative performance and capture", "Correlation and robustness"]),
+    ("idd_manager_performance_robustness", ["idd-manager-performance-robustness.json", "OUT"], 4, 9, ["Manager Robustness", "Window sensitivity", "Rolling evidence"]),
+    ("idd_manager_portfolio_fit", ["idd-portfolio-fit.json", "OUT"], 4, 9, ["portfolio-fit report", "Correlation and diversification", "Simulation and stress"]),
+    ("idd_manager_shortlist", ["idd-shortlist.json", "OUT"], 4, 9, ["shortlist report", "Performance comparison", "Advance/reserve/reject rationale"]),
+    ("idd_private_markets_pme", ["idd-private-markets-pme.json", "OUT"], 4, 9, ["PME", "PME and direct alpha", "Benchmark sensitivity"]),
     ("construction_private_markets", ["construction-private-markets.json", "OUT"], 10, 14, ["Private Markets Portfolio Construction", "Commitments, Pacing and Cash Flow", "Committee action requested"]),
     ("construction_fixed_income", ["construction-fixed-income.json", "OUT"], 10, 14, ["Fixed Income Portfolio Construction", "Rates and Credit Context", "Committee action requested"]),
     ("construction_global_public_equity", ["construction-global-public-equity.json", "OUT"], 10, 14, ["Global Public Equity Portfolio Construction", "Factor Exposures and Concentration", "Committee action requested"]),
