@@ -1,6 +1,6 @@
 ---
 name: gradient-odd-report
-description: "Create a branded, sourced ODD report or roster triage. Triggers: 'ODD report', 'due diligence report', 'run diligence', 'ODD on my roster'. Hands findings to DDQ reconciliation, manager comparison, monitoring, or an IC memo."
+description: "Create a branded, sourced ODD report or roster triage. Triggers: 'ODD report', 'operational due diligence', 'run diligence', 'ODD on my roster'. For return performance use gradient-idd-manager-track-record."
 metadata:
   style_contract: "2.1.0"
   group: "Operational diligence"
@@ -9,7 +9,7 @@ metadata:
   menu_order: "10"
   modules: "firmFundDiligence"
   contracts: "odd-evidence"
-  handoffs: "gradient-ddq-reconcile,gradient-ic-memo"
+  handoffs: "gradient-ddq-reconcile,gradient-manager-monitor,gradient-ic-memo"
   summary: "Produce a sourced operational due diligence report or roster triage."
 ---
 
@@ -37,7 +37,10 @@ unspecified subjects are triaged before full reports.
 Resolve organization and roster. Ask at most one question. A named single
 subject proceeds to a full report; no subject or multiple funds use triage.
 If a DDQ exists, plan `gradient-ddq-reconcile`; if a GIPS/performance document
-exists, use `gradient-gips-manager-diligence`.
+exists, use `gradient-gips-manager-diligence`. If a `gradient-idd-*` skill
+supplied a `gradient-idd-odd-ic-handoff/v1` object, read
+`references/contracts/odd-evidence.md` and keep its return and benchmark
+evidence as investment evidence, separate from ODD findings.
 
 Before roster-wide work read
 `references/odd-execution-contract.md#roster-triage-and-report-modes`. Apply
@@ -92,7 +95,11 @@ completeness, top concern, open-item count, and files.
 ## 5. Handoffs and writes
 
 - Reconcile supplied manager assertions → `gradient-ddq-reconcile`.
-- Compare candidates → `gradient-manager-compare`.
+- Compare candidates' Form ADV, service-provider, disclosure, or 13F evidence
+  → `gradient-manager-compare`.
+- Return or benchmark evidence → `gradient-idd-manager-track-record` for one
+  manager or `gradient-idd-manager-compare` for candidates.
+- Ongoing change tracking after the review → `gradient-manager-monitor`.
 - Feed the executive/follow-up sections into a decision memo →
   `gradient-ic-memo`.
 

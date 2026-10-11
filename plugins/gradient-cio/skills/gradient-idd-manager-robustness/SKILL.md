@@ -1,6 +1,6 @@
 ---
 name: gradient-idd-manager-robustness
-description: "Create a sourced manager persistence and robustness report. Triggers: 'does performance persist', 'test start dates', 'rolling performance', 'regime robustness'. For a basic comparison use gradient-idd-manager-compare."
+description: "Create a sourced manager persistence and robustness report. Triggers: 'does performance persist', 'test start dates', 'rolling performance', 'regime robustness'. For operational diligence use gradient-odd-report."
 metadata:
   version: "0.1.0"
   style_contract: "2.1.0"
@@ -36,7 +36,7 @@ Apply the approved metric and reliability rules in the shared IDD methodology co
 
 ## 3. Build the report
 
-Use these fixed sections: Executive conclusion; Coverage and tested windows; Window sensitivity; Rolling evidence; Regime evidence; What changes the view; Appendix A ? Sources and methods. Keep each section even when evidence is unavailable. Every figure carries a unit, date, and `[S#]` source tag.
+Use these fixed sections: Executive conclusion; Coverage and tested windows; Window sensitivity; Rolling evidence; Regime evidence; What changes the view; Appendix A — Sources and methods. Keep each section even when evidence is unavailable. Every figure carries a unit, date, and `[S#]` source tag.
 
 Read `references/report-style.md` and `references/writing-standards.md`. Build one validated `report.json`; do not hand-build HTML, Word, PDF, or slides and do not override the shared theme.
 
@@ -44,7 +44,7 @@ Read `references/report-style.md` and `references/writing-standards.md`. Build o
 
 Validate and attach a `gradient-idd-odd-ic-handoff/v1` object using `references/contracts/idd-odd-ic-handoff.schema.json`. Include canonical or advisory identity status, return-series and benchmark IDs, evidence, limitations, and selection rationale.
 
-A robust finalist ? `gradient-odd-report`; a changed conclusion ? `gradient-idd-manager-compare`.
+A robust finalist → `gradient-odd-report`; a changed conclusion → `gradient-idd-manager-compare`; an investment decision → `gradient-ic-memo`.
 
 ## 5. Validate and deliver
 

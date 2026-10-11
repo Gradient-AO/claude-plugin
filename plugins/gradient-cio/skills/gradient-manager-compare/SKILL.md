@@ -1,6 +1,6 @@
 ---
 name: gradient-manager-compare
-description: "Create a branded ODD comparison from Form ADV, service-provider, disclosure, and 13F evidence. Triggers: 'compare advisers', 'compare operational risk', 'screen ADV records'. For return performance use gradient-idd-manager-compare."
+description: "Create a branded ODD comparison or Form ADV screen from adviser, service-provider, disclosure, and 13F evidence. Triggers: 'compare advisers', 'compare operational risk', 'screen ADV records'. For returns use gradient-idd-manager-compare."
 metadata:
   style_contract: "2.1.0"
   group: "Operational diligence"
@@ -9,14 +9,16 @@ metadata:
   menu_order: "20"
   modules: "firmFundDiligence,research"
   contracts: "odd-evidence"
-  handoffs: "gradient-odd-report,gradient-ic-memo"
-  summary: "Compare managers side by side or screen a mandate shortlist."
+  handoffs: "gradient-odd-report,gradient-idd-manager-compare,gradient-ic-memo"
+  summary: "Compare managers' operational evidence or screen Form ADV records."
 ---
 
-# Manager comparison and shortlist
+# Operational manager comparison and Form ADV screen
 
-Use for manager screening, a 2–5 manager comparison, a shortlist, or 13F
-overlap. Deliver **"<Mandate or first manager> - Manager Comparison
+Use for Form ADV screening, a 2–5 manager operational comparison, an ADV-based
+shortlist, or 13F overlap. Return, benchmark, or track-record comparison
+belongs to `gradient-idd-manager-compare`; a return-based mandate shortlist
+belongs to `gradient-idd-manager-shortlist`. Deliver **"<Mandate or first manager> - Manager Comparison
 <YYYY-MM-DD>"**, normally 5–9 PDF pages. This is evidence comparison, not a
 ranking or investment recommendation.
 
@@ -36,7 +38,7 @@ ranking or investment recommendation.
 Resolve organization first and pass `organization_id` where supported. Ask at
 most one question.
 
-- Criteria or mandate terms → screen, then shortlist up to five.
+- Form ADV criteria or mandate terms → screen, then shortlist up to five.
 - Two to five named managers → compare directly.
 - One manager → ask for peers or offer a nearby factual screen.
 - Six or more → ask which five.
@@ -93,6 +95,8 @@ managers/signal, top flag, and next-step count.
 ## 5. Handoffs and optional writes
 
 - Full diligence on a selected manager → `gradient-odd-report`.
+- Return and benchmark evidence for the same candidates →
+  `gradient-idd-manager-compare`.
 - DDQ conflict or manager response needed → `gradient-ddq-reconcile`.
 - Manager-hire decision paper → `gradient-ic-memo`.
 

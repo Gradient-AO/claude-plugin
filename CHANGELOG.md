@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.8.1
+- Separated return-based investment diligence from Form ADV operational diligence across skill descriptions, menu summaries and handoffs; `gradient-manager-compare` is now described as the operational comparison and Form ADV screen, and `gradient-idd-manager-shortlist` as the return-based shortlist. Public command IDs are unchanged.
+- Split Manager Hire and candidate-selection handoffs in the ODD report, IC memo and five construction skills into return/benchmark evidence (`gradient-idd-*`) and operational evidence (`gradient-manager-compare`, `gradient-odd-report`).
+- Documented inbound IDD handoffs in the ODD report and IC memo, and aligned ODD report and robustness handoff metadata with their workflow steps.
+- Clarified that `gradient-idd-manager-portfolio-fit` covers one manager's add-or-replace effect while the construction skills design the whole sleeve or program.
+- Restored arrows and dashes that were garbled in the six IDD skill files.
+- Added routing fixtures for ADV versus return-based shortlists, operational versus performance comparison, manager fit versus sleeve construction, and IC memo manager-hire handoffs.
+
 ## 2.8.0
 - Added six Strategy Lab investment-due-diligence skills for manager comparison, track-record assessment, robustness, portfolio fit, private-markets PME and shortlist construction.
 - Reorganized the generated catalog around Research, IDD, ODD, Portfolio, Compliance, Decision and Admin metadata while preserving existing public command IDs.

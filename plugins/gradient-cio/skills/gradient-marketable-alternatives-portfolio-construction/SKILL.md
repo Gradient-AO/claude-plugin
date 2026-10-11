@@ -1,6 +1,6 @@
 ---
 name: gradient-marketable-alternatives-portfolio-construction
-description: "Build a marketable-alternatives report covering hedge funds, strategy mix, factor risk, redemption terms, and liquidity. Use for hedge fund portfolio, alternatives sleeve, or redemptions. For a committee vote use gradient-ic-memo."
+description: "Build a marketable-alternatives sleeve report covering hedge funds, strategy mix, factor risk, redemption terms, and liquidity. Use for hedge fund portfolio or redemptions. For one manager's fit use gradient-idd-manager-portfolio-fit."
 metadata:
   style_contract: "2.1.0"
   group: "Portfolio"
@@ -18,7 +18,8 @@ metadata:
 Produce a deterministic, fully sourced, decision-ready hedge-fund construction report. Select an existing
 Gradient portfolio, assess its marketable-alternatives sleeve, and recommend a target structure and
 implementation path. The committee decides; this skill never creates, updates or rebalances a portfolio in
-GradientCIO.
+GradientCIO. It designs the whole sleeve, including strategy mix and factor risk; one manager's
+add-or-replace effect belongs to `gradient-idd-manager-portfolio-fit`.
 
 The deliverable is a branded report. Its PDF form is normally 10–14 pages and uses the base name
 `"<Portfolio> - Marketable Alternatives Portfolio Construction <YYYY-MM-DD>"`.
@@ -113,7 +114,10 @@ recommendation, marketable-alternatives policy status, open-item count, plus the
 
 ## 5. Handoffs
 
-- Candidate-manager selection → `gradient-manager-compare`.
+- Candidate-manager returns against benchmarks → `gradient-idd-manager-compare`; return-based mandate
+  shortlist → `gradient-idd-manager-shortlist`.
+- Candidate-manager operations or a Form ADV screen → `gradient-manager-compare`.
+- One manager's effect on this sleeve's diversification → `gradient-idd-manager-portfolio-fit`.
 - Manager diligence → `gradient-odd-report` and `gradient-gips-manager-diligence`.
 - Drawdown commitment programs → `gradient-private-markets-portfolio-construction`.
 - Formal 16-section vote memo → `gradient-ic-memo` with memo type `Allocation Change` or `Rebalance`.

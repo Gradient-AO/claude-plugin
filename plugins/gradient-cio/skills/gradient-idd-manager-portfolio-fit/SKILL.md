@@ -1,6 +1,6 @@
 ---
 name: gradient-idd-manager-portfolio-fit
-description: "Create a sourced manager portfolio-fit and diversification report. Triggers: 'what does adding this manager do', 'portfolio fit', 'diversification impact'. For an allocation vote use gradient-ic-memo."
+description: "Create a sourced one-manager portfolio-fit and diversification report. Triggers: 'what does adding this manager do', 'portfolio fit', 'diversification impact'. For whole-sleeve design use a portfolio-construction skill."
 metadata:
   version: "0.1.0"
   style_contract: "2.1.0"
@@ -11,12 +11,14 @@ metadata:
   modules: "strategyLab"
   contracts: "idd-methodology,idd-odd-ic-handoff"
   handoffs: "gradient-odd-report,gradient-ic-memo"
-  summary: "Assess manager portfolio fit, diversification and scenario impact."
+  summary: "Assess one manager's portfolio fit, diversification and scenario impact."
 ---
 
 # Manager Portfolio Fit
 
 Compare the server-built portfolio baseline with an add-manager scenario using returned covariance, correlation, risk-contribution, and simulation evidence. Deliver a branded PDF by default and PowerPoint only when requested.
+
+Scope is one candidate manager added to, or replacing one manager in, a baseline built from selected return series. Designing a whole sleeve on a saved portfolio — strategy mix, target structure, liquidity, policy compliance — belongs to the matching `gradient-*-portfolio-construction` skill.
 
 ## Non-negotiable rules
 
@@ -36,7 +38,7 @@ Apply the approved metric and reliability rules in the shared IDD methodology co
 
 ## 3. Build the report
 
-Use these fixed sections: Executive conclusion; Baseline and proposed scenario; Correlation and diversification; Return and risk impact; Simulation and stress; Constraints and follow-ups; Appendix A ? Sources and methods. Keep each section even when evidence is unavailable. Every figure carries a unit, date, and `[S#]` source tag.
+Use these fixed sections: Executive conclusion; Baseline and proposed scenario; Correlation and diversification; Return and risk impact; Simulation and stress; Constraints and follow-ups; Appendix A — Sources and methods. Keep each section even when evidence is unavailable. Every figure carries a unit, date, and `[S#]` source tag.
 
 Read `references/report-style.md` and `references/writing-standards.md`. Build one validated `report.json`; do not hand-build HTML, Word, PDF, or slides and do not override the shared theme.
 
@@ -44,7 +46,7 @@ Read `references/report-style.md` and `references/writing-standards.md`. Build o
 
 Validate and attach a `gradient-idd-odd-ic-handoff/v1` object using `references/contracts/idd-odd-ic-handoff.schema.json`. Include canonical or advisory identity status, return-series and benchmark IDs, evidence, limitations, and selection rationale.
 
-A viable allocation change ? `gradient-ic-memo`; unresolved operations ? `gradient-odd-report`.
+A viable allocation change → `gradient-ic-memo`; unresolved operations → `gradient-odd-report`; a redesign of the whole sleeve → the matching `gradient-*-portfolio-construction` skill.
 
 ## 5. Validate and deliver
 

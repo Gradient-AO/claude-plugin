@@ -39,6 +39,42 @@
     "prompt": "Build an investment-diligence shortlist for this manager mandate",
     "expected": "gradient-idd-manager-shortlist",
     "not": "gradient-manager-compare",
-    "description_terms": ["shortlist", "mandate"]
+    "description_terms": ["return-based", "shortlist", "mandate"]
+  },
+  {
+    "prompt": "Screen Form ADV records for advisers that could fit this mandate",
+    "expected": "gradient-manager-compare",
+    "not": "gradient-idd-manager-shortlist",
+    "description_terms": ["Form ADV screen"]
+  },
+  {
+    "prompt": "What does adding this hedge fund manager do to our portfolio's diversification?",
+    "expected": "gradient-idd-manager-portfolio-fit",
+    "not": "gradient-marketable-alternatives-portfolio-construction",
+    "description_terms": ["one-manager", "diversification"]
+  },
+  {
+    "prompt": "Design the target strategy mix for our hedge fund sleeve",
+    "expected": "gradient-marketable-alternatives-portfolio-construction",
+    "not": "gradient-idd-manager-portfolio-fit",
+    "description_terms": ["sleeve", "strategy mix"]
+  },
+  {
+    "prompt": "Compare the operational risk of our two manager-hire finalists",
+    "expected": "gradient-manager-compare",
+    "not": "gradient-idd-manager-compare",
+    "description_terms": ["operational risk"]
+  },
+  {
+    "prompt": "Run operational due diligence on this finalist",
+    "expected": "gradient-odd-report",
+    "not": "gradient-idd-manager-track-record",
+    "description_terms": ["operational due diligence"]
+  },
+  {
+    "prompt": "Draft the IC memo for hiring this manager using the IDD and ODD findings",
+    "expected": "gradient-ic-memo",
+    "not": "gradient-idd-manager-compare",
+    "description_terms": ["manager hire", "IDD", "ODD"]
   }
 ]

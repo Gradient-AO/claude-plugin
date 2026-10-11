@@ -1,6 +1,6 @@
 ---
 name: gradient-ic-memo
-description: "Create a deterministic, sourced IC decision memo. Triggers: 'IC memo', 'board memo', 'allocation recommendation', 'rebalance proposal', 'manager hire/fire', 'committee vote'. Accepts handoffs from portfolio, diligence, and GIPS skills."
+description: "Create a deterministic, sourced IC decision memo. Triggers: 'IC memo', 'board memo', 'allocation recommendation', 'rebalance proposal', 'manager hire/fire', 'committee vote'. Accepts portfolio, IDD, ODD, and GIPS handoffs."
 metadata:
   style_contract: "2.1.0"
   group: "Decision"
@@ -41,6 +41,11 @@ Before selecting tools read `references/module-scope.md`; then read
 `references/data-map.md` section by section as evidence is collected. Resolve
 organization, assumption set, and portfolio first and record one source row
 per result.
+
+When a `gradient-idd-*` or `gradient-odd-report` run supplied a
+`gradient-idd-odd-ic-handoff/v1` object, validate it against
+`references/contracts/idd-odd-ic-handoff.schema.json` and carry its
+investment evidence, ODD findings, and limitations as separately cited inputs.
 
 Portfolio Analytics owns saved-portfolio evidence. Optional Strategy Lab uses
 separately selected `return_series_ids` and the loaded tool's benchmark field;
@@ -104,7 +109,12 @@ files.
 ## 6. Handoffs and optional save
 
 - Monitoring-only performance/allocation report → `gradient-portfolio-review`.
-- Candidate comparison before Manager Hire → `gradient-manager-compare`.
+- Manager Hire candidate returns against benchmarks →
+  `gradient-idd-manager-compare` (one candidate:
+  `gradient-idd-manager-track-record`).
+- Manager Hire candidate operations (Form ADV, service providers, disclosures,
+  13F) → `gradient-manager-compare`; full finalist review →
+  `gradient-odd-report`.
 
 Only when asked, an Allocation Change/Rebalance based on a real matching
 Strategy Lab basket may preview `save_strategy_lab_scenario`. Show the preview

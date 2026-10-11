@@ -1,6 +1,6 @@
 ---
 name: gradient-private-markets-portfolio-construction
-description: "Build a private-markets allocation report covering PE/private credit, commitments, pacing, cash flows, and liquidity. Use for private markets portfolio, commitment plan, or pacing. For a committee vote use gradient-ic-memo."
+description: "Build a private-markets program report covering PE/private credit, commitments, pacing, cash flows, and liquidity. Use for private markets portfolio, commitment plan, or pacing. For one fund's PME use gradient-idd-private-markets-pme."
 metadata:
   style_contract: "2.1.0"
   group: "Portfolio"
@@ -18,7 +18,7 @@ metadata:
 Produce a deterministic, fully sourced, decision-ready private-markets construction report. Select an
 existing Gradient portfolio, assess the current private-markets program, and recommend a target program and
 implementation path. The committee decides; this skill never creates, updates or rebalances a portfolio in
-GradientCIO.
+GradientCIO. It designs the whole program; one fund's PME belongs to `gradient-idd-private-markets-pme`.
 
 The deliverable is a branded report. Its PDF form is normally 10–14 pages and uses the base name
 `"<Portfolio> - Private Markets Portfolio Construction <YYYY-MM-DD>"`.
@@ -117,7 +117,10 @@ open-item count, plus the requested file(s).
 
 ## 5. Handoffs
 
-- Candidate-manager selection → `gradient-manager-compare`.
+- Candidate-manager returns against benchmarks → `gradient-idd-manager-compare`; return-based mandate
+  shortlist → `gradient-idd-manager-shortlist`.
+- Candidate-manager operations or a Form ADV screen → `gradient-manager-compare`.
+- One private fund's cash-flow performance against public markets → `gradient-idd-private-markets-pme`.
 - Manager or fund diligence → `gradient-odd-report` and `gradient-gips-manager-diligence`.
 - Hedge-fund or liquid-alternatives construction → `gradient-marketable-alternatives-portfolio-construction`.
 - Broad liquid/illiquid real-assets construction → `gradient-real-assets-portfolio-construction`.
