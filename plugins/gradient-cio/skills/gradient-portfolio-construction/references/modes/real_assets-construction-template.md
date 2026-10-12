@@ -135,10 +135,14 @@ apply its specific repair levers and rerun until clean.
 ### 13. Coverage
 
 - `coverage` block with every expected source and its typed status.
+- Include **Peer allocation intelligence**. When unlicensed, use status
+  `not licensed` and note `Not licensed — Peer allocation context was skipped
+  because peerIntelligence is not available for this organization. This
+  construction report uses portfolio evidence only.`
 
 ### Appendix A — Sources
 
-- `table`: Tag, Evidence, Tool / view, Key parameters, As of, Data scope, Validation, Digest.
+- `table`: Tag, Evidence, Basis, Tool / view, Key parameters, As of, Data scope, Validation, Digest.
 
 ### Appendix B — Server Metric Methods and Disclosures
 

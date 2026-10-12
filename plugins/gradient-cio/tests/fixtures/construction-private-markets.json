@@ -66,7 +66,8 @@
           "projection_registry_checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         }
       }
-    }
+    },
+    "data_basis": "gradient_governed"
   },
   "executive": {
     "label": "Recommendation",
@@ -309,7 +310,8 @@
                 "nav"
               ]
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -421,7 +423,8 @@
               "target": 1.0,
               "display": "0.0% → 1.0%"
             }
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "stacked",
@@ -469,7 +472,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "stacked",
@@ -541,7 +545,8 @@
               "value": 1.0,
               "display": "+1.0pp"
             }
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -814,7 +819,8 @@
               "x": "segment",
               "y": []
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "callout",
@@ -837,8 +843,48 @@
           "type": "line",
           "title": "Commitment pacing (USD millions)",
           "series": [
-            {"name": "Calls", "points": [["2026-12-31", 26.0], ["2027-06-30", 22.0], ["2027-12-31", 18.0], ["2028-06-30", 15.0]]},
-            {"name": "Distributions", "points": [["2026-12-31", 14.0], ["2027-06-30", 16.0], ["2027-12-31", 19.0], ["2028-06-30", 20.0]]}
+            {
+              "name": "Calls",
+              "points": [
+                [
+                  "2026-12-31",
+                  26.0
+                ],
+                [
+                  "2027-06-30",
+                  22.0
+                ],
+                [
+                  "2027-12-31",
+                  18.0
+                ],
+                [
+                  "2028-06-30",
+                  15.0
+                ]
+              ]
+            },
+            {
+              "name": "Distributions",
+              "points": [
+                [
+                  "2026-12-31",
+                  14.0
+                ],
+                [
+                  "2027-06-30",
+                  16.0
+                ],
+                [
+                  "2027-12-31",
+                  19.0
+                ],
+                [
+                  "2028-06-30",
+                  20.0
+                ]
+              ]
+            }
           ],
           "note": "Returned TEST projection [S6]."
         },
@@ -897,7 +943,8 @@
               "x": "period",
               "y": []
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -947,7 +994,11 @@
           "type": "bars",
           "title": "Governed scenario coverage",
           "items": [
-            {"label": "Base liquid coverage", "value": 4.8, "display": "4.8x"}
+            {
+              "label": "Base liquid coverage",
+              "value": 4.8,
+              "display": "4.8x"
+            }
           ],
           "note": "Denominator stress is unavailable [S3][S6]."
         },
@@ -970,7 +1021,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -1003,7 +1055,8 @@
                 "status": "compliant"
               }
             ]
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "kv",
@@ -1028,7 +1081,8 @@
               "$48.0M",
               "S6"
             ]
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "callout",
@@ -1068,7 +1122,8 @@
                 "status": "not_assessed"
               }
             ]
-          ]
+          ],
+          "source": "[S1]"
         }
       ]
     },
@@ -1452,6 +1507,7 @@
           "columns": [
             "Tag",
             "Evidence",
+            "Basis",
             "Tool / view",
             "Key parameters",
             "As of",
@@ -1463,6 +1519,7 @@
             [
               "S1",
               "Org capabilities",
+              "gradient_tool",
               "list_organizations; get_gradient_capabilities",
               "org=test",
               "2026-06-30",
@@ -1473,6 +1530,7 @@
             [
               "S2",
               "Portfolio / allocation",
+              "gradient_tool",
               "list_portfolios; get_portfolio_structure",
               "allocation_tree",
               "2026-06-30",
@@ -1483,6 +1541,7 @@
             [
               "S3",
               "Policy assessment",
+              "gradient_tool",
               "check_portfolio_policy",
               "portfolio=test",
               "2026-06-30",
@@ -1493,6 +1552,7 @@
             [
               "S4",
               "Private-market exposure",
+              "gradient_tool",
               "get_portfolio_exposure",
               "all pages",
               "2026-03-31",
@@ -1503,6 +1563,7 @@
             [
               "S5",
               "Forward assumptions",
+              "gradient_tool",
               "get_capital_market_assumptions",
               "baseline",
               "2026-06-15",
@@ -1513,6 +1574,7 @@
             [
               "S6",
               "Commitments and pacing",
+              "gradient_tool",
               "get_chart_data",
               "commitments",
               "2026-06-30",
@@ -1523,7 +1585,8 @@
             [
               "S7",
               "Manager / mandate",
-              "User document; diligence",
+              "gradient_tool",
+              "get_gradient_capabilities",
               "fictional",
               "2026-06-30",
               "Fictional TEST data",
@@ -1533,6 +1596,7 @@
             [
               "S8",
               "Returns / attribution",
+              "gradient_tool",
               "get_portfolio_historical_returns; get_portfolio_attribution",
               "all sections",
               "2026-06-30",
@@ -1543,6 +1607,7 @@
             [
               "S9",
               "ILPA company look-through",
+              "gradient_tool",
               "get_private_markets_holdings",
               "paged; server aggregates",
               "2026-06-30",

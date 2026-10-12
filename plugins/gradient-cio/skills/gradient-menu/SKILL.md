@@ -43,20 +43,15 @@ Example: “Compare these managers' track records.”
 
 Example: “Prepare ODD on the finalist.”
 
-## Portfolio
+## Portfolio Analytics
 - `/gradient-cio:gradient-portfolio-review` — Review portfolio performance, policy, exposures, risk and liquidity. Next: gradient-portfolio-attribution, gradient-decision-ic-memo.
-- `/gradient-cio:gradient-portfolio-attribution` — Explain historical and governed ex ante sources of portfolio return. Next: gradient-portfolio-review, gradient-decision-ic-memo.
+- `/gradient-cio:gradient-portfolio-attribution` — Explain historical and governed ex ante sources of portfolio return. Next: gradient-portfolio-attribution-compare, gradient-portfolio-review, gradient-decision-ic-memo.
 - `/gradient-cio:gradient-portfolio-attribution-compare` — Compare compatible historical, ex ante and simulated attribution lanes. Next: gradient-portfolio-review, gradient-decision-ic-memo.
 - `/gradient-cio:gradient-portfolio-construction` — Design portfolio sleeves across five asset-class construction modes. Next: gradient-decision-ic-memo.
 
 Example: “Review our total portfolio for the quarter.”
 
-## GIPS
-- `/gradient-cio:gradient-gips-report-review` — Review firm and asset-owner reports against applicable GIPS requirements. Next: gradient-decision-ic-memo.
-
-Example: “Review this report against the GIPS standards.”
-
-## Decision
+## Investment memos
 - `/gradient-cio:gradient-decision-ic-memo` — Produce a sourced decision memo with recommendation and requested vote.
 
 Example: “Draft an IC memo for this allocation change.”

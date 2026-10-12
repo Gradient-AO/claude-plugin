@@ -1,6 +1,6 @@
 ---
 name: gradient-idd-manager-shortlist
-description: "Create a manager shortlist report with optional Form ADV screening followed by governed performance evidence. Triggers: 'build a manager shortlist', 'screen this mandate', 'identify return finalists'."
+description: "Create a manager shortlist report with optional Form ADV screening followed by governed performance evidence. Triggers: 'build a manager shortlist', 'screen this mandate', 'identify return finalists'. For operational Form ADV comparison use gradient-odd-manager-compare."
 metadata:
   version: "0.1.0"
   style_contract: "2.1.0"
@@ -51,7 +51,7 @@ Advancing managers → `gradient-odd-report`; operational comparison of named fi
 Run the shared IDD contract validator, then canonical delivery QA:
 
 ```text
-python <skill>/scripts/validate_idd_report.py report.json
+python <skill>/scripts/validate_manager_shortlist.py report.json
 python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - Shortlist Report <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json
 ```
 

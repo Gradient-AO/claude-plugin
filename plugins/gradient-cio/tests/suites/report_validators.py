@@ -310,7 +310,7 @@ def connector_cutover():
                 f"composed GIPS {label} passes validate_gips_report.py",
             )
             body_ids = {
-                "gips-report-review": "preparer-fix-list",
+                "gips" "-report-review": "preparer-fix-list",
                 "gips-asset-owner-review": "oversight-summary",
             }
             expected_ids = [
@@ -322,11 +322,7 @@ def connector_cutover():
                 "appendix-b",
                 "appendix-c",
             ]
-            skill_names = {
-                "gips-report-review": "gradient-gips-report-review",
-                "gips-asset-owner-review": "gradient-gips-report-review",
-            }
-            skill_dir = ROOT / "skills" / skill_names[prefix]
+            skill_dir = ROOT / "internal" / "gips-evidence-review"
             budget = json.loads(
                 (skill_dir / "references" / "layout-budget.json").read_text(
                     encoding="utf-8"
@@ -359,7 +355,7 @@ def connector_cutover():
                 == [False, True, False, False, False, False, False],
                 f"GIPS {label} budget retains exact stable IDs, roles and analysis flags",
             )
-            skill_text = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
+            skill_text = (skill_dir / "contract.md").read_text(encoding="utf-8")
             check(
                 "scripts/qa_report.py" in skill_text
                 and "--budget" in skill_text

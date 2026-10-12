@@ -42,7 +42,8 @@
       "used": 5,
       "expected": 7,
       "state": "degraded"
-    }
+    },
+    "data_basis": "mixed"
   },
   "executive": {
     "bottom_line": "Ridgeview reports $12.40B regulatory AUM, 38 private funds and no Item 11 disclosures [S1]. No cohort metric is in the top quartile; the highest is AUM per adviser representative at the 62.6th percentile [S1]. Firm events are not yet published, so completeness is degraded and this is not a clean bill of health.",
@@ -189,7 +190,8 @@
                   "$127.22B",
                   "S1"
                 ]
-              ]
+              ],
+              "source": "[S1]"
             }
           ],
           "right": [
@@ -441,51 +443,57 @@
           "columns": [
             "Tag",
             "Evidence",
-            "Tool",
+            "Basis",
+            "Tool / view",
+            "Key parameters",
             "As of",
+            "Data scope",
             "Validation",
             "Digest"
           ],
           "align": [
-            "n",
             "l",
             "l",
-            "n",
-            "n",
-            "n"
+            "l",
+            "l",
+            "l",
+            "l",
+            "l",
+            "l",
+            "l"
           ],
           "rows": [
             [
               "S1",
               "Form ADV profile",
+              "gradient_tool",
               "get_manager_odd_profile",
+              "fixture=true",
               "2026-10-01",
-              {
-                "chip": "not_run",
-                "status": "not_run"
-              },
+              "Gradient-governed TEST evidence",
+              "{'chip': 'not_run', 'status': 'not_run'}",
               "091b0cf9"
             ],
             [
               "S2",
               "Manager Monitor",
+              "gradient_tool",
               "get_manager_monitor_evidence",
+              "fixture=true",
               "2026-10-01",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
               "f337365b"
             ],
             [
               "S3",
               "Form 13F snapshot",
+              "gradient_tool",
               "get_firm_13f_portfolio_review",
+              "fixture=true",
               "2026-08-14",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
               "90d3de53"
             ]
           ]

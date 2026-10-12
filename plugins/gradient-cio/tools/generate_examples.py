@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "fixtures"
 QA_RENDERER = ROOT / "shared" / "qa_report.py"
 GIPS_COMPOSER = (
-    ROOT / "skills" / "gradient-gips-report-review" / "scripts" / "compose_gips_report.py"
+    ROOT / "internal" / "gips-evidence-review" / "scripts" / "compose_gips_report.py"
 )
 FIXED_TIME = datetime.datetime(2020, 1, 1, tzinfo=datetime.timezone.utc)
 ZIP_TIME = (2020, 1, 1, 0, 0, 0)
@@ -48,12 +48,12 @@ DIRECT_SOURCES = {
 }
 
 GIPS_SOURCES = {
-    "gradient-gips-report-review-asset-owner": (
+    "internal-gips-review-asset-owner": (
         "gips" "-asset-owner-review.md",
         "gips" "-asset-owner-review-visuals.json",
         "gips" "-asset-owner-review-meta.json",
     ),
-    "gradient-gips-report-review": (
+    "internal-gips-review-firm": (
         "gips" "-report-review.md",
         "gips" "-report-review-visuals.json",
         "gips" "-report-review-meta.json",
@@ -69,9 +69,20 @@ def skill_for_artifact(artifact: str) -> str:
         return "gradient-idd-manager-performance"
     if artifact.startswith("gradient-portfolio-attribution-compare-"):
         return "gradient-portfolio-attribution-compare"
-    if artifact == "gradient-gips-report-review-asset-owner":
-        return "gradient-gips-report-review"
     return artifact
+
+
+def budget_for_artifact(artifact: str) -> Path:
+    """Resolve public-skill and internal-module layout budgets."""
+    if artifact.startswith("internal-gips-review-"):
+        return ROOT / "internal" / "gips-evidence-review" / "references" / "layout-budget.json"
+    return (
+        ROOT
+        / "skills"
+        / skill_for_artifact(artifact)
+        / "references"
+        / "layout-budget.json"
+    )
 
 
 def normalize_pptx(path: Path) -> None:
@@ -161,13 +172,7 @@ def main() -> int:
                     "--out",
                     str(work / skill),
                     "--budget",
-                    str(
-                        ROOT
-                        / "skills"
-                        / skill_for_artifact(skill)
-                        / "references"
-                        / "layout-budget.json"
-                    ),
+                    str(budget_for_artifact(skill)),
                 ],
                 env=environment,
                 check=False,

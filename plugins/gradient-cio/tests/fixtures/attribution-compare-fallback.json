@@ -25,7 +25,8 @@
       "used": 2,
       "expected": 4,
       "state": "partial"
-    }
+    },
+    "data_basis": "gradient_governed"
   },
   "executive": {
     "bottom_line": "Historical and ex ante effects are available, while simulation and server comparison capabilities are not published [S1][S2][S3].",
@@ -117,7 +118,8 @@
               "value": 0.2,
               "display": "+0.2pp"
             }
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "callout",
@@ -147,7 +149,8 @@
               "value": -0.1,
               "display": "-0.1pp"
             }
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "callout",
@@ -289,23 +292,47 @@
           "columns": [
             "Tag",
             "Evidence",
-            "Tool"
+            "Basis",
+            "Tool / view",
+            "Key parameters",
+            "As of",
+            "Data scope",
+            "Validation",
+            "Digest"
           ],
           "rows": [
             [
               "S1",
               "Capability gate",
-              "get_gradient_capabilities"
+              "gradient_tool",
+              "get_gradient_capabilities",
+              "fixture=true",
+              "2026-06-30",
+              "Gradient-governed TEST evidence",
+              "passed",
+              "sha256:test-s1"
             ],
             [
               "S2",
               "Historical attribution",
-              "get_portfolio_attribution"
+              "gradient_tool",
+              "get_portfolio_attribution",
+              "fixture=true",
+              "2026-06-30",
+              "Gradient-governed TEST evidence",
+              "passed",
+              "sha256:test-s2"
             ],
             [
               "S3",
               "Ex ante attribution",
-              "get_portfolio_ex_ante_attribution"
+              "gradient_tool",
+              "get_portfolio_ex_ante_attribution",
+              "fixture=true",
+              "2026-06-30",
+              "Gradient-governed TEST evidence",
+              "passed",
+              "sha256:test-s3"
             ]
           ]
         },

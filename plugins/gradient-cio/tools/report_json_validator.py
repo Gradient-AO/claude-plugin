@@ -24,6 +24,24 @@ JsonValue: TypeAlias = (
 
 SOURCE_TAG_PATTERN = re.compile(r"\[S(\d+)\]")
 SOURCE_CELL_PATTERN = re.compile(r"\[?S(\d+)\]?")
+NUMERIC_CLAIM_PATTERN = re.compile(
+    r"(?:[$€£]\s*\d|\b\d+(?:\.\d+)?\s*%|\b\d{4}-\d{2}-\d{2}\b)"
+)
+DATA_BASIS_VALUES = frozenset({"gradient_governed", "mixed"})
+SOURCE_BASIS_VALUES = frozenset(
+    {"gradient_tool", "user_document", "regulatory_filing"}
+)
+SOURCE_COLUMNS = (
+    "Tag",
+    "Evidence",
+    "Basis",
+    "Tool / view",
+    "Key parameters",
+    "As of",
+    "Data scope",
+    "Validation",
+    "Digest",
+)
 PLACEHOLDER_PATTERNS = (
     re.compile(r"<[^<>\n]{2,100}>"),
     re.compile(r"\{\{[^{}\n]+\}\}"),
@@ -191,6 +209,7 @@ class ReportSpec:
         "subtitle",
         "running_head",
         "data_as_of",
+        "data_basis",
         "cover_facts",
         "signal",
         "completeness",
@@ -207,6 +226,19 @@ def collect_strings(value: JsonValue) -> list[str]:
     if isinstance(value, dict):
         return [item for child in value.values() for item in collect_strings(child)]
     return []
+
+
+def contains_number(value: JsonValue) -> bool:
+    """Return whether a JSON-compatible value contains a finite number."""
+    if isinstance(value, bool) or value is None:
+        return False
+    if isinstance(value, (int, float)):
+        return math.isfinite(value)
+    if isinstance(value, list):
+        return any(contains_number(child) for child in value)
+    if isinstance(value, dict):
+        return any(contains_number(child) for child in value.values())
+    return False
 
 
 def as_object(value: JsonValue | object) -> dict[str, JsonValue] | None:
@@ -294,6 +326,169 @@ def appendix_tags(section: dict[str, JsonValue]) -> set[str]:
             if match is not None:
                 tags.add(match.group(1))
     return tags
+
+
+def _public_tools() -> frozenset[str]:
+    """Load the packaged connector tool catalog used for provenance checks."""
+    path = (
+        PLUGIN_ROOT
+        / "skills"
+        / "gradient-setup"
+        / "references"
+        / "public-tools.json"
+    )
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return frozenset()
+    tools = value.get("tools") if isinstance(value, dict) else None
+    if not isinstance(tools, list):
+        return frozenset()
+    return frozenset(tool for tool in tools if isinstance(tool, str))
+
+
+PUBLIC_TOOLS = _public_tools()
+
+
+def _source_table(
+    appendix: dict[str, JsonValue],
+) -> tuple[dict[str, JsonValue] | None, list[str]]:
+    """Return the canonical source table and its columns."""
+    for block in block_objects(appendix):
+        if block.get("type") != "table":
+            continue
+        columns = as_array(block.get("columns"))
+        if columns is None:
+            continue
+        labels = [str(column) for column in columns]
+        if labels and labels[0] in {"Tag", "Ref"}:
+            return block, labels
+    return None, []
+
+
+def validate_provenance(
+    root: dict[str, JsonValue],
+    sections: list[dict[str, JsonValue]],
+    appendix_pattern: str,
+) -> list[str]:
+    """Validate report-level basis and source-row lineage to governed evidence."""
+    errors: list[str] = []
+    meta = as_object(root.get("meta")) or {}
+    data_basis = meta.get("data_basis")
+    if data_basis not in DATA_BASIS_VALUES:
+        errors.append(
+            "meta.data_basis must be one of: "
+            + ", ".join(sorted(DATA_BASIS_VALUES))
+        )
+
+    appendices = [
+        section
+        for section in sections
+        if re.fullmatch(appendix_pattern, str(section.get("title", "")))
+    ]
+    if len(appendices) != 1:
+        return errors
+    table, columns = _source_table(appendices[0])
+    if table is None:
+        return errors + ["Sources appendix must contain a canonical source table"]
+    if tuple(columns) != SOURCE_COLUMNS:
+        errors.append(
+            "Sources table columns must be, in order: " + ", ".join(SOURCE_COLUMNS)
+        )
+        return errors
+
+    rows = as_array(table.get("rows")) or []
+    for index, value in enumerate(rows, start=1):
+        row = as_array(value)
+        if row is None or len(row) != len(SOURCE_COLUMNS):
+            errors.append(
+                f"Source row {index} must contain {len(SOURCE_COLUMNS)} cells"
+            )
+            continue
+        tag, _evidence, basis, tool_view, parameters, as_of, scope, validation, digest = (
+            str(cell).strip() for cell in row
+        )
+        if SOURCE_CELL_PATTERN.fullmatch(tag) is None:
+            errors.append(f"Source row {index} Tag must match S<number>")
+        if basis not in SOURCE_BASIS_VALUES:
+            errors.append(
+                f"Source row {index} Basis must be one of: "
+                + ", ".join(sorted(SOURCE_BASIS_VALUES))
+            )
+            continue
+        if data_basis == "gradient_governed" and basis != "gradient_tool":
+            errors.append(
+                f"Source row {index} must use gradient_tool for "
+                "meta.data_basis gradient_governed"
+            )
+        if basis == "gradient_tool":
+            tool_names = set(
+                re.findall(
+                    r"\b(?:analyze|batch|build|check|compare|create|extract|get|"
+                    r"list|log|preview|reconcile|run|save|update)_[a-z0-9_]+\b",
+                    tool_view,
+                )
+            )
+            if not tool_names:
+                errors.append(
+                    f"Source row {index} Tool / view must name a Gradient tool"
+                )
+            for tool_name in sorted(tool_names - PUBLIC_TOOLS):
+                errors.append(
+                    f"Source row {index} names unknown Gradient tool '{tool_name}'"
+                )
+            if digest.casefold() in {"", "n/a", "na", "none", "not available"}:
+                errors.append(
+                    f"Source row {index} Gradient tool evidence requires a digest"
+                )
+        for label, cell in (
+            ("Tool / view", tool_view),
+            ("Key parameters", parameters),
+            ("As of", as_of),
+            ("Data scope", scope),
+            ("Validation", validation),
+            ("Digest", digest),
+        ):
+            if not cell:
+                errors.append(f"Source row {index} {label} must be non-empty")
+    return errors
+
+
+def validate_numeric_lineage(
+    sections: list[dict[str, JsonValue]], appendix_pattern: str
+) -> list[str]:
+    """Require each quantitative block to carry an evidence source tag."""
+    errors: list[str] = []
+    for section in sections:
+        title = str(section.get("title", ""))
+        if re.fullmatch(appendix_pattern, title):
+            continue
+        for index, block in enumerate(direct_block_objects(section), start=1):
+            if has_typed_unavailable({"blocks": [block]}):
+                continue
+            strings = collect_strings(block)
+            has_number = bool(NUMERIC_CLAIM_PATTERN.search("\n".join(strings)))
+            has_numeric_value = contains_number(block)
+            if block.get("type") in {
+                "bars",
+                "pie",
+                "percentiles",
+                "waterfall",
+                "band",
+                "stacked",
+                "heat",
+                "line",
+                "chart",
+                "tiles",
+            }:
+                has_numeric_value = True
+            if (has_number or has_numeric_value) and SOURCE_TAG_PATTERN.search(
+                "\n".join(strings)
+            ) is None:
+                errors.append(
+                    f"{title} quantitative block {index} must contain an [S#] tag"
+                )
+    return errors
 
 
 def validate_section_order(
@@ -948,6 +1143,8 @@ def validate_report(document: JsonValue, spec: ReportSpec) -> list[str]:
     )
     errors.extend(validate_key_judgment_callouts(sections, spec.appendix_pattern))
     errors.extend(validate_sourced_analysis(root, sections))
+    errors.extend(validate_provenance(root, sections, spec.appendix_pattern))
+    errors.extend(validate_numeric_lineage(sections, spec.appendix_pattern))
     errors.extend(validate_analysis_callouts(sections, spec))
     errors.extend(validate_key_judgments(sections, spec))
     if spec.require_question_sources:

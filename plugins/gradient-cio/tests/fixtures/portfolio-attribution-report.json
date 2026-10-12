@@ -44,7 +44,8 @@
       "expected": 5,
       "state": "complete"
     },
-    "meter_title": "Evidence completeness"
+    "meter_title": "Evidence completeness",
+    "data_basis": "gradient_governed"
   },
   "executive": {
     "label": "Attribution conclusion",
@@ -214,7 +215,8 @@
               "Fictional TEST data",
               "S1"
             ]
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -323,7 +325,8 @@
                 "benchmark"
               ]
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -406,9 +409,21 @@
               "type": "waterfall",
               "title": "Allocation → selection → interaction",
               "items": [
-                {"label": "Allocation", "value": 0.1, "display": "+0.1pp"},
-                {"label": "Selection", "value": -0.8, "display": "-0.8pp"},
-                {"label": "Interaction", "value": 0.1, "display": "+0.1pp"}
+                {
+                  "label": "Allocation",
+                  "value": 0.1,
+                  "display": "+0.1pp"
+                },
+                {
+                  "label": "Selection",
+                  "value": -0.8,
+                  "display": "-0.8pp"
+                },
+                {
+                  "label": "Interaction",
+                  "value": 0.1,
+                  "display": "+0.1pp"
+                }
               ],
               "note": "Returned linked effects [S4]."
             }
@@ -418,13 +433,41 @@
               "type": "kv",
               "title": "Historical reconciliation and method",
               "rows": [
-                ["Active return", "-0.6pp", "S4"],
-                ["Total effects", "-0.6pp", "S4"],
-                ["Residual", "0.0bp", "S4"],
-                ["Tolerance", "0.00000001pp", "S4"],
-                ["Method", "Realized Brinson-Fachler", "S4"],
-                ["Linking", "Symmetric Carino", "S4"],
-                ["Currency", "USD", "S4"]
+                [
+                  "Active return",
+                  "-0.6pp",
+                  "S4"
+                ],
+                [
+                  "Total effects",
+                  "-0.6pp",
+                  "S4"
+                ],
+                [
+                  "Residual",
+                  "0.0bp",
+                  "S4"
+                ],
+                [
+                  "Tolerance",
+                  "0.00000001pp",
+                  "S4"
+                ],
+                [
+                  "Method",
+                  "Realized Brinson-Fachler",
+                  "S4"
+                ],
+                [
+                  "Linking",
+                  "Symmetric Carino",
+                  "S4"
+                ],
+                [
+                  "Currency",
+                  "USD",
+                  "S4"
+                ]
               ]
             }
           ]
@@ -471,7 +514,8 @@
                 "effect"
               ]
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -606,7 +650,8 @@
                 "effect"
               ]
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "callout",
@@ -780,11 +825,32 @@
         {
           "type": "heat",
           "title": "Segment effects by attribution lane",
-          "columns": ["Historical", "Ex ante"],
+          "columns": [
+            "Historical",
+            "Ex ante"
+          ],
           "rows": [
-            {"label": "Public equity", "values": [-0.6, 0.3]},
-            {"label": "Fixed income", "values": [0.3, 0.3]},
-            {"label": "Private assets", "values": [-0.3, -0.2]}
+            {
+              "label": "Public equity",
+              "values": [
+                -0.6,
+                0.3
+              ]
+            },
+            {
+              "label": "Fixed income",
+              "values": [
+                0.3,
+                0.3
+              ]
+            },
+            {
+              "label": "Private assets",
+              "values": [
+                -0.3,
+                -0.2
+              ]
+            }
           ],
           "format": "percentage points",
           "decimals": 1,
@@ -989,6 +1055,7 @@
           "columns": [
             "Tag",
             "Evidence",
+            "Basis",
             "Tool / view",
             "Key parameters",
             "As of",
@@ -997,105 +1064,92 @@
             "Digest"
           ],
           "align": [
-            "n",
             "l",
             "l",
             "l",
-            "n",
             "l",
             "l",
-            "n"
+            "l",
+            "l",
+            "l",
+            "l"
           ],
           "rows": [
             [
               "S1",
               "Capabilities",
+              "gradient_tool",
               "get_gradient_capabilities",
               "detail=full",
               "2026-10-08",
               "Fictional TEST data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "{'chip': 'passed', 'status': 'passed'}",
               "test-s1"
             ],
             [
               "S2",
               "Portfolio and root cohort",
+              "gradient_tool",
               "list_portfolios; get_portfolio_structure",
               "view=allocation_tree",
               "2026-10-08",
               "Fictional TEST data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "{'chip': 'passed', 'status': 'passed'}",
               "test-s2"
             ],
             [
               "S3",
               "Historical returns context",
+              "gradient_tool",
               "get_portfolio_historical_returns",
               "five sections",
               "2026-06-30",
               "Fictional TEST data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "{'chip': 'passed', 'status': 'passed'}",
               "test-s3"
             ],
             [
               "S4",
               "Historical attribution",
+              "gradient_tool",
               "get_portfolio_attribution",
               "policy; root; all sections",
               "2026-06-30",
               "Fictional TEST data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "{'chip': 'passed', 'status': 'passed'}",
               "test-s4"
             ],
             [
               "S5",
               "Governed ex ante attribution",
+              "gradient_tool",
               "get_portfolio_ex_ante_attribution",
               "policy; root; all sections",
               "2026-10-08",
               "Fictional TEST data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "{'chip': 'passed', 'status': 'passed'}",
               "test-s5"
             ],
             [
               "S6",
               "Largest-detractor manager findings",
+              "gradient_tool",
               "get_manager_diligence_findings",
               "view=open; public-equity managers",
               "2026-06-30",
               "Fictional TEST data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "{'chip': 'passed', 'status': 'passed'}",
               "test-s6"
             ],
             [
               "S7",
               "Macro regime",
+              "gradient_tool",
               "get_macro_signals",
               "view=gradient_signal; regime_state",
               "2026-06-30",
               "Fictional TEST data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "{'chip': 'passed', 'status': 'passed'}",
               "test-s7"
             ]
           ]

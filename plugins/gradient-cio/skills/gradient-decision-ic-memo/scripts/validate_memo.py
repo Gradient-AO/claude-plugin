@@ -14,8 +14,10 @@ Checks
 
 Exit code 0 = pass, 1 = errors (printed).
 """
+import json
 import re
 import sys
+from pathlib import Path
 
 REQUIRED = [
     r"^# Investment Committee Memo — .+",
@@ -45,6 +47,34 @@ TIMING = {"Before approval", "Within 30 days", "Next review"}
 EXEC_LABELS = ["Positioning", "IPS", "Performance", "Outlook", "Liquidity & diligence"]
 BANNED = [r"\bguaranteed?\b", r"\bwill return\b", r"\bexpected to deliver\b", r"\bverified returns\b",
           r"\bhas approved\b", r"\brisk-free\b(?! rate)"]
+SOURCE_HEADER = [
+    "Ref",
+    "Evidence",
+    "Basis",
+    "Tool / view",
+    "Key parameters",
+    "As of",
+    "Data scope",
+    "Validation",
+    "Digest",
+]
+SOURCE_BASES = {"gradient_tool", "user_document", "regulatory_filing"}
+PLUGIN_ROOT = Path(__file__).resolve().parents[3]
+PUBLIC_TOOLS = set(
+    json.loads(
+        (
+            PLUGIN_ROOT
+            / "skills"
+            / "gradient-setup"
+            / "references"
+            / "public-tools.json"
+        ).read_text(encoding="utf-8")
+    )["tools"]
+)
+TOOL_PATTERN = re.compile(
+    r"\b(?:analyze|batch|build|check|compare|create|extract|get|list|log|"
+    r"preview|reconcile|run|save|update)_[a-z0-9_]+\b"
+)
 
 
 def sections(lines):
@@ -129,6 +159,8 @@ def main(path):
     # 5/6. source tags and local-calculation prohibition
     appA = "\n".join(section_text(lines, r"^## Appendix A"))
     body_main = text.split("## Appendix A")[0]
+    if "| Data basis | mixed |" not in body_main:
+        errors.append("Header table must declare '| Data basis | mixed |'")
     cited_s = set(re.findall(r"\[S(\d+)\]", body_main))
     listed_s = set(re.findall(r"^\|\s*S(\d+)\s*\|", appA, re.M))
     for s in sorted(cited_s - listed_s, key=int):
@@ -137,6 +169,46 @@ def main(path):
         errors.append(f"S{s} listed in Appendix A but never cited")
     if re.search(r"\[Calc(?:\s+C(?:\d+|#))?\]", text):
         errors.append("Local calculation tags are not allowed; cite server or document evidence with [S#]")
+
+    source_lines = [line for line in appA.splitlines() if line.startswith("|")]
+    if source_lines:
+        header = [cell.strip() for cell in source_lines[0].strip("|").split("|")]
+        if header != SOURCE_HEADER:
+            errors.append(
+                "Appendix A columns must be, in order: " + ", ".join(SOURCE_HEADER)
+            )
+        else:
+            for row_number, line in enumerate(source_lines[2:], start=1):
+                cells = [cell.strip() for cell in line.strip("|").split("|")]
+                if len(cells) != len(SOURCE_HEADER):
+                    errors.append(
+                        f"Appendix A source row {row_number} must contain "
+                        f"{len(SOURCE_HEADER)} cells"
+                    )
+                    continue
+                _tag, _evidence, basis, tool_view, parameters, as_of, scope, validation, digest = cells
+                if basis not in SOURCE_BASES:
+                    errors.append(
+                        f"Appendix A source row {row_number} has invalid Basis '{basis}'"
+                    )
+                if basis == "gradient_tool":
+                    tools = set(TOOL_PATTERN.findall(tool_view))
+                    if not tools:
+                        errors.append(
+                            f"Appendix A source row {row_number} must name a Gradient tool"
+                        )
+                    for tool in sorted(tools - PUBLIC_TOOLS):
+                        errors.append(
+                            f"Appendix A source row {row_number} names unknown tool '{tool}'"
+                        )
+                    if digest.casefold() in {"", "n/a", "na", "none"}:
+                        errors.append(
+                            f"Appendix A source row {row_number} requires a digest"
+                        )
+                if not all((tool_view, parameters, as_of, scope, validation, digest)):
+                    errors.append(
+                        f"Appendix A source row {row_number} has an empty provenance field"
+                    )
 
     # 7. executive summary
     ex = [l for l in section_text(lines, r"^## 2\.") if l.strip().startswith("- ")]

@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.0
+- Moved GIPS report review behind the ODD and investment-committee workflows as an internal firm/asset-owner evidence contract; removed its standalone command, menu group and top-level marketing.
+- Added machine-checkable `data_basis`, canonical source classifications, Gradient tool-catalog checks, evidence digests and quantitative `[S#]` lineage to core report contracts.
+- Replaced ambiguous shared IDD validator entrypoints with explicit per-skill commands while retaining strict centralized per-mode contracts and enforcing the full IDD–ODD–IC handoff schema.
+- Corrected skill redirects and menu labels, and made peer-allocation context explicitly optional, capability-gated and non-blocking for portfolio construction.
+
 ## 4.0.0
 - Removed the standalone macro-brief and equity-note research skills from the public plugin.
 - Consolidated manager GIPS claim, verification and performance-integrity review into `gradient-odd-report`.

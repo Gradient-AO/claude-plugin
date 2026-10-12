@@ -1,23 +1,16 @@
 {
   "gradient-decision-ic-memo": {"validator": "skills/gradient-decision-ic-memo/scripts/validate_memo.py", "fixtures": ["ic.md"]},
-  "gradient-gips-report-review": {
-    "validator": "skills/gradient-gips-report-review/scripts/validate_gips_report.py",
-    "modes": {
-      "firm": ["gips-report-review.md", "gips-report-review-visuals.json", "gips-report-review-meta.json"],
-      "asset-owner": ["gips-asset-owner-review.md", "gips-asset-owner-review-visuals.json", "gips-asset-owner-review-meta.json"]
-    }
-  },
   "gradient-idd-manager-performance": {
-    "validator": "skills/gradient-idd-manager-performance/scripts/validate_idd_report.py",
+    "validator": "skills/gradient-idd-manager-performance/scripts/validate_manager_performance.py",
     "modes": {
       "single": ["idd-manager-performance-single.json"],
       "compare": ["idd-manager-performance-compare.json"],
       "robustness": ["idd-manager-performance-robustness.json"]
     }
   },
-  "gradient-idd-manager-portfolio-fit": {"validator": "skills/gradient-idd-manager-portfolio-fit/scripts/validate_idd_report.py", "fixtures": ["idd-portfolio-fit.json"]},
-  "gradient-idd-manager-shortlist": {"validator": "skills/gradient-idd-manager-shortlist/scripts/validate_idd_report.py", "fixtures": ["idd-shortlist.json"]},
-  "gradient-idd-private-markets-pme": {"validator": "skills/gradient-idd-private-markets-pme/scripts/validate_idd_report.py", "fixtures": ["idd-private-markets-pme.json"]},
+  "gradient-idd-manager-portfolio-fit": {"validator": "skills/gradient-idd-manager-portfolio-fit/scripts/validate_manager_portfolio_fit.py", "fixtures": ["idd-portfolio-fit.json"]},
+  "gradient-idd-manager-shortlist": {"validator": "skills/gradient-idd-manager-shortlist/scripts/validate_manager_shortlist.py", "fixtures": ["idd-shortlist.json"]},
+  "gradient-idd-private-markets-pme": {"validator": "skills/gradient-idd-private-markets-pme/scripts/validate_private_markets_pme.py", "fixtures": ["idd-private-markets-pme.json"]},
   "gradient-odd-ddq-reconcile": {"validator": "skills/gradient-odd-ddq-reconcile/scripts/validate_ddq_report.py", "fixtures": ["ddq.json"]},
   "gradient-odd-manager-compare": {"validator": "skills/gradient-odd-manager-compare/scripts/validate_manager_compare.py", "fixtures": ["compare.json"]},
   "gradient-odd-manager-monitor": {"validator": "skills/gradient-odd-manager-monitor/scripts/validate_monitor_digest.py", "fixtures": ["digest.json"]},

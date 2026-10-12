@@ -5,7 +5,7 @@
     "not": "gradient-odd-manager-compare",
     "description_terms": [
       "performance",
-      "benchmarks"
+      "benchmark"
     ]
   },
   {
@@ -135,36 +135,6 @@
   {
     "prompt": "Use gradient-decision-ic-memo for fictional routing case 5 (TEST).",
     "expected": "gradient-decision-ic-memo",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-report-review for fictional routing case 1 (TEST).",
-    "expected": "gradient-gips-report-review",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-report-review for fictional routing case 2 (TEST).",
-    "expected": "gradient-gips-report-review",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-report-review for fictional routing case 3 (TEST).",
-    "expected": "gradient-gips-report-review",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-report-review for fictional routing case 4 (TEST).",
-    "expected": "gradient-gips-report-review",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-report-review for fictional routing case 5 (TEST).",
-    "expected": "gradient-gips-report-review",
     "not": "gradient-menu",
     "description_terms": []
   },
@@ -515,5 +485,32 @@
     "expected": "gradient-setup",
     "not": "gradient-menu",
     "description_terms": []
+  },
+  {
+    "prompt": "Compare historical, governed ex ante, and simulated attribution lanes for this portfolio",
+    "expected": "gradient-portfolio-attribution-compare",
+    "not": "gradient-portfolio-attribution",
+    "description_terms": [
+      "multi-lane",
+      "attribution"
+    ]
+  },
+  {
+    "prompt": "Run one saved portfolio attribution report without a cross-lane comparison",
+    "expected": "gradient-portfolio-attribution",
+    "not": "gradient-portfolio-attribution-compare",
+    "description_terms": [
+      "single-lane",
+      "attribution"
+    ]
+  },
+  {
+    "prompt": "Assess one prospective manager against the current sleeve rather than redesigning the sleeve",
+    "expected": "gradient-idd-manager-portfolio-fit",
+    "not": "gradient-portfolio-construction",
+    "description_terms": [
+      "portfolio-fit",
+      "prospective manager"
+    ]
   }
 ]

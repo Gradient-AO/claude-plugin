@@ -142,7 +142,7 @@ The composer takes executive tiles from `visuals.json`, so the existing metadata
 
 ## Validate, compose and deliver
 
-Run from `gradient-gips-report-review`:
+Run from the internal GIPS review module:
 
 ```text
 python scripts/validate_gips_report.py review.md visuals.json meta.json

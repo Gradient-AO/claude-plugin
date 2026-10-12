@@ -22,18 +22,16 @@ GROUP_ORDER = (
     "Start",
     "Investment due diligence",
     "Operational due diligence",
-    "Portfolio",
-    "GIPS",
-    "Decision",
+    "Portfolio Analytics",
+    "Investment memos",
 )
 
 EXAMPLES = {
     "Start": "Check which GradientCIO workflows are ready.",
     "Investment due diligence": "Compare these managers' track records.",
     "Operational due diligence": "Prepare ODD on the finalist.",
-    "Portfolio": "Review our total portfolio for the quarter.",
-    "GIPS": "Review this report against the GIPS standards.",
-    "Decision": "Draft an IC memo for this allocation change.",
+    "Portfolio Analytics": "Review our total portfolio for the quarter.",
+    "Investment memos": "Draft an IC memo for this allocation change.",
 }
 
 README_BEGIN = "<!-- BEGIN GENERATED SKILL CATALOG -->"

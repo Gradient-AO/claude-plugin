@@ -727,6 +727,7 @@ def contract_manifest():
         path / "SKILL.md"
         for path in (ROOT / "skills").iterdir()
         if (path / "SKILL.md").exists()
+        and path.name != "gradient-menu"
         and (
             "Portfolio Analytics" in (path / "SKILL.md").read_text(encoding="utf-8")
             or "Strategy Lab" in (path / "SKILL.md").read_text(encoding="utf-8")
@@ -785,6 +786,35 @@ def contract_manifest():
         r"\s+",
         " ",
         portfolio_review_data_map,
+    )
+    construction_root = ROOT / "skills" / "gradient-portfolio-construction"
+    construction_guidance = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in (
+            construction_root / "SKILL.md",
+            construction_root / "references" / "data-map.md",
+            construction_root
+            / "references"
+            / "modes"
+            / "marketable_alternatives-data-map.md",
+            construction_root
+            / "references"
+            / "modes"
+            / "marketable_alternatives-construction-template.md",
+            construction_root
+            / "references"
+            / "modes"
+            / "real_assets-data-map.md",
+            construction_root
+            / "references"
+            / "modes"
+            / "real_assets-construction-template.md",
+        )
+    )
+    normalized_construction_guidance = re.sub(
+        r"\s+",
+        " ",
+        construction_guidance,
     )
     ic_memo_guidance = IC_MEMO_SKILL.read_text(encoding="utf-8")
     ic_memo_data_map = IC_MEMO_DATA_MAP.read_text(encoding="utf-8")
@@ -1039,6 +1069,74 @@ def contract_manifest():
         and "Peer allocation context: Not licensed (optional)"
         in SKILL_REQUIREMENTS.read_text(encoding="utf-8"),
         "portfolio review discloses the optional peer-entitlement skip",
+    )
+    check(
+        "`get_peer_allocation_intelligence`" in normalized_construction_guidance
+        and "`capabilities.peerIntelligence`"
+        in normalized_construction_guidance
+        and "do not call or retry" in normalized_construction_guidance
+        and peer_skip_text in normalized_construction_guidance
+        and "Missing peer intelligence never lowers construction readiness"
+        in normalized_construction_guidance
+        and "keep the mode's readiness rating unchanged"
+        in SKILL_REQUIREMENTS.read_text(encoding="utf-8"),
+        "portfolio construction gates and skips optional peer context",
+    )
+    public_tools = json.loads(
+        PUBLIC_TOOLS.read_text(encoding="utf-8")
+    )["tools"]
+    minimum_tools = json.loads(
+        CONTRACTS.read_text(encoding="utf-8")
+    )["minimum_connector_contract"]["required_tools"]
+    check(
+        "get_peer_allocation_intelligence" in public_tools
+        and "get_peer_allocation_intelligence" not in minimum_tools,
+        "peer allocation tool is advertised but remains outside the minimum connector",
+    )
+    peer_fixture_states = []
+    for fixture_name in (
+        "construction-marketable-alternatives.json",
+        "construction-real-assets.json",
+    ):
+        document = json.loads((FIX / fixture_name).read_text(encoding="utf-8"))
+        coverage = next(
+            section
+            for section in document["sections"]
+            if section.get("title") == "Coverage"
+        )
+        items = next(
+            block["items"]
+            for block in coverage["blocks"]
+            if block.get("type") == "coverage"
+        )
+        peer_fixture_states.append(
+            any(
+                item.get("name") == "Peer allocation intelligence"
+                and item.get("status") == "not licensed"
+                and peer_skip_text in item.get("note", "")
+                for item in items
+            )
+        )
+    check(
+        all(peer_fixture_states),
+        "construction fixtures preserve an optional unlicensed peer skip",
+    )
+    setup_document = json.loads((FIX / "setup.json").read_text(encoding="utf-8"))
+    setup_peer_unavailable = any(
+        item.get("name") == "Peer intelligence"
+        and item.get("status") == "unavailable"
+        for section in setup_document.get("sections", [])
+        if isinstance(section, dict)
+        for block in section.get("blocks", [])
+        if isinstance(block, dict) and block.get("type") == "coverage"
+        for item in block.get("items", [])
+        if isinstance(item, dict)
+    )
+    check(
+        setup_peer_unavailable
+        and "keep the mode's readiness rating unchanged"
+        in SKILL_REQUIREMENTS.read_text(encoding="utf-8"),
+        "setup reports unavailable peer access without downgrading construction",
     )
     check(
         by_id["portfolio_allocations"]["tool"] == "get_chart_data"

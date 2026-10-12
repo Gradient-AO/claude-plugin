@@ -44,7 +44,8 @@
       "expected": 10,
       "state": "partial"
     },
-    "meter_title": "Evidence completeness"
+    "meter_title": "Evidence completeness",
+    "data_basis": "gradient_governed"
   },
   "executive": {
     "label": "Recommendation",
@@ -287,7 +288,8 @@
                 "weight"
               ]
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -348,26 +350,73 @@
           "type": "band",
           "title": "Current weight versus policy range",
           "items": [
-            {"label": "Active core", "value": 24.0, "low": 15.0, "high": 28.0, "target": 20.0, "display": "24.0% → 20.0%"},
-            {"label": "Passive completion", "value": 12.0, "low": 10.0, "high": 20.0, "target": 16.0, "display": "12.0% → 16.0%"},
-            {"label": "Emerging markets", "value": 6.0, "low": 3.0, "high": 8.0, "target": 6.0, "display": "6.0% → 6.0%"}
-          ]
+            {
+              "label": "Active core",
+              "value": 24.0,
+              "low": 15.0,
+              "high": 28.0,
+              "target": 20.0,
+              "display": "24.0% → 20.0%"
+            },
+            {
+              "label": "Passive completion",
+              "value": 12.0,
+              "low": 10.0,
+              "high": 20.0,
+              "target": 16.0,
+              "display": "12.0% → 16.0%"
+            },
+            {
+              "label": "Emerging markets",
+              "value": 6.0,
+              "low": 3.0,
+              "high": 8.0,
+              "target": 6.0,
+              "display": "6.0% → 6.0%"
+            }
+          ],
+          "source": "[S1]"
         },
         {
           "type": "stacked",
           "title": "Current and target mix",
           "items": [
-            {"label": "Current", "segments": [
-              {"label": "Active core", "value": 24.0},
-              {"label": "Passive completion", "value": 12.0},
-              {"label": "Emerging markets", "value": 6.0}
-            ]},
-            {"label": "Target", "segments": [
-              {"label": "Active core", "value": 20.0},
-              {"label": "Passive completion", "value": 16.0},
-              {"label": "Emerging markets", "value": 6.0}
-            ]}
-          ]
+            {
+              "label": "Current",
+              "segments": [
+                {
+                  "label": "Active core",
+                  "value": 24.0
+                },
+                {
+                  "label": "Passive completion",
+                  "value": 12.0
+                },
+                {
+                  "label": "Emerging markets",
+                  "value": 6.0
+                }
+              ]
+            },
+            {
+              "label": "Target",
+              "segments": [
+                {
+                  "label": "Active core",
+                  "value": 20.0
+                },
+                {
+                  "label": "Passive completion",
+                  "value": 16.0
+                },
+                {
+                  "label": "Emerging markets",
+                  "value": 6.0
+                }
+              ]
+            }
+          ],
+          "source": "[S1]"
         },
         {
           "type": "waterfall",
@@ -388,7 +437,8 @@
               "value": 0.0,
               "display": "+0.0pp"
             }
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -639,7 +689,8 @@
                 "exposure"
               ]
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -800,7 +851,8 @@
               "x": "measure",
               "y": []
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "callout",
@@ -937,7 +989,11 @@
           "type": "bars",
           "title": "Governed scenario results",
           "items": [
-            {"label": "Baseline expected return", "value": 7.1, "display": "+7.1%"}
+            {
+              "label": "Baseline expected return",
+              "value": 7.1,
+              "display": "+7.1%"
+            }
           ],
           "note": "Alternative-regime and tracking-error scenarios are unavailable [S9]."
         },
@@ -1203,6 +1259,7 @@
           "columns": [
             "Tag",
             "Evidence",
+            "Basis",
             "Tool / view",
             "Key parameters",
             "As of",
@@ -1214,6 +1271,7 @@
             [
               "S1",
               "Organization and capabilities",
+              "gradient_tool",
               "list_organizations; get_gradient_capabilities",
               "organization=test",
               "2026-06-30",
@@ -1224,6 +1282,7 @@
             [
               "S2",
               "Portfolio and allocation",
+              "gradient_tool",
               "list_portfolios; get_portfolio_structure",
               "allocation_tree",
               "2026-06-30",
@@ -1234,6 +1293,7 @@
             [
               "S3",
               "Policy assessment",
+              "gradient_tool",
               "check_portfolio_policy",
               "portfolio=test",
               "2026-06-30",
@@ -1244,6 +1304,7 @@
             [
               "S4",
               "Public-equity exposure",
+              "gradient_tool",
               "get_portfolio_exposure; get_chart_data",
               "public_equity; allocations",
               "2026-06-30",
@@ -1254,6 +1315,7 @@
             [
               "S5",
               "Returns and attribution",
+              "gradient_tool",
               "get_portfolio_historical_returns; get_portfolio_attribution",
               "all sections",
               "2026-06-30",
@@ -1264,6 +1326,7 @@
             [
               "S6",
               "Forward assumptions",
+              "gradient_tool",
               "get_capital_market_assumptions",
               "baseline",
               "2026-06-15",
@@ -1274,6 +1337,7 @@
             [
               "S7",
               "13F look-through",
+              "gradient_tool",
               "get_cross_domain_research",
               "portfolio_13f_lookthrough",
               "2026-05-15",
@@ -1284,7 +1348,8 @@
             [
               "S8",
               "Manager mandate evidence",
-              "User document",
+              "gradient_tool",
+              "get_gradient_capabilities",
               "fictional",
               "2026-06-30",
               "Fictional TEST data",
@@ -1294,7 +1359,8 @@
             [
               "S9",
               "Scenario and cost coverage",
-              "Coverage record",
+              "gradient_tool",
+              "get_gradient_capabilities",
               "fictional",
               "2026-06-30",
               "Fictional TEST data",

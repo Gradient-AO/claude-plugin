@@ -1,26 +1,11 @@
----
-name: gradient-gips-report-review
-description: "Create a GIPS report review for a composite or pooled fund. Triggers: 'review this GIPS report', 'check a composite presentation', 'review a GIPS advertisement'. For manager operational diligence use gradient-odd-report."
-metadata:
-  style_contract: "2.1.0"
-  group: "GIPS"
-  subject: "GIPS report"
-  output: "review"
-  menu_order: "30"
-  modules: "none"
-  contracts: "gips"
-  handoffs: "gradient-decision-ic-memo"
-  version: "1.2.0"
-  summary: "Review GIPS reports and advertisements line by line."
----
 
 # GIPS Report Review
 
 Check a firm's GIPS Composite Report, GIPS Pooled Fund Report or GIPS Advertisement against the 2020 GIPS
 standards for firms, line by line.
 
-Shared references live in this skill's `references/` directory. Always load `firms-report-checklist.md`,
-`output-format.md` and `report-layout.md`; before drafting, also load this skill's
+Shared references live in the internal module's `references/` directory. Always load `firms-report-checklist.md`,
+`output-format.md` and `report-layout.md`; before drafting, also load the internal module's
 `references/writing-standards.md` and `references/analysis-examples.md`.
 
 ## Step 1 — Classify the document
@@ -93,5 +78,5 @@ memo handoff markdown remains unchanged through composition.
 python <skill>/scripts/validate_gips_report.py review.md visuals.json meta.json
 python <skill>/scripts/compose_gips_report.py review.md visuals.json meta.json report.json
 python <skill>/scripts/validate_gips_report.py report.json
-python <this skill's directory>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Report Review" --budget <this skill's directory>/references/layout-budget.json
+python <internal-gips>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Report Review" --budget <internal-gips>/references/layout-budget.json
 ```

@@ -31,6 +31,7 @@ Contents: Header · 1 Recommendation · 2 Executive Summary · 3 Portfolio Snaps
 | Base currency | <ISO code> |
 | Status | DRAFT — for committee review |
 | Data quality | <Complete / Degraded — <n> sections affected / Illustrative> |
+| Data basis | mixed |
 ```
 
 ## 1. Recommendation and Decision Requested
@@ -266,14 +267,14 @@ callout with that exact title, and ends with sourced Analysis.}
 
 ## 11. Performance Integrity & GIPS
 
-{Paste sections from gradient-gips-report-review (total fund) and the GIPS section of gradient-odd-report
+{Paste sections from the internal GIPS review contract in asset-owner mode (total fund) and the GIPS section of gradient-odd-report
 (each manager ≥ 5% NAV or being hired), unchanged, ordered: total fund first, then managers by exposure descending.}
 {The visual layer is compact: `GIPS review coverage` followed by `GIPS follow-ups`; do not repeat the pasted
 handoff in a second long table.}
 
 ```
 ### 11.1 Total fund
-<gradient-gips-report-review oversight-body summary, or "Not assessed — <reason>">
+<internal GIPS review oversight-body summary, or "Not assessed — <reason>">
 
 ### 11.2 <Manager name>
 <gradient-odd-report GIPS subsection>
@@ -361,8 +362,8 @@ handoff in a second long table.}
 {One row per tool call or document used; S-numbers assigned in order of first citation.}
 
 ```
-| Ref | Source | Parameters | As of | Data scope | Validation | Digest |
-|---|---|---|---|---|---|---|
+| Ref | Evidence | Basis | Tool / view | Key parameters | As of | Data scope | Validation | Digest |
+|---|---|---|---|---|---|---|---|---|
 ```
 
 ## Appendix B — Server Metric Methods

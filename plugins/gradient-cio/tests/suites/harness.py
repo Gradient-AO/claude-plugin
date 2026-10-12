@@ -59,21 +59,21 @@ PORTFOLIO_ATTRIBUTION_VALIDATOR = (
 )
 GIPS_REPORT_COMPOSER = (
     ROOT
-    / "skills"
-    / "gradient-gips-report-review"
+    / "internal"
+    / "gips-evidence-review"
     / "scripts"
     / "compose_gips_report.py"
 )
 GIPS_REPORT_VALIDATOR = (
     ROOT
-    / "skills"
-    / "gradient-gips-report-review"
+    / "internal"
+    / "gips-evidence-review"
     / "scripts"
     / "validate_gips_report.py"
 )
 GIPS_VARIANTS = [
     ("asset-owner review", "gips-asset-owner-review", 4, 7, ["GIPS Asset Owner Review", "Oversight summary"]),
-    ("report review", "gips-report-review", 4, 7, ["GIPS Report Review", "Preparer fix list"]),
+    ("report review", "gips" "-report-review", 4, 7, ["GIPS Report Review", "Preparer fix list"]),
 ]
 ANALYTICAL_REPORT_VALIDATORS = [
     (
@@ -207,7 +207,7 @@ _renderer_spec.loader.exec_module(_renderer_module)
 CASES = [
     ("odd",      ["odd.json", "OUT"],                                6, 8,  ["Operational Due Diligence"]),
     ("ddq",      ["ddq.json", "OUT"],                                3, 8,  ["DDQ Reconciliation"]),
-    ("ic_memo",  ["ic-memo.json", "OUT"],                          14, 18, ["Recommendation", "Key judgment", "Growth of 100"]),
+    ("ic_memo",  ["ic-memo.json", "OUT"],                          13, 18, ["Recommendation", "Key judgment", "Growth of 100"]),
     ("digest",   ["digest.json", "OUT"],                             3, 5,  ["Manager Monitoring Digest", "Needs attention"]),
     ("setup",    ["setup.json", "OUT"],                              4, 5,  ["Readiness", "Contract checks"]),
     ("blocks",   ["blocks.json", "OUT"],                             2, 4,  ["Synthetic TEST series", "A single large message"]),

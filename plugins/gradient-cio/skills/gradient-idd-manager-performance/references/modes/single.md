@@ -51,7 +51,7 @@ A viable manager → `gradient-odd-report`; an investment decision → `gradient
 Run the shared IDD contract validator, then canonical delivery QA:
 
 ```text
-python <skill>/scripts/validate_idd_report.py report.json
+python <skill>/scripts/validate_manager_performance.py report.json
 python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - Assessment Report <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json
 ```
 

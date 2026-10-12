@@ -80,7 +80,7 @@ Section 1. Titles are six words or fewer, text is about 60 words or fewer, and t
 
 Sections flow by default. Section 1 opens after the cover; Section 5 has a preferred page start that QA may
 remove, while Appendix A is the only authored forced page start. Sections 14–16 flow contiguously.
-The soft target is 14–18 pages and the hard ceiling is 22; never add filler to reach the target.
+The soft target is 13–18 pages and the hard ceiling is 22; never add filler to reach the target.
 `references/layout-budget.json` controls section words, body rows, visuals and page spans. Long returned chart
 tables show a 12-row body preview and move their complete returned rows to the generated Chart data appendix.
 Sections 4 and 10 place required visuals before their first markdown table. Use `narrow: true` for bars inside

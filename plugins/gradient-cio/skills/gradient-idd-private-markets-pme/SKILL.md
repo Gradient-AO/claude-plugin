@@ -51,7 +51,7 @@ A viable fund → `gradient-odd-report`; a commitment decision → `gradient-dec
 Run the shared IDD contract validator, then canonical delivery QA:
 
 ```text
-python <skill>/scripts/validate_idd_report.py report.json
+python <skill>/scripts/validate_private_markets_pme.py report.json
 python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - Pme Report <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json
 ```
 

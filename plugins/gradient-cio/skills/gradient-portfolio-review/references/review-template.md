@@ -212,7 +212,7 @@ decision or vote.
 
 ### Appendix A — Sources
 
-- `table` with columns `Tag`, `Evidence`, `Tool / view`, `Key parameters`, `As of`, `Data scope`,
+- `table` with columns `Tag`, `Evidence`, `Basis`, `Tool / view`, `Key parameters`, `As of`, `Data scope`,
   `Validation`, `Digest`.
 - One row per call or user document, in first-citation order.
 

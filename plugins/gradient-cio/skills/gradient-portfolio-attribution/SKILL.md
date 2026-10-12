@@ -1,15 +1,15 @@
 ---
 name: gradient-portfolio-attribution
-description: "Create a single-lane attribution report for one saved portfolio. Triggers: 'prepare an attribution report', 'run Brinson analysis', 'show sources of active return'. For broader portfolio monitoring use gradient-portfolio-review."
+description: "Create a single-lane attribution report for one saved portfolio. Triggers: 'prepare an attribution report', 'run Brinson analysis', 'show sources of active return'. For multi-lane attribution use gradient-portfolio-attribution-compare."
 metadata:
   style_contract: "2.1.0"
-  group: "Portfolio"
+  group: "Portfolio Analytics"
   subject: "portfolio attribution"
   output: "report"
   menu_order: "20"
   modules: "portfolio"
   contracts: "portfolio"
-  handoffs: "gradient-portfolio-review,gradient-decision-ic-memo"
+  handoffs: "gradient-portfolio-attribution-compare,gradient-portfolio-review,gradient-decision-ic-memo"
   summary: "Explain historical and governed ex ante sources of portfolio return."
 ---
 

@@ -6,7 +6,7 @@
   ],
   "pdf": {
     "target_pages": {
-      "min": 14,
+      "min": 13,
       "max": 18
     },
     "hard_max_pages": 22,

@@ -32,8 +32,25 @@
       "subject": {
         "name": "Northstar managers (TEST)",
         "identity_status": "advisory"
+      },
+      "return_series": [],
+      "evidence": [
+        {
+          "source_tag": "S1",
+          "tool": "get_gradient_capabilities",
+          "as_of": "2025-12-31",
+          "methodology_version": "connector/v1"
+        }
+      ],
+      "limitations": [
+        "Governed analytical evidence is unavailable in this test fixture."
+      ],
+      "selection": {
+        "status": "not_assessed",
+        "rationale": "Insufficient governed evidence."
       }
-    }
+    },
+    "data_basis": "gradient_governed"
   },
   "executive": {
     "bottom_line": "The comparison remains insufficient because required governed results are unavailable [S1].",
@@ -188,13 +205,25 @@
           "columns": [
             "Tag",
             "Evidence",
-            "Tool"
+            "Basis",
+            "Tool / view",
+            "Key parameters",
+            "As of",
+            "Data scope",
+            "Validation",
+            "Digest"
           ],
           "rows": [
             [
               "S1",
               "Typed unavailable test response",
-              "get_gradient_capabilities"
+              "gradient_tool",
+              "get_gradient_capabilities",
+              "fixture=true",
+              "2025-12-31",
+              "Gradient-governed TEST evidence",
+              "passed",
+              "sha256:test-s1"
             ]
           ]
         },

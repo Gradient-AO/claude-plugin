@@ -51,6 +51,14 @@ fields, and never compare or conflate the two excess values.
 
 ## Optional evidence
 
+Call `get_peer_allocation_intelligence` only when
+`capabilities.peerIntelligence` and the tool row both report available access.
+Otherwise do not call or retry it and use this typed disclosure:
+`Not licensed — Peer allocation context was skipped because peerIntelligence
+is not available for this organization. This construction report uses
+portfolio evidence only.` Peer context is optional and never changes the
+construction readiness rating by itself.
+
 | Need | Tool | Rule |
 |---|---|---|
 | CMA comparison | `get_cma_consensus_check`; fixed-income classes held | Preserve positioning, coverage and method |

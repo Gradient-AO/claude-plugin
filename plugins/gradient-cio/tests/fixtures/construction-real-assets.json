@@ -44,7 +44,8 @@
       "expected": 9,
       "state": "partial"
     },
-    "meter_title": "Evidence completeness"
+    "meter_title": "Evidence completeness",
+    "data_basis": "gradient_governed"
   },
   "executive": {
     "label": "Recommendation",
@@ -296,7 +297,8 @@
                 "value"
               ]
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -373,34 +375,113 @@
           "type": "band",
           "title": "Current weight versus policy range",
           "items": [
-            {"label": "Listed real estate", "value": 5.0, "low": 2.0, "high": 6.0, "target": 3.0, "display": "5.0% → 3.0%"},
-            {"label": "Listed infrastructure", "value": 3.0, "low": 2.0, "high": 5.0, "target": 4.0, "display": "3.0% → 4.0%"},
-            {"label": "Private real estate", "value": 3.0, "low": 2.0, "high": 5.0, "target": 3.0, "display": "3.0% → 3.0%"},
-            {"label": "Private infrastructure", "value": 2.5, "low": 2.0, "high": 4.0, "target": 3.0, "display": "2.5% → 3.0%"},
-            {"label": "Natural resources", "value": 1.0, "low": 0.0, "high": 2.0, "target": 1.5, "display": "1.0% → 1.5%"}
-          ]
+            {
+              "label": "Listed real estate",
+              "value": 5.0,
+              "low": 2.0,
+              "high": 6.0,
+              "target": 3.0,
+              "display": "5.0% → 3.0%"
+            },
+            {
+              "label": "Listed infrastructure",
+              "value": 3.0,
+              "low": 2.0,
+              "high": 5.0,
+              "target": 4.0,
+              "display": "3.0% → 4.0%"
+            },
+            {
+              "label": "Private real estate",
+              "value": 3.0,
+              "low": 2.0,
+              "high": 5.0,
+              "target": 3.0,
+              "display": "3.0% → 3.0%"
+            },
+            {
+              "label": "Private infrastructure",
+              "value": 2.5,
+              "low": 2.0,
+              "high": 4.0,
+              "target": 3.0,
+              "display": "2.5% → 3.0%"
+            },
+            {
+              "label": "Natural resources",
+              "value": 1.0,
+              "low": 0.0,
+              "high": 2.0,
+              "target": 1.5,
+              "display": "1.0% → 1.5%"
+            }
+          ],
+          "source": "[S1]"
         },
         {
           "type": "stacked",
           "title": "Current and target mix",
           "items": [
-            {"label": "Current", "segments": [
-              {"label": "Listed real estate", "value": 5.0},
-              {"label": "Listed infrastructure", "value": 3.0},
-              {"label": "Private real estate", "value": 3.0},
-              {"label": "Private infrastructure", "value": 2.5},
-              {"label": "Natural resources", "value": 1.0},
-              {"label": "Commodity securities", "value": 0.5}
-            ]},
-            {"label": "Target", "segments": [
-              {"label": "Listed real estate", "value": 3.0},
-              {"label": "Listed infrastructure", "value": 4.0},
-              {"label": "Private real estate", "value": 3.0},
-              {"label": "Private infrastructure", "value": 3.0},
-              {"label": "Natural resources", "value": 1.5},
-              {"label": "Commodity securities", "value": 0.5}
-            ]}
-          ]
+            {
+              "label": "Current",
+              "segments": [
+                {
+                  "label": "Listed real estate",
+                  "value": 5.0
+                },
+                {
+                  "label": "Listed infrastructure",
+                  "value": 3.0
+                },
+                {
+                  "label": "Private real estate",
+                  "value": 3.0
+                },
+                {
+                  "label": "Private infrastructure",
+                  "value": 2.5
+                },
+                {
+                  "label": "Natural resources",
+                  "value": 1.0
+                },
+                {
+                  "label": "Commodity securities",
+                  "value": 0.5
+                }
+              ]
+            },
+            {
+              "label": "Target",
+              "segments": [
+                {
+                  "label": "Listed real estate",
+                  "value": 3.0
+                },
+                {
+                  "label": "Listed infrastructure",
+                  "value": 4.0
+                },
+                {
+                  "label": "Private real estate",
+                  "value": 3.0
+                },
+                {
+                  "label": "Private infrastructure",
+                  "value": 3.0
+                },
+                {
+                  "label": "Natural resources",
+                  "value": 1.5
+                },
+                {
+                  "label": "Commodity securities",
+                  "value": 0.5
+                }
+              ]
+            }
+          ],
+          "source": "[S1]"
         },
         {
           "type": "waterfall",
@@ -426,7 +507,8 @@
               "value": 0.5,
               "display": "+0.5pp"
             }
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -702,7 +784,8 @@
                 "exposure"
               ]
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -852,7 +935,8 @@
               "x": "class",
               "y": []
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "callout",
@@ -969,7 +1053,8 @@
               "x": "period",
               "y": []
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -1066,7 +1151,8 @@
               "6.2x",
               "S3"
             ]
-          ]
+          ],
+          "source": "[S1]"
         }
       ]
     },
@@ -1127,7 +1213,11 @@
           "type": "bars",
           "title": "Governed scenario results",
           "items": [
-            {"label": "Baseline expected return", "value": 6.9, "display": "+6.9%"}
+            {
+              "label": "Baseline expected return",
+              "value": 6.9,
+              "display": "+6.9%"
+            }
           ],
           "note": "Inflation and denominator shocks are unavailable [S8]."
         },
@@ -1369,6 +1459,11 @@
               "name": "Mandate mappings and scenarios",
               "status": "unavailable",
               "note": "Commodity, linker and shock mappings not returned [S8]"
+            },
+            {
+              "name": "Peer allocation intelligence",
+              "status": "not licensed",
+              "note": "Not licensed ? Peer allocation context was skipped because peerIntelligence is not available for this organization. This construction report uses portfolio evidence only. [S1]"
             }
           ]
         }
@@ -1383,6 +1478,7 @@
           "columns": [
             "Tag",
             "Evidence",
+            "Basis",
             "Tool / view",
             "Key parameters",
             "As of",
@@ -1394,6 +1490,7 @@
             [
               "S1",
               "Organization and capabilities",
+              "gradient_tool",
               "list_organizations; get_gradient_capabilities",
               "organization=test",
               "2026-06-30",
@@ -1404,6 +1501,7 @@
             [
               "S2",
               "Portfolio and allocation",
+              "gradient_tool",
               "list_portfolios; get_portfolio_structure",
               "allocation_tree",
               "2026-06-30",
@@ -1414,6 +1512,7 @@
             [
               "S3",
               "Policy assessment",
+              "gradient_tool",
               "check_portfolio_policy",
               "portfolio=test",
               "2026-06-30",
@@ -1424,6 +1523,7 @@
             [
               "S4",
               "Real-assets exposure",
+              "gradient_tool",
               "get_portfolio_exposure",
               "all pages",
               "2026-06-30",
@@ -1434,6 +1534,7 @@
             [
               "S5",
               "Returns and attribution",
+              "gradient_tool",
               "get_portfolio_historical_returns; get_portfolio_attribution",
               "all sections",
               "2026-06-30",
@@ -1444,6 +1545,7 @@
             [
               "S6",
               "Forward assumptions and pacing",
+              "gradient_tool",
               "get_chart_data; get_capital_market_assumptions",
               "commitments; baseline",
               "2026-06-15",
@@ -1454,7 +1556,8 @@
             [
               "S7",
               "Macro context and diligence",
-              "get_macro_conditions; diligence tools",
+              "gradient_tool",
+              "get_macro_conditions",
               "fictional",
               "2026-06-30",
               "Fictional TEST data",
@@ -1464,7 +1567,8 @@
             [
               "S8",
               "Mandate mappings and gaps",
-              "User document; coverage record",
+              "gradient_tool",
+              "get_gradient_capabilities",
               "fictional",
               "2026-06-30",
               "Fictional TEST data",
