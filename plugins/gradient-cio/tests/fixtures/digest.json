@@ -7,15 +7,32 @@
     "running_head": "Gradient · week to 2026-10-04",
     "data_as_of": "2026-10-01 (Form ADV); queue 2026-10-04",
     "signal": {
-      "level": "review",
+      "level": "watch",
       "label": "1 item to review"
     },
     "signal_title": "This week",
     "completeness": {
       "used": 2,
       "expected": 2,
-      "state": "complete"
+      "state": "complete",
+      "distinct_funds": 1,
+      "unique_parent_firms": 1,
+      "evaluated_subjects": 2,
+      "not_evaluated_subjects": 0
     },
+    "week_kind": "active",
+    "event_date_from": "2026-09-28",
+    "event_date_to": "2026-10-04",
+    "latest_published_event": null,
+    "not_evaluated_count": 0,
+    "attention_items": [
+      {
+        "subject_kind": "firm",
+        "attention_reason": "material_change",
+        "severity": "medium",
+        "action": "Review new ADV filing"
+      }
+    ],
     "meter_title": "Subjects fully covered",
     "cover_facts": [
       [
@@ -367,7 +384,7 @@
               "2026-10-04",
               "Gradient-governed TEST evidence",
               "{'chip': 'passed', 'status': 'passed'}",
-              "sha256:test-s1"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S2",
@@ -378,7 +395,7 @@
               "2026-10-04",
               "Gradient-governed TEST evidence",
               "{'chip': 'passed', 'status': 'passed'}",
-              "sha256:test-s2"
+              "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
             ],
             [
               "S3",
@@ -389,7 +406,7 @@
               "2026-10-01",
               "Gradient-governed TEST evidence",
               "{'chip': 'passed', 'status': 'passed'}",
-              "sha256:test-s3"
+              "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
             ],
             [
               "S4",
@@ -400,18 +417,18 @@
               "2026-10-04",
               "Gradient-governed TEST evidence",
               "{'chip': 'advisory', 'status': 'advisory'}",
-              "sha256:test-s4"
+              "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
             ],
             [
               "S5",
               "Firm and fund events — Ridgeview Example Advisors",
               "gradient_tool",
               "get_firm_fund_events",
-              "fixture=true",
+              "event_date_from=2026-09-28; event_date_to=2026-10-04; fixture=true",
               "2026-10-04",
               "Gradient-governed TEST evidence",
               "{'chip': 'passed', 'status': 'passed'}",
-              "sha256:test-s5"
+              "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
             ],
             [
               "S6",
@@ -422,7 +439,7 @@
               "2026-10-04",
               "Gradient-governed TEST evidence",
               "{'chip': 'passed', 'status': 'passed'}",
-              "sha256:test-s6"
+              "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
             ]
           ],
           "note": "S4 validation: advisory 'empty primary list has no explicit reason' although the response states absence_reason no_open_findings."

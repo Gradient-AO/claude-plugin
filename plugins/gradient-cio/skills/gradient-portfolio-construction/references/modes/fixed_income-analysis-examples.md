@@ -12,7 +12,7 @@ Fictional examples marked **(TEST)** show the required depth. Use the pattern, n
 ## Rates and Credit Context
 
 **Strong (TEST)**
-> **Observation:** Duration is 4.1 years versus 6.0 for the benchmark, and spreads are 38 basis points above their five-year median [S5]. **Why it matters:** Both gaps shape sensitivity to rates and credit repricing. **Uncertainty:** Spread data lag by five business days. **What would change the view:** A credit-spread refresh below the median would reduce the watch signal.
+> **Observation:** Duration is 4.1 years versus 6.0 for the benchmark, and spreads are 38 basis points above their five-year median [S5]. **Why it matters:** Both gaps shape sensitivity to rates and credit repricing. **Uncertainty:** Spread data are five business days stale. **What would change the view:** A credit-spread refresh below the median would reduce the watch signal.
 
 **Weak contrast:** “Rates and spreads deserve attention [S5].” It does not identify the observed gap, why it matters, the data lag, or a measurable refresh condition.
 

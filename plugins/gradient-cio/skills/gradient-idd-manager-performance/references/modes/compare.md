@@ -1,21 +1,4 @@
----
-name: gradient-idd-manager-performance
-description: "Create a manager performance comparison report using governed return evidence. Triggers: 'compare manager track records', 'assess return performance', 'compare managers to benchmarks'. For operational comparison use gradient-odd-manager-compare."
-metadata:
-  version: "0.1.0"
-  style_contract: "2.1.0"
-  group: "Investment due diligence"
-  subject: "manager performance"
-  output: "comparison report"
-  menu_order: "10"
-  modules: "strategyLab"
-  contracts: "idd-methodology,idd-odd-ic-handoff"
-  handoffs: "gradient-odd-report,gradient-odd-manager-compare,gradient-decision-ic-memo"
-  modes: "compare"
-  summary: "Compare manager performance with matched benchmarks and reliability evidence."
----
-
-# Manager Performance
+# Compare mode
 
 Compare 2–10 selected manager return series against the separately matched benchmark for each manager. Deliver a branded PDF by default and PowerPoint only when requested.
 
@@ -37,9 +20,11 @@ Apply the approved metric and reliability rules in the shared IDD methodology co
 
 ## 3. Build the report
 
-Use these fixed sections: Executive conclusion; Data and benchmark coverage; Risk and return; Relative performance and capture; Correlation and robustness; Follow-ups; Appendix A — Sources and methods. Keep each section even when evidence is unavailable. Every figure carries a unit, date, and `[S#]` source tag.
+Use these fixed sections: Executive conclusion; Data and benchmark coverage; Risk and return; Relative performance and capture; Correlation and robustness; Follow-ups; Appendix — Sources and methods (`num: "A"`). Keep each section even when evidence is unavailable. Every figure carries a unit, date, and `[S#]` source tag.
 
 Read `references/report-style.md` and `references/writing-standards.md`. Build one validated `report.json`; do not hand-build HTML, Word, PDF, or slides and do not override the shared theme.
+
+Set `meta.data_basis` to `gradient_governed` or `mixed`. The sources appendix is `num: "A"` with title `Appendix — Sources and methods` and exactly these columns in order: `Tag`, `Evidence`, `Basis`, `Tool / view`, `Key parameters`, `As of`, `Data scope`, `Validation`, `Digest`. Successful Gradient rows use a response SHA-256 digest; failed or unavailable calls use the typed no-payload convention in `references/writing-standards.md`.
 
 ## 4. Handoff
 
@@ -53,7 +38,7 @@ Run the shared IDD contract validator, then canonical delivery QA:
 
 ```text
 python <skill>/scripts/validate_manager_performance.py report.json
-python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - Comparison Report <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json
+python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - Manager Performance <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json
 ```
 
 Inspect every requested contact sheet and spot-check every number against saved evidence. QA failures block delivery. Return the file plus three lines: conclusion, largest limitation, and follow-up count.

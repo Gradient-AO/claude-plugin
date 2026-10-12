@@ -1525,7 +1525,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "passed",
-              "pm-s1"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S2",
@@ -1536,7 +1536,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "passed",
-              "pm-s2"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S3",
@@ -1547,7 +1547,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "passed",
-              "pm-s3"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S4",
@@ -1558,7 +1558,7 @@
               "2026-03-31",
               "Fictional TEST data",
               "passed",
-              "pm-s4"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S5",
@@ -1569,7 +1569,7 @@
               "2026-06-15",
               "Fictional TEST data",
               "passed",
-              "pm-s5"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S6",
@@ -1580,7 +1580,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "passed",
-              "pm-s6"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S7",
@@ -1591,7 +1591,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "advisory",
-              "pm-s7"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S8",
@@ -1602,7 +1602,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "degraded",
-              "pm-s8"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S9",
@@ -1613,7 +1613,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "partial",
-              "pm-s9"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ]
           ]
         }

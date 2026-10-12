@@ -16,7 +16,7 @@ Fictional examples marked **(TEST)** show the required depth. Use the pattern, n
 ## Rates and Credit Context
 
 **Strong (TEST)**
-> **Observation:** Duration is 4.1 years versus 6.0 for the benchmark, and spreads are 38 basis points above their five-year median [S5]. **Why it matters:** Both gaps shape sensitivity to rates and credit repricing. **Uncertainty:** Spread data lag by five business days. **What would change the view:** A credit-spread refresh below the median would reduce the watch signal.
+> **Observation:** Duration is 4.1 years versus 6.0 for the benchmark, and spreads are 38 basis points above their five-year median [S5]. **Why it matters:** Both gaps shape sensitivity to rates and credit repricing. **Uncertainty:** Spread data are five business days stale. **What would change the view:** A credit-spread refresh below the median would reduce the watch signal.
 
 **Weak contrast:** “Rates and spreads deserve attention [S5].” It does not identify the observed gap, why it matters, the data lag, or a measurable refresh condition.
 
@@ -100,7 +100,7 @@ Fictional examples marked **(TEST)** show the required depth. Use the pattern, n
 ## Target Portfolio Structure
 
 **Strong (TEST)**
-> **Observation:** Buyout represents 62% of private-markets NAV versus a 45% target, while secondaries are 4% against a 12% target [S4]. **Why it matters:** The proposed mix reduces strategy concentration and adds a pacing tool. **Uncertainty:** Two fund valuations lag by one quarter. **What would change the view:** A refreshed NAV report showing buyout below 50% would narrow the restructuring need.
+> **Observation:** Buyout represents 62% of private-markets NAV versus a 45% target, while secondaries are 4% against a 12% target [S4]. **Why it matters:** The proposed mix reduces strategy concentration and adds a pacing tool. **Uncertainty:** Two fund valuations are one quarter stale. **What would change the view:** A refreshed NAV report showing buyout below 50% would narrow the restructuring need.
 
 **Weak contrast:** “The target structure improves diversification [S4].” It lacks the concentration values, portfolio implication, valuation limitation, and measurable refresh trigger.
 
@@ -135,7 +135,7 @@ Fictional examples marked **(TEST)** show the required depth. Use the pattern, n
 ## Target Sub-Segment Structure
 
 **Strong (TEST)**
-> **Observation:** Private real estate is 57% versus a 40% target, while listed infrastructure is 8% against a 15% target [S3]. **Why it matters:** The structure adds liquidity and reduces property-cycle concentration. **Uncertainty:** Private valuations lag by one quarter. **What would change the view:** A valuation report showing private real estate below 45% would narrow the gap.
+> **Observation:** Private real estate is 57% versus a 40% target, while listed infrastructure is 8% against a 15% target [S3]. **Why it matters:** The structure adds liquidity and reduces property-cycle concentration. **Uncertainty:** Private valuations are one quarter stale. **What would change the view:** A valuation report showing private real estate below 45% would narrow the gap.
 
 **Weak contrast:** “The target sub-segments are more balanced [S3].” It lacks the segment mismatch, construction consequence, valuation lag, and measurable update condition.
 

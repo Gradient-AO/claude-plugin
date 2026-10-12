@@ -3,7 +3,7 @@ name: gradient-portfolio-attribution-compare
 description: "Create a multi-lane portfolio-attribution comparison report. Triggers: 'compare historical and ex ante attribution', 'show persistent attribution sources', 'compare realized expected and simulated effects'. For one lane use gradient-portfolio-attribution."
 metadata:
   version: "3.0.0"
-  style_contract: "2.1.0"
+  style_contract: "2.2.0"
   group: "Portfolio Analytics"
   subject: "portfolio attribution comparison"
   output: "comparison report"
@@ -32,8 +32,9 @@ Set `meta.mode` to:
 - Historical and ex ante lanes use only their governed attribution tools.
 - Call either planned attribution tool only when capabilities list its exact name as available; the names and contracts live in `references/data-map.md`.
 - Never substitute Strategy Lab output.
-- In fallback mode display returned values, classify signs and order returned effects only.
+- In fallback mode display returned values, classify signs and order returned effects only; include **Returned sign by segment** with one returned segment per row and no aggregate sign counts.
 - Differences, concentration, persistence and “Sources that persist” are unavailable unless returned by the comparison tool.
+- An absent planned-tool capability row renders exactly `Not available — not listed by get_gradient_capabilities` and cites the capability response.
 - Preserve methods, units, dates, basis, residuals, diagnostics, coverage and request IDs.
 - Do not recommend a trade, rebalance, manager action, allocation or vote.
 
@@ -47,7 +48,7 @@ Run the shared compatibility gate before comparing lanes. If planned tools are a
 
 Use exactly eight sections: Executive Comparison; Scope and Compatibility; Historical Attribution; Governed Ex Ante Attribution; Simulated Attribution; Cross-Lane Comparison; Coverage and Limitations; Appendix A — Sources and Methods.
 
-Each required lane has a visual or typed unavailable block. Each analytical section includes sourced structured analysis. The executive uses three to five sourced key judgments. Lane language must distinguish realized, expected and simulated evidence.
+Each required lane has a visual or typed unavailable block. Each analytical section includes sourced structured analysis. The executive uses three to five sourced key judgments. Lane language must distinguish realized, expected and simulated evidence. Historical tile basis is `realized 12 months` with its period; ex ante is `1-year expected`; simulated and comparison tiles state their returned basis or typed unavailability. Prefer a page break before Historical Attribution, then force page breaks on Simulated Attribution, Cross-Lane Comparison and Appendix A — Sources and Methods.
 
 ## Validate and deliver
 

@@ -1,20 +1,4 @@
----
-name: gradient-idd-manager-performance
-description: "Create a manager robustness report for persistence across windows. Triggers: 'test performance persistence', 'run date-window robustness', 'check rolling consistency'. For operational diligence use gradient-odd-report."
-metadata:
-  version: "0.1.0"
-  style_contract: "2.1.0"
-  group: "Investment due diligence"
-  subject: "manager persistence"
-  output: "robustness report"
-  menu_order: "30"
-  modules: "strategyLab"
-  contracts: "idd-methodology,idd-odd-ic-handoff"
-  handoffs: "gradient-odd-report,gradient-decision-ic-memo"
-  summary: "Test manager persistence across windows, regimes and rolling periods."
----
-
-# Manager Persistence
+# Robustness mode
 
 Test whether a manager conclusion survives returned start-date, window, rolling-period, and regime evidence. Deliver a branded PDF by default and PowerPoint only when requested.
 
@@ -36,9 +20,11 @@ Apply the approved metric and reliability rules in the shared IDD methodology co
 
 ## 3. Build the report
 
-Use these fixed sections: Executive conclusion; Coverage and tested windows; Window sensitivity; Rolling evidence; Regime evidence; What changes the view; Appendix A — Sources and methods. Keep each section even when evidence is unavailable. Every figure carries a unit, date, and `[S#]` source tag.
+Use these fixed sections: Executive conclusion; Coverage and tested windows; Window sensitivity; Rolling evidence; Regime evidence; What changes the view; Appendix — Sources and methods (`num: "A"`). Keep each section even when evidence is unavailable. Every figure carries a unit, date, and `[S#]` source tag.
 
 Read `references/report-style.md` and `references/writing-standards.md`. Build one validated `report.json`; do not hand-build HTML, Word, PDF, or slides and do not override the shared theme.
+
+Set `meta.data_basis` to `gradient_governed` or `mixed`. The sources appendix is `num: "A"` with title `Appendix — Sources and methods` and exactly these columns in order: `Tag`, `Evidence`, `Basis`, `Tool / view`, `Key parameters`, `As of`, `Data scope`, `Validation`, `Digest`. Successful Gradient rows use a response SHA-256 digest; failed or unavailable calls use the typed no-payload convention in `references/writing-standards.md`.
 
 ## 4. Handoff
 
@@ -52,7 +38,7 @@ Run the shared IDD contract validator, then canonical delivery QA:
 
 ```text
 python <skill>/scripts/validate_manager_performance.py report.json
-python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - Robustness Report <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json
+python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - Manager Performance <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json
 ```
 
 Inspect every requested contact sheet and spot-check every number against saved evidence. QA failures block delivery. Return the file plus three lines: conclusion, largest limitation, and follow-up count.

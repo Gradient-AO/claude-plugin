@@ -2,13 +2,20 @@
 
 from suites.harness import *
 from suites.harness import _renderer_module
+import check_layout as _check_layout_module
 from report_layout import (
+    LAYOUT_GROUP_EVIDENCE_ANALYSIS,
+    LAYOUT_GROUP_TITLE_ROWS,
+    LAYOUT_GROUPS_FIELD,
+    LayoutPolicyError,
+    build_post_render_layout_contract,
     lint_report_design,
     prepare_report_for_render,
     repair_preferred_breaks,
     resolve_layout_budget,
     validate_layout_budget,
 )
+from report_theme import COVER_FIELD_LIMITS
 
 def chart_renderer():
     percentage_column = {
@@ -233,20 +240,127 @@ def chart_renderer():
         and "overflow-wrap:anywhere" in coverage_document,
         "coverage rows reserve complete chip width while notes wrap",
     )
+    cover_reference_document = _renderer_module.cover_html({
+        "meta": {
+            "title": "Cover source regression (TEST)",
+            "subtitle": "Evidence summary [S1] <escaped>",
+            "cover_facts": [["Evidence", "Primary record [S2]"]],
+        },
+    })
+    deck_reference_document = _renderer_module.deck_html({
+        "meta": {
+            "title": "Deck source regression (TEST)",
+            "subtitle": "Evidence summary [S3]",
+            "cover_facts": [["Evidence", "Primary record [S4]"]],
+        },
+        "slides": [],
+    })
+    check(
+        '<span class="src">S1</span>' in cover_reference_document
+        and '<span class="src">S2</span>' in cover_reference_document
+        and "&lt;escaped&gt;" in cover_reference_document
+        and '<span class="src">S3</span>' in deck_reference_document
+        and '<span class="src">S4</span>' in deck_reference_document
+        and (
+            f".cvr .src,.slide.dark .src{{color:{_renderer_module.INK};"
+            f"background:{_renderer_module.LIME}"
+        )
+        in cover_reference_document,
+        "PDF and deck covers render escaped source references as high-contrast chips",
+    )
+    compact_layout_document = _renderer_module.body_html({
+        "meta": {
+            "title": "Compact layout regression (TEST)",
+            "header_label": "Regression",
+            "data_as_of": "2026-10-11",
+        },
+        "sections": [{
+            "title": "Compact blocks",
+            "blocks": [
+                {
+                    "type": "tiles",
+                    "tiles": [{
+                        "label": "Evidence",
+                        "value": "Complete",
+                        "sub": (
+                            "A deliberately long evidence basis wraps cleanly "
+                            "beside its source [S5]"
+                        ),
+                    }],
+                },
+                {
+                    "type": "two_col",
+                    "left": [{
+                        "type": "coverage",
+                        "items": [{
+                            "name": "Long evidence domain",
+                            "status": "not_assessed",
+                            "note": "Readable coverage detail [S6]",
+                        }],
+                    }],
+                    "right": [{
+                        "type": "statement",
+                        "text": "Prominent compact conclusion [S7]",
+                    }],
+                },
+            ],
+        }],
+    })
+    check(
+        "-webkit-line-clamp:2" in compact_layout_document
+        and ".tile .ts .src{font-size:6.2pt;line-height:1.25;"
+        in compact_layout_document
+        and '<span class="src">S5</span>' in compact_layout_document,
+        "tile subtext is limited to two lines with source-chip-safe metrics",
+    )
+    check(
+        (
+            ".two .cov{grid-template-columns:minmax(0,1fr) max-content;"
+            "column-gap:8px;row-gap:2px"
+        )
+        in compact_layout_document
+        and ".two .cov .cnote{grid-column:1/-1;font-size:8pt;"
+        in compact_layout_document
+        and '<span class="src">S6</span>' in compact_layout_document,
+        "two-column coverage reflows notes at a readable scoped font size",
+    )
+    check(
+        ".two .stm-t{font-size:14pt;line-height:1.25;font-weight:750}"
+        in compact_layout_document
+        and '<div class="stm-t">Prominent compact conclusion '
+        '<span class="src">S7</span></div>' in compact_layout_document,
+        "two-column statements retain prominent conclusion typography",
+    )
     source_table = _renderer_module.b_table({
         "columns": ["Tag", "Evidence", "Tool"],
         "rows": [[f"S{index}", f"Evidence {index}", "test_tool"] for index in range(1, 7)],
     })
-    source_tail = re.search(
-        r'<tbody class="source-tail">(.*?)</tbody>',
-        source_table,
-        re.DOTALL,
-    )
     check(
-        source_tail is not None
-        and source_tail.group(1).count("<tr>") == 3
-        and all(f"S{index}" in source_tail.group(1) for index in (4, 5, 6)),
-        "source tables keep their final three rows in one print group",
+        source_table.count("<tbody>") == 1
+        and "source-tail" not in source_table
+        and source_table.count("<tr>") == 7
+        and all(f"S{index}" in source_table for index in range(1, 7)),
+        "source tables use one pageable body without a forced short tail",
+    )
+    appendix_document = _renderer_module.body_html({
+        "meta": {
+            "title": "Appendix regression (TEST)",
+            "header_label": "Regression",
+            "data_as_of": "2026-10-11",
+        },
+        "sections": [
+            {"title": "Main", "blocks": [{"type": "markdown", "text": "Body."}]},
+            {
+                "title": "Appendix A — Sources and methods",
+                "blocks": [{"type": "markdown", "text": "Sources."}],
+            },
+        ],
+    })
+    check(
+        '<div class="sn">A</div>' in appendix_document
+        and "Appendix — Sources and methods" in appendix_document
+        and "07 Appendix A" not in appendix_document,
+        "JSON appendices normalize to the lettered rendering convention",
     )
     long_pacing_table = _renderer_module.b_chart({"chart": {
         "chart_id": "commitments-pacing",
@@ -337,6 +451,284 @@ def chart_renderer():
         and prepare_report_for_render(prepared) == prepared,
         "shared report preparation is source-immutable and idempotent",
     )
+    layout_source = json.loads(
+        (FIX / "layout-groups.json").read_text(encoding="utf-8")
+    )
+    layout_source["sections"][0]["blocks"][0][LAYOUT_GROUPS_FIELD] = [
+        {"id": "authored:test", "kind": "custom"}
+    ]
+    layout_source_before = json.loads(json.dumps(layout_source))
+    grouped = prepare_report_for_render(layout_source)
+    grouped_table, grouped_chart, grouped_analysis = grouped["sections"][0]["blocks"]
+    long_table, long_analysis = grouped["sections"][1]["blocks"]
+    table_groups = grouped_table[LAYOUT_GROUPS_FIELD]
+    chart_groups = grouped_chart[LAYOUT_GROUPS_FIELD]
+    analysis_groups = grouped_analysis[LAYOUT_GROUPS_FIELD]
+    long_groups = long_table[LAYOUT_GROUPS_FIELD]
+    evidence_ids = {
+        group["id"]
+        for group in chart_groups
+        if group.get("kind") == LAYOUT_GROUP_EVIDENCE_ANALYSIS
+    }
+    analysis_ids = {
+        group["id"]
+        for group in analysis_groups
+        if group.get("kind") == LAYOUT_GROUP_EVIDENCE_ANALYSIS
+    }
+    check(
+        any(
+            group.get("kind") == LAYOUT_GROUP_TITLE_ROWS
+            and group.get("minimum_rows") == 2
+            for group in table_groups
+        )
+        and any(
+            group.get("kind") == LAYOUT_GROUP_TITLE_ROWS
+            and group.get("minimum_rows") == 2
+            for group in chart_groups
+        )
+        and LAYOUT_GROUPS_FIELD
+        not in grouped["sections"][2]["blocks"][0]
+        and {"id": "authored:test", "kind": "custom"} in table_groups,
+        "preparation groups table and nested chart titles only with two rows while preserving authored annotations",
+    )
+    check(
+        len(evidence_ids & analysis_ids) == 1
+        and not any(
+            group.get("kind") == LAYOUT_GROUP_EVIDENCE_ANALYSIS
+            for group in long_groups
+        )
+        and LAYOUT_GROUPS_FIELD not in long_analysis,
+        "bounded final evidence and Analysis callouts share a group while oversized tables remain splittable",
+    )
+    check(
+        layout_source == layout_source_before
+        and prepare_report_for_render(grouped) == grouped,
+        "layout grouping remains source-immutable and idempotent",
+    )
+    grouped_html = _renderer_module.body_html(grouped)
+    check(
+        "layout-title-rows" in grouped_html
+        and "layout-evidence-analysis" in grouped_html
+        and grouped_html.index("Titled assumptions (TEST)")
+        < grouped_html.index("Alpha")
+        < grouped_html.index("Beta")
+        and grouped_html.index("Titled evidence chart (TEST)")
+        < grouped_html.index("Analysis — Compact conclusion"),
+        "PDF renderer consumes title-row and bounded evidence-analysis layout groups",
+    )
+    canonical_pdf = {
+        "target_pages": {"min": 1, "max": 12},
+        "hard_max_pages": 12,
+        "minimum_body_fill": 0.40,
+        "orphan_tail_max_fill": 0.20,
+    }
+    layout_budget = {
+        "schema_version": 2,
+        "design_profile": "analytical",
+        "forced_breaks": ["01"],
+        "pdf": canonical_pdf,
+        "content": {
+            "defaults": {},
+            "sections": {
+                "evidence": {
+                    "role": "reference",
+                    "requires_analysis": False,
+                },
+                "unbounded": {
+                    "role": "reference",
+                    "requires_analysis": False,
+                },
+                "sources": {
+                    "role": "appendix",
+                    "requires_analysis": False,
+                },
+            },
+        },
+    }
+    check(
+        validate_layout_budget(layout_budget, grouped) == []
+        and lint_report_design(grouped, layout_budget) == [],
+        "design lint accepts complete generated grouping and a declared configured break",
+    )
+    missing_group = json.loads(json.dumps(grouped))
+    missing_group["sections"][0]["blocks"][1].pop(LAYOUT_GROUPS_FIELD)
+    check(
+        any(
+            item["code"] == "design-layout-group-missing"
+            for item in lint_report_design(missing_group, layout_budget)
+        ),
+        "design lint rejects missing title and evidence-analysis grouping",
+    )
+    missing_break = json.loads(json.dumps(grouped))
+    missing_break["sections"][0]["page_break"] = "auto"
+    missing_break["sections"][0]["new_page"] = False
+    check(
+        any(
+            item["code"] == "design-configured-forced-break-missing"
+            for item in lint_report_design(missing_break, layout_budget)
+        ),
+        "design lint rejects configured forced breaks absent from report JSON",
+    )
+    post_render_contract = build_post_render_layout_contract(
+        layout_source,
+        layout_budget,
+    )
+    check(
+        post_render_contract["schema_version"] == 1
+        and post_render_contract["forced_breaks"]
+        == [
+            {
+                "configured_identifier": "01",
+                "section_index": 1,
+                "section_id": "evidence",
+                "section_title": "Evidence",
+                "source_declares_force": True,
+            }
+        ]
+        and any(
+            candidate["section_id"] == "sources"
+            and candidate["eligible"] is True
+            for candidate in post_render_contract["appendix_fill"]
+        ),
+        "post-render contract exposes forced-break expectations and bounded appendix-fill candidates",
+    )
+    forced_break_contract = post_render_contract["forced_breaks"]
+    forced_pass = _check_layout_module.forced_break_failures(
+        [
+            ["Cover"],
+            [
+                "GradientCIO · Renderer regression",
+                "Layout grouping regression (TEST)",
+                "01 Evidence",
+            ],
+        ],
+        forced_break_contract,
+        grouped["meta"],
+    )
+    forced_fail = _check_layout_module.forced_break_failures(
+        [
+            ["Cover"],
+            [
+                "GradientCIO · Renderer regression",
+                "Prior section content",
+                "01 Evidence",
+            ]
+        ],
+        forced_break_contract,
+        grouped["meta"],
+    )
+    check(
+        forced_pass == []
+        and len(forced_fail) == 1
+        and "forced break not applied" in forced_fail[0]
+        and _check_layout_module._diagnostic(
+            forced_fail[0],
+            "error",
+        )["code"]
+        == "forced-break-not-applied",
+        "post-render forced-break failures use the stable QA code",
+    )
+    original_bbox_pages = _check_layout_module.bbox_pages
+    original_raster_metrics = _check_layout_module.raster_body_metrics
+    original_page_lines = _check_layout_module.page_lines
+    try:
+        _check_layout_module.bbox_pages = lambda _path: [
+            (792.0, []),
+            (792.0, []),
+            (792.0, []),
+            (792.0, []),
+        ]
+        _check_layout_module.raster_body_metrics = lambda _path: [
+            {"page": 1, "fill": 0.05, "clusters": 1},
+            {"page": 2, "fill": 0.80, "clusters": 4},
+            {"page": 3, "fill": 0.08, "clusters": 1},
+            {"page": 4, "fill": 0.18, "clusters": 2},
+        ]
+        _check_layout_module.page_lines = lambda _path: [
+            ["Cover"],
+            ["01 Main", "Dense body content"],
+            ["Divider"],
+            ["A Appendix — Sources", "Sparse final appendix"],
+        ]
+        appendix_failures = _check_layout_module.check_layout(
+            pathlib.Path("synthetic.pdf"),
+            headings=[],
+            minimum_fill=0.40,
+            excluded={1},
+            minimum_pages=None,
+            maximum_pages=None,
+            underfill_excluded={3},
+        )
+    finally:
+        _check_layout_module.bbox_pages = original_bbox_pages
+        _check_layout_module.raster_body_metrics = original_raster_metrics
+        _check_layout_module.page_lines = original_page_lines
+    check(
+        any("page 4 is 18% full" in failure for failure in appendix_failures)
+        and not any(
+            "page 3 is 8% full" in failure for failure in appendix_failures
+        )
+        and any(
+            "page 3 contains an orphan tail" in failure
+            for failure in appendix_failures
+        ),
+        "minimum body fill applies to sparse final appendices while explicit dividers remain exempt",
+    )
+    banner_report = {
+        "meta": {
+            "title": "Scope banner regression (TEST)",
+            "subtitle": "Subtitle remains visible.",
+            "header_label": "Renderer regression",
+            "data_as_of": "2026-10-12",
+            "confidentiality": "Confidential (TEST)",
+            "data_scope_banner": ILLUSTRATIVE_LABEL,
+        },
+        "sections": [
+            {
+                "num": "01",
+                "title": "Evidence",
+                "blocks": [{"type": "text", "text": "Body evidence."}],
+            }
+        ],
+    }
+    banner_cover = _renderer_module.cover_html(
+        prepare_report_for_render(banner_report)
+    )
+    banner_body = _renderer_module.body_html(banner_report)
+    banner_header, banner_footer = _renderer_module.header_footer(
+        prepare_report_for_render(banner_report)
+    )
+    check(
+        all(
+            value in banner_cover
+            for value in (
+                "Scope banner regression (TEST)",
+                "Subtitle remains visible.",
+                "Confidential (TEST)",
+                "Illustrative, Gradient Maintained",
+            )
+        )
+        and "Illustrative, Gradient Maintained" in banner_header
+        and "Scope banner regression (TEST)" in banner_header
+        and "Confidential (TEST)" in banner_footer
+        and "Evidence" in banner_body,
+        "PDF cover and running header add the data-scope banner without replacing metadata",
+    )
+    overlong_banner = json.loads(json.dumps(banner_report))
+    overlong_banner["meta"]["data_scope_banner"] = "x" * (
+        COVER_FIELD_LIMITS["data_scope_banner"] + 1
+    )
+    try:
+        prepare_report_for_render(overlong_banner)
+        banner_limit_rejected = False
+    except LayoutPolicyError as error:
+        banner_limit_rejected = any(
+            "meta.data_scope_banner" in issue for issue in error.errors
+        )
+    check(
+        banner_limit_rejected,
+        "data-scope banner uses the canonical bounded metadata limit",
+    )
     invalid_budget = {
         "schema_version": 99,
         "content": {"sections": {"missing": {"max_words": 10}}},
@@ -358,6 +750,7 @@ def chart_renderer():
         "schema_version": 2,
         "design_profile": "analytical",
         "forced_breaks": [],
+        "pdf": canonical_pdf,
         "content": {
             "defaults": {"max_words": 100},
             "sections": {
@@ -390,8 +783,12 @@ def chart_renderer():
         "schema_version": 2,
         "design_profile": "deck",
         "forced_breaks": [],
-        "sections": {
-            "1": {"role": "reference", "requires_analysis": False}
+        "pdf": canonical_pdf,
+        "content": {
+            "defaults": {},
+            "sections": {
+                "1": {"role": "reference", "requires_analysis": False}
+            },
         },
     }
     prepared_deck = prepare_report_for_render(deck_report)
@@ -436,7 +833,8 @@ def chart_renderer():
         "schema_version": 2,
         "design_profile": "analytical",
         "forced_breaks": ["summary"],
-        "default_mode": "brief",
+        "pdf": canonical_pdf,
+        "selector": {"path": "meta.mode", "default": "brief"},
         "content": {
             "defaults": {"max_words": 100},
             "sections": {
@@ -448,7 +846,6 @@ def chart_renderer():
         },
         "modes": {
             "brief": {
-                "design_profile": "reference",
                 "forced_breaks": ["2"],
                 "content": {
                     "sections": {
@@ -463,8 +860,9 @@ def chart_renderer():
     }
     resolved_mode = resolve_layout_budget(mode_budget, schema_v2_report)
     check(
-        resolved_mode["design_profile"] == "analytical"
-        and resolved_mode["forced_breaks"] == ["summary"]
+        validate_layout_budget(mode_budget, schema_v2_report) == []
+        and resolved_mode["design_profile"] == "analytical"
+        and resolved_mode["forced_breaks"] == ["2"]
         and resolved_mode["content"]["defaults"] == {"max_words": 100}
         and set(resolved_mode["content"]["sections"]) == {"summary", "2"},
         "mode budgets inherit root design profile, breaks, defaults, and sections",
@@ -473,6 +871,7 @@ def chart_renderer():
         "schema_version": 2,
         "design_profile": "analytical",
         "forced_breaks": [],
+        "pdf": canonical_pdf,
         "content": {
             "defaults": {},
             "sections": {
@@ -553,7 +952,8 @@ def chart_renderer():
         item["code"] for item in lint_report_design(lint_report, lint_budget)
     }
     check(
-        {
+        validate_layout_budget(lint_budget, lint_report) == []
+        and {
             "design-forced-break-not-allowlisted",
             "design-analytical-evidence-missing",
             "design-analysis-callout-count",
@@ -685,6 +1085,35 @@ def chart_renderer():
             )
             == '$0.0,,"M"',
             "PowerPoint currency axes use the same compact scale",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            pptx_output = pathlib.Path(directory) / "scope-banner.pptx"
+            pptx_module.render_report(banner_report, pptx_output)
+            from pptx import Presentation
+
+            presentation = Presentation(pptx_output)
+            slide_text = [
+                "\n".join(
+                    shape.text
+                    for shape in slide.shapes
+                    if getattr(shape, "has_text_frame", False)
+                )
+                for slide in presentation.slides
+            ]
+        check(
+            len(slide_text) == 2
+            and all(ILLUSTRATIVE_LABEL in text for text in slide_text)
+            and all(
+                value in slide_text[0]
+                for value in (
+                    "Scope banner regression (TEST)",
+                    "Subtitle remains visible.",
+                    "Confidential (TEST)",
+                )
+            )
+            and "Evidence" in slide_text[1]
+            and "Confidential (TEST)" in slide_text[1],
+            "PowerPoint cover and running header add the data-scope banner without replacing metadata",
         )
 
 def render(keep):
@@ -865,19 +1294,19 @@ def render(keep):
             else {}
         )
         check(
-            layout_checked.returncode == 1
-            and any(
+            layout_checked.returncode == 0
+            and not any(
                 item.get("code") == "page-underfill"
                 for item in structured.get("diagnostics", [])
             ),
-            "IC memo stress fixture exposes the preferred-break repair diagnostic"
+            "IC memo stress fixture satisfies strict body and appendix fill"
             + (
                 f": {(layout_checked.stderr or layout_checked.stdout).strip()[-500:]}"
-                if layout_checked.returncode != 1 else ""
+                if layout_checked.returncode else ""
             ),
         )
         check(
-            structured.get("status") == "fail"
+            structured.get("status") == "pass"
             and structured.get("theme_version")
             and all(
                 {"start_page", "end_page", "pages_touched"} <= set(section)
@@ -915,11 +1344,11 @@ def render(keep):
             and qa_document.get("status") == "pass"
             and qa_document.get("outputs", {}).get("pdf", {}).get("status")
             == "pass"
-            and qa_document.get("repair", {}).get("rerendered") is True
+            and qa_document.get("repair", {}).get("rerendered") is False
             and qa_document.get("repair", {}).get(
                 "removed_preferred_breaks"
             )
-            == ["Decision Analysis"]
+            == []
             and qa_contact.is_file(),
             "one-command QA writes structured diagnostics and a labeled PDF contact sheet"
             + (

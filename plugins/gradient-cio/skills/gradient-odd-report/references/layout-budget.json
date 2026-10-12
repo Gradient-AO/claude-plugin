@@ -8,7 +8,7 @@
       "max": 8
     },
     "hard_max_pages": 10,
-    "minimum_body_fill": 0.3,
+    "minimum_body_fill": 0.4,
     "orphan_tail_max_fill": 0.2
   },
   "content": {

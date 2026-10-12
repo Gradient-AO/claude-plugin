@@ -1,7 +1,7 @@
 # Private Markets Construction Template
 
 Keep every section title and the order exactly as shown. Missing evidence becomes
-`Not available — <returned reason>`; never remove a section. The soft target is 10–14 pages and the hard
+`Not available — <returned reason>`; never remove a section. The soft target is 8–14 pages and the hard
 ceiling is 17; never add filler. Before delivery run
 `python scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Private Markets Construction" --budget references/layout-budget.json`;
 apply its specific repair levers and rerun until clean.

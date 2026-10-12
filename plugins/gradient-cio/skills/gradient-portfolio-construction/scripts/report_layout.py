@@ -4,13 +4,24 @@
 from __future__ import annotations
 
 import copy
-import json
 import math
 import re
+import sys
 from pathlib import Path
 from typing import Any
 
 from report_theme import COVER_FIELD_LIMITS, THEME_VERSION
+
+TOOLS_ROOT = Path(__file__).resolve().parent.parent / "tools"
+if str(TOOLS_ROOT) not in sys.path:
+    sys.path.insert(0, str(TOOLS_ROOT))
+
+from layout_budget_schema import (  # noqa: E402
+    LayoutBudgetSchemaError,
+    load_layout_budget as load_canonical_layout_budget,
+    resolve_layout_budget as resolve_canonical_layout_budget,
+    validate_layout_budget as validate_canonical_layout_budget,
+)
 
 
 SCHEMA_VERSION = 2
@@ -52,6 +63,7 @@ BOUNDED_METADATA_FIELDS = {
     "eyebrow": COVER_FIELD_LIMITS["eyebrow"],
     "header_label": COVER_FIELD_LIMITS["header_label"],
     "running_head": COVER_FIELD_LIMITS["running_head"],
+    "data_scope_banner": COVER_FIELD_LIMITS["data_scope_banner"],
     "signal_title": 48,
     "meter_title": 48,
     "confidentiality": 180,
@@ -74,6 +86,15 @@ VISUAL_BLOCK_TYPES = frozenset(
         "chart",
     }
 )
+LAYOUT_GROUPS_FIELD = "_layout_groups"
+LAYOUT_GROUP_SOURCE = "prepare_report_for_render"
+LAYOUT_GROUP_TITLE_ROWS = "title-with-rows"
+LAYOUT_GROUP_EVIDENCE_ANALYSIS = "evidence-with-analysis"
+LAYOUT_MINIMUM_VISIBLE_ROWS = 2
+LAYOUT_MAX_GROUP_HEIGHT_POINTS = 360
+LAYOUT_MAX_ESTIMATED_TABLE_ROWS = 8
+LAYOUT_MAX_ESTIMATED_CALLOUT_WORDS = 120
+LAYOUT_SECTION_HEADER_HEIGHT_POINTS = 54
 
 
 class LayoutPolicyError(ValueError):
@@ -337,6 +358,220 @@ def _prepare_chart_appendix(sections: list[dict[str, Any]]) -> None:
         )
 
 
+def _block_title(block: dict[str, Any]) -> str:
+    if block.get("type") == "chart" and isinstance(block.get("chart"), dict):
+        return str(block["chart"].get("title", "")).strip()
+    return str(block.get("title", "")).strip()
+
+
+def _block_rows(block: dict[str, Any]) -> list[Any] | None:
+    if block.get("type") == "table":
+        rows = block.get("rows")
+        return rows if isinstance(rows, list) else None
+    if block.get("type") == "chart" and isinstance(block.get("chart"), dict):
+        if effective_chart_mode(block["chart"]) == "callout":
+            return None
+        rows = block["chart"].get("rows")
+        return rows if isinstance(rows, list) else None
+    return None
+
+
+def _analysis_callout(block: dict[str, Any]) -> bool:
+    return block.get("type") == "callout" and bool(
+        re.match(
+            r"^Analysis\s*(?:—|-)",
+            str(block.get("title", "")).strip(),
+            re.IGNORECASE,
+        )
+    )
+
+
+def _evidence_block(block: dict[str, Any]) -> bool:
+    return _is_table_block(block) or block.get("type") in VISUAL_BLOCK_TYPES
+
+
+def estimate_block_height_points(block: dict[str, Any]) -> int | None:
+    """Return a conservative bounded-fit estimate, or None when unbounded."""
+    block_type = str(block.get("type", ""))
+    rows = _block_rows(block)
+    if rows is not None and (
+        block_type == "table"
+        or (
+            block_type == "chart"
+            and isinstance(block.get("chart"), dict)
+            and effective_chart_mode(block["chart"]) == "table"
+        )
+    ):
+        if len(rows) > LAYOUT_MAX_ESTIMATED_TABLE_ROWS:
+            return None
+        title_height = 20 if _block_title(block) else 0
+        note_height = 18 if block.get("note") else 0
+        return title_height + 24 + (22 * len(rows)) + note_height
+    if block_type == "callout":
+        words = len(
+            " ".join(
+                (
+                    str(block.get("title", "")),
+                    str(block.get("text", "")),
+                )
+            ).split()
+        )
+        if words > LAYOUT_MAX_ESTIMATED_CALLOUT_WORDS:
+            return None
+        return 54 + (14 * max(1, math.ceil(words / 18)))
+    if block_type == "chart":
+        chart = block.get("chart")
+        if not isinstance(chart, dict) or effective_chart_mode(chart) == "callout":
+            return None
+        return 230
+    if block_type in VISUAL_BLOCK_TYPES:
+        return 210
+    return None
+
+
+def bounded_layout_group_fits(blocks: list[dict[str, Any]]) -> bool:
+    """Return whether supported blocks conservatively fit in one keep group."""
+    estimates = [estimate_block_height_points(block) for block in blocks]
+    return bool(estimates) and all(value is not None for value in estimates) and sum(
+        value for value in estimates if value is not None
+    ) <= LAYOUT_MAX_GROUP_HEIGHT_POINTS
+
+
+def _generated_layout_group(
+    group_id: str,
+    kind: str,
+    **details: Any,
+) -> dict[str, Any]:
+    return {
+        "id": group_id,
+        "kind": kind,
+        "source": LAYOUT_GROUP_SOURCE,
+        **details,
+    }
+
+
+def _set_generated_layout_groups(
+    block: dict[str, Any],
+    generated: list[dict[str, Any]],
+) -> None:
+    existing = block.get(LAYOUT_GROUPS_FIELD, [])
+    preserved: list[dict[str, Any]] = []
+    if isinstance(existing, list):
+        preserved = [
+            copy.deepcopy(group)
+            for group in existing
+            if isinstance(group, dict)
+            and group.get("source") != LAYOUT_GROUP_SOURCE
+        ]
+    groups = preserved + generated
+    if groups:
+        block[LAYOUT_GROUPS_FIELD] = groups
+    else:
+        block.pop(LAYOUT_GROUPS_FIELD, None)
+
+
+def _prepare_block_layout_groups(
+    blocks: list[Any],
+    section_key: str,
+    path_prefix: tuple[str, ...] = (),
+) -> None:
+    block_objects = [block for block in blocks if isinstance(block, dict)]
+    generated_by_identity: dict[int, list[dict[str, Any]]] = {
+        id(block): [] for block in block_objects
+    }
+    for index, block in enumerate(block_objects):
+        path = path_prefix + (str(index),)
+        path_key = ".".join(path)
+        rows = _block_rows(block)
+        if (
+            block.get("type") in {"table", "chart"}
+            and _block_title(block)
+            and isinstance(rows, list)
+            and len(rows) >= LAYOUT_MINIMUM_VISIBLE_ROWS
+        ):
+            generated_by_identity[id(block)].append(
+                _generated_layout_group(
+                    f"layout:{section_key}:{path_key}:title-rows",
+                    LAYOUT_GROUP_TITLE_ROWS,
+                    minimum_rows=LAYOUT_MINIMUM_VISIBLE_ROWS,
+                )
+            )
+        if block.get("type") == "two_col":
+            for side in ("left", "right"):
+                children = block.get(side, [])
+                if isinstance(children, list):
+                    _prepare_block_layout_groups(
+                        children,
+                        section_key,
+                        path + (side,),
+                    )
+    evidence_indexes = [
+        index
+        for index, block in enumerate(block_objects)
+        if _evidence_block(block)
+    ]
+    if evidence_indexes:
+        evidence_index = evidence_indexes[-1]
+        analysis_index = evidence_index + 1
+        if (
+            analysis_index < len(block_objects)
+            and _analysis_callout(block_objects[analysis_index])
+            and bounded_layout_group_fits(
+                [block_objects[evidence_index], block_objects[analysis_index]]
+            )
+        ):
+            group_id = (
+                f"layout:{section_key}:"
+                f"{'.'.join(path_prefix + (str(evidence_index),))}:evidence-analysis"
+            )
+            estimate = sum(
+                estimate_block_height_points(block) or 0
+                for block in (
+                    block_objects[evidence_index],
+                    block_objects[analysis_index],
+                )
+            )
+            group = _generated_layout_group(
+                group_id,
+                LAYOUT_GROUP_EVIDENCE_ANALYSIS,
+                estimated_height_points=estimate,
+                maximum_height_points=LAYOUT_MAX_GROUP_HEIGHT_POINTS,
+            )
+            generated_by_identity[id(block_objects[evidence_index])].append(group)
+            generated_by_identity[id(block_objects[analysis_index])].append(
+                copy.deepcopy(group)
+            )
+    for block in block_objects:
+        _set_generated_layout_groups(block, generated_by_identity[id(block)])
+
+
+def _prepare_layout_groups(sections: list[dict[str, Any]]) -> None:
+    for index, section in enumerate(sections, start=1):
+        section_key = str(section.get("id") or section.get("num") or index).strip()
+        blocks = section.get("blocks", [])
+        if isinstance(blocks, list):
+            _prepare_block_layout_groups(blocks, f"{index}:{section_key}")
+
+
+def _normalize_appendices(sections: list[dict[str, Any]]) -> None:
+    """Align JSON-native appendix numbering with the Markdown rendering contract."""
+    for section in sections:
+        if section.get("id") == "chart-data-appendix":
+            continue
+        title = str(section.get("title", "")).strip()
+        match = re.match(
+            r"^Appendix\s+([A-Z])\b\s*[—–:-]?\s*(.*)$",
+            title,
+            re.IGNORECASE,
+        )
+        if match is None:
+            continue
+        letter = match.group(1).upper()
+        remainder = match.group(2).strip()
+        section.setdefault("num", letter)
+        section["title"] = f"Appendix — {remainder}" if remainder else "Appendix"
+
+
 def prepare_report_for_render(report: dict[str, Any]) -> dict[str, Any]:
     """Return an immutable, idempotently prepared report copy."""
     if not isinstance(report, dict):
@@ -357,8 +592,10 @@ def prepare_report_for_render(report: dict[str, Any]) -> dict[str, Any]:
     if len(section_objects) != len(sections):
         raise LayoutPolicyError(["every report section must be an object"])
     prepared["sections"] = section_objects
+    _normalize_appendices(section_objects)
     _prepare_page_breaks(section_objects)
     _prepare_chart_appendix(section_objects)
+    _prepare_layout_groups(section_objects)
     return prepared
 
 
@@ -388,59 +625,11 @@ def resolve_layout_budget(
     budget: dict[str, Any],
     report: dict[str, Any],
 ) -> dict[str, Any]:
-    """Resolve an optional report mode into one effective budget copy."""
-    modes = budget.get("modes")
-    if not isinstance(modes, dict):
-        return copy.deepcopy(budget)
-    meta = report.get("meta")
-    meta_mode = meta.get("mode") if isinstance(meta, dict) else None
-    mode = str(
-        meta_mode
-        or report.get("review_mode")
-        or report.get("report_mode")
-        or budget.get("default_mode")
-        or ""
-    )
-    selected = modes.get(mode)
-    if not isinstance(selected, dict):
-        raise LayoutPolicyError(
-            [f"layout budget has no mode {mode!r}; available: {', '.join(sorted(modes))}"]
-        )
-    base = {
-        key: copy.deepcopy(value)
-        for key, value in budget.items()
-        if key not in {"modes", "default_mode"}
-    }
-    selected_copy = copy.deepcopy(selected)
-    for inherited_key in ("schema_version", "design_profile", "forced_breaks"):
-        selected_copy.pop(inherited_key, None)
-    root_content = base.get("content")
-    selected_content = selected_copy.get("content")
-    if isinstance(root_content, dict) and isinstance(selected_content, dict):
-        merged_content = copy.deepcopy(root_content)
-        for key, value in selected_content.items():
-            if (
-                key in {"defaults", "sections"}
-                and isinstance(merged_content.get(key), dict)
-                and isinstance(value, dict)
-            ):
-                merged_content[key].update(copy.deepcopy(value))
-            else:
-                merged_content[key] = copy.deepcopy(value)
-        selected_copy["content"] = merged_content
-    elif isinstance(root_content, dict):
-        merged_content = copy.deepcopy(root_content)
-        if isinstance(selected_copy.get("section_defaults"), dict):
-            merged_content.setdefault("defaults", {}).update(
-                selected_copy["section_defaults"]
-            )
-        if isinstance(selected_copy.get("sections"), dict):
-            merged_content.setdefault("sections", {}).update(
-                selected_copy["sections"]
-            )
-        selected_copy["content"] = merged_content
-    base.update(selected_copy)
-    return base
+    """Resolve a canonical schema-v2 budget while preserving the public API."""
+    try:
+        return resolve_canonical_layout_budget(budget, report)
+    except LayoutBudgetSchemaError as error:
+        raise LayoutPolicyError(error.errors) from error
 
 
 def _report_sections(report: dict[str, Any]) -> list[Any]:
@@ -484,7 +673,15 @@ def validate_layout_budget(
     budget: dict[str, Any],
     report: dict[str, Any] | None = None,
 ) -> list[str]:
-    """Return schema and section-resolution errors for a layout budget."""
+    """Return strict canonical schema-v2 and section-resolution errors."""
+    return validate_canonical_layout_budget(budget, report)
+
+
+def _validate_layout_budget_legacy(
+    budget: dict[str, Any],
+    report: dict[str, Any] | None = None,
+) -> list[str]:
+    """Retained implementation reference; canonical validation delegates above."""
     if not isinstance(budget, dict):
         return ["layout budget root must be an object"]
     errors: list[str] = []
@@ -663,10 +860,7 @@ def validate_layout_budget(
             for index, section in enumerate(_report_sections(report), start=1):
                 if not isinstance(section, dict):
                     continue
-                identifiers = {
-                    str(section.get("num", index)).lstrip("0") or "0",
-                    str(section.get("id", "")),
-                }
+                identifiers = _section_identifiers(section, index)
                 for identifier in identifiers - {""}:
                     resolved.setdefault(identifier, []).append(section)
             for configured in sections:
@@ -707,10 +901,112 @@ def _section_identifiers(section: dict[str, Any], index: int) -> set[str]:
         str(section.get("num", index)).strip(),
         str(section.get("id", "")).strip(),
     } - {""}
-    return identifiers | {
+    resolved = identifiers | {
         value.lstrip("0") or "0"
         for value in identifiers
         if value.isdigit()
+    }
+    appendix_match = re.match(
+        r"^Appendix(?:\s+([A-Z]))?\b",
+        str(section.get("title", "")),
+        re.IGNORECASE,
+    )
+    if appendix_match is not None:
+        resolved.add((appendix_match.group(1) or "A").upper())
+    return resolved
+
+
+def forced_break_contracts(
+    report: dict[str, Any],
+    effective_budget: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Return ordered source contracts for later rendered-page verification."""
+    sections = _report_sections(report)
+    configured = effective_budget.get("forced_breaks", [])
+    if not isinstance(configured, list):
+        return []
+    contracts: list[dict[str, Any]] = []
+    for value in configured:
+        if not isinstance(value, str) or not value.strip():
+            continue
+        identifier = value.strip()
+        normalized = identifier.lstrip("0") or "0"
+        matches = [
+            (index, section)
+            for index, section in enumerate(sections, start=1)
+            if isinstance(section, dict)
+            and normalized in _section_identifiers(section, index)
+        ]
+        if len(matches) != 1:
+            continue
+        index, section = matches[0]
+        declared = section.get("page_break") == "force" or (
+            section.get("new_page") is True
+            and section.get("page_break") in {None, "force"}
+        )
+        contracts.append(
+            {
+                "configured_identifier": identifier,
+                "section_index": index,
+                "section_id": str(section.get("id") or section.get("num") or index),
+                "section_title": str(section.get("title", "")),
+                "source_declares_force": declared,
+            }
+        )
+    return contracts
+
+
+def appendix_fill_contracts(report: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return bounded appendix-opening candidates for later fill integration."""
+    contracts: list[dict[str, Any]] = []
+    for index, section in enumerate(_report_sections(report), start=1):
+        if not isinstance(section, dict) or not _appendix(section):
+            continue
+        blocks = section.get("blocks", [])
+        first_block = None
+        if isinstance(blocks, list):
+            first_block = next(
+                (block for block in blocks if isinstance(block, dict)),
+                None,
+            )
+        estimate = (
+            estimate_block_height_points(first_block)
+            if first_block is not None
+            else None
+        )
+        opening_estimate = (
+            LAYOUT_SECTION_HEADER_HEIGHT_POINTS + estimate
+            if estimate is not None
+            else None
+        )
+        page_break = str(section.get("page_break", "auto"))
+        contracts.append(
+            {
+                "section_index": index,
+                "section_id": str(section.get("id") or section.get("num") or index),
+                "section_title": str(section.get("title", "")),
+                "page_break": page_break,
+                "opening_estimated_height_points": opening_estimate,
+                "eligible": (
+                    page_break == "auto"
+                    and opening_estimate is not None
+                    and opening_estimate <= LAYOUT_MAX_GROUP_HEIGHT_POINTS
+                ),
+            }
+        )
+    return contracts
+
+
+def build_post_render_layout_contract(
+    report: dict[str, Any],
+    effective_budget: dict[str, Any],
+) -> dict[str, Any]:
+    """Build renderer-neutral inputs for later post-render layout QA."""
+    prepared = prepare_report_for_render(report)
+    return {
+        "schema_version": 1,
+        "forced_breaks": forced_break_contracts(prepared, effective_budget),
+        "appendix_fill": appendix_fill_contracts(prepared),
     }
 
 
@@ -768,6 +1064,87 @@ def _diagnostic(
     }
 
 
+def _layout_group_ids(block: dict[str, Any], kind: str) -> set[str]:
+    groups = block.get(LAYOUT_GROUPS_FIELD, [])
+    if not isinstance(groups, list):
+        return set()
+    return {
+        str(group.get("id"))
+        for group in groups
+        if isinstance(group, dict)
+        and group.get("kind") == kind
+        and isinstance(group.get("id"), str)
+        and group.get("id")
+    }
+
+
+def _lint_layout_groups(
+    blocks: list[Any],
+    section: dict[str, Any],
+    index: int,
+) -> list[dict[str, str]]:
+    diagnostics: list[dict[str, str]] = []
+    block_objects = [block for block in blocks if isinstance(block, dict)]
+    for block in block_objects:
+        rows = _block_rows(block)
+        if (
+            block.get("type") in {"table", "chart"}
+            and _block_title(block)
+            and isinstance(rows, list)
+            and len(rows) >= LAYOUT_MINIMUM_VISIBLE_ROWS
+            and not _layout_group_ids(block, LAYOUT_GROUP_TITLE_ROWS)
+        ):
+            diagnostics.append(
+                _diagnostic(
+                    "design-layout-group-missing",
+                    "Titled table or chart must keep its title, header, and first two rows together.",
+                    section,
+                    index,
+                )
+            )
+        if block.get("type") == "two_col":
+            for side in ("left", "right"):
+                children = block.get(side, [])
+                if isinstance(children, list):
+                    diagnostics.extend(
+                        _lint_layout_groups(children, section, index)
+                    )
+    evidence_indexes = [
+        block_index
+        for block_index, block in enumerate(block_objects)
+        if _evidence_block(block)
+    ]
+    if evidence_indexes:
+        evidence_index = evidence_indexes[-1]
+        analysis_index = evidence_index + 1
+        if (
+            analysis_index < len(block_objects)
+            and _analysis_callout(block_objects[analysis_index])
+            and bounded_layout_group_fits(
+                [block_objects[evidence_index], block_objects[analysis_index]]
+            )
+            and not (
+                _layout_group_ids(
+                    block_objects[evidence_index],
+                    LAYOUT_GROUP_EVIDENCE_ANALYSIS,
+                )
+                & _layout_group_ids(
+                    block_objects[analysis_index],
+                    LAYOUT_GROUP_EVIDENCE_ANALYSIS,
+                )
+            )
+        ):
+            diagnostics.append(
+                _diagnostic(
+                    "design-layout-group-missing",
+                    "Final evidence block and adjacent Analysis callout must share a bounded keep group.",
+                    section,
+                    index,
+                )
+            )
+    return diagnostics
+
+
 def _lint_table_runs(
     blocks: list[Any],
     section: dict[str, Any],
@@ -815,6 +1192,11 @@ def lint_report_design(
     if effective_budget.get("design_profile") != "analytical":
         return []
     diagnostics: list[dict[str, str]] = []
+    metadata = report.get("meta")
+    prepared_layout = (
+        isinstance(metadata, dict)
+        and metadata.get("_theme_version") == THEME_VERSION
+    )
     configured = _content_sections(effective_budget)
     configured = configured if isinstance(configured, dict) else {}
     forced_breaks = effective_budget.get("forced_breaks", [])
@@ -846,6 +1228,15 @@ def lint_report_design(
                     index,
                 )
             )
+        if identifiers & allowed_breaks and not forced:
+            diagnostics.append(
+                _diagnostic(
+                    "design-configured-forced-break-missing",
+                    "Section is listed in forced_breaks but does not declare a forced page break.",
+                    section,
+                    index,
+                )
+            )
         blocks = section.get("blocks", [])
         blocks = blocks if isinstance(blocks, list) else []
         walked = _walk_blocks(blocks)
@@ -873,6 +1264,8 @@ def lint_report_design(
                         index,
                     )
                 )
+        if prepared_layout:
+            diagnostics.extend(_lint_layout_groups(blocks, section, index))
         diagnostics.extend(_lint_table_runs(blocks, section, index))
         section_config: dict[str, Any] = {}
         for identifier in identifiers:
@@ -1022,18 +1415,8 @@ def validate_report_budget(
 
 
 def load_layout_budget(path: Path) -> dict[str, Any]:
-    """Load a budget with stable parse diagnostics."""
+    """Load a canonical budget while preserving public error semantics."""
     try:
-        value = json.loads(path.read_text(encoding="utf-8"))
-    except OSError as error:
-        raise LayoutPolicyError([f"unable to read layout budget {path}: {error}"]) from error
-    except json.JSONDecodeError as error:
-        raise LayoutPolicyError(
-            [
-                f"invalid layout budget JSON at line {error.lineno}, "
-                f"column {error.colno}: {error.msg}"
-            ]
-        ) from error
-    if not isinstance(value, dict):
-        raise LayoutPolicyError(["layout budget root must be an object"])
-    return value
+        return load_canonical_layout_budget(path)
+    except LayoutBudgetSchemaError as error:
+        raise LayoutPolicyError(error.errors) from error

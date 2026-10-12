@@ -28,7 +28,7 @@ Expected output contract:
 - allocation, selection, interaction and supported factor effects;
 - uncertainty, residual, diagnostics, coverage and provenance.
 
-The plugin calls this tool only when `get_gradient_capabilities` lists it available.
+The plugin calls this tool only when `get_gradient_capabilities` lists the exact `simulate_portfolio_attribution` row as available. When the row is absent, the report renders `Not available — not listed by get_gradient_capabilities` and cites that capability response.
 
 ### `compare_portfolio_attribution`
 
@@ -45,7 +45,7 @@ Expected output contract:
 - returned persistent-source rows;
 - residual, diagnostics, coverage and provenance.
 
-The plugin calls this tool only when `get_gradient_capabilities` lists it available. Without it, fallback comparison is limited to displaying, sign-classifying and ordering returned effects.
+The plugin calls this tool only when `get_gradient_capabilities` lists it available. When the row is absent, the report renders `Not available — not listed by get_gradient_capabilities` and cites that capability response. Without it, fallback comparison is limited to displaying, sign-classifying and ordering returned effects one returned segment per row; aggregate sign counts are not permitted.
 
 ## Strategy Lab diversification
 

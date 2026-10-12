@@ -41,7 +41,7 @@
     "completeness": {
       "used": 5,
       "expected": 7,
-      "state": "degraded"
+      "state": "partial"
     },
     "data_basis": "mixed"
   },
@@ -472,7 +472,7 @@
               "2026-10-01",
               "Gradient-governed TEST evidence",
               "{'chip': 'not_run', 'status': 'not_run'}",
-              "091b0cf9"
+              "sha256:273814b06d98b1737c111b83024663b8e8600d4b69330958b9c6b9c61b827814"
             ],
             [
               "S2",
@@ -483,7 +483,7 @@
               "2026-10-01",
               "Gradient-governed TEST evidence",
               "{'chip': 'passed', 'status': 'passed'}",
-              "f337365b"
+              "sha256:2bdcc27a6e4cd1e329899b4d04e170b5c8d8495ae3ac85508662595e0ddba249"
             ],
             [
               "S3",
@@ -494,7 +494,7 @@
               "2026-08-14",
               "Gradient-governed TEST evidence",
               "{'chip': 'passed', 'status': 'passed'}",
-              "90d3de53"
+              "sha256:b978ab9ea42f3266f45899cd2105866e57f56016496c2bd775d7260eab4fd245"
             ]
           ]
         },

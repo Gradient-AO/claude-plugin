@@ -46,7 +46,7 @@ Use this template when `review_mode` is `comprehensive`. Keep the section titles
 The report is a monitoring document, not a decision memo. It analyzes evidence and identifies considerations;
 it does not recommend trades, allocation changes, manager actions or votes.
 
-The soft target is 15–20 pages when the available evidence supports the full review; the hard ceiling is 24.
+The soft target is 13–20 pages when the available evidence supports the full review; the hard ceiling is 24.
 Never invent or repeat content to reach a page count. Keep every section when evidence is unavailable and
 replace its analytical blocks with `Not available — <returned reason>`. Before delivery run
 `python scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Portfolio Review" --budget references/layout-budget.json`;

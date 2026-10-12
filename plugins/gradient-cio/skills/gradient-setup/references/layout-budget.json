@@ -2,59 +2,66 @@
   "schema_version": 2,
   "design_profile": "reference",
   "forced_breaks": [],
-  "page_target": {
-    "min": 4,
-    "max": 5
+  "pdf": {
+    "target_pages": {
+      "min": 4,
+      "max": 5
+    },
+    "hard_max_pages": 7,
+    "minimum_body_fill": 0.4,
+    "orphan_tail_max_fill": 0.2
   },
-  "hard_ceiling": 7,
-  "sections": {
-    "1": {
-      "max_pages": 1,
-      "max_words": 350,
-      "max_table_rows": 12,
-      "max_visuals": 5,
-      "role": "summary",
-      "requires_analysis": false
-    },
-    "2": {
-      "max_pages": 1,
-      "max_words": 300,
-      "max_table_rows": 12,
-      "max_visuals": 2,
-      "role": "list",
-      "requires_analysis": false
-    },
-    "3": {
-      "max_pages": 1,
-      "max_words": 350,
-      "max_table_rows": 18,
-      "max_visuals": 3,
-      "role": "reference",
-      "requires_analysis": false
-    },
-    "4": {
-      "max_pages": 1,
-      "max_words": 350,
-      "max_table_rows": 18,
-      "max_visuals": 3,
-      "role": "reference",
-      "requires_analysis": false
-    },
-    "5": {
-      "max_pages": 1,
-      "max_words": 350,
-      "max_table_rows": 18,
-      "max_visuals": 3,
-      "role": "closing",
-      "requires_analysis": false
-    },
-    "A": {
-      "max_pages": 2,
-      "max_words": 450,
-      "max_table_rows": 24,
-      "max_visuals": 2,
-      "role": "appendix",
-      "requires_analysis": false
+  "content": {
+    "defaults": {},
+    "sections": {
+      "1": {
+        "max_pages": 1,
+        "max_words": 350,
+        "max_visuals": 5,
+        "role": "summary",
+        "requires_analysis": false,
+        "max_body_table_rows": 12
+      },
+      "2": {
+        "max_pages": 1,
+        "max_words": 300,
+        "max_visuals": 2,
+        "role": "list",
+        "requires_analysis": false,
+        "max_body_table_rows": 12
+      },
+      "3": {
+        "max_pages": 1,
+        "max_words": 350,
+        "max_visuals": 3,
+        "role": "reference",
+        "requires_analysis": false,
+        "max_body_table_rows": 18
+      },
+      "4": {
+        "max_pages": 1,
+        "max_words": 350,
+        "max_visuals": 3,
+        "role": "reference",
+        "requires_analysis": false,
+        "max_body_table_rows": 18
+      },
+      "5": {
+        "max_pages": 1,
+        "max_words": 350,
+        "max_visuals": 3,
+        "role": "closing",
+        "requires_analysis": false,
+        "max_body_table_rows": 18
+      },
+      "A": {
+        "max_pages": 2,
+        "max_words": 450,
+        "max_visuals": 2,
+        "role": "appendix",
+        "requires_analysis": false,
+        "max_body_table_rows": 24
+      }
     }
   }
 }

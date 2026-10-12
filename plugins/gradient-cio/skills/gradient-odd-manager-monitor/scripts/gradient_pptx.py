@@ -607,6 +607,20 @@ class PptxRenderer:
                 MUTED,
                 align="right",
             )
+        data_scope_banner = _text(self._meta.get("data_scope_banner"))
+        if data_scope_banner:
+            self._shape(slide, 0.75, 1.34, 8.9, 0.36, PANEL, LIME)
+            self._text_box(
+                slide,
+                0.9,
+                1.43,
+                8.6,
+                0.18,
+                data_scope_banner,
+                7.2,
+                LIME,
+                bold=True,
+            )
         self._text_box(
             slide,
             0.75,
@@ -793,6 +807,20 @@ class PptxRenderer:
     def _render_divider(self, section: JsonObject, number: int) -> None:
         slide = self._new_slide()
         self._shape(slide, 0, 0, SLIDE_WIDTH_IN, SLIDE_HEIGHT_IN, INK, INK)
+        data_scope_banner = _text(self._meta.get("data_scope_banner"))
+        if data_scope_banner:
+            self._text_box(
+                slide,
+                0.8,
+                0.55,
+                11.7,
+                0.3,
+                data_scope_banner,
+                7.2,
+                LIME,
+                bold=True,
+                align="right",
+            )
         self._text_box(slide, 0.8, 2.0, 10.8, 0.3, _text(section.get("kicker")).upper(), 9, LIME, bold=True)
         self._text_box(slide, 0.8, 2.46, 10.8, 1.6, _text(section.get("title")), 36, PAPER, bold=True)
         subtitle = _text(section.get("subtitle"))
@@ -804,8 +832,32 @@ class PptxRenderer:
         self, slide: Any, title: str, kicker: str, number: str, layout: str
     ) -> None:
         accent = LIME if layout != "appendix" else SLATE
+        data_scope_banner = _text(self._meta.get("data_scope_banner"))
         if kicker:
-            self._text_box(slide, 0.7, 0.36, 10.8, 0.2, kicker.upper(), 7.5, LIME_DARK, bold=True)
+            self._text_box(
+                slide,
+                0.7,
+                0.36,
+                5.8 if data_scope_banner else 10.8,
+                0.2,
+                kicker.upper(),
+                7.5,
+                LIME_DARK,
+                bold=True,
+            )
+        if data_scope_banner:
+            self._text_box(
+                slide,
+                6.45,
+                0.34,
+                5.25,
+                0.28,
+                data_scope_banner,
+                6.8,
+                LIME_DARK,
+                bold=True,
+                align="right",
+            )
         self._text_box(slide, 0.7, 0.62, 11.0, 0.58, title, 23, INK, bold=True)
         self._shape(slide, 0.7, 1.22, 11.93, 0.02, INK, INK)
         self._shape(slide, 12.05, 0.55, 0.58, 0.43, accent, accent)

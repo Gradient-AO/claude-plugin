@@ -2,7 +2,7 @@
 name: gradient-odd-manager-compare
 description: "Create an operational comparison report for named managers. Triggers: 'compare manager operations', 'compare Form ADV disclosures', 'review service providers'. For return performance use gradient-idd-manager-performance."
 metadata:
-  style_contract: "2.1.0"
+  style_contract: "2.2.0"
   group: "Operational due diligence"
   subject: "manager"
   output: "comparison report"

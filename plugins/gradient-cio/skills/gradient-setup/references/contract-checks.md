@@ -31,7 +31,7 @@ or report date; the default probe therefore exercises the current latest-publica
 sample_portfolio, chart_catalog. The sample probe verifies that `list_portfolios`
 returns Gradient's canonical example first.
 
-**Full read set (57 reads including standard):** standard plus capabilities_summary,
+**Full read set (61 reads including standard):** standard plus capabilities_summary,
 fund_diligence_monitoring, fund_diligence_review, manager_diligence_brief,
 attention, findings, events, events_roster, entity_facts, conditions, credit_spreads, gradient_signal, regime_state,
 cma_baseline, cma_consensus, cma_consensus_allocation, watchlist,
@@ -39,7 +39,9 @@ portfolio_tree, portfolio_exposure, portfolio_policy, portfolio_ownership, portf
 portfolio_attribution, portfolio_ex_ante_attribution, portfolio_series,
 chart_availability, portfolio_allocations, portfolio_commitments,
 strategy_benchmarks, strategy_return_series, two Strategy Lab session builders,
-strategy_expected_statistics, strategy_relative_return, strategy_manager_compare, strategy_date_windows,
+strategy_expected_statistics, strategy_pme_builder, strategy_pme,
+strategy_pme_sensitivity_builder, strategy_pme_sensitivity, strategy_relative_return,
+strategy_manager_compare, strategy_date_windows,
 adv_13f_consistency,
 multi_manager_13f_overlap, search_managers, screen, cftc_positioning, hf_crowding, regional_facts,
 regional_capital_markets, equity_fundamentals, equity_risk_findings, ddq_extract_fund_aliases,
@@ -78,7 +80,7 @@ The first call persists fictional inline text as a ready subject-bound document 
 save call is still a dry-run preview and must return `outcome: "preview"`, `dry_run: true` and `committed:
 false`.
 
-The complete matrix is 71 calls. Run the standard or full read set without write confirmation. Run the
+The complete matrix is 75 calls. Run the standard or full read set without write confirmation. Run the
 writes set only as previews. Before the DDQ save-preview set, tell the user that its reconciliation call
 persists a test document and immutable test workpaper.
 
@@ -111,6 +113,15 @@ Report the two module results separately.
 Live IDD workflows may replace the common benchmark shorthand with
 `benchmark_series_ids`, keyed exactly by selected manager return-series ID. Preserve returned benchmark
 mappings, identity rows, rolling evidence, and typed extended-analysis coverage.
+
+The PME builder probe is schema-focused and uses only fictional TEST UUIDs:
+`portfolio_id: 10000000-0000-4000-8000-000000000001`,
+`commitment_id: 60000000-0000-4000-8000-000000000001`, and
+`benchmark_id: b0000000-0000-0000-0000-000000000001`. Accept either `status: available` with a non-null
+session or `status: unavailable` with the returned reason; the probe does not assume those identifiers exist
+in live production. Run `strategy_pme` only when the builder returns an available session. The sensitivity
+probe makes a second, separate builder call with the same canonical portfolio and commitment IDs and
+`benchmark_id: b0000000-0000-0000-0000-000000000002`; never reuse or edit the primary session.
 
 **Private-markets construction mode (1 read):** private_markets_holdings. Run it only when rating or
 preparing `gradient-portfolio-construction` in `private_markets` mode. It uses the canonical illustrative

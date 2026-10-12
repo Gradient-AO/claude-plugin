@@ -11,9 +11,15 @@ Apply this contract to every `gradient-idd-*` report.
 
 ## Benchmark matching
 
-- Match each manager return series to one benchmark and retain both IDs plus the server-returned matching rationale.
+- Match each manager return series to one benchmark and retain both IDs plus the server-returned `status`, `selectionType`, matching `reason`, matched fields and aligned period.
 - Never apply one benchmark to every manager unless the user explicitly requests it or the server identifies it as the common mandate benchmark.
-- Treat missing or weak benchmark matches as a report limitation, not a neutral comparison.
+- Treat `advisory`, `ambiguous` or `unavailable` matches as a report limitation, not a neutral comparison.
+
+## Realized and simulated evidence
+
+- Historical manager claims use `realized_metrics` or realized `result_rows`; preserve their period, observations, basis and `metric_scope`.
+- Forward-looking path evidence uses `simulated_metrics` and must be labeled simulated. The deprecated top-level relative-return aliases are simulated values and must never be quoted as realized history.
+- Never substitute a simulated mean active return or information ratio for the realized manager-versus-benchmark result.
 
 ## Approved evidence
 

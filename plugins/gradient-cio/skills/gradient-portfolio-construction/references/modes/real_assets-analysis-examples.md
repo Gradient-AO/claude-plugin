@@ -5,7 +5,7 @@ Fictional examples marked **(TEST)** show the required depth. Use the pattern, n
 ## Target Sub-Segment Structure
 
 **Strong (TEST)**
-> **Observation:** Private real estate is 57% versus a 40% target, while listed infrastructure is 8% against a 15% target [S3]. **Why it matters:** The structure adds liquidity and reduces property-cycle concentration. **Uncertainty:** Private valuations lag by one quarter. **What would change the view:** A valuation report showing private real estate below 45% would narrow the gap.
+> **Observation:** Private real estate is 57% versus a 40% target, while listed infrastructure is 8% against a 15% target [S3]. **Why it matters:** The structure adds liquidity and reduces property-cycle concentration. **Uncertainty:** Private valuations are one quarter stale. **What would change the view:** A valuation report showing private real estate below 45% would narrow the gap.
 
 **Weak contrast:** “The target sub-segments are more balanced [S3].” It lacks the segment mismatch, construction consequence, valuation lag, and measurable update condition.
 

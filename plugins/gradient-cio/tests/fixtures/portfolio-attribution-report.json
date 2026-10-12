@@ -1078,13 +1078,13 @@
             [
               "S1",
               "Capabilities",
-              "gradient_tool",
+              "gradient_tool_metadata",
               "get_gradient_capabilities",
               "detail=full",
               "2026-10-08",
               "Fictional TEST data",
               "{'chip': 'passed', 'status': 'passed'}",
-              "test-s1"
+              "not_applicable_metadata_response"
             ],
             [
               "S2",
@@ -1095,7 +1095,7 @@
               "2026-10-08",
               "Fictional TEST data",
               "{'chip': 'passed', 'status': 'passed'}",
-              "test-s2"
+              "sha256:2222222222222222222222222222222222222222222222222222222222222222"
             ],
             [
               "S3",
@@ -1106,7 +1106,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "{'chip': 'passed', 'status': 'passed'}",
-              "test-s3"
+              "sha256:3333333333333333333333333333333333333333333333333333333333333333"
             ],
             [
               "S4",
@@ -1117,7 +1117,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "{'chip': 'passed', 'status': 'passed'}",
-              "test-s4"
+              "sha256:4444444444444444444444444444444444444444444444444444444444444444"
             ],
             [
               "S5",
@@ -1128,7 +1128,7 @@
               "2026-10-08",
               "Fictional TEST data",
               "{'chip': 'passed', 'status': 'passed'}",
-              "test-s5"
+              "sha256:5555555555555555555555555555555555555555555555555555555555555555"
             ],
             [
               "S6",
@@ -1139,7 +1139,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "{'chip': 'passed', 'status': 'passed'}",
-              "test-s6"
+              "sha256:6666666666666666666666666666666666666666666666666666666666666666"
             ],
             [
               "S7",
@@ -1150,7 +1150,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "{'chip': 'passed', 'status': 'passed'}",
-              "test-s7"
+              "sha256:7777777777777777777777777777777777777777777777777777777777777777"
             ]
           ]
         }

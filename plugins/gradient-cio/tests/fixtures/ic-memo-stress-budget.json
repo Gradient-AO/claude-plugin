@@ -42,7 +42,7 @@
         "max_words": 200,
         "max_body_table_rows": 0,
         "max_visuals": 1,
-        "hard_max_pdf_pages": 1,
+        "hard_max_pdf_pages": 2,
         "role": "closing",
         "requires_analysis": false
       }

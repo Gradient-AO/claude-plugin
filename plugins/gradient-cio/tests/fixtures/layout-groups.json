@@ -1,0 +1,94 @@
+{
+  "meta": {
+    "title": "Layout grouping regression (TEST)",
+    "header_label": "Renderer regression",
+    "data_as_of": "2026-10-12"
+  },
+  "sections": [
+    {
+      "id": "evidence",
+      "num": "01",
+      "title": "Evidence",
+      "page_break": "force",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Titled assumptions (TEST)",
+          "columns": ["Item", "Value"],
+          "rows": [
+            ["Alpha", "1"],
+            ["Beta", "2"],
+            ["Gamma", "3"]
+          ]
+        },
+        {
+          "type": "chart",
+          "chart": {
+            "chart_id": "layout-group-chart",
+            "title": "Titled evidence chart (TEST)",
+            "status": "ok",
+            "columns": [
+              {"key": "name", "title": "Name", "format": "text", "decimals": null},
+              {"key": "value", "title": "Value", "format": "number", "decimals": 1}
+            ],
+            "rows": [
+              ["Alpha", 1.0],
+              ["Beta", 2.0],
+              ["Gamma", 3.0]
+            ],
+            "truncated": false,
+            "render_hint": {"block": "bars", "x": "name", "y": ["value"]}
+          }
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Analysis — Compact conclusion",
+          "text": "The bounded chart and this short analytical conclusion fit together."
+        }
+      ]
+    },
+    {
+      "id": "unbounded",
+      "num": "02",
+      "title": "Unbounded evidence",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Long evidence table (TEST)",
+          "columns": ["Item", "Value"],
+          "rows": [
+            ["01", "1"],
+            ["02", "2"],
+            ["03", "3"],
+            ["04", "4"],
+            ["05", "5"],
+            ["06", "6"],
+            ["07", "7"],
+            ["08", "8"],
+            ["09", "9"]
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Analysis — Intentionally ungrouped",
+          "text": "The table exceeds the bounded fit estimate."
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "num": "A",
+      "title": "Appendix A — Sources",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Sources (TEST)",
+          "columns": ["Tag", "Source"],
+          "rows": [["S1", "Fictional source (TEST)"]]
+        }
+      ]
+    }
+  ]
+}

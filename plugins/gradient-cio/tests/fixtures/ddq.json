@@ -666,7 +666,7 @@
               "2026-10-01",
               "Gradient-governed TEST evidence",
               "{'chip': 'passed', 'status': 'passed'}",
-              "7c89a13a"
+              "sha256:f7d651b2f80f66bfed38fc7041a906cab927de85ad580cf8dc38713fbc66bafa"
             ],
             [
               "S2",
@@ -677,7 +677,7 @@
               "2026-10-01",
               "Gradient-governed TEST evidence",
               "{'chip': 'not run', 'status': 'not_run'}",
-              "091b0cf9"
+              "sha256:a04715c67d5ce3adfd18b7b78a12cf0cbf791f70803e2feffcd7826418a2b647"
             ],
             [
               "S3",

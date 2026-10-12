@@ -3,7 +3,7 @@ name: gradient-portfolio-construction
 description: "Create a portfolio-construction report for private markets, fixed income, global public equity, marketable alternatives, or real assets. Triggers: 'design a sleeve strategy mix', 'build an allocation', 'review portfolio construction'. For one-manager fit use gradient-idd-manager-portfolio-fit."
 metadata:
   version: "3.0.0"
-  style_contract: "2.1.0"
+  style_contract: "2.2.0"
   group: "Portfolio Analytics"
   subject: "portfolio construction"
   output: "construction report"

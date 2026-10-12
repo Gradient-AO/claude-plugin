@@ -40,6 +40,15 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
             r"Regime evidence",
         ),
     ),
+    "gradient-idd-private-markets-pme": (
+        True,
+        (
+            r"PME and direct alpha",
+            r"IRR and multiples",
+            r"Benchmark sensitivity",
+            r"Partial evidence",
+        ),
+    ),
     "gradient-portfolio-attribution-compare": (
         True,
         (
@@ -187,7 +196,9 @@ def _strong_examples(markdown):
 
 def handoff_contract_checks():
     validator = ROOT / "shared" / "validate_handoff.py"
+    schema_path = ROOT / "shared" / "contracts" / "idd-odd-ic-handoff.schema.json"
     fixture = FIX / "idd-handoff.json"
+    document = json.loads(fixture.read_text(encoding="utf-8"))
     valid = subprocess.run(
         [sys.executable, str(validator), str(fixture)],
         capture_output=True,
@@ -196,17 +207,156 @@ def handoff_contract_checks():
         errors="replace",
     )
     check(valid.returncode == 0, "canonical IDD handoff passes validation")
+
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    object_schemas = []
+
+    def collect_object_schemas(value, path="$"):
+        if isinstance(value, dict):
+            if value.get("type") == "object":
+                object_schemas.append((path, value))
+            for key, child in value.items():
+                collect_object_schemas(child, f"{path}.{key}")
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                collect_object_schemas(child, f"{path}[{index}]")
+
+    collect_object_schemas(schema)
+    open_objects = [
+        path
+        for path, object_schema in object_schemas
+        if object_schema.get("additionalProperties") is not False
+    ]
+    check(
+        not open_objects,
+        "handoff schema closes every declared object"
+        + (f": {open_objects}" if open_objects else ""),
+    )
+
+    legacy = json.loads(json.dumps(document))
+    legacy["return_series"] = [legacy["return_series"][0]]
+    legacy["return_series"][0].pop("benchmark_status")
+    legacy["evidence"] = [legacy["evidence"][0]]
+    legacy["evidence"][0].pop("status")
+
+    mutations = []
+
+    def mutate(label, source, apply):
+        changed = json.loads(json.dumps(source))
+        apply(changed)
+        mutations.append((label, changed))
+
+    mutate(
+        "server-matched benchmark without series ID",
+        document,
+        lambda value: value["return_series"][0].pop("benchmark_series_id"),
+    )
+    mutate(
+        "advisory benchmark without rationale",
+        document,
+        lambda value: value["return_series"][1].pop("benchmark_rationale"),
+    )
+    mutate(
+        "unavailable benchmark with series ID",
+        document,
+        lambda value: value["return_series"][2].update(
+            {"benchmark_series_id": "benchmark-must-be-null"}
+        ),
+    )
+    mutate(
+        "unavailable benchmark without reason",
+        document,
+        lambda value: value["return_series"][2].pop("unavailable_reason"),
+    )
+    mutate(
+        "legacy benchmark without rationale",
+        legacy,
+        lambda value: value["return_series"][0].pop("benchmark_rationale"),
+    )
+    mutate(
+        "successful evidence without methodology",
+        document,
+        lambda value: value["evidence"][0].pop("methodology_version"),
+    )
+    mutate(
+        "failed evidence without failure detail",
+        document,
+        lambda value: value["evidence"][1].pop("error_code"),
+    )
+    mutate(
+        "unavailable evidence without reason",
+        document,
+        lambda value: value["evidence"][2].pop("unavailable_reason"),
+    )
+    mutate(
+        "not-run evidence without reason",
+        document,
+        lambda value: value["evidence"][3].pop("unavailable_reason"),
+    )
+    mutate(
+        "failed evidence with success digest",
+        document,
+        lambda value: value["evidence"][1].update(
+            {"digest": "sha256:" + ("0" * 64)}
+        ),
+    )
+    mutate(
+        "successful evidence with malformed digest",
+        document,
+        lambda value: value["evidence"][0].update({"digest": "test-digest"}),
+    )
+    mutate(
+        "legacy evidence without methodology key",
+        legacy,
+        lambda value: value["evidence"][0].pop("methodology_version"),
+    )
+    mutate(
+        "unknown return-series property",
+        document,
+        lambda value: value["return_series"][0].update({"extra": True}),
+    )
+
     with tempfile.TemporaryDirectory() as temporary:
-        invalid_path = pathlib.Path(temporary) / "invalid-handoff.json"
-        invalid_path.write_text('{"stage":"idd"}', encoding="utf-8")
-        invalid = subprocess.run(
-            [sys.executable, str(validator), str(invalid_path)],
+        temporary_path = pathlib.Path(temporary)
+        legacy_path = temporary_path / "legacy-handoff.json"
+        legacy_path.write_text(json.dumps(legacy), encoding="utf-8")
+        legacy_result = subprocess.run(
+            [sys.executable, str(validator), str(legacy_path)],
             capture_output=True,
             text=True,
             encoding="utf-8",
             errors="replace",
         )
-    check(invalid.returncode == 1, "incomplete IDD handoff fails validation")
+        failures = []
+        unstable = []
+        for index, (label, invalid_document) in enumerate(mutations):
+            invalid_path = temporary_path / f"invalid-handoff-{index}.json"
+            invalid_path.write_text(json.dumps(invalid_document), encoding="utf-8")
+            results = [
+                subprocess.run(
+                    [sys.executable, str(validator), str(invalid_path)],
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
+                )
+                for _ in range(2)
+            ]
+            if results[0].returncode != 1:
+                failures.append(label)
+            if results[0].stderr != results[1].stderr:
+                unstable.append(label)
+    check(legacy_result.returncode == 0, "legacy v1 handoff remains valid")
+    check(
+        not failures,
+        "handoff validator rejects status, digest and closed-object mutations"
+        + (f": {failures}" if failures else ""),
+    )
+    check(
+        not unstable,
+        "handoff validation errors are deterministic"
+        + (f": {unstable}" if unstable else ""),
+    )
     preservation = subprocess.run(
         [
             sys.executable,
@@ -250,6 +400,147 @@ def handoff_contract_checks():
     check(
         report_validation.returncode == 0,
         "canonical IDD report passes its skill-specific strict validator",
+    )
+
+
+def attribution_compare_contract_checks():
+    validator = (
+        ROOT
+        / "skills"
+        / "gradient-portfolio-attribution-compare"
+        / "scripts"
+        / "validate_attribution_compare.py"
+    )
+    documents = {
+        mode: json.loads((FIX / fixture).read_text(encoding="utf-8"))
+        for mode, fixture in (
+            ("fallback", "attribution-compare-fallback.json"),
+            ("three_lane", "attribution-compare-three-lane.json"),
+        )
+    }
+
+    def section(document, title):
+        return next(
+            item for item in document["sections"] if item.get("title") == title
+        )
+
+    mutations = []
+    fallback = documents["fallback"]
+
+    wrong_unavailable = json.loads(json.dumps(fallback))
+    section(wrong_unavailable, "Simulated Attribution")["blocks"][0]["text"] = (
+        "Not available — capability not published [S1]."
+    )
+    mutations.append(("non-canonical capability unavailability", wrong_unavailable))
+
+    missing_sign_table = json.loads(json.dumps(fallback))
+    comparison_blocks = section(
+        missing_sign_table, "Cross-Lane Comparison"
+    )["blocks"]
+    comparison_blocks[:] = [
+        block
+        for block in comparison_blocks
+        if block.get("title") != "Returned sign by segment"
+    ]
+    mutations.append(("missing returned-sign table", missing_sign_table))
+
+    aggregate_sign_count = json.loads(json.dumps(fallback))
+    sign_table = next(
+        block
+        for block in section(
+            aggregate_sign_count, "Cross-Lane Comparison"
+        )["blocks"]
+        if block.get("title") == "Returned sign by segment"
+    )
+    sign_table["rows"][0][1] = "2 of 5 segments"
+    mutations.append(("aggregate fallback sign count", aggregate_sign_count))
+
+    combined_segment_row = json.loads(json.dumps(fallback))
+    sign_table = next(
+        block
+        for block in section(
+            combined_segment_row, "Cross-Lane Comparison"
+        )["blocks"]
+        if block.get("title") == "Returned sign by segment"
+    )
+    sign_table["rows"][0][1] = "Public Equity; Fixed Income"
+    mutations.append(("multiple segments in one sign row", combined_segment_row))
+
+    unsourced_reconciliation = json.loads(json.dumps(fallback))
+    boundary = next(
+        block
+        for block in section(
+            unsourced_reconciliation, "Historical Attribution"
+        )["blocks"]
+        if "entity_return_reconciliation" in block.get("text", "")
+    )
+    boundary["text"] = boundary["text"].replace(" [S2]", "")
+    mutations.append(
+        ("unsourced historical reconciliation callout", unsourced_reconciliation)
+    )
+
+    for title in (
+        "Simulated Attribution",
+        "Cross-Lane Comparison",
+        "Appendix A — Sources and Methods",
+    ):
+        missing_break = json.loads(json.dumps(fallback))
+        section(missing_break, title).pop("page_break", None)
+        mutations.append((f"missing forced break on {title}", missing_break))
+
+    bad_tile_subs = (
+        ("fallback historical tile basis", "fallback", 0, "Realized effects [S2]"),
+        ("fallback ex-ante tile basis", "fallback", 1, "Expected effects [S3]"),
+        (
+            "fallback simulated tile basis",
+            "fallback",
+            2,
+            "Capability unavailable [S1]",
+        ),
+        (
+            "fallback comparison tile basis",
+            "fallback",
+            3,
+            "No server metrics [S1]",
+        ),
+        (
+            "three-lane simulated tile basis",
+            "three_lane",
+            2,
+            "Governed scenario [S4]",
+        ),
+        (
+            "three-lane comparison tile basis",
+            "three_lane",
+            3,
+            "Server comparison [S5]",
+        ),
+    )
+    for label, mode, tile_index, sub in bad_tile_subs:
+        bad_tile = json.loads(json.dumps(documents[mode]))
+        bad_tile["executive"]["tiles"][tile_index]["sub"] = sub
+        mutations.append((label, bad_tile))
+
+    failures = []
+    with tempfile.TemporaryDirectory() as temporary:
+        temporary_path = pathlib.Path(temporary)
+        for index, (label, document) in enumerate(mutations):
+            path = temporary_path / f"invalid-{index}.json"
+            path.write_text(json.dumps(document), encoding="utf-8")
+            result = subprocess.run(
+                [sys.executable, str(validator), str(path)],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+            if result.returncode == 0:
+                failures.append(label)
+    check(
+        not failures,
+        "attribution-compare validator rejects capability, fallback, basis, "
+        "reconciliation and pagination mutations"
+        + (f": {failures}" if failures else ""),
     )
 
 
@@ -311,6 +602,64 @@ def analysis_example_checks():
         callable(review_callout) and reviewed_count > 0 and not quality_errors,
         "strong examples produce zero analysis-quality notes"
         + (f": {quality_errors}" if quality_errors else ""),
+    )
+
+
+def private_markets_pme_contract_checks():
+    skill_root = ROOT / "skills" / "gradient-idd-private-markets-pme"
+    skill_text = (skill_root / "SKILL.md").read_text(encoding="utf-8")
+    data_map_text = (
+        skill_root / "references" / "data-map.md"
+    ).read_text(encoding="utf-8")
+    check(
+        "If all attempted benchmark paths produce zero usable PME evidence"
+        in skill_text
+        and "Return chat only" in skill_text
+        and "Do not create `report.json`" in skill_text
+        and "Zero usable PME evidence across all attempted paths ends in a chat-only"
+        in data_map_text
+        and "get_return_series" not in skill_text
+        and "get_return_series" not in data_map_text,
+        "PME zero-evidence branch is chat-only and cash-flow native",
+    )
+
+    document = json.loads(
+        (FIX / "idd-private-markets-pme.json").read_text(encoding="utf-8")
+    )
+    handoff = document["meta"]["handoff"]
+    evidence = {
+        row["source_tag"]: row
+        for row in handoff["evidence"]
+    }
+    source_rows = next(
+        block["rows"]
+        for section in document["sections"]
+        if section.get("title") == "Appendix A — Sources and methods"
+        for block in section["blocks"]
+        if block.get("type") == "table"
+        and block.get("columns", [])[:4]
+        == ["Tag", "Evidence", "Basis", "Tool / view"]
+    )
+    rows_by_tag = {row[0]: row for row in source_rows}
+    check(
+        handoff["return_series"] == []
+        and evidence["S6"]["tool"] == "run_strategy_lab_private_markets_pme"
+        and evidence["S6"]["status"] == "ok"
+        and evidence["S7"]["tool"] == "build_strategy_lab_session"
+        and evidence["S7"]["status"] == "unavailable"
+        and evidence["S7"]["digest"] == "not_available:no_payload",
+        "PME fixture carries typed primary and sensitivity handoff statuses",
+    )
+    check(
+        rows_by_tag["S5"][3] == "build_strategy_lab_session"
+        and "benchmark_id=b0000000-0000-0000-0000-000000000001"
+        in rows_by_tag["S5"][4]
+        and rows_by_tag["S6"][3] == "run_strategy_lab_private_markets_pme"
+        and rows_by_tag["S7"][3] == "build_strategy_lab_session"
+        and "benchmark_id=b0000000-0000-0000-0000-000000000002"
+        in rows_by_tag["S7"][4]
+        and rows_by_tag["S7"][8] == "not_available:no_payload",
+        "PME fixture maps separate primary and sensitivity sources",
     )
 
 
@@ -447,6 +796,40 @@ def registered_json_validator_checks(validator_manifest):
                 ]["rows"][source_row]
                 row[8] = "n/a"
                 provenance_mutations.append(("missing Gradient digest", missing_digest))
+
+                request_id_digest = json.loads(json.dumps(document))
+                row = request_id_digest["sections"][source_section]["blocks"][
+                    source_block
+                ]["rows"][source_row]
+                row[8] = "request_id=req-123"
+                provenance_mutations.append(
+                    ("request ID used as Gradient digest", request_id_digest)
+                )
+
+                failed_with_success_digest = json.loads(json.dumps(document))
+                row = failed_with_success_digest["sections"][source_section]["blocks"][
+                    source_block
+                ]["rows"][source_row]
+                row[7] = "failed:demo_series_not_found; request_id=req-123"
+                provenance_mutations.append(
+                    (
+                        "failed Gradient call without no-payload digest",
+                        failed_with_success_digest,
+                    )
+                )
+
+            if skill_name == "gradient-idd-manager-performance":
+                recommendation = json.loads(json.dumps(document))
+                first_section = recommendation.get("sections", [])[0]
+                first_section.setdefault("blocks", []).append(
+                    {
+                        "type": "markdown",
+                        "text": "We recommend hiring this manager.",
+                    }
+                )
+                provenance_mutations.append(
+                    ("investment recommendation wording", recommendation)
+                )
 
             for provenance_label, provenance_document in provenance_mutations:
                 with tempfile.TemporaryDirectory() as temporary:
@@ -653,7 +1036,40 @@ def static(allow_branded):
     )
     registered_json_validator_checks(validator_manifest)
     handoff_contract_checks()
+    attribution_compare_contract_checks()
     analysis_example_checks()
+    private_markets_pme_contract_checks()
+    manager_performance_modes = (
+        ROOT
+        / "skills"
+        / "gradient-idd-manager-performance"
+        / "references"
+        / "modes"
+    )
+    mode_contract_errors = []
+    for mode_path in sorted(manager_performance_modes.glob("*.md")):
+        mode_text = mode_path.read_text(encoding="utf-8")
+        if mode_text.startswith("---"):
+            mode_contract_errors.append(
+                f"{mode_path.name}: mode references must not declare skill frontmatter"
+            )
+        if "Assessment Report" in mode_text or "Comparison Report" in mode_text or "Robustness Report" in mode_text:
+            mode_contract_errors.append(
+                f"{mode_path.name}: use the canonical Manager Performance output name"
+            )
+        for required_text in (
+            "meta.data_basis",
+            "Tag`, `Evidence`, `Basis`, `Tool / view`, `Key parameters`, `As of`, `Data scope`, `Validation`, `Digest",
+        ):
+            if required_text not in mode_text:
+                mode_contract_errors.append(
+                    f"{mode_path.name}: missing required evidence instruction {required_text!r}"
+                )
+    check(
+        not mode_contract_errors,
+        "manager-performance mode references inherit the root skill contract"
+        + (f": {mode_contract_errors}" if mode_contract_errors else ""),
+    )
     stale = []
     for p in ROOT.rglob("*"):
         if p.is_file() and p.suffix in (".md", ".py", ".json") and "tests" not in p.parts and STALE.search(p.read_text(encoding="utf-8", errors="ignore")):
@@ -701,6 +1117,32 @@ def static(allow_branded):
     )
     live_tools = public_tools | set(tool_states.get("live", []))
     planned_tools = set(tool_states.get("planned", []))
+    stale_simulation_name = "run_portfolio_attribution_simulation"
+    planned_tool_paths = list(
+        (
+            ROOT / "skills" / "gradient-portfolio-attribution-compare"
+        ).rglob("*")
+    ) + [
+        ROOT / "shared" / "contracts" / "portfolio-attribution.md",
+        repository_root / "docs" / "server-gaps.md",
+    ]
+    stale_simulation_hits = [
+        str(path.relative_to(repository_root))
+        for path in planned_tool_paths
+        if path.is_file()
+        and path.suffix in {".md", ".py", ".json"}
+        and stale_simulation_name in path.read_text(
+            encoding="utf-8", errors="ignore"
+        )
+    ]
+    check(
+        "simulate_portfolio_attribution" in planned_tools
+        and stale_simulation_name not in planned_tools
+        and not stale_simulation_hits,
+        "planned attribution simulation uses canonical "
+        "simulate_portfolio_attribution name"
+        + (f": {stale_simulation_hits}" if stale_simulation_hits else ""),
+    )
     tool_pattern = re.compile(
         r"`((?:get|list|run|analyze|build|check|search|screen|compare|"
         r"save|update|create|extract|reconcile|batch|upload|preview|log|"

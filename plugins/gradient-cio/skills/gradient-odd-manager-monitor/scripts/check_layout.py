@@ -6,9 +6,9 @@ Usage:
       [--exclude 1,4-5] [--budget layout-budget.json]
       [--min-pages 3] [--max-pages 12]
 
-The fill metric is the vertical share occupied by extracted text. Covers, section
-dividers and deliberately sparse appendices should be listed with --exclude.
-Requires Poppler's pdftotext.
+The fill metric is the vertical body share occupied by rendered ink. Covers and
+explicitly authored section dividers may be excluded; appendix pages use the
+same minimum-fill rule as body pages. Requires Poppler's pdftotext.
 """
 
 from __future__ import annotations
@@ -25,6 +25,7 @@ from typing import Any
 
 from report_layout import (
     LayoutPolicyError,
+    build_post_render_layout_contract,
     load_layout_budget,
     resolve_layout_budget,
     validate_layout_budget,
@@ -224,11 +225,15 @@ def check_layout(
     maximum_pages: int | None,
     hard_ceiling: int | None = None,
     orphan_tail_max_fill: float = 0.20,
+    underfill_excluded: set[int] | None = None,
+    forced_breaks: list[dict[str, Any]] | None = None,
+    metadata: dict[str, Any] | None = None,
 ) -> list[str]:
     """Return deterministic layout failures."""
     pages = bbox_pages(pdf_path)
     body_metrics = raster_body_metrics(pdf_path)
     lines = page_lines(pdf_path)
+    underfill_excluded = underfill_excluded or set()
     failures: list[str] = []
     if minimum_pages is not None and len(pages) < minimum_pages:
         failures.append(f"page count {len(pages)} is below {minimum_pages}")
@@ -240,7 +245,7 @@ def check_layout(
         if number in excluded:
             continue
         fill = float(metric["fill"])
-        if fill < minimum_fill:
+        if fill < minimum_fill and number not in underfill_excluded:
             failures.append(
                 f"page {number} is {fill:.0%} full; minimum is {minimum_fill:.0%}"
             )
@@ -261,6 +266,13 @@ def check_layout(
             ]
             if positions and len(page_text) - positions[-1] <= 3:
                 failures.append(f"page {number} ends with heading '{heading}'")
+    failures.extend(
+        forced_break_failures(
+            lines,
+            forced_breaks or [],
+            metadata or {},
+        )
+    )
     return failures
 
 
@@ -327,6 +339,95 @@ def section_page_spans(
         number: int(details["pages_touched"])
         for number, details in section_page_ranges(page_text, sections).items()
     }
+
+
+def explicit_divider_pages(
+    page_text: list[list[str]],
+    report: dict[str, Any],
+) -> set[int]:
+    """Return rendered pages explicitly authored as sparse dividers."""
+    pages: set[int] = set()
+    sections = report.get("sections", [])
+    if not isinstance(sections, list):
+        return pages
+    for section in sections:
+        if not isinstance(section, dict) or section.get("layout") not in {
+            "divider",
+            "section",
+        }:
+            continue
+        title = str(section.get("title", "")).strip()
+        page_number = next(
+            (
+                index
+                for index, lines in enumerate(page_text, start=1)
+                if any(is_heading_line(line, title) for line in lines)
+            ),
+            None,
+        )
+        if page_number is not None:
+            pages.add(page_number)
+    return pages
+
+
+def forced_break_failures(
+    page_text: list[list[str]],
+    contracts: list[dict[str, Any]],
+    metadata: dict[str, Any],
+) -> list[str]:
+    """Verify configured forced headings begin a rendered content region."""
+    markers = {
+        str(metadata.get(field, "")).strip().casefold()
+        for field in (
+            "title",
+            "header_label",
+            "running_head",
+            "data_scope_banner",
+        )
+        if str(metadata.get(field, "")).strip()
+    }
+    failures: list[str] = []
+    for contract in contracts:
+        title = str(contract.get("section_title", "")).strip()
+        identifier = str(contract.get("configured_identifier", "")).strip()
+        location = next(
+            (
+                (page_number, line_index)
+                for page_number, lines in enumerate(page_text[1:], start=2)
+                for line_index, line in enumerate(lines)
+                if is_heading_line(line, title)
+            ),
+            None,
+        )
+        if location is None:
+            failures.append(
+                f"forced break not applied for section {identifier!r} "
+                f"('{title}'): rendered heading not found"
+            )
+            continue
+        page_number, line_index = location
+        preceding = page_text[page_number - 1][:line_index]
+        substantive = []
+        for line in preceding:
+            normalized = " ".join(line.split()).casefold()
+            if not normalized:
+                continue
+            if normalized.startswith(("gradientcio", "gradient cio", "powered by")):
+                continue
+            if any(marker in normalized or normalized in marker for marker in markers):
+                continue
+            if (
+                normalized.lstrip("0")
+                == identifier.casefold().lstrip("0")
+            ):
+                continue
+            substantive.append(line)
+        if substantive:
+            failures.append(
+                f"forced break not applied for section {identifier!r} "
+                f"('{title}') on page {page_number}"
+            )
+    return failures
 
 
 def budget_diagnostics(
@@ -400,6 +501,8 @@ def _diagnostic(message: str, severity: str) -> dict[str, Any]:
     code = "layout"
     if "orphan tail" in normalized:
         code = "orphan-tail"
+    elif "forced break not applied" in normalized:
+        code = "forced-break-not-applied"
     elif "ends with heading" in normalized:
         code = "orphan-heading"
     elif "full; minimum" in normalized:
@@ -486,6 +589,16 @@ def main() -> int:
             "orphan_tail_max_fill",
             budget.get("orphan_tail_max_fill", 0.20),
         )
+        rendered_lines = page_lines(args.pdf)
+        underfill_excluded = explicit_divider_pages(
+            rendered_lines,
+            document,
+        )
+        post_render_contract = (
+            build_post_render_layout_contract(document, budget)
+            if budget
+            else {"forced_breaks": []}
+        )
         failures = check_layout(
             args.pdf,
             headings=report_headings(args.report),
@@ -502,6 +615,13 @@ def main() -> int:
                 else None
             ),
             orphan_tail_max_fill=float(orphan_tail_max_fill),
+            underfill_excluded=underfill_excluded,
+            forced_breaks=post_render_contract.get("forced_breaks", []),
+            metadata=(
+                document.get("meta", {})
+                if isinstance(document.get("meta"), dict)
+                else {}
+            ),
         )
         budget_failures, warnings, spans = budget_diagnostics(
             args.pdf, args.report, budget

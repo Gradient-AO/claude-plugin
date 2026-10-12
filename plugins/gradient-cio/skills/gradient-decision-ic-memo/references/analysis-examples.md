@@ -5,7 +5,7 @@ Fictional examples marked **(TEST)** show the required depth. Use the pattern, n
 ## Executive Summary
 
 **Strong (TEST)**
-> **Observation:** The proposed allocation raises modeled return from 6.1% to 6.5% while reducing tier-one liquidity from 24% to 20% [S2]. **Why it matters:** The committee’s trade-off is incremental return versus a smaller immediate buffer. **Uncertainty:** Both outcomes rely on baseline assumptions. **What would change the view:** A refreshed result with liquidity below the 18% policy threshold would weaken the proposal.
+> **Observation:** The proposed allocation raises modeled return from 6.1% to 6.5% while reducing tier-one liquidity from 24% to 20% [S2]. **Why it matters:** The committee’s trade-off is incremental return versus a smaller immediate buffer. **Uncertainty:** Both modeled outcomes use baseline assumptions. **What would change the view:** A refreshed result with liquidity below the 18% policy threshold would weaken the proposal.
 
 **Weak contrast:** “The proposal improves return with manageable risk [S2].” It lacks quantified trade-offs, assumption limits, and a policy-linked trigger.
 
@@ -54,7 +54,7 @@ Fictional examples marked **(TEST)** show the required depth. Use the pattern, n
 ## Liquidity
 
 **Strong (TEST)**
-> **Observation:** Tier-one assets cover 1.35 times the next twelve months of modeled calls, down from 1.72 times before the proposal [S9]. **Why it matters:** The proposal narrows the immediate funding cushion. **Uncertainty:** Call timing relies on manager pacing assumptions. **What would change the view:** A commitments refresh showing coverage below 1.25 times would breach the committee’s condition.
+> **Observation:** Tier-one assets cover 1.35 times the next twelve months of modeled calls, down from 1.72 times before the proposal [S9]. **Why it matters:** The proposal narrows the immediate funding cushion. **Uncertainty:** The call schedule uses manager pacing assumptions. **What would change the view:** A commitments refresh showing coverage below 1.25 times would breach the committee’s condition.
 
 **Weak contrast:** “Liquidity declines under the proposal [S9].” It gives no coverage comparison, funding implication, pacing limitation, or committee threshold.
 

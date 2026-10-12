@@ -38,22 +38,22 @@
       {
         "label": "Historical lane",
         "value": "Available",
-        "sub": "Realized effects [S2]"
+        "sub": "Realized 12 months · 2025-07-01 to 2026-06-30 [S2]"
       },
       {
         "label": "Ex ante lane",
         "value": "Available",
-        "sub": "Expected effects [S3]"
+        "sub": "1-year expected [S3]"
       },
       {
         "label": "Simulated lane",
         "value": "Available",
-        "sub": "Governed scenario [S4]"
+        "sub": "1-year simulated · governed scenario [S4]"
       },
       {
         "label": "Comparison coverage",
         "value": "Complete",
-        "sub": "Server comparison [S5]"
+        "sub": "Server-returned comparison · compatible receipts [S5]"
       }
     ]
   },
@@ -61,7 +61,7 @@
     {
       "id": "executive",
       "title": "Executive Comparison",
-      "kicker": "Two governed lanes are available without server comparison metrics",
+      "kicker": "Three compatible governed lanes have server-returned comparison metrics",
       "blocks": [
         {
           "type": "callout",
@@ -82,7 +82,7 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — Comparison",
-          "text": "Observation: Comparison capability is unavailable [S1]. Why it matters: Persistence cannot be assessed. Uncertainty: A future tool may return metrics. What would change the view: Published capability."
+          "text": "Observation: Server-returned comparison metrics cover three compatible lanes [S5]. Why it matters: Cross-lane evidence is governed. Uncertainty: One comparison receipt limits time-series interpretation. What would change the view: A later receipt returning different lane signs."
         }
       ]
     },
@@ -107,6 +107,7 @@
       "id": "historical",
       "title": "Historical Attribution",
       "kicker": "Returned realized effects are shown without recalculation",
+      "page_break": "prefer",
       "blocks": [
         {
           "type": "bars",
@@ -123,7 +124,7 @@
               "display": "+0.2pp"
             }
           ],
-          "source": "[S1]"
+          "source": "[S2]"
         },
         {
           "type": "callout",
@@ -131,6 +132,12 @@
           "tone": "info",
           "title": "Analysis — Selection leads detractors",
           "text": "Observation: Returned selection is negative [S2]. Why it matters: Selection leads realized detractors. Uncertainty: The evidence covers one linked period. What would change the view: A later historical result."
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Benchmark and excess boundary",
+          "text": "Returned diagnostics.entity_return_reconciliation keeps attribution-summary excess against the linked segment benchmark composite separate from historical-return excess against the policy benchmark entity [S2]."
         }
       ]
     },
@@ -154,7 +161,7 @@
               "display": "-0.1pp"
             }
           ],
-          "source": "[S1]"
+          "source": "[S3]"
         },
         {
           "type": "callout",
@@ -185,7 +192,7 @@
               "display": "-0.2pp"
             }
           ],
-          "source": "[S1]"
+          "source": "[S4]"
         },
         {
           "type": "coverage",
@@ -247,7 +254,7 @@
               "display": "+0.1pp"
             }
           ],
-          "source": "[S1]"
+          "source": "[S5]"
         },
         {
           "type": "callout",
@@ -314,7 +321,7 @@
               "2026-06-30",
               "Gradient-governed TEST evidence",
               "passed",
-              "sha256:test-s1"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S2",
@@ -325,7 +332,7 @@
               "2026-06-30",
               "Gradient-governed TEST evidence",
               "passed",
-              "sha256:test-s2"
+              "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
             ],
             [
               "S3",
@@ -336,7 +343,7 @@
               "2026-06-30",
               "Gradient-governed TEST evidence",
               "passed",
-              "sha256:test-s3"
+              "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
             ],
             [
               "S4",
@@ -347,7 +354,7 @@
               "2026-06-30",
               "Gradient-governed TEST evidence",
               "passed",
-              "sha256:test-s4"
+              "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
             ],
             [
               "S5",
@@ -358,7 +365,7 @@
               "2026-06-30",
               "Gradient-governed TEST evidence",
               "passed",
-              "sha256:test-s5"
+              "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
             ]
           ]
         },

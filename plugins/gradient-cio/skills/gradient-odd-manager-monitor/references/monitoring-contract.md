@@ -31,8 +31,19 @@ evidence.
 
 For every fund due within 30 days, overdue, materially changed, or otherwise
 requiring attention, call `get_fund_diligence_review` with its canonical
-`fund_id`. Read `review` plus bounded `history.events`; page with the returned
-cursor only when the requested monitoring window requires older events.
+`fund_id`. Apply the same review handling to every parent firm due within 30
+days, overdue, materially changed, unreviewed, or otherwise requiring attention:
+use its governed firm review surface and canonical `firm_id`. Read `review`
+plus bounded `history.events`; page with the returned cursor only when the
+requested monitoring window requires older events.
+
+Every `get_firm_fund_events` call must pass the monitoring bounds as
+`event_date_from` and `event_date_to`. Preserve those two dates separately from
+the response's `latest_published_event`: the bounds describe what was queried;
+`latest_published_event` describes all-time event-feed freshness, is independent
+of the requested window, and must preserve the returned `event_id`,
+`event_date`, and nullable `publication_date`. It may be null only with a typed
+unavailable/unpublished caveat.
 
 Use canonical roster IDs. On failure record coverage and continue. For
 `subject_resolution_unavailable`, write
@@ -50,18 +61,43 @@ reasons, in-window changes, alerts, red flags, findings, events, watchlist
 changes, and reviews due within 30 days. Do not reconstruct review status from
 roster dates when the fund read tools return governed status.
 
-High: tier-1 alert, new red flag, overdue high finding, or overdue review.
-Medium: material change/new ADV, tier-2 alert, open medium finding, or review
-due within 30 days. Low/info: tier-3, event, watchlist change, or nothing new.
+High: tier-1 alert, new red flag, overdue high finding, overdue review, or
+identity attention. Medium: material change/new ADV, tier-2 alert, open medium
+finding, unreviewed subject, unavailable evidence, Form D signal/baseline
+upgrade, or review due within 30 days. Low/info: tier-3, stale evidence, event,
+watchlist change, or nothing new.
 
 Signal is elevated for any High, review for any Medium, otherwise clear.
-Completeness is attention-queue subjects marked complete over roster subjects.
+The completeness denominator is the count of distinct roster funds plus the
+count of their unique parent firms. Do not count a parent firm once per fund:
+one fund and its one parent firm have denominator 2. Record `distinct_funds`,
+`unique_parent_firms`, `evaluated_subjects`, and `not_evaluated_subjects` in
+`meta.completeness`; `expected` must equal the first two fields summed, `used`
+must equal `evaluated_subjects`, and evaluated plus not evaluated must equal
+expected. Also record `meta.not_evaluated_count` across subject synthesis and
+monitor evidence; it must be at least `not_evaluated_subjects`.
 
 Allowed actions are exactly: No action; Review new ADV filing; Run ODD refresh
 (`gradient-odd-report`); Reconcile latest DDQ (`gradient-odd-ddq-reconcile`);
 Close or update finding; Schedule review. Every action cites its trigger.
 Absence is bounded by the processed window and as-of date. An unpublished
 event feed is unavailable, never no events. Form ADV is adviser-reported.
+
+Use this complete shared attention-reason policy. Report each returned reason
+in `meta.attention_items` with `subject_kind`, `attention_reason`, `severity`,
+and the mapped `action`; use one item per subject/reason pair. A dash means the
+server reason is fund-only and is invalid for a firm.
+
+| Attention reason | Shared severity | Fund action | Firm action |
+|---|---|---|---|
+| `identity_attention` | High | Run ODD refresh | Run ODD refresh |
+| `overdue` | High | Schedule review | Schedule review |
+| `unreviewed` | Medium | Schedule review | Schedule review |
+| `material_change` | Medium | Run ODD refresh | Review new ADV filing |
+| `form_d_signals_detected` | Medium | Run ODD refresh | — |
+| `evidence_unavailable` | Medium | Run ODD refresh | Run ODD refresh |
+| `form_d_baseline_upgrade_required` | Medium | Schedule review | — |
+| `stale_evidence` | Low | Schedule review | — |
 
 ## Report and delivery
 
@@ -80,12 +116,20 @@ an empty timeline. Review calendar contains both a nonempty reviews-due
 `timeline` and a governed review-date `table`. Coverage and freshness uses
 `coverage`; the appendix uses a source `table`.
 
-A quiet week is deterministic: current-period alerts equal zero and the
-changes-since-review call returns zero changes. In that case omit
-`changes-alerts` and make `executive` start with one `two_col` containing a
-quiet-week `statement` on the left and monitoring `coverage` on the right.
-Keep a nonempty `review-calendar`, then `coverage-freshness` and
-`sources-method`; do not collapse the calendar even when no review is due.
+Set evidence-derived `meta.week_kind` to exactly `active` or `quiet`. `quiet`
+is valid only when every distinct denominator subject was evaluated and every
+governed current-period alert and changes-since-review count is zero. Any
+`not_evaluated` subject or monitor result forces `active` and requires
+`meta.not_evaluated_caveat` to name `not_evaluated` and explain why zero is not
+negative assurance. An active report with all subjects evaluated and both
+governed counts at zero is invalid; it is a quiet week.
+
+For a quiet week omit `changes-alerts` and make `executive` start with one
+`two_col` containing a quiet-week `statement` on the left and monitoring
+`coverage` on the right. Keep a nonempty `review-calendar`, then
+`coverage-freshness` and `sources-method`; do not collapse the calendar even
+when no review is due. Store the queried `event_date_from`, `event_date_to`,
+and separate nullable `latest_published_event` object in `meta`.
 
 Use the exact `report-style.md` schemas, source-tag every analytical
 statement/action, include the four required tiles, severity rules, and

@@ -9,7 +9,7 @@
     "confidentiality": "RENDER TEST — fictional managers, not a real comparison",
     "signal_title": "Comparison evidence",
     "signal": {
-      "level": "review",
+      "level": "watch",
       "label": "2 of 3 managers with flags"
     },
     "meter_title": "Evidence completeness",
@@ -793,7 +793,7 @@
               "2026-10-01",
               "Gradient-governed TEST evidence",
               "{'chip': 'not_run', 'status': 'not_run'}",
-              "a1b2c3d4"
+              "sha256:9364230b9895a9186656f1afaa4fdd9ff25a070143a72a1b504df9822dbd0c2c"
             ],
             [
               "S2",
@@ -804,7 +804,7 @@
               "2026-10-01",
               "Gradient-governed TEST evidence",
               "{'chip': 'advisory', 'status': 'advisory'}",
-              "b2c3d4e5"
+              "sha256:0ba26a4bbb2e102faee753294979c1138f605a155f985ac94efe3e887fdc52f7"
             ],
             [
               "S3",
@@ -815,7 +815,7 @@
               "2026-10-01",
               "Gradient-governed TEST evidence",
               "{'chip': 'not_run', 'status': 'not_run'}",
-              "c3d4e5f6"
+              "sha256:079104f42a886920dde0e602181eea3c7622408e953d392d251e822c3d4c40fc"
             ],
             [
               "S4",
@@ -826,7 +826,7 @@
               "2026-08-14",
               "Gradient-governed TEST evidence",
               "{'chip': 'passed', 'status': 'passed'}",
-              "d4e5f6a7"
+              "sha256:02bde3555a826680ac703dc2f2b89fbb093036a42c537ffa067590dde6b99d98"
             ],
             [
               "S5",
@@ -837,7 +837,7 @@
               "2026-08-13",
               "Gradient-governed TEST evidence",
               "{'chip': 'passed', 'status': 'passed'}",
-              "e5f6a7b8"
+              "sha256:ac6a4099593588f1ff12b41d56187683d45a4860c1d6b076ea601db88f9a9544"
             ],
             [
               "S6",
@@ -848,7 +848,7 @@
               "2026-08-14",
               "Gradient-governed TEST evidence",
               "{'chip': 'passed', 'status': 'passed'}",
-              "f6a7b8c9"
+              "sha256:92cdf7540064d7e561fae2a2b9b1cb371e49a0421b9ca8ccaf8d5ef73a6ed907"
             ],
             [
               "S7",
@@ -859,7 +859,7 @@
               "2026-10-01",
               "Gradient-governed TEST evidence",
               "{'chip': 'not_run', 'status': 'not_run'}",
-              "a7b8c9d0"
+              "sha256:3cb10846a6ea6eae69552d0fdba086d996c6b674c6e6c2c707ffd556f51bf50d"
             ],
             [
               "S8",
@@ -870,7 +870,7 @@
               "2026-10-01",
               "Gradient-governed TEST evidence",
               "{'chip': 'passed', 'status': 'passed'}",
-              "b8c9d0e1"
+              "sha256:052330f5bbf0bf07ded0648cdacf9f452a9be7aef933b86130551d39c5cd9236"
             ],
             [
               "S9",
@@ -881,7 +881,7 @@
               "2026-10-04",
               "Gradient-governed TEST evidence",
               "{'chip': 'advisory', 'status': 'advisory'}",
-              "c9d0e1f2"
+              "sha256:c5b2df526a01725ac3e9171b38b2b72687d5f5faa1864768ec4c3bc85ceeb816"
             ],
             [
               "S10",
@@ -892,7 +892,7 @@
               "2026-10-04",
               "Gradient-governed TEST evidence",
               "{'chip': 'passed', 'status': 'passed'}",
-              "d0e1f2a3"
+              "sha256:50e4d573d06639839dc345c94ef1e122c0380d0a1c5e1c5c7477c6e8715cb44f"
             ],
             [
               "S11",
@@ -903,7 +903,7 @@
               "2026-10-01",
               "Gradient-governed TEST evidence",
               "{'chip': 'passed', 'status': 'passed'}",
-              "e1f2a3b4"
+              "sha256:ac4c506efcb81b48fdc16e42bff6a13136fcc0a2b78fcad838a590e4fccee0ab"
             ]
           ]
         },

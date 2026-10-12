@@ -4,6 +4,7 @@ ILLUSTRATIVE_LABEL = (
     "Illustrative, Gradient Maintained — demo data, "
     "not the client's holdings or managers"
 )
+METADATA_RESPONSE_DIGEST = "not_applicable_metadata_response"
 
 ATTRIBUTION_STATUS_PATTERNS = (
     r"\bsimulated attribution\b",

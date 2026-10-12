@@ -23,6 +23,7 @@ from report_json_validator import (  # noqa: E402
     section_objects,
     validate_report,
 )
+from report_vocab import DILIGENCE_VOCAB  # noqa: E402
 
 
 FULL_SPEC = ReportSpec(
@@ -42,8 +43,10 @@ FULL_SPEC = ReportSpec(
         )
     ),
     appendix_pattern=r"Appendix — sources & method",
-    signal_levels=frozenset({"clear", "watch", "elevated", "insufficient"}),
-    completeness_states=frozenset({"complete", "degraded"}),
+    signal_levels=DILIGENCE_VOCAB.signal_levels,
+    completeness_states=DILIGENCE_VOCAB.completeness_states,
+    allowed_tones=DILIGENCE_VOCAB.allowed_tones,
+    allowed_statuses=DILIGENCE_VOCAB.allowed_statuses,
     slot_rules=(
         SlotRule(r"Executive summary", frozenset({"coverage"}), "coverage block"),
         SlotRule(
@@ -138,8 +141,10 @@ ROSTER_SPEC = ReportSpec(
         )
     ),
     appendix_pattern=r"Appendix — sources & method",
-    signal_levels=frozenset({"clear", "watch", "elevated", "insufficient"}),
-    completeness_states=frozenset({"complete", "degraded"}),
+    signal_levels=DILIGENCE_VOCAB.signal_levels,
+    completeness_states=DILIGENCE_VOCAB.completeness_states,
+    allowed_tones=DILIGENCE_VOCAB.allowed_tones,
+    allowed_statuses=DILIGENCE_VOCAB.allowed_statuses,
     slot_rules=(
         SlotRule(r"Executive summary", frozenset({"table"}), "flagged-funds table"),
         SlotRule(r"Roster detail", frozenset({"table"}), "roster table"),

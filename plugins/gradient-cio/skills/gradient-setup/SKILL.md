@@ -2,7 +2,7 @@
 name: gradient-setup
 description: "Create a readiness report for GradientCIO access and data. Triggers: 'check GradientCIO setup', 'test connector readiness', 'which workflows are ready'. For workflow selection use gradient-menu."
 metadata:
-  style_contract: "2.1.0"
+  style_contract: "2.2.0"
   group: "Start"
   subject: "connection and readiness"
   output: "report"
@@ -77,13 +77,13 @@ report them as separate modules; never use the canonical illustrative portfolio 
 ## 3. Contract self-test
 
 Run the probes in `references/contract-checks.md`. The **standard** set is 8 quick reads (default). The
-**full read** set is 57 reads (the 8 standard plus 49 full probes); run it when the user asks for a health
+**full read** set is 61 reads (the 8 standard plus 53 full probes); run it when the user asks for a health
 check or self-test, or after a plugin update. The separate **writes** set is 8 dry-run previews, including
 monitoring, review and Strategy Lab scenario previews plus one batch-preview contract and one DDQ upload
 preview, and must never commit. Private-markets construction adds one fictional `private_markets_holdings`
 read probe. The **DDQ save-preview** set is 3 calls: it intentionally persists one fictional test
 document and one immutable reconciliation test run so that document identity and the chained save can be
-tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 71 calls.
+tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 75 calls.
 
 For each probe, record pass, fail (with error code and HTTP status) or not run (not entitled), and the
 response `as_of`. Resolve `depends_on` arguments with `check_contract.py --resolve-args`; do not manually

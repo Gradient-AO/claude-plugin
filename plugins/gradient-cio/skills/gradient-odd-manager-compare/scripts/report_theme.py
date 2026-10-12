@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 
-THEME_VERSION = "2.1.0"
+THEME_VERSION = "2.2.0"
 FONT_FAMILY = "Inter"
 FONT_FALLBACK = ("Arial", "sans-serif")
 
@@ -103,6 +103,7 @@ COVER_FIELD_LIMITS = {
     "eyebrow": 48,
     "header_label": 48,
     "running_head": 72,
+    "data_scope_banner": 120,
     "cover_fact_label": 36,
     "cover_fact_value": 80,
     "cover_facts": 6,
