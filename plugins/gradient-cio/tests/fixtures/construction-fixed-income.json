@@ -44,7 +44,8 @@
    "expected": 9,
    "state": "partial"
   },
-  "meter_title": "Evidence completeness"
+  "meter_title": "Evidence completeness",
+  "data_basis": "gradient_governed"
  },
  "executive": {
   "label": "Recommendation",
@@ -284,7 +285,8 @@
         "weight"
        ]
       }
-     }
+     },
+     "source": "[S1]"
     },
     {
      "type": "table",
@@ -361,7 +363,8 @@
        "target": 4.0,
        "display": "4.0% → 4.0%"
       }
-     ]
+     ],
+     "source": "[S1]"
     },
     {
      "type": "stacked",
@@ -401,7 +404,8 @@
         }
        ]
       }
-     ]
+     ],
+     "source": "[S1]"
     },
     {
      "type": "waterfall",
@@ -422,7 +426,8 @@
        "value": 0.0,
        "display": "+0.0pp"
       }
-     ]
+     ],
+     "source": "[S1]"
     },
     {
      "type": "table",
@@ -676,7 +681,8 @@
         "spread"
        ]
       }
-     }
+     },
+     "source": "[S1]"
     },
     {
      "type": "table",
@@ -826,7 +832,8 @@
        "x": "segment",
        "y": []
       }
-     }
+     },
+     "source": "[S1]"
     },
     {
      "type": "callout",
@@ -864,7 +871,8 @@
         }
        ]
       }
-     ]
+     ],
+     "source": "[S1]"
     },
     {
      "type": "table",
@@ -940,7 +948,8 @@
         "status": "available"
        }
       ]
-     ]
+     ],
+     "source": "[S1]"
     },
     {
      "type": "text",
@@ -1200,6 +1209,7 @@
      "columns": [
       "Tag",
       "Evidence",
+      "Basis",
       "Tool / view",
       "Key parameters",
       "As of",
@@ -1211,6 +1221,7 @@
       [
        "S1",
        "Organization and capabilities",
+       "gradient_tool",
        "list_organizations; get_gradient_capabilities",
        "organization=test",
        "2026-06-30",
@@ -1221,6 +1232,7 @@
       [
        "S2",
        "Portfolio and allocation",
+       "gradient_tool",
        "list_portfolios; get_portfolio_structure",
        "allocation_tree",
        "2026-06-30",
@@ -1231,6 +1243,7 @@
       [
        "S3",
        "Policy assessment",
+       "gradient_tool",
        "check_portfolio_policy",
        "portfolio=test",
        "2026-06-30",
@@ -1241,6 +1254,7 @@
       [
        "S4",
        "Fixed-income exposure",
+       "gradient_tool",
        "get_portfolio_exposure",
        "fixed_income",
        "2026-06-30",
@@ -1251,6 +1265,7 @@
       [
        "S5",
        "Returns and attribution",
+       "gradient_tool",
        "get_portfolio_historical_returns; get_portfolio_attribution",
        "all sections",
        "2026-06-30",
@@ -1261,6 +1276,7 @@
       [
        "S6",
        "Credit context",
+       "gradient_tool",
        "get_macro_conditions",
        "credit_spreads",
        "2026-06-30",
@@ -1271,6 +1287,7 @@
       [
        "S7",
        "Forward assumptions",
+       "gradient_tool",
        "get_capital_market_assumptions",
        "baseline",
        "2026-06-15",
@@ -1281,7 +1298,8 @@
       [
        "S8",
        "Mandate and evidence gaps",
-       "User document; coverage record",
+       "gradient_tool",
+       "get_gradient_capabilities",
        "fictional",
        "2026-06-30",
        "Fictional TEST data",

@@ -4,7 +4,7 @@ description: "Create a multi-lane portfolio-attribution comparison report. Trigg
 metadata:
   version: "3.0.0"
   style_contract: "2.1.0"
-  group: "Portfolio"
+  group: "Portfolio Analytics"
   subject: "portfolio attribution comparison"
   output: "comparison report"
   menu_order: "25"

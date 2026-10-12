@@ -144,7 +144,7 @@ apply its specific repair levers and rerun until clean.
 
 ### Appendix A — Sources
 
-- `table`: Tag, Evidence, Tool / view, Key parameters, As of, Data scope, Validation, Digest.
+- `table`: Tag, Evidence, Basis, Tool / view, Key parameters, As of, Data scope, Validation, Digest.
 
 ### Appendix B — Server Metric Methods and Disclosures
 

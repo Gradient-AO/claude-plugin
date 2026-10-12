@@ -125,7 +125,6 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
             r"Risks & Mitigants",
         ),
     ),
-    "gradient-gips-report-review": (True, (r"Findings",)),
 }
 ANALYSIS_LABELS = (
     "Observation:",
@@ -234,8 +233,14 @@ def handoff_contract_checks():
     report_validation = subprocess.run(
         [
             sys.executable,
-            str(ROOT / "shared" / "validate_idd_report.py"),
-            str(FIX / "idd-report.json"),
+            str(
+                ROOT
+                / "skills"
+                / "gradient-idd-manager-performance"
+                / "scripts"
+                / "validate_manager_performance.py"
+            ),
+            str(FIX / "idd-manager-performance-single.json"),
         ],
         capture_output=True,
         text=True,
@@ -244,7 +249,7 @@ def handoff_contract_checks():
     )
     check(
         report_validation.returncode == 0,
-        "canonical IDD report passes its shared validator",
+        "canonical IDD report passes its skill-specific strict validator",
     )
 
 
@@ -381,6 +386,86 @@ def registered_json_validator_checks(validator_manifest):
                 negative_errors.append(
                     f"{skill_name}/{fixture_name}: accepted {mutation}"
                 )
+            if skill_name == "gradient-setup":
+                continue
+            provenance_mutations = []
+            missing_basis = json.loads(json.dumps(document))
+            missing_basis.get("meta", {}).pop("data_basis", None)
+            provenance_mutations.append(("missing data basis", missing_basis))
+
+            source_row = None
+            for section in document.get("sections", []):
+                if not isinstance(section, dict):
+                    continue
+                for block in section.get("blocks", []):
+                    if not isinstance(block, dict) or block.get("type") != "table":
+                        continue
+                    columns = block.get("columns")
+                    rows = block.get("rows")
+                    if (
+                        columns
+                        == [
+                            "Tag",
+                            "Evidence",
+                            "Basis",
+                            "Tool / view",
+                            "Key parameters",
+                            "As of",
+                            "Data scope",
+                            "Validation",
+                            "Digest",
+                        ]
+                        and isinstance(rows, list)
+                    ):
+                        source_row = next(
+                            (
+                                index
+                                for index, row in enumerate(rows)
+                                if isinstance(row, list)
+                                and len(row) == 9
+                                and row[2] == "gradient_tool"
+                            ),
+                            None,
+                        )
+                        if source_row is not None:
+                            source_section = document["sections"].index(section)
+                            source_block = section["blocks"].index(block)
+                            break
+                if source_row is not None:
+                    break
+            if source_row is not None:
+                unknown_tool = json.loads(json.dumps(document))
+                row = unknown_tool["sections"][source_section]["blocks"][
+                    source_block
+                ]["rows"][source_row]
+                row[3] = "get_not_a_gradient_tool"
+                provenance_mutations.append(("unknown Gradient tool", unknown_tool))
+
+                missing_digest = json.loads(json.dumps(document))
+                row = missing_digest["sections"][source_section]["blocks"][
+                    source_block
+                ]["rows"][source_row]
+                row[8] = "n/a"
+                provenance_mutations.append(("missing Gradient digest", missing_digest))
+
+            for provenance_label, provenance_document in provenance_mutations:
+                with tempfile.TemporaryDirectory() as temporary:
+                    invalid_path = pathlib.Path(temporary) / fixture.name
+                    invalid_path.write_text(
+                        json.dumps(provenance_document, ensure_ascii=False),
+                        encoding="utf-8",
+                    )
+                    invalid = subprocess.run(
+                        [sys.executable, str(validator), str(invalid_path)],
+                        capture_output=True,
+                        text=True,
+                        encoding="utf-8",
+                        errors="replace",
+                    )
+                if invalid.returncode == 0:
+                    negative_errors.append(
+                        f"{skill_name}/{fixture_name}: accepted {provenance_label}"
+                    )
     check(
         exercised > 0 and not positive_errors,
         "registered JSON validators accept every canonical fixture"
@@ -406,7 +491,7 @@ def static(allow_branded):
     theme_version = theme_match.group(1) if theme_match else ""
     check(bool(theme_version), "shared report theme declares THEME_VERSION")
     skills = sorted(p for p in (ROOT / "skills").iterdir() if (p / "SKILL.md").exists())
-    check(len(skills) == 16, f"exactly 16 target skills found ({len(skills)})")
+    check(len(skills) == 15, f"exactly 15 target skills found ({len(skills)})")
     descriptions_by_name = {}
     triggers_by_skill = {}
     for s in skills:

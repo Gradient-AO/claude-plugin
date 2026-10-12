@@ -2,6 +2,7 @@
  "title":"Rebalance: Gradient Global Growth III",
  "subtitle":"Example Foundation · Prepared for the Investment Committee · Meeting 2026-10-15",
  "running_head":"IC Memo · Global Growth III rebalance","data_as_of":"2026-09-30",
+ "data_basis":"mixed",
  "confidentiality":"DRAFT — for committee review · Illustrative data",
  "cover_facts":[["Memo type","Rebalance"],["Meeting date","2026-10-15"],["Data as of","2026-09-30"],["Base currency","USD"],["Assumption set","ICAPM Q3 2026"],["Status","Draft"]],
  "signal_title":"IPS status","signal":{"level":"breach","label":"2 breaches · 1 watch · 3 not assessed"},

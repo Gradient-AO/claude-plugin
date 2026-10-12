@@ -44,7 +44,8 @@
       "expected": 8,
       "state": "partial"
     },
-    "meter_title": "Evidence completeness"
+    "meter_title": "Evidence completeness",
+    "data_basis": "gradient_governed"
   },
   "executive": {
     "bottom_line": "The portfolio returned 11.5% over the year to 2026-07-31, 0.2pp behind its policy benchmark [S3][S4], and 3.1% a year since inception, 0.6pp ahead [S3][S4]. Alternatives are 23.6% of NAV against a 20.0% target, 1.4pp below the 25% upper limit, so they are on watch [S2]. Annualized volatility was 8.7% against 10.3% for the benchmark, and the deepest drawdown (-13.1%, 2022-01 to 2023-10) was recovered by 2025-04 [S3][S4]. Form 13F look-through puts the five largest public-equity issuers at 6.7% of NAV, from lagged long-only filings [S6].",
@@ -1046,7 +1047,8 @@
                 8.7
               ]
             }
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -1165,7 +1167,8 @@
                 "benchmark"
               ]
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "kv",
@@ -1205,7 +1208,8 @@
               "0.24",
               "S3/S4"
             ]
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "callout",
@@ -1360,97 +1364,113 @@
           "columns": [
             "Tag",
             "Evidence",
+            "Basis",
             "Tool / view",
+            "Key parameters",
             "As of",
-            "Validation"
+            "Data scope",
+            "Validation",
+            "Digest"
           ],
           "align": [
-            "n",
             "l",
             "l",
-            "n",
+            "l",
+            "l",
+            "l",
+            "l",
+            "l",
+            "l",
             "l"
           ],
           "rows": [
             [
               "S1",
               "Portfolio record",
+              "gradient_tool",
               "list_portfolios",
+              "fixture=true",
               "2026-07-31",
-              {
-                "chip": "passed",
-                "status": "passed"
-              }
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
+              "sha256:test-s1"
             ],
             [
               "S2",
               "Allocation targets, ranges, weights",
-              "get_portfolio_structure (allocation_tree)",
+              "gradient_tool",
+              "get_portfolio_structure",
+              "fixture=true",
               "2026-07-31",
-              {
-                "chip": "passed",
-                "status": "passed"
-              }
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
+              "sha256:test-s2"
             ],
             [
               "S3",
               "Portfolio returns and risk metrics",
-              "get_portfolio_historical_returns (standard_periods, calendar_years, risk_metrics, benchmark_relative, cumulative_growth, points)",
+              "gradient_tool",
+              "get_portfolio_historical_returns",
+              "fixture=true",
               "2026-07-31",
-              {
-                "chip": "passed",
-                "status": "passed"
-              }
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
+              "sha256:test-s3"
             ],
             [
               "S4",
               "Benchmark identity and monthly returns",
-              "get_benchmarks (catalog); get_return_series (benchmark)",
+              "gradient_tool",
+              "get_benchmarks; get_return_series",
+              "fixture=true",
               "2026-07-31",
-              {
-                "chip": "passed",
-                "status": "passed"
-              }
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
+              "sha256:test-s4"
             ],
             [
               "S5",
               "Holdings and market value",
+              "gradient_tool",
               "get_portfolio_exposure",
+              "fixture=true",
               "2026-07-31",
-              {
-                "chip": "passed",
-                "status": "passed"
-              }
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
+              "sha256:test-s5"
             ],
             [
               "S6",
               "13F look-through issuers",
-              "get_cross_domain_research (portfolio_13f_lookthrough)",
+              "gradient_tool",
+              "get_cross_domain_research",
+              "fixture=true",
               "2026-06-30",
-              {
-                "chip": "advisory",
-                "status": "advisory"
-              }
+              "Gradient-governed TEST evidence",
+              "{'chip': 'advisory', 'status': 'advisory'}",
+              "sha256:test-s6"
             ],
             [
               "S7",
               "House macro view",
+              "gradient_tool",
               "get_the_read",
+              "fixture=true",
               "2026-10-03",
-              {
-                "chip": "passed",
-                "status": "passed"
-              }
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
+              "sha256:test-s7"
             ],
             [
               "S8",
               "Capital market assumptions",
-              "get_capital_market_assumptions (baseline)",
+              "gradient_tool",
+              "get_capital_market_assumptions",
+              "fixture=true",
               "2026-09-30",
-              {
-                "chip": "passed",
-                "status": "passed"
-              }
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
+              "sha256:test-s8"
             ]
           ]
         },
@@ -1458,35 +1478,71 @@
           "type": "table",
           "title": "Server Metric Methods",
           "columns": [
-            "Source",
-            "Metric",
-            "Server method / basis"
+            "Tag",
+            "Evidence",
+            "Basis",
+            "Tool / view",
+            "Key parameters",
+            "As of",
+            "Data scope",
+            "Validation",
+            "Digest"
           ],
           "align": [
-            "n",
+            "l",
+            "l",
+            "l",
+            "l",
+            "l",
+            "l",
+            "l",
             "l",
             "l"
           ],
           "rows": [
             [
               "S3",
-              "Returns and benchmark-relative performance",
-              "get_portfolio_historical_returns; preserve returned period labels, annualization, benchmark values, excess values and coverage"
+              "S3",
+              "gradient_tool",
+              "get_portfolio_historical_returns",
+              "fixture=true",
+              "2026-07-31 (returns, holdings); 2026-06-30 (Form 13F)",
+              "Gradient-governed TEST evidence",
+              "passed",
+              "sha256:test-s3"
             ],
             [
               "S3",
-              "Risk metrics",
-              "get_portfolio_historical_returns.risk_metrics; preserve returned volatility, drawdown, beta, tracking error, information ratio, dates, units and basis"
+              "S3",
+              "gradient_tool",
+              "get_portfolio_historical_returns",
+              "fixture=true",
+              "2026-07-31 (returns, holdings); 2026-06-30 (Form 13F)",
+              "Gradient-governed TEST evidence",
+              "passed",
+              "sha256:test-s3"
             ],
             [
               "S5",
-              "Asset-class exposure",
-              "get_portfolio_exposure; preserve server aggregate totals, shares, coverage and truncation"
+              "S5",
+              "gradient_tool",
+              "get_portfolio_exposure",
+              "fixture=true",
+              "2026-07-31 (returns, holdings); 2026-06-30 (Form 13F)",
+              "Gradient-governed TEST evidence",
+              "passed",
+              "sha256:test-s5"
             ],
             [
               "S2",
-              "Policy weights",
-              "get_portfolio_structure; preserve returned total-portfolio weight basis and coverage without multiplying hierarchy weights"
+              "S2",
+              "gradient_tool",
+              "get_portfolio_structure",
+              "fixture=true",
+              "2026-07-31 (returns, holdings); 2026-06-30 (Form 13F)",
+              "Gradient-governed TEST evidence",
+              "passed",
+              "sha256:test-s2"
             ]
           ]
         },

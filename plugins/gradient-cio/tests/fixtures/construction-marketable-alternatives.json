@@ -44,7 +44,8 @@
       "expected": 9,
       "state": "partial"
     },
-    "meter_title": "Evidence completeness"
+    "meter_title": "Evidence completeness",
+    "data_basis": "gradient_governed"
   },
   "executive": {
     "label": "Recommendation",
@@ -287,7 +288,8 @@
                 "weight"
               ]
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -348,29 +350,89 @@
           "type": "band",
           "title": "Current weight versus policy range",
           "items": [
-            {"label": "Equity long/short", "value": 5.0, "low": 2.0, "high": 6.0, "target": 3.0, "display": "5.0% → 3.0%"},
-            {"label": "Macro", "value": 2.5, "low": 2.0, "high": 5.0, "target": 3.5, "display": "2.5% → 3.5%"},
-            {"label": "Relative value", "value": 1.5, "low": 1.0, "high": 4.0, "target": 2.5, "display": "1.5% → 2.5%"},
-            {"label": "Multi-strategy", "value": 3.0, "low": 2.0, "high": 4.0, "target": 3.0, "display": "3.0% → 3.0%"}
-          ]
+            {
+              "label": "Equity long/short",
+              "value": 5.0,
+              "low": 2.0,
+              "high": 6.0,
+              "target": 3.0,
+              "display": "5.0% → 3.0%"
+            },
+            {
+              "label": "Macro",
+              "value": 2.5,
+              "low": 2.0,
+              "high": 5.0,
+              "target": 3.5,
+              "display": "2.5% → 3.5%"
+            },
+            {
+              "label": "Relative value",
+              "value": 1.5,
+              "low": 1.0,
+              "high": 4.0,
+              "target": 2.5,
+              "display": "1.5% → 2.5%"
+            },
+            {
+              "label": "Multi-strategy",
+              "value": 3.0,
+              "low": 2.0,
+              "high": 4.0,
+              "target": 3.0,
+              "display": "3.0% → 3.0%"
+            }
+          ],
+          "source": "[S1]"
         },
         {
           "type": "stacked",
           "title": "Current and target strategy mix",
           "items": [
-            {"label": "Current", "segments": [
-              {"label": "Equity long/short", "value": 5.0},
-              {"label": "Macro", "value": 2.5},
-              {"label": "Relative value", "value": 1.5},
-              {"label": "Multi-strategy", "value": 3.0}
-            ]},
-            {"label": "Target", "segments": [
-              {"label": "Equity long/short", "value": 3.0},
-              {"label": "Macro", "value": 3.5},
-              {"label": "Relative value", "value": 2.5},
-              {"label": "Multi-strategy", "value": 3.0}
-            ]}
-          ]
+            {
+              "label": "Current",
+              "segments": [
+                {
+                  "label": "Equity long/short",
+                  "value": 5.0
+                },
+                {
+                  "label": "Macro",
+                  "value": 2.5
+                },
+                {
+                  "label": "Relative value",
+                  "value": 1.5
+                },
+                {
+                  "label": "Multi-strategy",
+                  "value": 3.0
+                }
+              ]
+            },
+            {
+              "label": "Target",
+              "segments": [
+                {
+                  "label": "Equity long/short",
+                  "value": 3.0
+                },
+                {
+                  "label": "Macro",
+                  "value": 3.5
+                },
+                {
+                  "label": "Relative value",
+                  "value": 2.5
+                },
+                {
+                  "label": "Multi-strategy",
+                  "value": 3.0
+                }
+              ]
+            }
+          ],
+          "source": "[S1]"
         },
         {
           "type": "waterfall",
@@ -396,7 +458,8 @@
               "value": 0.0,
               "display": "+0.0pp"
             }
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -676,7 +739,8 @@
                 "exposure"
               ]
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -832,7 +896,8 @@
               "x": "class",
               "y": []
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "callout",
@@ -870,7 +935,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -903,7 +969,8 @@
                 "status": "available"
               }
             ]
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -1008,7 +1075,11 @@
           "type": "bars",
           "title": "Governed scenario results",
           "items": [
-            {"label": "Baseline expected return", "value": 5.9, "display": "+5.9%"}
+            {
+              "label": "Baseline expected return",
+              "value": 5.9,
+              "display": "+5.9%"
+            }
           ],
           "note": "Saved-portfolio stress is unavailable [S8]."
         },
@@ -1228,6 +1299,11 @@
               "name": "Redemption terms and scenarios",
               "status": "unavailable",
               "note": "Gate terms and saved-portfolio stress not returned [S8]"
+            },
+            {
+              "name": "Peer allocation intelligence",
+              "status": "not licensed",
+              "note": "Not licensed ? Peer allocation context was skipped because peerIntelligence is not available for this organization. This construction report uses portfolio evidence only. [S1]"
             }
           ]
         }
@@ -1242,6 +1318,7 @@
           "columns": [
             "Tag",
             "Evidence",
+            "Basis",
             "Tool / view",
             "Key parameters",
             "As of",
@@ -1253,6 +1330,7 @@
             [
               "S1",
               "Organization and capabilities",
+              "gradient_tool",
               "list_organizations; get_gradient_capabilities",
               "organization=test",
               "2026-06-30",
@@ -1263,6 +1341,7 @@
             [
               "S2",
               "Portfolio and allocation",
+              "gradient_tool",
               "list_portfolios; get_portfolio_structure",
               "allocation_tree",
               "2026-06-30",
@@ -1273,6 +1352,7 @@
             [
               "S3",
               "Policy assessment",
+              "gradient_tool",
               "check_portfolio_policy",
               "portfolio=test",
               "2026-06-30",
@@ -1283,6 +1363,7 @@
             [
               "S4",
               "Hedge-fund exposure",
+              "gradient_tool",
               "get_portfolio_exposure",
               "all pages",
               "2026-06-30",
@@ -1293,6 +1374,7 @@
             [
               "S5",
               "Returns and attribution",
+              "gradient_tool",
               "get_portfolio_historical_returns; get_portfolio_attribution",
               "all sections",
               "2026-06-30",
@@ -1303,6 +1385,7 @@
             [
               "S6",
               "Forward assumptions",
+              "gradient_tool",
               "get_capital_market_assumptions",
               "baseline",
               "2026-06-15",
@@ -1313,7 +1396,8 @@
             [
               "S7",
               "Diligence and look-through",
-              "Diligence tools; get_cross_domain_research",
+              "gradient_tool",
+              "get_cross_domain_research",
               "fictional",
               "2026-06-30",
               "Fictional TEST data",
@@ -1323,7 +1407,8 @@
             [
               "S8",
               "Mandate, redemption terms and gaps",
-              "User document; coverage record",
+              "gradient_tool",
+              "get_gradient_capabilities",
               "fictional",
               "2026-06-30",
               "Fictional TEST data",

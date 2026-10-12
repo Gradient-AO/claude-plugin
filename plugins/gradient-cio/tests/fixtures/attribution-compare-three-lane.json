@@ -29,7 +29,8 @@
     "capability_gate": {
       "simulation": "available",
       "comparison": "available"
-    }
+    },
+    "data_basis": "gradient_governed"
   },
   "executive": {
     "bottom_line": "Historical, ex ante, and simulated effects are compatible, and governed comparison metrics are available [S2][S3][S4][S5].",
@@ -121,7 +122,8 @@
               "value": 0.2,
               "display": "+0.2pp"
             }
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "callout",
@@ -151,7 +153,8 @@
               "value": -0.1,
               "display": "-0.1pp"
             }
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "callout",
@@ -181,7 +184,8 @@
               "value": -0.2,
               "display": "-0.2pp"
             }
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "coverage",
@@ -242,7 +246,8 @@
               "value": 0.1,
               "display": "+0.1pp"
             }
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "callout",
@@ -291,33 +296,69 @@
           "columns": [
             "Tag",
             "Evidence",
-            "Tool"
+            "Basis",
+            "Tool / view",
+            "Key parameters",
+            "As of",
+            "Data scope",
+            "Validation",
+            "Digest"
           ],
           "rows": [
             [
               "S1",
               "Capability gate",
-              "get_gradient_capabilities"
+              "gradient_tool",
+              "get_gradient_capabilities",
+              "fixture=true",
+              "2026-06-30",
+              "Gradient-governed TEST evidence",
+              "passed",
+              "sha256:test-s1"
             ],
             [
               "S2",
               "Historical attribution",
-              "get_portfolio_attribution"
+              "gradient_tool",
+              "get_portfolio_attribution",
+              "fixture=true",
+              "2026-06-30",
+              "Gradient-governed TEST evidence",
+              "passed",
+              "sha256:test-s2"
             ],
             [
               "S3",
               "Ex ante attribution",
-              "get_portfolio_ex_ante_attribution"
+              "gradient_tool",
+              "get_portfolio_ex_ante_attribution",
+              "fixture=true",
+              "2026-06-30",
+              "Gradient-governed TEST evidence",
+              "passed",
+              "sha256:test-s3"
             ],
             [
               "S4",
               "Simulated attribution",
-              "simulate_portfolio_attribution"
+              "gradient_tool",
+              "get_gradient_capabilities",
+              "fixture=true",
+              "2026-06-30",
+              "Gradient-governed TEST evidence",
+              "passed",
+              "sha256:test-s4"
             ],
             [
               "S5",
               "Cross-lane comparison",
-              "compare_portfolio_attribution"
+              "gradient_tool",
+              "get_gradient_capabilities",
+              "fixture=true",
+              "2026-06-30",
+              "Gradient-governed TEST evidence",
+              "passed",
+              "sha256:test-s5"
             ]
           ]
         },

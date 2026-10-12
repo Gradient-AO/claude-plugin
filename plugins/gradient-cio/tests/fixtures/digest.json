@@ -42,7 +42,8 @@
         "ADV data as of",
         "2026-10-01"
       ]
-    ]
+    ],
+    "data_basis": "mixed"
   },
   "executive": {
     "bottom_line": "One item needs attention: Ridgeview Example Advisors filed a new Form ADV snapshot dated 2026-10-01, two days after its last review on 2026-09-29 [S2]. The monitor processed that filing and raised no alerts in any category [S3], and there are no open findings [S4]. Review the new filing and decide whether an ODD refresh is needed; Global Macro Fund II has no new activity. The firm and fund event feed is not yet published, so absence of events is not evidence of none [S5].",
@@ -193,7 +194,8 @@
                   "None",
                   "S4"
                 ]
-              ]
+              ],
+              "source": "[S1]"
             }
           ],
           "right": [
@@ -336,77 +338,91 @@
           "columns": [
             "Tag",
             "Evidence",
+            "Basis",
             "Tool / view",
+            "Key parameters",
             "As of",
-            "Validation"
+            "Data scope",
+            "Validation",
+            "Digest"
           ],
           "align": [
-            "n",
             "l",
             "l",
-            "n",
+            "l",
+            "l",
+            "l",
+            "l",
+            "l",
+            "l",
             "l"
           ],
           "rows": [
             [
               "S1",
               "Diligence Roster and capacity",
+              "gradient_tool",
               "get_diligence_roster_funds",
+              "fixture=true",
               "2026-10-04",
-              {
-                "chip": "passed",
-                "status": "passed"
-              }
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
+              "sha256:test-s1"
             ],
             [
               "S2",
               "Attention queue, changes since review, red flags",
-              "get_manager_diligence_attention_queue (3 views)",
+              "gradient_tool",
+              "get_manager_diligence_attention_queue",
+              "fixture=true",
               "2026-10-04",
-              {
-                "chip": "passed",
-                "status": "passed"
-              }
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
+              "sha256:test-s2"
             ],
             [
               "S3",
               "Monitor alerts and coverage",
-              "get_manager_monitor_evidence (alerts, coverage)",
+              "gradient_tool",
+              "get_manager_monitor_evidence",
+              "fixture=true",
               "2026-10-01",
-              {
-                "chip": "passed",
-                "status": "passed"
-              }
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
+              "sha256:test-s3"
             ],
             [
               "S4",
               "Open findings — Ridgeview Example Advisors",
-              "get_manager_diligence_findings (open)",
+              "gradient_tool",
+              "get_manager_diligence_findings",
+              "fixture=true",
               "2026-10-04",
-              {
-                "chip": "advisory",
-                "status": "advisory"
-              }
+              "Gradient-governed TEST evidence",
+              "{'chip': 'advisory', 'status': 'advisory'}",
+              "sha256:test-s4"
             ],
             [
               "S5",
               "Firm and fund events — Ridgeview Example Advisors",
-              "get_firm_fund_events (subject)",
+              "gradient_tool",
+              "get_firm_fund_events",
+              "fixture=true",
               "2026-10-04",
-              {
-                "chip": "passed",
-                "status": "passed"
-              }
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
+              "sha256:test-s5"
             ],
             [
               "S6",
               "Research watchlist changes",
+              "gradient_tool",
               "get_research_watchlist_changes",
+              "fixture=true",
               "2026-10-04",
-              {
-                "chip": "passed",
-                "status": "passed"
-              }
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
+              "sha256:test-s6"
             ]
           ],
           "note": "S4 validation: advisory 'empty primary list has no explicit reason' although the response states absence_reason no_open_findings."

@@ -18,6 +18,7 @@ from report_json_validator import (
     print_quality_notes,
     validate_report,
 )
+from validate_handoff import validate_handoff
 
 
 SIGNAL_LEVELS = frozenset({"clear", "watch", "elevated", "insufficient"})
@@ -246,11 +247,9 @@ def validate_idd_report(
     errors = validate_report(document, contract.spec)
     if expected_mode is not None and mode != expected_mode:
         errors.append(f"This validator requires meta.mode '{expected_mode}', not '{mode}'")
-    handoff = meta.get("handoff")
-    if not isinstance(handoff, dict) or handoff.get("schema_version") != (
-        "gradient-idd-odd-ic-handoff/v1"
-    ):
-        errors.append("meta.handoff must use gradient-idd-odd-ic-handoff/v1")
+    errors.extend(
+        f"meta.handoff: {error}" for error in validate_handoff(meta.get("handoff"))
+    )
     return contract, errors
 
 
@@ -305,11 +304,10 @@ def run_named_idd_cli(argv: list[str], report_kind: str) -> int:
         meta = as_object(root.get("meta")) or {}
         if meta.get("report_kind") != report_kind:
             errors.append(f"meta.report_kind must be '{report_kind}'")
-        handoff = meta.get("handoff")
-        if not isinstance(handoff, dict) or handoff.get("schema_version") != (
-            "gradient-idd-odd-ic-handoff/v1"
-        ):
-            errors.append("meta.handoff must use gradient-idd-odd-ic-handoff/v1")
+        errors.extend(
+            f"meta.handoff: {error}"
+            for error in validate_handoff(meta.get("handoff"))
+        )
     if errors:
         print(f"FAIL — {contract.spec.name}: {len(errors)} issue(s)")
         for error in errors:

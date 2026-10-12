@@ -39,10 +39,11 @@ Resolve organization and roster. Ask at most one question. A named single
 subject proceeds to a full report; no subject or multiple funds use triage.
 If a DDQ exists, plan `gradient-odd-ddq-reconcile`. If a manager GIPS claim,
 verification report, or performance document exists, include a GIPS and
-performance-integrity subsection in the full ODD report; use
-`gradient-gips-report-review` only when the task is to check a composite,
-pooled-fund, advertisement, or asset-owner report itself. If a `gradient-idd-*` skill
-supplied a `gradient-idd-odd-ic-handoff/v1` object, read
+performance-integrity subsection in the full ODD report. When supplied evidence
+includes a composite, pooled-fund report, or advertisement, load
+`../../internal/gips-evidence-review/contract.md` in `firm` mode and carry its
+validated findings into the ODD report; do not expose it as a separate command.
+If a `gradient-idd-*` skill supplied a `gradient-idd-odd-ic-handoff/v1` object, read
 `references/contracts/odd-evidence.md` and keep its return and benchmark
 evidence as investment evidence, separate from ODD findings.
 

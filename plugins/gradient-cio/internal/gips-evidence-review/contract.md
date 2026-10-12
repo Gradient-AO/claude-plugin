@@ -1,23 +1,9 @@
----
-name: gradient-gips-report-review
-description: "Create a GIPS report review in firm or asset-owner mode. Triggers: 'review this GIPS report', 'check a composite presentation', 'assess an asset-owner total-fund report'. For manager operational diligence use gradient-odd-report."
-metadata:
-  version: "4.0.0"
-  style_contract: "2.1.0"
-  group: "GIPS"
-  subject: "GIPS report"
-  output: "review"
-  menu_order: "30"
-  modules: "none"
-  contracts: "gips"
-  handoffs: "gradient-decision-ic-memo"
-  modes: "firm,asset-owner"
-  summary: "Review firm and asset-owner reports against applicable GIPS requirements."
----
+# Internal GIPS report-review contract
 
-# GIPS Report Review
-
-Review a supplied performance report against the applicable 2020 GIPS standards. Select exactly one mode and set `meta.mode`:
+This is an internal ODD/IC evidence module, not a public plugin command. Review
+a supplied performance report against the applicable 2020 GIPS standards only
+when `gradient-odd-report` or `gradient-decision-ic-memo` invokes it. Select
+exactly one mode and set `meta.mode`:
 
 | Mode | Applies to | Contract |
 |---|---|---|
@@ -26,7 +12,7 @@ Review a supplied performance report against the applicable 2020 GIPS standards.
 
 ## Shared rules
 
-- Load the selected mode contract plus the named references in this skill's `references/` directory.
+- Load the selected mode contract plus the named references in this module's `references/` directory.
 - Quote disclosed evidence; do not calculate implied performance, multiples, fee spreads or relationships locally.
 - Mark conditional requirements N/A only when supplied evidence shows they do not apply.
 - Missing governed calculations are `Not assessed — governed calculation unavailable`.
@@ -46,10 +32,10 @@ Confirm the organization qualifies as an asset owner and identify the oversight 
 Write authoritative `review.md`, `visuals.json` and `meta.json`; compose one `report.json` through this skill's GIPS scripts. Preserve the markdown handoff unchanged.
 
 ```text
-python <skill>/scripts/validate_gips_report.py review.md visuals.json meta.json
-python <skill>/scripts/compose_gips_report.py review.md visuals.json meta.json report.json
-python <skill>/scripts/validate_gips_report.py report.json
-python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Report Review" --budget <skill>/references/layout-budget.json
+python <internal-gips>/scripts/validate_gips_report.py review.md visuals.json meta.json
+python <internal-gips>/scripts/compose_gips_report.py review.md visuals.json meta.json report.json
+python <internal-gips>/scripts/validate_gips_report.py report.json
+python <internal-gips>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Review" --budget <internal-gips>/references/layout-budget.json
 ```
 
 Deliver PDF by default and PowerPoint only when requested. Both formats must come from the same validated report.

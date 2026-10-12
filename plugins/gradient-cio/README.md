@@ -20,10 +20,10 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 
 | Skill | Produces / routes | Modules |
 |---|---|---|
-| `gradient-idd-manager-performance` | Create a manager performance report for single-manager meaningfulness against benchmarks, comparison, or rolling-window persistence and robustness. Triggers: 'assess one track record', 'compare manager performance', 'test performance persistence'. For operational diligence use gradient-odd-report. | strategyLab |
+| `gradient-idd-manager-performance` | Create a manager performance report for single-manager meaningfulness, benchmark comparisons, and rolling-window robustness. Triggers: 'assess one track record', 'compare manager performance', 'test performance persistence'. For operational diligence use gradient-odd-report. | strategyLab |
 | `gradient-idd-manager-portfolio-fit` | Create a portfolio-fit report for one prospective manager. Triggers: 'test manager portfolio fit', 'add this hedge fund manager', 'assess diversification impact'. For whole-sleeve design use gradient-portfolio-construction. | strategyLab |
 | `gradient-idd-private-markets-pme` | Create a private-markets PME report for one fund or manager. Triggers: 'run private-markets PME', 'compare this fund to public markets', 'assess PME performance'. For program construction use gradient-portfolio-construction. | strategyLab |
-| `gradient-idd-manager-shortlist` | Create a manager shortlist report with optional Form ADV screening followed by governed performance evidence. Triggers: 'build a manager shortlist', 'screen this mandate', 'identify return finalists'. | strategyLab |
+| `gradient-idd-manager-shortlist` | Create a manager shortlist report with optional Form ADV screening followed by governed performance evidence. Triggers: 'build a manager shortlist', 'screen this mandate', 'identify return finalists'. For operational Form ADV comparison use gradient-odd-manager-compare. | strategyLab |
 
 ### Operational due diligence
 
@@ -34,22 +34,16 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 | `gradient-odd-ddq-reconcile` | Create a DDQ reconciliation report against Form ADV evidence. Triggers: 'reconcile this DDQ', 'verify questionnaire answers', 'check DDQ discrepancies'. For a full operational review use gradient-odd-report. | firmFundDiligence |
 | `gradient-odd-manager-monitor` | Create a manager-monitoring digest for a diligence roster. Triggers: 'prepare the weekly manager digest', 'show roster changes', 'review manager alerts'. For a full operational review use gradient-odd-report. | firmFundDiligence |
 
-### Portfolio
+### Portfolio Analytics
 
 | Skill | Produces / routes | Modules |
 |---|---|---|
 | `gradient-portfolio-review` | Create a portfolio monitoring review for a board or committee. Triggers: 'review our total portfolio', 'prepare a quarterly portfolio review', 'monitor portfolio risks'. For a decision memo use gradient-decision-ic-memo. | portfolio,research,peerIntelligence,strategyLab |
-| `gradient-portfolio-attribution` | Create a single-lane attribution report for one saved portfolio. Triggers: 'prepare an attribution report', 'run Brinson analysis', 'show sources of active return'. For broader portfolio monitoring use gradient-portfolio-review. | portfolio |
+| `gradient-portfolio-attribution` | Create a single-lane attribution report for one saved portfolio. Triggers: 'prepare an attribution report', 'run Brinson analysis', 'show sources of active return'. For multi-lane attribution use gradient-portfolio-attribution-compare. | portfolio |
 | `gradient-portfolio-attribution-compare` | Create a multi-lane portfolio-attribution comparison report. Triggers: 'compare historical and ex ante attribution', 'show persistent attribution sources', 'compare realized expected and simulated effects'. For one lane use gradient-portfolio-attribution. | portfolio |
-| `gradient-portfolio-construction` | Create a portfolio-construction report in private markets, fixed income, global public equity, marketable alternatives, or real assets mode. Triggers: 'design a sleeve strategy mix', 'build an allocation', 'review portfolio construction'. | portfolio,research,macroDesk,peerIntelligence,gradientSignals,firmFundDiligence,strategyLab |
+| `gradient-portfolio-construction` | Create a portfolio-construction report for private markets, fixed income, global public equity, marketable alternatives, or real assets. Triggers: 'design a sleeve strategy mix', 'build an allocation', 'review portfolio construction'. For one-manager fit use gradient-idd-manager-portfolio-fit. | portfolio,research,macroDesk,peerIntelligence,gradientSignals,firmFundDiligence,strategyLab |
 
-### GIPS
-
-| Skill | Produces / routes | Modules |
-|---|---|---|
-| `gradient-gips-report-review` | Create a GIPS report review in firm or asset-owner mode. Triggers: 'review this GIPS report', 'check a composite presentation', 'assess an asset-owner total-fund report'. For manager operational diligence use gradient-odd-report. | none |
-
-### Decision
+### Investment memos
 
 | Skill | Produces / routes | Modules |
 |---|---|---|
@@ -59,7 +53,7 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 
 The skills work together: the portfolio-construction skill selects an existing portfolio and produces
 read-only decision packs for a whole sleeve; the `gradient-idd-*` skills supply return-based manager evidence,
-while `gradient-odd-manager-compare`, the ODD report and GIPS report review supply operational evidence; the IC memo
+while `gradient-odd-manager-compare`, the ODD report and its internal GIPS evidence review supply operational evidence; the IC memo
 provides the formal 16-section vote format; and the portfolio review monitors the approved portfolio. The
 portfolio attribution report provides a focused realized-versus-expected effect analysis without prescribing
 portfolio changes. The

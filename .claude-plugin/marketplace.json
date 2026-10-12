@@ -6,8 +6,8 @@
     {
       "name": "gradient-cio",
       "source": "./plugins/gradient-cio",
-      "description": "Investment and operational due diligence, portfolio construction and attribution, portfolio reviews, investment-committee memos and GIPS report reviews with centralized branded PDF and PowerPoint styling.",
-      "version": "4.0.0",
+      "description": "Investment and operational due diligence, portfolio analytics, portfolio construction and attribution, and investment-committee memos with centralized branded PDF and PowerPoint styling.",
+      "version": "5.0.0",
       "homepage": "https://gradientcio.com"
     }
   ]

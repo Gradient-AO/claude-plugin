@@ -44,7 +44,8 @@
       "expected": 12,
       "state": "partial"
     },
-    "meter_title": "Evidence completeness"
+    "meter_title": "Evidence completeness",
+    "data_basis": "gradient_governed"
   },
   "executive": {
     "label": "Review conclusion",
@@ -222,7 +223,8 @@
               "Fictional TEST data",
               "S1"
             ]
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -347,7 +349,8 @@
                 "return"
               ]
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "callout",
@@ -546,11 +549,31 @@
           "type": "bars",
           "title": "Calendar-year excess returns",
           "items": [
-            {"label": "2022", "value": 0.8, "display": "+0.8pp"},
-            {"label": "2023", "value": 0.4, "display": "+0.4pp"},
-            {"label": "2024", "value": -0.7, "display": "-0.7pp"},
-            {"label": "2025", "value": 0.4, "display": "+0.4pp"},
-            {"label": "2026 partial", "value": -0.5, "display": "-0.5pp"}
+            {
+              "label": "2022",
+              "value": 0.8,
+              "display": "+0.8pp"
+            },
+            {
+              "label": "2023",
+              "value": 0.4,
+              "display": "+0.4pp"
+            },
+            {
+              "label": "2024",
+              "value": -0.7,
+              "display": "-0.7pp"
+            },
+            {
+              "label": "2025",
+              "value": 0.4,
+              "display": "+0.4pp"
+            },
+            {
+              "label": "2026 partial",
+              "value": -0.5,
+              "display": "-0.5pp"
+            }
           ],
           "note": "2026 is partial through June [S4]."
         },
@@ -643,10 +666,26 @@
           "type": "waterfall",
           "title": "Allocation, selection and interaction",
           "items": [
-            {"label": "Allocation", "value": 0.18, "display": "+0.18pp"},
-            {"label": "Selection", "value": -0.51, "display": "-0.51pp"},
-            {"label": "Interaction", "value": -0.05, "display": "-0.05pp"},
-            {"label": "Residual", "value": -0.02, "display": "-0.02pp"}
+            {
+              "label": "Allocation",
+              "value": 0.18,
+              "display": "+0.18pp"
+            },
+            {
+              "label": "Selection",
+              "value": -0.51,
+              "display": "-0.51pp"
+            },
+            {
+              "label": "Interaction",
+              "value": -0.05,
+              "display": "-0.05pp"
+            },
+            {
+              "label": "Residual",
+              "value": -0.02,
+              "display": "-0.02pp"
+            }
           ],
           "note": "Realized linked effects for the review period [S5]."
         },
@@ -817,11 +856,46 @@
           "type": "band",
           "title": "Current weight versus policy range",
           "items": [
-            {"label": "Public Equity", "value": 43.5, "low": 32.0, "high": 52.0, "target": 42.0, "display": "43.5%"},
-            {"label": "Fixed Income", "value": 23.1, "low": 15.0, "high": 35.0, "target": 25.0, "display": "23.1%"},
-            {"label": "Private Assets", "value": 28.2, "low": 15.0, "high": 30.0, "target": 25.0, "display": "28.2%"},
-            {"label": "Real Assets", "value": 3.7, "low": 2.0, "high": 10.0, "target": 5.0, "display": "3.7%"},
-            {"label": "Cash", "value": 1.5, "low": 0.0, "high": 8.0, "target": 3.0, "display": "1.5%"}
+            {
+              "label": "Public Equity",
+              "value": 43.5,
+              "low": 32.0,
+              "high": 52.0,
+              "target": 42.0,
+              "display": "43.5%"
+            },
+            {
+              "label": "Fixed Income",
+              "value": 23.1,
+              "low": 15.0,
+              "high": 35.0,
+              "target": 25.0,
+              "display": "23.1%"
+            },
+            {
+              "label": "Private Assets",
+              "value": 28.2,
+              "low": 15.0,
+              "high": 30.0,
+              "target": 25.0,
+              "display": "28.2%"
+            },
+            {
+              "label": "Real Assets",
+              "value": 3.7,
+              "low": 2.0,
+              "high": 10.0,
+              "target": 5.0,
+              "display": "3.7%"
+            },
+            {
+              "label": "Cash",
+              "value": 1.5,
+              "low": 0.0,
+              "high": 8.0,
+              "target": 3.0,
+              "display": "1.5%"
+            }
           ],
           "note": "Governed policy ranges and targets [S3]."
         },
@@ -876,7 +950,8 @@
                 "weight"
               ]
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -1298,7 +1373,8 @@
                 "risk_contribution"
               ]
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "kv",
@@ -1344,7 +1420,8 @@
               "Not available — historical contract did not return CVaR",
               "S4"
             ]
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -1413,10 +1490,30 @@
         {
           "type": "tiles",
           "tiles": [
-            {"label": "GRIP score", "value": "63", "sub": "Available history [S12]", "tone": "info"},
-            {"label": "GRIP stance", "value": "Balanced", "sub": "Current context [S12]", "tone": "info"},
-            {"label": "Policy expected return", "value": "6.2%", "sub": "Governed basis [S3][S8]", "tone": "good"},
-            {"label": "Return objective", "value": "5.5%", "sub": "Policy objective [S3]", "tone": "good"}
+            {
+              "label": "GRIP score",
+              "value": "63",
+              "sub": "Available history [S12]",
+              "tone": "info"
+            },
+            {
+              "label": "GRIP stance",
+              "value": "Balanced",
+              "sub": "Current context [S12]",
+              "tone": "info"
+            },
+            {
+              "label": "Policy expected return",
+              "value": "6.2%",
+              "sub": "Governed basis [S3][S8]",
+              "tone": "good"
+            },
+            {
+              "label": "Return objective",
+              "value": "5.5%",
+              "sub": "Policy objective [S3]",
+              "tone": "good"
+            }
           ]
         },
         {
@@ -1437,7 +1534,8 @@
               "high": 11.2,
               "display": "10.4%"
             }
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "kv",
@@ -1473,7 +1571,8 @@
               "Governed policy and CMA evidence",
               "S3,S8"
             ]
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -1557,10 +1656,22 @@
             {
               "label": "Portfolio",
               "segments": [
-                {"label": "Daily to weekly", "value": 48.0},
-                {"label": "Monthly to quarterly", "value": 15.0},
-                {"label": "Semi-annual to 2 years", "value": 12.0},
-                {"label": "Over 2 years / locked", "value": 25.0}
+                {
+                  "label": "Daily to weekly",
+                  "value": 48.0
+                },
+                {
+                  "label": "Monthly to quarterly",
+                  "value": 15.0
+                },
+                {
+                  "label": "Semi-annual to 2 years",
+                  "value": 12.0
+                },
+                {
+                  "label": "Over 2 years / locked",
+                  "value": 25.0
+                }
               ]
             }
           ],
@@ -1624,7 +1735,8 @@
                 "distributions"
               ]
             }
-          }
+          },
+          "source": "[S1]"
         },
         {
           "type": "table",
@@ -1715,7 +1827,8 @@
               "Complete for 31 commitments",
               "S6"
             ]
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "callout",
@@ -1817,6 +1930,7 @@
           "columns": [
             "Tag",
             "Evidence",
+            "Basis",
             "Tool / view",
             "Key parameters",
             "As of",
@@ -1825,170 +1939,147 @@
             "Digest"
           ],
           "align": [
-            "n",
             "l",
             "l",
             "l",
-            "n",
             "l",
             "l",
-            "n"
+            "l",
+            "l",
+            "l",
+            "l"
           ],
           "rows": [
             [
               "S1",
               "Organization and capabilities",
+              "gradient_tool",
               "list_organizations; get_gradient_capabilities",
               "organization_id=test",
               "2026-06-30",
               "Fictional TEST data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "{'chip': 'passed', 'status': 'passed'}",
               "test-s1"
             ],
             [
               "S2",
               "Portfolio record and allocation tree",
+              "gradient_tool",
               "list_portfolios; get_portfolio_structure",
               "view=allocation_tree",
               "2026-06-30",
               "Fictional TEST data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "{'chip': 'passed', 'status': 'passed'}",
               "test-s2"
             ],
             [
               "S3",
               "Policy assessment",
+              "gradient_tool",
               "check_portfolio_policy",
               "portfolio_id=test",
               "2026-06-30",
               "Fictional TEST data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "{'chip': 'passed', 'status': 'passed'}",
               "test-s3"
             ],
             [
               "S4",
               "Historical returns and realized risk",
+              "gradient_tool",
               "get_portfolio_historical_returns",
               "all six sections",
               "2026-06-30",
               "Fictional TEST data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "{'chip': 'passed', 'status': 'passed'}",
               "test-s4"
             ],
             [
               "S5",
               "Historical attribution",
+              "gradient_tool",
               "get_portfolio_attribution",
               "summary, segments, diagnostics",
               "2026-06-30",
               "Fictional TEST data",
-              {
-                "chip": "degraded",
-                "status": "degraded"
-              },
+              "{'chip': 'degraded', 'status': 'degraded'}",
               "test-s5"
             ],
             [
               "S6",
               "Holdings exposure",
+              "gradient_tool",
               "get_portfolio_exposure",
               "all pages",
               "2026-06-30",
               "Fictional TEST data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "{'chip': 'passed', 'status': 'passed'}",
               "test-s6"
             ],
             [
               "S7",
               "Portfolio chart packs",
+              "gradient_tool",
               "get_chart_data",
               "allocations, commitments",
               "2026-06-30",
               "Fictional TEST data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "{'chip': 'passed', 'status': 'passed'}",
               "test-s7"
             ],
             [
               "S8",
               "Capital-market assumptions",
+              "gradient_tool",
               "get_capital_market_assumptions",
               "view=baseline",
               "2026-06-15",
               "Fictional TEST data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "{'chip': 'passed', 'status': 'passed'}",
               "test-s8"
             ],
             [
               "S9",
               "Market context",
+              "gradient_tool",
               "get_the_read",
               "visuals=none",
               "2026-06-30",
               "Fictional TEST data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "{'chip': 'passed', 'status': 'passed'}",
               "test-s9"
             ],
             [
               "S10",
               "13F look-through",
+              "gradient_tool",
               "get_cross_domain_research",
               "portfolio_13f_lookthrough",
               "2026-05-15",
               "Fictional TEST data",
-              {
-                "chip": "advisory",
-                "status": "advisory"
-              },
+              "{'chip': 'advisory', 'status': 'advisory'}",
               "test-s10"
             ],
             [
               "S11",
               "Manager diligence findings",
+              "gradient_tool",
               "get_manager_diligence_findings",
               "view=open; resolved portfolio managers",
               "2026-06-30",
               "Fictional TEST data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "{'chip': 'passed', 'status': 'passed'}",
               "test-s11"
             ],
             [
               "S12",
               "GRIP context",
+              "gradient_tool",
               "get_macro_signals",
               "view=gradient_signal",
               "2026-06-30",
               "Fictional TEST data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "{'chip': 'passed', 'status': 'passed'}",
               "test-s12"
             ]
           ]

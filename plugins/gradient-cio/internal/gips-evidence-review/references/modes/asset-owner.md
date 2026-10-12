@@ -1,26 +1,11 @@
----
-name: gradient-gips-report-review
-description: "Create a GIPS asset-owner review for a total-fund report. Triggers: 'review an asset-owner report', 'check a board performance report', 'assess total-fund GIPS compliance'. For firm reports use gradient-gips-report-review."
-metadata:
-  style_contract: "2.1.0"
-  group: "GIPS"
-  subject: "GIPS asset owner"
-  output: "review"
-  menu_order: "40"
-  modules: "none"
-  contracts: "gips"
-  handoffs: "gradient-decision-ic-memo"
-  version: "1.2.0"
-  summary: "Review asset-owner performance reporting against the GIPS standards."
----
 
 # GIPS Asset Owner Review
 
 Check an asset owner's GIPS Asset Owner Report (total fund and any additional composites) against the 2020
 GIPS standards for asset owners.
 
-Shared references live in this skill's `references/` directory. Load `asset-owners.md`, `verification.md`,
-`output-format.md` and `report-layout.md`; before drafting, also load this skill's
+Shared references live in the internal module's `references/` directory. Load `asset-owners.md`, `verification.md`,
+`output-format.md` and `report-layout.md`; before drafting, also load the internal module's
 `references/writing-standards.md` and `references/analysis-examples.md`.
 
 ## Step 1 — Confirm the right standards apply
@@ -28,7 +13,7 @@ Shared references live in this skill's `references/` directory. Load `asset-owne
 - Confirm the organization is an asset owner (manages assets for participants, beneficiaries or itself) with
   discretion over the total fund, directly or by hiring and firing managers (21.A.2–21.A.3).
 - If it offers investment services to outside clients for a fee and markets performance to win that business,
-  note that it may need to comply as a firm and switch to gradient-gips-report-review for those reports.
+  note that it may need to comply as a firm and switch to the internal firm mode for those reports.
 - Identify the audience: the oversight body (board, investment committee, trustees).
 
 ## Step 2 — Extract the numbers
@@ -81,5 +66,5 @@ markdown checklist and memo handoff remain unchanged through composition.
 python <skill>/scripts/validate_gips_report.py review.md visuals.json meta.json
 python <skill>/scripts/compose_gips_report.py review.md visuals.json meta.json report.json
 python <skill>/scripts/validate_gips_report.py report.json
-python <this skill's directory>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Asset Owner Review" --budget <this skill's directory>/references/layout-budget.json
+python <internal-gips>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Asset Owner Review" --budget <internal-gips>/references/layout-budget.json
 ```

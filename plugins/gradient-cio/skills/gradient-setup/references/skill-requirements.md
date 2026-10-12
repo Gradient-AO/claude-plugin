@@ -36,7 +36,6 @@ and `effective_capabilities` must equal whether that mode is not `unavailable`. 
 | gradient-idd-private-markets-pme | Private-markets PME PDF | get_benchmarks, get_return_series, build_strategy_lab_session, run_strategy_lab_private_markets_pme | — | strategyLab |
 | gradient-idd-manager-shortlist | IDD manager-shortlist PDF | search_managers, get_return_series, analyze_strategy_lab_compare, run_strategy_lab_expected_statistics | optional screen_managers followed by governed performance; run_strategy_lab_relative_return; canonical manager/fund-to-return-series links | strategyLab (firmFundDiligence optional) |
 | gradient-odd-manager-compare | Named-manager operational comparison PDF | search_managers, get_manager_odd_profile | get_diligence_roster_funds, get_firm_13f_portfolio_review, get_multi_manager_13f_overlap, get_cross_domain_research, get_firm_fund_events, get_manager_diligence_findings, update_watchlist, update_manager_monitoring | firmFundDiligence (overlap: research) |
-| gradient-gips-report-review | Firm or asset-owner GIPS review PDF | none (documents) | — | — |
 | gradient-menu | In-chat grouped command catalog | none | — | — |
 | gradient-setup | Readiness PDF | list_organizations, get_gradient_capabilities | all probes in contract-checks.md, including sample-portfolio exposure, structure, historical returns, historical and ex ante attribution, policy and chart packs; session-bound IDD Strategy Lab tools; dry-run watchlist, monitoring, review, finding, roster, scenario and upload writes; persisted extract_ddq_claims document identity and DDQ save preview | — |
 
@@ -62,6 +61,10 @@ unavailable report block.
 Missing `peerIntelligence` does not make gradient-portfolio-review Not licensed or Partial by itself. Report
 `Peer allocation context: Not licensed (optional)`, skip the peer tool and complete the review from portfolio
 evidence.
+Apply the same optional rule to `gradient-portfolio-construction`: gate the
+call on `capabilities.peerIntelligence` and the advertised tool row, do not
+retry an unavailable or unlicensed result, report `Peer allocation context:
+Not licensed (optional)`, and keep the mode's readiness rating unchanged.
 
 Rate the IC memo's Portfolio Analytics core and Strategy Lab supplement separately. Missing `strategyLab`
 makes the combined memo **Partial**, not Not licensed; report

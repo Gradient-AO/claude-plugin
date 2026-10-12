@@ -1,10 +1,10 @@
 ---
 name: gradient-portfolio-construction
-description: "Create a portfolio-construction report in private markets, fixed income, global public equity, marketable alternatives, or real assets mode. Triggers: 'design a sleeve strategy mix', 'build an allocation', 'review portfolio construction'."
+description: "Create a portfolio-construction report for private markets, fixed income, global public equity, marketable alternatives, or real assets. Triggers: 'design a sleeve strategy mix', 'build an allocation', 'review portfolio construction'. For one-manager fit use gradient-idd-manager-portfolio-fit."
 metadata:
   version: "3.0.0"
   style_contract: "2.1.0"
-  group: "Portfolio"
+  group: "Portfolio Analytics"
   subject: "portfolio construction"
   output: "construction report"
   menu_order: "30"
@@ -31,7 +31,9 @@ Select exactly one mode and set `meta.mode` before validation:
 
 ## Shared rules
 
-- Read `references/contracts/portfolio-construction.md` and every reference named by the selected mode.
+- Read `references/module-scope.md`,
+  `references/contracts/portfolio-construction.md`, and every reference named
+  by the selected mode.
 - Resolve the organization, call `get_gradient_capabilities` once and select an existing portfolio.
 - Capture mandate, policy benchmark, horizon, risk budget and user-supplied constraints.
 - Use only server-returned values. Preserve basis, method, units, dates, coverage, truncation and request IDs.
@@ -39,6 +41,11 @@ Select exactly one mode and set `meta.mode` before validation:
 - Historical attribution comes only from `get_portfolio_attribution`; never derive it locally.
 - Missing constraints or governed results stay typed unavailable. Do not infer policy status or numeric targets.
 - Label illustrative records exactly as required by `references/report-style.md`.
+- Gate peer context on both `capabilities.peerIntelligence` and the
+  `get_peer_allocation_intelligence` tool row. If either is unavailable, do not
+  call or retry the tool; disclose the optional skip and continue from
+  portfolio evidence. Missing peer intelligence never lowers construction
+  readiness by itself.
 
 ## Collect and assess
 

@@ -53,7 +53,7 @@ A viable allocation change → `gradient-decision-ic-memo`; unresolved operation
 Run the shared IDD contract validator, then canonical delivery QA:
 
 ```text
-python <skill>/scripts/validate_idd_report.py report.json
+python <skill>/scripts/validate_manager_portfolio_fit.py report.json
 python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - Diversification Report <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json
 ```
 

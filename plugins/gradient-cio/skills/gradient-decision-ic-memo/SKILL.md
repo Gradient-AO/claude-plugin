@@ -3,7 +3,7 @@ name: gradient-decision-ic-memo
 description: "Create a sourced decision memo for an investment committee. Triggers: 'draft an IC memo', 'prepare an allocation vote', 'write a manager hire memo'. For portfolio monitoring use gradient-portfolio-review."
 metadata:
   style_contract: "2.1.0"
-  group: "Decision"
+  group: "Investment memos"
   subject: "investment committee"
   output: "memo"
   menu_order: "10"
@@ -62,9 +62,11 @@ saved evidence and must be labeled/cited as specified in
 ## 3. GIPS and evidence boundaries
 
 Always retain Performance Integrity & GIPS. Use
-`gradient-gips-report-review` for total-fund reporting and the GIPS section of
-`gradient-odd-report` for managers at least 5% exposure and every hire
-candidate. Carry High/Medium findings and follow-ups into memo risk/open items.
+`../../internal/gips-evidence-review/contract.md` in `asset-owner` mode for
+total-fund reporting and the GIPS section of `gradient-odd-report` for managers
+at least 5% exposure and every hire candidate. Treat the review contract as an
+internal evidence step, not a separate command. Carry High/Medium findings and
+follow-ups into memo risk/open items.
 If unavailable, mark Not assessed and preserve the gap.
 
 Expected returns are assumptions, not forecasts. Strategy Lab relative return

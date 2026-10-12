@@ -43,7 +43,8 @@
         "Report date",
         "2026-10-04"
       ]
-    ]
+    ],
+    "data_basis": "mixed"
   },
   "executive": {
     "bottom_line": "Three advisers were compared for the global macro mandate: Ridgeview reports $12.40B regulatory AUM, Harbor $4.85B and Northfield $1.92B [S1][S2][S3]. None reports an Item 11 disciplinary disclosure [S1][S2][S3]. Harbor has 2 of 9 private funds with no administrator named and Northfield reports custody through a related person, so both carry medium flags [S2][S3]. Weighted 13F overlap between Ridgeview and Harbor is 18.4% for the 2026-06-30 period [S6]; Northfield is not in the diligence catalog, so it has no 13F, consistency or events evidence. This is an evidence comparison, not a ranking.",
@@ -164,37 +165,88 @@
           "prefix": "$",
           "suffix": "B",
           "items": [
-            {"label": "Ridgeview", "value": 12.4, "source": "S1"},
-            {"label": "Harbor", "value": 4.85, "source": "S2"},
-            {"label": "Northfield", "value": 1.92, "source": "S3"}
-          ]
+            {
+              "label": "Ridgeview",
+              "value": 12.4,
+              "source": "S1"
+            },
+            {
+              "label": "Harbor",
+              "value": 4.85,
+              "source": "S2"
+            },
+            {
+              "label": "Northfield",
+              "value": 1.92,
+              "source": "S3"
+            }
+          ],
+          "source": "[S1]"
         },
         {
           "type": "bars",
           "title": "Client count",
           "items": [
-            {"label": "Ridgeview", "value": 41, "source": "S1"},
-            {"label": "Harbor", "value": 28, "source": "S2"},
-            {"label": "Northfield", "value": 12, "source": "S3"}
-          ]
+            {
+              "label": "Ridgeview",
+              "value": 41,
+              "source": "S1"
+            },
+            {
+              "label": "Harbor",
+              "value": 28,
+              "source": "S2"
+            },
+            {
+              "label": "Northfield",
+              "value": 12,
+              "source": "S3"
+            }
+          ],
+          "source": "[S1]"
         },
         {
           "type": "bars",
           "title": "Item 11 disclosures",
           "items": [
-            {"label": "Ridgeview", "value": 0, "source": "S1"},
-            {"label": "Harbor", "value": 0, "source": "S2"},
-            {"label": "Northfield", "value": 0, "source": "S3"}
-          ]
+            {
+              "label": "Ridgeview",
+              "value": 0,
+              "source": "S1"
+            },
+            {
+              "label": "Harbor",
+              "value": 0,
+              "source": "S2"
+            },
+            {
+              "label": "Northfield",
+              "value": 0,
+              "source": "S3"
+            }
+          ],
+          "source": "[S1]"
         },
         {
           "type": "percentiles",
           "title": "RAUM cohort percentile positioning",
           "threshold": 75,
           "items": [
-            {"label": "Ridgeview (n=214)", "percentile": 78, "value_display": "$12.40B"},
-            {"label": "Harbor (n=187)", "percentile": 59, "value_display": "$4.85B"},
-            {"label": "Northfield (n=96)", "percentile": 42, "value_display": "$1.92B"}
+            {
+              "label": "Ridgeview (n=214)",
+              "percentile": 78,
+              "value_display": "$12.40B"
+            },
+            {
+              "label": "Harbor (n=187)",
+              "percentile": 59,
+              "value_display": "$4.85B"
+            },
+            {
+              "label": "Northfield (n=96)",
+              "percentile": 42,
+              "value_display": "$1.92B"
+            }
           ],
           "note": "Each percentile uses the adviser's own Gradient-selected cohort [S7]."
         },
@@ -341,10 +393,23 @@
           "type": "bars",
           "title": "Open flags by severity",
           "items": [
-            {"label": "High", "value": 0, "source": "S8"},
-            {"label": "Medium", "value": 2, "source": "S8"},
-            {"label": "Low", "value": 2, "source": "S8"}
-          ]
+            {
+              "label": "High",
+              "value": 0,
+              "source": "S8"
+            },
+            {
+              "label": "Medium",
+              "value": 2,
+              "source": "S8"
+            },
+            {
+              "label": "Low",
+              "value": 2,
+              "source": "S8"
+            }
+          ],
+          "source": "[S1]"
         },
         {
           "type": "findings",
@@ -402,10 +467,25 @@
         {
           "type": "heat",
           "title": "Weighted 13F overlap matrix",
-          "columns": ["Ridgeview", "Harbor"],
+          "columns": [
+            "Ridgeview",
+            "Harbor"
+          ],
           "rows": [
-            {"label": "Ridgeview", "values": [100, 18.4]},
-            {"label": "Harbor", "values": [18.4, 100]}
+            {
+              "label": "Ridgeview",
+              "values": [
+                100,
+                18.4
+              ]
+            },
+            {
+              "label": "Harbor",
+              "values": [
+                18.4,
+                100
+              ]
+            }
           ],
           "suffix": "%",
           "note": "Northfield is excluded because its catalog CIK is missing [S6]."
@@ -481,7 +561,8 @@
               "$71.8M",
               "$22.9M"
             ]
-          ]
+          ],
+          "source": "[S1]"
         },
         {
           "type": "callout",
@@ -683,139 +764,145 @@
           "columns": [
             "Tag",
             "Evidence",
+            "Basis",
             "Tool / view",
+            "Key parameters",
             "As of",
+            "Data scope",
             "Validation",
             "Digest"
           ],
           "align": [
-            "n",
             "l",
             "l",
-            "n",
-            "n",
-            "n"
+            "l",
+            "l",
+            "l",
+            "l",
+            "l",
+            "l",
+            "l"
           ],
           "rows": [
             [
               "S1",
               "Form ADV profile — Ridgeview (TEST)",
+              "gradient_tool",
               "get_manager_odd_profile",
+              "fixture=true",
               "2026-10-01",
-              {
-                "chip": "not_run",
-                "status": "not_run"
-              },
+              "Gradient-governed TEST evidence",
+              "{'chip': 'not_run', 'status': 'not_run'}",
               "a1b2c3d4"
             ],
             [
               "S2",
               "Form ADV profile — Harbor (TEST)",
+              "gradient_tool",
               "get_manager_odd_profile",
+              "fixture=true",
               "2026-10-01",
-              {
-                "chip": "advisory",
-                "status": "advisory"
-              },
+              "Gradient-governed TEST evidence",
+              "{'chip': 'advisory', 'status': 'advisory'}",
               "b2c3d4e5"
             ],
             [
               "S3",
               "Form ADV profile — Northfield (TEST)",
+              "gradient_tool",
               "get_manager_odd_profile",
+              "fixture=true",
               "2026-10-01",
-              {
-                "chip": "not_run",
-                "status": "not_run"
-              },
+              "Gradient-governed TEST evidence",
+              "{'chip': 'not_run', 'status': 'not_run'}",
               "c3d4e5f6"
             ],
             [
               "S4",
               "13F snapshot — Ridgeview (TEST)",
+              "gradient_tool",
               "get_firm_13f_portfolio_review",
+              "fixture=true",
               "2026-08-14",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
               "d4e5f6a7"
             ],
             [
               "S5",
               "13F snapshot — Harbor (TEST)",
+              "gradient_tool",
               "get_firm_13f_portfolio_review",
+              "fixture=true",
               "2026-08-13",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
               "e5f6a7b8"
             ],
             [
               "S6",
               "13F overlap",
+              "gradient_tool",
               "get_multi_manager_13f_overlap",
+              "fixture=true",
               "2026-08-14",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
               "f6a7b8c9"
             ],
             [
               "S7",
               "Cohort comparison",
-              "get_manager_odd_profile (comparison)",
+              "gradient_tool",
+              "get_manager_odd_profile",
+              "fixture=true",
               "2026-10-01",
-              {
-                "chip": "not_run",
-                "status": "not_run"
-              },
+              "Gradient-governed TEST evidence",
+              "{'chip': 'not_run', 'status': 'not_run'}",
               "a7b8c9d0"
             ],
             [
               "S8",
               "ADV–13F consistency — Ridgeview",
+              "gradient_tool",
               "get_cross_domain_research",
+              "fixture=true",
               "2026-10-01",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
               "b8c9d0e1"
             ],
             [
               "S9",
               "Open findings — Ridgeview",
+              "gradient_tool",
               "get_manager_diligence_findings",
+              "fixture=true",
               "2026-10-04",
-              {
-                "chip": "advisory",
-                "status": "advisory"
-              },
+              "Gradient-governed TEST evidence",
+              "{'chip': 'advisory', 'status': 'advisory'}",
               "c9d0e1f2"
             ],
             [
               "S10",
               "Firm events",
+              "gradient_tool",
               "get_firm_fund_events",
+              "fixture=true",
               "2026-10-04",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
               "d0e1f2a3"
             ],
             [
               "S11",
               "ADV–13F consistency — Harbor",
+              "gradient_tool",
               "get_cross_domain_research",
+              "fixture=true",
               "2026-10-01",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
               "e1f2a3b4"
             ]
           ]

@@ -43,7 +43,8 @@
     },
     "header_label": "DDQ Reconciliation",
     "signal_title": "Reconciliation result",
-    "meter_title": "Fields assessed"
+    "meter_title": "Fields assessed",
+    "data_basis": "mixed"
   },
   "executive": {
     "bottom_line": "Of 20 checkable DDQ answers, **13 are consistent** with Form ADV and Schedule D, **4 are contradicted** and **3 need review** [S1][S2]. The most serious gap is the **fund administrator**: the DDQ names Example Fund Administration, while Schedule D lists Example Trust Company [S1][S2]. The DDQ also overstates headcount by 105 people and private funds by 3, and understates the fund minimum by $1.67M; these gaps are returned by the governed reconciliation [S1]. The source DDQ is preserved by digest [S3].",
@@ -636,47 +637,56 @@
           "columns": [
             "Tag",
             "Evidence",
-            "Tool",
+            "Basis",
+            "Tool / view",
+            "Key parameters",
             "As of",
+            "Data scope",
             "Validation",
             "Digest"
           ],
           "align": [
-            "n",
             "l",
             "l",
-            "n",
-            "n",
-            "n"
+            "l",
+            "l",
+            "l",
+            "l",
+            "l",
+            "l",
+            "l"
           ],
           "rows": [
             [
               "S1",
               "DDQ reconciliation, 20 claims with governed numeric gaps",
+              "gradient_tool",
               "reconcile_manager_ddq_claims",
+              "fixture=true",
               "2026-10-01",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "Gradient-governed TEST evidence",
+              "{'chip': 'passed', 'status': 'passed'}",
               "7c89a13a"
             ],
             [
               "S2",
               "Form ADV profile incl. Schedule D 7.B.1",
+              "gradient_tool",
               "get_manager_odd_profile",
+              "fixture=true",
               "2026-10-01",
-              {
-                "chip": "not run",
-                "status": "not_run"
-              },
+              "Gradient-governed TEST evidence",
+              "{'chip': 'not run', 'status': 'not_run'}",
               "091b0cf9"
             ],
             [
               "S3",
               "Synthetic DDQ file (sha256)",
-              "—",
+              "user_document",
+              "User-supplied document",
+              "fixture=true",
               "2026-09-30",
+              "Gradient-governed TEST evidence",
               "—",
               "1b448613"
             ]

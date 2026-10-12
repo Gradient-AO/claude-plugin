@@ -54,6 +54,15 @@ availability or presentation rules.
 
 ## Evidence and availability
 
+- Set `meta.data_basis` to `gradient_governed` when every source is a Gradient
+  tool result, or `mixed` when the report also uses user documents or regulatory
+  filings. Core reports may not use an ungoverned or document-only basis.
+- Every source appendix uses these columns in order: `Tag`, `Evidence`, `Basis`,
+  `Tool / view`, `Key parameters`, `As of`, `Data scope`, `Validation`, `Digest`.
+  `Basis` is `gradient_tool`, `user_document`, or `regulatory_filing`.
+- A `gradient_tool` row names only tools in the packaged public catalog and
+  preserves a non-empty evidence digest. Never cite a locally derived value as
+  a Gradient tool result.
 - Every factual number, governed status and analytical judgment carries an `[S#]` tag.
 - Preserve returned dates, units, bases, formula identity and version, coverage, validation state and
   unavailable reason.
