@@ -5,7 +5,7 @@ Fictional examples marked **(TEST)** show the required depth. Use the pattern, n
 ## Target Portfolio Structure
 
 **Strong (TEST)**
-> **Observation:** Buyout represents 62% of private-markets NAV versus a 45% target, while secondaries are 4% against a 12% target [S4]. **Why it matters:** The proposed mix reduces strategy concentration and adds a pacing tool. **Uncertainty:** Two fund valuations lag by one quarter. **What would change the view:** A refreshed NAV report showing buyout below 50% would narrow the restructuring need.
+> **Observation:** Buyout represents 62% of private-markets NAV versus a 45% target, while secondaries are 4% against a 12% target [S4]. **Why it matters:** The proposed mix reduces strategy concentration and adds a pacing tool. **Uncertainty:** Two fund valuations are one quarter stale. **What would change the view:** A refreshed NAV report showing buyout below 50% would narrow the restructuring need.
 
 **Weak contrast:** “The target structure improves diversification [S4].” It lacks the concentration values, portfolio implication, valuation limitation, and measurable refresh trigger.
 

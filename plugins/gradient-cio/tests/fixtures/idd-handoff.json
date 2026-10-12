@@ -12,10 +12,29 @@
     {
       "return_series_id": "b0000000-0000-0000-0000-000000000001",
       "benchmark_series_id": "b0000000-0000-0000-0000-000000000003",
+      "benchmark_status": "server_matched",
       "benchmark_rationale": "Server-matched mandate benchmark",
       "start_date": "2021-01-31",
       "end_date": "2025-12-31",
       "observation_count": 60
+    },
+    {
+      "return_series_id": "b0000000-0000-0000-0000-000000000002",
+      "benchmark_series_id": "b0000000-0000-0000-0000-000000000004",
+      "benchmark_status": "advisory",
+      "benchmark_rationale": "User-selected advisory peer benchmark",
+      "start_date": "2023-01-31",
+      "end_date": "2025-12-31",
+      "observation_count": 36
+    },
+    {
+      "return_series_id": "b0000000-0000-0000-0000-000000000005",
+      "benchmark_series_id": null,
+      "benchmark_status": "unavailable",
+      "unavailable_reason": "No governed benchmark mapping was available.",
+      "start_date": "2023-01-31",
+      "end_date": "2025-12-31",
+      "observation_count": 36
     }
   ],
   "evidence": [
@@ -24,7 +43,33 @@
       "tool": "analyze_strategy_lab_compare",
       "as_of": "2025-12-31",
       "methodology_version": "manager-compare/v1",
-      "digest": "test-digest"
+      "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "status": "ok"
+    },
+    {
+      "source_tag": "S2",
+      "tool": "get_manager_benchmark_mapping",
+      "as_of": "2025-12-31",
+      "digest": "not_available:no_payload",
+      "status": "failed",
+      "error_code": "benchmark_mapping_failed",
+      "request_id": "request-test-002"
+    },
+    {
+      "source_tag": "S3",
+      "tool": "get_manager_benchmark_mapping",
+      "as_of": "2025-12-31",
+      "digest": "not_available:no_payload",
+      "status": "unavailable",
+      "unavailable_reason": "The connector did not publish this evidence."
+    },
+    {
+      "source_tag": "S4",
+      "tool": "get_manager_benchmark_mapping",
+      "as_of": "2025-12-31",
+      "digest": "not_available:no_payload",
+      "status": "not_run",
+      "unavailable_reason": "The optional follow-up was not required."
     }
   ],
   "limitations": [

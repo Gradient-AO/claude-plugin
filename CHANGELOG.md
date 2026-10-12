@@ -1,5 +1,20 @@
 # Changelog
 
+## 5.2.0
+- Completed Punch List 4 private-markets PME integration with commitment-scoped setup probes, separate primary and sensitivity sessions, and PME-native partial-evidence reporting.
+- Added typed IDD handoff status propagation, a chat-only zero-evidence branch, source-mapping checks, and synchronized Workstream K contracts across report skills.
+
+## 5.1.1
+- Aligned manager-performance mode instructions, evidence-basis and source-table requirements with the strict IDD validator, including honest no-payload handling for failed Gradient calls and enforced recommendation-neutral language.
+- Corrected lettered appendix rendering, intentional appendix-break whitespace QA and source-table pagination without report filler or hand edits.
+- Updated Strategy Lab setup contracts for catalog benchmark parity, server-returned mapping rationale, separated realized and simulated relative metrics, and dated robustness windows.
+
+## 5.1.0
+- Tightened attribution comparison around canonical simulation capability naming, absent capability rows, benchmark-basis reconciliation, fallback sign tables, lane-basis tiles and authored forced breaks.
+- Completed Punch List 2 report-layout integration: titled evidence keeps its opening rows, bounded evidence/Analysis pairs stay together, configured forced breaks are verified after rendering, and appendix pages now meet the same fill standard as body pages.
+- Added bounded `data_scope_banner` provenance metadata to PDF and PowerPoint covers and running headers without replacing report identity, subtitle or confidentiality text.
+- Expanded renderer and QA regressions for grouped evidence, sparse appendices, forced-break diagnostics and cross-format provenance rendering, alongside the Punch List 1 renderer/provenance fixes.
+
 ## 5.0.0
 - Moved GIPS report review behind the ODD and investment-committee workflows as an internal firm/asset-owner evidence contract; removed its standalone command, menu group and top-level marketing.
 - Added machine-checkable `data_basis`, canonical source classifications, Gradient tool-catalog checks, evidence digests and quantitative `[S#]` lineage to core report contracts.

@@ -34,6 +34,7 @@ from report_constants import (  # noqa: E402
     NEUTRAL_REBALANCE_PATTERNS,
     NEUTRAL_RECOMMENDATION_PATTERNS,
 )
+from report_vocab import ATTRIBUTION_VOCAB  # noqa: E402
 
 
 PROHIBITED_REPORT_PATTERNS = (
@@ -68,8 +69,8 @@ SPEC = ReportSpec(
         )
     ),
     appendix_pattern=r"Appendix A — Sources",
-    signal_levels=frozenset({"watch", "satisfactory", "insufficient"}),
-    completeness_states=frozenset({"complete", "partial"}),
+    signal_levels=ATTRIBUTION_VOCAB.signal_levels,
+    completeness_states=ATTRIBUTION_VOCAB.completeness_states,
     slot_rules=(
         SlotRule(
             r"Historical Returns Context",
@@ -144,9 +145,8 @@ SPEC = ReportSpec(
         "Ex ante residual",
     ),
     require_tile_sources=True,
-    allowed_tones=frozenset(
-        {"", "good", "watch", "bad", "info", "warning"}
-    ),
+    allowed_tones=ATTRIBUTION_VOCAB.allowed_tones,
+    allowed_statuses=ATTRIBUTION_VOCAB.allowed_statuses,
 )
 
 

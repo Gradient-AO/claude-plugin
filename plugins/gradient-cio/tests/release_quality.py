@@ -301,6 +301,15 @@ def run_source_checks(check: Check) -> None:
             minimum_pages=3,
             maximum_pages=4,
         )
+        intentional_break_failures = layout.check_layout(
+            pathlib.Path("fictional.pdf"),
+            headings=[],
+            minimum_fill=0.40,
+            excluded=set(),
+            minimum_pages=None,
+            maximum_pages=None,
+            underfill_excluded={2},
+        )
     finally:
         layout.bbox_pages = original_bbox
         layout.page_lines = original_lines
@@ -309,6 +318,14 @@ def run_source_checks(check: Check) -> None:
         any("page count 2 is below 3" in failure for failure in failures)
         and any("page 2 is 15% full" in failure for failure in failures)
         and any("ends with heading" in failure for failure in failures)
+        and not any(
+            "page 2 is 15% full" in failure
+            for failure in intentional_break_failures
+        )
+        and any(
+            "page 2 contains an orphan tail" in failure
+            for failure in intentional_break_failures
+        )
         and layout.parse_pages("1,3-4") == {1, 3, 4}
         and layout.is_heading_line("09 Liquidity", "Liquidity")
         and not layout.is_heading_line(

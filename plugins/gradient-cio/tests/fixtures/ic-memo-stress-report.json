@@ -115,6 +115,20 @@
           "text": "No proposed portfolio was supplied for this fictional renderer test. The section remains in the memo so the final callout exercises short-tail orphan prevention [S1]."
         },
         {
+          "type": "bullets",
+          "items": [
+            "Confirm the fictional decision scope before evaluating any allocation change [S1].",
+            "Retain the current policy baseline until a governed proposal is supplied [S1].",
+            "Request explicit sizing, timing, funding source, and implementation constraints [S1].",
+            "Re-run projected return and risk only after proposal terms are complete [S1].",
+            "Re-run liquidity and commitment pacing with the proposed cash-flow path [S1].",
+            "Document benchmark and currency assumptions alongside the proposal [S1].",
+            "Keep unavailable evidence typed rather than filling gaps with estimates [S1].",
+            "Route the completed evidence set through the normal approval workflow [S1].",
+            "Record the final decision and any conditions in the governed source record [S1]."
+          ]
+        },
+        {
           "type": "callout",
           "tone": "info",
           "title": "No proposal to evaluate",

@@ -24,6 +24,7 @@
       "get_portfolio_exposure",
       "get_portfolio_historical_returns",
       "get_portfolio_structure",
+      "get_private_markets_holdings",
       "get_public_equity_filing_evidence",
       "get_public_equity_fundamentals",
       "get_return_series",
@@ -34,6 +35,7 @@
       "reconcile_manager_ddq_claims",
       "run_strategy_lab_date_window_robustness",
       "run_strategy_lab_expected_statistics",
+      "run_strategy_lab_private_markets_pme",
       "run_strategy_lab_relative_return",
       "save_strategy_lab_scenario",
       "search_managers",
@@ -43,7 +45,10 @@
     "required_response_field_paths": {
       "analyze_strategy_lab_compare": [
         "domain",
-        "ranking_rows"
+        "ranking_rows",
+        "benchmark_mappings[0].status",
+        "benchmark_mappings[0].selectionType",
+        "benchmark_mappings[0].reason"
       ],
       "batch_reconcile_manager_ddq_claims": [
         "result_type",
@@ -210,6 +215,12 @@
         "nodes[0].target_weight",
         "coverage.status"
       ],
+      "get_private_markets_holdings": [
+        "portfolio.portfolio_id",
+        "items",
+        "aggregates.coverage.status",
+        "methodology"
+      ],
       "get_public_equity_filing_evidence": [
         "findings"
       ],
@@ -244,15 +255,36 @@
       ],
       "run_strategy_lab_date_window_robustness": [
         "domain",
-        "metric_rows"
+        "windows[0].start_date",
+        "windows[0].end_date",
+        "metric_rows[0].window_start_date",
+        "metric_rows[0].window_end_date"
       ],
       "run_strategy_lab_expected_statistics": [
         "domain",
         "rows",
         "covariance.method"
       ],
+      "run_strategy_lab_private_markets_pme": [
+        "domain",
+        "ks_pme",
+        "direct_alpha",
+        "irr",
+        "tvpi",
+        "dpi",
+        "rvpi",
+        "benchmark_comparisons",
+        "result_rows",
+        "has_sufficient_data",
+        "data_quality_limitations",
+        "result_freshness"
+      ],
       "run_strategy_lab_relative_return": [
         "domain",
+        "realized_metrics.metric_scope",
+        "simulated_metrics.metric_scope",
+        "benchmark_mappings[0].status",
+        "benchmark_mappings[0].reason",
         "result_rows[0]",
         "result_rows[1]",
         "result_rows[2]",
@@ -327,12 +359,17 @@
       "chart_availability",
       "portfolio_allocations",
       "portfolio_commitments",
+      "private_markets_holdings",
       "cma_consensus",
       "cma_consensus_allocation",
       "strategy_benchmarks",
       "strategy_return_series",
       "strategy_expected_statistics_session",
       "strategy_expected_statistics",
+      "strategy_pme_builder",
+      "strategy_pme",
+      "strategy_pme_sensitivity_builder",
+      "strategy_pme_sensitivity",
       "strategy_relative_return",
       "strategy_manager_compare",
       "strategy_date_windows_session",
@@ -1490,6 +1527,124 @@
       }
     },
     {
+      "id": "strategy_pme_builder",
+      "set": "full",
+      "tool": "build_strategy_lab_session",
+      "args": {
+        "domain": "private-markets-pme",
+        "portfolio_id": "10000000-0000-4000-8000-000000000001",
+        "commitment_id": "60000000-0000-4000-8000-000000000001",
+        "benchmark_id": "b0000000-0000-0000-0000-000000000001"
+      },
+      "required": [
+        "status",
+        "domain",
+        "strategy_lab_session",
+        "coverage.status",
+        "coverage.missing_reasons",
+        "unavailable_reason",
+        "provenance.builder",
+        "provenance.portfolio_id",
+        "provenance.commitment_id",
+        "provenance.benchmark_id",
+        "provenance.sources"
+      ],
+      "equals": {
+        "domain": "private-markets-pme",
+        "provenance.builder": "server",
+        "provenance.portfolio_id": "10000000-0000-4000-8000-000000000001",
+        "provenance.commitment_id": "60000000-0000-4000-8000-000000000001",
+        "provenance.benchmark_id": "b0000000-0000-0000-0000-000000000001"
+      }
+    },
+    {
+      "id": "strategy_pme",
+      "set": "full",
+      "tool": "run_strategy_lab_private_markets_pme",
+      "depends_on": [
+        "strategy_pme_builder"
+      ],
+      "args": {
+        "strategy_lab_session": "<strategy_pme_builder:strategy_lab_session>"
+      },
+      "required": [
+        "domain",
+        "ks_pme",
+        "direct_alpha",
+        "irr",
+        "tvpi",
+        "dpi",
+        "rvpi",
+        "benchmark_comparisons",
+        "result_rows",
+        "has_sufficient_data",
+        "data_quality_limitations",
+        "result_freshness"
+      ],
+      "equals": {
+        "domain": "private-markets-pme"
+      }
+    },
+    {
+      "id": "strategy_pme_sensitivity_builder",
+      "set": "full",
+      "tool": "build_strategy_lab_session",
+      "args": {
+        "domain": "private-markets-pme",
+        "portfolio_id": "10000000-0000-4000-8000-000000000001",
+        "commitment_id": "60000000-0000-4000-8000-000000000001",
+        "benchmark_id": "b0000000-0000-0000-0000-000000000002"
+      },
+      "required": [
+        "status",
+        "domain",
+        "strategy_lab_session",
+        "coverage.status",
+        "coverage.missing_reasons",
+        "unavailable_reason",
+        "provenance.builder",
+        "provenance.portfolio_id",
+        "provenance.commitment_id",
+        "provenance.benchmark_id",
+        "provenance.sources"
+      ],
+      "equals": {
+        "domain": "private-markets-pme",
+        "provenance.builder": "server",
+        "provenance.portfolio_id": "10000000-0000-4000-8000-000000000001",
+        "provenance.commitment_id": "60000000-0000-4000-8000-000000000001",
+        "provenance.benchmark_id": "b0000000-0000-0000-0000-000000000002"
+      }
+    },
+    {
+      "id": "strategy_pme_sensitivity",
+      "set": "full",
+      "tool": "run_strategy_lab_private_markets_pme",
+      "depends_on": [
+        "strategy_pme_sensitivity_builder"
+      ],
+      "args": {
+        "strategy_lab_session": "<strategy_pme_sensitivity_builder:strategy_lab_session>"
+      },
+      "required": [
+        "domain",
+        "ks_pme",
+        "direct_alpha",
+        "irr",
+        "tvpi",
+        "dpi",
+        "rvpi",
+        "benchmark_comparisons",
+        "result_rows",
+        "has_sufficient_data",
+        "data_quality_limitations",
+        "result_freshness"
+      ],
+      "equals": {
+        "domain": "private-markets-pme"
+      }
+    },
+    {
       "id": "strategy_relative_return",
       "set": "full",
       "tool": "run_strategy_lab_relative_return",
@@ -1502,10 +1657,17 @@
           "<strategy_benchmarks:demo_set.manager_fund_series[1].series_id>",
           "<strategy_benchmarks:demo_set.manager_fund_series[2].series_id>"
         ],
-        "benchmark_id": "<strategy_benchmarks:demo_set.benchmark_series[0].series_id>"
+        "benchmark_id": "<strategy_benchmarks:benchmarks[0].benchmark_id>"
       },
       "required": [
         "domain",
+        "realized_metrics.metric_scope",
+        "simulated_metrics.metric_scope",
+        "benchmark_mappings[0].status",
+        "benchmark_mappings[0].reason",
+        "result_rows[0].metric_scope",
+        "result_rows[0].period_start",
+        "result_rows[0].period_end",
         "result_rows[0]",
         "result_rows[1]",
         "result_rows[2]",
@@ -1529,7 +1691,7 @@
           "<strategy_benchmarks:demo_set.manager_fund_series[1].series_id>",
           "<strategy_benchmarks:demo_set.manager_fund_series[2].series_id>"
         ],
-        "benchmark_series_id": "<strategy_benchmarks:demo_set.benchmark_series[0].series_id>"
+        "benchmark_id": "<strategy_benchmarks:benchmarks[0].benchmark_id>"
       },
       "required": [
         "domain",
@@ -1541,7 +1703,10 @@
         "selected_series_summaries[2]",
         "selected_series_id_count",
         "selected_series_summary_count",
-        "ranking_rows"
+        "ranking_rows",
+        "benchmark_mappings[0].status",
+        "benchmark_mappings[0].selectionType",
+        "benchmark_mappings[0].reason"
       ],
       "equals": {
         "domain": "manager-compare",
@@ -1589,7 +1754,10 @@
       },
       "required": [
         "domain",
-        "metric_rows"
+        "windows[0].start_date",
+        "windows[0].end_date",
+        "metric_rows[0].window_start_date",
+        "metric_rows[0].window_end_date"
       ],
       "equals": {
         "domain": "date-window-robustness"

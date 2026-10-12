@@ -51,6 +51,9 @@ from report_theme import (
     normalize_branding,
 )
 from report_layout import (
+    LAYOUT_GROUP_EVIDENCE_ANALYSIS,
+    LAYOUT_GROUP_TITLE_ROWS,
+    LAYOUT_GROUPS_FIELD,
     effective_chart_mode,
     prepare_report_for_render,
 )
@@ -165,20 +168,7 @@ def b_table(b):
             else:
                 cells.append(f"<td{cell_cls}>{rich(c)}</td>")
         rendered_rows.append("<tr>" + "".join(cells) + "</tr>")
-    source_table = bool(b["columns"]) and str(b["columns"][0]).strip().casefold() in {
-        "source",
-        "tag",
-    }
-    if source_table and len(rendered_rows) > 3:
-        body = (
-            "<tbody>"
-            + "".join(rendered_rows[:-3])
-            + '</tbody><tbody class="source-tail">'
-            + "".join(rendered_rows[-3:])
-            + "</tbody>"
-        )
-    else:
-        body = "<tbody>" + "".join(rendered_rows) + "</tbody>"
+    body = "<tbody>" + "".join(rendered_rows) + "</tbody>"
     title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
     note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
     return f'{title}<table class="grid">{colgroup}<thead><tr>{head}</tr></thead>{body}</table>{note}'
@@ -200,21 +190,25 @@ def _display_rows(rows, cap=CHART_TABLE_ROW_CAP):
 def _chart_table(c, columns, cap=None):
     rows = list(c["rows"]) if cap is None else _display_rows(c["rows"], cap)[0]
     total = int(c.get("_preview_total") or len(c["rows"]))
+    displayed = len(rows) + int(c.get("_layout_leading_rows") or 0)
     notes = []
-    if c.get("_appendix_reference"):
+    if c.get("_layout_suppress_note"):
+        pass
+    elif c.get("_appendix_reference"):
         notes.append(
-            f"Showing {len(rows)} of {total} returned rows; all returned rows "
+            f"Showing {displayed} of {total} returned rows; all returned rows "
             f"are in {c['_appendix_reference']}"
         )
-    elif len(rows) < total:
-        notes.append(f"Showing {len(rows)} of {total} rows")
-    if c.get("_chart_data_appendix") and c.get("truncated"):
-        notes.append(
-            "Connector output was truncated at source; this appendix contains "
-            "all returned rows, not the complete dataset"
-        )
-    elif c.get("_source_truncated") or c.get("truncated"):
-        notes.append("Connector output was truncated at source")
+    elif displayed < total:
+        notes.append(f"Showing {displayed} of {total} rows")
+    if not c.get("_layout_suppress_note"):
+        if c.get("_chart_data_appendix") and c.get("truncated"):
+            notes.append(
+                "Connector output was truncated at source; this appendix contains "
+                "all returned rows, not the complete dataset"
+            )
+        elif c.get("_source_truncated") or c.get("truncated"):
+            notes.append("Connector output was truncated at source")
     return b_table({
         "title": c.get("title"),
         "columns": [column.get("title", column.get("key", "")) for column in columns],
@@ -996,14 +990,95 @@ BLOCKS = {"text": b_text, "bullets": b_bullets, "kv": b_kv, "table": b_table, "t
           "markdown": b_markdown, "line": b_line, "statement": b_statement, "chart": b_chart,
           "waterfall": b_waterfall, "band": b_band, "stacked": b_stacked, "heat": b_heat}
 
+def _layout_group_ids(block, kind):
+    groups = block.get(LAYOUT_GROUPS_FIELD, [])
+    if not isinstance(groups, list):
+        return set()
+    return {
+        str(group.get("id"))
+        for group in groups
+        if isinstance(group, dict)
+        and group.get("kind") == kind
+        and group.get("id")
+    }
+
+def _blocks_share_layout_group(left, right, kind):
+    return bool(
+        _layout_group_ids(left, kind)
+        & _layout_group_ids(right, kind)
+    )
+
 def render_blocks(blocks):
-    out = []
-    for b in blocks:
-        fn = BLOCKS.get(b["type"])
+    def render_one(block):
+        fn = BLOCKS.get(block["type"])
         if not fn:
-            raise SystemExit(f"Unknown block type: {b['type']}")
-        classes = "blk table-block" if b["type"] in {"table", "heat"} else "blk"
-        out.append(f'<div class="{classes}">{fn(b)}</div>')
+            raise SystemExit(f"Unknown block type: {block['type']}")
+        classes = "blk table-block" if block["type"] in {"table", "heat"} else "blk"
+        title_row_groups = _layout_group_ids(block, LAYOUT_GROUP_TITLE_ROWS)
+        row_container = (
+            block.get("chart")
+            if block.get("type") == "chart"
+            and effective_chart_mode(block.get("chart") or {}) == "table"
+            else block
+        )
+        rows = (
+            row_container.get("rows")
+            if isinstance(row_container, dict)
+            else None
+        )
+        if not title_row_groups or not isinstance(rows, list) or len(rows) <= 2:
+            rendered = f'<div class="{classes}">{fn(block)}</div>'
+            return (
+                f'<div class="keep layout-title-rows">{rendered}</div>'
+                if title_row_groups
+                else rendered
+            )
+        opening = copy.deepcopy(block)
+        opening_container = (
+            opening.get("chart")
+            if opening.get("type") == "chart"
+            else opening
+        )
+        opening_container["rows"] = rows[:2]
+        opening_container.pop("note", None)
+        if opening.get("type") == "chart":
+            opening_container["_layout_suppress_note"] = True
+        remainder = copy.deepcopy(block)
+        remainder_container = (
+            remainder.get("chart")
+            if remainder.get("type") == "chart"
+            else remainder
+        )
+        remainder_container["rows"] = rows[2:]
+        remainder_container.pop("title", None)
+        if remainder.get("type") == "chart":
+            remainder_container["_layout_leading_rows"] = 2
+        return (
+            f'<div class="keep layout-title-rows"><div class="{classes}">'
+            f'{fn(opening)}</div></div><div class="{classes}">{fn(remainder)}</div>'
+        )
+
+    out = []
+    index = 0
+    while index < len(blocks):
+        block = blocks[index]
+        if index + 1 < len(blocks):
+            shared_groups = _blocks_share_layout_group(
+                block,
+                blocks[index + 1],
+                LAYOUT_GROUP_EVIDENCE_ANALYSIS,
+            )
+            if shared_groups:
+                out.append(
+                    '<div class="keep layout-evidence-analysis">'
+                    + render_one(block)
+                    + render_one(blocks[index + 1])
+                    + "</div>"
+                )
+                index += 2
+                continue
+        out.append(render_one(block))
+        index += 1
     return "".join(out)
 
 def _is_short_tail(block):
@@ -1065,6 +1140,7 @@ html{{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 body{{font-family:GradientInter,Inter,'Helvetica Neue',Arial,sans-serif;color:{INK};font-size:9.4pt;line-height:1.5;background:{PAPER}}}
 b{{font-weight:650}} code{{font-family:'DejaVu Sans Mono',Menlo,monospace;font-size:8pt;background:{WASH};padding:0 3px;border-radius:2px}}
 .src{{display:inline-block;font-size:6.6pt;font-weight:600;color:{LIME_DK};background:#F1FAD6;border-radius:3px;padding:0 4px;line-height:1.5;vertical-align:1px;white-space:nowrap}}
+.cvr .src,.slide.dark .src{{color:{INK};background:{LIME};vertical-align:1px}}
 .sec{{break-before:auto;margin-top:22px}} .sec.first{{break-before:auto;margin-top:0}} .sec.new-page{{break-before:page;margin-top:0}}
 .sh{{display:flex;align-items:flex-end;gap:14px;border-bottom:2px solid {INK};padding-bottom:8px;margin-bottom:14px}}
 .sn{{background:{LIME};color:{INK};font-weight:800;font-size:15pt;line-height:1;padding:8px 9px 6px;border-radius:3px;letter-spacing:-.02em}}
@@ -1089,7 +1165,8 @@ thead{{display:table-header-group}} tr{{break-inside:avoid}}
 .tile{{background:{WASH};border-radius:4px;padding:10px 11px 9px;border-top:3px solid var(--bar)}}
 .tile .tl{{font-size:6.8pt;letter-spacing:.08em;text-transform:uppercase;color:{INK2};font-weight:650}}
 .tile .tv{{font-size:17pt;font-weight:780;letter-spacing:-.02em;line-height:1.15;margin-top:3px}}
-.tile .ts{{font-size:7.2pt;color:{INK2};margin-top:1px;line-height:1.35}}
+.tile .ts{{font-size:7.2pt;color:{INK2};margin-top:1px;line-height:1.35;max-height:2.7em;overflow:hidden;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}}
+.tile .ts .src{{font-size:6.2pt;line-height:1.25;vertical-align:baseline;padding:0 3px}}
 .tile.dark{{background:{PANEL};color:{TEXT_ON_DARK}}} .tile.dark .tl{{color:{TEXT_ON_DARK_MUTED}}} .tile.dark .tv{{color:{LIME}}} .tile.dark .ts{{color:{TEXT_ON_DARK_MUTED}}}
 .chart{{display:block}} .chart .cl{{font-size:10.5px;fill:{INK};font-family:GradientInter,Inter,Arial}} .chart .cv{{font-size:10.5px;font-weight:650;fill:{INK};font-family:GradientInter,Inter,Arial}}
 .chart .ax{{font-size:9px;fill:{MUTED};font-family:GradientInter,Inter,Arial}}
@@ -1097,7 +1174,6 @@ thead{{display:table-header-group}} tr{{break-inside:avoid}}
 .callout .ct{{font-weight:700;margin-bottom:2px}}
 .covwrap{{border-top:1px solid {RULE}}} .cov{{display:grid;grid-template-columns:minmax(0,32%) max-content minmax(0,1fr);gap:8px;padding:4px 0;border-bottom:1px solid {RULE};align-items:start}}
 .cn{{font-weight:600}} .cnote{{font-size:7.8pt;color:{INK2};min-width:0;overflow-wrap:anywhere}}
-.source-tail{{break-inside:avoid}}
 .finding{{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid {RULE}}}
 .fs{{font-size:6.8pt;font-weight:800;letter-spacing:.08em;color:{INK};background:var(--c);text-align:center;border-radius:3px;padding:3px 0;height:fit-content}}
 .ft{{font-weight:650}} .fd{{color:{INK2};font-size:8.4pt}}
@@ -1109,8 +1185,13 @@ thead{{display:table-header-group}} tr{{break-inside:avoid}}
 .qs li:before{{content:counter(q,decimal-leading-zero);position:absolute;left:0;top:7px;font-weight:800;color:{LIME_DK};font-size:10pt}}
 .qt{{font-weight:600}} .qw{{color:{INK2};font-size:8.1pt;margin-top:1px}}
 .two{{display:grid;grid-template-columns:1fr 1fr;gap:20px}}
+.two .cov{{grid-template-columns:minmax(0,1fr) max-content;column-gap:8px;row-gap:2px;padding:6px 0}}
+.two .cov .cn{{min-width:0;overflow-wrap:anywhere}}
+.two .cov .cnote{{grid-column:1/-1;font-size:8pt;line-height:1.35}}
+.two .stm-t{{font-size:14pt;line-height:1.25;font-weight:750}}
 .pb{{break-after:page}}
 .keep{{break-inside:avoid}}
+.layout-title-rows>.blk:last-child,.layout-evidence-analysis>.blk:last-child{{margin-bottom:0}}
 .opening-table table{{break-inside:avoid}}
 .md .h3{{font-size:11pt;font-weight:750;margin:14px 0 6px;letter-spacing:-.01em}} .md .h4{{font-size:7.4pt;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:{INK2};margin:10px 0 5px}}
 .md > *{{margin-bottom:9px}} .md table.grid{{break-inside:auto}} .md table.grid tr{{break-inside:avoid}}
@@ -1140,7 +1221,7 @@ def cover_html(r):
     page_name, page_width, page_height = page_spec(m)
     sig = m.get("signal"); c = m.get("completeness")
     slabel, scol, stxt = SIGNAL[sig["level"]] if sig else ("", SLATE, INK)
-    facts = "".join(f'<div><div class="fk">{esc(k)}</div><div class="fv">{esc(v)}</div></div>' for k, v in m.get("cover_facts", []))
+    facts = "".join(f'<div><div class="fk">{esc(k)}</div><div class="fv">{rich(v)}</div></div>' for k, v in m.get("cover_facts", []))
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>{esc(m["title"])}</title>{FONT_LINK}<style>{CSS}
 @page{{size:{page_name};margin:0}}
 body{{background:{INK}}}
@@ -1151,6 +1232,7 @@ body{{background:{INK}}}
 .eyebrow{{margin-top:2.25in;color:{LIME};font-weight:750;font-size:9pt;letter-spacing:.18em;text-transform:uppercase}}
 .h1{{font-size:38pt;font-weight:800;line-height:1.02;letter-spacing:-.035em;margin-top:14px;max-width:6.4in}}
 .h2{{font-size:15pt;font-weight:500;color:{TEXT_ON_DARK_MUTED};margin-top:12px;max-width:6.4in;line-height:1.3}}
+.scope-banner{{display:inline-block;margin-top:14px;padding:5px 9px;border:1px solid {LIME};border-radius:3px;color:{LIME};font-size:7.4pt;font-weight:700;line-height:1.3;letter-spacing:.03em;max-width:6.4in}}
 .rule{{width:1.1in;height:5px;background:{LIME};margin:28px 0 26px;border-radius:1px}}
 .facts{{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 22px;max-width:6.6in}}
 .fk{{font-size:6.8pt;letter-spacing:.12em;text-transform:uppercase;color:{POWERED_BY_MUTED};font-weight:700}} .fv{{font-size:10.5pt;font-weight:600;margin-top:2px}}
@@ -1167,7 +1249,8 @@ body{{background:{INK}}}
 {cover_brand()}
 <div class="eyebrow">{esc(m.get("eyebrow", m.get("header_label", "")))}</div>
 <div class="h1">{esc(m["title"])}</div>
-<div class="h2">{esc(m.get("subtitle",""))}</div>
+<div class="h2">{rich(m.get("subtitle",""))}</div>
+{f'<div class="scope-banner">{esc(m["data_scope_banner"])}</div>' if m.get("data_scope_banner") else ""}
 <div class="rule"></div>
 <div class="facts">{facts}</div>
 <div class="sigrow">
@@ -1226,6 +1309,18 @@ def body_html(r):
         blocks = s.get("blocks", [])
         if pre:
             body = f'<div class="keep">{head}{pre}</div>' + render_body_blocks(blocks)
+        elif (
+            len(blocks) >= 2
+            and _blocks_share_layout_group(
+                blocks[0],
+                blocks[1],
+                LAYOUT_GROUP_EVIDENCE_ANALYSIS,
+            )
+        ):
+            body = (
+                f'<div class="keep">{head}{render_blocks(blocks[:2])}</div>'
+                + render_body_blocks(blocks[2:])
+            )
         elif blocks and blocks[0]["type"] == "markdown":
             pieces = md_to_html(blocks[0]["text"])
             first = pieces[0] if pieces else ""
@@ -1301,8 +1396,15 @@ def header_footer(r):
     st = f"font-family:GradientInter,Inter,Arial,sans-serif;font-size:7px;color:{MUTED};width:100%;padding:0 0.75in;display:flex;justify-content:space-between;"
     who = (f'<b style="color:{INK}">{esc(client_name())}</b>' if client_name()
            else f'<b style="color:{INK}">Gradient</b><b style="color:{LIME_DK}">CIO</b>')
+    scope = (
+        f'<br><span style="font-size:6px;font-weight:700;color:{LIME_DK}">'
+        f'{esc(m["data_scope_banner"])}</span>'
+        if m.get("data_scope_banner")
+        else ""
+    )
     hdr = (f'<div style="{st}"><span>{who}'
-           f' &nbsp;·&nbsp; {esc(m.get("header_label", DEFAULT_HEADER_LABEL))}</span><span>{esc(m.get("running_head", m.get("title","")))}</span></div>')
+           f' &nbsp;·&nbsp; {esc(m.get("header_label", DEFAULT_HEADER_LABEL))}</span>'
+           f'<span style="text-align:right">{esc(m.get("running_head", m.get("title","")))}{scope}</span></div>')
     pb = f' &nbsp;·&nbsp; {esc(footer_brand())}' if client_name() and footer_brand() else ""
     ftr = (f'<div style="{st}"><span>{esc(m.get("confidentiality") or default_confidentiality())} &nbsp;·&nbsp; Data as of {esc(m.get("data_as_of",""))}{pb}</span>'
            f'<span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span></div>')
@@ -1379,9 +1481,12 @@ body{{font-size:12pt;line-height:1.42}}
 .dcv .brand{{font-size:12pt}} .dcv .eyebrow{{margin-top:1.45in;color:{LIME};font-weight:750;font-size:10pt;letter-spacing:.18em;text-transform:uppercase}}
 .dcv .h1{{font-size:44pt;font-weight:800;line-height:1.02;letter-spacing:-.035em;margin-top:14px;max-width:10.5in}}
 .dcv .h2{{font-size:16pt;font-weight:500;color:{TEXT_ON_DARK_MUTED};margin-top:12px;max-width:10in}}
+.dcv .scope-banner{{display:inline-block;margin-top:13px;padding:5px 9px;border:1px solid {LIME};border-radius:3px;color:{LIME};font-size:8pt;font-weight:700;line-height:1.25;max-width:10in}}
 .dcv .rule{{width:1.1in;height:5px;background:{LIME};margin:26px 0 24px;border-radius:1px}}
 .dcv .facts{{display:grid;grid-template-columns:repeat(4,auto);gap:14px 40px;justify-content:start}}
 .dcv .fk{{font-size:7.4pt;letter-spacing:.12em;text-transform:uppercase;color:{POWERED_BY_MUTED};font-weight:700}} .dcv .fv{{font-size:12pt;font-weight:600;margin-top:2px}}
+.s-scope{{position:absolute;top:.20in;left:.7in;right:1.45in;text-align:right;color:{LIME_DK};font-size:7pt;font-weight:700;letter-spacing:.02em}}
+.slide.dark .s-scope{{color:{LIME}}}
 """
 
 def _deck_footer(m, n, total, dark=False):
@@ -1392,30 +1497,41 @@ def _deck_footer(m, n, total, dark=False):
 
 def deck_html(d):
     m = d["meta"]; slides = d["slides"]; total = len(slides) + 1
-    facts = "".join(f'<div><div class="fk">{esc(k)}</div><div class="fv">{esc(v)}</div></div>' for k, v in m.get("cover_facts", []))
+    facts = "".join(f'<div><div class="fk">{esc(k)}</div><div class="fv">{rich(v)}</div></div>' for k, v in m.get("cover_facts", []))
     lines = "".join(f'<line x1="{60+i*36}" y1="0" x2="{-340+i*36}" y2="750" stroke="{LIME}" stroke-width="1"/>' for i in range(16))
     out = [f"""<section class="slide dark dcv"><div class="glow"></div>
 <svg style="position:absolute;right:0;top:0;width:5.5in;height:{PPTX_SLIDE_HEIGHT_IN}in;opacity:.18" viewBox="0 0 500 750" preserveAspectRatio="none">{lines}</svg>
 {cover_brand()}<div class="eyebrow">{esc(m.get("eyebrow", m.get("header_label", "")))}</div>
-<div class="h1">{esc(m["title"])}</div><div class="h2">{esc(m.get("subtitle", ""))}</div><div class="rule"></div>
+<div class="h1">{esc(m["title"])}</div><div class="h2">{rich(m.get("subtitle", ""))}</div>
+{f'<div class="scope-banner">{esc(m["data_scope_banner"])}</div>' if m.get("data_scope_banner") else ""}<div class="rule"></div>
 <div class="facts">{facts}</div>{_deck_footer(m, 1, total, True)}</section>"""]
     num = 0
     for k, sl in enumerate(slides, start=2):
         lay = sl.get("layout", "full")
         if lay == "section":
-            out.append(f'<section class="slide dark"><div class="div-k">{esc(sl.get("kicker",""))}</div><div class="div-t">{esc(sl["title"])}</div>'
+            scope = (
+                f'<div class="s-scope">{esc(m["data_scope_banner"])}</div>'
+                if m.get("data_scope_banner")
+                else ""
+            )
+            out.append(f'<section class="slide dark">{scope}<div class="div-k">{esc(sl.get("kicker",""))}</div><div class="div-t">{esc(sl["title"])}</div>'
                        f'<div class="div-s">{rich(sl.get("subtitle",""))}</div>{_deck_footer(m, k, total, True)}</section>')
             continue
         num += 1
         head = (f'<div class="s-h"><div><div class="s-k">{esc(sl.get("kicker",""))}</div><div class="s-t">{esc(sl["title"])}</div></div>'
                 f'<div class="s-n">{num:02d}</div></div>')
+        scope = (
+            f'<div class="s-scope">{esc(m["data_scope_banner"])}</div>'
+            if m.get("data_scope_banner")
+            else ""
+        )
         if lay in ("two", "wide"):
             body = (f'<div class="s-{lay}"><div>{render_blocks(sl.get("left", []))}</div><div>{render_blocks(sl.get("right", []))}</div></div>')
         else:
             body = render_blocks(sl.get("blocks", []))
         take = f'<div class="s-take"><b>Takeaway</b><span>{rich(sl["takeaway"])}</span></div>' if sl.get("takeaway") else ""
         style = ' style="padding-bottom:1.45in"' if take else ""
-        out.append(f'<section class="slide"{style}>{head}<div class="s-body">{body}</div>{take}{_deck_footer(m, k, total)}</section>')
+        out.append(f'<section class="slide"{style}>{scope}{head}<div class="s-body">{body}</div>{take}{_deck_footer(m, k, total)}</section>')
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>{esc(m["title"])}</title>{FONT_LINK}<style>{CSS}{DECK_CSS}</style></head><body>{"".join(out)}</body></html>"""
 
 OVERFLOW_JS = """() => Array.from(document.querySelectorAll('.slide')).map((s, i) => {

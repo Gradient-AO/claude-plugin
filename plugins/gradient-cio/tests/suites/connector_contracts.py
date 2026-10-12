@@ -13,7 +13,7 @@ def contract_manifest():
         for name in ("standard", "full", "writes", "ddq-save-preview")
     }
     check(
-        counts == {"standard": 8, "full": 49, "writes": 8, "ddq-save-preview": 3},
+        counts == {"standard": 8, "full": 53, "writes": 8, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
     )
     full_read_count = counts["standard"] + counts["full"]
@@ -188,6 +188,7 @@ def contract_manifest():
         "get_portfolio_exposure",
         "get_portfolio_historical_returns",
         "get_portfolio_structure",
+        "get_private_markets_holdings",
         "get_public_equity_filing_evidence",
         "get_public_equity_fundamentals",
         "get_return_series",
@@ -197,6 +198,7 @@ def contract_manifest():
         "reconcile_manager_ddq_claims",
         "run_strategy_lab_date_window_robustness",
         "run_strategy_lab_expected_statistics",
+        "run_strategy_lab_private_markets_pme",
         "run_strategy_lab_relative_return",
         "save_strategy_lab_scenario",
         "search_managers",
@@ -219,6 +221,7 @@ def contract_manifest():
             "chart_availability",
             "portfolio_allocations",
             "portfolio_commitments",
+            "private_markets_holdings",
             "entity_facts",
             "fund_diligence_monitoring",
             "fund_diligence_review",
@@ -228,6 +231,8 @@ def contract_manifest():
             "strategy_return_series",
             "strategy_expected_statistics_session",
             "strategy_expected_statistics",
+            "strategy_pme_builder",
+            "strategy_pme",
             "strategy_relative_return",
             "strategy_manager_compare",
             "strategy_date_windows_session",
@@ -271,8 +276,8 @@ def contract_manifest():
             )
         )
         and "get_private_markets_holdings"
-        not in minimum.get("required_tools", []),
-        "private-markets holdings is mode-scoped without widening the minimum connector",
+        in minimum.get("required_tools", []),
+        "private-markets holdings remains construction-mode scoped and is required by PME",
     )
     private_markets_probe = next(
         (
@@ -1152,6 +1157,8 @@ def contract_manifest():
         "strategy_return_series",
         "strategy_expected_statistics_session",
         "strategy_expected_statistics",
+        "strategy_pme_builder",
+        "strategy_pme",
         "strategy_relative_return",
         "strategy_manager_compare",
         "strategy_date_windows_session",
@@ -1172,6 +1179,51 @@ def contract_manifest():
         },
         "Strategy Lab expected-statistics probe uses a server-built session",
     )
+    pme_builder = by_id["strategy_pme_builder"]
+    pme_probe = by_id["strategy_pme"]
+    pme_test_ids = {
+        "portfolio_id": "10000000-0000-4000-8000-000000000001",
+        "commitment_id": "60000000-0000-4000-8000-000000000001",
+        "benchmark_id": "b0000000-0000-0000-0000-000000000001",
+    }
+    check(
+        pme_builder["tool"] == "build_strategy_lab_session"
+        and pme_builder["args"] == {
+            "domain": "private-markets-pme",
+            **pme_test_ids,
+        }
+        and {
+            "status",
+            "strategy_lab_session",
+            "coverage.status",
+            "coverage.missing_reasons",
+            "unavailable_reason",
+            "provenance.portfolio_id",
+            "provenance.commitment_id",
+            "provenance.benchmark_id",
+        } <= set(pme_builder.get("required", []))
+        and "status" not in pme_builder.get("equals", {})
+        and "strategy_lab_session" not in pme_builder.get("non_null", []),
+        "PME builder probe uses fictional IDs and accepts typed availability",
+    )
+    check(
+        pme_probe["tool"] == "run_strategy_lab_private_markets_pme"
+        and pme_probe["depends_on"] == ["strategy_pme_builder"]
+        and pme_probe["args"].get("strategy_lab_session")
+        == "<strategy_pme_builder:strategy_lab_session>"
+        and {
+            "ks_pme",
+            "direct_alpha",
+            "irr",
+            "tvpi",
+            "dpi",
+            "rvpi",
+            "benchmark_comparisons",
+            "result_rows",
+        } <= set(pme_probe.get("required", []))
+        and "second, separate builder call" in contract_guidance,
+        "PME setup probes preserve primary and sensitivity request separation",
+    )
     relative_args = by_id["strategy_relative_return"]["args"]
     check(
         relative_args.get("return_series_ids") == [
@@ -1180,7 +1232,7 @@ def contract_manifest():
             "<strategy_benchmarks:demo_set.manager_fund_series[2].series_id>",
         ]
         and relative_args.get("benchmark_id")
-        == "<strategy_benchmarks:demo_set.benchmark_series[0].series_id>"
+        == "<strategy_benchmarks:benchmarks[0].benchmark_id>"
         and "strategy_lab_session" not in relative_args
         and by_id["strategy_relative_return"]["equals"].get("result_row_count")
         == 3,
@@ -1195,8 +1247,9 @@ def contract_manifest():
         compare_args.get("return_series_ids") == relative_args.get(
             "return_series_ids",
         )
-        and compare_args.get("benchmark_series_id")
-        == "<strategy_benchmarks:demo_set.benchmark_series[0].series_id>"
+        and compare_args.get("benchmark_id")
+        == "<strategy_benchmarks:benchmarks[0].benchmark_id>"
+        and "benchmark_series_id" not in compare_args
         and "strategy_lab_session" not in compare_args
         and by_id["strategy_manager_compare"]["equals"].get(
             "selected_series_id_count",

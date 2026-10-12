@@ -14,6 +14,7 @@ from pathlib import Path
 
 from report_layout import (
     LayoutPolicyError,
+    build_post_render_layout_contract,
     lint_report_design,
     load_layout_budget,
     prepare_report_for_render,
@@ -134,6 +135,8 @@ def fix_for(issue: str) -> str:
     normalized = issue.casefold()
     if "orphan tail" in normalized or "ends with heading" in normalized:
         return "keep the short tail with its preceding block or remove the forced break"
+    if "forced break not applied" in normalized:
+        return "restore the configured forced page break before the named section"
     if "full; minimum" in normalized:
         return "remove the following forced break or combine adjacent short sections"
     if "section " in normalized and "spans" in normalized:
@@ -246,7 +249,10 @@ def preferred_break_candidates(
         if (
             isinstance(start_page, int)
             and start_page > 1
-            and body_pages.get(start_page - 1, 1.0) < threshold
+            and (
+                body_pages.get(start_page - 1, 1.0) < threshold
+                or body_pages.get(start_page, 1.0) < threshold
+            )
         ):
             candidates.add(str(section.get("title", "")).strip())
     return candidates
@@ -275,6 +281,11 @@ def main() -> int:
         budget = load_layout_budget(args.budget) if args.budget else {}
         prepared = prepare_report_for_render(report)
         effective_budget = resolve_layout_budget(budget, report) if budget else {}
+        post_render_layout_contract = (
+            build_post_render_layout_contract(prepared, effective_budget)
+            if effective_budget
+            else {"schema_version": 1, "forced_breaks": [], "appendix_fill": []}
+        )
         content_errors = (
             validate_report_budget(prepared, effective_budget)
             if budget
@@ -317,6 +328,7 @@ def main() -> int:
                         "budget": str(args.budget) if args.budget else None,
                         "pre_render_budget_issues": issues,
                         "design_diagnostics": design_diagnostics,
+                        "post_render_layout_contract": post_render_layout_contract,
                         "outputs": {},
                     },
                     ensure_ascii=False,
@@ -376,6 +388,7 @@ def main() -> int:
             if key != "client_logo"
         },
         "design_diagnostics": design_diagnostics,
+        "post_render_layout_contract": post_render_layout_contract,
         "outputs": {},
     }
     failures: list[str] = []
@@ -404,7 +417,7 @@ def main() -> int:
             else:
                 pdf_result = {}
             removable = preferred_break_candidates(prepared, pdf_result)
-            if removable:
+            if removable and checked.returncode != 0:
                 repaired, removed = repair_preferred_breaks(
                     prepared,
                     removable,

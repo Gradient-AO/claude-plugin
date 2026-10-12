@@ -2,7 +2,7 @@
 name: gradient-odd-report
 description: "Create an operational due-diligence report for a manager or fund, including GIPS claim and performance-integrity review. Triggers: 'run operational due diligence', 'prepare an ODD report', 'verify a manager GIPS claim'. For return performance use gradient-idd-manager-performance."
 metadata:
-  style_contract: "2.1.0"
+  style_contract: "2.2.0"
   group: "Operational due diligence"
   subject: "manager or fund"
   output: "ODD report"

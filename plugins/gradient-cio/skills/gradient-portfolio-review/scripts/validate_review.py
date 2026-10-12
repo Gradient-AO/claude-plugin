@@ -35,6 +35,7 @@ from report_constants import (  # noqa: E402
     NEUTRAL_REBALANCE_PATTERNS,
     NEUTRAL_RECOMMENDATION_PATTERNS,
 )
+from report_vocab import REVIEW_VOCAB  # noqa: E402
 
 
 NEUTRAL_PATTERNS = (
@@ -65,8 +66,10 @@ BRIEF_SPEC = ReportSpec(
         )
     ),
     appendix_pattern=r"Appendix — Sources and method",
-    signal_levels=frozenset({"breach", "watch", "satisfactory", "insufficient"}),
-    completeness_states=frozenset({"complete", "partial"}),
+    signal_levels=REVIEW_VOCAB.signal_levels,
+    completeness_states=REVIEW_VOCAB.completeness_states,
+    allowed_tones=REVIEW_VOCAB.allowed_tones,
+    allowed_statuses=REVIEW_VOCAB.allowed_statuses,
     slot_rules=(
         SlotRule(r"Performance", frozenset({"line"}), "growth-of-100 line"),
         SlotRule(r"Performance", frozenset({"bars"}), "signed excess-return bars"),
@@ -142,8 +145,10 @@ COMPREHENSIVE_SPEC = ReportSpec(
         )
     ),
     appendix_pattern=r"Appendix A — Sources",
-    signal_levels=frozenset({"breach", "watch", "satisfactory", "insufficient"}),
-    completeness_states=frozenset({"complete", "partial"}),
+    signal_levels=REVIEW_VOCAB.signal_levels,
+    completeness_states=REVIEW_VOCAB.completeness_states,
+    allowed_tones=REVIEW_VOCAB.allowed_tones,
+    allowed_statuses=REVIEW_VOCAB.allowed_statuses,
     slot_rules=(
         SlotRule(r"Historical Returns", frozenset({"line", "chart"}), "returns visual"),
         SlotRule(r"Historical Returns", frozenset({"bars"}), "calendar-year signed bars"),

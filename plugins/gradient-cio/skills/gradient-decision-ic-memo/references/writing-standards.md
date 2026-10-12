@@ -59,10 +59,30 @@ availability or presentation rules.
   filings. Core reports may not use an ungoverned or document-only basis.
 - Every source appendix uses these columns in order: `Tag`, `Evidence`, `Basis`,
   `Tool / view`, `Key parameters`, `As of`, `Data scope`, `Validation`, `Digest`.
-  `Basis` is `gradient_tool`, `user_document`, or `regulatory_filing`.
-- A `gradient_tool` row names only tools in the packaged public catalog and
-  preserves a non-empty evidence digest. Never cite a locally derived value as
-  a Gradient tool result.
+  `Basis` is `gradient_tool`, `gradient_tool_metadata`, `user_document`, or
+  `regulatory_filing`.
+- A successful `gradient_tool` row names only tools in the packaged public
+  catalog and records the SHA-256 digest of the saved response as
+  `sha256:<64 lowercase hex>`. A failed or unavailable call uses a typed
+  `Validation` value (`failed:<reason>`, `unavailable:<reason>` or
+  `not_run:<reason>`) and the exact Digest sentinel
+  `not_available:no_payload`; keep any error code and request ID in
+  `Validation`. Never put a request ID in `Digest` or cite a locally derived
+  value as a Gradient tool result.
+- A `gradient_tool_metadata` row names a tool in the packaged public catalog
+  and uses the exact typed Digest marker
+  `not_applicable_metadata_response`. Use this basis only for a metadata
+  response with no evidence payload to hash. Both `gradient_tool` and
+  `gradient_tool_metadata` are valid when `meta.data_basis` is
+  `gradient_governed`.
+- Illustrative labeling is triggered only by structured scope: `Illustrative`
+  in a source-row `Data scope`, `meta.data_scope`, or a `Data scope` cover
+  fact. The word in ordinary prose does not trigger the contract. When
+  triggered, set `meta.data_scope_banner` to exactly **Illustrative, Gradient
+  Maintained — demo data, not the client's holdings or managers**. Every
+  affected source row keeps `Illustrative` in `Data scope`, does not repeat
+  the full label in `Evidence`, and the sources appendix carries the full
+  label exactly once in a `note`.
 - Every factual number, governed status and analytical judgment carries an `[S#]` tag.
 - Preserve returned dates, units, bases, formula identity and version, coverage, validation state and
   unavailable reason.

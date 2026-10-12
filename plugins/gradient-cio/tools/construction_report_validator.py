@@ -28,10 +28,9 @@ from report_constants import (
     ILLUSTRATIVE_LABEL,
     LOCAL_CALC_TAG_PATTERNS,
 )
+from report_vocab import CONSTRUCTION_VOCAB
 
 
-SIGNAL_LEVELS = frozenset({"clear", "watch", "elevated", "insufficient"})
-COMPLETENESS_STATES = frozenset({"complete", "partial"})
 COMMON_FORBIDDEN_PATTERNS = (
     ATTRIBUTION_STATUS_PATTERNS
     + LOCAL_CALC_TAG_PATTERNS
@@ -79,8 +78,8 @@ def _spec(
         name=name,
         section_rules=_rules(*titles),
         appendix_pattern=r"Appendix A — Sources",
-        signal_levels=SIGNAL_LEVELS,
-        completeness_states=COMPLETENESS_STATES,
+        signal_levels=CONSTRUCTION_VOCAB.signal_levels,
+        completeness_states=CONSTRUCTION_VOCAB.completeness_states,
         slot_rules=slots,
         forbidden_body_patterns=COMMON_FORBIDDEN_PATTERNS + forbidden,
         illustrative_label=ILLUSTRATIVE_LABEL,
@@ -99,7 +98,8 @@ def _spec(
         require_key_judgment_structure=True,
         executive_tile_labels=tiles,
         require_tile_sources=True,
-        allowed_tones=frozenset({"", "accent", "good", "watch", "bad", "info"}),
+        allowed_tones=CONSTRUCTION_VOCAB.allowed_tones,
+        allowed_statuses=CONSTRUCTION_VOCAB.allowed_statuses,
     )
 
 

@@ -2,7 +2,7 @@
 name: gradient-portfolio-attribution
 description: "Create a single-lane attribution report for one saved portfolio. Triggers: 'prepare an attribution report', 'run Brinson analysis', 'show sources of active return'. For multi-lane attribution use gradient-portfolio-attribution-compare."
 metadata:
-  style_contract: "2.1.0"
+  style_contract: "2.2.0"
   group: "Portfolio Analytics"
   subject: "portfolio attribution"
   output: "report"

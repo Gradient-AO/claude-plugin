@@ -3,7 +3,7 @@ name: gradient-idd-manager-performance
 description: "Create a manager performance report for single-manager meaningfulness, benchmark comparisons, and rolling-window robustness. Triggers: 'assess one track record', 'compare manager performance', 'test performance persistence'. For operational diligence use gradient-odd-report."
 metadata:
   version: "3.0.0"
-  style_contract: "2.1.0"
+  style_contract: "2.2.0"
   group: "Investment due diligence"
   subject: "manager performance"
   output: "performance report"
@@ -36,6 +36,14 @@ Set `meta.mode` to the selected value before validation. Do not combine modes in
 - Keep investment evidence separate from Form ADV, Form 13F and operational evidence.
 - Correlation and risk-contribution evidence are unavailable unless returned by a governed live tool.
 - Label illustrative evidence exactly as required by `references/report-style.md`.
+
+## Required evidence contract
+
+- Set `meta.data_basis` to `gradient_governed` when every source is a Gradient tool result, or `mixed` when user documents or regulatory filings are also cited.
+- The sources appendix table uses exactly these columns in order: `Tag`, `Evidence`, `Basis`, `Tool / view`, `Key parameters`, `As of`, `Data scope`, `Validation`, `Digest`.
+- `Basis` is one of `gradient_tool`, `user_document`, or `regulatory_filing`.
+- For a successful `gradient_tool` call, `Digest` is the SHA-256 digest of the saved response in `sha256:<64 lowercase hex>` form. For a failed or unavailable call, use the typed no-payload sentinel required by `references/writing-standards.md`; preserve its error code and request ID in `Validation`, never in `Digest`.
+- Use `num: "A"` and title `Appendix — Sources and methods` for the sources appendix.
 
 ## Collect, assess and hand off
 

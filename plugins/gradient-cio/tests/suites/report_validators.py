@@ -566,6 +566,40 @@ def connector_cutover():
             == [],
             "strong structured analysis callout produces zero quality notes",
         )
+        clear_missing_mapping = (
+            "Observation: The manager returned 8.4% against the selected benchmark "
+            "[S2]. Why it matters: Relative interpretation depends on a defensible "
+            "comparison series. Uncertainty: The server returned no benchmark "
+            "mapping for this manager. What would change the view: A refreshed "
+            "response containing a named benchmark and matching rationale."
+        )
+        check(
+            review_callout(
+                "Analysis — Benchmark mapping is unresolved",
+                clear_missing_mapping,
+                structured=True,
+            )
+            == [],
+            "clear limitation prose does not require a preferred keyword",
+        )
+        keyword_stuffing = (
+            "Observation: The manager returned 8.4% against the selected benchmark "
+            "[S2]. Why it matters: Relative interpretation depends on a defensible "
+            "comparison series. Uncertainty: Coverage missing limited unavailable "
+            "unknown assumptions evidence. What would change the view: A refreshed "
+            "response containing a named benchmark and matching rationale."
+        )
+        check(
+            any(
+                "specific limitation" in note
+                for note in review_callout(
+                    "Analysis — Benchmark mapping is unresolved",
+                    keyword_stuffing,
+                    structured=True,
+                )
+            ),
+            "keyword-stuffed uncertainty does not pass the quality check",
+        )
         strong_unstructured = (
             "(TEST) Revenue rose 8.4% while operating margin fell from 18.2% "
             "to 15.6% across the latest four filed quarters [S2]. The result "
@@ -676,7 +710,11 @@ def connector_cutover():
     )
     with tempfile.TemporaryDirectory() as monitor_tmp:
         quiet = json.loads(json.dumps(monitor_fixture))
-        quiet["meta"]["signal"] = {"level": "clear", "label": "Quiet week"}
+        quiet["meta"].update({
+            "signal": {"level": "clear", "label": "Quiet week"},
+            "week_kind": "quiet",
+            "attention_items": [],
+        })
         quiet["executive"]["bottom_line"] = (
             "No current-period alerts or returned changes were identified in the "
             "processed TEST window [S2] [S3]."
@@ -686,6 +724,11 @@ def connector_cutover():
             for tile in quiet["executive"]["tiles"]
             if tile["label"] == "Changes since review"
         ).update({"value": "0", "sub": "No returned changes [S2]", "tone": "good"})
+        next(
+            fact
+            for fact in quiet["meta"]["cover_facts"]
+            if fact[0] == "Changes since review"
+        )[1] = "0"
         quiet["sections"].pop(1)
         quiet["sections"][0]["kicker"] = (
             "No current-period alerts or returned changes require attention"
@@ -710,6 +753,14 @@ def connector_cutover():
                                 "name": "Alerts and changes",
                                 "status": "available",
                                 "note": "Seven-day TEST window processed [S2] [S3]",
+                            },
+                            {
+                                "name": "Latest published event",
+                                "status": "not_assessed",
+                                "note": (
+                                    "Not available — the firm and fund event feed "
+                                    "is not published [S5]"
+                                ),
                             }
                         ],
                     }
@@ -864,7 +915,8 @@ def connector_cutover():
                 for block in section["blocks"]
                 if block.get("type") == "table"
             )
-            table["rows"].append(json.loads(json.dumps(table["rows"][0])))
+            while len(table["rows"]) < 13:
+                table["rows"].append(json.loads(json.dumps(table["rows"][0])))
         next(
             block
             for block in second_fund["blocks"]
@@ -880,8 +932,18 @@ def connector_cutover():
             encoding="utf-8",
             errors="replace",
         )
+        split_fund_rows = [
+            sum(
+                len(block.get("rows", []))
+                for block in section["blocks"]
+                if block.get("type") == "table"
+            )
+            for section in (first_fund, second_fund)
+        ]
         check(
-            split_result.returncode == 0,
+            sum(split_fund_rows) > 24
+            and all(rows <= 24 for rows in split_fund_rows)
+            and split_result.returncode == 0,
             "DDQ validator accepts one analytical section per fund above 24 rows",
         )
 
@@ -959,49 +1021,87 @@ def connector_cutover():
             "attribution validator accepts a typed-unavailable ex ante section",
         )
 
-        illustrative = json.loads(json.dumps(attribution_fixture))
-        illustrative_label = ILLUSTRATIVE_LABEL
+        def source_table(document):
+            return next(
+                block
+                for section in document["sections"]
+                for block in section["blocks"]
+                if block.get("columns", [None])[0] == "Tag"
+            )
+
+        def run_attribution_case(name, document):
+            path = tmp_dir / f"{name}.json"
+            path.write_text(json.dumps(document), encoding="utf-8")
+            return subprocess.run(
+                [
+                    sys.executable,
+                    str(PORTFOLIO_ATTRIBUTION_VALIDATOR),
+                    str(path),
+                ],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+
         check(
-            illustrative_label
+            ILLUSTRATIVE_LABEL
             == (
                 "Illustrative, Gradient Maintained — demo data, "
                 "not the client's holdings or managers"
             ),
             "report validators share the exact standard illustrative label",
         )
-        illustrative["meta"]["title"] += f" — {illustrative_label}"
-        illustrative["meta"]["confidentiality"] = illustrative_label
-        illustrative_path = tmp_dir / "attribution-illustrative.json"
-        illustrative_path.write_text(
-            json.dumps(illustrative),
-            encoding="utf-8",
+
+        normal_prose = json.loads(json.dumps(attribution_fixture))
+        normal_prose["meta"]["subtitle"] += " · illustrative discussion"
+        normal_prose_result = run_attribution_case(
+            "attribution-normal-prose",
+            normal_prose,
         )
-        illustrative_result = subprocess.run(
-            [
-                sys.executable,
-                str(PORTFOLIO_ATTRIBUTION_VALIDATOR),
-                str(illustrative_path),
-            ],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
+        check(
+            normal_prose_result.returncode == 0,
+            "ordinary illustrative prose does not trigger scope labeling",
+        )
+
+        illustrative = json.loads(json.dumps(attribution_fixture))
+        illustrative["meta"]["data_scope_banner"] = ILLUSTRATIVE_LABEL
+        for fact in illustrative["meta"]["cover_facts"]:
+            if fact[0] == "Data scope":
+                fact[1] = "Illustrative — fictional TEST data"
+        illustrative_sources = source_table(illustrative)
+        for row in illustrative_sources["rows"]:
+            row[6] = "Illustrative — fictional TEST data"
+        illustrative_sources["note"] = ILLUSTRATIVE_LABEL
+        illustrative_result = run_attribution_case(
+            "attribution-illustrative",
+            illustrative,
         )
         check(
             illustrative_result.returncode == 0,
-            "attribution validator accepts the standard illustrative label",
+            "attribution validator accepts structured illustrative scope",
         )
 
-        illustrative["meta"]["confidentiality"] = "Illustrative"
-        illustrative_path.write_text(
-            json.dumps(illustrative),
+        ddq_illustrative = json.loads(
+            (FIX / "ddq.json").read_text(encoding="utf-8")
+        )
+        ddq_illustrative["meta"]["data_scope_banner"] = ILLUSTRATIVE_LABEL
+        ddq_sources = source_table(ddq_illustrative)
+        for source_index, row in enumerate(ddq_sources["rows"], start=1):
+            if row[2] == "gradient_tool":
+                row[8] = f"sha256:{source_index:064x}"
+        ddq_sources["rows"][0][6] = "Illustrative — synthetic TEST data"
+        ddq_sources["note"] = ILLUSTRATIVE_LABEL
+        ddq_illustrative_path = tmp_dir / "ddq-illustrative.json"
+        ddq_illustrative_path.write_text(
+            json.dumps(ddq_illustrative),
             encoding="utf-8",
         )
-        missing_label_result = subprocess.run(
+        ddq_illustrative_result = subprocess.run(
             [
                 sys.executable,
-                str(PORTFOLIO_ATTRIBUTION_VALIDATOR),
-                str(illustrative_path),
+                str(ddq_validator),
+                str(ddq_illustrative_path),
             ],
             capture_output=True,
             text=True,
@@ -1009,41 +1109,138 @@ def connector_cutover():
             errors="replace",
         )
         check(
-            missing_label_result.returncode != 0,
-            "attribution validator rejects incomplete illustrative labeling",
+            ddq_illustrative_result.returncode == 0,
+            "illustrative scope applies to ReportSpecs without legacy opt-in",
         )
-        shared_label_results = []
-        for name, validator, fixture_name in (
+
+        invalid_illustrative_cases = []
+        missing_banner = json.loads(json.dumps(illustrative))
+        missing_banner["meta"].pop("data_scope_banner")
+        invalid_illustrative_cases.append(
             (
-                "construction",
-                CONSTRUCTION_VALIDATORS[0][1],
-                "construction-private-markets.json",
-            ),
+                "missing canonical banner",
+                missing_banner,
+                "meta.data_scope_banner",
+            )
+        )
+        missing_row_scope = json.loads(json.dumps(illustrative))
+        source_table(missing_row_scope)["rows"][0][6] = "Fictional TEST data"
+        invalid_illustrative_cases.append(
             (
-                "review",
-                PORTFOLIO_REVIEW_VALIDATOR,
-                "portfolio-comprehensive.json",
-            ),
+                "affected row missing Illustrative scope",
+                missing_row_scope,
+                "Data scope must contain 'Illustrative'",
+            )
+        )
+        repeated_evidence_label = json.loads(json.dumps(illustrative))
+        source_table(repeated_evidence_label)["rows"][0][1] = ILLUSTRATIVE_LABEL
+        invalid_illustrative_cases.append(
+            (
+                "full label repeated in Evidence",
+                repeated_evidence_label,
+                "Evidence must not repeat",
+            )
+        )
+        missing_appendix_note = json.loads(json.dumps(illustrative))
+        source_table(missing_appendix_note).pop("note")
+        invalid_illustrative_cases.append(
+            (
+                "missing appendix label note",
+                missing_appendix_note,
+                "exactly once as an appendix note",
+            )
+        )
+        for index, (label, document, expected) in enumerate(
+            invalid_illustrative_cases
         ):
-            labeled = json.loads(
-                (FIX / fixture_name).read_text(encoding="utf-8")
+            result = run_attribution_case(
+                f"attribution-illustrative-invalid-{index}",
+                document,
             )
-            labeled["meta"]["title"] += f" — {ILLUSTRATIVE_LABEL}"
-            labeled["meta"]["confidentiality"] = ILLUSTRATIVE_LABEL
-            labeled_path = tmp_dir / f"{name}-illustrative.json"
-            labeled_path.write_text(json.dumps(labeled), encoding="utf-8")
-            shared_label_results.append(
-                subprocess.run(
-                    [sys.executable, str(validator), str(labeled_path)],
-                    capture_output=True,
-                    text=True,
-                    encoding="utf-8",
-                    errors="replace",
-                )
+            output = result.stdout + result.stderr
+            check(
+                result.returncode == 1 and expected in output,
+                f"attribution validator rejects {label}",
             )
+
+        metadata_row = json.loads(json.dumps(attribution_fixture))
+        metadata_source = source_table(metadata_row)["rows"][0]
+        metadata_source[2] = "gradient_tool_metadata"
+        metadata_source[8] = "not_applicable_metadata_response"
+        metadata_result = run_attribution_case(
+            "attribution-metadata-row",
+            metadata_row,
+        )
         check(
-            all(result.returncode == 0 for result in shared_label_results),
-            "construction, attribution, and review validators accept the shared label",
+            metadata_result.returncode == 0,
+            "gradient-governed report accepts a public-tool metadata row",
+        )
+
+        invalid_metadata_digest = json.loads(json.dumps(metadata_row))
+        source_table(invalid_metadata_digest)["rows"][0][8] = "sha256:metadata"
+        invalid_metadata_result = run_attribution_case(
+            "attribution-metadata-row-invalid-digest",
+            invalid_metadata_digest,
+        )
+        invalid_metadata_output = (
+            invalid_metadata_result.stdout + invalid_metadata_result.stderr
+        )
+        check(
+            invalid_metadata_result.returncode == 1
+            and "not_applicable_metadata_response" in invalid_metadata_output,
+            "metadata row requires the exact typed Digest marker",
+        )
+
+        invalid_metadata_tool = json.loads(json.dumps(metadata_row))
+        source_table(invalid_metadata_tool)["rows"][0][3] = (
+            "get_nonpublic_metadata"
+        )
+        invalid_tool_result = run_attribution_case(
+            "attribution-metadata-row-invalid-tool",
+            invalid_metadata_tool,
+        )
+        invalid_tool_output = invalid_tool_result.stdout + invalid_tool_result.stderr
+        check(
+            invalid_tool_result.returncode == 1
+            and "unknown Gradient tool" in invalid_tool_output,
+            "metadata row requires a packaged public tool name",
+        )
+
+        invalid_normal_digest = json.loads(json.dumps(attribution_fixture))
+        normal_row = next(
+            row
+            for row in source_table(invalid_normal_digest)["rows"]
+            if row[2] == "gradient_tool"
+        )
+        normal_row[8] = "missing"
+        invalid_normal_result = run_attribution_case(
+            "attribution-normal-row-invalid-digest",
+            invalid_normal_digest,
+        )
+        invalid_normal_output = (
+            invalid_normal_result.stdout + invalid_normal_result.stderr
+        )
+        check(
+            invalid_normal_result.returncode == 1
+            and "successful Gradient evidence requires Digest" in invalid_normal_output,
+            "normal Gradient tool rows retain digest validation",
+        )
+
+        failed_tool_evidence = json.loads(json.dumps(attribution_fixture))
+        failed_row = next(
+            row
+            for row in source_table(failed_tool_evidence)["rows"]
+            if row[2] == "gradient_tool"
+        )
+        failed_row[7] = "failed:demo_series_not_found; request_id=req-123"
+        failed_row[8] = "not_available:no_payload"
+        failed_tool_result = run_attribution_case(
+            "attribution-failed-tool-evidence",
+            failed_tool_evidence,
+        )
+        check(
+            failed_tool_result.returncode == 0,
+            "failed Gradient calls use typed no-payload provenance",
         )
     for label, validator, fixture in CONSTRUCTION_VALIDATORS:
         validated_construction = subprocess.run(
@@ -1285,7 +1482,12 @@ def connector_cutover():
             )
         )
         budget = resolve_layout_budget(budget, document)
-        budget_sections = budget["sections"]
+        budget_content = budget.get("content")
+        budget_sections = (
+            budget_content.get("sections", {})
+            if isinstance(budget_content, dict)
+            else budget.get("sections", {})
+        )
         expected_keys = [
             str(index) for index in range(1, len(expected["sections"]) + 1)
         ]

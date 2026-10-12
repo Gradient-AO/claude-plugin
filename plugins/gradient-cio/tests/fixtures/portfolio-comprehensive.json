@@ -1959,7 +1959,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "{'chip': 'passed', 'status': 'passed'}",
-              "test-s1"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S2",
@@ -1970,7 +1970,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "{'chip': 'passed', 'status': 'passed'}",
-              "test-s2"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S3",
@@ -1981,7 +1981,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "{'chip': 'passed', 'status': 'passed'}",
-              "test-s3"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S4",
@@ -1992,7 +1992,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "{'chip': 'passed', 'status': 'passed'}",
-              "test-s4"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S5",
@@ -2003,7 +2003,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "{'chip': 'degraded', 'status': 'degraded'}",
-              "test-s5"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S6",
@@ -2014,7 +2014,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "{'chip': 'passed', 'status': 'passed'}",
-              "test-s6"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S7",
@@ -2025,7 +2025,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "{'chip': 'passed', 'status': 'passed'}",
-              "test-s7"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S8",
@@ -2036,7 +2036,7 @@
               "2026-06-15",
               "Fictional TEST data",
               "{'chip': 'passed', 'status': 'passed'}",
-              "test-s8"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S9",
@@ -2047,7 +2047,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "{'chip': 'passed', 'status': 'passed'}",
-              "test-s9"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S10",
@@ -2058,7 +2058,7 @@
               "2026-05-15",
               "Fictional TEST data",
               "{'chip': 'advisory', 'status': 'advisory'}",
-              "test-s10"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S11",
@@ -2069,7 +2069,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "{'chip': 'passed', 'status': 'passed'}",
-              "test-s11"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S12",
@@ -2080,7 +2080,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "{'chip': 'passed', 'status': 'passed'}",
-              "test-s12"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ]
           ]
         }

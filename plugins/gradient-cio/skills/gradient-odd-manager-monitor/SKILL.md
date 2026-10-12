@@ -2,7 +2,7 @@
 name: gradient-odd-manager-monitor
 description: "Create a manager-monitoring digest for a diligence roster. Triggers: 'prepare the weekly manager digest', 'show roster changes', 'review manager alerts'. For a full operational review use gradient-odd-report."
 metadata:
-  style_contract: "2.1.0"
+  style_contract: "2.2.0"
   group: "Operational due diligence"
   subject: "manager roster"
   output: "monitoring digest"

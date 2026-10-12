@@ -19,11 +19,21 @@ When the comparison tool is unavailable, fallback comparison is limited to:
 - classifying the sign of returned effects;
 - ordering already-returned effects within each lane.
 
-Fallback mode must not calculate lane differences, concentration, persistence, overlap, reconciliation or any other derived metric. It must not describe a lane as improving or deteriorating. “Sources that persist” is unavailable unless returned by `compare_portfolio_attribution`.
+Fallback mode must include a **Returned sign by segment** table with exactly one returned segment per row. It must not aggregate sign counts (for example, “2 of 5”), calculate lane differences, concentration, persistence, overlap, reconciliation or any other derived metric. It must not describe a lane as improving or deteriorating. “Sources that persist” is unavailable unless returned by `compare_portfolio_attribution`.
+
+## Benchmark and excess boundary
+
+Historical attribution `summary.benchmark_return` is the linked segment benchmark composite, and attribution `summary.excess_return` is measured against that composite. Historical-return `benchmark_relative` rows instead use the portfolio policy benchmark entity, and their arithmetic excess is measured against that entity.
+
+When both appear, preserve `diagnostics.entity_return_reconciliation`, including the window, both portfolio returns, both benchmark returns, their basis fields and returned deltas. The Historical Attribution section must include a sourced callout explaining the basis boundary. Never compare, subtract or conflate attribution-summary excess with historical-return policy-benchmark excess.
 
 ## Unavailability
 
-Missing lanes and server-derived comparisons render as typed unavailable evidence. If more than half of required report slots are unavailable, `meta.signal.level` is `insufficient`.
+An exact planned-tool row absent from `get_gradient_capabilities` renders as `Not available — not listed by get_gradient_capabilities` with a citation to the capability response. Missing lanes and server-derived comparisons otherwise render as typed unavailable evidence. If more than half of required report slots are unavailable, `meta.signal.level` is `insufficient`.
+
+## Report structure
+
+Executive tile subtitles identify their basis: historical is `realized 12 months` with the period, ex ante is `1-year expected`, and simulated and comparison tiles state their returned basis or the typed capability unavailability. Simulated Attribution, Cross-Lane Comparison and Appendix A — Sources and Methods use `page_break: "force"`.
 
 ## Provenance
 

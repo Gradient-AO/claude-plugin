@@ -5,13 +5,13 @@ from __future__ import annotations
 
 import re
 import sys
+from datetime import date
 from pathlib import Path
-
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(PLUGIN_ROOT / "tools"))
 
-from report_json_validator import (  # noqa: E402
+from report_json_validator import (
     JsonValue,
     ReportSpec,
     SectionRule,
@@ -26,7 +26,7 @@ from report_json_validator import (  # noqa: E402
     section_objects,
     validate_report,
 )
-
+from report_vocab import DILIGENCE_VOCAB
 
 ACTIVE_SPEC = ReportSpec(
     name="manager monitoring digest",
@@ -41,8 +41,8 @@ ACTIVE_SPEC = ReportSpec(
         )
     ),
     appendix_pattern=r"Appendix A — Sources and method",
-    signal_levels=frozenset({"clear", "review", "elevated"}),
-    completeness_states=frozenset({"complete", "degraded"}),
+    signal_levels=DILIGENCE_VOCAB.signal_levels,
+    completeness_states=DILIGENCE_VOCAB.completeness_states,
     slot_rules=(
         SlotRule(r"This week", frozenset({"bars"}), "alerts-by-severity bars"),
         SlotRule(r"This week", frozenset({"findings"}), "top findings"),
@@ -51,12 +51,8 @@ ACTIVE_SPEC = ReportSpec(
             frozenset({"two_col"}),
             "per-manager change and event groups",
         ),
-        SlotRule(
-            r"Review calendar", frozenset({"table"}), "review-calendar table"
-        ),
-        SlotRule(
-            r"Review calendar", frozenset({"timeline"}), "reviews-due timeline"
-        ),
+        SlotRule(r"Review calendar", frozenset({"table"}), "review-calendar table"),
+        SlotRule(r"Review calendar", frozenset({"timeline"}), "reviews-due timeline"),
         SlotRule(
             r"Coverage and freshness",
             frozenset({"coverage"}),
@@ -68,9 +64,7 @@ ACTIVE_SPEC = ReportSpec(
             "sources table",
         ),
     ),
-    forbidden_body_patterns=(
-        r"\b(?:hire|fire|terminate|redeem from|allocate to)\b",
-    ),
+    forbidden_body_patterns=(r"\b(?:hire|fire|terminate|redeem from|allocate to)\b",),
     require_action_row_sources=True,
     analysis_section_patterns=(r"Changes and alerts", r"Review calendar"),
     analytical_section_patterns=(r"Changes and alerts", r"Review calendar"),
@@ -99,16 +93,12 @@ QUIET_SPEC = ReportSpec(
         )
     ),
     appendix_pattern=r"Appendix A — Sources and method",
-    signal_levels=frozenset({"clear", "review", "elevated"}),
-    completeness_states=frozenset({"complete", "degraded"}),
+    signal_levels=DILIGENCE_VOCAB.signal_levels,
+    completeness_states=DILIGENCE_VOCAB.completeness_states,
     slot_rules=(
         SlotRule(r"This week", frozenset({"two_col"}), "quiet-week summary"),
-        SlotRule(
-            r"Review calendar", frozenset({"table"}), "review-calendar table"
-        ),
-        SlotRule(
-            r"Review calendar", frozenset({"timeline"}), "reviews-due timeline"
-        ),
+        SlotRule(r"Review calendar", frozenset({"table"}), "review-calendar table"),
+        SlotRule(r"Review calendar", frozenset({"timeline"}), "reviews-due timeline"),
         SlotRule(
             r"Coverage and freshness",
             frozenset({"coverage"}),
@@ -120,9 +110,7 @@ QUIET_SPEC = ReportSpec(
             "sources table",
         ),
     ),
-    forbidden_body_patterns=(
-        r"\b(?:hire|fire|terminate|redeem from|allocate to)\b",
-    ),
+    forbidden_body_patterns=(r"\b(?:hire|fire|terminate|redeem from|allocate to)\b",),
     require_action_row_sources=True,
     analysis_section_patterns=(r"Review calendar",),
     analytical_section_patterns=(r"Review calendar",),
@@ -137,6 +125,59 @@ QUIET_SPEC = ReportSpec(
     ),
     require_tile_sources=True,
 )
+
+ATTENTION_REASON_POLICY: dict[str, tuple[str, dict[str, str | None]]] = {
+    "identity_attention": (
+        "high",
+        {
+            "fund": "Run ODD refresh",
+            "firm": "Run ODD refresh",
+        },
+    ),
+    "overdue": (
+        "high",
+        {"fund": "Schedule review", "firm": "Schedule review"},
+    ),
+    "unreviewed": (
+        "medium",
+        {"fund": "Schedule review", "firm": "Schedule review"},
+    ),
+    "material_change": (
+        "medium",
+        {
+            "fund": "Run ODD refresh",
+            "firm": "Review new ADV filing",
+        },
+    ),
+    "form_d_signals_detected": (
+        "medium",
+        {
+            "fund": "Run ODD refresh",
+            "firm": None,
+        },
+    ),
+    "evidence_unavailable": (
+        "medium",
+        {
+            "fund": "Run ODD refresh",
+            "firm": "Run ODD refresh",
+        },
+    ),
+    "form_d_baseline_upgrade_required": (
+        "medium",
+        {"fund": "Schedule review", "firm": None},
+    ),
+    "stale_evidence": (
+        "low",
+        {"fund": "Schedule review", "firm": None},
+    ),
+}
+
+
+def _nonnegative_integer(value: JsonValue | None) -> int | None:
+    if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+        return None
+    return value
 
 
 def _tile_is_zero(root: dict[str, JsonValue], label: str) -> bool:
@@ -157,10 +198,242 @@ def _tile_is_zero(root: dict[str, JsonValue], label: str) -> bool:
     return False
 
 
+def _tile_count(root: dict[str, JsonValue], label: str) -> int | None:
+    executive = as_object(root.get("executive"))
+    tiles = as_array(executive.get("tiles")) if executive is not None else None
+    if tiles is None:
+        return None
+    for value in tiles:
+        tile = as_object(value)
+        if tile is None or tile.get("label") != label:
+            continue
+        raw_value = tile.get("value")
+        if isinstance(raw_value, bool):
+            return None
+        if isinstance(raw_value, int) and raw_value >= 0:
+            return raw_value
+        if isinstance(raw_value, str) and re.fullmatch(r"\d+", raw_value.strip()):
+            return int(raw_value)
+        return None
+    return None
+
+
 def _is_quiet_week(root: dict[str, JsonValue]) -> bool:
     return _tile_is_zero(root, "New alerts") and _tile_is_zero(
         root, "Changes since review"
     )
+
+
+def _iso_date(value: JsonValue | None) -> date | None:
+    if not isinstance(value, str):
+        return None
+    try:
+        return date.fromisoformat(value)
+    except ValueError:
+        return None
+
+
+def _validate_completeness(
+    meta: dict[str, JsonValue],
+) -> tuple[list[str], int | None]:
+    errors: list[str] = []
+    completeness = as_object(meta.get("completeness"))
+    if completeness is None:
+        return ["meta.completeness must be an object"], None
+
+    field_names = (
+        "distinct_funds",
+        "unique_parent_firms",
+        "evaluated_subjects",
+        "not_evaluated_subjects",
+        "used",
+        "expected",
+    )
+    counts = {
+        name: _nonnegative_integer(completeness.get(name)) for name in field_names
+    }
+    for name, value in counts.items():
+        if value is None:
+            errors.append(f"meta.completeness.{name} must be a nonnegative integer")
+    if any(value is None for value in counts.values()):
+        return errors, counts["not_evaluated_subjects"]
+
+    distinct_funds = counts["distinct_funds"]
+    unique_parent_firms = counts["unique_parent_firms"]
+    evaluated_subjects = counts["evaluated_subjects"]
+    not_evaluated_subjects = counts["not_evaluated_subjects"]
+    used = counts["used"]
+    expected = counts["expected"]
+    assert distinct_funds is not None
+    assert unique_parent_firms is not None
+    assert evaluated_subjects is not None
+    assert not_evaluated_subjects is not None
+    assert used is not None
+    assert expected is not None
+    if expected != distinct_funds + unique_parent_firms:
+        errors.append(
+            "meta.completeness.expected must equal distinct_funds plus "
+            "unique_parent_firms"
+        )
+    if used != evaluated_subjects:
+        errors.append("meta.completeness.used must equal evaluated_subjects")
+    if evaluated_subjects + not_evaluated_subjects != expected:
+        errors.append(
+            "evaluated_subjects plus not_evaluated_subjects must equal "
+            "meta.completeness.expected"
+        )
+    expected_state = "complete" if used == expected else "partial"
+    if completeness.get("state") != expected_state:
+        errors.append(
+            f"meta.completeness.state must be {expected_state!r} from used/expected"
+        )
+    return errors, not_evaluated_subjects
+
+
+def _validate_event_freshness(
+    root: dict[str, JsonValue],
+    meta: dict[str, JsonValue],
+) -> list[str]:
+    errors: list[str] = []
+    event_date_from = _iso_date(meta.get("event_date_from"))
+    event_date_to = _iso_date(meta.get("event_date_to"))
+    if event_date_from is None:
+        errors.append("meta.event_date_from must be an ISO date")
+    if event_date_to is None:
+        errors.append("meta.event_date_to must be an ISO date")
+    if (
+        event_date_from is not None
+        and event_date_to is not None
+        and event_date_from > event_date_to
+    ):
+        errors.append("meta.event_date_from must not be after event_date_to")
+
+    if "latest_published_event" not in meta:
+        errors.append("meta.latest_published_event is required")
+        return errors
+    latest_value = meta.get("latest_published_event")
+    latest = as_object(latest_value)
+    if latest_value is not None and latest is None:
+        errors.append("meta.latest_published_event must be an object or null")
+    elif latest is not None:
+        if _iso_date(latest.get("event_date")) is None:
+            errors.append(
+                "meta.latest_published_event.event_date must be an ISO date"
+            )
+        publication_date = latest.get("publication_date")
+        if publication_date is not None and _iso_date(publication_date) is None:
+            errors.append(
+                "meta.latest_published_event.publication_date must be an ISO date or null"
+            )
+    if latest_value is None and not _typed_unavailable([root]):
+        errors.append(
+            "null latest_published_event requires a typed Not available reason"
+        )
+    return errors
+
+
+def _validate_attention_items(meta: dict[str, JsonValue]) -> list[str]:
+    errors: list[str] = []
+    items = as_array(meta.get("attention_items"))
+    if items is None:
+        return ["meta.attention_items must be an array"]
+    for index, value in enumerate(items):
+        item = as_object(value)
+        prefix = f"meta.attention_items[{index}]"
+        if item is None:
+            errors.append(f"{prefix} must be an object")
+            continue
+        subject_kind = item.get("subject_kind")
+        reason = item.get("attention_reason")
+        severity = item.get("severity")
+        action = item.get("action")
+        if subject_kind not in {"firm", "fund"}:
+            errors.append(f"{prefix}.subject_kind must be firm or fund")
+            continue
+        if not isinstance(reason, str) or reason not in ATTENTION_REASON_POLICY:
+            errors.append(f"{prefix}.attention_reason is not a governed reason")
+            continue
+        expected_severity, actions = ATTENTION_REASON_POLICY[reason]
+        expected_action = actions[str(subject_kind)]
+        if expected_action is None:
+            errors.append(f"{prefix} uses fund-only reason {reason!r} for a firm")
+            continue
+        if severity != expected_severity:
+            errors.append(
+                f"{prefix}.severity must be {expected_severity!r} for {reason!r}"
+            )
+        if action != expected_action:
+            errors.append(
+                f"{prefix}.action must be {expected_action!r} for "
+                f"{subject_kind} {reason!r}"
+            )
+    return errors
+
+
+def _validate_monitoring_contract(root: dict[str, JsonValue]) -> list[str]:
+    errors: list[str] = []
+    meta = as_object(root.get("meta"))
+    if meta is None:
+        return ["meta must be an object"]
+
+    errors.extend(_validate_event_freshness(root, meta))
+    completeness_errors, not_evaluated_subjects = _validate_completeness(meta)
+    errors.extend(completeness_errors)
+    errors.extend(_validate_attention_items(meta))
+
+    not_evaluated_count = _nonnegative_integer(meta.get("not_evaluated_count"))
+    if not_evaluated_count is None:
+        errors.append("meta.not_evaluated_count must be a nonnegative integer")
+    elif (
+        not_evaluated_subjects is not None
+        and not_evaluated_count < not_evaluated_subjects
+    ):
+        errors.append(
+            "meta.not_evaluated_count must be at least "
+            "meta.completeness.not_evaluated_subjects"
+        )
+
+    alert_count = _tile_count(root, "New alerts")
+    change_count = _tile_count(root, "Changes since review")
+    if alert_count is None:
+        errors.append("New alerts tile must contain a nonnegative integer")
+    if change_count is None:
+        errors.append("Changes since review tile must contain a nonnegative integer")
+
+    week_kind = meta.get("week_kind")
+    if week_kind not in {"active", "quiet"}:
+        errors.append("meta.week_kind must be active or quiet")
+    if (
+        week_kind in {"active", "quiet"}
+        and alert_count is not None
+        and change_count is not None
+        and not_evaluated_count is not None
+    ):
+        derived_week_kind = (
+            "quiet"
+            if alert_count == 0 and change_count == 0 and not_evaluated_count == 0
+            else "active"
+        )
+        if week_kind != derived_week_kind:
+            errors.append(
+                f"meta.week_kind must be {derived_week_kind!r} from governed "
+                "alert/change and not_evaluated counts"
+            )
+
+    if not_evaluated_count is not None and not_evaluated_count > 0:
+        caveat = meta.get("not_evaluated_caveat")
+        if (
+            not isinstance(caveat, str)
+            or "not_evaluated" not in caveat
+            or not re.search(
+                r"\b(?:not|no)\b.*\b(?:assurance|zero)\b", caveat, re.IGNORECASE
+            )
+        ):
+            errors.append(
+                "meta.not_evaluated_caveat must name not_evaluated and explain "
+                "that it is not zero/negative assurance"
+            )
+    return errors
 
 
 def _typed_unavailable(blocks: list[JsonValue]) -> bool:
@@ -208,18 +481,13 @@ def _validate_active_layout(root: dict[str, JsonValue]) -> list[str]:
 
     this_week = sections[0] if sections else {}
     lead_types = [
-        str(block.get("type", ""))
-        for block in direct_block_objects(this_week)[:2]
+        str(block.get("type", "")) for block in direct_block_objects(this_week)[:2]
     ]
     if lead_types != ["bars", "findings"]:
         errors.append("This week must lead with bars, then findings")
 
     changes = next(
-        (
-            section
-            for section in sections
-            if section.get("id") == "changes-alerts"
-        ),
+        (section for section in sections if section.get("id") == "changes-alerts"),
         None,
     )
     groups = (
@@ -247,7 +515,9 @@ def _validate_active_layout(root: dict[str, JsonValue]) -> list[str]:
             if (block := as_object(value)) is not None
         }
         if not left_types.intersection({"kv", "table", "findings"}):
-            errors.append(f"manager change group {index} needs change evidence on the left")
+            errors.append(
+                f"manager change group {index} needs change evidence on the left"
+            )
         if "timeline" not in right_types and not _typed_unavailable(right):
             errors.append(
                 f"manager change group {index} needs a returned event timeline or "
@@ -312,9 +582,16 @@ def main(argv: list[str]) -> int:
         )
         return 1
 
-    quiet = _is_quiet_week(root)
+    meta = as_object(root.get("meta"))
+    declared_week_kind = meta.get("week_kind") if meta is not None else None
+    quiet = (
+        declared_week_kind == "quiet"
+        if declared_week_kind in {"active", "quiet"}
+        else _is_quiet_week(root)
+    )
     spec = QUIET_SPEC if quiet else ACTIVE_SPEC
     errors = validate_report(document, spec)
+    errors.extend(_validate_monitoring_contract(root))
     errors.extend(
         _validate_quiet_layout(root) if quiet else _validate_active_layout(root)
     )

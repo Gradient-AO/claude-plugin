@@ -24,6 +24,7 @@ from report_json_validator import (  # noqa: E402
     section_objects,
     validate_report,
 )
+from report_vocab import DDQ_VOCAB  # noqa: E402
 
 
 SPEC = ReportSpec(
@@ -42,10 +43,10 @@ SPEC = ReportSpec(
         SectionRule(r"Appendix — Sources and method", "Appendix — Sources and method"),
     ),
     appendix_pattern=r"Appendix — Sources and method",
-    signal_levels=frozenset(
-        {"discrepancies", "review", "consistent", "insufficient"}
-    ),
-    completeness_states=frozenset({"complete", "partial"}),
+    signal_levels=DDQ_VOCAB.signal_levels,
+    completeness_states=DDQ_VOCAB.completeness_states,
+    allowed_tones=DDQ_VOCAB.allowed_tones,
+    allowed_statuses=DDQ_VOCAB.allowed_statuses,
     slot_rules=(
         SlotRule(
             r"Discrepancies and follow-ups",

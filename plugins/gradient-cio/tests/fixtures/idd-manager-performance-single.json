@@ -197,7 +197,8 @@
       ]
     },
     {
-      "title": "Appendix A — Sources and methods",
+      "num": "A",
+      "title": "Appendix — Sources and methods",
       "kicker": "Saved fictional test evidence",
       "blocks": [
         {
@@ -223,7 +224,7 @@
               "2025-12-31",
               "Gradient-governed TEST evidence",
               "passed",
-              "sha256:test-s1"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ]
           ]
         },
@@ -238,6 +239,12 @@
           "tone": "info",
           "title": "Decision-use boundary",
           "text": "Typed unavailability limits the conclusion and drives the insufficient signal where most required slots are absent [S1]. The evidence supports follow-up collection only; operational diligence and committee decisions remain separate handoffs with their own governed evidence and validation contracts. Every unresolved field remains reader-visible in the delivered report."
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Metric and digest interpretation",
+          "text": "Historical claims must use returned realized metrics with their exact periods, while path-distribution statistics must remain explicitly simulated [S1]. Successful tool evidence records the SHA-256 digest of the saved response; a failed call instead uses the typed no-payload sentinel and preserves its error code and request ID in the validation field. These controls prevent simulated statistics or request identifiers from being presented as observed evidence. The source row also retains the tool name, key parameters, as-of date and data scope so a reviewer can reproduce the evidence boundary without treating an unavailable payload as a successful observation. Advisory benchmark selections remain visibly advisory throughout the report and handoff. This distinction tells reviewers which comparisons are server-matched and which still require independent benchmark confirmation."
         }
       ]
     }

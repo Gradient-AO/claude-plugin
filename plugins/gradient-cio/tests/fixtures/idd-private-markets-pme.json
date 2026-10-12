@@ -1,121 +1,184 @@
 {
   "meta": {
     "eyebrow": "Investment Due Diligence",
-    "header_label": "Manager Performance",
-    "title": "Northstar private-markets-pme report (TEST)",
-    "subtitle": "Governed return evidence",
-    "running_head": "Northstar comparison (TEST)",
+    "header_label": "Private Markets PME",
+    "title": "Northstar Growth Fund III PME (TEST)",
+    "subtitle": "Commitment cash-flow evidence versus public markets",
+    "running_head": "Northstar Growth Fund III PME (TEST)",
     "data_as_of": "2025-12-31",
     "cover_facts": [
-      [
-        "Mode",
-        "Compare"
-      ],
-      [
-        "Scope",
-        "Fictional TEST managers"
-      ]
+      ["Mode", "Commitment PME"],
+      ["Scope", "Fictional TEST fund"]
     ],
     "signal": {
-      "level": "insufficient",
-      "label": "Insufficient governed evidence"
+      "level": "watch",
+      "label": "Primary PME available; sensitivity incomplete"
     },
     "completeness": {
-      "used": 1,
-      "expected": 4,
+      "used": 6,
+      "expected": 7,
       "state": "partial"
     },
     "handoff": {
       "schema_version": "gradient-idd-odd-ic-handoff/v1",
       "stage": "idd",
       "subject": {
-        "name": "Northstar managers (TEST)",
-        "identity_status": "advisory"
+        "fund_id": "70000000-0000-4000-8000-000000000001",
+        "name": "Northstar Growth Fund III (TEST)",
+        "identity_status": "canonical"
       },
       "return_series": [],
       "evidence": [
         {
           "source_tag": "S1",
-          "tool": "get_gradient_capabilities",
+          "tool": "list_portfolios",
           "as_of": "2025-12-31",
-          "methodology_version": "connector/v1"
+          "methodology_version": "portfolio-catalog/v1",
+          "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "status": "ok"
+        },
+        {
+          "source_tag": "S2",
+          "tool": "get_portfolio_exposure",
+          "as_of": "2025-12-31",
+          "methodology_version": "portfolio-exposure/v1",
+          "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "status": "ok"
+        },
+        {
+          "source_tag": "S3",
+          "tool": "get_private_markets_holdings",
+          "as_of": "2025-12-31",
+          "methodology_version": "private-markets-holdings/v1",
+          "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "status": "ok"
+        },
+        {
+          "source_tag": "S4",
+          "tool": "get_benchmarks",
+          "as_of": "2025-12-31",
+          "methodology_version": "benchmark-catalog/v1",
+          "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+          "status": "ok"
+        },
+        {
+          "source_tag": "S5",
+          "tool": "build_strategy_lab_session",
+          "as_of": "2025-12-31",
+          "methodology_version": "strategy-lab-session-builder/v1",
+          "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+          "status": "ok"
+        },
+        {
+          "source_tag": "S6",
+          "tool": "run_strategy_lab_private_markets_pme",
+          "as_of": "2025-12-31",
+          "methodology_version": "private-markets-pme/v1",
+          "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+          "status": "ok"
+        },
+        {
+          "source_tag": "S7",
+          "tool": "build_strategy_lab_session",
+          "as_of": "2025-12-31",
+          "digest": "not_available:no_payload",
+          "status": "unavailable",
+          "error_code": "benchmark_returns_unavailable",
+          "request_id": "request-test-pme-007",
+          "unavailable_reason": "The sensitivity benchmark did not have governed returns for the commitment cash-flow window."
         }
       ],
       "limitations": [
-        "Governed analytical evidence is unavailable in this test fixture."
+        "The primary benchmark produced usable PME evidence, but the separately requested sensitivity benchmark was unavailable.",
+        "Holdings and ILPA company detail are contextual and were not used as PME calculator inputs."
       ],
       "selection": {
         "status": "not_assessed",
-        "rationale": "Insufficient governed evidence."
+        "rationale": "PME evidence informs investment diligence but does not determine a manager-selection decision."
       }
     },
     "report_kind": "private_markets_pme",
     "data_basis": "gradient_governed"
   },
   "executive": {
-    "bottom_line": "The comparison remains insufficient because required governed results are unavailable [S1].",
+    "bottom_line": "Northstar Growth Fund III (TEST) returned 1.08x KS-PME and 12.6% IRR against the primary benchmark through 2025-12-31, while the separate sensitivity path remained unavailable [S6][S7].",
     "tiles": [
       {
         "label": "Result",
-        "value": "Insufficient",
-        "sub": "Governed evidence gap [S1]"
+        "value": "1.08x",
+        "sub": "Primary KS-PME [S6]"
       },
       {
         "label": "Benchmark",
-        "value": "Advisory",
-        "sub": "Match not confirmed [S1]"
+        "value": "Primary only",
+        "sub": "Sensitivity unavailable [S4][S7]"
       },
       {
         "label": "Coverage",
-        "value": "1 / 4",
-        "sub": "Required reads [S1]"
+        "value": "1 of 2",
+        "sub": "Benchmark paths usable [S5][S7]"
       },
       {
         "label": "Reliability",
-        "value": "Not assessed",
-        "sub": "Window result unavailable [S1]"
+        "value": "Partial",
+        "sub": "Direct alpha absent [S6]"
       }
     ]
   },
   "sections": [
     {
       "title": "Executive conclusion",
-      "kicker": "Evidence does not support a comparative conclusion",
+      "kicker": "Primary PME is positive but the alternate benchmark path is unresolved",
       "blocks": [
         {
           "type": "callout",
           "role": "key_judgment",
-          "tone": "watch",
-          "title": "Key judgment — Coverage",
-          "text": "Observation: Coverage is incomplete [S1]. Why it matters: Comparison is constrained. Uncertainty: Missing reads may change results. What would change the view: Governed comparison evidence."
+          "tone": "info",
+          "title": "Key judgment — Primary result",
+          "text": "Observation: The primary server run returned 1.08x KS-PME through 2025-12-31 [S6]. Why it matters: The fund exceeded the selected public-market equivalent on the returned cash-flow basis. Uncertainty: Direct alpha was not returned by the server. What would change the view: A refreshed primary run at or below 1.00x KS-PME."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
-          "title": "Key judgment — Benchmarks",
-          "text": "Observation: Benchmark matching is advisory [S1]. Why it matters: Relative evidence is bounded. Uncertainty: Mandate fit is unconfirmed. What would change the view: Canonical matches."
+          "title": "Key judgment — Benchmark sensitivity",
+          "text": "Observation: One of two separately requested benchmark sessions was usable [S5][S7]. Why it matters: Relative performance has not been tested against the alternate basis. Uncertainty: The missing path could materially change interpretation. What would change the view: A sensitivity session returning KS-PME below 1.00x."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
-          "title": "Key judgment — Reliability",
-          "text": "Observation: Robustness is unavailable [S1]. Why it matters: Persistence is unknown. Uncertainty: Window sensitivity is untested. What would change the view: Governed robustness results."
+          "title": "Key judgment — Cash-flow context",
+          "text": "Observation: The PME run returned 12.6% IRR and 1.41x TVPI, with 0.66x distributed and 0.75x residual value [S6]. Why it matters: More value remains unrealized than distributed. Uncertainty: Holdings context is not a calculator input. What would change the view: Audited cash flows changing TVPI by at least 0.10x."
         }
       ]
     },
     {
       "title": "Cash-flow and benchmark coverage",
-      "kicker": "Benchmark identity remains advisory for the test candidates",
+      "kicker": "Canonical commitment identity supports one benchmark path",
       "blocks": [
         {
           "type": "coverage",
           "items": [
             {
-              "name": "Benchmark mapping",
+              "name": "Canonical portfolio and commitment",
+              "status": "available",
+              "note": "Portfolio 10000000-0000-4000-8000-000000000001 and commitment 60000000-0000-4000-8000-000000000001 resolved [S1][S2]."
+            },
+            {
+              "name": "Primary benchmark session",
+              "status": "available",
+              "note": "Benchmark b0000000-0000-0000-0000-000000000001 produced an available server session [S4][S5]."
+            },
+            {
+              "name": "Sensitivity benchmark session",
               "status": "unavailable",
-              "note": "Canonical match unavailable [S1]"
+              "note": "Benchmark b0000000-0000-0000-0000-000000000002 returned benchmark_returns_unavailable [S4][S7]."
+            },
+            {
+              "name": "Holdings and ILPA context",
+              "status": "partial",
+              "note": "15 of 18 portfolio companies matched returned ILPA detail; these values were not calculator inputs [S3]."
             }
           ]
         }
@@ -123,74 +186,108 @@
     },
     {
       "title": "PME and direct alpha",
-      "kicker": "Risk and return comparison is unavailable",
+      "kicker": "Primary KS-PME exceeds one while direct alpha remains unavailable",
       "blocks": [
         {
+          "type": "bars",
+          "title": "Primary public-market-equivalent result",
+          "items": [
+            {
+              "label": "KS-PME",
+              "value": 1.08,
+              "display": "1.08x",
+              "source": "S6"
+            }
+          ],
+          "note": "Server-returned primary benchmark result through 2025-12-31 [S6]."
+        },
+        {
           "type": "callout",
-          "tone": "watch",
           "role": "availability",
-          "title": "Not available",
-          "text": "Not available — governed comparison result missing [S1]."
+          "tone": "watch",
+          "title": "Direct alpha not available",
+          "text": "Not available — the primary PME payload returned direct_alpha as null [S6]."
         },
         {
           "type": "callout",
           "role": "analysis",
           "tone": "info",
-          "title": "Analysis — Comparison unavailable",
-          "text": "Observation: Comparative metrics are unavailable [S1]. Why it matters: No ranking is supportable. Uncertainty: Missing evidence may differ by manager. What would change the view: A governed comparison result."
+          "title": "Analysis — Primary PME result",
+          "text": "Observation: The returned KS-PME was 1.08x against the primary benchmark through 2025-12-31 [S6]. Why it matters: The observed cash-flow path modestly exceeded the public-market equivalent. Uncertainty: Direct alpha was null and the sensitivity run was unavailable. What would change the view: A complete alternate-benchmark result below 1.00x."
         }
       ]
     },
     {
       "title": "IRR and multiple context",
-      "kicker": "Relative and capture evidence is unavailable",
+      "kicker": "Returned value remains split between distributions and residual NAV",
       "blocks": [
         {
-          "type": "callout",
-          "tone": "watch",
-          "role": "availability",
-          "title": "Not available",
-          "text": "Not available — relative-return result missing [S1]."
+          "type": "bars",
+          "title": "Returned fund metrics",
+          "items": [
+            {"label": "IRR", "value": 12.6, "display": "12.6%", "source": "S6"},
+            {"label": "TVPI", "value": 1.41, "display": "1.41x", "source": "S6"},
+            {"label": "DPI", "value": 0.66, "display": "0.66x", "source": "S6"},
+            {"label": "RVPI", "value": 0.75, "display": "0.75x", "source": "S6"}
+          ],
+          "note": "PME-tool outputs; holdings and ILPA values are excluded from these calculator metrics [S3][S6]."
         },
         {
           "type": "callout",
           "role": "analysis",
           "tone": "info",
-          "title": "Analysis — Relative evidence missing",
-          "text": "Observation: Relative evidence is unavailable [S1]. Why it matters: Benchmark-relative behavior is unknown. Uncertainty: Capture may vary by window. What would change the view: A governed relative-return result."
+          "title": "Analysis — Realized and residual value",
+          "text": "Observation: The tool returned 12.6% IRR, 1.41x TVPI, 0.66x DPI, and 0.75x RVPI [S6]. Why it matters: Residual value slightly exceeds distributed value. Uncertainty: ILPA coverage is incomplete for three of 18 holdings [S3]. What would change the view: Audited cash flows shifting DPI or RVPI by at least 0.10x."
         }
       ]
     },
     {
       "title": "Benchmark sensitivity",
-      "kicker": "Persistence and correlation evidence is unavailable",
+      "kicker": "Only the primary benchmark produced analytical evidence",
       "blocks": [
         {
+          "type": "bars",
+          "title": "KS-PME by completed benchmark path",
+          "items": [
+            {
+              "label": "Primary benchmark",
+              "value": 1.08,
+              "display": "1.08x",
+              "source": "S6"
+            }
+          ],
+          "note": "No local value is inserted for the unavailable sensitivity path [S6][S7]."
+        },
+        {
           "type": "callout",
-          "tone": "watch",
           "role": "availability",
-          "title": "Not available",
-          "text": "Not available — governed robustness and correlation results missing [S1]."
+          "tone": "watch",
+          "title": "Sensitivity not available",
+          "text": "Not available — benchmark_returns_unavailable; request_id=request-test-pme-007 [S7]."
         },
         {
           "type": "callout",
           "role": "analysis",
           "tone": "info",
-          "title": "Analysis — Robustness unavailable",
-          "text": "Observation: Robustness evidence is unavailable [S1]. Why it matters: Persistence cannot be assessed. Uncertainty: Results may depend on dates. What would change the view: Governed window tests."
+          "title": "Analysis — Sensitivity gap",
+          "text": "Observation: The primary path returned 1.08x KS-PME, while the distinct sensitivity builder returned no session [S6][S7]. Why it matters: Benchmark dependence remains unresolved across the two selected public-market bases. Uncertainty: Sensitivity coverage is limited because no alternate PME value supports a range. What would change the view: A separately built sensitivity session returning KS-PME at or below 1.00x."
         }
       ]
     },
     {
       "title": "Limitations and follow-ups",
-      "kicker": "One governed evidence request remains",
+      "kicker": "One benchmark path and three ILPA mappings remain incomplete",
       "blocks": [
         {
           "type": "questions",
           "items": [
             {
-              "q": "Return canonical benchmark and comparison evidence.",
-              "why": "Required to assess manager-relative performance [S1]."
+              "q": "Can the sensitivity benchmark history be completed for the canonical commitment window?",
+              "why": "A separate available builder response would permit a governed sensitivity run [S7]."
+            },
+            {
+              "q": "Can the next audited cash-flow package resolve the three unmatched ILPA company records?",
+              "why": "The holdings context is partial even though it remains separate from PME inputs [S3]."
             }
           ]
         }
@@ -198,7 +295,7 @@
     },
     {
       "title": "Appendix A — Sources and methods",
-      "kicker": "Saved fictional test evidence",
+      "kicker": "Saved fictional commitment, benchmark, builder and PME evidence",
       "blocks": [
         {
           "type": "table",
@@ -214,30 +311,26 @@
             "Digest"
           ],
           "rows": [
-            [
-              "S1",
-              "Typed unavailable test response",
-              "gradient_tool",
-              "get_gradient_capabilities",
-              "fixture=true",
-              "2025-12-31",
-              "Gradient-governed TEST evidence",
-              "passed",
-              "sha256:test-s1"
-            ]
+            ["S1", "Canonical portfolio", "gradient_tool", "list_portfolios", "portfolio_id=10000000-0000-4000-8000-000000000001", "2025-12-31", "Fictional TEST portfolio", "passed", "sha256:1111111111111111111111111111111111111111111111111111111111111111"],
+            ["S2", "Canonical commitment", "gradient_tool", "get_portfolio_exposure", "commitment_id=60000000-0000-4000-8000-000000000001", "2025-12-31", "Fictional TEST commitment", "passed", "sha256:2222222222222222222222222222222222222222222222222222222222222222"],
+            ["S3", "Holdings and ILPA context", "gradient_tool", "get_private_markets_holdings", "portfolio_id=10000000-0000-4000-8000-000000000001; commitment_id=60000000-0000-4000-8000-000000000001", "2025-12-31", "Context only; not a PME input", "partial", "sha256:3333333333333333333333333333333333333333333333333333333333333333"],
+            ["S4", "Primary and sensitivity benchmark identities", "gradient_tool", "get_benchmarks", "benchmark_ids=b0000000-0000-0000-0000-000000000001,b0000000-0000-0000-0000-000000000002", "2025-12-31", "Fictional TEST catalog", "passed", "sha256:4444444444444444444444444444444444444444444444444444444444444444"],
+            ["S5", "Primary commitment-scoped session", "gradient_tool", "build_strategy_lab_session", "domain=private-markets-pme; benchmark_id=b0000000-0000-0000-0000-000000000001", "2025-12-31", "Primary builder call", "passed", "sha256:5555555555555555555555555555555555555555555555555555555555555555"],
+            ["S6", "Primary PME metrics", "gradient_tool", "run_strategy_lab_private_markets_pme", "session=primary; benchmark_id=b0000000-0000-0000-0000-000000000001", "2025-12-31", "Server-computed PME evidence", "passed", "sha256:6666666666666666666666666666666666666666666666666666666666666666"],
+            ["S7", "Sensitivity session unavailable", "gradient_tool", "build_strategy_lab_session", "domain=private-markets-pme; benchmark_id=b0000000-0000-0000-0000-000000000002", "2025-12-31", "Separate sensitivity builder call", "unavailable:benchmark_returns_unavailable; request_id=request-test-pme-007", "not_available:no_payload"]
           ]
         },
         {
           "type": "callout",
           "tone": "info",
           "title": "Governed evidence boundary",
-          "text": "The report preserves the returned subject identity, benchmark mapping, observation window, units, methods, coverage status and request provenance [S1]. Missing performance, correlation, capture, simulation or regime fields remain unavailable. No local statistics, substitutions, rankings or neutral defaults are introduced."
+          "text": "The primary and sensitivity requests use the same canonical portfolio and commitment IDs but distinct benchmark IDs and separately built sessions [S5][S7]. Only the primary session produced server-computed PME evidence [S6]. Holdings and ILPA context remain a separate source lane and are never calculator inputs [S3]."
         },
         {
           "type": "callout",
           "tone": "info",
           "title": "Decision-use boundary",
-          "text": "Typed unavailability limits the conclusion and drives the insufficient signal where most required slots are absent [S1]. The evidence supports follow-up collection only; operational diligence and committee decisions remain separate handoffs with their own governed evidence and validation contracts. Every unresolved field remains reader-visible in the delivered report."
+          "text": "This partial report is supported because one benchmark path returned usable PME evidence [S6]. The unavailable sensitivity path stays reader-visible with its typed error and request ID [S7]. If both paths had returned zero usable analytical evidence, the skill contract would require a chat-only unavailable response rather than a report."
         }
       ]
     }

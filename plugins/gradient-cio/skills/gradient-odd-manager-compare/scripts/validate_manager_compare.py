@@ -16,6 +16,7 @@ from report_json_validator import (  # noqa: E402
     SlotRule,
     run_cli,
 )
+from report_vocab import DILIGENCE_VOCAB  # noqa: E402
 
 
 SPEC = ReportSpec(
@@ -33,8 +34,10 @@ SPEC = ReportSpec(
         )
     ),
     appendix_pattern=r"Appendix A — Sources and method",
-    signal_levels=frozenset({"elevated", "review", "clear", "insufficient"}),
-    completeness_states=frozenset({"complete", "partial"}),
+    signal_levels=DILIGENCE_VOCAB.signal_levels,
+    completeness_states=DILIGENCE_VOCAB.completeness_states,
+    allowed_tones=DILIGENCE_VOCAB.allowed_tones,
+    allowed_statuses=DILIGENCE_VOCAB.allowed_statuses,
     slot_rules=(
         SlotRule(
             r"Executive summary", frozenset({"table"}), "shortlist-at-a-glance table"

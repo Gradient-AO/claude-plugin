@@ -40,19 +40,48 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "return_series_id",
-          "benchmark_series_id",
-          "benchmark_rationale"
-        ],
+        "required": ["return_series_id"],
         "properties": {
           "return_series_id": { "type": "string", "minLength": 1 },
           "benchmark_series_id": { "type": ["string", "null"] },
           "benchmark_rationale": { "type": "string", "minLength": 1 },
+          "benchmark_status": {
+            "enum": ["server_matched", "advisory", "unavailable"]
+          },
+          "unavailable_reason": { "type": "string", "minLength": 1 },
           "start_date": { "type": ["string", "null"], "format": "date" },
           "end_date": { "type": ["string", "null"], "format": "date" },
           "observation_count": { "type": ["integer", "null"], "minimum": 0 }
-        }
+        },
+        "allOf": [
+          {
+            "if": { "required": ["benchmark_status"] },
+            "then": {
+              "if": {
+                "properties": {
+                  "benchmark_status": {
+                    "enum": ["server_matched", "advisory"]
+                  }
+                }
+              },
+              "then": {
+                "required": ["benchmark_series_id", "benchmark_rationale"],
+                "properties": {
+                  "benchmark_series_id": { "type": "string", "minLength": 1 }
+                }
+              },
+              "else": {
+                "required": ["benchmark_series_id", "unavailable_reason"],
+                "properties": {
+                  "benchmark_series_id": { "const": null }
+                }
+              }
+            },
+            "else": {
+              "required": ["benchmark_series_id", "benchmark_rationale"]
+            }
+          }
+        ]
       }
     },
     "evidence": {
@@ -61,14 +90,80 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["source_tag", "tool", "as_of", "methodology_version"],
+        "required": ["source_tag", "tool", "as_of"],
         "properties": {
           "source_tag": { "type": "string", "pattern": "^S[0-9]+$" },
           "tool": { "type": "string", "minLength": 1 },
           "as_of": { "type": ["string", "null"] },
           "methodology_version": { "type": ["string", "null"] },
-          "digest": { "type": ["string", "null"] }
-        }
+          "digest": { "type": ["string", "null"] },
+          "status": {
+            "enum": ["ok", "failed", "unavailable", "not_run"]
+          },
+          "error_code": { "type": "string", "minLength": 1 },
+          "request_id": { "type": "string", "minLength": 1 },
+          "unavailable_reason": { "type": "string", "minLength": 1 }
+        },
+        "allOf": [
+          {
+            "if": { "required": ["status"] },
+            "then": {
+              "oneOf": [
+                {
+                  "properties": { "status": { "const": "ok" } },
+                  "required": ["methodology_version"],
+                  "allOf": [
+                    {
+                      "properties": {
+                        "methodology_version": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "digest": {
+                          "type": ["string", "null"],
+                          "pattern": "^sha256:[0-9a-f]{64}$"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "properties": { "status": { "const": "failed" } },
+                  "required": ["digest"],
+                  "allOf": [
+                    {
+                      "anyOf": [
+                        { "required": ["error_code"] },
+                        { "required": ["unavailable_reason"] }
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "digest": { "const": "not_available:no_payload" }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "properties": {
+                    "status": { "enum": ["unavailable", "not_run"] },
+                    "digest": { "const": "not_available:no_payload" }
+                  },
+                  "required": ["digest", "unavailable_reason"]
+                }
+              ]
+            },
+            "else": {
+              "required": ["methodology_version"],
+              "properties": {
+                "digest": {
+                  "type": ["string", "null"],
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "limitations": {
@@ -90,6 +185,7 @@
       "type": "array",
       "items": {
         "type": "object",
+        "additionalProperties": false,
         "required": ["title", "severity", "source_tags"],
         "properties": {
           "title": { "type": "string", "minLength": 1 },

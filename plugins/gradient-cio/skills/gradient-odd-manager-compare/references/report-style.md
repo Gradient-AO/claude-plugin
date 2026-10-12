@@ -27,6 +27,7 @@ from the plugin's `assets/fonts/` and make no network requests. If Playwright is
 | `header_label` | Report type in the running header, e.g. "Operational Due Diligence". |
 | `running_head` | Short subject in the running header (right side). |
 | `data_as_of` | Data dates shown in the footer, e.g. "2026-10-01 (Form ADV); 2026-08-14 (Form 13F)". |
+| `data_scope_banner` | Required for structured illustrative scope. Use exactly "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers". |
 | `confidentiality` | Footer text. Default form: "Confidential — prepared for <organization> internal use". |
 | `cover_facts` | Up to 6 `[label, value]` pairs on the cover. |
 | `signal` | `{"level": <level>, "label": "<optional override>"}` — the headline assessment. |
@@ -137,9 +138,14 @@ write a branding file in the working directory (logo path relative to it) and pa
 - ISO dates; currency in $B/$M (or the report's currency) with 1–2 decimals; percentages to 1 dp; spreads in bps.
 - Absence is not evidence: an empty or unavailable result is reported as such, never as "none occurred".
 - No adjectives the data cannot support ("robust", "best-in-class", "strong").
-- Label illustrative data exactly **Illustrative, Gradient Maintained — demo data, not the client's holdings
-  or managers** on the cover (`confidentiality`), in the banner, in the first affected section, and in every
-  affected source row.
+- Structured illustrative scope means `Illustrative` appears in a source-row
+  `Data scope`, `meta.data_scope`, or a `Data scope` cover fact; ordinary prose
+  does not activate the rule. Set `meta.data_scope_banner` to exactly
+  **Illustrative, Gradient Maintained — demo data, not the client's holdings or
+  managers**. Keep `Illustrative` in each affected source row's `Data scope`,
+  do not repeat the full label in `Evidence`, and put the full label exactly
+  once in a sources-appendix `note`. No title, subtitle or confidentiality
+  placement is required.
 - Every report ends with an appendix: sources (tag, evidence, tool, as-of, validation, digest), server metric
   methods (formula identity/version, basis, units and coverage where returned), and a disclaimer (not
   investment, legal or compliance advice; Form ADV is adviser-reported).

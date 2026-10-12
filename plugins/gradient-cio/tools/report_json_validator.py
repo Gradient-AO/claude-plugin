@@ -16,6 +16,10 @@ PLUGIN_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PLUGIN_ROOT / "shared"))
 
 from analysis_quality import review_report  # noqa: E402
+from report_constants import (  # noqa: E402
+    ILLUSTRATIVE_LABEL,
+    METADATA_RESPONSE_DIGEST,
+)
 
 
 JsonValue: TypeAlias = (
@@ -24,12 +28,21 @@ JsonValue: TypeAlias = (
 
 SOURCE_TAG_PATTERN = re.compile(r"\[S(\d+)\]")
 SOURCE_CELL_PATTERN = re.compile(r"\[?S(\d+)\]?")
+ILLUSTRATIVE_SCOPE_PATTERN = re.compile(r"\billustrative\b", re.IGNORECASE)
 NUMERIC_CLAIM_PATTERN = re.compile(
     r"(?:[$€£]\s*\d|\b\d+(?:\.\d+)?\s*%|\b\d{4}-\d{2}-\d{2}\b)"
 )
 DATA_BASIS_VALUES = frozenset({"gradient_governed", "mixed"})
 SOURCE_BASIS_VALUES = frozenset(
-    {"gradient_tool", "user_document", "regulatory_filing"}
+    {
+        "gradient_tool",
+        "gradient_tool_metadata",
+        "user_document",
+        "regulatory_filing",
+    }
+)
+GRADIENT_GOVERNED_SOURCE_BASES = frozenset(
+    {"gradient_tool", "gradient_tool_metadata"}
 )
 SOURCE_COLUMNS = (
     "Tag",
@@ -42,6 +55,12 @@ SOURCE_COLUMNS = (
     "Validation",
     "Digest",
 )
+SHA256_DIGEST_PATTERN = re.compile(r"sha256:[0-9a-f]{64}")
+FAILED_VALIDATION_PATTERN = re.compile(
+    r"(?:failed|unavailable|not_run):\S",
+    re.IGNORECASE,
+)
+NO_PAYLOAD_DIGEST = "not_available:no_payload"
 PLACEHOLDER_PATTERNS = (
     re.compile(r"<[^<>\n]{2,100}>"),
     re.compile(r"\{\{[^{}\n]+\}\}"),
@@ -350,6 +369,22 @@ def _public_tools() -> frozenset[str]:
 PUBLIC_TOOLS = _public_tools()
 
 
+def _gradient_tool_names(tool_view: str) -> set[str]:
+    """Extract connector-style tool names from a source-row Tool / view cell."""
+    return set(
+        re.findall(
+            r"\b(?:analyze|batch|build|check|compare|create|extract|get|"
+            r"list|log|preview|reconcile|run|save|update)_[a-z0-9_]+\b",
+            tool_view,
+        )
+    )
+
+
+def _metadata_tool_names(tool_view: str) -> set[str]:
+    """Extract exact public-catalog candidates from a metadata source row."""
+    return set(re.findall(r"\b[a-z][a-z0-9]*_[a-z0-9_]+\b", tool_view))
+
+
 def _source_table(
     appendix: dict[str, JsonValue],
 ) -> tuple[dict[str, JsonValue] | None, list[str]]:
@@ -364,6 +399,131 @@ def _source_table(
         if labels and labels[0] in {"Tag", "Ref"}:
             return block, labels
     return None, []
+
+
+def _metadata_scope_values(meta: dict[str, JsonValue]) -> list[str]:
+    """Return values from structured metadata fields that declare data scope."""
+    values: list[str] = []
+
+    def visit(value: JsonValue) -> None:
+        if isinstance(value, list):
+            for child in value:
+                visit(child)
+            return
+        if not isinstance(value, dict):
+            return
+        for key, child in value.items():
+            normalized_key = key.casefold().replace("-", "_").replace(" ", "_")
+            if normalized_key == "data_scope":
+                values.extend(collect_strings(child))
+            if normalized_key == "cover_facts":
+                facts = as_array(child) or []
+                for fact_value in facts:
+                    fact = as_array(fact_value)
+                    if (
+                        fact
+                        and str(fact[0]).strip().casefold() == "data scope"
+                    ):
+                        values.extend(collect_strings(fact[1:]))
+            visit(child)
+
+    visit(meta)
+    return values
+
+
+def _appendix_notes(appendix: dict[str, JsonValue]) -> list[str]:
+    """Return strings carried by explicit appendix note fields."""
+    notes: list[str] = []
+
+    def visit(value: JsonValue) -> None:
+        if isinstance(value, list):
+            for child in value:
+                visit(child)
+            return
+        if not isinstance(value, dict):
+            return
+        for key, child in value.items():
+            if key == "note":
+                notes.extend(collect_strings(child))
+            visit(child)
+
+    visit(appendix)
+    return notes
+
+
+def validate_illustrative_scope(
+    root: dict[str, JsonValue],
+    sections: list[dict[str, JsonValue]],
+    appendix_pattern: str,
+) -> list[str]:
+    """Validate canonical labeling from structured illustrative scope fields."""
+    appendices = [
+        section
+        for section in sections
+        if re.fullmatch(appendix_pattern, str(section.get("title", "")))
+    ]
+    if len(appendices) != 1:
+        return []
+    appendix = appendices[0]
+    table, columns = _source_table(appendix)
+    if table is None or tuple(columns) != SOURCE_COLUMNS:
+        return []
+
+    source_rows: list[tuple[int, list[str]]] = []
+    for index, value in enumerate(as_array(table.get("rows")) or [], start=1):
+        row = as_array(value)
+        if row is None or len(row) != len(SOURCE_COLUMNS):
+            continue
+        source_rows.append((index, [str(cell).strip() for cell in row]))
+
+    meta = as_object(root.get("meta")) or {}
+    metadata_is_illustrative = any(
+        ILLUSTRATIVE_SCOPE_PATTERN.search(value)
+        for value in _metadata_scope_values(meta)
+    )
+    row_is_illustrative = {
+        index
+        for index, row in source_rows
+        if ILLUSTRATIVE_SCOPE_PATTERN.search(row[6])
+    }
+    if not metadata_is_illustrative and not row_is_illustrative:
+        return []
+
+    errors: list[str] = []
+    if meta.get("data_scope_banner") != ILLUSTRATIVE_LABEL:
+        errors.append(
+            "Illustrative scope requires the exact standard label in "
+            "meta.data_scope_banner"
+        )
+
+    affected_indexes = (
+        {index for index, _row in source_rows}
+        if metadata_is_illustrative
+        else row_is_illustrative
+    )
+    for index, row in source_rows:
+        if index not in affected_indexes:
+            continue
+        evidence = row[1]
+        scope = row[6]
+        if ILLUSTRATIVE_SCOPE_PATTERN.search(scope) is None:
+            errors.append(
+                f"Source row {index} Data scope must contain 'Illustrative'"
+            )
+        if ILLUSTRATIVE_LABEL in evidence:
+            errors.append(
+                f"Source row {index} Evidence must not repeat the "
+                "standard illustrative label"
+            )
+
+    appendix_occurrences = section_text(appendix).count(ILLUSTRATIVE_LABEL)
+    exact_note_count = _appendix_notes(appendix).count(ILLUSTRATIVE_LABEL)
+    if appendix_occurrences != 1 or exact_note_count != 1:
+        errors.append(
+            "Illustrative scope requires the standard label exactly once "
+            "as an appendix note"
+        )
+    return errors
 
 
 def validate_provenance(
@@ -416,18 +576,20 @@ def validate_provenance(
                 + ", ".join(sorted(SOURCE_BASIS_VALUES))
             )
             continue
-        if data_basis == "gradient_governed" and basis != "gradient_tool":
+        if (
+            data_basis == "gradient_governed"
+            and basis not in GRADIENT_GOVERNED_SOURCE_BASES
+        ):
             errors.append(
-                f"Source row {index} must use gradient_tool for "
+                f"Source row {index} must use gradient_tool or "
+                "gradient_tool_metadata for "
                 "meta.data_basis gradient_governed"
             )
-        if basis == "gradient_tool":
-            tool_names = set(
-                re.findall(
-                    r"\b(?:analyze|batch|build|check|compare|create|extract|get|"
-                    r"list|log|preview|reconcile|run|save|update)_[a-z0-9_]+\b",
-                    tool_view,
-                )
+        if basis in GRADIENT_GOVERNED_SOURCE_BASES:
+            tool_names = (
+                _metadata_tool_names(tool_view)
+                if basis == "gradient_tool_metadata"
+                else _gradient_tool_names(tool_view)
             )
             if not tool_names:
                 errors.append(
@@ -437,10 +599,27 @@ def validate_provenance(
                 errors.append(
                     f"Source row {index} names unknown Gradient tool '{tool_name}'"
                 )
-            if digest.casefold() in {"", "n/a", "na", "none", "not available"}:
+        if basis == "gradient_tool":
+            failed_or_unavailable = FAILED_VALIDATION_PATTERN.match(validation)
+            if failed_or_unavailable is not None:
+                if digest != NO_PAYLOAD_DIGEST:
+                    errors.append(
+                        f"Source row {index} failed/unavailable Gradient evidence "
+                        f"must use Digest {NO_PAYLOAD_DIGEST}"
+                    )
+            elif SHA256_DIGEST_PATTERN.fullmatch(digest) is None:
                 errors.append(
-                    f"Source row {index} Gradient tool evidence requires a digest"
+                    f"Source row {index} successful Gradient evidence requires "
+                    "Digest sha256:<64 lowercase hex>"
                 )
+        elif (
+            basis == "gradient_tool_metadata"
+            and digest != METADATA_RESPONSE_DIGEST
+        ):
+            errors.append(
+                f"Source row {index} gradient_tool_metadata Digest must be "
+                f"'{METADATA_RESPONSE_DIGEST}'"
+            )
         for label, cell in (
             ("Tool / view", tool_view),
             ("Key parameters", parameters),
@@ -1144,6 +1323,7 @@ def validate_report(document: JsonValue, spec: ReportSpec) -> list[str]:
     errors.extend(validate_key_judgment_callouts(sections, spec.appendix_pattern))
     errors.extend(validate_sourced_analysis(root, sections))
     errors.extend(validate_provenance(root, sections, spec.appendix_pattern))
+    errors.extend(validate_illustrative_scope(root, sections, spec.appendix_pattern))
     errors.extend(validate_numeric_lineage(sections, spec.appendix_pattern))
     errors.extend(validate_analysis_callouts(sections, spec))
     errors.extend(validate_key_judgments(sections, spec))
@@ -1182,23 +1362,6 @@ def validate_report(document: JsonValue, spec: ReportSpec) -> list[str]:
             match = re.search(pattern, body_text, re.IGNORECASE)
             if match is not None:
                 errors.append(f"Prohibited report language: '{match.group(0)}'")
-
-    if spec.illustrative_label and re.search(
-        r"\billustrative\b", all_text, re.IGNORECASE
-    ):
-        confidentiality = str(meta.get("confidentiality", ""))
-        if spec.illustrative_label not in confidentiality:
-            errors.append(
-                "Illustrative evidence requires the standard label in "
-                "meta.confidentiality"
-            )
-        title_and_subtitle = (
-            f"{meta.get('title', '')}\n{meta.get('subtitle', '')}"
-        )
-        if spec.illustrative_label not in title_and_subtitle:
-            errors.append(
-                "Illustrative evidence requires the standard label in title or subtitle"
-            )
 
     return errors
 

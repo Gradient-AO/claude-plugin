@@ -1496,7 +1496,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "passed",
-              "ra-s1"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S2",
@@ -1507,7 +1507,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "passed",
-              "ra-s2"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S3",
@@ -1518,7 +1518,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "passed",
-              "ra-s3"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S4",
@@ -1529,7 +1529,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "passed",
-              "ra-s4"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S5",
@@ -1540,7 +1540,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "degraded",
-              "ra-s5"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S6",
@@ -1551,7 +1551,7 @@
               "2026-06-15",
               "Fictional TEST data",
               "passed",
-              "ra-s6"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S7",
@@ -1562,7 +1562,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "degraded",
-              "ra-s7"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
               "S8",
@@ -1573,7 +1573,7 @@
               "2026-06-30",
               "Fictional TEST data",
               "advisory",
-              "ra-s8"
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ]
           ]
         }

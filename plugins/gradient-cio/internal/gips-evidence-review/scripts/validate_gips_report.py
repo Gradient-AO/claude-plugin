@@ -23,6 +23,12 @@ PLUGIN_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(PLUGIN_ROOT / "tools"))
 
 from report_json_validator import print_quality_notes  # noqa: E402
+from report_vocab import (  # noqa: E402
+    GIPS_ASSESSMENT_TONES,
+    GIPS_CALLOUT_TONES,
+    GIPS_COMPLETENESS_STATES,
+    GIPS_SEVERITIES,
+)
 
 
 SCHEMA_VERSION = "1.0"
@@ -44,13 +50,8 @@ COMMON_SECTION_IDS = {
     "Appendix C — Method & Disclaimer": "appendix-c",
 }
 TILE_LABELS = ["Met", "Partially met", "Not met", "Not found"]
-TILE_TONES = {
-    "Met": "good",
-    "Partially met": "watch",
-    "Not met": "bad",
-    "Not found": "watch",
-}
-SEVERITIES = ["High", "Medium", "Low"]
+TILE_TONES = GIPS_ASSESSMENT_TONES
+SEVERITIES = list(GIPS_SEVERITIES)
 SUPPORTED_BLOCKS = {
     "text",
     "bullets",
@@ -302,7 +303,7 @@ def validate_block_shape(block: dict[str, Any], location: str) -> list[str]:
     ):
         errors.append(f"{location}: {block_type} block needs text")
     if block_type == "callout":
-        if block.get("tone") not in {"good", "watch", "bad", "info"}:
+        if block.get("tone") not in GIPS_CALLOUT_TONES:
             errors.append(f"{location}: callout tone must be good, watch, bad or info")
         if not isinstance(block.get("text"), str) or not block["text"].strip():
             errors.append(f"{location}: callout needs non-empty text")
@@ -836,7 +837,7 @@ def validate_meta(
                 f"meta.completeness.used is {completeness.get('used')}; "
                 f"checklist evidenced count is {used}"
             )
-        if completeness.get("state") not in {"complete", "partial"}:
+        if completeness.get("state") not in GIPS_COMPLETENESS_STATES:
             errors.append("meta.completeness.state must be complete or partial")
     executive = meta.get("executive")
     if isinstance(executive, dict) and not executive.get("bottom_line"):

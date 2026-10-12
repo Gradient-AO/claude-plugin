@@ -18,13 +18,21 @@ from report_json_validator import (
     print_quality_notes,
     validate_report,
 )
+from report_vocab import DILIGENCE_VOCAB
 from validate_handoff import validate_handoff
 
 
-SIGNAL_LEVELS = frozenset({"clear", "watch", "elevated", "insufficient"})
-COMPLETENESS_STATES = frozenset({"complete", "partial"})
 VISUALS = frozenset(
     {"chart", "line", "bars", "percentiles", "waterfall", "band", "stacked", "heat"}
+)
+RECOMMENDATION_PATTERNS = (
+    r"\b(?:we\s+recommend|best\s+manager|allocate\s+to|redeem\s+from)\b",
+    r"\b(?:should|recommend(?:s|ed|ing)?)\s+(?:hire|select|allocate|redeem|terminate|fire)\b",
+    r"\b(?:hire|fire|terminate)\s+(?:the|this|that)\s+(?:manager|fund|strategy)\b",
+)
+SOURCES_APPENDIX_TITLE = "Appendix — Sources and methods"
+SOURCES_APPENDIX_PATTERN = (
+    r"(?:Appendix — Sources and methods|Appendix A — Sources and methods)"
 )
 
 
@@ -35,7 +43,15 @@ class IddContract:
 
 
 def _rules(*titles: str) -> tuple[SectionRule, ...]:
-    return tuple(SectionRule(re.escape(title), title) for title in titles)
+    return tuple(
+        SectionRule(
+            SOURCES_APPENDIX_PATTERN
+            if title == SOURCES_APPENDIX_TITLE
+            else re.escape(title),
+            title,
+        )
+        for title in titles
+    )
 
 
 def _spec(
@@ -47,9 +63,11 @@ def _spec(
     return ReportSpec(
         name=name,
         section_rules=_rules(*titles),
-        appendix_pattern=re.escape("Appendix A — Sources and methods"),
-        signal_levels=SIGNAL_LEVELS,
-        completeness_states=COMPLETENESS_STATES,
+        appendix_pattern=SOURCES_APPENDIX_PATTERN,
+        signal_levels=DILIGENCE_VOCAB.signal_levels,
+        completeness_states=DILIGENCE_VOCAB.completeness_states,
+        allowed_tones=DILIGENCE_VOCAB.allowed_tones,
+        allowed_statuses=DILIGENCE_VOCAB.allowed_statuses,
         slot_rules=slots,
         analysis_section_patterns=tuple(re.escape(title) for title in analytical),
         analytical_section_patterns=tuple(re.escape(title) for title in analytical),
@@ -61,6 +79,7 @@ def _spec(
         executive_tile_labels=("Result", "Benchmark", "Coverage", "Reliability"),
         require_tile_sources=True,
         require_question_sources=True,
+        forbidden_body_patterns=RECOMMENDATION_PATTERNS,
     )
 
 
@@ -76,7 +95,7 @@ CONTRACTS = {
                 "Relative performance",
                 "Reliability and date-window sensitivity",
                 "Follow-ups",
-                "Appendix A — Sources and methods",
+                SOURCES_APPENDIX_TITLE,
             ),
             (
                 "Absolute risk and return",
@@ -105,7 +124,7 @@ CONTRACTS = {
                 "Relative performance and capture",
                 "Correlation and robustness",
                 "Follow-ups",
-                "Appendix A — Sources and methods",
+                SOURCES_APPENDIX_TITLE,
             ),
             (
                 "Risk and return",
@@ -138,7 +157,7 @@ CONTRACTS = {
                 "Rolling evidence",
                 "Regime evidence",
                 "What changes the view",
-                "Appendix A — Sources and methods",
+                SOURCES_APPENDIX_TITLE,
             ),
             ("Window sensitivity", "Rolling evidence", "Regime evidence"),
             (
@@ -162,7 +181,7 @@ NAMED_CONTRACTS = {
                 "Return and risk impact",
                 "Simulation and stress",
                 "Constraints and follow-ups",
-                "Appendix A — Sources and methods",
+                SOURCES_APPENDIX_TITLE,
             ),
             (
                 "Correlation and diversification",
@@ -187,7 +206,7 @@ NAMED_CONTRACTS = {
                 "Performance comparison",
                 "Advance/reserve/reject rationale",
                 "ODD handoff",
-                "Appendix A — Sources and methods",
+                SOURCES_APPENDIX_TITLE,
             ),
             (
                 "Candidate evidence",
@@ -216,7 +235,7 @@ NAMED_CONTRACTS = {
                 "IRR and multiple context",
                 "Benchmark sensitivity",
                 "Limitations and follow-ups",
-                "Appendix A — Sources and methods",
+                SOURCES_APPENDIX_TITLE,
             ),
             (
                 "PME and direct alpha",

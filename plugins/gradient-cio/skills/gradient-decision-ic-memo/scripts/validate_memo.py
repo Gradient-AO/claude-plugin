@@ -19,6 +19,11 @@ import re
 import sys
 from pathlib import Path
 
+PLUGIN_ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(PLUGIN_ROOT / "tools"))
+
+from report_vocab import IC_POLICY_STATUSES, IC_RISK_RATINGS  # noqa: E402
+
 REQUIRED = [
     r"^# Investment Committee Memo — .+",
     r"^## 1\. Recommendation and Decision Requested$",
@@ -41,8 +46,8 @@ REQUIRED = [
     r"^## Appendix B — Server Metric Methods$",
     r"^## Appendix C — Methodology & Disclosures$",
 ]
-STATUS = {"Compliant", "Watch", "Breach", "Not assessed", "n/a", ""}
-RATING = {"High", "Medium", "Low"}
+STATUS = IC_POLICY_STATUSES
+RATING = IC_RISK_RATINGS
 TIMING = {"Before approval", "Within 30 days", "Next review"}
 EXEC_LABELS = ["Positioning", "IPS", "Performance", "Outlook", "Liquidity & diligence"]
 BANNED = [r"\bguaranteed?\b", r"\bwill return\b", r"\bexpected to deliver\b", r"\bverified returns\b",
@@ -59,7 +64,6 @@ SOURCE_HEADER = [
     "Digest",
 ]
 SOURCE_BASES = {"gradient_tool", "user_document", "regulatory_filing"}
-PLUGIN_ROOT = Path(__file__).resolve().parents[3]
 PUBLIC_TOOLS = set(
     json.loads(
         (
