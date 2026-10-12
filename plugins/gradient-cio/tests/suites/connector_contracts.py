@@ -29,10 +29,6 @@ def contract_manifest():
         for name, _args, minimum, maximum, _required_text in CASES
     }
     documented_budgets = {
-        "gips_note": (
-            ROOT / "skills" / "gradient-gips-standards" / "SKILL.md",
-            ROOT / "skills" / "gradient-gips-standards" / "references" / "layout-budget.json",
-        ),
         "setup": (
             SETUP_SKILL,
             ROOT / "skills" / "gradient-setup" / "references" / "layout-budget.json",
@@ -154,9 +150,9 @@ def contract_manifest():
         public_tool_catalog.get("generated") is True
         and public_tool_catalog.get("source")
         == "@gradientcio/contracts canonical MCP tool catalog"
-        and len(public_tools) == 66
+        and len(public_tools) == 68
         and public_tools == sorted(set(public_tools)),
-        "public-tool catalog has generated 66-tool canonical parity",
+        "public-tool catalog has generated 68-tool canonical parity",
     )
     minimum = contracts.get("minimum_connector_contract", {})
     response_path_tools = set(minimum.get("required_response_field_paths", {}))
@@ -252,6 +248,46 @@ def contract_manifest():
         and response_path_tools
         == expected_minimum_tools | {"update_diligence_roster", "update_watchlist"},
         "minimum connector contract owns required probes and dry-run write response paths",
+    )
+    construction_modes = contracts.get("mode_requirements", {}).get(
+        "gradient-portfolio-construction",
+        {},
+    )
+    check(
+        construction_modes.get("private_markets") == {
+            "required_tools": ["get_private_markets_holdings"],
+            "required_probe_ids": ["private_markets_holdings"],
+        }
+        and all(
+            construction_modes.get(mode) == {
+                "required_tools": [],
+                "required_probe_ids": [],
+            }
+            for mode in (
+                "fixed_income",
+                "global_public_equity",
+                "marketable_alternatives",
+                "real_assets",
+            )
+        )
+        and "get_private_markets_holdings"
+        not in minimum.get("required_tools", []),
+        "private-markets holdings is mode-scoped without widening the minimum connector",
+    )
+    private_markets_probe = next(
+        (
+            probe
+            for probe in probes
+            if probe.get("id") == "private_markets_holdings"
+        ),
+        {},
+    )
+    check(
+        private_markets_probe.get("tool") == "get_private_markets_holdings"
+        and private_markets_probe.get("set") == "construction-private-markets"
+        and private_markets_probe.get("equals", {}).get("aggregates.basis")
+        == "canonical_portfolio_company_nav_base_non_additive_to_commitment_exposure",
+        "private-markets construction owns a fictional non-additive setup probe",
     )
     capability_paths = set(
         minimum.get("required_response_field_paths", {}).get(
@@ -642,28 +678,6 @@ def contract_manifest():
         in regional_probe.get("required", []),
         "regional capital-markets probe verifies reporting coverage",
     )
-    equity_probe = by_id["equity_fundamentals"]
-    equity_evidence_contract = (
-        ROOT
-        / "skills"
-        / "gradient-research-equity-note"
-        / "references"
-        / "equity-evidence-contract.md"
-    ).read_text(encoding="utf-8")
-    check(
-        equity_probe["args"].get("filing_periods") == 4
-        and "`view: fundamentals`,\n   `filing_periods: 4`"
-        in equity_evidence_contract
-        and {
-            "leverage_metric.status",
-            "leverage_metric.value",
-            "leverage_metric.formula_id",
-            "leverage_metric.formula_version",
-            "leverage_metric.period_basis",
-            "leverage_metric.source_facts",
-        } <= set(equity_probe.get("required", [])),
-        "equity-fundamentals probe requests four periods and requires leverage",
-    )
     ddq_gap_probe = by_id["ddq_numeric_gap"]
     batch_ddq_probe = by_id["batch_ddq_preview"]
     check(
@@ -695,7 +709,6 @@ def contract_manifest():
         "batch write probe previews two changes without committing",
     )
     contract_guidance = CONTRACT_CHECKS.read_text(encoding="utf-8")
-    macro_guidance = MACRO_BRIEF_SKILL.read_text(encoding="utf-8")
     check(
         "| get_the_read" not in contract_guidance
         and "get_the_read with `asOfDate`" not in contract_guidance,
@@ -706,21 +719,6 @@ def contract_manifest():
         and "ownership_weights` | `response_contract_invalid" not in contract_guidance
         and "data_scope.kind: live" not in contract_guidance,
         "setup contract guidance omits resolved portfolio failures",
-    )
-    check(
-        "`get_the_read.asOfDate` is optional" in macro_guidance
-        and "Omit it for the current brief" in macro_guidance,
-        "macro brief treats asOfDate as optional for a specific edition",
-    )
-    check(
-        "`status: unavailable` with `unavailable_reason`" in macro_guidance,
-        "macro brief treats unavailable regime state as a valid evidence gap",
-    )
-    check(
-        "sources.grip.availability.status" in macro_guidance
-        and "coverage.unavailable_visuals" in macro_guidance
-        and "coverage.omitted_visual_reasons" in macro_guidance,
-        "macro brief retains typed GRIP and The Read visual gaps",
     )
     scope_reference = "`references/module-scope.md`"
     scope_guidance = SHARED_MODULE_SCOPE.read_text(encoding="utf-8")
@@ -1451,7 +1449,6 @@ def contract_manifest():
     )
     evidence_wording = [
         ODD_REPORT_SKILL.read_text(encoding="utf-8"),
-        GIPS_MANAGER_DILIGENCE_SKILL.read_text(encoding="utf-8"),
         IC_MEMO_DATA_MAP.read_text(encoding="utf-8"),
     ]
     check(
@@ -1460,8 +1457,7 @@ def contract_manifest():
             for text in evidence_wording
         )
         and "not report-ready" in evidence_wording[0].lower()
-        and "do not use them as a GIPS" in evidence_wording[1]
-        and "not an IC" in evidence_wording[2],
+        and "not an IC" in evidence_wording[1],
         "diligence skills keep server evidence separate from plugin conclusions",
     )
 
@@ -1554,6 +1550,14 @@ def contract_checker():
                 },
                 "required_probe_ids": ["source", "preview"],
             },
+            "mode_requirements": {
+                "test-skill": {
+                    "test-mode": {
+                        "required_tools": ["preview_tool"],
+                        "required_probe_ids": ["preview"],
+                    }
+                }
+            },
             "probes": [
                 {
                     "id": "source",
@@ -1608,7 +1612,10 @@ def contract_checker():
             "product_entitlements": {"portfolio": False},
             "effective_capabilities": {"portfolio": True},
             "capability_access_modes": {"portfolio": "illustrative"},
-            "tools": [{"name": "preview_tool"}, {"name": "source_tool"}],
+            "tools": [
+                {"name": "preview_tool", "available": True},
+                {"name": "source_tool", "available": True},
+            ],
         }), encoding="utf-8")
         old_capabilities_path = temp / "old-capabilities.json"
         old_capabilities_path.write_text(json.dumps({
@@ -1617,7 +1624,10 @@ def contract_checker():
             "product_entitlements": {"portfolio": False},
             "effective_capabilities": {"portfolio": True},
             "capability_access_modes": {"portfolio": "illustrative"},
-            "tools": [{"name": "preview_tool"}, {"name": "source_tool"}],
+            "tools": [
+                {"name": "preview_tool", "available": True},
+                {"name": "source_tool", "available": True},
+            ],
         }), encoding="utf-8")
         invalid_modes_path = temp / "invalid-modes.json"
         invalid_modes_path.write_text(json.dumps({
@@ -1626,7 +1636,17 @@ def contract_checker():
             "product_entitlements": {"portfolio": False},
             "effective_capabilities": {"portfolio": True},
             "capability_access_modes": {"portfolio": "demo"},
-            "tools": [{"name": "preview_tool"}, {"name": "source_tool"}],
+            "tools": [
+                {"name": "preview_tool", "available": True},
+                {"name": "source_tool", "available": True},
+            ],
+        }), encoding="utf-8")
+        unavailable_mode_path = temp / "unavailable-mode.json"
+        unavailable_mode_path.write_text(json.dumps({
+            "tools": [
+                {"name": "preview_tool", "available": False},
+                {"name": "source_tool", "available": True},
+            ],
         }), encoding="utf-8")
         def run(*args):
             return subprocess.run(
@@ -1652,6 +1672,20 @@ def contract_checker():
             contract_path,
             invalid_modes_path,
         )
+        mode_ready = run(
+            "--validate-mode",
+            contract_path,
+            "test-skill",
+            "test-mode",
+            capabilities_path,
+        )
+        mode_unavailable = run(
+            "--validate-mode",
+            contract_path,
+            "test-skill",
+            "test-mode",
+            unavailable_mode_path,
+        )
         check(passed.returncode == 0 and "PASS preview" in passed.stdout, "contract checker accepts matching values")
         check(null.returncode == 1 and "null receipt_id" in null.stdout, "contract checker rejects null values")
         check(unequal.returncode == 1 and "expected True" in unequal.stdout, "contract checker rejects unequal values")
@@ -1674,5 +1708,15 @@ def contract_checker():
             connector_invalid_modes.returncode == 1
             and "invalid capability_access_modes" in connector_invalid_modes.stdout,
             "connector checker rejects invalid capability access modes",
+        )
+        check(
+            mode_ready.returncode == 0
+            and "PASS mode test-skill.test-mode" in mode_ready.stdout,
+            "mode checker accepts an available mode-scoped tool",
+        )
+        check(
+            mode_unavailable.returncode == 1
+            and "missing required tools preview_tool" in mode_unavailable.stdout,
+            "mode checker isolates an unavailable mode-scoped tool",
         )
 

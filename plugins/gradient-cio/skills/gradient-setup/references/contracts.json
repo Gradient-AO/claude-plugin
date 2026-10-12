@@ -352,6 +352,34 @@
       "write_upload_ddq"
     ]
   },
+  "mode_requirements": {
+    "gradient-portfolio-construction": {
+      "private_markets": {
+        "required_tools": [
+          "get_private_markets_holdings"
+        ],
+        "required_probe_ids": [
+          "private_markets_holdings"
+        ]
+      },
+      "fixed_income": {
+        "required_tools": [],
+        "required_probe_ids": []
+      },
+      "global_public_equity": {
+        "required_tools": [],
+        "required_probe_ids": []
+      },
+      "marketable_alternatives": {
+        "required_tools": [],
+        "required_probe_ids": []
+      },
+      "real_assets": {
+        "required_tools": [],
+        "required_probe_ids": []
+      }
+    }
+  },
   "envelope": [
     "provenance.as_of",
     "validation.status"
@@ -1036,6 +1064,39 @@
         "aggregates_by_asset_classification.coverage.status": "available",
         "aggregates_by_asset_classification.rows[0].asset_classification": "Fixed Income",
         "aggregates_by_asset_classification.rows[0].fixed_income_metrics.weighting_basis": "current_holding_nav_base"
+      }
+    },
+    {
+      "id": "private_markets_holdings",
+      "set": "construction-private-markets",
+      "tool": "get_private_markets_holdings",
+      "depends_on": [
+        "orgs",
+        "sample_portfolio"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
+        "limit": 2
+      },
+      "required": [
+        "portfolio.portfolio_id",
+        "portfolio.record_kind",
+        "selected_artifacts",
+        "items",
+        "aggregates.scope",
+        "aggregates.basis",
+        "aggregates.coverage.status",
+        "aggregates.coverage.complete",
+        "aggregates.coverage.mapped_company_count",
+        "aggregates.coverage.selected_artifact_count",
+        "has_more",
+        "methodology"
+      ],
+      "equals": {
+        "portfolio.record_kind": "example",
+        "aggregates.scope": "filtered_portfolio",
+        "aggregates.basis": "canonical_portfolio_company_nav_base_non_additive_to_commitment_exposure"
       }
     },
     {

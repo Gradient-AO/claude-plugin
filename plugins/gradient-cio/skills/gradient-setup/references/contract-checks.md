@@ -78,7 +78,7 @@ The first call persists fictional inline text as a ready subject-bound document 
 save call is still a dry-run preview and must return `outcome: "preview"`, `dry_run: true` and `committed:
 false`.
 
-The complete matrix is 70 calls. Run the standard or full read set without write confirmation. Run the
+The complete matrix is 71 calls. Run the standard or full read set without write confirmation. Run the
 writes set only as previews. Before the DDQ save-preview set, tell the user that its reconciliation call
 persists a test document and immutable test workpaper.
 
@@ -111,6 +111,11 @@ Report the two module results separately.
 Live IDD workflows may replace the common benchmark shorthand with
 `benchmark_series_ids`, keyed exactly by selected manager return-series ID. Preserve returned benchmark
 mappings, identity rows, rolling evidence, and typed extended-analysis coverage.
+
+**Private-markets construction mode (1 read):** private_markets_holdings. Run it only when rating or
+preparing `gradient-portfolio-construction` in `private_markets` mode. It uses the canonical illustrative
+portfolio and accepts either mapped company evidence or a typed no-artifact result. It requires the
+non-additive canonical-NAV aggregate basis and never joins company values to commitment exposure.
 
 For a non-entitled organization, successful Portfolio Analytics and Strategy Lab probes are expected to
 report illustrative access, not live client access. Confirm `record_kind: example`, `access_mode:

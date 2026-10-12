@@ -735,7 +735,6 @@ def render(keep):
             "construction_real_assets",
             "portfolio_attribution_report",
             "compare",
-            "equity",
         ):
             check("Powered by" not in text, f"{name}: no client branding by default")
 

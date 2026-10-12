@@ -40,11 +40,33 @@
       "label": "Pacing and concentration on watch"
     },
     "completeness": {
-      "used": 8,
-      "expected": 9,
+      "used": 9,
+      "expected": 10,
       "state": "partial"
     },
-    "meter_title": "Evidence completeness"
+    "meter_title": "Evidence completeness",
+    "evidence": {
+      "private_markets_holdings": {
+        "connector_status": "available",
+        "data_status": "partial",
+        "mapped_company_count": 2,
+        "aggregate_complete": false,
+        "selected_artifact_count": 1,
+        "draft_label": "Draft — July 22, 2026",
+        "source_tag": "S9",
+        "aggregate_basis": "canonical_portfolio_company_nav_base_non_additive_to_commitment_exposure",
+        "unknown_grain_count": 1,
+        "lineage": {
+          "artifact_ids": [
+            "fictional-ilpa-artifact-test"
+          ],
+          "parser_id": "ilpa_portfolio_company_draft_2026_07_22",
+          "parser_version": "1.0.0",
+          "projection_registry_id": "private-markets-holding-exact-to-range-v1",
+          "projection_registry_checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      }
+    }
   },
   "executive": {
     "label": "Recommendation",
@@ -328,8 +350,34 @@
           ]
         },
         {
+          "type": "table",
+          "title": "ILPA company coverage",
+          "columns": [
+            "Data status",
+            "Mapped companies",
+            "Valued companies",
+            "Assessed / total",
+            "Aggregate completeness",
+            "Selected artifacts",
+            "Reporting date",
+            "Draft label"
+          ],
+          "rows": [
+            [
+              "Partial",
+              "2",
+              "2",
+              "2 / 3",
+              "Partial — one unknown-grain holding excluded",
+              "1",
+              "2026-06-30",
+              "Draft — July 22, 2026 [S9]"
+            ]
+          ]
+        },
+        {
           "type": "text",
-          "text": "All reported private-market NAVs are dated 2026-03-31 and therefore lag the report date; unfunded amounts are shown separately and are not included in NAV [S4]."
+          "text": "All reported private-market NAVs are dated 2026-03-31 and therefore lag the report date; unfunded amounts are shown separately and are not included in NAV. Company look-through is a non-additive risk overlay; the partial server aggregates assess two of three holdings, with one unknown grain excluded [S4][S9]."
         }
       ]
     },
@@ -1036,7 +1084,8 @@
             "Largest exposure",
             "Share",
             "Limit",
-            "Status"
+            "Status",
+            "Server metric / basis"
           ],
           "rows": [
             [
@@ -1047,7 +1096,8 @@
               {
                 "chip": "Watch",
                 "status": "watch"
-              }
+              },
+              "Commitment exposure; additive [S4]"
             ],
             [
               "Strategy",
@@ -1057,9 +1107,78 @@
               {
                 "chip": "Not assessed",
                 "status": "not_assessed"
-              }
+              },
+              "Commitment exposure; additive [S4]"
+            ],
+            [
+              "Portfolio company",
+              "Fictional Company A (TEST)",
+              "24.0% of valued company NAV",
+              "Not assessed",
+              {
+                "chip": "Partial",
+                "status": "watch"
+              },
+              "Server company_concentration; canonical NAV; non-additive [S9]"
+            ],
+            [
+              "Sector",
+              "Technology",
+              "41.0% of valued company NAV",
+              "Not assessed",
+              {
+                "chip": "Partial",
+                "status": "watch"
+              },
+              "Server sector_concentration; canonical NAV; non-additive [S9]"
             ]
           ]
+        },
+        {
+          "type": "table",
+          "title": "Portfolio-company evidence",
+          "columns": [
+            "Company",
+            "Canonical NAV",
+            "Exact ILPA value",
+            "Valuation / reporting date",
+            "Projected range",
+            "Leverage / coverage",
+            "Covenant status",
+            "Operating-quality evidence",
+            "Reconciliation",
+            "Source"
+          ],
+          "rows": [
+            [
+              "Fictional Company A (TEST)",
+              "$24.0M",
+              "FMV $24.0M in USD",
+              "2026-06-30 / 2026-06-30",
+              "Leverage 3.0–4.0x",
+              "Interest coverage 2.0–3.0x",
+              "In compliance",
+              "Revenue growth 5%–10%",
+              "Matched",
+              "[S9]"
+            ],
+            [
+              "Fictional Company B (TEST)",
+              "$18.0M",
+              "FMV $18.0M in USD",
+              "2026-06-30 / 2026-06-30",
+              "Leverage 4.0–5.0x",
+              "Interest coverage 1.5–2.0x",
+              "Watch",
+              "EBITDA margin 15%–20%",
+              "Matched",
+              "[S9]"
+            ]
+          ]
+        },
+        {
+          "type": "text",
+          "text": "Selected artifact fictional-ilpa-artifact-test, version 1; parser ilpa_portfolio_company_draft_2026_07_22 version 1.0.0; projection registry private-markets-holding-exact-to-range-v1, checksum aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa. Draft — July 22, 2026. Canonical values, exact ILPA source values and projected Gradient ranges remain separate [S9]."
         },
         {
           "type": "table",
@@ -1271,6 +1390,11 @@
               "note": "NAV, commitments and unfunded [S4]"
             },
             {
+              "name": "ILPA portfolio-company look-through",
+              "status": "degraded",
+              "note": "Partial — 2 of 3 holdings assessed; one unknown grain; Draft — July 22, 2026 [S9]"
+            },
+            {
               "name": "Forward assumptions",
               "status": "available",
               "note": "2026 Strategic CMA (TEST) [S5]"
@@ -1338,9 +1462,9 @@
           "rows": [
             [
               "S1",
-              "Organization and capabilities",
+              "Org capabilities",
               "list_organizations; get_gradient_capabilities",
-              "organization=test",
+              "org=test",
               "2026-06-30",
               "Fictional TEST data",
               "passed",
@@ -1348,7 +1472,7 @@
             ],
             [
               "S2",
-              "Portfolio and allocation",
+              "Portfolio / allocation",
               "list_portfolios; get_portfolio_structure",
               "allocation_tree",
               "2026-06-30",
@@ -1398,8 +1522,8 @@
             ],
             [
               "S7",
-              "Manager evidence and mandate",
-              "User document; diligence evidence",
+              "Manager / mandate",
+              "User document; diligence",
               "fictional",
               "2026-06-30",
               "Fictional TEST data",
@@ -1408,13 +1532,23 @@
             ],
             [
               "S8",
-              "Returns and attribution",
+              "Returns / attribution",
               "get_portfolio_historical_returns; get_portfolio_attribution",
               "all sections",
               "2026-06-30",
               "Fictional TEST data",
               "degraded",
               "pm-s8"
+            ],
+            [
+              "S9",
+              "ILPA company look-through",
+              "get_private_markets_holdings",
+              "paged; server aggregates",
+              "2026-06-30",
+              "Fictional TEST data",
+              "partial",
+              "pm-s9"
             ]
           ]
         }
@@ -1456,17 +1590,19 @@
               "Expected-statistics charts",
               "chart-contract-v1",
               "10-year assumptions"
+            ],
+            [
+              "S9",
+              "Company concentration",
+              "Server aggregates only",
+              "private-markets-holding-exact-to-range-v1",
+              "Canonical NAV; non-additive; partial coverage"
             ]
           ]
         },
         {
-          "type": "bullets",
-          "items": [
-            "Private-market valuations may lag the report date [S4].",
-            "Forward values are assumptions, not forecasts or guarantees [S5].",
-            "Portfolio Analytics and Strategy Lab are separate analytical scopes.",
-            "This AI-assisted construction analysis is not investment, legal or compliance advice."
-          ]
+          "type": "text",
+          "text": "Private-market valuations may lag the report date [S4]. Company look-through is non-additive to commitment exposure, and exact ILPA source money is not summed across currencies [S9]. The selected portfolio-company artifact is Draft — July 22, 2026, not a final ILPA release [S9]. Forward values are assumptions, not forecasts or guarantees [S5]. Portfolio Analytics and Strategy Lab are separate analytical scopes. This AI-assisted construction analysis is not investment, legal or compliance advice."
         }
       ]
     }

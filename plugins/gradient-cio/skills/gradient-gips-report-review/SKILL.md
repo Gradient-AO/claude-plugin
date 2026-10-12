@@ -1,8 +1,8 @@
 ---
 name: gradient-gips-report-review
-description: "Create a GIPS report review in firm or asset-owner mode. Triggers: 'review this GIPS report', 'check a composite presentation', 'assess an asset-owner total-fund report'. For general requirements use gradient-gips-standards."
+description: "Create a GIPS report review in firm or asset-owner mode. Triggers: 'review this GIPS report', 'check a composite presentation', 'assess an asset-owner total-fund report'. For manager operational diligence use gradient-odd-report."
 metadata:
-  version: "3.0.0"
+  version: "4.0.0"
   style_contract: "2.1.0"
   group: "GIPS"
   subject: "GIPS report"
@@ -26,7 +26,7 @@ Review a supplied performance report against the applicable 2020 GIPS standards.
 
 ## Shared rules
 
-- Load the selected mode contract plus the named references under `gradient-gips-standards/references/`.
+- Load the selected mode contract plus the named references in this skill's `references/` directory.
 - Quote disclosed evidence; do not calculate implied performance, multiples, fee spreads or relationships locally.
 - Mark conditional requirements N/A only when supplied evidence shows they do not apply.
 - Missing governed calculations are `Not assessed — governed calculation unavailable`.
@@ -43,12 +43,12 @@ Confirm the organization qualifies as an asset owner and identify the oversight 
 
 ## Build, validate and deliver
 
-Write authoritative `review.md`, `visuals.json` and `meta.json`; compose one `report.json` through the GIPS shared scripts. Preserve the markdown handoff unchanged.
+Write authoritative `review.md`, `visuals.json` and `meta.json`; compose one `report.json` through this skill's GIPS scripts. Preserve the markdown handoff unchanged.
 
 ```text
-python <gradient-gips-standards>/scripts/validate_gips_report.py review.md visuals.json meta.json
-python <gradient-gips-standards>/scripts/compose_gips_report.py review.md visuals.json meta.json report.json
-python <gradient-gips-standards>/scripts/validate_gips_report.py report.json
+python <skill>/scripts/validate_gips_report.py review.md visuals.json meta.json
+python <skill>/scripts/compose_gips_report.py review.md visuals.json meta.json report.json
+python <skill>/scripts/validate_gips_report.py report.json
 python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Report Review" --budget <skill>/references/layout-budget.json
 ```
 

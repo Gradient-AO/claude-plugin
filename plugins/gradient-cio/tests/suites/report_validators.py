@@ -310,10 +310,8 @@ def connector_cutover():
                 f"composed GIPS {label} passes validate_gips_report.py",
             )
             body_ids = {
-                "gips": "performance-integrity-memo",
                 "gips-report-review": "preparer-fix-list",
                 "gips-asset-owner-review": "oversight-summary",
-                "gips-policies-gap-check": "policy-gaps-by-area",
             }
             expected_ids = [
                 "executive",
@@ -325,10 +323,8 @@ def connector_cutover():
                 "appendix-c",
             ]
             skill_names = {
-                "gips": "gradient-gips-manager-diligence",
                 "gips-report-review": "gradient-gips-report-review",
                 "gips-asset-owner-review": "gradient-gips-report-review",
-                "gips-policies-gap-check": "gradient-gips-policies-gap-check",
             }
             skill_dir = ROOT / "skills" / skill_names[prefix]
             budget = json.loads(
@@ -893,148 +889,6 @@ def connector_cutover():
             "DDQ validator accepts one analytical section per fund above 24 rows",
         )
 
-    with tempfile.TemporaryDirectory() as report_tmp:
-        tmp_dir = pathlib.Path(report_tmp)
-        equity_fixture = json.loads((FIX / "equity.json").read_text(encoding="utf-8"))
-        fundamentals = next(
-            section
-            for section in equity_fixture["sections"]
-            if section["title"] == "Fundamentals trend"
-        )
-        analysis = next(
-            block
-            for block in fundamentals["blocks"]
-            if block.get("role") == "analysis"
-        )
-        malformed_reports = []
-
-        missing_analysis = json.loads(json.dumps(equity_fixture))
-        missing_fundamentals = next(
-            section
-            for section in missing_analysis["sections"]
-            if section["title"] == "Fundamentals trend"
-        )
-        for block in missing_fundamentals["blocks"]:
-            block.pop("role", None)
-        malformed_reports.append(("missing analysis role", missing_analysis))
-
-        missing_earnings_analysis = json.loads(json.dumps(equity_fixture))
-        earnings_blocks = next(
-            section
-            for section in missing_earnings_analysis["sections"]
-            if section["title"] == "Latest earnings release"
-        )["blocks"]
-        next(
-            block for block in earnings_blocks if block.get("role") == "analysis"
-        ).pop("role")
-        malformed_reports.append(
-            ("missing evidence-backed earnings analysis", missing_earnings_analysis)
-        )
-
-        wrong_lead = json.loads(json.dumps(equity_fixture))
-        risk_blocks = next(
-            section
-            for section in wrong_lead["sections"]
-            if section["title"] == "Risk factors"
-        )["blocks"]
-        risk_blocks[0], risk_blocks[1] = risk_blocks[1], risk_blocks[0]
-        malformed_reports.append(("wrong risk-factor lead slot", wrong_lead))
-
-        unknown_tag = json.loads(json.dumps(equity_fixture))
-        unknown_fundamentals = next(
-            section
-            for section in unknown_tag["sections"]
-            if section["title"] == "Fundamentals trend"
-        )
-        unknown_analysis = next(
-            block
-            for block in unknown_fundamentals["blocks"]
-            if block.get("role") == "analysis"
-        )
-        unknown_analysis["text"] += " [S999]"
-        malformed_reports.append(("unknown source tag", unknown_tag))
-
-        prohibited_action = json.loads(json.dumps(equity_fixture))
-        prohibited_fundamentals = next(
-            section
-            for section in prohibited_action["sections"]
-            if section["title"] == "Fundamentals trend"
-        )
-        prohibited_analysis = next(
-            block
-            for block in prohibited_fundamentals["blocks"]
-            if block.get("role") == "analysis"
-        )
-        prohibited_analysis["text"] += " We recommend buying the security [S1]."
-        malformed_reports.append(("prohibited investment recommendation", prohibited_action))
-
-        for index, (label, malformed) in enumerate(malformed_reports):
-            malformed_path = tmp_dir / f"equity-invalid-{index}.json"
-            malformed_path.write_text(json.dumps(malformed), encoding="utf-8")
-            rejected = subprocess.run(
-                [
-                    sys.executable,
-                    str(
-                        ROOT
-                        / "skills"
-                        / "gradient-research-equity-note"
-                        / "scripts"
-                        / "validate_equity_note.py"
-                    ),
-                    str(malformed_path),
-                ],
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
-            )
-            check(
-                rejected.returncode == 1,
-                f"analytical report validator rejects {label}",
-            )
-
-        check(
-            analysis.get("role") == "analysis",
-            "equity fixture retains its sourced analysis block",
-        )
-        check(
-            [section["title"] for section in equity_fixture["sections"]]
-            == [
-                "Executive summary",
-                "Fundamentals trend",
-                "Filing changes",
-                "Risk factors",
-                "Latest earnings release",
-                "Peers and dated valuation context",
-                "Industry structure",
-                "Positioning and crowding",
-                "Roster holders",
-                "Appendix A — Sources and method",
-            ],
-            "equity fixture retains the fixed evidence-first section order",
-        )
-        equity_lead_types = {
-            "Fundamentals trend": "line",
-            "Filing changes": "heat",
-            "Risk factors": "findings",
-            "Latest earnings release": "bars",
-            "Peers and dated valuation context": "bars",
-            "Industry structure": "stacked",
-            "Positioning and crowding": "bars",
-            "Roster holders": "callout",
-        }
-        check(
-            all(
-                next(
-                    section
-                    for section in equity_fixture["sections"]
-                    if section["title"] == title
-                )["blocks"][0]["type"]
-                == block_type
-                for title, block_type in equity_lead_types.items()
-            ),
-            "equity fixture leads each evidence section with its required slot",
-        )
     validated_attribution = subprocess.run(
         [
             sys.executable,
@@ -1594,6 +1448,134 @@ def connector_cutover():
             "private-markets construction missing vintage slot",
             construction_validator,
             missing_vintage,
+        )
+    )
+
+    false_unavailable = cloned_fixture("construction-private-markets.json")
+    false_unavailable["meta"]["evidence"]["private_markets_holdings"][
+        "data_status"
+    ] = "unavailable"
+    contract_regressions.append(
+        (
+            "private-markets mapped evidence marked unavailable",
+            construction_validator,
+            false_unavailable,
+        )
+    )
+
+    missing_draft_label = cloned_fixture("construction-private-markets.json")
+    missing_draft_label["meta"]["evidence"]["private_markets_holdings"][
+        "draft_label"
+    ] = "Final"
+    contract_regressions.append(
+        (
+            "private-markets missing exact draft label",
+            construction_validator,
+            missing_draft_label,
+        )
+    )
+
+    missing_aggregate_basis = cloned_fixture(
+        "construction-private-markets.json"
+    )
+    missing_aggregate_basis["meta"]["evidence"][
+        "private_markets_holdings"
+    ]["aggregate_basis"] = "locally_recomputed"
+    contract_regressions.append(
+        (
+            "private-markets missing server aggregate basis",
+            construction_validator,
+            missing_aggregate_basis,
+        )
+    )
+
+    double_counted = cloned_fixture("construction-private-markets.json")
+    report_section(
+        double_counted, "Diversification and Manager Diligence"
+    )["blocks"].append({
+        "type": "text",
+        "text": "We added company NAV to commitment exposure [S9].",
+    })
+    contract_regressions.append(
+        (
+            "private-markets company NAV double counting",
+            construction_validator,
+            double_counted,
+        )
+    )
+
+    missing_lineage = cloned_fixture("construction-private-markets.json")
+    missing_lineage["meta"]["evidence"]["private_markets_holdings"].pop(
+        "lineage"
+    )
+    contract_regressions.append(
+        (
+            "private-markets missing artifact lineage",
+            construction_validator,
+            missing_lineage,
+        )
+    )
+
+    undisclosed_unknown_grain = cloned_fixture(
+        "construction-private-markets.json"
+    )
+    current_blocks = report_section(
+        undisclosed_unknown_grain, "Current Private Markets Portfolio"
+    )["blocks"]
+    for block in current_blocks:
+        if isinstance(block.get("text"), str):
+            block["text"] = block["text"].replace(
+                "unknown grain", "unclassified holding"
+            )
+        for row in block.get("rows", []):
+            for index, cell in enumerate(row):
+                if isinstance(cell, str):
+                    row[index] = cell.replace(
+                        "unknown-grain", "unclassified"
+                    )
+    contract_regressions.append(
+        (
+            "private-markets unknown grain undisclosed",
+            construction_validator,
+            undisclosed_unknown_grain,
+        )
+    )
+
+    incomplete_as_complete = cloned_fixture(
+        "construction-private-markets.json"
+    )
+    current_blocks = report_section(
+        incomplete_as_complete, "Current Private Markets Portfolio"
+    )["blocks"]
+    for block in current_blocks:
+        if isinstance(block.get("text"), str):
+            block["text"] = block["text"].replace("partial", "bounded")
+        for row in block.get("rows", []):
+            for index, cell in enumerate(row):
+                if isinstance(cell, str):
+                    row[index] = cell.replace("Partial", "Complete")
+    contract_regressions.append(
+        (
+            "private-markets incomplete aggregates presented complete",
+            construction_validator,
+            incomplete_as_complete,
+        )
+    )
+
+    conflated_exact_range = cloned_fixture(
+        "construction-private-markets.json"
+    )
+    report_section(
+        conflated_exact_range, "Diversification and Manager Diligence"
+    )["blocks"].append({
+        "type": "text",
+        "text": "The exact ILPA projected value is 3.0–4.0x [S9].",
+    })
+    contract_regressions.append(
+        (
+            "private-markets exact and projected values conflated",
+            construction_validator,
+            conflated_exact_range,
         )
     )
 

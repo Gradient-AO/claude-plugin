@@ -118,7 +118,7 @@ recommendation, marketable-alternatives policy status, open-item count, plus the
   shortlist → `gradient-idd-manager-shortlist`.
 - Candidate-manager operations or a Form ADV screen → `gradient-odd-manager-compare`.
 - One manager's effect on this sleeve's diversification → `gradient-idd-manager-portfolio-fit`.
-- Manager diligence → `gradient-odd-report` and `gradient-gips-manager-diligence`.
+- Manager diligence, including GIPS claims and performance integrity → `gradient-odd-report`.
 - Drawdown commitment programs → `gradient-portfolio-construction`.
 - Formal 16-section vote memo → `gradient-decision-ic-memo` with memo type `Allocation Change` or `Rebalance`.
 - Ongoing monitoring → `gradient-portfolio-review`.

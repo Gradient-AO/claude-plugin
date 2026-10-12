@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import datetime
-import importlib.util
 import json
 import os
 import subprocess
@@ -13,21 +12,19 @@ import sys
 import tempfile
 import zipfile
 from pathlib import Path
-from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "fixtures"
 QA_RENDERER = ROOT / "shared" / "qa_report.py"
 GIPS_COMPOSER = (
-    ROOT / "skills" / "gradient-gips-standards" / "scripts" / "compose_gips_report.py"
+    ROOT / "skills" / "gradient-gips-report-review" / "scripts" / "compose_gips_report.py"
 )
 FIXED_TIME = datetime.datetime(2020, 1, 1, tzinfo=datetime.timezone.utc)
 ZIP_TIME = (2020, 1, 1, 0, 0, 0)
 
 DIRECT_SOURCES = {
     "gradient-odd-ddq-reconcile": "ddq.json",
-    "gradient-research-equity-note": "equity.json",
     "gradient-idd-manager-performance-single": "idd-manager-performance-single.json",
     "gradient-idd-manager-performance-compare": "idd-manager-performance-compare.json",
     "gradient-idd-manager-performance-robustness": "idd-manager-performance-robustness.json",
@@ -37,7 +34,6 @@ DIRECT_SOURCES = {
     "gradient-portfolio-construction-fixed-income": "construction-fixed-income.json",
     "gradient-portfolio-construction-global-public-equity": "construction-global-public-equity.json",
     "gradient-decision-ic-memo": "ic-memo.json",
-    "gradient-research-macro-brief": "deck.json",
     "gradient-odd-manager-compare": "compare.json",
     "gradient-odd-manager-monitor": "digest.json",
     "gradient-portfolio-construction-marketable-alternatives": "construction-marketable-alternatives.json",
@@ -52,16 +48,10 @@ DIRECT_SOURCES = {
 }
 
 GIPS_SOURCES = {
-    "gradient-gips-manager-diligence": ("gips.md", "gips_visuals.json", "gips_meta.json"),
     "gradient-gips-report-review-asset-owner": (
         "gips" "-asset-owner-review.md",
         "gips" "-asset-owner-review-visuals.json",
         "gips" "-asset-owner-review-meta.json",
-    ),
-    "gradient-gips-policies-gap-check": (
-        "gips" "-policies-gap-check.md",
-        "gips" "-policies-gap-check-visuals.json",
-        "gips" "-policies-gap-check-meta.json",
     ),
     "gradient-gips-report-review": (
         "gips" "-report-review.md",
@@ -130,28 +120,6 @@ def gips_source(skill: str, directory: Path) -> Path:
     return output
 
 
-def gips_reference_source(directory: Path) -> Path:
-    """Convert the GIPS reference note to canonical report JSON."""
-    renderer_path = ROOT / "shared" / "gradient_report.py"
-    if str(renderer_path.parent) not in sys.path:
-        sys.path.insert(0, str(renderer_path.parent))
-    spec = importlib.util.spec_from_file_location("gradient_report_example", renderer_path)
-    if spec is None or spec.loader is None:
-        raise RuntimeError("Unable to load shared report converter")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    markdown = (FIXTURES / "note.md").read_text(encoding="utf-8")
-    meta: dict[str, Any] = json.loads(
-        (FIXTURES / "note_meta.json").read_text(encoding="utf-8")
-    )
-    output = directory / "gradient-gips-standards.json"
-    output.write_text(
-        json.dumps(module.md_document_to_report(markdown, meta), indent=2),
-        encoding="utf-8",
-    )
-    return output
-
-
 def main() -> int:
     """Generate the public fictional reference set."""
     parser = argparse.ArgumentParser()
@@ -179,7 +147,6 @@ def main() -> int:
         sources.update(
             {skill: gips_source(skill, temporary) for skill in GIPS_SOURCES}
         )
-        sources["gradient-gips-standards"] = gips_reference_source(temporary)
         failed: list[str] = []
         for skill in sorted(sources):
             work = temporary / "qa" / skill

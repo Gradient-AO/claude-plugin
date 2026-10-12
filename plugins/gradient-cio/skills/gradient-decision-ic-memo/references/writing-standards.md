@@ -1,7 +1,7 @@
 # Gradient analytical writing standards
 
 These standards apply to client-facing analytical reports and decision packs. They do not apply to the
-`gradient-setup` readiness report or to the `gradient-gips-standards` reference answer. A family-specific skill
+`gradient-setup` readiness report or to GIPS report-review deliverables. A family-specific skill
 may narrow the voice, required sections or permitted decision language, but it may not weaken evidence,
 availability or presentation rules.
 
@@ -9,7 +9,7 @@ availability or presentation rules.
 
 - Default analytical-report order is verdict and executive band, key judgments, evidence sections ordered by
   the decision question, risks and gaps, actions or follow-ups, coverage, then appendices. A family contract
-  may narrow or reorder this spine. The setup readiness report, GIPS reference answer and deck profile are
+  may narrow or reorder this spine. The setup readiness report, GIPS report-review profile and deck profile are
   exempt.
 - Write section kickers as the conclusion a reader should retain, not as a topic label. Prefer
   `Private-assets headroom is narrow` to `Allocation and policy`.

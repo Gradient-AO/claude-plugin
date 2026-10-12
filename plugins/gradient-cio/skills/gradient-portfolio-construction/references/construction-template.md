@@ -8,10 +8,13 @@ apply its specific repair levers and rerun until clean.
 
 ## Metadata and executive band
 
-- Root `construction_mode`: `private_markets`.
+- `meta.mode`: `private_markets`.
 - `meta.eyebrow` and `meta.header_label`: `Private Markets Portfolio Construction`.
 - Cover facts: As of, Base currency, Total NAV, Private-markets NAV, Unfunded commitments, Data scope.
 - `meta.signal_title`: `Private-markets program status`.
+- `meta.evidence.private_markets_holdings`: connector status, data status, mapped-company count,
+  aggregate completeness, selected-artifact count, unknown-grain count, exact draft label, source tag,
+  aggregate basis and artifact/parser/projection lineage.
 - `executive.label`: `Recommendation`.
 - `executive.bottom_line`: recommendation, requested committee action, principal evidence and largest risk.
 - Four tiles: Private-markets weight, Unfunded commitments, Liquid coverage, Policy status.
@@ -56,7 +59,12 @@ apply its specific repair levers and rerun until clean.
 
 - Lead with one unchanged allocations chart when available; otherwise use a compact typed unavailable callout.
 - `table` **Current program snapshot**: Strategy, NAV, Unfunded, Commitment, % NAV, Valuation date.
-- `text` states valuation lag, coverage and unsupported classifications.
+- `table` **ILPA company coverage**: Data status, Mapped companies, Valued companies, Assessed / total,
+  Aggregate completeness, Selected artifacts, Reporting date, Draft label.
+- `text` states valuation lag, coverage and unsupported classifications. Label company evidence as a
+  non-additive overlay and display **Draft — July 22, 2026** when an artifact is selected. When no mapped
+  artifact exists, replace the ILPA coverage table with exactly one typed
+  `Not available — no mapped ILPA portfolio-company artifact` callout.
 
 ### 4. Target Portfolio Structure
 
@@ -107,7 +115,14 @@ apply its specific repair levers and rerun until clean.
 
 ### 9. Diversification and Manager Diligence
 
-- `table` **Diversification**: Axis, Largest exposure, Share, Limit, Status.
+- `table` **Diversification**: Axis, Largest exposure, Share, Limit, Status, Server metric / basis. Company,
+  sector and geography rows copy only server-returned aggregates and retain completeness.
+- `table` **Portfolio-company evidence**: Company, Canonical NAV, Exact ILPA value, Valuation / reporting
+  date, Projected range, Leverage / coverage, Covenant status, Operating-quality evidence, Reconciliation,
+  Source. Keep canonical, exact-source and projected-range labels distinct; do not sum rows.
+- State the selected artifact ID/version, parser ID/version, projection registry/checksum and
+  **Draft — July 22, 2026** near the company table. If mapped-company count is zero, use the single typed
+  unavailable callout from section 3 instead of a company table or inferred diversification.
 - `table` **Manager evidence**: Manager / fund, Exposure, Diligence status, Open findings, Next step.
 - Proposed managers require a manager-comparison and diligence handoff or `Not assessed`.
 
