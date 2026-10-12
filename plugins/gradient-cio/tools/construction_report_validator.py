@@ -660,6 +660,7 @@ def _validate_mode_specific(
                 label="vintage-year stacked visual",
             )
         )
+        errors.extend(_validate_private_markets_evidence(root, sections))
     elif mode == "global_public_equity":
         errors.extend(
             _validate_named_visual_slot(
@@ -732,6 +733,194 @@ def _validate_mode_specific(
             errors.append(
                 "Context section must identify inflation or commodity evidence"
             )
+    return errors
+
+
+def _validate_private_markets_evidence(
+    root: dict[str, JsonValue],
+    sections: list[dict[str, JsonValue]],
+) -> list[str]:
+    """Validate structured ILPA look-through state and bounded report claims."""
+    errors: list[str] = []
+    meta = as_object(root.get("meta")) or {}
+    evidence = as_object(meta.get("evidence")) or {}
+    state = as_object(evidence.get("private_markets_holdings"))
+    if state is None:
+        return [
+            "meta.evidence.private_markets_holdings structured state is required"
+        ]
+    required_fields = {
+        "connector_status",
+        "data_status",
+        "mapped_company_count",
+        "aggregate_complete",
+        "selected_artifact_count",
+        "draft_label",
+        "source_tag",
+        "aggregate_basis",
+        "unknown_grain_count",
+        "lineage",
+    }
+    missing = required_fields - set(state)
+    if missing:
+        errors.append(
+            "meta.evidence.private_markets_holdings is missing "
+            + ", ".join(sorted(missing))
+        )
+        return errors
+    if state.get("connector_status") not in {"available", "unavailable"}:
+        errors.append(
+            "private-markets holding connector_status must be available "
+            "or unavailable"
+        )
+    if state.get("data_status") not in {
+        "available",
+        "partial",
+        "unavailable",
+    }:
+        errors.append(
+            "private-markets holding data_status must be available, partial "
+            "or unavailable"
+        )
+    count_fields = (
+        "mapped_company_count",
+        "selected_artifact_count",
+        "unknown_grain_count",
+    )
+    if any(
+        not isinstance(state.get(field), int)
+        or isinstance(state.get(field), bool)
+        or state.get(field, -1) < 0
+        for field in count_fields
+    ):
+        errors.append("private-markets holding counts must be non-negative integers")
+        return errors
+    if not isinstance(state.get("aggregate_complete"), bool):
+        errors.append("private-markets aggregate_complete must be boolean")
+    current = _section(sections, "Current Private Markets Portfolio") or {}
+    diversification = _section(
+        sections, "Diversification and Manager Diligence"
+    ) or {}
+    current_text = _text(current)
+    diversification_text = _text(diversification)
+    report_text = f"{current_text}\n{diversification_text}"
+    mapped_count = state["mapped_company_count"]
+    company_tables = [
+        block
+        for block in block_objects(diversification)
+        if block.get("type") == "table"
+        and str(block.get("title", "")) == "Portfolio-company evidence"
+    ]
+    unavailable_phrase = (
+        "Not available — no mapped ILPA portfolio-company artifact"
+    )
+    if mapped_count > 0:
+        if state.get("connector_status") != "available":
+            errors.append(
+                "mapped private-markets companies require an available connector"
+            )
+        if state.get("data_status") not in {"available", "partial"}:
+            errors.append(
+                "mapped private-markets companies cannot be marked unavailable"
+            )
+        if unavailable_phrase in report_text:
+            errors.append(
+                "mapped private-markets companies cannot use the no-artifact "
+                "substitute"
+            )
+        if not company_tables:
+            errors.append(
+                "mapped private-markets companies require the "
+                "Portfolio-company evidence table"
+            )
+        if "ILPA company coverage" not in current_text:
+            errors.append(
+                "mapped private-markets companies require ILPA company coverage"
+            )
+        for label in ("Canonical NAV", "Exact ILPA value", "Projected range"):
+            if label not in diversification_text:
+                errors.append(
+                    f"Portfolio-company evidence must distinguish {label}"
+                )
+        source_tag = str(state.get("source_tag", ""))
+        if not re.fullmatch(r"S[1-9]\d*", source_tag):
+            errors.append("private-markets source_tag must use S# form")
+        elif f"[{source_tag}]" not in report_text:
+            errors.append(
+                "private-markets company evidence must cite its structured "
+                "source tag"
+            )
+        if state.get("draft_label") != "Draft — July 22, 2026":
+            errors.append(
+                "private-markets evidence must use exact Draft — July 22, 2026 "
+                "label"
+            )
+        if "Draft — July 22, 2026" not in report_text:
+            errors.append(
+                "mapped private-markets evidence must disclose "
+                "Draft — July 22, 2026"
+            )
+        if (
+            state.get("aggregate_basis")
+            != "canonical_portfolio_company_nav_base_non_additive_to_commitment_exposure"
+        ):
+            errors.append(
+                "private-markets aggregate basis must identify the server "
+                "non-additive canonical-NAV metric"
+            )
+        lineage = as_object(state.get("lineage"))
+        lineage_fields = {
+            "artifact_ids",
+            "parser_id",
+            "parser_version",
+            "projection_registry_id",
+            "projection_registry_checksum",
+        }
+        if lineage is None or lineage_fields - set(lineage):
+            errors.append(
+                "mapped private-markets evidence requires artifact, parser and "
+                "projection lineage"
+            )
+        if state.get("aggregate_complete") is False and "Partial" not in current_text:
+            errors.append(
+                "incomplete private-markets aggregates must be presented as Partial"
+            )
+        if state.get("unknown_grain_count", 0) > 0 and re.search(
+            r"\bunknown grain\b", report_text, re.IGNORECASE
+        ) is None:
+            errors.append(
+                "unknown-grain private-markets holdings require explicit disclosure"
+            )
+    else:
+        if report_text.count(unavailable_phrase) != 1:
+            errors.append(
+                "zero mapped companies require exactly one typed no-artifact "
+                "substitute"
+            )
+        if company_tables:
+            errors.append(
+                "zero mapped companies cannot include a Portfolio-company "
+                "evidence table"
+            )
+    for pattern, label in (
+        (
+            r"\b(?:added|combined|included)\b.{0,40}\bcompany\b.{0,20}\b"
+            r"(?:NAV|fair value|FMV)\b",
+            "company values added to commitment exposure",
+        ),
+        (
+            r"\b(?:recomputed|reconstructed|calculated locally|row-derived)\b"
+            r".{0,40}\b(?:company|sector|geography|aggregate|roll-up)\b",
+            "unsupported local company roll-up",
+        ),
+        (
+            r"\bexact(?: ILPA)? projected\b|\bexact ILPA range\b|"
+            r"\bprojected exact(?:-source)?\b",
+            "exact-source and projected-range conflation",
+        ),
+    ):
+        if re.search(pattern, report_text, re.IGNORECASE):
+            errors.append(f"Private-markets evidence contains {label}")
     return errors
 
 

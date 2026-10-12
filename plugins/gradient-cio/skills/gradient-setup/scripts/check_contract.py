@@ -140,7 +140,87 @@ def validate_manifest(contracts, public_tools=None):
         probes,
         allowed_tools,
     ))
+    errors.extend(_validate_mode_requirements(
+        contracts,
+        probes,
+        allowed_tools,
+    ))
     return errors
+
+
+def _validate_mode_requirements(contracts, probes, allowed_tools):
+    requirements = contracts.get("mode_requirements")
+    if requirements is None:
+        return []
+    if not isinstance(requirements, dict) or not requirements:
+        return ["mode_requirements is not a non-empty object"]
+    errors = []
+    probes_by_id = {
+        probe.get("id"): probe
+        for probe in probes
+        if isinstance(probe, dict) and isinstance(probe.get("id"), str)
+    }
+    for skill, modes in requirements.items():
+        if not isinstance(skill, str) or not skill or not isinstance(modes, dict):
+            errors.append("mode_requirements contains an invalid skill entry")
+            continue
+        for mode, requirement in modes.items():
+            label = f"mode_requirements.{skill}.{mode}"
+            if (
+                not isinstance(mode, str)
+                or not mode
+                or not isinstance(requirement, dict)
+            ):
+                errors.append(f"{label} is not an object")
+                continue
+            required_tools = requirement.get("required_tools")
+            required_probe_ids = requirement.get("required_probe_ids")
+            if (
+                not isinstance(required_tools, list)
+                or any(not isinstance(tool, str) or not tool for tool in required_tools)
+                or len(required_tools) != len(set(required_tools or []))
+            ):
+                errors.append(f"{label}.required_tools must be unique strings")
+                required_tools = []
+            if (
+                not isinstance(required_probe_ids, list)
+                or any(
+                    not isinstance(probe_id, str) or not probe_id
+                    for probe_id in required_probe_ids
+                )
+                or len(required_probe_ids)
+                != len(set(required_probe_ids or []))
+            ):
+                errors.append(
+                    f"{label}.required_probe_ids must be unique strings"
+                )
+                required_probe_ids = []
+            if allowed_tools is not None:
+                unknown_tools = set(required_tools) - allowed_tools
+                if unknown_tools:
+                    errors.append(
+                        f"{label} references unknown public tools "
+                        f"{sorted(unknown_tools)}"
+                    )
+            unknown_probe_ids = set(required_probe_ids) - set(probes_by_id)
+            if unknown_probe_ids:
+                errors.append(
+                    f"{label} references unknown probes "
+                    f"{sorted(unknown_probe_ids)}"
+                )
+            probe_tools = {
+                probes_by_id[probe_id].get("tool")
+                for probe_id in required_probe_ids
+                if probe_id in probes_by_id
+            }
+            uncovered_tools = set(required_tools) - probe_tools
+            if uncovered_tools:
+                errors.append(
+                    f"{label} required tools lack mode probes "
+                    f"{sorted(uncovered_tools)}"
+                )
+    return errors
+
 
 def _validate_minimum_connector_contract(contracts, probes, allowed_tools):
     contract = contracts.get("minimum_connector_contract")
@@ -446,11 +526,61 @@ def validate_connector(argv):
     )
     return 0
 
+
+def validate_mode(argv):
+    import pathlib
+    if len(argv) != 6:
+        raise SystemExit(__doc__)
+    contracts_path = pathlib.Path(argv[2])
+    skill = argv[3]
+    mode = argv[4]
+    capabilities = load(argv[5])
+    public_tools, catalog_errors = load_and_validate_catalog(contracts_path)
+    contracts = load(contracts_path)
+    manifest_errors = catalog_errors + validate_manifest(
+        contracts,
+        public_tools,
+    )
+    if manifest_errors:
+        print(f"FAIL manifest: {'; '.join(manifest_errors)}")
+        return 1
+    requirement = (
+        contracts.get("mode_requirements", {})
+        .get(skill, {})
+        .get(mode)
+    )
+    if not isinstance(requirement, dict):
+        print(f"FAIL mode: unknown mode requirement {skill}.{mode}")
+        return 1
+    rows = capabilities.get("tools", []) if isinstance(capabilities, dict) else []
+    available_tools = {
+        row.get("name")
+        for row in rows
+        if isinstance(row, dict)
+        and row.get("available") is True
+        and isinstance(row.get("name"), str)
+    }
+    missing_tools = set(requirement["required_tools"]) - available_tools
+    if missing_tools:
+        print(
+            f"FAIL mode: {skill}.{mode} missing required tools "
+            + ", ".join(sorted(missing_tools))
+        )
+        return 1
+    print(
+        f"PASS mode {skill}.{mode} "
+        f"({len(requirement['required_tools'])} required tools)"
+    )
+    return 0
+
+
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == "--resolve-args":
         raise SystemExit(resolve_args(sys.argv))
     if len(sys.argv) > 1 and sys.argv[1] == "--validate-connector":
         raise SystemExit(validate_connector(sys.argv))
+    if len(sys.argv) > 1 and sys.argv[1] == "--validate-mode":
+        raise SystemExit(validate_mode(sys.argv))
     if len(sys.argv) != 4:
         raise SystemExit(__doc__)
     import pathlib

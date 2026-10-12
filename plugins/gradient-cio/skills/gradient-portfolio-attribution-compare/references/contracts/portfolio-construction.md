@@ -21,6 +21,15 @@ The selected mode controls required sections, evidence slots, restrictions, layo
 - Use only governed server-returned values.
 - Preserve tool, arguments, as-of date, method, basis, units, coverage, truncation and request ID.
 - Keep portfolio-tree, exposure, policy, historical, attribution and forward-assumption evidence distinct.
+- In `private_markets` mode, keep commitment exposure, portfolio-company look-through and immutable ILPA
+  source artifacts as distinct evidence lanes. Commitment exposure is the only additive portfolio-value
+  lane; company look-through is a non-additive risk/diversification overlay.
+- Page portfolio-company rows for detail and coverage, but use only named server aggregates for company,
+  sector, geography, status, holding-age or projected-range roll-ups. Never reconstruct an aggregate from
+  paged rows or combine company NAV / source fair value with fund or commitment NAV.
+- Label canonical holding values, exact ILPA source values and projected Gradient ranges distinctly.
+  Preserve reconciliation, aggregate basis/completeness, artifact/source-cell lineage, parser and projection
+  versions, and the exact **Draft — July 22, 2026** label. Never claim draft evidence is final.
 - Use `get_portfolio_attribution` as the sole historical attribution source.
 - Never infer compliance, multiply nested targets, equal-weight records, convert missing classifications, or calculate derived portfolio results.
 - Missing governed evidence is a typed unavailable result, not zero or neutral.

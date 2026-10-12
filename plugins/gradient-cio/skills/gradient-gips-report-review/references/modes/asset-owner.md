@@ -19,9 +19,8 @@ metadata:
 Check an asset owner's GIPS Asset Owner Report (total fund and any additional composites) against the 2020
 GIPS standards for asset owners.
 
-Shared references live in `${CLAUDE_PLUGIN_ROOT}/skills/gradient-gips-standards/references/` (fallback:
-`../gradient-gips-standards/references/`). Load `asset-owners.md`, `verification.md`, `output-format.md` and
-`report-layout.md`; before drafting, also load this skill's
+Shared references live in this skill's `references/` directory. Load `asset-owners.md`, `verification.md`,
+`output-format.md` and `report-layout.md`; before drafting, also load this skill's
 `references/writing-standards.md` and `references/analysis-examples.md`.
 
 ## Step 1 — Confirm the right standards apply
@@ -68,7 +67,7 @@ example, evaluating an OCIO or a peer asset owner), use the standard memo sectio
 ## Output
 
 Always deliver a branded review. Write `review.md`, `visuals.json` and `meta.json`; preserve the authoritative
-markdown and validate and compose them with the shared scripts in `gradient-gips-standards/scripts`, writing
+markdown and validate and compose them with this skill's scripts, writing
 the resulting validated JSON as `report.json`. Require evidence-status
 tiles, evidence coverage, findings and severity summaries, sourced analysis, and typed unavailable blocks
 when expected evidence is missing. Market charts are not required. Follow `output-format.md`,
@@ -79,8 +78,8 @@ both when it says `both` or `board pack`. Both formats must come from the same v
 markdown checklist and memo handoff remain unchanged through composition.
 
 ```text
-python <gradient-gips-standards>/scripts/validate_gips_report.py review.md visuals.json meta.json
-python <gradient-gips-standards>/scripts/compose_gips_report.py review.md visuals.json meta.json report.json
-python <gradient-gips-standards>/scripts/validate_gips_report.py report.json
+python <skill>/scripts/validate_gips_report.py review.md visuals.json meta.json
+python <skill>/scripts/compose_gips_report.py review.md visuals.json meta.json report.json
+python <skill>/scripts/validate_gips_report.py report.json
 python <this skill's directory>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Asset Owner Review" --budget <this skill's directory>/references/layout-budget.json
 ```

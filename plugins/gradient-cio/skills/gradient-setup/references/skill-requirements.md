@@ -25,7 +25,6 @@ and `effective_capabilities` must equal whether that mode is not `unavailable`. 
 | gradient-odd-report | ODD report PDF | get_diligence_roster_funds, get_manager_diligence_brief | get_fund_diligence_monitoring and get_fund_diligence_review for fund reports; get_manager_odd_profile, get_manager_diligence_findings, get_manager_diligence_attention_queue, get_firm_fund_events, get_firm_13f_portfolio_review, get_manager_monitor_evidence | firmFundDiligence |
 | gradient-odd-ddq-reconcile | DDQ reconciliation PDF | reconcile_manager_ddq_claims, get_manager_odd_profile, search_managers | upload_ddq_document, extract_ddq_claims, batch_reconcile_manager_ddq_claims, save_ddq_reconciliation, preview_diligence_changes, get_ddq_reconciliation_history | firmFundDiligence |
 | gradient-odd-manager-monitor | Weekly monitoring digest PDF | get_diligence_roster_funds, get_fund_diligence_monitoring, get_manager_diligence_attention_queue, get_manager_monitor_evidence | get_fund_diligence_review, get_manager_diligence_findings, get_firm_fund_events, get_research_watchlist_changes | firmFundDiligence |
-| gradient-research-macro-brief | Macro briefing deck PDF | get_the_read, get_macro_conditions, get_macro_calendar | get_macro_signals, get_capital_market_assumptions, get_regional_research (facts, capital_markets) | macroDesk, research (signals: gradientSignals) |
 | gradient-decision-ic-memo — Portfolio Analytics core | IC memo PDF | list_portfolios, get_portfolio_structure, get_portfolio_exposure, check_portfolio_policy, get_portfolio_historical_returns, get_portfolio_attribution, get_chart_data, get_capital_market_assumptions | get_cma_consensus_check, macro tools, diligence tools | portfolio, research |
 | gradient-decision-ic-memo — Strategy Lab supplement | Optional selected-series appendix | get_benchmarks, get_return_series, run_strategy_lab_expected_statistics | run_strategy_lab_simulation, run_strategy_lab_relative_return, run_strategy_lab_date_window_robustness | strategyLab optional; missing makes the memo Partial, not Not licensed |
 | gradient-portfolio-review | Brief (5–8 page) or comprehensive (15–20 page) portfolio review PDF | list_portfolios, get_portfolio_structure, get_portfolio_exposure, check_portfolio_policy, and get_portfolio_historical_returns or get_return_series | **Comprehensive Portfolio Analytics:** get_portfolio_attribution, get_chart_data (allocations, commitments), list_assumption_sets; **context:** get_benchmarks, get_cross_domain_research (portfolio_13f_lookthrough, roster_macro_exposure), get_peer_allocation_intelligence, get_the_read, get_capital_market_assumptions; **Strategy Lab supplement (module optional):** selected `return_series_ids` passed directly to run_strategy_lab_simulation, run_strategy_lab_expected_statistics, run_strategy_lab_relative_return or run_strategy_lab_date_window_robustness | portfolio (research, peerIntelligence and strategyLab optional) |
@@ -37,26 +36,29 @@ and `effective_capabilities` must equal whether that mode is not `unavailable`. 
 | gradient-idd-private-markets-pme | Private-markets PME PDF | get_benchmarks, get_return_series, build_strategy_lab_session, run_strategy_lab_private_markets_pme | — | strategyLab |
 | gradient-idd-manager-shortlist | IDD manager-shortlist PDF | search_managers, get_return_series, analyze_strategy_lab_compare, run_strategy_lab_expected_statistics | optional screen_managers followed by governed performance; run_strategy_lab_relative_return; canonical manager/fund-to-return-series links | strategyLab (firmFundDiligence optional) |
 | gradient-odd-manager-compare | Named-manager operational comparison PDF | search_managers, get_manager_odd_profile | get_diligence_roster_funds, get_firm_13f_portfolio_review, get_multi_manager_13f_overlap, get_cross_domain_research, get_firm_fund_events, get_manager_diligence_findings, update_watchlist, update_manager_monitoring | firmFundDiligence (overlap: research) |
-| gradient-research-equity-note | Equity research note PDF | get_public_equity_fundamentals, get_public_equity_filing_evidence | get_market_positioning, get_cross_domain_research (holdings_issuer_risk), get_diligence_roster_funds, get_research_context, get_research_watchlist_changes, update_watchlist | research (positioning: gradientSignals) |
-| gradient-gips-manager-diligence | GIPS review PDF | none (works from documents) | get_manager_odd_profile, get_manager_diligence_brief, get_firm_entity_facts, list_diligence_documents, get_ddq_reconciliation_history | firmFundDiligence (optional) |
 | gradient-gips-report-review | Firm or asset-owner GIPS review PDF | none (documents) | — | — |
-| gradient-gips-policies-gap-check | GIPS review PDF | none (documents) | — | — |
-| gradient-gips-standards | GIPS briefing note PDF | none | — | — |
 | gradient-menu | In-chat grouped command catalog | none | — | — |
 | gradient-setup | Readiness PDF | list_organizations, get_gradient_capabilities | all probes in contract-checks.md, including sample-portfolio exposure, structure, historical returns, historical and ex ante attribution, policy and chart packs; session-bound IDD Strategy Lab tools; dry-run watchlist, monitoring, review, finding, roster, scenario and upload writes; persisted extract_ddq_claims document identity and DDQ save preview | — |
 
 Core skills (any one **Not licensed** or blocked makes the overall signal `not_ready` only if the client
 licensed the module it needs): gradient-odd-report, gradient-odd-ddq-reconcile, gradient-odd-manager-monitor,
-gradient-research-macro-brief, gradient-decision-ic-memo, gradient-portfolio-review,
+gradient-decision-ic-memo, gradient-portfolio-review,
 gradient-portfolio-attribution, gradient-portfolio-attribution-compare,
 gradient-portfolio-construction, gradient-idd-manager-performance,
 gradient-idd-manager-portfolio-fit,
 gradient-idd-private-markets-pme, gradient-idd-manager-shortlist,
-gradient-odd-manager-compare, gradient-research-equity-note.
+gradient-odd-manager-compare.
 
 gradient-portfolio-review without `portfolio` can still review Gradient's illustrative portfolio: rate it **Partial**.
 Apply the same Partial rating to gradient-portfolio-attribution and each portfolio-construction skill when only the illustrative portfolio is
 available; the report must carry the standard illustrative label and cannot describe a client portfolio.
+
+For `gradient-portfolio-construction`, apply `mode_requirements` after the shared skill rating. Only
+`private_markets` requires `get_private_markets_holdings`; if that tool is not advertised and available,
+rate private-markets construction **Not ready** while leaving fixed income, global public equity,
+marketable alternatives and real assets unchanged. A callable tool returning no mapped artifact is not a
+connector failure: rate the mode Ready or Partial from its returned data coverage and use the typed
+unavailable report block.
 Missing `peerIntelligence` does not make gradient-portfolio-review Not licensed or Partial by itself. Report
 `Peer allocation context: Not licensed (optional)`, skip the peer tool and complete the review from portfolio
 evidence.

@@ -1,6 +1,6 @@
 ---
 name: gradient-gips-report-review
-description: "Create a GIPS report review for a composite or pooled fund. Triggers: 'review this GIPS report', 'check a composite presentation', 'review a GIPS advertisement'. For general requirements use gradient-gips-standards."
+description: "Create a GIPS report review for a composite or pooled fund. Triggers: 'review this GIPS report', 'check a composite presentation', 'review a GIPS advertisement'. For manager operational diligence use gradient-odd-report."
 metadata:
   style_contract: "2.1.0"
   group: "GIPS"
@@ -19,9 +19,8 @@ metadata:
 Check a firm's GIPS Composite Report, GIPS Pooled Fund Report or GIPS Advertisement against the 2020 GIPS
 standards for firms, line by line.
 
-Shared references live in `${CLAUDE_PLUGIN_ROOT}/skills/gradient-gips-standards/references/` (fallback:
-`../gradient-gips-standards/references/`). Always load `firms-report-checklist.md`, `output-format.md` and
-`report-layout.md`; before drafting, also load this skill's
+Shared references live in this skill's `references/` directory. Always load `firms-report-checklist.md`,
+`output-format.md` and `report-layout.md`; before drafting, also load this skill's
 `references/writing-standards.md` and `references/analysis-examples.md`.
 
 ## Step 1 — Classify the document
@@ -73,8 +72,8 @@ Produce the authoritative markdown checklist and separate visual layer using `ou
 `report-layout.md`, delivered as the branded PDF (see Output). Require evidence-status tiles, evidence
 coverage, findings and severity summaries, sourced analysis, and typed unavailable blocks where expected
 evidence is missing. This workflow always uses `## 3. Preparer Fix List`, ordered Not met, Partially met, then
-Not found. A manager-evaluation memo belongs in `gradient-gips-manager-diligence`, which uses the Performance
-Integrity Memo body. Analysis is non-prescriptive and may point only to existing numbered requests.
+Not found. Manager-level claim, verification and performance-integrity diligence belongs in the GIPS section
+of `gradient-odd-report`. Analysis is non-prescriptive and may point only to existing numbered requests.
 
 State any item resting on a † (to-be-confirmed) reference line as "confirm against the standards" rather than
 a definitive deficiency.
@@ -82,7 +81,7 @@ a definitive deficiency.
 ## Output
 
 Always deliver a branded review. Write `review.md`, `visuals.json` and `meta.json`; preserve the authoritative
-markdown and validate and compose them with the shared scripts in `gradient-gips-standards/scripts`, writing
+markdown and validate and compose them with this skill's scripts, writing
 the resulting validated JSON as `report.json`. Market charts are not required. Follow
 `output-format.md`, `report-layout.md` and this skill's `references/report-style.md`.
 
@@ -91,8 +90,8 @@ both when it says `both` or `board pack`. Both formats must come from the same v
 memo handoff markdown remains unchanged through composition.
 
 ```text
-python <gradient-gips-standards>/scripts/validate_gips_report.py review.md visuals.json meta.json
-python <gradient-gips-standards>/scripts/compose_gips_report.py review.md visuals.json meta.json report.json
-python <gradient-gips-standards>/scripts/validate_gips_report.py report.json
+python <skill>/scripts/validate_gips_report.py review.md visuals.json meta.json
+python <skill>/scripts/compose_gips_report.py review.md visuals.json meta.json report.json
+python <skill>/scripts/validate_gips_report.py report.json
 python <this skill's directory>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - GIPS Report Review" --budget <this skill's directory>/references/layout-budget.json
 ```

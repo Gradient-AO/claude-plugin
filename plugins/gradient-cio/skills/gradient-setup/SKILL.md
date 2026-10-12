@@ -70,17 +70,20 @@ report them as separate modules; never use the canonical illustrative portfolio 
    `access_mode: "illustrative"`, report
    **Evaluation — Illustrative, Gradient Maintained — demo data, not the client's holdings or managers**,
    not Ready or Not licensed.
+   Then apply `mode_requirements` for the selected construction mode. Run `check_contract.py
+   --validate-mode <contracts.json> gradient-portfolio-construction <mode> <capabilities-response.json>`;
+   a missing `get_private_markets_holdings` makes only `private_markets` construction **Not ready**.
 4. Call `get_diligence_roster_funds`: roster size, capacity used and available, and reviews due within 30 days.
-
 ## 3. Contract self-test
 
 Run the probes in `references/contract-checks.md`. The **standard** set is 8 quick reads (default). The
 **full read** set is 57 reads (the 8 standard plus 49 full probes); run it when the user asks for a health
 check or self-test, or after a plugin update. The separate **writes** set is 8 dry-run previews, including
 monitoring, review and Strategy Lab scenario previews plus one batch-preview contract and one DDQ upload
-preview, and must never commit. The **DDQ save-preview** set is 3 calls: it intentionally persists one fictional test
+preview, and must never commit. Private-markets construction adds one fictional `private_markets_holdings`
+read probe. The **DDQ save-preview** set is 3 calls: it intentionally persists one fictional test
 document and one immutable reconciliation test run so that document identity and the chained save can be
-tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 70 calls.
+tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 71 calls.
 
 For each probe, record pass, fail (with error code and HTTP status) or not run (not entitled), and the
 response `as_of`. Resolve `depends_on` arguments with `check_contract.py --resolve-args`; do not manually

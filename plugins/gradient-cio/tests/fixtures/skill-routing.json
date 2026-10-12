@@ -139,66 +139,6 @@
     "description_terms": []
   },
   {
-    "prompt": "Use gradient-gips-manager-diligence for fictional routing case 1 (TEST).",
-    "expected": "gradient-gips-manager-diligence",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-manager-diligence for fictional routing case 2 (TEST).",
-    "expected": "gradient-gips-manager-diligence",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-manager-diligence for fictional routing case 3 (TEST).",
-    "expected": "gradient-gips-manager-diligence",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-manager-diligence for fictional routing case 4 (TEST).",
-    "expected": "gradient-gips-manager-diligence",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-manager-diligence for fictional routing case 5 (TEST).",
-    "expected": "gradient-gips-manager-diligence",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-policies-gap-check for fictional routing case 1 (TEST).",
-    "expected": "gradient-gips-policies-gap-check",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-policies-gap-check for fictional routing case 2 (TEST).",
-    "expected": "gradient-gips-policies-gap-check",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-policies-gap-check for fictional routing case 3 (TEST).",
-    "expected": "gradient-gips-policies-gap-check",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-policies-gap-check for fictional routing case 4 (TEST).",
-    "expected": "gradient-gips-policies-gap-check",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-policies-gap-check for fictional routing case 5 (TEST).",
-    "expected": "gradient-gips-policies-gap-check",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
     "prompt": "Use gradient-gips-report-review for fictional routing case 1 (TEST).",
     "expected": "gradient-gips-report-review",
     "not": "gradient-menu",
@@ -225,36 +165,6 @@
   {
     "prompt": "Use gradient-gips-report-review for fictional routing case 5 (TEST).",
     "expected": "gradient-gips-report-review",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-standards for fictional routing case 1 (TEST).",
-    "expected": "gradient-gips-standards",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-standards for fictional routing case 2 (TEST).",
-    "expected": "gradient-gips-standards",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-standards for fictional routing case 3 (TEST).",
-    "expected": "gradient-gips-standards",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-standards for fictional routing case 4 (TEST).",
-    "expected": "gradient-gips-standards",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-gips-standards for fictional routing case 5 (TEST).",
-    "expected": "gradient-gips-standards",
     "not": "gradient-menu",
     "description_terms": []
   },
@@ -573,66 +483,6 @@
   {
     "prompt": "Use gradient-portfolio-review for fictional routing case 5 (TEST).",
     "expected": "gradient-portfolio-review",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-research-equity-note for fictional routing case 1 (TEST).",
-    "expected": "gradient-research-equity-note",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-research-equity-note for fictional routing case 2 (TEST).",
-    "expected": "gradient-research-equity-note",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-research-equity-note for fictional routing case 3 (TEST).",
-    "expected": "gradient-research-equity-note",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-research-equity-note for fictional routing case 4 (TEST).",
-    "expected": "gradient-research-equity-note",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-research-equity-note for fictional routing case 5 (TEST).",
-    "expected": "gradient-research-equity-note",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-research-macro-brief for fictional routing case 1 (TEST).",
-    "expected": "gradient-research-macro-brief",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-research-macro-brief for fictional routing case 2 (TEST).",
-    "expected": "gradient-research-macro-brief",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-research-macro-brief for fictional routing case 3 (TEST).",
-    "expected": "gradient-research-macro-brief",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-research-macro-brief for fictional routing case 4 (TEST).",
-    "expected": "gradient-research-macro-brief",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-research-macro-brief for fictional routing case 5 (TEST).",
-    "expected": "gradient-research-macro-brief",
     "not": "gradient-menu",
     "description_terms": []
   },

@@ -24,7 +24,6 @@ SHARED_REPORT_STYLE = ROOT / "shared" / "report-style.md"
 SHARED_MODULE_SCOPE = ROOT / "shared" / "module-scope.md"
 SHARED_CHART_DATA = ROOT / "shared" / "chart-data.md"
 SKILL_REQUIREMENTS = ROOT / "skills" / "gradient-setup" / "references" / "skill-requirements.md"
-MACRO_BRIEF_SKILL = ROOT / "skills" / "gradient-research-macro-brief" / "SKILL.md"
 IC_MEMO_SKILL = ROOT / "skills" / "gradient-decision-ic-memo" / "SKILL.md"
 IC_MEMO_DATA_MAP = ROOT / "skills" / "gradient-decision-ic-memo" / "references" / "data-map.md"
 IC_MEMO_CALCULATIONS = ROOT / "skills" / "gradient-decision-ic-memo" / "references" / "calculations.md"
@@ -33,7 +32,6 @@ IC_MEMO_COMPOSER = ROOT / "skills" / "gradient-decision-ic-memo" / "scripts" / "
 IC_MEMO_EVIDENCE = FIX / "ic_evidence.json"
 IC_MEMO_EXAMPLE = ROOT / "skills" / "gradient-decision-ic-memo" / "assets" / "example-memo.md"
 ODD_REPORT_SKILL = ROOT / "skills" / "gradient-odd-report" / "SKILL.md"
-GIPS_MANAGER_DILIGENCE_SKILL = ROOT / "skills" / "gradient-gips-manager-diligence" / "SKILL.md"
 PORTFOLIO_REVIEW_SKILL = ROOT / "skills" / "gradient-portfolio-review" / "SKILL.md"
 PORTFOLIO_REVIEW_TEMPLATE = (
     ROOT
@@ -62,21 +60,19 @@ PORTFOLIO_ATTRIBUTION_VALIDATOR = (
 GIPS_REPORT_COMPOSER = (
     ROOT
     / "skills"
-    / "gradient-gips-standards"
+    / "gradient-gips-report-review"
     / "scripts"
     / "compose_gips_report.py"
 )
 GIPS_REPORT_VALIDATOR = (
     ROOT
     / "skills"
-    / "gradient-gips-standards"
+    / "gradient-gips-report-review"
     / "scripts"
     / "validate_gips_report.py"
 )
 GIPS_VARIANTS = [
-    ("manager diligence", "gips", 4, 7, ["GIPS Manager Diligence", "Performance integrity memo"]),
     ("asset-owner review", "gips-asset-owner-review", 4, 7, ["GIPS Asset Owner Review", "Oversight summary"]),
-    ("policies gap check", "gips-policies-gap-check", 5, 8, ["GIPS Policies Gap Check", "Policy gaps by area"]),
     ("report review", "gips-report-review", 4, 7, ["GIPS Report Review", "Preparer fix list"]),
 ]
 ANALYTICAL_REPORT_VALIDATORS = [
@@ -98,15 +94,6 @@ ANALYTICAL_REPORT_VALIDATORS = [
         / "scripts"
         / "validate_ddq_report.py",
         FIX / "ddq.json",
-    ),
-    (
-        "equity note",
-        ROOT
-        / "skills"
-        / "gradient-research-equity-note"
-        / "scripts"
-        / "validate_equity_note.py",
-        FIX / "equity.json",
     ),
     (
         "manager comparison",
@@ -221,11 +208,9 @@ CASES = [
     ("odd",      ["odd.json", "OUT"],                                6, 8,  ["Operational Due Diligence"]),
     ("ddq",      ["ddq.json", "OUT"],                                3, 8,  ["DDQ Reconciliation"]),
     ("ic_memo",  ["ic-memo.json", "OUT"],                          14, 18, ["Recommendation", "Key judgment", "Growth of 100"]),
-    ("gips_note",["--md", "note.md", "--meta", "note_meta.json", "OUT"], 1, 3, ["GIPS"]),
     ("digest",   ["digest.json", "OUT"],                             3, 5,  ["Manager Monitoring Digest", "Needs attention"]),
     ("setup",    ["setup.json", "OUT"],                              4, 5,  ["Readiness", "Contract checks"]),
     ("blocks",   ["blocks.json", "OUT"],                             2, 4,  ["Synthetic TEST series", "A single large message"]),
-    ("deck",     ["--deck", "deck.json", "OUT"],                     11, 11, ["Macro Briefing", "Takeaway"]),
     ("branded",  ["--brand", "branding-test.json", "blocks.json", "OUT"], 2, 4, ["Northwind Pension Plan (TEST)", "Powered by GradientCIO.com"]),
     ("portfolio", ["portfolio.json", "OUT"],                         5, 8,  ["Portfolio Review", "Standard periods to", "Growth of 100", "Look-through concentration"]),
     ("portfolio_comprehensive", ["portfolio-comprehensive.json", "OUT"], 15, 20, ["Comprehensive Portfolio Review", "Historical Attribution", "Projected Return and Risk Decomposition", "Analysis —"]),
@@ -244,7 +229,6 @@ CASES = [
     ("construction_marketable_alternatives", ["construction-marketable-alternatives.json", "OUT"], 10, 14, ["Marketable Alternatives Portfolio Construction", "Liquidity, Redemption and Operational Terms", "Committee action requested"]),
     ("construction_real_assets", ["construction-real-assets.json", "OUT"], 10, 14, ["Real Assets Portfolio Construction", "Commitments, Liquidity and Valuation", "Committee action requested"]),
     ("compare",  ["compare.json", "OUT"],                            5, 9,  ["Manager Comparison", "Side-by-side comparison", "Form 13F overlap"]),
-    ("equity",   ["equity.json", "OUT"],                             6, 9,  ["Equity Research Note", "Review flags", "not a recommendation"]),
 ]
 
 fails = []

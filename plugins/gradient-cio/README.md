@@ -16,13 +16,6 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 | `gradient-menu` | Browse a command catalog for GradientCIO workflows. Triggers: 'show the skill menu', 'list GradientCIO commands', 'help me choose a workflow'. For connection readiness use gradient-setup. | none |
 | `gradient-setup` | Create a readiness report for GradientCIO access and data. Triggers: 'check GradientCIO setup', 'test connector readiness', 'which workflows are ready'. For workflow selection use gradient-menu. | none |
 
-### Research
-
-| Skill | Produces / routes | Modules |
-|---|---|---|
-| `gradient-research-macro-brief` | Create a macro briefing deck for an investment committee. Triggers: 'prepare a macro brief', 'review rates and credit conditions', 'build an IC macro deck'. For a committee decision use gradient-decision-ic-memo. | macroDesk,research,gradientSignals |
-| `gradient-research-equity-note` | Create a sourced equity research note for one US-listed issuer. Triggers: 'research this ticker', 'review our concentrated holding', 'summarize filing changes'. For operational manager diligence use gradient-odd-report. | research,gradientSignals |
-
 ### Investment due diligence
 
 | Skill | Produces / routes | Modules |
@@ -36,7 +29,7 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 
 | Skill | Produces / routes | Modules |
 |---|---|---|
-| `gradient-odd-report` | Create an operational due-diligence report for a manager or fund. Triggers: 'run operational due diligence', 'prepare an ODD report', 'review manager operations'. For return performance use gradient-idd-manager-performance. | firmFundDiligence |
+| `gradient-odd-report` | Create an operational due-diligence report for a manager or fund, including GIPS claim and performance-integrity review. Triggers: 'run operational due diligence', 'prepare an ODD report', 'verify a manager GIPS claim'. For return performance use gradient-idd-manager-performance. | firmFundDiligence |
 | `gradient-odd-manager-compare` | Create an operational comparison report for named managers. Triggers: 'compare manager operations', 'compare Form ADV disclosures', 'review service providers'. For return performance use gradient-idd-manager-performance. | firmFundDiligence,research |
 | `gradient-odd-ddq-reconcile` | Create a DDQ reconciliation report against Form ADV evidence. Triggers: 'reconcile this DDQ', 'verify questionnaire answers', 'check DDQ discrepancies'. For a full operational review use gradient-odd-report. | firmFundDiligence |
 | `gradient-odd-manager-monitor` | Create a manager-monitoring digest for a diligence roster. Triggers: 'prepare the weekly manager digest', 'show roster changes', 'review manager alerts'. For a full operational review use gradient-odd-report. | firmFundDiligence |
@@ -54,10 +47,7 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 
 | Skill | Produces / routes | Modules |
 |---|---|---|
-| `gradient-gips-standards` | Create a GIPS standards briefing for a compliance question. Triggers: 'explain GIPS requirements', 'what is the compliance statement', 'compare GIPS and SEC rules'. For a document review use gradient-gips-report-review. | none |
-| `gradient-gips-manager-diligence` | Create a GIPS diligence report for an investment manager. Triggers: 'verify a GIPS claim', 'review manager GIPS compliance', 'assess performance integrity'. For an operational review use gradient-odd-report. | firmFundDiligence |
-| `gradient-gips-report-review` | Create a GIPS report review in firm or asset-owner mode. Triggers: 'review this GIPS report', 'check a composite presentation', 'assess an asset-owner total-fund report'. For general requirements use gradient-gips-standards. | none |
-| `gradient-gips-policies-gap-check` | Create a GIPS policies gap report for a compliance manual. Triggers: 'review our GIPS manual', 'check missing GIPS policies', 'gap-check policies and procedures'. For report disclosures use gradient-gips-report-review. | none |
+| `gradient-gips-report-review` | Create a GIPS report review in firm or asset-owner mode. Triggers: 'review this GIPS report', 'check a composite presentation', 'assess an asset-owner total-fund report'. For manager operational diligence use gradient-odd-report. | none |
 
 ### Decision
 
@@ -69,7 +59,7 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 
 The skills work together: the portfolio-construction skill selects an existing portfolio and produces
 read-only decision packs for a whole sleeve; the `gradient-idd-*` skills supply return-based manager evidence,
-while `gradient-odd-manager-compare`, the ODD report and GIPS reviews supply operational evidence; the IC memo
+while `gradient-odd-manager-compare`, the ODD report and GIPS report review supply operational evidence; the IC memo
 provides the formal 16-section vote format; and the portfolio review monitors the approved portfolio. The
 portfolio attribution report provides a focused realized-versus-expected effect analysis without prescribing
 portfolio changes. The
@@ -79,7 +69,7 @@ always as a preview first, and only after you confirm.
 ## Requirements
 
 - **GradientCIO connector** — bundled with the plugin (`https://mcp.gradientcio.com/mcp`); each user signs in
-  once from their connector settings. Run gradient-setup to confirm access. The GIPS skills also work from
+  once from their connector settings. Run gradient-setup to confirm access. The GIPS report-review skill also works from
   documents alone.
 - **Python 3.11+ with Playwright (Chromium)** and poppler (`pdftoppm`, `pdfunite`) or `qpdf` to render PDFs.
   These are available in Cowork; elsewhere run `pip install playwright && python -m playwright install chromium`.

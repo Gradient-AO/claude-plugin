@@ -27,12 +27,6 @@ For connection, entitlement, or data-readiness checks, use `/gradient-cio:gradie
 
 Example: “Check which GradientCIO workflows are ready.”
 
-## Research
-- `/gradient-cio:gradient-research-macro-brief` — Brief investment committees on macro conditions, signals, events and assumptions. Next: gradient-decision-ic-memo.
-- `/gradient-cio:gradient-research-equity-note` — Research one public equity issuer with sourced fundamentals and filing changes. Next: gradient-odd-report, gradient-decision-ic-memo.
-
-Example: “Prepare a macro brief for the next IC meeting.”
-
 ## Investment due diligence
 - `/gradient-cio:gradient-idd-manager-performance` — Assess manager performance, comparisons and persistence with matched benchmarks. Next: gradient-odd-report, gradient-odd-manager-compare, gradient-decision-ic-memo.
 - `/gradient-cio:gradient-idd-manager-portfolio-fit` — Assess one manager's portfolio fit, diversification and scenario impact. Next: gradient-odd-report, gradient-decision-ic-memo.
@@ -58,10 +52,7 @@ Example: “Prepare ODD on the finalist.”
 Example: “Review our total portfolio for the quarter.”
 
 ## GIPS
-- `/gradient-cio:gradient-gips-standards` — Answer GIPS requirements questions in a sourced briefing note. Next: gradient-gips-report-review.
-- `/gradient-cio:gradient-gips-manager-diligence` — Verify manager GIPS claims, verification and performance integrity. Next: gradient-odd-report, gradient-decision-ic-memo.
 - `/gradient-cio:gradient-gips-report-review` — Review firm and asset-owner reports against applicable GIPS requirements. Next: gradient-decision-ic-memo.
-- `/gradient-cio:gradient-gips-policies-gap-check` — Gap-check GIPS policies and procedures against required provisions. Next: gradient-decision-ic-memo.
 
 Example: “Review this report against the GIPS standards.”
 

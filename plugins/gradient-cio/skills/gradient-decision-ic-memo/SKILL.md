@@ -62,10 +62,10 @@ saved evidence and must be labeled/cited as specified in
 ## 3. GIPS and evidence boundaries
 
 Always retain Performance Integrity & GIPS. Use
-`gradient-gips-report-review` for total-fund reporting and
-`gradient-gips-manager-diligence` for managers at least 5% exposure and every
-hire candidate. Carry High/Medium findings and follow-ups into memo risk/open
-items. If unavailable, mark Not assessed and preserve the gap.
+`gradient-gips-report-review` for total-fund reporting and the GIPS section of
+`gradient-odd-report` for managers at least 5% exposure and every hire
+candidate. Carry High/Medium findings and follow-ups into memo risk/open items.
+If unavailable, mark Not assessed and preserve the gap.
 
 Expected returns are assumptions, not forecasts. Strategy Lab relative return
 is not saved-portfolio attribution. Policy `not_assessed` is never inferred

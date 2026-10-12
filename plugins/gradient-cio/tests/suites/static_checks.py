@@ -87,18 +87,6 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
             r"Monitoring, findings & DDQ",
         ),
     ),
-    "gradient-research-equity-note": (
-        False,
-        (
-            r"Fundamentals trend",
-            r"Filing changes",
-            r"Risk factors",
-            r"Latest earnings release",
-            r"Peers and dated valuation context",
-            r"Industry structure",
-            r"Positioning and crowding",
-        ),
-    ),
     "gradient-odd-manager-compare": (
         False,
         (
@@ -137,9 +125,7 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
             r"Risks & Mitigants",
         ),
     ),
-    "gradient-gips-manager-diligence": (True, (r"Findings",)),
     "gradient-gips-report-review": (True, (r"Findings",)),
-    "gradient-gips-policies-gap-check": (True, (r"Findings",)),
 }
 ANALYSIS_LABELS = (
     "Observation:",
@@ -420,7 +406,7 @@ def static(allow_branded):
     theme_version = theme_match.group(1) if theme_match else ""
     check(bool(theme_version), "shared report theme declares THEME_VERSION")
     skills = sorted(p for p in (ROOT / "skills").iterdir() if (p / "SKILL.md").exists())
-    check(len(skills) == 21, f"exactly 21 target skills found ({len(skills)})")
+    check(len(skills) == 16, f"exactly 16 target skills found ({len(skills)})")
     descriptions_by_name = {}
     triggers_by_skill = {}
     for s in skills:
@@ -597,6 +583,11 @@ def static(allow_branded):
         "gradient-marketable-alternatives-portfolio-construction",
         "gradient-real-assets-portfolio-construction",
         "gradient-gips-asset-owner-review",
+        "gradient-gips-manager-diligence",
+        "gradient-gips-policies-gap-check",
+        "gradient-gips-standards",
+        "gradient-research-equity-note",
+        "gradient-research-macro-brief",
     )
     legacy_hits = []
     repository_root = ROOT.parents[1]

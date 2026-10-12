@@ -124,8 +124,8 @@ write a branding file in the working directory (logo path relative to it) and pa
 
 ## Writing rules (all reports)
 
-- Apply `shared/writing-standards.md` to analytical reports. The setup readiness report and the
-  `gradient-gips-standards` reference answer are exempt; GIPS review deliverables remain subject to their own
+- Apply `shared/writing-standards.md` to analytical reports. The setup readiness report is exempt; GIPS
+  report-review deliverables remain subject to their own
   analytical report contract.
 - Lead with the finding. Every figure carries a unit, a date where relevant, and an `[S#]` tag for the
   Gradient result or user document that supplied it. Skills may scale and round values for display but must

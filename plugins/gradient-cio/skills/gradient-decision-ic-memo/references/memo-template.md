@@ -266,8 +266,8 @@ callout with that exact title, and ends with sourced Analysis.}
 
 ## 11. Performance Integrity & GIPS
 
-{Paste sections from gradient-gips-report-review (total fund) and gradient-gips-manager-diligence (each manager ≥ 5% NAV or
-being hired), unchanged, ordered: total fund first, then managers by exposure descending.}
+{Paste sections from gradient-gips-report-review (total fund) and the GIPS section of gradient-odd-report
+(each manager ≥ 5% NAV or being hired), unchanged, ordered: total fund first, then managers by exposure descending.}
 {The visual layer is compact: `GIPS review coverage` followed by `GIPS follow-ups`; do not repeat the pasted
 handoff in a second long table.}
 
@@ -276,7 +276,7 @@ handoff in a second long table.}
 <gradient-gips-report-review oversight-body summary, or "Not assessed — <reason>">
 
 ### 11.2 <Manager name>
-<gradient-gips-manager-diligence memo section>
+<gradient-odd-report GIPS subsection>
 ```
 
 ## 12. Market Context

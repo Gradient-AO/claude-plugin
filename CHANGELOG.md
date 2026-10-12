@@ -1,5 +1,17 @@
 # Changelog
 
+## 4.0.0
+- Removed the standalone macro-brief and equity-note research skills from the public plugin.
+- Consolidated manager GIPS claim, verification and performance-integrity review into `gradient-odd-report`.
+- Retained `gradient-gips-report-review` as the single GIPS skill, with firm and asset-owner modes and self-contained references and validation scripts.
+- Removed the standalone GIPS standards briefing and policies gap-check skills, and updated catalogs, setup readiness, routing, examples and regressions for the reduced command set.
+
+## 3.1.0
+- Added governed ILPA portfolio-company look-through to private-markets Portfolio Construction through the new `get_private_markets_holdings` connector tool.
+- Kept commitment exposure additive while treating company, sector, geography, valuation, leverage and covenant evidence as a non-additive diversification overlay.
+- Preserved canonical holdings, exact ILPA source values and projected ranges as distinct lanes with artifact, parser, draft and projection lineage.
+- Added private-markets-only setup readiness, fictional connector probes, structured report evidence, strict validator regressions and refreshed PDF/PowerPoint examples.
+
 ## 3.0.0
 - Consolidated the public catalog from 27 commands to 21, with mode-driven manager-performance, portfolio-construction and GIPS report-review skills.
 - Added capability-gated portfolio attribution comparison with governed historical, ex ante and simulated lanes; absent server capabilities remain typed unavailable without local derived analytics.

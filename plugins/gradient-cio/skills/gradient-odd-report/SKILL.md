@@ -1,6 +1,6 @@
 ---
 name: gradient-odd-report
-description: "Create an operational due-diligence report for a manager or fund. Triggers: 'run operational due diligence', 'prepare an ODD report', 'review manager operations'. For return performance use gradient-idd-manager-performance."
+description: "Create an operational due-diligence report for a manager or fund, including GIPS claim and performance-integrity review. Triggers: 'run operational due diligence', 'prepare an ODD report', 'verify a manager GIPS claim'. For return performance use gradient-idd-manager-performance."
 metadata:
   style_contract: "2.1.0"
   group: "Operational due diligence"
@@ -37,8 +37,11 @@ unspecified subjects are triaged before full reports.
 
 Resolve organization and roster. Ask at most one question. A named single
 subject proceeds to a full report; no subject or multiple funds use triage.
-If a DDQ exists, plan `gradient-odd-ddq-reconcile`; if a GIPS/performance document
-exists, use `gradient-gips-manager-diligence`. If a `gradient-idd-*` skill
+If a DDQ exists, plan `gradient-odd-ddq-reconcile`. If a manager GIPS claim,
+verification report, or performance document exists, include a GIPS and
+performance-integrity subsection in the full ODD report; use
+`gradient-gips-report-review` only when the task is to check a composite,
+pooled-fund, advertisement, or asset-owner report itself. If a `gradient-idd-*` skill
 supplied a `gradient-idd-odd-ic-handoff/v1` object, read
 `references/contracts/odd-evidence.md` and keep its return and benchmark
 evidence as investment evidence, separate from ODD findings.
@@ -70,6 +73,12 @@ Read `references/odd-execution-contract.md#interpretation`. Apply its full ODD
 signal and completeness rubric, preserve all filed and analytical caveats, and
 write neutral, source-tagged questions from governed questions and concrete
 gaps. A degraded clear result is not a clean bill of health.
+
+For manager GIPS evidence, distinguish the firm's claim, verifier scope,
+composite or pooled-fund definition, fee basis, portability, and any difference
+between verification and performance examination. Quote supplied documents,
+do not infer compliance from verification alone, and keep these findings inside
+the regulatory and conflicts section of the ODD report.
 
 ## 4. Build and deliver
 

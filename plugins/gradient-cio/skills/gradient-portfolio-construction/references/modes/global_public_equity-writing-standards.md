@@ -1,7 +1,7 @@
 # Gradient analytical writing standards
 
 These standards apply to client-facing analytical reports and decision packs. They do not apply to the
-`gradient-setup` readiness report or to the `gradient-gips-standards` reference answer. A family-specific skill
+`gradient-setup` readiness report or to GIPS report-review deliverables. A family-specific skill
 may narrow the voice, required sections or permitted decision language, but it may not weaken evidence,
 availability or presentation rules.
 

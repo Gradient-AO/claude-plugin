@@ -20,7 +20,6 @@ REQUIREMENTS = (
 
 GROUP_ORDER = (
     "Start",
-    "Research",
     "Investment due diligence",
     "Operational due diligence",
     "Portfolio",
@@ -30,7 +29,6 @@ GROUP_ORDER = (
 
 EXAMPLES = {
     "Start": "Check which GradientCIO workflows are ready.",
-    "Research": "Prepare a macro brief for the next IC meeting.",
     "Investment due diligence": "Compare these managers' track records.",
     "Operational due diligence": "Prepare ODD on the finalist.",
     "Portfolio": "Review our total portfolio for the quarter.",

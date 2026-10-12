@@ -1,7 +1,5 @@
 {
   "gradient-decision-ic-memo": {"validator": "skills/gradient-decision-ic-memo/scripts/validate_memo.py", "fixtures": ["ic.md"]},
-  "gradient-gips-manager-diligence": {"validator": "skills/gradient-gips-manager-diligence/scripts/validate_gips_report.py", "fixtures": ["gips.md", "gips_visuals.json", "gips_meta.json"]},
-  "gradient-gips-policies-gap-check": {"validator": "skills/gradient-gips-policies-gap-check/scripts/validate_gips_report.py", "fixtures": ["gips-policies-gap-check.md", "gips-policies-gap-check-visuals.json", "gips-policies-gap-check-meta.json"]},
   "gradient-gips-report-review": {
     "validator": "skills/gradient-gips-report-review/scripts/validate_gips_report.py",
     "modes": {
@@ -9,7 +7,6 @@
       "asset-owner": ["gips-asset-owner-review.md", "gips-asset-owner-review-visuals.json", "gips-asset-owner-review-meta.json"]
     }
   },
-  "gradient-gips-standards": {"validator": "skills/gradient-gips-standards/scripts/validate_gips_report.py", "fixtures": ["gips.md", "gips_visuals.json", "gips_meta.json"]},
   "gradient-idd-manager-performance": {
     "validator": "skills/gradient-idd-manager-performance/scripts/validate_idd_report.py",
     "modes": {
@@ -44,7 +41,5 @@
     }
   },
   "gradient-portfolio-review": {"validator": "skills/gradient-portfolio-review/scripts/validate_review.py", "fixtures": ["portfolio.json", "portfolio-comprehensive.json"]},
-  "gradient-research-equity-note": {"validator": "skills/gradient-research-equity-note/scripts/validate_equity_note.py", "fixtures": ["equity.json"]},
-  "gradient-research-macro-brief": {"validator": "skills/gradient-research-macro-brief/scripts/validate_deck.py", "fixtures": ["deck.json"]},
   "gradient-setup": {"validator": "skills/gradient-setup/scripts/validate_setup.py", "fixtures": ["setup.json"]}
 }

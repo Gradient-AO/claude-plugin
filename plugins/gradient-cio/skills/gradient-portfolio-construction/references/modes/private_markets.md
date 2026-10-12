@@ -59,7 +59,10 @@ as-of date, data-scope label, validation status and payload digest.
 
 Required evidence:
 
-- portfolio record, allocation tree, full exposure pages and policy result;
+- portfolio record, allocation tree, full commitment-exposure pages and policy result;
+- `get_private_markets_holdings`, called after commitment exposure with the selected `portfolio_id`; page
+  inventory rows to completion, but use only its server-returned aggregates for company, sector, geography,
+  status, holding-age and projected-range roll-ups;
 - historical returns and governed attribution, preserving typed unavailable states;
 - `get_chart_data` availability, then `allocations` and `commitments` one pack at a time, or up to four
   targeted `chart_ids` (never both selectors); `max_rows` defaults to 40 and is capped at 100; disclose
@@ -73,6 +76,13 @@ is `Not licensed`, not an outage. Retry only once and only when the error says i
 
 - Use returned private-market exposure classifications, NAV, commitment amount and unfunded values. Do not
   treat unfunded as NAV or add it to server exposure aggregates.
+- Keep commitment exposure authoritative for portfolio and sleeve totals. Treat company look-through as a
+  non-additive risk and diversification overlay; never add company NAV or ILPA fair value to commitment NAV,
+  use paged company rows to reconstruct an aggregate, or use company evidence to calculate targets locally.
+- Keep the three evidence lanes distinct: current `canonical_holding` values, exact immutable
+  `ilpa_source_evidence` values and projected Gradient ranges. Preserve reconciliation status, reporting and
+  valuation lag, aggregate basis/completeness, selected artifact lineage, parser version, and the exact
+  release label **Draft — July 22, 2026**.
 - Use returned total-portfolio targets and governed policy statuses. Do not multiply parent and child
   targets or infer a policy status.
 - Lead liquidity analysis with unfunded coverage, near-term calls and denominator sensitivity. State every
@@ -121,7 +131,7 @@ open-item count, plus the requested file(s).
   shortlist → `gradient-idd-manager-shortlist`.
 - Candidate-manager operations or a Form ADV screen → `gradient-odd-manager-compare`.
 - One private fund's cash-flow performance against public markets → `gradient-idd-private-markets-pme`.
-- Manager or fund diligence → `gradient-odd-report` and `gradient-gips-manager-diligence`.
+- Manager or fund diligence, including GIPS claims and performance integrity → `gradient-odd-report`.
 - Hedge-fund or liquid-alternatives construction → `gradient-portfolio-construction`.
 - Broad liquid/illiquid real-assets construction → `gradient-portfolio-construction`.
 - Formal 16-section committee memo → `gradient-decision-ic-memo` with memo type `New Commitment` or
