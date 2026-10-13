@@ -222,6 +222,8 @@ def validate(document: JsonValue) -> list[str]:
         errors.append("Root attribution_report_mode must be 'standard'")
 
     meta = as_object(root.get("meta"))
+    if meta is None or meta.get("mode") != "single":
+        errors.append("meta.mode must be 'single'")
     if meta is not None and meta.get("eyebrow") != "Portfolio Attribution Report":
         errors.append("meta.eyebrow must be 'Portfolio Attribution Report'")
 

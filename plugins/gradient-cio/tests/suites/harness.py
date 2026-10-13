@@ -99,9 +99,9 @@ ANALYTICAL_REPORT_VALIDATORS = [
         "manager comparison",
         ROOT
         / "skills"
-        / "gradient-odd-manager-compare"
+        / "gradient-odd-report"
         / "scripts"
-        / "validate_manager_compare.py",
+        / "validate_odd_report.py",
         FIX / "compare.json",
     ),
     (

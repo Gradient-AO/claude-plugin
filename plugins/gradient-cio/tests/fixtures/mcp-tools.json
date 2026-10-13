@@ -9,7 +9,7 @@
     "compare_portfolio_attribution"
   ],
   "planned_scope": {
-    "simulate_portfolio_attribution": "gradient-portfolio-attribution-compare/references",
-    "compare_portfolio_attribution": "gradient-portfolio-attribution-compare/references"
+    "simulate_portfolio_attribution": "gradient-portfolio-attribution/references/modes/compare-lanes",
+    "compare_portfolio_attribution": "gradient-portfolio-attribution/references/modes/compare-lanes"
   }
 }

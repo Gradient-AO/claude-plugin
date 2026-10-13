@@ -1,8 +1,8 @@
 ---
 name: gradient-idd-manager-performance
-description: "Create a manager performance report for single-manager meaningfulness, benchmark comparisons, and rolling-window robustness. Triggers: 'assess one track record', 'compare manager performance', 'test performance persistence'. For operational diligence use gradient-odd-report."
+description: "Create performance reports for single-manager meaningfulness, benchmark comparisons, rolling persistence, or a mandate shortlist. Triggers: 'assess one track record', 'compare manager performance', 'test performance persistence', 'build a manager shortlist'. For ODD use gradient-odd-report."
 metadata:
-  version: "4.0.0"
+  version: "4.1.0"
   style_contract: "2.3.0"
   group: "Investment due diligence"
   subject: "manager performance"
@@ -10,9 +10,9 @@ metadata:
   menu_order: "10"
   modules: "strategyLab"
   contracts: "idd-methodology,idd-odd-ic-handoff"
-  handoffs: "gradient-odd-report,gradient-odd-manager-compare,gradient-decision-ic-memo"
-  modes: "single,compare,robustness"
-  summary: "Assess manager performance, comparisons and persistence with matched benchmarks."
+  handoffs: "gradient-odd-report,gradient-decision-ic-memo"
+  modes: "single,compare,robustness,shortlist"
+  summary: "Assess manager performance, comparisons, persistence and shortlists with matched benchmarks."
 ---
 
 # Manager Performance
@@ -24,6 +24,7 @@ Produce a sourced manager-performance report in exactly one mode:
 | `single` | Assess one manager track record and statistical reliability | `references/modes/single.md` |
 | `compare` | Compare 2–10 managers against separately matched benchmarks | `references/modes/compare.md` |
 | `robustness` | Test persistence across returned windows, rolling periods and regimes | `references/modes/robustness.md` |
+| `shortlist` | Screen a mandate and build an evidence-governed manager shortlist | `references/modes/shortlist.md` |
 
 Set `meta.mode` to the selected value before validation. Do not combine modes in one report.
 
@@ -51,7 +52,7 @@ Resolve the organization, selected return-series IDs, canonical entity links, da
 
 Apply the shared methodology and state what would change the conclusion. Attach a validated `gradient-idd-odd-ic-handoff/v1` object with identity status, return-series and benchmark IDs, evidence, limitations and selection rationale.
 
-Viable finalists → `gradient-odd-report`; operational comparison → `gradient-odd-manager-compare`; a hire decision → `gradient-decision-ic-memo`.
+Viable finalists → `gradient-odd-report`; operational comparison → `gradient-odd-report` compare mode; a hire decision → `gradient-decision-ic-memo`.
 
 ## Validate and deliver
 

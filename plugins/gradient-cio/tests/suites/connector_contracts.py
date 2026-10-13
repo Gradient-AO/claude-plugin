@@ -1686,9 +1686,11 @@ def contract_manifest():
         if line.startswith("| gradient-odd-report ")
     )
     check(
-        "| get_diligence_roster_funds, get_manager_diligence_brief |"
+        "full mode: get_diligence_roster_funds, get_manager_diligence_brief"
+        in odd_requirements
+        and "compare mode: search_managers, get_manager_odd_profile"
         in odd_requirements,
-        "ODD readiness requires the composite diligence brief",
+        "ODD readiness declares mode-specific required evidence",
     )
     manager_monitor_contract = (
         ROOT
@@ -1759,10 +1761,8 @@ def contract_manifest():
         IC_MEMO_DATA_MAP.read_text(encoding="utf-8"),
     ]
     check(
-        all(
-            "server-derived evidence signals" in text.lower()
-            for text in evidence_wording
-        )
+        "server-derived signals" in evidence_wording[0].lower()
+        and "server-derived evidence signals" in evidence_wording[1].lower()
         and "not report-ready" in evidence_wording[0].lower()
         and "not an IC" in evidence_wording[1],
         "diligence skills keep server evidence separate from plugin conclusions",

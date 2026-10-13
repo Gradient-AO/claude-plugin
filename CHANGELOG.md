@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.8.0
+- Consolidated the public report catalog from 13 to 10 commands by moving attribution comparison, operational manager comparison and manager shortlisting into modes of their canonical skills.
+- Moved roster triage from the full ODD workflow into manager monitoring while preserving focused full-report routing.
+- Preserved existing report styling, renderers and mode-specific layout budgets, and strengthened mode, handoff and menu-order validation.
+
 ## 5.7.0
 - Tightened the single-portfolio attribution contract around an 11-page hard ceiling, scoped visual unavailability, paired-dot expected returns, full-width return context, depth-1 cumulative selection and diagnostics-only residuals.
 - Added safe direct-series imports for saved JSON tool responses and a plugin-version preflight that blocks only when a newer duplicate install exists.

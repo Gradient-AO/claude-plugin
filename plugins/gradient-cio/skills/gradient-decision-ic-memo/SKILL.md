@@ -10,7 +10,7 @@ metadata:
   modules: "portfolio,research,strategyLab,firmFundDiligence"
   contracts: "decision"
   handoffs: "none"
-  version: "0.3.0"
+  version: "0.3.1"
   summary: "Produce a sourced decision memo with recommendation and requested vote."
 ---
 
@@ -114,9 +114,9 @@ files.
 - Manager Hire candidate returns against benchmarks →
   `gradient-idd-manager-performance` (one candidate:
   `gradient-idd-manager-performance`).
-- Manager Hire candidate operations (Form ADV, service providers, disclosures,
-  13F) → `gradient-odd-manager-compare`; full finalist review →
-  `gradient-odd-report`.
+- Manager Hire candidate operations comparison (Form ADV, service providers,
+  disclosures, 13F) → `gradient-odd-report` in `compare` mode; full finalist
+  review → `gradient-odd-report` in `full` mode.
 
 Only when asked, an Allocation Change/Rebalance based on a real matching
 Strategy Lab basket may preview `save_strategy_lab_scenario`. Show the preview

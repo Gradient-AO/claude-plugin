@@ -119,9 +119,9 @@ recommendation, real-assets policy status, open-item count, plus the requested f
 - Drawdown pacing or commitment-program depth → `gradient-portfolio-construction`.
 - Inflation-linked fixed-income detail → `gradient-portfolio-construction`.
 - Candidate-manager returns against benchmarks → `gradient-idd-manager-performance`; return-based mandate
-  shortlist → `gradient-idd-manager-shortlist`.
-- Candidate-manager operations or a Form ADV screen → `gradient-odd-manager-compare`.
+  shortlist → `gradient-idd-manager-performance` in `shortlist` mode.
+- Candidate-manager operations or a Form ADV screen → `gradient-odd-report` in `compare` mode.
 - One manager's effect on this sleeve's diversification → `gradient-idd-manager-portfolio-fit`.
-- Manager or fund diligence, including GIPS claims and performance integrity → `gradient-odd-report`.
+- Manager or fund diligence, including GIPS claims and performance integrity → `gradient-odd-report` in `full` mode.
 - Formal 16-section vote memo → `gradient-decision-ic-memo` with memo type `Allocation Change` or `Rebalance`.
 - Ongoing monitoring → `gradient-portfolio-review`.

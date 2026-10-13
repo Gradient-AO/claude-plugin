@@ -2,12 +2,12 @@
 name: gradient-idd-private-markets-pme
 description: "Create a private-markets PME report for one fund or manager. Triggers: 'run private-markets PME', 'compare this fund to public markets', 'assess PME performance'. For program construction use gradient-portfolio-construction."
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
   style_contract: "2.3.0"
   group: "Investment due diligence"
   subject: "private-markets performance"
   output: "PME Report"
-  menu_order: "50"
+  menu_order: "30"
   modules: "strategyLab"
   contracts: "idd-methodology,idd-odd-ic-handoff"
   handoffs: "gradient-odd-report,gradient-decision-ic-memo"

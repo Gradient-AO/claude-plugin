@@ -43,6 +43,9 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
             r"Window sensitivity",
             r"Rolling evidence",
             r"Regime evidence",
+            r"Candidate evidence",
+            r"Performance comparison",
+            r"Advance/reserve/reject rationale",
         ),
     ),
     "gradient-idd-private-markets-pme": (
@@ -52,15 +55,6 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
             r"IRR and multiples",
             r"Benchmark sensitivity",
             r"Partial evidence",
-        ),
-    ),
-    "gradient-portfolio-attribution-compare": (
-        True,
-        (
-            r"Historical Attribution",
-            r"Governed Ex Ante Attribution",
-            r"Simulated Attribution",
-            r"Cross-Lane Comparison",
         ),
     ),
     "gradient-portfolio-review": (
@@ -88,6 +82,8 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
             r"Historical Attribution",
             r"Governed Ex Ante Attribution",
             r"Historical-versus-Ex-Ante Scope and Comparison",
+            r"Simulated Attribution",
+            r"Cross-Lane Comparison",
         ),
     ),
     "gradient-odd-report": (
@@ -99,11 +95,6 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
             r"Fund operations & service providers",
             r"Reported equity holdings \(Form 13F\)",
             r"Monitoring, findings & DDQ",
-        ),
-    ),
-    "gradient-odd-manager-compare": (
-        False,
-        (
             r"Side-by-side comparison",
             r"Operational flags",
             r"Form 13F overlap",
@@ -138,6 +129,20 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
             r"Proposed Changes & Impact",
             r"Risks & Mitigants",
         ),
+    ),
+}
+ANALYSIS_EXAMPLE_PATHS = {
+    "gradient-idd-manager-performance": (
+        "references/analysis-examples.md",
+        "references/modes/shortlist-analysis-examples.md",
+    ),
+    "gradient-odd-report": (
+        "references/analysis-examples.md",
+        "references/modes/compare-analysis-examples.md",
+    ),
+    "gradient-portfolio-attribution": (
+        "references/analysis-examples.md",
+        "references/modes/compare-lanes-analysis-examples.md",
     ),
 }
 ANALYSIS_LABELS = (
@@ -412,7 +417,7 @@ def attribution_compare_contract_checks():
     validator = (
         ROOT
         / "skills"
-        / "gradient-portfolio-attribution-compare"
+        / "gradient-portfolio-attribution"
         / "scripts"
         / "validate_attribution_compare.py"
     )
@@ -463,9 +468,10 @@ def attribution_compare_contract_checks():
         (
             ROOT
             / "skills"
-            / "gradient-portfolio-attribution-compare"
+            / "gradient-portfolio-attribution"
             / "references"
-            / "layout-budget.json"
+            / "modes"
+            / "compare-lanes-layout-budget.json"
         ).read_text(encoding="utf-8")
     )
     check(
@@ -1204,11 +1210,18 @@ def analysis_example_checks():
     quality_errors = []
     reviewed_count = 0
     for skill_name, (structured, section_patterns) in ANALYSIS_EXAMPLE_CONTRACTS.items():
-        path = ROOT / "skills" / skill_name / "references" / "analysis-examples.md"
-        if not path.is_file():
-            missing_files.append(skill_name)
+        relative_paths = ANALYSIS_EXAMPLE_PATHS.get(
+            skill_name,
+            ("references/analysis-examples.md",),
+        )
+        paths = [ROOT / "skills" / skill_name / path for path in relative_paths]
+        absent = [str(path.relative_to(ROOT)) for path in paths if not path.is_file()]
+        if absent:
+            missing_files.extend(absent)
             continue
-        examples = _strong_examples(path.read_text(encoding="utf-8"))
+        examples = {}
+        for path in paths:
+            examples.update(_strong_examples(path.read_text(encoding="utf-8")))
         headings = tuple(examples)
         for pattern in section_patterns:
             if not any(re.fullmatch(pattern, heading, re.IGNORECASE) for heading in headings):
@@ -1457,17 +1470,22 @@ def registered_json_validator_checks(validator_manifest):
     negative_errors = []
     exercised = 0
     for skill_name, registration in validator_manifest.items():
-        validator = ROOT / registration["validator"]
         cases = [
-            (None, fixture_name)
+            (None, fixture_name, ROOT / registration["validator"])
             for fixture_name in registration.get("fixtures", [])
         ]
-        cases.extend(
-            (mode, fixture_name)
-            for mode, fixture_names in registration.get("modes", {}).items()
-            for fixture_name in fixture_names
-        )
-        for mode, fixture_name in cases:
+        for mode, mode_registration in registration.get("modes", {}).items():
+            if isinstance(mode_registration, dict):
+                validator = ROOT / mode_registration["validator"]
+                fixture_names = mode_registration.get("fixtures", [])
+            else:
+                validator = ROOT / registration["validator"]
+                fixture_names = mode_registration
+            cases.extend(
+                (mode, fixture_name, validator)
+                for fixture_name in fixture_names
+            )
+        for mode, fixture_name, validator in cases:
             fixture = FIX / fixture_name
             if fixture.suffix != ".json" or not fixture.is_file():
                 continue
@@ -1817,14 +1835,16 @@ def static(allow_branded):
     theme_version = theme_match.group(1) if theme_match else ""
     check(bool(theme_version), "shared report theme declares THEME_VERSION")
     skills = sorted(p for p in (ROOT / "skills").iterdir() if (p / "SKILL.md").exists())
-    check(len(skills) == 15, f"exactly 15 target skills found ({len(skills)})")
+    check(len(skills) == 12, f"exactly 12 target skills found ({len(skills)})")
     descriptions_by_name = {}
+    frontmatter_by_name = {}
     triggers_by_skill = {}
     for s in skills:
         text = (s / "SKILL.md").read_text(encoding="utf-8"); fm = frontmatter(text)
         check(fm.get("name") == s.name and s.name.startswith("gradient-"), f"{s.name}: name matches folder and starts with gradient-")
         description = fm.get("description", "")
         descriptions_by_name[s.name] = description
+        frontmatter_by_name[s.name] = fm
         chat_only = fm.get("delivery") == "chat"
         check(bool(description), f"{s.name}: has description")
         check(
@@ -1916,6 +1936,58 @@ def static(allow_branded):
             len(text.split()) <= 1800,
             f"{s.name}: SKILL.md at most 1,800 words ({len(text.split())})",
         )
+    installed_names = set(descriptions_by_name)
+    handoff_errors = []
+    mode_reference_errors = []
+    group_orders = {}
+    for skill_name, fm in frontmatter_by_name.items():
+        handoffs = tuple(
+            name.strip()
+            for name in fm.get("handoffs", "").split(",")
+            if name.strip() and name.strip() != "none"
+        )
+        missing_handoffs = sorted(set(handoffs) - installed_names)
+        if missing_handoffs:
+            handoff_errors.append(f"{skill_name}: {missing_handoffs}")
+        modes = tuple(
+            mode.strip()
+            for mode in fm.get("modes", "").split(",")
+            if mode.strip()
+        )
+        for mode in modes:
+            mode_path = (
+                ROOT
+                / "skills"
+                / skill_name
+                / "references"
+                / "modes"
+                / f"{mode}.md"
+            )
+            if not mode_path.is_file():
+                mode_reference_errors.append(
+                    f"{skill_name}: references/modes/{mode}.md"
+                )
+        group_orders.setdefault(fm["group"], []).append(int(fm["menu_order"]))
+    menu_order_errors = {
+        group: sorted(orders)
+        for group, orders in group_orders.items()
+        if sorted(orders) != list(range(10, 10 * (len(orders) + 1), 10))
+    }
+    check(
+        not handoff_errors,
+        "all metadata handoffs target installed skills"
+        + (f": {handoff_errors}" if handoff_errors else ""),
+    )
+    check(
+        not mode_reference_errors,
+        "all metadata modes have mode reference files"
+        + (f": {mode_reference_errors}" if mode_reference_errors else ""),
+    )
+    check(
+        not menu_order_errors,
+        "group menu_order values are contiguous 10-point increments"
+        + (f": {menu_order_errors}" if menu_order_errors else ""),
+    )
     illustrative_title_rules = []
     for template_path in (ROOT / "skills").rglob("*template*.md"):
         template_text = template_path.read_text(encoding="utf-8")
@@ -1985,12 +2057,35 @@ def static(allow_branded):
             f"stale={sorted(set(validator_manifest) - output_skills)}"
         )
     for skill_name, registration in validator_manifest.items():
-        validator = ROOT / str(registration.get("validator", ""))
-        if not validator.is_file():
-            manifest_errors.append(f"{skill_name}: missing validator {validator}")
+        default_validator = registration.get("validator")
+        if default_validator is not None:
+            validator = ROOT / str(default_validator)
+            if not validator.is_file():
+                manifest_errors.append(f"{skill_name}: missing validator {validator}")
         fixture_names = list(registration.get("fixtures", []))
-        for mode_fixtures in registration.get("modes", {}).values():
-            fixture_names.extend(mode_fixtures)
+        declared_modes = set(
+            frontmatter_by_name.get(skill_name, {}).get("modes", "").split(",")
+        ) - {""}
+        registered_modes = set(registration.get("modes", {}))
+        if declared_modes and registered_modes != declared_modes:
+            manifest_errors.append(
+                f"{skill_name}: modes differ; declared={sorted(declared_modes)}, "
+                f"registered={sorted(registered_modes)}"
+            )
+        for mode, mode_registration in registration.get("modes", {}).items():
+            if isinstance(mode_registration, dict):
+                mode_validator = ROOT / str(mode_registration.get("validator", ""))
+                if not mode_validator.is_file():
+                    manifest_errors.append(
+                        f"{skill_name}/{mode}: missing validator {mode_validator}"
+                    )
+                fixture_names.extend(mode_registration.get("fixtures", []))
+            else:
+                if default_validator is None:
+                    manifest_errors.append(
+                        f"{skill_name}/{mode}: missing default validator"
+                    )
+                fixture_names.extend(mode_registration)
         fixture_names.extend(registration.get("chat_fixtures", []))
         for fixture_name in fixture_names:
             if not (FIX / fixture_name).is_file():
@@ -2057,6 +2152,11 @@ def static(allow_branded):
         "gradient-gips-standards",
         "gradient-research-equity-note",
         "gradient-research-macro-brief",
+        "gradient-odd-" "manager-compare",
+        "gradient-portfolio-attribution-" "compare",
+        "gradient-idd-" "manager-shortlist",
+        "roster-" "summary",
+        "roster_" "summary",
     )
     legacy_hits = []
     repository_root = ROOT.parents[1]
@@ -2085,10 +2185,13 @@ def static(allow_branded):
     )
     live_tools = public_tools | set(tool_states.get("live", []))
     planned_tools = set(tool_states.get("planned", []))
+    planned_scope = tool_states.get("planned_scope", {})
     stale_simulation_name = "run_portfolio_attribution_simulation"
     planned_tool_paths = list(
         (
-            ROOT / "skills" / "gradient-portfolio-attribution-compare"
+            ROOT / "skills" / "gradient-portfolio-attribution"
+            / "references"
+            / "modes"
         ).rglob("*")
     ) + [
         ROOT / "shared" / "contracts" / "portfolio-attribution.md",
@@ -2106,6 +2209,7 @@ def static(allow_branded):
     check(
         "simulate_portfolio_attribution" in planned_tools
         and stale_simulation_name not in planned_tools
+        and set(planned_scope) == planned_tools
         and not stale_simulation_hits,
         "planned attribution simulation uses canonical "
         "simulate_portfolio_attribution name"
@@ -2123,10 +2227,10 @@ def static(allow_branded):
         for tool_name in tool_pattern.findall(text):
             if tool_name in planned_tools:
                 relative = path.relative_to(ROOT).as_posix()
+                scope = planned_scope.get(tool_name, "")
                 allowed_scope = (
-                    relative.startswith(
-                        "skills/gradient-portfolio-attribution-compare/references/"
-                    )
+                    bool(scope)
+                    and relative.startswith(f"skills/{scope}")
                     or relative.endswith(
                         "/references/contracts/portfolio-attribution.md"
                     )

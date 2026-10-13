@@ -2,12 +2,12 @@
 name: gradient-idd-manager-portfolio-fit
 description: "Create a portfolio-fit report for one prospective manager. Triggers: 'test manager portfolio fit', 'add this hedge fund manager', 'assess diversification impact'. For whole-sleeve design use gradient-portfolio-construction."
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
   style_contract: "2.3.0"
   group: "Investment due diligence"
   subject: "manager portfolio fit"
   output: "diversification report"
-  menu_order: "40"
+  menu_order: "20"
   modules: "strategyLab"
   contracts: "idd-methodology,idd-odd-ic-handoff"
   handoffs: "gradient-odd-report,gradient-decision-ic-memo"

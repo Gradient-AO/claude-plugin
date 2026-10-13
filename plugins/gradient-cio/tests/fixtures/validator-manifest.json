@@ -5,26 +5,41 @@
     "modes": {
       "single": ["idd-manager-performance-single.json"],
       "compare": ["idd-manager-performance-compare.json"],
-      "robustness": ["idd-manager-performance-robustness.json"]
+      "robustness": ["idd-manager-performance-robustness.json"],
+      "shortlist": ["idd-shortlist.json"]
     }
   },
   "gradient-idd-manager-portfolio-fit": {"validator": "skills/gradient-idd-manager-portfolio-fit/scripts/validate_manager_portfolio_fit.py", "fixtures": ["idd-portfolio-fit.json"]},
-  "gradient-idd-manager-shortlist": {"validator": "skills/gradient-idd-manager-shortlist/scripts/validate_manager_shortlist.py", "fixtures": ["idd-shortlist.json"]},
   "gradient-idd-private-markets-pme": {
     "validator": "skills/gradient-idd-private-markets-pme/scripts/validate_private_markets_pme.py",
     "fixtures": ["idd-private-markets-pme.json"],
     "chat_fixtures": ["idd-private-markets-pme-zero-evidence.json"]
   },
   "gradient-odd-ddq-reconcile": {"validator": "skills/gradient-odd-ddq-reconcile/scripts/validate_ddq_report.py", "fixtures": ["ddq.json"]},
-  "gradient-odd-manager-compare": {"validator": "skills/gradient-odd-manager-compare/scripts/validate_manager_compare.py", "fixtures": ["compare.json"]},
-  "gradient-odd-manager-monitor": {"validator": "skills/gradient-odd-manager-monitor/scripts/validate_monitor_digest.py", "fixtures": ["digest.json"]},
-  "gradient-odd-report": {"validator": "skills/gradient-odd-report/scripts/validate_odd_report.py", "fixtures": ["odd.json"]},
-  "gradient-portfolio-attribution": {"validator": "skills/gradient-portfolio-attribution/scripts/validate_attribution.py", "fixtures": ["portfolio-attribution-report.json"]},
-  "gradient-portfolio-attribution-compare": {
-    "validator": "skills/gradient-portfolio-attribution-compare/scripts/validate_attribution_compare.py",
+  "gradient-odd-manager-monitor": {
+    "validator": "skills/gradient-odd-manager-monitor/scripts/validate_monitor_digest.py",
     "modes": {
-      "fallback": ["attribution-compare-fallback.json"],
-      "three_lane": ["attribution-compare-three-lane.json"]
+      "digest": ["digest.json"],
+      "triage": ["triage.json"]
+    }
+  },
+  "gradient-odd-report": {
+    "validator": "skills/gradient-odd-report/scripts/validate_odd_report.py",
+    "modes": {
+      "full": ["odd.json"],
+      "compare": ["compare.json"]
+    }
+  },
+  "gradient-portfolio-attribution": {
+    "modes": {
+      "single": {
+        "validator": "skills/gradient-portfolio-attribution/scripts/validate_attribution.py",
+        "fixtures": ["portfolio-attribution-report.json"]
+      },
+      "compare-lanes": {
+        "validator": "skills/gradient-portfolio-attribution/scripts/validate_attribution_compare.py",
+        "fixtures": ["attribution-compare-fallback.json", "attribution-compare-three-lane.json"]
+      }
     }
   },
   "gradient-portfolio-construction": {
@@ -37,6 +52,12 @@
       "real_assets": ["construction-real-assets.json"]
     }
   },
-  "gradient-portfolio-review": {"validator": "skills/gradient-portfolio-review/scripts/validate_review.py", "fixtures": ["portfolio.json", "portfolio-comprehensive.json"]},
+  "gradient-portfolio-review": {
+    "validator": "skills/gradient-portfolio-review/scripts/validate_review.py",
+    "modes": {
+      "brief": ["portfolio.json"],
+      "comprehensive": ["portfolio-comprehensive.json"]
+    }
+  },
   "gradient-setup": {"validator": "skills/gradient-setup/scripts/validate_setup.py", "fixtures": ["setup.json"]}
 }
