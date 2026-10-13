@@ -725,25 +725,38 @@ def b_waterfall(b):
 
 def b_heat(b):
     columns = b["columns"]
+    mapping_rows = all(isinstance(row, dict) for row in b["rows"])
     normalized_rows = [
         [row.get("label", "")] + list(row.get("values", []))
         if isinstance(row, dict)
         else row
         for row in b["rows"]
     ]
+    if mapping_rows:
+        columns = [b.get("row_label", "")] + list(columns)
     numeric = [
         float(cell.get("value", 0) if isinstance(cell, dict) else cell)
         for row in normalized_rows for cell in row[1:]
         if isinstance(cell, (int, float)) or isinstance(cell, dict) and isinstance(cell.get("value"), (int, float))
     ]
     scale = max((abs(value) for value in numeric), default=1) or 1
+    decimals = max(0, int(b.get("decimals", 1)))
     rows = []
     for row in normalized_rows:
-        cells = [f"<th>{rich(row[0])}</th>"]
+        cells = [
+            f'<th style="background:{WASH};color:{INK}">{rich(row[0])}</th>'
+        ]
         for cell in row[1:]:
             value = cell.get("value") if isinstance(cell, dict) else cell
-            display = cell.get("display", value) if isinstance(cell, dict) else value
+            display = cell.get("display") if isinstance(cell, dict) else None
             amount = float(value) if isinstance(value, (int, float)) else 0
+            if display is None and isinstance(value, (int, float)):
+                rounded = round(amount, decimals)
+                if rounded == 0:
+                    rounded = 0.0
+                display = f"{rounded:.{decimals}f}"
+            elif display is None:
+                display = value
             color = LIME if amount >= 0 else CORAL
             alpha = .08 + .32 * min(1, abs(amount) / scale)
             cells.append(f'<td style="background:{color};background:color-mix(in srgb,{color} {alpha*100:.0f}%,white)">{rich(display)}</td>')
@@ -906,11 +919,14 @@ def _nice_y_bounds(low, high):
     if low == high:
         pad = abs(low) * 0.1 or 1.0
         low, high = low - pad, high + pad
-    else:
-        pad = (high - low) * 0.08
-        low, high = low - pad, high + pad
-    step = _nice_step(high - low)
-    return math.floor(low / step) * step, math.ceil(high / step) * step, step
+    span = high - low
+    step = _nice_step(span, target_intervals=8)
+    pad = span * 0.04
+    return (
+        math.floor((low - pad) / step) * step,
+        math.ceil((high + pad) / step) * step,
+        step,
+    )
 
 def _axis_ticks(low, high, step):
     """Return bounded grid ticks and always expose the base-100 line in range."""
@@ -985,7 +1001,7 @@ def b_line(b, W=640, H=None):
         for value in y_ticks
     ]
     pl = max(46, 10 + max(_svg_text_width(label) for label in axis_labels))
-    use_legend = len(series) > 4
+    use_legend = len(series) > 2
     show_end_labels = (
         b.get("end_labels", True)
         and len(series) > 1
@@ -1051,6 +1067,17 @@ def b_line(b, W=640, H=None):
         labs = [category_labels[int(xv)] for xv in tx]
     else:
         labs = [f"{xv:g}" for xv in tx]
+    while len(tx) > 2 and any(
+        sx(tx[index + 1]) - sx(tx[index])
+        < (
+            _svg_text_width(labs[index])
+            + _svg_text_width(labs[index + 1])
+        ) / 2 + 8
+        for index in range(len(tx) - 1)
+    ):
+        retained = [0, *range(2, len(tx) - 1, 2), len(tx) - 1]
+        tx = [tx[index] for index in retained]
+        labs = [labs[index] for index in retained]
     for k, (xv, lab) in enumerate(zip(tx, labs)):
         anchor = "start" if k == 0 else ("end" if k == n - 1 else "middle")
         o.append(f'<text x="{sx(xv):.1f}" y="{H-8}" text-anchor="{anchor}" class="ax">{lab}</text>')

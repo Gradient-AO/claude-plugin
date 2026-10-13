@@ -10,10 +10,12 @@ every call and record one source row per response.
 | Capabilities | `get_gradient_capabilities` | Portfolio capability; both attribution tools' availability, access mode and readiness reasons |
 | Portfolio | `list_portfolios` | `portfolio_id`, name, base currency, record kind, canonical default, data scope |
 | Cohort | `get_portfolio_structure`, `view: allocation_tree`, `max_depth: 3`, `node_limit: 100` | Allocation IDs, names, parent IDs, depth, target and actual weights, policy benchmark context, coverage |
-| Return context | `get_portfolio_historical_returns`, requested period end and `limit: 100`; request `standard_periods`, `calendar_years` and `benchmark_relative` with `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, benchmark_relative]` first, then separate projected calls for `points` and `cumulative_growth`; disclose the returned count if the 100-row response is unexpectedly truncated | Returned values, units, period labels, coverage and benchmark identity |
-| Historical attribution | `get_portfolio_attribution`, selected `portfolio_id`, `benchmark_role`, `parent_allocation_id`, month-end start/end, all sections | Method, period, basis, currency, coverage, summary, residual, segments and diagnostics |
+| Return context | `get_portfolio_historical_returns`, requested period end and `limit: 100`; request `standard_periods`, `calendar_years` and `benchmark_relative` with `fields: [portfolio, policy_benchmark, filters, coverage, display, standard_periods, calendar_years, benchmark_relative]` first, then separate projected calls for `points` plus `cumulative_growth`, and `rolling` plus `drawdown_series`; every projection retains `portfolio`, `policy_benchmark`, `filters`, `coverage` and `display`; disclose the returned count if the 100-row response is unexpectedly truncated | Returned values, units, period labels, coverage and benchmark identity |
+| Historical attribution | `get_portfolio_attribution`, selected `portfolio_id`, `benchmark_role`, `parent_allocation_id`, month-end start/end, `sections: [summary, segments, periods, diagnostics, active_risk]` | Method, period, basis, currency, coverage, summary, residual, segment and monthly linked effects, diagnostics and active-risk attribution |
+| Largest-detractor drill-down | Rerun `get_portfolio_attribution` with the same role/window and `parent_allocation_id` set to the largest root detractor's returned allocation ID | Sub-allocation effects inside the detractor; preserve typed unavailable when it has no child cohort |
 | Ex ante attribution | `get_portfolio_ex_ante_attribution`, same `portfolio_id`, `benchmark_role`, `parent_allocation_id`, all sections | Method and formula version, horizon, basis, currency, assumptions, coverage, summary, residual, segment inputs/effects and diagnostics |
-| Manager findings | `get_manager_diligence_findings`, `view: open` for every resolved manager or fund in the largest detractor segment | Entity scope, severity, status and due date; unmatched entities remain `Not assessed` |
+| Manager resolution | `get_portfolio_exposure`, with `asset_classification` set to the largest detractor's returned display name or supported alias and `limit: 100` | Held commitment, fund and firm IDs in that segment; use complete filtered totals/coverage and do not infer IDs from names |
+| Manager findings | `get_manager_diligence_findings`, `view: open` with exactly one resolved `firm_id` or `fund_id` per call | Entity scope, severity, status and due date; unmatched entities remain `Not assessed` |
 | Macro regime | `get_macro_signals`, `view: gradient_signal`, plus `view: regime_state` when available | Returned regime status and GRIP availability/degradation reasons for the historical period; context only, not a causal attribution |
 
 Use `get_benchmarks` by returned benchmark ID only when a governed response
@@ -39,6 +41,10 @@ no subject return history; do not substitute benchmark or Strategy Lab returns.
 - typed missing reasons.
 
 Never use historical return points to recalculate effects.
+
+Use `periods[]` exactly as returned for the cumulative linked-effects line and
+segment-by-month heat. Use `active_risk.segments[].contribution_share` for
+tracking-error contribution; do not substitute standalone volatility.
 
 ### Benchmark and excess boundary
 

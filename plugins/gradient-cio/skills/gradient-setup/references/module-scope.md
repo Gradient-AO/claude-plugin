@@ -48,8 +48,10 @@ When a commitment comparison reports `not_yet_funded`, state that the commitment
 history; do not treat it as a zero return or omit the gap. The canonical illustrative history also contains
 partial calendar years 2016 and 2026: label each from its returned `month_count`, `partial`,
 `coverage_status`, and `missing_reason`, and never present either as a full-year return.
-Do not request all six result sections in one call. Request summary and benchmark-relative sections together,
-then request `points` and `cumulative_growth` separately when needed. Set `limit: 100` on every call so the
+Do not request all historical-return result sections in one call. Request summary and benchmark-relative
+sections together, then use bounded projected calls for `points` plus `cumulative_growth` and for `rolling`
+plus `drawdown_series` when needed. Every projection retains the top-level `policy_benchmark` object. Set
+`limit: 100` on every call so the
 canonical portfolio's 69 commitment comparisons return in one response. Preserve
 `benchmark_relative.commitments_total`, `commitments_returned`, `commitments_truncated`, and `has_more`; if
 the result is unexpectedly truncated, disclose the returned count and omitted detail rather than presenting

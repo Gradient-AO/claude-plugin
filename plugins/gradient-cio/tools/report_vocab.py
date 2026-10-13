@@ -44,6 +44,7 @@ BASE_STATUSES = frozenset(
         "overdue",
         "partial",
         "passed",
+        "passed_with_warnings",
         "ready",
         "review",
         "unavailable",

@@ -17,7 +17,7 @@ metadata:
 
 Use for a focused saved-portfolio historical and governed ex ante attribution
 pack. Deliver **"<Portfolio> - Portfolio Attribution Report <YYYY-MM-DD>"**,
-normally 7–10 PDF pages. This is monitoring, not a recommendation.
+normally 7–9 PDF pages. This is monitoring, not a recommendation.
 
 ## Non-negotiable rules
 
@@ -51,8 +51,11 @@ Read `references/module-scope.md` before tool selection.
 Immediately before calls read `references/data-map.md#required-calls`. Save
 each response and source row with key arguments, as-of date, data scope,
 validation, and digest. Collect capabilities, portfolio, allocation tree,
-projected historical-return context, both attribution lanes, relevant manager
-findings, and macro regime context.
+projected historical-return context (including growth, rolling and drawdown
+series), historical periods and active risk, both attribution lanes, relevant
+manager findings, and macro regime context. Resolve held fund/firm IDs for the
+largest detractor through filtered portfolio exposure before requesting open
+findings, and rerun historical attribution for that detractor's allocation ID.
 
 Retry only once when `retryable: true`; entitlement is Not licensed. Preserve
 partial return coverage, `no_subject_returns`, `not_yet_funded`, partial 2016
@@ -68,7 +71,9 @@ Identify returned positive/negative effects, allocation-versus-selection
 dominance, reconciliation, assumptions, and coverage limits. Compare only
 sign, rank, and concentration after all compatibility gates pass. Never
 subtract lanes or describe differences as improvement, deterioration, alpha,
-or forecast. Manager findings and regime are context, not causal attribution.
+or forecast. Use returned monthly linked effects, active-risk contribution
+shares, and the depth-1 rerun without reconstructing effects. Manager findings
+and regime are context, not causal attribution.
 
 ## 4. Build and deliver
 
@@ -78,9 +83,10 @@ Read `references/attribution-template.md`,
 drafting/rendering. Follow the exact
 section order, four executive tiles, required visuals, sourced analysis, and
 typed unavailable states. Section 1 includes three to five sourced Key
-judgments. Sections 4 and 5 are visual-first. Diagnostics leads with
-residual-versus-tolerance bars and supporting evidence, then flows directly
-into Coverage. Do not author forced page breaks.
+judgments. Sections 3–6 are visual-first. Diagnostics leads with a pass strip
+when every residual is at most 10% of tolerance, otherwise with
+residual-versus-tolerance bars, then supporting evidence and Coverage. Do not
+author forced page breaks.
 
 Validate and render the same report source:
 

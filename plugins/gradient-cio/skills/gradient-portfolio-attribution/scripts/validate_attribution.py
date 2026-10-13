@@ -19,6 +19,7 @@ from report_json_validator import (  # noqa: E402
     as_object,
     block_objects,
     collect_strings,
+    has_typed_unavailable,
     load_json,
     print_quality_notes,
     section_objects,
@@ -74,8 +75,9 @@ SPEC = ReportSpec(
     slot_rules=(
         SlotRule(
             r"Historical Returns Context",
-            frozenset({"line", "chart"}),
-            "historical-context visual",
+            frozenset({"line"}),
+            "historical-context line visuals",
+            minimum=3,
         ),
         SlotRule(
             r"Historical Attribution",
@@ -89,6 +91,16 @@ SPEC = ReportSpec(
         ),
         SlotRule(r"Historical Attribution", frozenset({"two_col"}), "waterfall reconciliation layout"),
         SlotRule(
+            r"Historical Attribution",
+            frozenset({"line"}),
+            "cumulative linked-effects line",
+        ),
+        SlotRule(
+            r"Historical Attribution",
+            frozenset({"heat"}),
+            "segment-by-month linked-effect heat",
+        ),
+        SlotRule(
             r"Governed Ex Ante Attribution",
             frozenset({"table"}),
             "ex-ante-attribution evidence",
@@ -99,14 +111,24 @@ SPEC = ReportSpec(
             "ex-ante-attribution visual",
         ),
         SlotRule(
+            r"Governed Ex Ante Attribution",
+            frozenset({"two_col"}),
+            "ex-ante totals and reconciliation layout",
+        ),
+        SlotRule(
             r"Historical-versus-Ex-Ante Scope and Comparison",
-            frozenset({"heat"}),
-            "segment-by-lane heat visual",
+            frozenset({"bars"}),
+            "paired segment comparison bars",
+        ),
+        SlotRule(
+            r"Historical-versus-Ex-Ante Scope and Comparison",
+            frozenset({"tiles"}),
+            "sign-agreement strip",
         ),
         SlotRule(
             r"Diagnostics and Limitations",
-            frozenset({"bars"}),
-            "residual-versus-tolerance visual",
+            frozenset({"bars", "tiles"}),
+            "residual tolerance status visual",
         ),
         SlotRule(
             r"Diagnostics and Limitations",
@@ -193,6 +215,52 @@ def validate(document: JsonValue) -> list[str]:
             "Governed Ex Ante Attribution must retain evidence or typed unavailability"
         )
 
+    required_visuals = {
+        "Historical Returns Context": (
+            ("line", "Growth of 100"),
+            ("line", "Rolling 12-month excess"),
+            ("line", "Drawdown"),
+        ),
+        "Historical Attribution": (
+            ("line", "Cumulative linked effects"),
+            ("heat", "Segment × month linked total effect"),
+            ("bars", "Contribution to tracking error"),
+            ("bars", "Return effect share"),
+        ),
+        "Governed Ex Ante Attribution": (
+            ("bars", "Expected return by segment"),
+        ),
+        "Historical-versus-Ex-Ante Scope and Comparison": (
+            ("bars", "Historical vs ex ante segment effects"),
+            ("tiles", "Sign agreement"),
+        ),
+    }
+    for section_title, visual_contracts in required_visuals.items():
+        section = by_title.get(section_title)
+        if section is None or has_typed_unavailable(section):
+            continue
+        section_blocks = block_objects(section)
+        for block_type, block_title in visual_contracts:
+            if not any(
+                block.get("type") == block_type
+                and block.get("title") == block_title
+                for block in section_blocks
+            ):
+                errors.append(
+                    f"{section_title} requires {block_type} titled "
+                    f"'{block_title}'"
+                )
+    if historical is not None and not has_typed_unavailable(historical):
+        if not any(
+            block.get("type") == "bars"
+            and str(block.get("title", "")).startswith("Inside ")
+            for block in block_objects(historical)
+        ):
+            errors.append(
+                "Historical Attribution requires depth-1 bars titled "
+                "'Inside <largest detractor>'"
+            )
+
     diagnostics = by_title.get("Diagnostics and Limitations")
     if diagnostics is not None:
         diagnostic_blocks = diagnostics.get("blocks")
@@ -202,15 +270,86 @@ def validate(document: JsonValue) -> list[str]:
             and isinstance(diagnostic_blocks[0], dict)
             else None
         )
-        if (
-            first_block is None
-            or first_block.get("type") != "bars"
-            or first_block.get("title") != "Residual vs tolerance (bp)"
-        ):
+        if first_block is None or first_block.get("type") not in {
+            "bars",
+            "tiles",
+        }:
             errors.append(
-                "Diagnostics and Limitations must lead with bars titled "
-                "'Residual vs tolerance (bp)'"
+                "Diagnostics and Limitations must lead with residual bars or "
+                "a residual tolerance pass strip"
             )
+        elif first_block.get("type") == "tiles":
+            if first_block.get("title") != "Residual tolerance checks":
+                errors.append(
+                    "Residual pass strip must be titled "
+                    "'Residual tolerance checks'"
+                )
+            tiles = first_block.get("tiles")
+            valid_tiles = (
+                tiles
+                if isinstance(tiles, list)
+                and tiles
+                and all(isinstance(tile, dict) for tile in tiles)
+                else []
+            )
+            if not valid_tiles:
+                errors.append("Residual tolerance checks must contain tiles")
+            for tile in valid_tiles:
+                residual = tile.get("residual")
+                tolerance = tile.get("tolerance")
+                if (
+                    not isinstance(residual, (int, float))
+                    or isinstance(residual, bool)
+                    or not isinstance(tolerance, (int, float))
+                    or isinstance(tolerance, bool)
+                    or tolerance <= 0
+                    or tile.get("within_tolerance") is not True
+                    or abs(float(residual)) > 0.1 * float(tolerance)
+                ):
+                    errors.append(
+                        "Residual pass-strip tiles require numeric residual "
+                        "within 10% of positive tolerance and "
+                        "within_tolerance true"
+                    )
+        else:
+            if first_block.get("title") != "Residual vs tolerance (bp)":
+                errors.append(
+                    "Residual bars must be titled "
+                    "'Residual vs tolerance (bp)'"
+                )
+            items = first_block.get("items")
+            valid_items = (
+                items
+                if isinstance(items, list)
+                and items
+                and all(isinstance(item, dict) for item in items)
+                else []
+            )
+            breaches_display_threshold = False
+            for item in valid_items:
+                residual = item.get("value")
+                tolerance = item.get("tolerance")
+                if (
+                    not isinstance(residual, (int, float))
+                    or isinstance(residual, bool)
+                    or not isinstance(tolerance, (int, float))
+                    or isinstance(tolerance, bool)
+                    or tolerance <= 0
+                ):
+                    errors.append(
+                        "Residual bar items require numeric value and "
+                        "positive tolerance in bp"
+                    )
+                    continue
+                breaches_display_threshold = (
+                    breaches_display_threshold
+                    or abs(float(residual)) > 0.1 * float(tolerance)
+                )
+            if valid_items and not breaches_display_threshold:
+                errors.append(
+                    "Residual bars require at least one lane over 10% of "
+                    "its tolerance; use the pass strip otherwise"
+                )
 
     all_text = "\n".join(collect_strings(root))
     for pattern in PROHIBITED_REPORT_PATTERNS:

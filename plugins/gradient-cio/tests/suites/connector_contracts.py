@@ -992,9 +992,13 @@ def contract_manifest():
         "historical-return skills project fields and disclose each required coverage gap",
     )
     check(
-        "Do not request all six result sections in one call"
+        "Do not request all historical-return result sections in one call"
         in scope_guidance
-        and "`points` and `cumulative_growth` separately"
+        and "`points` plus `cumulative_growth`"
+        in scope_guidance
+        and "`rolling`"
+        in scope_guidance
+        and "`drawdown_series`"
         in scope_guidance
         and "`limit: 100`" in scope_guidance
         and "not_yet_funded" in scope_guidance

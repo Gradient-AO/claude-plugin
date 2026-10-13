@@ -29,7 +29,6 @@ JsonValue: TypeAlias = (
 
 SOURCE_TAG_PATTERN = re.compile(r"\[S(\d+)\]")
 SOURCE_CELL_PATTERN = re.compile(r"\[?S(\d+)\]?")
-ILLUSTRATIVE_SCOPE_PATTERN = re.compile(r"\billustrative\b", re.IGNORECASE)
 NUMERIC_CLAIM_PATTERN = re.compile(
     r"(?:[$€£]\s*\d|\b\d+(?:\.\d+)?\s*%|\b\d{4}-\d{2}-\d{2}\b)"
 )
@@ -67,6 +66,7 @@ SOURCE_VALIDATION_VALUES = frozenset(
         "partial",
         "failed",
         "unavailable",
+        "passed_with_warnings",
         "not_run",
         "not_applicable",
     }
@@ -170,6 +170,7 @@ DEFAULT_STATUSES = frozenset(
         "overdue",
         "partial",
         "passed",
+        "passed_with_warnings",
         "ready",
         "review",
         "unavailable",
@@ -451,6 +452,12 @@ def _source_cell_text(value: JsonValue) -> str:
     return value.strip() if isinstance(value, str) else str(value).strip()
 
 
+def _declares_illustrative_scope(value: str) -> bool:
+    """Return whether a structured scope value positively declares illustrative data."""
+    normalized = re.sub(r"\s+", " ", value).strip().casefold()
+    return normalized.startswith("illustrative")
+
+
 def _validation_cell_text(value: JsonValue) -> tuple[str, str | None]:
     """Return source validation text from a string or renderer chip cell."""
     if isinstance(value, dict):
@@ -538,13 +545,13 @@ def validate_illustrative_scope(
 
     meta = as_object(root.get("meta")) or {}
     metadata_is_illustrative = any(
-        ILLUSTRATIVE_SCOPE_PATTERN.search(value)
+        _declares_illustrative_scope(value)
         for value in _metadata_scope_values(meta)
     )
     row_is_illustrative = {
         index
         for index, row in source_rows
-        if ILLUSTRATIVE_SCOPE_PATTERN.search(_source_cell_text(row[6]))
+        if _declares_illustrative_scope(_source_cell_text(row[6]))
     }
     if not metadata_is_illustrative and not row_is_illustrative:
         return []
@@ -916,7 +923,10 @@ def validate_key_judgment_callouts(
         if re.fullmatch(appendix_pattern, title):
             continue
         for index, block in enumerate(block_objects(section), start=1):
-            if block.get("type") != "callout" or block.get("tone") == "info":
+            if (
+                block.get("type") != "callout"
+                or block.get("role") not in {"key_judgment", "analysis"}
+            ):
                 continue
             text = "\n".join(collect_strings(block))
             if has_typed_unavailable({"blocks": [block]}):

@@ -214,7 +214,7 @@ CASES = [
     ("branded",  ["--brand", "branding-test.json", "blocks.json", "OUT"], 2, 4, ["Northwind Pension Plan (TEST)", "Powered by GradientCIO.com"]),
     ("portfolio", ["portfolio.json", "OUT"],                         6, 8,  ["Portfolio Review", "Calendar-year excess returns", "Growth of 100", "Manager × asset class"]),
     ("portfolio_comprehensive", ["portfolio-comprehensive.json", "OUT"], 13, 20, ["Comprehensive Portfolio Review", "Historical Attribution", "Projected Return and Risk Decomposition", "Analysis —"]),
-    ("portfolio_attribution_report", ["portfolio-attribution-report.json", "OUT"], 7, 10, ["Portfolio Attribution Report", "Historical Attribution", "Governed Ex Ante Attribution", "Analysis —"]),
+    ("portfolio_attribution_report", ["portfolio-attribution-report.json", "OUT"], 7, 9, ["Portfolio Attribution Report", "Historical Attribution", "Governed Ex Ante Attribution", "Analysis —"]),
     ("portfolio_attribution_compare_fallback", ["attribution-compare-fallback.json", "OUT"], 6, 10, ["Attribution Comparison", "Historical Attribution", "Cross-Lane Comparison"]),
     ("portfolio_attribution_compare_three_lane", ["attribution-compare-three-lane.json", "OUT"], 6, 10, ["Attribution Comparison", "Simulated Attribution", "Cross-Lane Comparison"]),
     ("idd_manager_performance_single", ["idd-manager-performance-single.json", "OUT"], 3, 9, ["Northstar Select Equity Composite", "Absolute risk and return", "Reliability and date-window sensitivity"]),
