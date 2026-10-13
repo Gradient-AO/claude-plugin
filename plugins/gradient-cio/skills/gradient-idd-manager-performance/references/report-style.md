@@ -61,7 +61,7 @@ eight positive slices) ·
 `callout {tone: good|watch|bad|info, title?, text}` · `coverage {title?, items:[{name, status, note}]}` ·
 `findings {items:[{severity, title, detail}], empty_title, empty_text}` · `questions {items:[{q, why}]}` ·
 `two_col {left:[blocks], right:[blocks]}` · `markdown {text}` · `pagebreak {}` ·
-`line {title?, series:[{name, points:[[date, value]]}], y_suffix?, decimals?, ref?:{value,label}, height?, note?}`
+`line {title?, series:[{name, points:[[date, value]]}], y_suffix?, decimals?, ref?:{value,label}, x_bands?:[{start,end,label?}], height?, note?}`
 (time series only from returned series, never invented) · `statement {text, sub?, tone?}` (one large message).
 `chart {chart:<one chart item returned by get_chart_data>}` renders from `render_hint`: line, bars, pie, or a
 formatted table fallback. Pass the returned chart object unchanged; do not remap chart IDs in a skill.
@@ -139,15 +139,25 @@ write a branding file in the working directory (logo path relative to it) and pa
   `Why it matters:`, `Uncertainty:`, and `What would change the view:` in that order.
 - ISO dates; currency in $B/$M (or the report's currency) with 1–2 decimals; percentages to 1 dp; spreads in bps.
 - Absence is not evidence: an empty or unavailable result is reported as such, never as "none occurred".
+- Source-table `Validation` cells may be strings or `{chip, status}` objects.
+  Normalize chip text to `passed`, `advisory`, `degraded`, `partial`, `failed`,
+  `unavailable`, `not_run`, or `not_applicable`; the last requires a reason or
+  disclosure.
+  Payloads require their returned `sha256:` digest. Use
+  `not_available:no_payload` only with a validation value that explicitly
+  discloses the absent payload. Metadata responses retain
+  `not_applicable_metadata_response`.
 - No adjectives the data cannot support ("robust", "best-in-class", "strong").
 - Structured illustrative scope means `Illustrative` appears in a source-row
   `Data scope`, `meta.data_scope`, or a `Data scope` cover fact; ordinary prose
   does not activate the rule. Set `meta.data_scope_banner` to exactly
   **Illustrative, Gradient Maintained — demo data, not the client's holdings or
-  managers**. Keep `Illustrative` in each affected source row's `Data scope`,
-  do not repeat the full label in `Evidence`, and put the full label exactly
-  once in a sources-appendix `note`. No title, subtitle or confidentiality
-  placement is required.
+  managers**. Classify every source row from its own provenance-backed `Data
+  scope`: an illustrative report-level scope does not make live rows
+  illustrative. Keep `Illustrative` in each illustrative row's `Data scope`
+  and do not repeat the full label in `Evidence`. The banner is the canonical
+  full-label placement; a duplicate sources-appendix note is not required. No
+  title, subtitle or confidentiality placement is required.
 - Every report includes its sources appendix with exact rendered title
   `Appendix A — Sources and methods`. In normalized report JSON use
   `title: "Appendix — Sources and methods"` with `num: "A"`; Markdown uses

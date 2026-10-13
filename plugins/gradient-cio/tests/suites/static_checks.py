@@ -1187,21 +1187,156 @@ def private_markets_pme_contract_checks():
         handoff["return_series"] == []
         and evidence["S6"]["tool"] == "run_strategy_lab_private_markets_pme"
         and evidence["S6"]["status"] == "ok"
-        and evidence["S7"]["tool"] == "build_strategy_lab_session"
-        and evidence["S7"]["status"] == "unavailable"
-        and evidence["S7"]["digest"] == "not_available:no_payload",
-        "PME fixture carries typed primary and sensitivity handoff statuses",
+        and evidence["S7"]["tool"] == "run_strategy_lab_private_markets_pme"
+        and evidence["S7"]["status"] == "ok"
+        and document["meta"]["evidence_flags"]["cash_flow_series_returned"]
+        is True,
+        "PME fixture carries two typed results and cash-flow series coverage",
     )
     check(
         rows_by_tag["S5"][3] == "build_strategy_lab_session"
         and "benchmark_id=b0000000-0000-0000-0000-000000000001"
         in rows_by_tag["S5"][4]
         and rows_by_tag["S6"][3] == "run_strategy_lab_private_markets_pme"
-        and rows_by_tag["S7"][3] == "build_strategy_lab_session"
+        and rows_by_tag["S7"][3] == "run_strategy_lab_private_markets_pme"
         and "benchmark_id=b0000000-0000-0000-0000-000000000002"
         in rows_by_tag["S7"][4]
-        and rows_by_tag["S7"][8] == "not_available:no_payload",
+        and rows_by_tag["S7"][8]
+        == "sha256:7777777777777777777777777777777777777777777777777777777777777777",
         "PME fixture maps separate primary and sensitivity sources",
+    )
+    visual_blocks = [
+        block
+        for section in document["sections"]
+        for block in section.get("blocks", [])
+        if block.get("type") in {
+            "chart",
+            "line",
+            "bars",
+            "percentiles",
+            "waterfall",
+            "band",
+            "stacked",
+            "heat",
+        }
+    ]
+    line_titles = {
+        block.get("title", "")
+        for block in visual_blocks
+        if block.get("type") == "line"
+    }
+    context_blocks = [
+        block
+        for block in visual_blocks
+        if block.get("context_kind") in {"holdings", "sector", "geography"}
+    ]
+    sensitivity_table = next(
+        block
+        for section in document["sections"]
+        if section.get("title") == "Benchmark sensitivity"
+        for block in section["blocks"]
+        if block.get("title") == "Primary and sensitivity benchmark results"
+    )
+    lineage_table = next(
+        block
+        for section in document["sections"]
+        if section.get("title") == "Appendix — Sources and methods"
+        for block in section["blocks"]
+        if block.get("title") == "Series view lineage"
+    )
+    line_views = {
+        block.get("title", ""): block.get("evidence_metadata", {}).get("view")
+        for block in visual_blocks
+        if block.get("type") == "line"
+    }
+    lineage_views = {row[1] for row in lineage_table["rows"]}
+    check(
+        {"Net IRR", "TVPI", "KS-PME", "Direct alpha"}
+        == {tile["label"] for tile in document["executive"]["tiles"]}
+        and any("J-curve" in title for title in line_titles)
+        and any("PME path" in title for title in line_titles)
+        and any("multiples" in title for title in line_titles)
+        and any("IRR path" in title for title in line_titles)
+        and len(context_blocks) == 3
+        and {
+            block["context_kind"] for block in context_blocks
+        }
+        == {"holdings", "sector", "geography"}
+        and all(
+            block.get("context_label") == "Context only — not a PME input"
+            and "Context only — not a PME input" in block.get("title", "")
+            for block in context_blocks
+        )
+        and sensitivity_table["columns"][2] == "benchmark_window_return"
+        and [row[0] for row in sensitivity_table["rows"]]
+        == ["Primary", "Sensitivity"]
+        and len(lineage_table["rows"]) == 11
+        and {
+            next(
+                view
+                for title, view in line_views.items()
+                if purpose in title
+            )
+            for purpose in ("J-curve", "PME path", "multiples", "IRR path")
+        }
+        == {
+            "cash_flow_series",
+            "pme_series",
+            "multiples_series",
+            "irr_series",
+        }
+        and {
+            "cash_flow_series",
+            "pme_series",
+            "multiples_series",
+            "irr_series",
+        }
+        <= lineage_views
+        and not any(
+            view.startswith("cash_flow_series_")
+            for view in lineage_views
+        )
+        and all("evidence_metadata" in block for block in visual_blocks),
+        "PME golden carries the complete cash-flow, context and lineage inventory",
+    )
+
+    zero_evidence = json.loads(
+        (FIX / "idd-private-markets-pme-zero-evidence.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    zero_expected = zero_evidence["expected"]
+    rendered_chat = zero_expected["template"].format(
+        commitment=zero_evidence["commitment"],
+        portfolio=zero_evidence["portfolio"],
+        checked_on=zero_evidence["checked_on"],
+        **zero_expected,
+    )
+    check(
+        zero_evidence["usable_pme_evidence_count"] == 0
+        and all(
+            attempt["status"] == "unavailable"
+            for attempt in zero_evidence["attempts"]
+        )
+        and zero_expected["delivery"] == "chat_only"
+        and zero_expected["builder_path_count"]
+        == len(zero_evidence["attempts"])
+        and zero_expected["next_step"] == "load fund cash flows"
+        and rendered_chat == zero_expected["message"]
+        and rendered_chat
+        == (
+            "PME not available for Senior Direct Lending Fund "
+            "(Total Plan - Demo Portfolio): benchmark_returns_unavailable. "
+            "Checked 2 builder path(s) on 2026-10-13. "
+            "request_id=request-test-pme-zero-002 "
+            "Next: load fund cash flows."
+        )
+        and "Not available —" not in zero_expected["template"]
+        and zero_expected["actions"] == []
+        and zero_evidence["forbidden_artifacts"] == ["report.json"]
+        and zero_evidence["forbidden_actions"]
+        == ["validate_private_markets_pme", "qa_report"],
+        "PME zero-evidence fixture emits canonical chat and no report or QA action",
     )
 
 
@@ -1348,15 +1483,16 @@ def registered_json_validator_checks(validator_manifest):
                     ("request ID used as Gradient digest", request_id_digest)
                 )
 
-                failed_with_success_digest = json.loads(json.dumps(document))
-                row = failed_with_success_digest["sections"][source_section]["blocks"][
+                undisclosed_no_payload = json.loads(json.dumps(document))
+                row = undisclosed_no_payload["sections"][source_section]["blocks"][
                     source_block
                 ]["rows"][source_row]
-                row[7] = "failed:demo_series_not_found; request_id=req-123"
+                row[7] = "passed"
+                row[8] = "not_available:no_payload"
                 provenance_mutations.append(
                     (
-                        "failed Gradient call without no-payload digest",
-                        failed_with_success_digest,
+                        "no-payload digest without explicit absence",
+                        undisclosed_no_payload,
                     )
                 )
 
@@ -1575,6 +1711,28 @@ def static(allow_branded):
             len(text.split()) <= 1800,
             f"{s.name}: SKILL.md at most 1,800 words ({len(text.split())})",
         )
+    illustrative_title_rules = []
+    for template_path in (ROOT / "skills").rglob("*template*.md"):
+        template_text = template_path.read_text(encoding="utf-8")
+        if re.search(
+            r"(?:meta\.title[^\n]*with the standard illustrative suffix|"
+            r"meta\.title(?![^\n]*\bnever\b)[^\n]*\b(?:append|include|add)\b|"
+            r"meta\.title[^\n]*\n\s*(?!never\b)(?:append|include|add)\b)",
+            template_text,
+            re.IGNORECASE,
+        ):
+            illustrative_title_rules.append(
+                str(template_path.relative_to(ROOT))
+            )
+    check(
+        not illustrative_title_rules,
+        "skill templates never append illustrative labels to meta.title"
+        + (
+            f": {illustrative_title_rules}"
+            if illustrative_title_rules
+            else ""
+        ),
+    )
     routing_fixtures = json.loads(
         (FIX / "skill-routing.json").read_text(encoding="utf-8")
     )
@@ -1628,6 +1786,7 @@ def static(allow_branded):
         fixture_names = list(registration.get("fixtures", []))
         for mode_fixtures in registration.get("modes", {}).values():
             fixture_names.extend(mode_fixtures)
+        fixture_names.extend(registration.get("chat_fixtures", []))
         for fixture_name in fixture_names:
             if not (FIX / fixture_name).is_file():
                 manifest_errors.append(f"{skill_name}: missing fixture {fixture_name}")

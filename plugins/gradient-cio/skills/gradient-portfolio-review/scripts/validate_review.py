@@ -20,7 +20,10 @@ from report_json_validator import (  # noqa: E402
     ReportSpec,
     SectionRule,
     SlotRule,
+    as_array,
     as_object,
+    block_objects,
+    collect_strings,
     load_json,
     print_quality_notes,
     validate_report,
@@ -72,19 +75,40 @@ BRIEF_SPEC = ReportSpec(
     allowed_tones=REVIEW_VOCAB.allowed_tones,
     allowed_statuses=REVIEW_VOCAB.allowed_statuses,
     slot_rules=(
-        SlotRule(r"Performance", frozenset({"line"}), "growth-of-100 line"),
+        SlotRule(
+            r"Summary",
+            frozenset({"statement"}),
+            "one-line verdict statement",
+        ),
+        SlotRule(
+            r"Performance",
+            frozenset({"line"}),
+            "growth and rolling-return lines",
+            minimum=2,
+        ),
         SlotRule(r"Performance", frozenset({"bars"}), "signed excess-return bars"),
         SlotRule(r"Allocation", frozenset({"band"}), "policy-band visual"),
         SlotRule(
-            r"Look-through", frozenset({"bars", "heat"}), "concentration visual"
+            r"Allocation",
+            frozenset({"stacked"}),
+            "liquidity-tier stacked visual",
+        ),
+        SlotRule(
+            r"Look-through", frozenset({"heat"}), "manager-by-asset-class heat matrix"
         ),
         SlotRule(
             r"Risk",
-            frozenset({"bars", "band", "chart"}),
-            "governed risk visual",
+            frozenset({"line"}),
+            "drawdown and rolling-volatility lines",
+            minimum=2,
         ),
         SlotRule(r"Outlook", frozenset({"tiles"}), "forward-context tiles"),
-        SlotRule(r"Outlook", frozenset({"bars"}), "CMA bars"),
+        SlotRule(
+            r"Outlook",
+            frozenset({"bars"}),
+            "CMA or governed expected-return bars",
+        ),
+        SlotRule(r"Outlook", frozenset({"line"}), "macro-spread line"),
         SlotRule(r"Coverage", frozenset({"coverage"}), "coverage block"),
         SlotRule(
             SOURCES_APPENDIX_TITLE,
@@ -119,7 +143,7 @@ BRIEF_SPEC = ReportSpec(
     executive_tile_labels=(
         "Trailing 1Y",
         "Since inception (ann.)",
-        "Volatility (ann.)",
+        "Excess vs policy (1Y)",
         "Max drawdown",
     ),
     require_tile_sources=True,
@@ -239,12 +263,90 @@ def select_spec(document: JsonValue) -> tuple[ReportSpec, list[str]]:
     root = as_object(document)
     if root is None:
         return BRIEF_SPEC, []
-    mode = root.get("review_mode")
+    meta = as_object(root.get("meta")) or {}
+    mode = meta.get("mode")
     if mode == "comprehensive":
         return COMPREHENSIVE_SPEC, []
-    if mode in (None, "brief"):
+    if mode == "brief":
         return BRIEF_SPEC, []
-    return BRIEF_SPEC, ["review_mode must be 'brief' or 'comprehensive'"]
+    return BRIEF_SPEC, ["meta.mode must be 'brief' or 'comprehensive'"]
+
+
+def validate_review_contract(
+    document: JsonValue,
+    spec: ReportSpec,
+) -> list[str]:
+    """Validate portfolio-review metadata and brief-specific evidence rules."""
+    root = as_object(document)
+    if root is None:
+        return []
+    errors: list[str] = []
+    meta = as_object(root.get("meta")) or {}
+    title = str(meta.get("title", ""))
+    if "illustrative, gradient maintained" in title.casefold():
+        errors.append(
+            "meta.title must be the portfolio name only; use "
+            "meta.data_scope_banner for the illustrative label"
+        )
+    if spec is not BRIEF_SPEC:
+        return errors
+
+    sections = [
+        section
+        for value in (as_array(root.get("sections")) or [])
+        if (section := as_object(value)) is not None
+    ]
+    summary = next(
+        (section for section in sections if section.get("title") == "Summary"),
+        None,
+    )
+    if summary is not None:
+        if summary.get("id") != "executive":
+            errors.append('Brief Summary id must be "executive"')
+        if summary.get("num") != "1":
+            errors.append('Brief Summary num must be "1"')
+        summary_text = "\n".join(collect_strings(summary)).casefold()
+        if "forward assumption" not in summary_text:
+            errors.append(
+                "Brief Summary must state that the return-objective comparison "
+                "is a forward assumption"
+            )
+
+    performance = next(
+        (section for section in sections if section.get("title") == "Performance"),
+        None,
+    )
+    if performance is not None:
+        line_count = sum(
+            block.get("type") == "line" for block in block_objects(performance)
+        )
+        performance_text = "\n".join(collect_strings(performance)).casefold()
+        if (
+            line_count < 2
+            and "not available — benchmark series not returned"
+            not in performance_text
+        ):
+            errors.append(
+                "Brief Performance requires at least two line blocks when "
+                "benchmark growth is returned; otherwise add exactly "
+                "'Not available — benchmark series not returned'"
+            )
+
+    executive = as_object(root.get("executive")) or {}
+    tiles = [
+        tile
+        for value in (as_array(executive.get("tiles")) or [])
+        if (tile := as_object(value)) is not None
+    ]
+    max_drawdown = next(
+        (tile for tile in tiles if tile.get("label") == "Max drawdown"),
+        None,
+    )
+    if max_drawdown is not None and "since inception" not in str(
+        max_drawdown.get("sub", "")
+    ).casefold():
+        errors.append("Max drawdown tile sub-text must state 'Since inception'")
+    return errors
 
 
 def main(argv: list[str]) -> int:
@@ -262,6 +364,7 @@ def main(argv: list[str]) -> int:
 
     spec, errors = select_spec(document)
     errors.extend(validate_report(document, spec))
+    errors.extend(validate_review_contract(document, spec))
     if errors:
         print(f"FAIL — {spec.name}: {len(errors)} issue(s)")
         for error in errors:

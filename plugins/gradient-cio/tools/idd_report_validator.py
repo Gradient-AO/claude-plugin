@@ -47,6 +47,22 @@ BENCHMARK_SENSITIVITY_TITLE = "Benchmark sensitivity"
 LIMITATIONS_TITLE = "Limitations and follow-ups"
 SERIES_FALLBACK = "Not available — series views not published"
 SIMULATED_LABEL = "Model outputs (simulated)"
+PME_CONTEXT_LABEL = "Context only — not a PME input"
+PME_SENSITIVITY_TABLE_TITLE = "Primary and sensitivity benchmark results"
+PME_SENSITIVITY_COLUMNS = (
+    "Path",
+    "Benchmark",
+    "benchmark_window_return",
+    "KS-PME",
+    "Direct alpha",
+    "Source",
+)
+PME_LINE_VIEW_FIELDS = (
+    ("j-curve", "cash_flow_series"),
+    ("pme path", "pme_series"),
+    ("multiple", "multiples_series"),
+    ("irr path", "irr_series"),
+)
 
 
 @dataclass(frozen=True)
@@ -239,27 +255,30 @@ NAMED_CONTRACTS = {
     ),
     "private_markets_pme": IddContract(
         "private_markets_pme",
-        _spec(
-            "private-markets PME report",
-            (
-                "Executive conclusion",
-                "Cash-flow and benchmark coverage",
-                "PME and direct alpha",
-                "IRR and multiple context",
-                "Benchmark sensitivity",
-                "Limitations and follow-ups",
-                SOURCES_APPENDIX_TITLE,
+        replace(
+            _spec(
+                "private-markets PME report",
+                (
+                    "Executive conclusion",
+                    "Cash-flow and benchmark coverage",
+                    "PME and direct alpha",
+                    "IRR and multiple context",
+                    "Benchmark sensitivity",
+                    "Limitations and follow-ups",
+                    SOURCES_APPENDIX_TITLE,
+                ),
+                (
+                    "PME and direct alpha",
+                    "IRR and multiple context",
+                    "Benchmark sensitivity",
+                ),
+                (
+                    SlotRule(re.escape("PME and direct alpha"), VISUALS, "PME visual"),
+                    SlotRule(re.escape("IRR and multiple context"), VISUALS, "IRR/multiple visual"),
+                    SlotRule(re.escape("Benchmark sensitivity"), VISUALS, "benchmark-sensitivity visual"),
+                ),
             ),
-            (
-                "PME and direct alpha",
-                "IRR and multiple context",
-                "Benchmark sensitivity",
-            ),
-            (
-                SlotRule(re.escape("PME and direct alpha"), VISUALS, "PME visual"),
-                SlotRule(re.escape("IRR and multiple context"), VISUALS, "IRR/multiple visual"),
-                SlotRule(re.escape("Benchmark sensitivity"), VISUALS, "benchmark-sensitivity visual"),
-            ),
+            executive_tile_labels=("Net IRR", "TVPI", "KS-PME", "Direct alpha"),
         ),
     ),
 }
@@ -674,17 +693,193 @@ def _validate_modern_single(
     return errors
 
 
+def _validate_private_markets_pme(
+    root: dict[str, JsonValue],
+    sections: list[dict[str, JsonValue]],
+) -> list[str]:
+    """Validate the cash-flow-native PME exhibit and context boundaries."""
+    errors: list[str] = []
+    meta = as_object(root.get("meta")) or {}
+    evidence_flags = as_object(meta.get("evidence_flags")) or {}
+    cash_flow_series_returned = evidence_flags.get(
+        "cash_flow_series_returned"
+    )
+    if not isinstance(cash_flow_series_returned, bool):
+        errors.append(
+            "meta.evidence_flags.cash_flow_series_returned must be a boolean"
+        )
+
+    line_blocks = [
+        block
+        for section in sections
+        for block in block_objects(section)
+        if block.get("type") == "line"
+    ]
+    if cash_flow_series_returned is True:
+        line_titles = [str(block.get("title", "")) for block in line_blocks]
+        if len(line_blocks) < 2:
+            errors.append(
+                "cash_flow_series requires at least 2 line blocks"
+            )
+        if not any("j-curve" in title.casefold() for title in line_titles):
+            errors.append(
+                "cash_flow_series requires a line block specifically titled as a J-curve"
+            )
+        if not any("multiple" in title.casefold() for title in line_titles):
+            errors.append(
+                "cash_flow_series requires a line block specifically titled as multiples"
+            )
+    for block in line_blocks:
+        title = str(block.get("title", "")).casefold()
+        expected_view = next(
+            (
+                view
+                for purpose, view in PME_LINE_VIEW_FIELDS
+                if purpose in title
+            ),
+            None,
+        )
+        if expected_view is None:
+            continue
+        metadata = _chart_evidence(block)
+        entries, _ = _lineage_entries(metadata) if metadata is not None else ([], [])
+        views = {
+            str(entry.get("view", "")).strip()
+            for entry in entries
+        }
+        if views != {expected_view}:
+            errors.append(
+                f"{block.get('title')} must trace to the returned server field "
+                f"'{expected_view}'"
+            )
+
+    context_blocks = [
+        block
+        for section in sections
+        for block in block_objects(section)
+        if block.get("type") == "bars"
+        and str(block.get("context_kind", "")).casefold()
+        in {"holdings", "sector", "geography"}
+    ]
+    context_kinds = {
+        str(block.get("context_kind", "")).casefold() for block in context_blocks
+    }
+    if context_kinds != {"holdings", "sector", "geography"}:
+        errors.append(
+            "PME context requires holdings, sector and geography bars"
+        )
+    for block in context_blocks:
+        title = str(block.get("title", ""))
+        if (
+            block.get("context_label") != PME_CONTEXT_LABEL
+            or PME_CONTEXT_LABEL not in title
+        ):
+            errors.append(
+                "holdings, sector and geography bars must use the exact visible "
+                f"label '{PME_CONTEXT_LABEL}'"
+            )
+
+    sensitivity = next(
+        (
+            section
+            for section in sections
+            if section.get("title") == "Benchmark sensitivity"
+        ),
+        None,
+    )
+    if sensitivity is not None:
+        sensitivity_blocks = block_objects(sensitivity)
+        comparison_tables = [
+            block
+            for block in sensitivity_blocks
+            if block.get("type") == "table"
+            and block.get("title") == PME_SENSITIVITY_TABLE_TITLE
+        ]
+        complete_table = False
+        for table in comparison_tables:
+            columns = tuple(
+                str(value) for value in as_array(table.get("columns")) or []
+            )
+            rows = [
+                as_array(value)
+                for value in as_array(table.get("rows")) or []
+            ]
+            paths = {
+                str(row[0]).strip().casefold()
+                for row in rows
+                if row is not None and row
+            }
+            if columns == PME_SENSITIVITY_COLUMNS and {
+                "primary",
+                "sensitivity",
+            } <= paths:
+                complete_table = True
+        typed_unavailable = any(
+            block.get("role") == "availability"
+            and re.fullmatch(
+                r"Not available — .+; error_code=[a-z0-9_]+"
+                r"(?:; request_id=[A-Za-z0-9._:-]+)?\.?",
+                str(block.get("text", "")).strip(),
+            )
+            is not None
+            for block in sensitivity_blocks
+        )
+        if not complete_table and not typed_unavailable:
+            errors.append(
+                "Benchmark sensitivity requires primary and sensitivity rows "
+                f"in '{PME_SENSITIVITY_TABLE_TITLE}' with the exact "
+                "benchmark_window_return column, or a typed unavailable "
+                "sensitivity reason with error_code"
+            )
+
+    for section in sections:
+        for block in block_objects(section):
+            if block.get("type") not in VISUALS:
+                continue
+            metadata = _chart_evidence(block)
+            if metadata is None:
+                continue
+            entries, _ = _lineage_entries(metadata)
+            source_tags = {
+                str(entry.get("source_tag", "")).strip()
+                .removeprefix("[")
+                .removesuffix("]")
+                for entry in entries
+            }
+            for item_index, value in enumerate(
+                as_array(block.get("items")) or [],
+                start=1,
+            ):
+                item = as_object(value)
+                if item is None:
+                    continue
+                source = str(item.get("source", "")).strip()
+                source = source.removeprefix("[").removesuffix("]")
+                if source not in source_tags:
+                    errors.append(
+                        f"{section.get('title')} visual item {item_index} must "
+                        "trace to the block's source/view/payload digest lineage"
+                    )
+    return errors
+
+
 def _validate_idd_extensions(
     root: dict[str, JsonValue],
     *,
     modern_single: bool,
+    private_markets_pme: bool = False,
 ) -> list[str]:
     """Apply IDD-only evidence and presentation constraints."""
     sections = section_objects(root)
-    errors = _validate_chart_evidence(sections, all_visuals=modern_single)
+    errors = _validate_chart_evidence(
+        sections,
+        all_visuals=modern_single or private_markets_pme,
+    )
     errors.extend(_validate_simulated_labels(sections))
     if modern_single:
         errors.extend(_validate_modern_single(sections))
+    if private_markets_pme:
+        errors.extend(_validate_private_markets_pme(root, sections))
     return errors
 
 
@@ -765,7 +960,13 @@ def run_named_idd_cli(argv: list[str], report_kind: str) -> int:
             f"meta.handoff: {error}"
             for error in validate_handoff(meta.get("handoff"))
         )
-        errors.extend(_validate_idd_extensions(root, modern_single=False))
+        errors.extend(
+            _validate_idd_extensions(
+                root,
+                modern_single=False,
+                private_markets_pme=report_kind == "private_markets_pme",
+            )
+        )
     if errors:
         print(f"FAIL — {contract.spec.name}: {len(errors)} issue(s)")
         for error in errors:

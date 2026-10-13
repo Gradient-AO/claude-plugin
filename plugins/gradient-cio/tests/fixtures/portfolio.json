@@ -1,6 +1,6 @@
 {
-  "review_mode": "brief",
   "meta": {
+    "mode": "brief",
     "eyebrow": "Portfolio Review",
     "header_label": "Portfolio Review",
     "title": "Example Endowment Portfolio (TEST)",
@@ -63,25 +63,31 @@
         "tone": "good"
       },
       {
-        "label": "Volatility (ann.)",
-        "value": "8.7%",
-        "sub": "Benchmark 10.3% [S3][S4]",
-        "tone": "good"
+        "label": "Excess vs policy (1Y)",
+        "value": "-0.2pp",
+        "sub": "Portfolio 11.5% · policy 11.7% [S3][S4]",
+        "tone": "watch"
       },
       {
         "label": "Max drawdown",
         "value": "-13.1%",
-        "sub": "2022-01 to 2023-10, recovered [S3][S4]",
+        "sub": "Since inception · 2022-01 to 2023-10 [S3][S4]",
         "tone": "watch"
       }
     ]
   },
   "sections": [
     {
-      "id": "1",
+      "id": "executive",
+      "num": "1",
       "title": "Summary",
       "kicker": "Performance, allocation and risk to 2026-07-31",
       "blocks": [
+        {
+          "type": "statement",
+          "text": "Behind policy 1Y (−0.2pp), ahead since inception; the return-objective breach is structural and forward-looking [S3][S4][S8].",
+          "tone": "watch"
+        },
         {
           "type": "table",
           "title": "At a glance",
@@ -149,7 +155,7 @@
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Max drawdown is -13.1% in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
+          "text": "Observation: The governed objective comparison is a target-weighted expected-return forward assumption, not realized return [S8]. Why it matters: It identifies a structural policy gap. Uncertainty: Capital-market assumptions may change. What would change the view: A refreshed governed assumption set that meets the objective."
         }
       ]
     },
@@ -162,6 +168,13 @@
           "type": "line",
           "title": "Growth of 100 since inception (TEST)",
           "decimals": 0,
+          "x_bands": [
+            {
+              "start": "2022-01-31",
+              "end": "2022-12-31",
+              "label": "2022 drawdown"
+            }
+          ],
           "series": [
             {
               "name": "Portfolio",
@@ -702,176 +715,34 @@
           "note": "Signed excess returns preserve the returned full- and partial-year rows [S3][S4]."
         },
         {
-          "type": "table",
-          "title": "Standard periods to 2026-07-31",
-          "columns": [
-            "Period",
-            "Portfolio",
-            "Benchmark",
-            "Excess",
-            "Coverage"
+          "type": "line",
+          "title": "Rolling 36-month excess return",
+          "series": [
+            {
+              "name": "Portfolio minus policy benchmark",
+              "points": [
+                [
+                  "2024-07-31",
+                  -0.4
+                ],
+                [
+                  "2025-07-31",
+                  0.3
+                ],
+                [
+                  "2026-07-31",
+                  0.6
+                ]
+              ]
+            }
           ],
-          "align": [
-            "l",
-            "r",
-            "r",
-            "r",
-            "l"
-          ],
-          "rows": [
-            [
-              "3M",
-              "6.2%",
-              "8.9%",
-              "-2.7pp",
-              {
-                "chip": "Complete",
-                "status": "available"
-              }
-            ],
-            [
-              "YTD",
-              "9.2%",
-              "11.8%",
-              "-2.6pp",
-              {
-                "chip": "Complete",
-                "status": "available"
-              }
-            ],
-            [
-              "1Y",
-              "11.5%",
-              "11.7%",
-              "-0.2pp",
-              {
-                "chip": "Complete",
-                "status": "available"
-              }
-            ],
-            [
-              "3Y (ann.)",
-              "7.6%",
-              "8.5%",
-              "-0.9pp",
-              {
-                "chip": "Complete",
-                "status": "available"
-              }
-            ],
-            [
-              "5Y (ann.)",
-              "3.1%",
-              "2.5%",
-              "+0.6pp",
-              {
-                "chip": "Complete",
-                "status": "available"
-              }
-            ],
-            [
-              "10Y (ann.)",
-              "Not available",
-              "Not available",
-              "Not available",
-              {
-                "chip": "Insufficient history",
-                "status": "not_applicable"
-              }
-            ],
-            [
-              "Since inception (ann.)",
-              "3.1%",
-              "2.5%",
-              "+0.6pp",
-              {
-                "chip": "Complete",
-                "status": "available"
-              }
-            ]
-          ],
-          "note": "Returned by get_portfolio_historical_returns [S3][S4]. Periods over 12 months are annualized only as labelled; excess is in percentage points. 10Y: the series starts 2021-08 [S3]."
-        },
-        {
-          "type": "table",
-          "title": "Calendar years",
-          "columns": [
-            "Year",
-            "Portfolio",
-            "Benchmark",
-            "Excess",
-            "Coverage"
-          ],
-          "align": [
-            "n",
-            "r",
-            "r",
-            "r",
-            "l"
-          ],
-          "rows": [
-            [
-              "2021 partial (2021-08 to 2021-12)",
-              "4.9%",
-              "4.8%",
-              "+0.1pp",
-              {
-                "chip": "Partial year",
-                "status": "partial"
-              }
-            ],
-            [
-              "2022",
-              "-8.6%",
-              "-12.3%",
-              "+3.7pp",
-              {
-                "chip": "Full year",
-                "status": "available"
-              }
-            ],
-            [
-              "2023",
-              "3.3%",
-              "1.6%",
-              "+1.7pp",
-              {
-                "chip": "Full year",
-                "status": "available"
-              }
-            ],
-            [
-              "2024",
-              "0.4%",
-              "4.1%",
-              "-3.7pp",
-              {
-                "chip": "Full year",
-                "status": "available"
-              }
-            ],
-            [
-              "2025",
-              "7.2%",
-              "3.9%",
-              "+3.3pp",
-              {
-                "chip": "Full year",
-                "status": "available"
-              }
-            ],
-            [
-              "2026 partial (2026-01 to 2026-07)",
-              "9.2%",
-              "11.8%",
-              "-2.6pp",
-              {
-                "chip": "Partial year",
-                "status": "partial"
-              }
-            ]
-          ],
-          "note": "Partial years are cumulative for the months shown and are not annualized [S3]."
+          "ref": {
+            "value": 0,
+            "label": "Policy benchmark"
+          },
+          "y_suffix": "pp",
+          "decimals": 1,
+          "note": "Returned rolling 36-month portfolio arithmetic excess versus the policy benchmark [S3][S4]."
         },
         {
           "type": "callout",
@@ -933,6 +804,38 @@
             }
           ],
           "note": "Governed targets, ranges and actual weights as of 2026-07-31 [S2]."
+        },
+        {
+          "type": "stacked",
+          "title": "Liquidity tiers",
+          "items": [
+            {
+              "label": "Portfolio",
+              "segments": [
+                {
+                  "label": "T1",
+                  "value": 53.4,
+                  "display": "53.4%"
+                },
+                {
+                  "label": "T2",
+                  "value": 9.0,
+                  "display": "9.0%"
+                },
+                {
+                  "label": "T3",
+                  "value": 1.1,
+                  "display": "1.1%"
+                },
+                {
+                  "label": "Locked",
+                  "value": 36.5,
+                  "display": "36.5%"
+                }
+              ]
+            }
+          ],
+          "note": "Governed liquidity buckets; locked share 36.5% versus the 55.0% illiquid cap [S2]."
         },
         {
           "type": "table",
@@ -1029,26 +932,37 @@
       "blocks": [
         {
           "type": "heat",
-          "title": "Concentration watch matrix (TEST)",
+          "title": "Manager × asset class share of NAV (TEST)",
           "columns": [
-            "Exposure",
-            "Weight"
+            "Public Equity",
+            "Fixed Income",
+            "Alternatives",
+            "Real Assets"
           ],
           "rows": [
             {
-              "label": "Largest issuer",
+              "label": "Example Manager A (TEST)",
               "values": [
-                2.4
+                5.2,
+                0.0,
+                3.5,
+                0.0
               ]
             },
             {
-              "label": "Top five issuers",
+              "label": "Example Manager B (TEST)",
               "values": [
-                8.7
+                3.1,
+                2.4,
+                0.0,
+                1.2
               ]
             }
           ],
-          "source": "[S1]"
+          "format": "percentage",
+          "decimals": 1,
+          "note": "Returned exposure aggregates; manager cap 20.0% of NAV and issuer cap 10.0% [S5].",
+          "source": "[S5]"
         },
         {
           "type": "table",
@@ -1119,6 +1033,96 @@
       "kicker": "Realized risk from monthly returns",
       "new_page": false,
       "blocks": [
+        {
+          "type": "line",
+          "title": "Drawdown from peak",
+          "series": [
+            {
+              "name": "Portfolio",
+              "points": [
+                [
+                  "2022-01-31",
+                  0.0
+                ],
+                [
+                  "2023-10-31",
+                  -13.1
+                ],
+                [
+                  "2025-04-30",
+                  0.0
+                ]
+              ]
+            },
+            {
+              "name": "Policy benchmark",
+              "points": [
+                [
+                  "2022-01-31",
+                  0.0
+                ],
+                [
+                  "2023-10-31",
+                  -14.6
+                ],
+                [
+                  "2025-02-28",
+                  0.0
+                ]
+              ]
+            }
+          ],
+          "y_suffix": "%",
+          "decimals": 1,
+          "note": "Monthly drawdown from peak since inception, returned for portfolio and policy benchmark [S3][S4]."
+        },
+        {
+          "type": "line",
+          "title": "Rolling 36-month volatility",
+          "series": [
+            {
+              "name": "Portfolio",
+              "points": [
+                [
+                  "2024-07-31",
+                  9.4
+                ],
+                [
+                  "2025-07-31",
+                  9.0
+                ],
+                [
+                  "2026-07-31",
+                  8.7
+                ]
+              ]
+            },
+            {
+              "name": "Policy benchmark",
+              "points": [
+                [
+                  "2024-07-31",
+                  10.8
+                ],
+                [
+                  "2025-07-31",
+                  10.5
+                ],
+                [
+                  "2026-07-31",
+                  10.3
+                ]
+              ]
+            }
+          ],
+          "ref": {
+            "value": 11.0,
+            "label": "Policy limit"
+          },
+          "y_suffix": "%",
+          "decimals": 1,
+          "note": "Returned rolling 36-month annualized volatility; governed policy limit 11.0% [S2][S3][S4]."
+        },
         {
           "type": "chart",
           "chart": {
@@ -1217,6 +1221,12 @@
           "tone": "info",
           "title": "Analysis — Realized volatility stayed lower",
           "text": "Observation: Annualized volatility is 8.7% versus 10.3% for the benchmark [S3][S4]. Why it matters: Realized variability was lower on the returned basis. Uncertainty: Historical-risk coverage does not establish policy status. What would change the view: A governed report showing a breach or higher relative volatility."
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Window basis",
+          "text": "The −13.1% executive tile is since inception; the governed policy-risk row is measured over the trailing three-year observation window. The two drawdown figures are not directly comparable [S2][S3]."
         }
       ]
     },
@@ -1281,6 +1291,53 @@
             }
           ],
           "note": "Returned 10-year nominal assumptions from the baseline TEST set [S8]."
+        },
+        {
+          "type": "line",
+          "title": "Treasury curve spreads",
+          "series": [
+            {
+              "name": "10Y–2Y",
+              "points": [
+                [
+                  "2025-07-31",
+                  18
+                ],
+                [
+                  "2026-01-31",
+                  31
+                ],
+                [
+                  "2026-07-31",
+                  42
+                ]
+              ]
+            },
+            {
+              "name": "10Y–3M",
+              "points": [
+                [
+                  "2025-07-31",
+                  -22
+                ],
+                [
+                  "2026-01-31",
+                  -5
+                ],
+                [
+                  "2026-07-31",
+                  16
+                ]
+              ]
+            }
+          ],
+          "ref": {
+            "value": 0,
+            "label": "Zero"
+          },
+          "y_suffix": " bps",
+          "decimals": 0,
+          "note": "Returned dated macro-indicator histories; no locally derived spreads [S7]."
         },
         {
           "type": "text",
@@ -1447,7 +1504,7 @@
               "fixture=true",
               "2026-06-30",
               "Gradient-governed TEST evidence",
-              "{'chip': 'advisory', 'status': 'advisory'}",
+              "{'chip': 'partial', 'status': 'partial'}",
               "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
             ],
             [
@@ -1471,78 +1528,6 @@
               "Gradient-governed TEST evidence",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:2222222222222222222222222222222222222222222222222222222222222222"
-            ]
-          ]
-        },
-        {
-          "type": "table",
-          "title": "Server Metric Methods",
-          "columns": [
-            "Tag",
-            "Evidence",
-            "Basis",
-            "Tool / view",
-            "Key parameters",
-            "As of",
-            "Data scope",
-            "Validation",
-            "Digest"
-          ],
-          "align": [
-            "l",
-            "l",
-            "l",
-            "l",
-            "l",
-            "l",
-            "l",
-            "l",
-            "l"
-          ],
-          "rows": [
-            [
-              "S3",
-              "S3",
-              "gradient_tool",
-              "get_portfolio_historical_returns",
-              "fixture=true",
-              "2026-07-31 (returns, holdings); 2026-06-30 (Form 13F)",
-              "Gradient-governed TEST evidence",
-              "passed",
-              "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
-            ],
-            [
-              "S3",
-              "S3",
-              "gradient_tool",
-              "get_portfolio_historical_returns",
-              "fixture=true",
-              "2026-07-31 (returns, holdings); 2026-06-30 (Form 13F)",
-              "Gradient-governed TEST evidence",
-              "passed",
-              "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
-            ],
-            [
-              "S5",
-              "S5",
-              "gradient_tool",
-              "get_portfolio_exposure",
-              "fixture=true",
-              "2026-07-31 (returns, holdings); 2026-06-30 (Form 13F)",
-              "Gradient-governed TEST evidence",
-              "passed",
-              "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-            ],
-            [
-              "S2",
-              "S2",
-              "gradient_tool",
-              "get_portfolio_structure",
-              "fixture=true",
-              "2026-07-31 (returns, holdings); 2026-06-30 (Form 13F)",
-              "Gradient-governed TEST evidence",
-              "passed",
-              "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
             ]
           ]
         },

@@ -70,6 +70,7 @@ BOUNDED_METADATA_FIELDS = {
     "confidentiality": 180,
     "page_size": 24,
 }
+SIGNAL_LABEL_MAX_CHARACTERS = 48
 VISUAL_BLOCK_TYPES = frozenset(
     {
         "bars",
@@ -91,6 +92,7 @@ LAYOUT_GROUPS_FIELD = "_layout_groups"
 LAYOUT_GROUP_SOURCE = "prepare_report_for_render"
 LAYOUT_GROUP_TITLE_ROWS = "title-with-rows"
 LAYOUT_GROUP_EVIDENCE_ANALYSIS = "evidence-with-analysis"
+LAYOUT_GROUP_LINE_BARS = "line-with-bars"
 LAYOUT_MINIMUM_VISIBLE_ROWS = 2
 LAYOUT_MAX_GROUP_HEIGHT_POINTS = 360
 LAYOUT_MAX_ESTIMATED_TABLE_ROWS = 8
@@ -192,6 +194,17 @@ def normalize_report_metadata(metadata: dict[str, Any]) -> dict[str, Any]:
         errors.append(
             "meta contains forbidden visual override field(s): " + ", ".join(overrides)
         )
+    signal = metadata.get("signal")
+    if isinstance(signal, dict):
+        signal_label = signal.get("label")
+        if (
+            isinstance(signal_label, str)
+            and len(signal_label.strip()) > SIGNAL_LABEL_MAX_CHARACTERS
+        ):
+            errors.append(
+                f"meta.signal.label has {len(signal_label.strip())} characters; "
+                f"maximum is {SIGNAL_LABEL_MAX_CHARACTERS}"
+            )
     facts = metadata.get("cover_facts", [])
     if facts is not None:
         if not isinstance(facts, list):
@@ -480,6 +493,25 @@ def estimate_block_height_points(block: dict[str, Any]) -> int | None:
         if not isinstance(chart, dict) or effective_chart_mode(chart) == "callout":
             return None
         return 230
+    if block_type == "line":
+        height = block.get("height", 220)
+        if not isinstance(height, (int, float)) or isinstance(height, bool):
+            return None
+        return (
+            round(float(height) * 0.75)
+            + (20 if _block_title(block) else 0)
+            + (18 if block.get("note") else 0)
+        )
+    if block_type == "bars":
+        items = block.get("items")
+        if not isinstance(items, list) or not items:
+            return None
+        row_height = 34 if len(items) <= 9 and block.get("_deck_mode") else 22
+        return (
+            round((row_height * len(items) + 8) * 0.75)
+            + (20 if _block_title(block) else 0)
+            + (18 if block.get("note") else 0)
+        )
     if block_type in VISUAL_BLOCK_TYPES:
         return 210
     return None
@@ -561,6 +593,27 @@ def _prepare_block_layout_groups(
                         section_key,
                         path + (side,),
                     )
+    for index in range(len(block_objects) - 1):
+        pair = block_objects[index : index + 2]
+        if (
+            [block.get("type") for block in pair] == ["line", "bars"]
+            and bounded_layout_group_fits(pair)
+        ):
+            group_id = (
+                f"layout:{section_key}:"
+                f"{'.'.join(path_prefix + (str(index),))}:line-bars"
+            )
+            estimate = sum(
+                estimate_block_height_points(block) or 0 for block in pair
+            )
+            group = _generated_layout_group(
+                group_id,
+                LAYOUT_GROUP_LINE_BARS,
+                estimated_height_points=estimate,
+                maximum_height_points=LAYOUT_MAX_GROUP_HEIGHT_POINTS,
+            )
+            generated_by_identity[id(pair[0])].append(group)
+            generated_by_identity[id(pair[1])].append(copy.deepcopy(group))
     evidence_indexes = [
         index
         for index, block in enumerate(block_objects)
@@ -1173,6 +1226,24 @@ def _lint_layout_groups(
                     diagnostics.extend(
                         _lint_layout_groups(children, section, index)
                     )
+    for block_index in range(len(block_objects) - 1):
+        pair = block_objects[block_index : block_index + 2]
+        if (
+            [block.get("type") for block in pair] == ["line", "bars"]
+            and bounded_layout_group_fits(pair)
+            and not (
+                _layout_group_ids(pair[0], LAYOUT_GROUP_LINE_BARS)
+                & _layout_group_ids(pair[1], LAYOUT_GROUP_LINE_BARS)
+            )
+        ):
+            diagnostics.append(
+                _diagnostic(
+                    "design-layout-group-missing",
+                    "Adjacent line and bars blocks must share a bounded keep group.",
+                    section,
+                    index,
+                )
+            )
     evidence_indexes = [
         block_index
         for block_index, block in enumerate(block_objects)

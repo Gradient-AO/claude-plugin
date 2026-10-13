@@ -1,0 +1,43 @@
+{
+  "schema_version": "gradient-pme-zero-evidence-test/v1",
+  "case_id": "pme-zero-usable-evidence",
+  "usable_pme_evidence_count": 0,
+  "commitment": "Senior Direct Lending Fund",
+  "portfolio": "Total Plan - Demo Portfolio",
+  "checked_on": "2026-10-13",
+  "attempts": [
+    {
+      "path": "primary",
+      "benchmark_id": "b0000000-0000-0000-0000-000000000001",
+      "status": "unavailable",
+      "returned_reason": "The primary benchmark had no governed returns for the commitment cash-flow window",
+      "error_code": "benchmark_returns_unavailable",
+      "request_id": "request-test-pme-zero-001"
+    },
+    {
+      "path": "sensitivity",
+      "benchmark_id": "b0000000-0000-0000-0000-000000000002",
+      "status": "unavailable",
+      "returned_reason": "The sensitivity benchmark had no governed returns for the commitment cash-flow window",
+      "error_code": "benchmark_returns_unavailable",
+      "request_id": "request-test-pme-zero-002"
+    }
+  ],
+  "expected": {
+    "delivery": "chat_only",
+    "template": "PME not available for {commitment} ({portfolio}): {unavailable_reason}. Checked {builder_path_count} builder path(s) on {checked_on}. request_id={request_id} Next: {next_step}.",
+    "unavailable_reason": "benchmark_returns_unavailable",
+    "builder_path_count": 2,
+    "request_id": "request-test-pme-zero-002",
+    "next_step": "load fund cash flows",
+    "message": "PME not available for Senior Direct Lending Fund (Total Plan - Demo Portfolio): benchmark_returns_unavailable. Checked 2 builder path(s) on 2026-10-13. request_id=request-test-pme-zero-002 Next: load fund cash flows.",
+    "actions": []
+  },
+  "forbidden_artifacts": [
+    "report.json"
+  ],
+  "forbidden_actions": [
+    "validate_private_markets_pme",
+    "qa_report"
+  ]
+}

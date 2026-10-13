@@ -1,5 +1,17 @@
 # Changelog
 
+## 5.5.0
+- Made private-markets PME collection fail fast on commitment cash-flow readiness, with canonical commitment resolution and a deterministic chat-only unavailable response.
+- Added server-traceable J-curve, PME-path, multiples and since-inception IRR series, benchmark-window sensitivity evidence and per-view payload-digest lineage.
+- Upgraded the PME golden to a validator-enforced 6–8 page report with contextual holdings separation and native editable PowerPoint charts.
+- Expanded setup probes for the strict three-ID PME builder path, exposure readiness and the complete PME series contract.
+
+## 5.4.0
+- Upgraded the brief portfolio review to an IC-grade 6–8 page contract with benchmark-relative growth, excess, drawdown and rolling-risk evidence, liquidity and look-through visuals, governed forward fallbacks and explicit basis disclosures.
+- Added mixed live/illustrative source validation, chip-aware Validation parsing, explicit `not_applicable` handling and canonical banner-only illustrative labeling.
+- Improved report bands, time-series axes, executive signals, visual pagination and sources-table readability across all report skills.
+- Aligned setup probes and portfolio-review guidance with benchmark calendar years, anchored dual growth series, rolling/drawdown payloads and dated macro spread series.
+
 ## 5.3.0
 - Tightened attribution-comparison capability truthfulness and mode-specific page-layout contracts, including explicit planned-tool unavailable states.
 - Standardized comparison charts and added native editable PowerPoint output for fallback and three-lane attribution examples.

@@ -13,7 +13,7 @@ Read `module-scope.md` first; every saved-portfolio call in this map is Portfoli
 | `list_assumption_sets` | `organization_id`; select the active/default set using returned fields | Assumption-set identity, release/version, horizon and currency needed by forward chart context; preserve the returned selection basis |
 | `get_portfolio_structure` | `view: allocation_tree`, `portfolio_id`, `max_depth` 3, `node_limit` 100 | `portfolio.record_kind`, `nodes[].{allocation_id, parent_id, allocation_name, asset_classification, depth, is_leaf, target_weight, target_weight_total_portfolio, target_weight_total_portfolio_basis, target_weight_total_portfolio_coverage, actual_weight, lower_limit, upper_limit, allocation_policy}`, `coverage.{status, returned_count, truncated, missing_reasons}` |
 | `get_portfolio_structure` | `view: ownership_weights`, `portfolio_id` | `by_owner[].weights[]` (optional) |
-| `get_portfolio_historical_returns` | `portfolio_id`, `end_date` = period end, `limit: 100`; first request `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` and `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`, then separate projected calls for `points` and `cumulative_growth`; disclose the returned count if the 100-row response is unexpectedly truncated | Each projected section as returned, with its coverage state, partial-period label, missing reason, display unit and `record_kind` |
+| `get_portfolio_historical_returns` | `portfolio_id`, `end_date` = period end, `limit: 100`; request `sections: [standard_periods, calendar_years, cumulative_growth, risk_metrics, drawdown_series, rolling, benchmark_relative]`; request `points` separately only when needed | Each projected section as returned, including policy-benchmark identity, coverage, partial-period flags, the anchored portfolio/benchmark growth rows, calendar-year benchmark/excess values, monthly drawdowns, rolling 12M/36M return/volatility/excess, display bases and `record_kind` |
 | `check_portfolio_policy` | `portfolio_id` | Governed-only `overall_status`; `allocation_bands`; `return_objective`; `risk_limits.{observation_basis, rows, coverage}`; `liquidity.{buckets, locked_share, unfunded_commitment_ratio, coverage}`; `concentration.groups`; comparison semantics, methodology and provenance |
 | `get_portfolio_attribution` | `portfolio_id`, `benchmark_role: policy`, `parent_allocation_id: root`, month-end `start_date` / `end_date`, `sections: [summary, segments, diagnostics]` | Coverage and typed missing reasons; realized Brinson-Fachler allocation, selection and interaction; symmetric-Carino linked summary; segment effects; residual and diagnostics; period, basis, currency, formula version and tolerance |
 | `get_return_series` | `series_kind: portfolio` or `benchmark`, `series_id` (portfolio or benchmark UUID), `trailing_months` / `start_date` / `end_date` | `series.{name, record_kind}`, `availability.{status, reason}`, `coverage.{source_point_count, source_start_date, source_end_date, selected_*}`, `display.return_unit` (`decimal_fraction`), `points[].{period_date, return}` |
@@ -21,15 +21,19 @@ Read `module-scope.md` first; every saved-portfolio call in this map is Portfoli
 | `get_portfolio_exposure` | `portfolio_id`, a returned display name or snake_case `asset_classification` alias when filtering, `limit` 100, `cursor` = `next_cursor` until `has_more` is false | `as_of_date`, `exposures[].{commitment_name, manager_name, fund_name, asset_classification, currency, as_of_date, value_basis, market_value_base, nav_base, null_reasons, commitment_amount, unfunded_base}`, page-scoped `page_totals`, filtered `portfolio_totals`, and `aggregates_by_asset_classification`; use governed fixed-income metrics only from complete `portfolio_totals` or the Fixed Income aggregate |
 | `get_chart_data` | Catalog without portfolio; availability with `portfolio_id`; data one supported `analysis_type` at a time. | `charts[].{chart_id, status, basis, columns, rows, metrics, render_hint, truncated}`, unavailable reasons, `context.fingerprint`; packs: `allocations`, `commitments` |
 | `get_cross_domain_research` | `view: portfolio_13f_lookthrough`, `portfolio_id`, `top_n_managers` 10, `limit` 20, optional `as_of_date`, `base_currency` | Issuer rows with join basis, source dates, coverage and missing reasons as returned |
+| `get_firm_13f_portfolio_review` | Call only for an exposure row that resolves to a public-markets manager/firm identity accepted by the loaded schema; use returned firm identifier and optional filing date | Security/issuer holdings, filing date, coverage and validation as returned. Skip private-market managers, unresolved identities and rows without relevant Form 13F coverage; never guess a CIK or firm match |
 | `get_cross_domain_research` | `view: roster_macro_exposure`, `portfolio_id` (required) | As returned; optional context only |
 | `get_peer_allocation_intelligence` | Policy or cohort mode supported by the loaded schema | Optional peer context only; preserve cohort, date, denominator and coverage |
 | `get_the_read` | `visuals: none` | `overview.headline`, `publication.{resolved_as_of_date, freshness, fallback_applied, fallback_reason}`, `coverage.status`; numbers only from `read.facts`, never from prose |
 | `get_macro_signals` | `view: gradient_signal` | GRIP `sources.grip.current`, availability, index degradation and outlook reasons; context only, never a forecast |
+| `get_macro_conditions` | `view: indicators`, `seriesIds: [T10Y2Y, T10Y3M]`, `startDate` / `endDate` through the review period | `dated_series[].{series_id,label,unit,coverage_status,missing_reason,observations[].{date,value}}` as returned. Do not derive either spread from separate yield observations |
 | `get_manager_diligence_findings` | `view: open` for every resolved manager or fund represented in the portfolio | Preserve entity scope, severity, due date and exposure link; unmatched entities remain `Not assessed` |
 | `get_capital_market_assumptions` | `view: baseline`, `collection: primary_factors`, `base_currency` = portfolio currency, `per_page` 10 | The assumption set, horizon, return basis and per-class expected return; state all four |
 
 Amounts in exposure are strings in base currency units (e.g. `"58484093"`); convert to $M with 1 dp.
 Return points are decimal fractions; show percentages to 1 dp.
+Growth indexes are returned with a `1.0000` base; apply the renderer's display
+scale to show Growth of 100 without changing the underlying series.
 
 ## Comprehensive mode collection
 
@@ -107,3 +111,33 @@ organization. This review uses portfolio evidence only.`
 Benchmark: use the one identified by `benchmark_relative`. If that section is unavailable, ask the user which
 catalog benchmark is the policy benchmark (do not guess from the catalog; there are ~180 system series,
 mostly proxies). Without one, report absolute returns only and say "No benchmark designated".
+
+## Brief chart and fallback path
+
+1. Performance uses `cumulative_growth`, `calendar_years` and rolling 36M
+   results exactly as returned. If calendar-year benchmark values are
+   unavailable, use `standard_periods` 3M, YTD, 1Y, 3Y, 5Y and ITD excess and
+   title the visual **Standard-period excess returns**. If benchmark growth is
+   unavailable, plot only the portfolio series and add
+   `Not available — benchmark series not returned`.
+2. Risk uses `drawdown_series` for portfolio and policy benchmark and rolling
+   36M volatility with the governed risk limit as a reference. The executive
+   Max drawdown tile is since inception; when policy risk is observed over a
+   trailing window, state both bases explicitly.
+3. Allocation uses `check_portfolio_policy.liquidity.buckets` for the T1, T2,
+   T3 and locked stacked bar and the returned illiquid limit/status. Do not
+   recalculate bucket shares.
+4. Look-through first pages all `get_portfolio_exposure` rows and builds the
+   manager × asset-class matrix only from returned server aggregates/rows.
+   Security-level evidence is optional. Call `get_firm_13f_portfolio_review`
+   only for a resolved public manager with relevant filing coverage. Otherwise
+   add `Not available — security-level look-through not returned for this
+   manager`; private commitments are expected skips, not connector failures.
+5. Outlook uses CMA expected-return rows beside returned policy target weights.
+   When the baseline fails a blocking check, substitute
+   `check_portfolio_policy.return_objective` expected return versus objective
+   and label it governed expected-return evidence. The policy comparison is a
+   forward assumption, not realized performance.
+6. Every visual carries the source tag for the exact tool payload. The source
+   row records that payload's digest; no plotted point may be locally
+   synthesized.
