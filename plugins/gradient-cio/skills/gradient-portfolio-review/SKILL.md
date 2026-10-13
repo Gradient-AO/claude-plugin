@@ -17,7 +17,7 @@ metadata:
 # Portfolio review
 
 Use for periodic total-portfolio monitoring without a requested trade, vote, or
-recommendation. Default to a 5–8 page brief; use the 15–20 page comprehensive
+recommendation. Default to a 6–8 page brief; use the 15–20 page comprehensive
 mode for full, detailed, deep-dive, or board-book requests. Base name:
 **"<Portfolio> - Portfolio Review <YYYY-MM-DD>"**.
 
@@ -25,10 +25,13 @@ mode for full, detailed, deep-dive, or board-book requests. Base name:
 
 - A `record_kind: example` or illustrative scope uses the exact label
   **Illustrative, Gradient Maintained — demo data, not the client's holdings or managers**
-  in confidentiality, title/subtitle, and summary. Never call it the user's
-  portfolio.
+  in `meta.data_scope_banner`. Keep `meta.title` equal to the portfolio name;
+  never append the illustrative label or call the example the user's portfolio.
 - Every number comes from cited evidence and carries `[S#]`. Preserve returned
   periods, units, coverage, partial labels, reasons, formulas, and as-of dates.
+- Every plotted block carries a source tag that resolves to the source row for
+  the exact returned payload digest. Plot returned points only; do not derive
+  chart series locally.
 - Missing, blocked, or optional evidence is typed unavailable/not licensed,
   never zero or inferred compliance.
 - Monitoring analysis may raise neutral considerations but never recommends a
@@ -46,11 +49,13 @@ read `references/data-map.md#calls-arguments-and-the-fields-used`.
 
 ## 2. Collect
 
-Collect capabilities, portfolio, allocation tree, historical returns, policy,
-exposure, and applicable benchmark. Brief attribution/charts are optional;
-comprehensive mode also collects governed attribution, allocations and
-commitments chart packs, look-through, liquidity, forward assumptions, and
-requested context.
+Collect capabilities, portfolio, allocation tree, historical returns
+(including benchmark growth, calendar years, drawdown and rolling sections),
+policy, exposure, and applicable benchmark. Brief attribution/charts are
+optional; comprehensive mode also collects governed attribution, allocations
+and commitments chart packs, look-through, liquidity, forward assumptions,
+and requested context. For brief Outlook, request the returned 10Y–2Y and
+10Y–3M histories when the macro-conditions series option is available.
 
 For chart calls, read `references/chart-data.md` just before use: request one
 supported pack at a time or up to four explicit `chart_ids`, never both;
@@ -72,6 +77,11 @@ fixed-income aggregates, attribution, liquidity, and forward-assumption bases
 without local recomputation. Read `references/writing-standards.md` and
 `references/analysis-examples.md` only before drafting analysis.
 
+Treat a return-objective breach from
+`check_portfolio_policy.return_objective` as a forward assumption: it compares
+target-weighted expected return with the governed objective and is not a
+realized-return breach.
+
 Signal: breach for any policy Breach; otherwise watch for policy Watch or
 underperformance over both 1Y and 3Y; otherwise satisfactory; insufficient
 when returns and allocation are unavailable. Preserve policy `not_assessed`.
@@ -90,7 +100,8 @@ Risk, Outlook, Coverage, and applicable Appendix sequence. Comprehensive mode
 follows its exact comprehensive order. Keep unavailable sections.
 
 Read `references/report-style.md` only before JSON construction/rendering.
-Set root `review_mode`, then run these commands in order against the same JSON.
+Set `meta.mode` to `brief` or `comprehensive`; do not add a root
+`review_mode`. Then run these commands in order against the same JSON.
 Fix validation failures before running QA:
 
 ```text

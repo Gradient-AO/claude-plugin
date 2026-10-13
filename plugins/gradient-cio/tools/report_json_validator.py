@@ -16,6 +16,7 @@ PLUGIN_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PLUGIN_ROOT / "shared"))
 
 from analysis_quality import review_report  # noqa: E402
+from report_layout import SIGNAL_LABEL_MAX_CHARACTERS  # noqa: E402
 from report_constants import (  # noqa: E402
     ILLUSTRATIVE_LABEL,
     METADATA_RESPONSE_DIGEST,
@@ -58,9 +59,21 @@ SOURCE_COLUMNS = (
 SOURCES_APPENDIX_TITLE = "Appendix — Sources and methods"
 SOURCES_APPENDIX_NUM = "A"
 SHA256_DIGEST_PATTERN = re.compile(r"sha256:[0-9a-f]{64}")
-FAILED_VALIDATION_PATTERN = re.compile(
-    r"(?:failed|unavailable|not_run):\S",
-    re.IGNORECASE,
+SOURCE_VALIDATION_VALUES = frozenset(
+    {
+        "passed",
+        "advisory",
+        "degraded",
+        "partial",
+        "failed",
+        "unavailable",
+        "not_run",
+        "not_applicable",
+    }
+)
+SOURCE_VALIDATION_REASON_REQUIRED = frozenset({"not_applicable"})
+ABSENT_PAYLOAD_VALIDATIONS = frozenset(
+    {"failed", "unavailable", "not_run", "not_applicable"}
 )
 NO_PAYLOAD_DIGEST = "not_available:no_payload"
 PLACEHOLDER_PATTERNS = (
@@ -433,24 +446,69 @@ def _metadata_scope_values(meta: dict[str, JsonValue]) -> list[str]:
     return values
 
 
-def _appendix_notes(appendix: dict[str, JsonValue]) -> list[str]:
-    """Return strings carried by explicit appendix note fields."""
-    notes: list[str] = []
+def _source_cell_text(value: JsonValue) -> str:
+    """Return display text from a scalar source-table cell."""
+    return value.strip() if isinstance(value, str) else str(value).strip()
 
-    def visit(value: JsonValue) -> None:
-        if isinstance(value, list):
-            for child in value:
-                visit(child)
-            return
-        if not isinstance(value, dict):
-            return
-        for key, child in value.items():
-            if key == "note":
-                notes.extend(collect_strings(child))
-            visit(child)
 
-    visit(appendix)
-    return notes
+def _validation_cell_text(value: JsonValue) -> tuple[str, str | None]:
+    """Return source validation text from a string or renderer chip cell."""
+    if isinstance(value, dict):
+        chip = value.get("chip")
+        status = value.get("status")
+        if not isinstance(chip, str) or not chip.strip():
+            return "", "must be a string or an object with a non-empty chip"
+        if not isinstance(status, str) or not status.strip():
+            return "", "chip object must contain a non-empty status"
+        return chip.strip(), None
+    if not isinstance(value, str):
+        return "", "must be a string or an object with chip and status"
+
+    text = value.strip()
+    legacy_chip = re.search(
+        r"""['"]chip['"]\s*:\s*['"]([^'"]+)['"]""",
+        text,
+    )
+    if legacy_chip is not None:
+        return legacy_chip.group(1).strip(), None
+    return text, None
+
+
+def _parse_source_validation(
+    value: JsonValue,
+) -> tuple[str | None, str, str | None]:
+    """Normalize and parse one source Validation cell."""
+    text, cell_error = _validation_cell_text(value)
+    if cell_error is not None:
+        return None, "", cell_error
+
+    normalized = re.sub(r"\s+", " ", text).strip().casefold()
+    for state in sorted(SOURCE_VALIDATION_VALUES, key=len, reverse=True):
+        labels = {state, state.replace("_", " "), state.replace("_", "-")}
+        for label in labels:
+            if normalized == label:
+                detail = ""
+            else:
+                detail = ""
+                for separator in (":", ";", " — ", " - "):
+                    prefix = label + separator
+                    if normalized.startswith(prefix):
+                        detail = normalized[len(prefix):].strip()
+                        break
+                if not detail:
+                    continue
+            if state in SOURCE_VALIDATION_REASON_REQUIRED and not detail:
+                return (
+                    state,
+                    "",
+                    f"'{state}' requires an explicit reason or disclosure",
+                )
+            return state, detail, None
+    return (
+        None,
+        "",
+        "must start with one of: " + ", ".join(sorted(SOURCE_VALIDATION_VALUES)),
+    )
 
 
 def validate_illustrative_scope(
@@ -471,12 +529,12 @@ def validate_illustrative_scope(
     if table is None or tuple(columns) != SOURCE_COLUMNS:
         return []
 
-    source_rows: list[tuple[int, list[str]]] = []
+    source_rows: list[tuple[int, list[JsonValue]]] = []
     for index, value in enumerate(as_array(table.get("rows")) or [], start=1):
         row = as_array(value)
         if row is None or len(row) != len(SOURCE_COLUMNS):
             continue
-        source_rows.append((index, [str(cell).strip() for cell in row]))
+        source_rows.append((index, row))
 
     meta = as_object(root.get("meta")) or {}
     metadata_is_illustrative = any(
@@ -486,7 +544,7 @@ def validate_illustrative_scope(
     row_is_illustrative = {
         index
         for index, row in source_rows
-        if ILLUSTRATIVE_SCOPE_PATTERN.search(row[6])
+        if ILLUSTRATIVE_SCOPE_PATTERN.search(_source_cell_text(row[6]))
     }
     if not metadata_is_illustrative and not row_is_illustrative:
         return []
@@ -498,33 +556,15 @@ def validate_illustrative_scope(
             "meta.data_scope_banner"
         )
 
-    affected_indexes = (
-        {index for index, _row in source_rows}
-        if metadata_is_illustrative
-        else row_is_illustrative
-    )
     for index, row in source_rows:
-        if index not in affected_indexes:
+        if index not in row_is_illustrative:
             continue
-        evidence = row[1]
-        scope = row[6]
-        if ILLUSTRATIVE_SCOPE_PATTERN.search(scope) is None:
-            errors.append(
-                f"Source row {index} Data scope must contain 'Illustrative'"
-            )
+        evidence = _source_cell_text(row[1])
         if ILLUSTRATIVE_LABEL in evidence:
             errors.append(
                 f"Source row {index} Evidence must not repeat the "
                 "standard illustrative label"
             )
-
-    appendix_occurrences = section_text(appendix).count(ILLUSTRATIVE_LABEL)
-    exact_note_count = _appendix_notes(appendix).count(ILLUSTRATIVE_LABEL)
-    if appendix_occurrences != 1 or exact_note_count != 1:
-        errors.append(
-            "Illustrative scope requires the standard label exactly once "
-            "as an appendix note"
-        )
     return errors
 
 
@@ -567,9 +607,19 @@ def validate_provenance(
                 f"Source row {index} must contain {len(SOURCE_COLUMNS)} cells"
             )
             continue
-        tag, _evidence, basis, tool_view, parameters, as_of, scope, validation, digest = (
-            str(cell).strip() for cell in row
+        tag, _evidence, basis, tool_view, parameters, as_of, scope = (
+            _source_cell_text(cell) for cell in row[:7]
         )
+        validation_value = row[7]
+        validation = _source_cell_text(validation_value)
+        digest = _source_cell_text(row[8])
+        validation_state, validation_detail, validation_error = (
+            _parse_source_validation(validation_value)
+        )
+        if validation_error is not None:
+            errors.append(
+                f"Source row {index} Validation {validation_error}"
+            )
         if SOURCE_CELL_PATTERN.fullmatch(tag) is None:
             errors.append(f"Source row {index} Tag must match S<number>")
         if basis not in SOURCE_BASIS_VALUES:
@@ -602,17 +652,21 @@ def validate_provenance(
                     f"Source row {index} names unknown Gradient tool '{tool_name}'"
                 )
         if basis == "gradient_tool":
-            failed_or_unavailable = FAILED_VALIDATION_PATTERN.match(validation)
-            if failed_or_unavailable is not None:
-                if digest != NO_PAYLOAD_DIGEST:
+            if digest == NO_PAYLOAD_DIGEST:
+                if (
+                    validation_state not in ABSENT_PAYLOAD_VALIDATIONS
+                    or not validation_detail
+                ):
                     errors.append(
-                        f"Source row {index} failed/unavailable Gradient evidence "
-                        f"must use Digest {NO_PAYLOAD_DIGEST}"
+                        f"Source row {index} Digest {NO_PAYLOAD_DIGEST} requires "
+                        "Validation to explicitly disclose an absent payload"
                     )
             elif SHA256_DIGEST_PATTERN.fullmatch(digest) is None:
                 errors.append(
-                    f"Source row {index} successful Gradient evidence requires "
-                    "Digest sha256:<64 lowercase hex>"
+                    f"Source row {index} Gradient evidence with a payload requires "
+                    "Digest sha256:<64 lowercase hex>; use "
+                    f"{NO_PAYLOAD_DIGEST} only when Validation explicitly "
+                    "discloses an absent payload"
                 )
         elif (
             basis == "gradient_tool_metadata"
@@ -1318,6 +1372,15 @@ def validate_report(document: JsonValue, spec: ReportSpec) -> list[str]:
     if signal_level not in spec.signal_levels:
         allowed = ", ".join(sorted(spec.signal_levels))
         errors.append(f"meta.signal.level must be one of: {allowed}")
+    signal_label = signal.get("label") if signal is not None else None
+    if (
+        isinstance(signal_label, str)
+        and len(signal_label.strip()) > SIGNAL_LABEL_MAX_CHARACTERS
+    ):
+        errors.append(
+            f"meta.signal.label must be at most "
+            f"{SIGNAL_LABEL_MAX_CHARACTERS} characters"
+        )
 
     completeness = as_object(meta.get("completeness"))
     completeness_state = (

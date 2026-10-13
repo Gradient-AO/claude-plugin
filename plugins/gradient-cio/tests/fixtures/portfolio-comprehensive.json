@@ -1,6 +1,6 @@
 {
-  "review_mode": "comprehensive",
   "meta": {
+    "mode": "comprehensive",
     "eyebrow": "Comprehensive Portfolio Review",
     "header_label": "Comprehensive Portfolio Review",
     "title": "Example Comprehensive Portfolio (TEST)",
@@ -2002,7 +2002,7 @@
               "summary, segments, diagnostics",
               "2026-06-30",
               "Fictional TEST data",
-              "{'chip': 'degraded', 'status': 'degraded'}",
+              "{'chip': 'partial', 'status': 'partial'}",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
@@ -2057,7 +2057,7 @@
               "portfolio_13f_lookthrough",
               "2026-05-15",
               "Fictional TEST data",
-              "{'chip': 'advisory', 'status': 'advisory'}",
+              "{'chip': 'partial', 'status': 'partial'}",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [

@@ -61,16 +61,22 @@ availability or presentation rules.
   `Tool / view`, `Key parameters`, `As of`, `Data scope`, `Validation`, `Digest`.
   `Basis` is `gradient_tool`, `gradient_tool_metadata`, `user_document`, or
   `regulatory_filing`.
-- A successful `gradient_tool` row names only tools in the packaged public
-  catalog. Set `Digest` to the exact concatenation
+- A `gradient_tool` row names only tools in the packaged public catalog.
+  `Validation` may be a string or a renderer chip object
+  `{"chip": "<value>", "status": "<status>"}`. Its normalized value must be
+  `passed`, `partial`, `failed`, `unavailable`, `not_run`, or
+  `not_applicable`. `not_applicable` requires an explicit reason or disclosure
+  and is not a silent success state.
+- When a response payload exists, set `Digest` to the exact concatenation
   `sha256:` + `provenance.reproducibility.payload_digest`; do not hash or
-  derive a replacement locally. When that payload digest is absent, use the
-  exact sentinel `not_available:no_payload`. A failed or unavailable call uses a typed
-  `Validation` value (`failed:<reason>`, `unavailable:<reason>` or
-  `not_run:<reason>`) and the exact Digest sentinel
-  `not_available:no_payload`; keep any error code and request ID in
-  `Validation`. Never put a request ID in `Digest` or cite a locally derived
-  value as a Gradient tool result.
+  derive a replacement locally. Use the exact sentinel
+  `not_available:no_payload` only when `Validation` explicitly discloses the
+  absent payload with `failed:<reason>`, `unavailable:<reason>`,
+  `not_run:<reason>`, or `not_applicable:<reason>`. A failed, unavailable,
+  not-run, or not-applicable row may still carry a SHA-256 digest when an
+  evidence payload exists. Keep any error code and request ID in `Validation`.
+  Never put a request ID in `Digest` or cite a locally derived value as a
+  Gradient tool result.
 - A `gradient_tool_metadata` row names a tool in the packaged public catalog
   and uses the exact typed Digest marker
   `not_applicable_metadata_response`. Use this basis only for a metadata
@@ -81,10 +87,12 @@ availability or presentation rules.
   in a source-row `Data scope`, `meta.data_scope`, or a `Data scope` cover
   fact. The word in ordinary prose does not trigger the contract. When
   triggered, set `meta.data_scope_banner` to exactly **Illustrative, Gradient
-  Maintained — demo data, not the client's holdings or managers**. Every
-  affected source row keeps `Illustrative` in `Data scope`, does not repeat
-  the full label in `Evidence`, and the sources appendix carries the full
-  label exactly once in a `note`.
+  Maintained — demo data, not the client's holdings or managers**. Classify
+  each source row from its own provenance-backed `Data scope`; illustrative
+  report metadata does not convert live rows to illustrative. Every
+  illustrative row keeps `Illustrative` in `Data scope` and does not repeat
+  the full label in `Evidence`. The banner is the canonical full-label
+  placement, so no duplicate sources-appendix note is required.
 - Every factual number, governed status and analytical judgment carries an `[S#]` tag.
 - Preserve returned dates, units, bases, formula identity and version, coverage, validation state and
   unavailable reason.

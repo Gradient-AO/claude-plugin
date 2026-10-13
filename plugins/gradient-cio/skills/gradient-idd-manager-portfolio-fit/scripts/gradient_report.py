@@ -53,6 +53,7 @@ from report_theme import (
 from report_layout import (
     ATOMIC_TABLE_ROW_LIMIT,
     LAYOUT_GROUP_EVIDENCE_ANALYSIS,
+    LAYOUT_GROUP_LINE_BARS,
     LAYOUT_GROUP_TITLE_ROWS,
     LAYOUT_GROUPS_FIELD,
     effective_chart_mode,
@@ -171,6 +172,23 @@ def b_table(b):
         colgroup = "<colgroup>" + "".join(
             f'<col style="width:{esc(width)}">' for width in widths
         ) + "</colgroup>"
+    else:
+        normalized_columns = {
+            str(column).strip().casefold() for column in b["columns"]
+        }
+        if {"tag", "evidence", "validation"} <= normalized_columns:
+            weights = [
+                2.0 if str(column).strip().casefold() == "evidence"
+                else 1.5 if str(column).strip().casefold() == "validation"
+                else 1.0
+                for column in b["columns"]
+            ]
+            total_weight = sum(weights)
+            colgroup = "<colgroup>" + "".join(
+                f'<col style="width:{weight / total_weight * 100:.3f}%" '
+                f'data-column-weight="{weight:g}">'
+                for weight in weights
+            ) + "</colgroup>"
     head = "".join(
         f'<th{f" class={json.dumps(cls(i))}" if cls(i) else ""}>{esc(c)}</th>'
         for i, c in enumerate(b["columns"])
@@ -204,6 +222,8 @@ def b_table(b):
                     digest_notes.append(f"{row_label}: {full_digest}")
                 else:
                     content = rich(c)
+                    if column_name.strip().casefold() == "validation":
+                        content = content.replace("_", "_<wbr>").replace(",", ",<wbr>")
                 attributes = f' class="{" ".join(dict.fromkeys(classes))}"' if classes else ""
                 if digest:
                     attributes += f' data-full-digest="{esc(full_digest)}"'
@@ -572,39 +592,92 @@ def b_stacked(b):
     note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
     return title + "".join(out) + note
 
+def _nice_ceiling(value):
+    """Round a positive chart limit upward to a readable decade subdivision."""
+    amount = float(value)
+    if not math.isfinite(amount) or amount <= 0:
+        return 1.0
+    magnitude = 10 ** math.floor(math.log10(amount))
+    fraction = amount / magnitude
+    step = next(
+        candidate
+        for candidate in (
+            1.0, 1.2, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 6.0, 8.0, 10.0
+        )
+        if fraction <= candidate
+    )
+    return step * magnitude
+
+def _band_display(value, item):
+    """Format a band endpoint consistently with the authored current display."""
+    authored = str(item.get("display", ""))
+    suffix = "%" if authored.strip().endswith("%") else ""
+    amount = float(value)
+    return f"{amount:g}{suffix}"
+
 def b_band(b):
     items = b["items"]
-    values = [
-        float(value)
+    highs = [
+        float(item.get("max", item.get("high")))
         for item in items
-        for value in (
-            item.get("min", item.get("low")),
-            item.get("max", item.get("high")),
-            item.get("target", item.get("current", item.get("value", item.get("min", item.get("low"))))),
-        )
     ]
-    low, high = min(values), max(values)
-    pad = (high - low) * .05 or 1
-    low, high = low - pad, high + pad
-    W, lw, rw, rh = (360, 128, 34, 28) if b.get("narrow") else (640, 205, 45, 28)
+    if not highs or any(not math.isfinite(value) for value in highs):
+        raise SystemExit("band items require finite high/max values")
+    low, high = 0.0, _nice_ceiling(max(highs) * 1.1)
+    W, lw, rw, rh = (360, 138, 24, 38) if b.get("narrow") else (640, 215, 32, 38)
     x0, x1 = lw, W - rw
     sx = lambda value: x0 + (x1 - x0) * (float(value) - low) / (high - low)
     H = len(items) * rh + 22
     out = [_svg_start(W, H, b.get("title"), b.get("description") or b.get("note"))]
     for index, item in enumerate(items):
-        y = 8 + index * rh
+        y = 5 + index * rh
         item_min = item.get("min", item.get("low"))
         item_max = item.get("max", item.get("high"))
         current = item.get("current", item.get("value"))
         minimum, maximum = sx(item_min), sx(item_max)
-        target = sx(item.get("target", current if current is not None else item_min))
-        out.append(f'<text x="{lw-10}" y="{y+14}" text-anchor="end" class="cl">{esc(item["label"])}</text>'
-                   f'<rect x="{minimum:.1f}" y="{y+6}" width="{max(2, maximum-minimum):.1f}" height="9" rx="4" fill="{RULE}"/>'
-                   f'<line x1="{target:.1f}" x2="{target:.1f}" y1="{y+2}" y2="{y+20}" stroke="{INK}" stroke-width="2"/>')
+        target_value = float(
+            item.get("target", current if current is not None else item_min)
+        )
+        target = sx(target_value)
+        current_value = float(current) if current is not None else None
+        target_offset = (
+            7.0
+            if current_value is not None
+            and math.isclose(target_value, current_value, rel_tol=1e-9, abs_tol=1e-9)
+            else 0.0
+        )
+        target = min(x1, max(x0, target + target_offset))
+        current_display = (
+            str(item.get("display") or _band_display(current_value, item))
+            if current_value is not None
+            else "—"
+        )
+        range_display = (
+            f"{_band_display(item_min, item)}–{_band_display(item_max, item)}"
+        )
+        out.append(
+            f'<text x="{lw-10}" y="{y+11}" text-anchor="end" class="cl">'
+            f'{esc(item["label"])}</text>'
+            f'<text x="{lw-10}" y="{y+24}" text-anchor="end" class="ax">'
+            f'{esc(current_display)} · {esc(range_display)}</text>'
+            f'<rect x="{minimum:.1f}" y="{y+8}" '
+            f'width="{max(2, maximum-minimum):.1f}" height="9" rx="4" fill="{RULE}"/>'
+            f'<text x="{minimum:.1f}" y="{y+31}" text-anchor="middle" class="ax">'
+            f'{esc(_band_display(item_min, item))}</text>'
+            f'<text x="{maximum:.1f}" y="{y+31}" text-anchor="middle" class="ax">'
+            f'{esc(_band_display(item_max, item))}</text>'
+            f'<line x1="{target:.1f}" x2="{target:.1f}" y1="{y+3}" y2="{y+22}" '
+            f'stroke="{INK}" stroke-width="2"/>'
+        )
         if current is not None:
-            out.append(f'<circle cx="{sx(current):.1f}" cy="{y+10.5}" r="5" fill="{LIME_DK}" stroke="{PAPER}" stroke-width="1.5"/>')
-    out.append(f'<text x="{x0}" y="{H-2}" class="ax">{low:.1f}</text>'
-               f'<text x="{x1}" y="{H-2}" text-anchor="end" class="ax">{high:.1f}</text></svg>')
+            out.append(
+                f'<circle cx="{sx(current):.1f}" cy="{y+12.5}" r="5" '
+                f'fill="{LIME_DK}" stroke="{PAPER}" stroke-width="1.5"/>'
+            )
+    out.append(
+        f'<text x="{x0}" y="{H-2}" class="ax">0</text>'
+        f'<text x="{x1}" y="{H-2}" text-anchor="end" class="ax">{high:g}</text></svg>'
+    )
     title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
     note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
     return title + "".join(out) + note
@@ -814,6 +887,65 @@ def _line_x_axis(series):
         True,
     )
 
+def _nice_step(span, target_intervals=4):
+    """Return a readable grid interval near span/target_intervals."""
+    raw = abs(float(span)) / max(1, int(target_intervals))
+    if not math.isfinite(raw) or raw == 0:
+        return 1.0
+    magnitude = 10 ** math.floor(math.log10(raw))
+    fraction = raw / magnitude
+    nice_fraction = next(
+        candidate for candidate in (1.0, 2.0, 2.5, 5.0, 10.0)
+        if fraction <= candidate
+    )
+    return nice_fraction * magnitude
+
+def _nice_y_bounds(low, high):
+    """Expand finite data bounds to stable, readable grid boundaries."""
+    low, high = float(low), float(high)
+    if low == high:
+        pad = abs(low) * 0.1 or 1.0
+        low, high = low - pad, high + pad
+    else:
+        pad = (high - low) * 0.08
+        low, high = low - pad, high + pad
+    step = _nice_step(high - low)
+    return math.floor(low / step) * step, math.ceil(high / step) * step, step
+
+def _axis_ticks(low, high, step):
+    """Return bounded grid ticks and always expose the base-100 line in range."""
+    first = math.ceil((low - step * 1e-9) / step) * step
+    ticks = []
+    value = first
+    while value <= high + step * 1e-9 and len(ticks) < 20:
+        ticks.append(0.0 if abs(value) < step * 1e-9 else value)
+        value += step
+    if low <= 100 <= high and not any(
+        math.isclose(value, 100.0, rel_tol=1e-9, abs_tol=1e-9)
+        for value in ticks
+    ):
+        ticks.append(100.0)
+    return sorted(set(ticks))
+
+def _date_ticks(low, high):
+    """Return January 1 ticks for multi-year date axes, bounded for legibility."""
+    first_date = datetime.date.fromordinal(math.ceil(low))
+    last_date = datetime.date.fromordinal(math.floor(high))
+    starts = [
+        datetime.date(year, 1, 1)
+        for year in range(first_date.year, last_date.year + 1)
+        if first_date <= datetime.date(year, 1, 1) <= last_date
+    ]
+    if len(starts) < 2:
+        return []
+    if len(starts) > 7:
+        indices = [
+            round(index * (len(starts) - 1) / 6)
+            for index in range(7)
+        ]
+        starts = [starts[index] for index in indices]
+    return [float(value.toordinal()) for value in starts]
+
 def b_line(b, W=640, H=None):
     """Line chart. series: [{name, points: [[date|category|x, value], ...]}]."""
     series = [sr for sr in b["series"] if sr.get("points")]
@@ -837,19 +969,20 @@ def b_line(b, W=640, H=None):
     xs = [x_value(value) for value in raw_xs]; ys = [float(p[1]) for sr in series for p in sr["points"]]
     if b.get("ref") is not None: ys.append(float(b["ref"]["value"]))
     x0, x1 = min(xs), max(xs); y0, y1 = min(ys), max(ys)
-    pad = (y1 - y0) * 0.08 or abs(y1) * 0.1 or 1; y0 -= pad; y1 += pad
+    y0, y1, y_step = _nice_y_bounds(y0, y1)
     if b.get("y_min") is not None: y0 = float(b["y_min"])
     if b.get("y_max") is not None: y1 = float(b["y_max"])
     dec = b.get("decimals", 1); suf = b.get("y_suffix", "")
+    y_ticks = _axis_ticks(y0, y1, y_step)
     axis_labels = [
         _format_axis_value(
-            y0 + (y1 - y0) * k / 4,
+            value,
             dec,
             suf,
             b.get("currency"),
             b.get("y_format"),
         )
-        for k in range(5)
+        for value in y_ticks
     ]
     pl = max(46, 10 + max(_svg_text_width(label) for label in axis_labels))
     use_legend = len(series) > 4
@@ -876,18 +1009,40 @@ def b_line(b, W=640, H=None):
                 f'<text x="{legend_x+16:.1f}" y="12" class="ax">{esc(name)}</text>'
             )
             legend_x += 24 + _svg_text_width(name)
-    for k in range(5):
-        yv = y0 + (y1 - y0) * k / 4; y = sy(yv)
+    for band in b.get("x_bands", []):
+        if x_kind not in {"date", "numeric"}:
+            raise SystemExit("line x_bands require a date or numeric x axis")
+        band_start = max(x0, min(x1, x_value(band["start"])))
+        band_end = max(x0, min(x1, x_value(band["end"])))
+        if band_end < band_start:
+            band_start, band_end = band_end, band_start
+        band_x = sx(band_start)
+        band_width = max(1.0, sx(band_end) - band_x)
+        o.append(
+            f'<rect x="{band_x:.1f}" y="{pt}" width="{band_width:.1f}" '
+            f'height="{ih:.1f}" fill="{AMBER}" fill-opacity="0.10"/>'
+        )
+        if band.get("label"):
+            o.append(
+                f'<text x="{band_x + 4:.1f}" y="{pt + 10:.1f}" '
+                f'class="ax">{esc(band["label"])}</text>'
+            )
+    for yv, axis_label in zip(y_ticks, axis_labels):
+        y = sy(yv)
         o.append(f'<line x1="{pl}" x2="{pl+iw:.1f}" y1="{y:.1f}" y2="{y:.1f}" stroke="{RULE}"/>'
-                 f'<text x="{pl-6}" y="{y+3:.1f}" text-anchor="end" class="ax">{esc(axis_labels[k])}</text>')
+                 f'<text x="{pl-6}" y="{y+3:.1f}" text-anchor="end" class="ax">{esc(axis_label)}</text>')
     if y0 < 0 < y1:
         o.append(f'<line x1="{pl}" x2="{pl+iw:.1f}" y1="{sy(0):.1f}" y2="{sy(0):.1f}" stroke="{MUTED}" stroke-width="1"/>')
     if b.get("ref") is not None:
         ry = sy(float(b["ref"]["value"]))
         o.append(f'<line x1="{pl}" x2="{pl+iw:.1f}" y1="{ry:.1f}" y2="{ry:.1f}" stroke="{CORAL}" stroke-dasharray="4 3"/>'
                  f'<text x="{pl+iw-2:.1f}" y="{ry-4:.1f}" text-anchor="end" class="ax" fill="{CORAL}">{esc(b["ref"].get("label",""))}</text>')
-    allx = sorted(set(xs)); n = min(5, len(allx))
-    tx = [allx[round(k * (len(allx) - 1) / max(n - 1, 1))] for k in range(n)]
+    allx = sorted(set(xs))
+    tx = _date_ticks(x0, x1) if x_kind == "date" else []
+    if not tx:
+        n = min(5, len(allx))
+        tx = [allx[round(k * (len(allx) - 1) / max(n - 1, 1))] for k in range(n)]
+    n = len(tx)
     if x_kind == "date":
         labs = [datetime.date.fromordinal(int(xv)).strftime("%b %Y") for xv in tx]
         if len(set(labs)) < len(labs):
@@ -973,6 +1128,8 @@ def _md_table_cell(value, heading, numeric=False):
         content = esc(display)
     else:
         content = _md_cell(value, bool(_CHIP_COLS.search(str(heading))))
+        if normalized_heading == "validation":
+            content = content.replace("_", "_<wbr>").replace(",", ",<wbr>")
     return f"<td{attributes}>{content}</td>"
 
 def _is_sep(line):
@@ -1135,6 +1292,20 @@ def render_blocks(blocks):
     while index < len(blocks):
         block = blocks[index]
         if index + 1 < len(blocks):
+            line_bars_group = _blocks_share_layout_group(
+                block,
+                blocks[index + 1],
+                LAYOUT_GROUP_LINE_BARS,
+            )
+            if line_bars_group:
+                out.append(
+                    '<div class="keep layout-line-bars">'
+                    + render_one(block)
+                    + render_one(blocks[index + 1])
+                    + "</div>"
+                )
+                index += 2
+                continue
             shared_groups = _blocks_share_layout_group(
                 block,
                 blocks[index + 1],
@@ -1269,7 +1440,7 @@ thead{{display:table-header-group}} tr{{break-inside:avoid}}
 .atomic-table,.atomic-table table{{break-inside:avoid}}
 .paginated-table,.paginated-table table{{break-inside:auto}}
 .layout-title-rows .btitle,.layout-title-rows thead,.layout-title-rows tbody tr:first-child{{break-after:avoid}}
-.layout-title-rows:last-child,.layout-evidence-analysis>.blk:last-child{{margin-bottom:0}}
+.layout-title-rows:last-child,.layout-evidence-analysis>.blk:last-child,.layout-line-bars>.blk:last-child{{margin-bottom:0}}
 .md .h3{{font-size:11pt;font-weight:750;margin:14px 0 6px;letter-spacing:-.01em}} .md .h4{{font-size:7.4pt;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:{INK2};margin:10px 0 5px}}
 .md > *{{margin-bottom:9px}} .md table.grid{{break-inside:auto}} .md table.grid tr{{break-inside:avoid}}
 .heat th:first-child{{text-align:left}} .heat td{{text-align:center;font-variant-numeric:tabular-nums}}
@@ -1277,9 +1448,9 @@ thead{{display:table-header-group}} tr{{break-inside:avoid}}
 .pre{{font-family:'DejaVu Sans Mono',Menlo,monospace;font-size:7.6pt;background:{WASH};padding:8px 10px;border-radius:4px;white-space:pre-wrap}}
 /* executive band */
 .exec.one{{grid-template-columns:1fr}}
-.exec{{display:grid;grid-template-columns:200px 1fr;gap:18px;background:{INK};color:{TEXT_ON_DARK};border-radius:6px;padding:18px 20px;margin-bottom:14px}}
+.exec{{display:grid;grid-template-columns:minmax(230px,250px) minmax(0,1fr);gap:18px;background:{INK};color:{TEXT_ON_DARK};border-radius:6px;padding:18px 20px;margin-bottom:14px}}
 .sig{{border-radius:4px;padding:12px 12px 10px;color:{INK}}} .sig .k{{font-size:6.8pt;letter-spacing:.1em;text-transform:uppercase;font-weight:750;opacity:.75}}
-.sig .v{{font-size:15pt;font-weight:800;line-height:1.1;margin-top:4px;letter-spacing:-.01em}}
+.sig .v{{font-size:clamp(12pt,2.15vw,15pt);font-weight:800;line-height:1.1;margin-top:4px;letter-spacing:-.01em;overflow-wrap:anywhere}}
 .meter{{margin-top:12px;font-size:7pt;color:{TEXT_ON_DARK_MUTED};letter-spacing:.06em;text-transform:uppercase;font-weight:650}}
 .meter .bars{{display:flex;gap:3px;margin-top:5px}} .meter .bars i{{flex:1;height:7px;border-radius:1px;background:{DARK_METER}}} .meter .bars i.on{{background:{LIME}}}
 .exec .rt{{font-size:7pt;letter-spacing:.1em;text-transform:uppercase;color:{LIME};font-weight:750;margin-bottom:5px}}
@@ -1381,6 +1552,18 @@ def body_html(r):
         blocks = s.get("blocks", [])
         if pre:
             body = f'<div class="keep">{head}{pre}</div>' + render_body_blocks(blocks)
+        elif (
+            len(blocks) >= 2
+            and _blocks_share_layout_group(
+                blocks[0],
+                blocks[1],
+                LAYOUT_GROUP_LINE_BARS,
+            )
+        ):
+            body = (
+                f'<div class="keep">{head}{render_blocks(blocks[:2])}</div>'
+                + render_body_blocks(blocks[2:])
+            )
         elif (
             len(blocks) >= 2
             and _blocks_share_layout_group(

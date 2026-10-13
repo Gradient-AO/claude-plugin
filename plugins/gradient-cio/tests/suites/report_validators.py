@@ -30,6 +30,52 @@ def connector_cutover():
         and native_line_charts >= 4,
         "single-manager golden PowerPoint contains at least four native editable line charts",
     )
+    with tempfile.TemporaryDirectory() as pme_pptx_tmp:
+        pme_base = (
+            pathlib.Path(pme_pptx_tmp)
+            / "gradient-idd-private-markets-pme"
+        )
+        pme_pptx = pme_base.with_suffix(".pptx")
+        generated_pme = subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "shared" / "render.py"),
+                str(FIX / "idd-private-markets-pme.json"),
+                "--format",
+                "pptx",
+                "--out",
+                str(pme_base),
+            ],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        pme_chart_parts: list[str] = []
+        pme_line_charts = 0
+        if generated_pme.returncode == 0 and pme_pptx.is_file():
+            with zipfile.ZipFile(pme_pptx) as archive:
+                pme_chart_parts = [
+                    name
+                    for name in archive.namelist()
+                    if name.startswith("ppt/charts/chart")
+                    and name.endswith(".xml")
+                ]
+                pme_line_charts = sum(
+                    b"lineChart" in archive.read(name)
+                    for name in pme_chart_parts
+                )
+        check(
+            generated_pme.returncode == 0
+            and len(pme_chart_parts) >= 4
+            and pme_line_charts >= 4,
+            "PME golden PowerPoint generates four native editable line charts"
+            + (
+                f": {(generated_pme.stderr or generated_pme.stdout).strip()}"
+                if generated_pme.returncode != 0
+                else ""
+            ),
+        )
     removed_scripts = [
         ROOT / "skills" / "gradient-decision-ic-memo" / "scripts" / "memo_calcs.py",
         ROOT / "skills" / "gradient-portfolio-review" / "scripts" / "review_calcs.py",
@@ -835,8 +881,12 @@ def connector_cutover():
         "`sha256:` + `provenance.reproducibility.payload_digest`"
         in writing_standards
         and "`not_available:no_payload`" in writing_standards
+        and "`passed`, `partial`, `failed`, `unavailable`, `not_run`, or"
+        in writing_standards
+        and "no duplicate sources-appendix note is required"
+        in writing_standards
         and "`Not available — series views not published`" in writing_standards,
-        "canonical writing standards define payload digest and series fallback contracts",
+        "canonical writing standards define source validation, scope, and digest contracts",
     )
 
     manager_performance_validator = idd_validators[0][1]
@@ -1144,6 +1194,214 @@ def connector_cutover():
             + (
                 f": {rejected_modern_mutations}"
                 if rejected_modern_mutations
+                else ""
+            ),
+        )
+
+    pme_validator = idd_validators[3][1]
+    pme_document = json.loads(
+        (FIX / "idd-private-markets-pme.json").read_text(encoding="utf-8")
+    )
+
+    def pme_section(document, title):
+        return next(
+            section
+            for section in document["sections"]
+            if section.get("title") == title
+        )
+
+    def run_pme_case(tmp_dir, name, document):
+        path = tmp_dir / f"{name}.json"
+        path.write_text(json.dumps(document), encoding="utf-8")
+        return subprocess.run(
+            [sys.executable, str(pme_validator), str(path)],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+
+    with tempfile.TemporaryDirectory() as pme_tmp:
+        tmp_dir = pathlib.Path(pme_tmp)
+        unavailable_sensitivity = json.loads(json.dumps(pme_document))
+        sensitivity_blocks = pme_section(
+            unavailable_sensitivity,
+            "Benchmark sensitivity",
+        )["blocks"]
+        sensitivity_blocks[:] = [
+            block
+            for block in sensitivity_blocks
+            if block.get("title")
+            != "Primary and sensitivity benchmark results"
+        ]
+        sensitivity_blocks.append(
+            {
+                "type": "callout",
+                "role": "availability",
+                "tone": "watch",
+                "title": "Sensitivity not available",
+                "text": (
+                    "Not available — alternate benchmark history missing; "
+                    "error_code=benchmark_returns_unavailable; "
+                    "request_id=request-test-pme-007."
+                ),
+            }
+        )
+        check(
+            run_pme_case(
+                tmp_dir,
+                "pme-typed-unavailable-sensitivity",
+                unavailable_sensitivity,
+            ).returncode
+            == 0,
+            "PME validator accepts a typed unavailable sensitivity reason",
+        )
+
+        pme_mutations = []
+
+        missing_j_curve = json.loads(json.dumps(pme_document))
+        blocks = pme_section(
+            missing_j_curve,
+            "PME and direct alpha",
+        )["blocks"]
+        blocks[:] = [
+            block
+            for block in blocks
+            if "J-curve" not in str(block.get("title", ""))
+        ]
+        pme_mutations.append(("missing required J-curve line", missing_j_curve))
+
+        renamed_multiples = json.loads(json.dumps(pme_document))
+        next(
+            block
+            for block in pme_section(
+                renamed_multiples,
+                "IRR and multiple context",
+            )["blocks"]
+            if block.get("type") == "line"
+            and "multiples" in str(block.get("title", ""))
+        )["title"] = "Fund value path [S6]"
+        pme_mutations.append(
+            ("cash-flow line not specifically titled multiples", renamed_multiples)
+        )
+
+        wrong_context_label = json.loads(json.dumps(pme_document))
+        next(
+            block
+            for section in wrong_context_label["sections"]
+            for block in section.get("blocks", [])
+            if block.get("context_kind") == "sector"
+        )["context_label"] = "Context only"
+        pme_mutations.append(("non-canonical context-only label", wrong_context_label))
+
+        no_sensitivity_contract = json.loads(json.dumps(pme_document))
+        blocks = pme_section(
+            no_sensitivity_contract,
+            "Benchmark sensitivity",
+        )["blocks"]
+        blocks[:] = [
+            block
+            for block in blocks
+            if block.get("title")
+            != "Primary and sensitivity benchmark results"
+        ]
+        pme_mutations.append(
+            ("missing sensitivity rows and typed reason", no_sensitivity_contract)
+        )
+
+        wrong_window_column = json.loads(json.dumps(pme_document))
+        table = next(
+            block
+            for block in pme_section(
+                wrong_window_column,
+                "Benchmark sensitivity",
+            )["blocks"]
+            if block.get("title")
+            == "Primary and sensitivity benchmark results"
+        )
+        table["columns"][2] = "Locally calculated return"
+        pme_mutations.append(
+            ("missing server benchmark_window_return column", wrong_window_column)
+        )
+
+        missing_visual_lineage = json.loads(json.dumps(pme_document))
+        next(
+            block
+            for block in pme_section(
+                missing_visual_lineage,
+                "PME and direct alpha",
+            )["blocks"]
+            if block.get("type") == "line"
+        ).pop("evidence_metadata")
+        pme_mutations.append(
+            ("plotted points without source view digest", missing_visual_lineage)
+        )
+
+        wrong_point_source = json.loads(json.dumps(pme_document))
+        next(
+            block
+            for section in wrong_point_source["sections"]
+            for block in section.get("blocks", [])
+            if block.get("context_kind") == "holdings"
+        )["items"][0]["source"] = "S999"
+        pme_mutations.append(
+            ("plotted item source outside block lineage", wrong_point_source)
+        )
+
+        false_series_view = json.loads(json.dumps(pme_document))
+        pme_line = next(
+            block
+            for block in pme_section(
+                false_series_view,
+                "PME and direct alpha",
+            )["blocks"]
+            if block.get("type") == "line"
+            and "PME path" in str(block.get("title", ""))
+        )
+        pme_line["evidence_metadata"]["view"] = "cash_flow_series_pme"
+        lineage_table = next(
+            block
+            for block in pme_section(
+                false_series_view,
+                "Appendix — Sources and methods",
+            )["blocks"]
+            if block.get("title") == "Series view lineage"
+        )
+        next(
+            row
+            for row in lineage_table["rows"]
+            if row[1] == "pme_series"
+        )[1] = "cash_flow_series_pme"
+        pme_mutations.append(
+            ("PME path names a false cash-flow field", false_series_view)
+        )
+
+        digest_mismatch = json.loads(json.dumps(pme_document))
+        next(
+            block
+            for block in pme_section(
+                digest_mismatch,
+                "IRR and multiple context",
+            )["blocks"]
+            if block.get("type") == "line"
+        )["evidence_metadata"]["payload_digest"] = "sha256:" + "9" * 64
+        pme_mutations.append(("per-view payload digest mismatch", digest_mismatch))
+
+        rejected_pme_mutations = []
+        for index, (label, document) in enumerate(pme_mutations):
+            result = run_pme_case(
+                tmp_dir,
+                f"pme-invalid-{index}",
+                document,
+            )
+            if result.returncode != 1:
+                rejected_pme_mutations.append(label)
+        check(
+            not rejected_pme_mutations,
+            "PME validator rejects cash-flow, context, sensitivity and lineage mutations"
+            + (
+                f": {rejected_pme_mutations}"
+                if rejected_pme_mutations
                 else ""
             ),
         )
@@ -1533,16 +1791,15 @@ def connector_cutover():
             if fact[0] == "Data scope":
                 fact[1] = "Illustrative — fictional TEST data"
         illustrative_sources = source_table(illustrative)
-        for row in illustrative_sources["rows"]:
-            row[6] = "Illustrative — fictional TEST data"
-        illustrative_sources["note"] = ILLUSTRATIVE_LABEL
+        illustrative["meta"]["data_basis"] = "mixed"
+        illustrative_sources["rows"][0][6] = "Illustrative — fictional TEST data"
         illustrative_result = run_attribution_case(
             "attribution-illustrative",
             illustrative,
         )
         check(
             illustrative_result.returncode == 0,
-            "attribution validator accepts structured illustrative scope",
+            "mixed scope classifies each source row without an appendix label note",
         )
 
         ddq_illustrative = json.loads(
@@ -1553,8 +1810,9 @@ def connector_cutover():
         for source_index, row in enumerate(ddq_sources["rows"], start=1):
             if row[2] == "gradient_tool":
                 row[8] = f"sha256:{source_index:064x}"
+            elif row[7] == "—":
+                row[7] = "not_applicable:user document validation is disclosed"
         ddq_sources["rows"][0][6] = "Illustrative — synthetic TEST data"
-        ddq_sources["note"] = ILLUSTRATIVE_LABEL
         ddq_illustrative_path = tmp_dir / "ddq-illustrative.json"
         ddq_illustrative_path.write_text(
             json.dumps(ddq_illustrative),
@@ -1586,15 +1844,6 @@ def connector_cutover():
                 "meta.data_scope_banner",
             )
         )
-        missing_row_scope = json.loads(json.dumps(illustrative))
-        source_table(missing_row_scope)["rows"][0][6] = "Fictional TEST data"
-        invalid_illustrative_cases.append(
-            (
-                "affected row missing Illustrative scope",
-                missing_row_scope,
-                "Data scope must contain 'Illustrative'",
-            )
-        )
         repeated_evidence_label = json.loads(json.dumps(illustrative))
         source_table(repeated_evidence_label)["rows"][0][1] = ILLUSTRATIVE_LABEL
         invalid_illustrative_cases.append(
@@ -1604,13 +1853,15 @@ def connector_cutover():
                 "Evidence must not repeat",
             )
         )
-        missing_appendix_note = json.loads(json.dumps(illustrative))
-        source_table(missing_appendix_note).pop("note")
+        row_scope_missing_banner = json.loads(json.dumps(attribution_fixture))
+        source_table(row_scope_missing_banner)["rows"][0][6] = (
+            "Illustrative — synthetic TEST data"
+        )
         invalid_illustrative_cases.append(
             (
-                "missing appendix label note",
-                missing_appendix_note,
-                "exactly once as an appendix note",
+                "illustrative row scope without canonical banner",
+                row_scope_missing_banner,
+                "meta.data_scope_banner",
             )
         )
         for index, (label, document, expected) in enumerate(
@@ -1685,8 +1936,41 @@ def connector_cutover():
         )
         check(
             invalid_normal_result.returncode == 1
-            and "successful Gradient evidence requires Digest" in invalid_normal_output,
+            and "Gradient evidence with a payload requires Digest"
+            in invalid_normal_output,
             "normal Gradient tool rows retain digest validation",
+        )
+
+        chip_validation = json.loads(json.dumps(attribution_fixture))
+        chip_row = next(
+            row
+            for row in source_table(chip_validation)["rows"]
+            if row[2] == "gradient_tool"
+        )
+        chip_row[7] = {"chip": " Passed ", "status": "passed"}
+        check(
+            run_attribution_case(
+                "attribution-chip-validation",
+                chip_validation,
+            ).returncode
+            == 0,
+            "source Validation accepts and normalizes a chip object",
+        )
+
+        failed_with_payload = json.loads(json.dumps(attribution_fixture))
+        failed_with_payload_row = next(
+            row
+            for row in source_table(failed_with_payload)["rows"]
+            if row[2] == "gradient_tool"
+        )
+        failed_with_payload_row[7] = "failed:response carried error evidence"
+        check(
+            run_attribution_case(
+                "attribution-failed-with-payload",
+                failed_with_payload,
+            ).returncode
+            == 0,
+            "failed Gradient validation retains payload digest when payload exists",
         )
 
         failed_tool_evidence = json.loads(json.dumps(attribution_fixture))
@@ -1705,6 +1989,100 @@ def connector_cutover():
             failed_tool_result.returncode == 0,
             "failed Gradient calls use typed no-payload provenance",
         )
+
+        not_applicable_payload = json.loads(json.dumps(attribution_fixture))
+        not_applicable_payload_row = next(
+            row
+            for row in source_table(not_applicable_payload)["rows"]
+            if row[2] == "gradient_tool"
+        )
+        not_applicable_payload_row[7] = (
+            "not_applicable:validation does not apply to this payload"
+        )
+        check(
+            run_attribution_case(
+                "attribution-not-applicable-with-payload",
+                not_applicable_payload,
+            ).returncode
+            == 0,
+            "not_applicable is disclosed while retaining an existing payload digest",
+        )
+
+        not_applicable_without_payload = json.loads(
+            json.dumps(attribution_fixture)
+        )
+        not_applicable_without_payload_row = next(
+            row
+            for row in source_table(not_applicable_without_payload)["rows"]
+            if row[2] == "gradient_tool"
+        )
+        not_applicable_without_payload_row[7] = {
+            "chip": "Not applicable: no evidence payload was produced",
+            "status": "not_applicable",
+        }
+        not_applicable_without_payload_row[8] = "not_available:no_payload"
+        check(
+            run_attribution_case(
+                "attribution-not-applicable-without-payload",
+                not_applicable_without_payload,
+            ).returncode
+            == 0,
+            "disclosed not_applicable chip accepts the no-payload sentinel",
+        )
+
+        invalid_validation_cases = []
+        unknown_validation = json.loads(json.dumps(attribution_fixture))
+        next(
+            row
+            for row in source_table(unknown_validation)["rows"]
+            if row[2] == "gradient_tool"
+        )[7] = "unknown"
+        invalid_validation_cases.append(
+            ("validation outside the source vocabulary", unknown_validation, "must start")
+        )
+
+        undisclosed_not_applicable = json.loads(json.dumps(attribution_fixture))
+        next(
+            row
+            for row in source_table(undisclosed_not_applicable)["rows"]
+            if row[2] == "gradient_tool"
+        )[7] = {"chip": "not applicable", "status": "not_applicable"}
+        invalid_validation_cases.append(
+            (
+                "not_applicable without reason",
+                undisclosed_not_applicable,
+                "requires an explicit reason or disclosure",
+            )
+        )
+
+        silent_no_payload = json.loads(json.dumps(attribution_fixture))
+        silent_no_payload_row = next(
+            row
+            for row in source_table(silent_no_payload)["rows"]
+            if row[2] == "gradient_tool"
+        )
+        silent_no_payload_row[7] = "passed"
+        silent_no_payload_row[8] = "not_available:no_payload"
+        invalid_validation_cases.append(
+            (
+                "no-payload digest without explicit absence",
+                silent_no_payload,
+                "explicitly disclose an absent payload",
+            )
+        )
+
+        for index, (label, document, expected) in enumerate(
+            invalid_validation_cases
+        ):
+            result = run_attribution_case(
+                f"attribution-validation-invalid-{index}",
+                document,
+            )
+            output = result.stdout + result.stderr
+            check(
+                result.returncode == 1 and expected in output,
+                f"attribution validator rejects {label}",
+            )
     for label, validator, fixture in CONSTRUCTION_VALIDATORS:
         validated_construction = subprocess.run(
             [sys.executable, str(validator), str(fixture)],
@@ -2328,6 +2706,86 @@ def connector_cutover():
             "comprehensive review malformed four-part analysis",
             PORTFOLIO_REVIEW_VALIDATOR,
             malformed_analysis,
+        )
+    )
+
+    overlong_review_signal = cloned_fixture("portfolio.json")
+    overlong_review_signal["meta"]["signal"]["label"] = "x" * 49
+    contract_regressions.append(
+        (
+            "brief review overlong signal label",
+            PORTFOLIO_REVIEW_VALIDATOR,
+            overlong_review_signal,
+        )
+    )
+
+    wrong_brief_summary_identity = cloned_fixture("portfolio.json")
+    report_section(wrong_brief_summary_identity, "Summary")["id"] = "1"
+    contract_regressions.append(
+        (
+            "brief review Summary missing executive id",
+            PORTFOLIO_REVIEW_VALIDATOR,
+            wrong_brief_summary_identity,
+        )
+    )
+
+    missing_brief_mode = cloned_fixture("portfolio.json")
+    missing_brief_mode["meta"].pop("mode")
+    missing_brief_mode["review_mode"] = "brief"
+    contract_regressions.append(
+        (
+            "brief review uses deprecated root review_mode",
+            PORTFOLIO_REVIEW_VALIDATOR,
+            missing_brief_mode,
+        )
+    )
+
+    missing_benchmark_line = cloned_fixture("portfolio.json")
+    performance_blocks = report_section(
+        missing_benchmark_line,
+        "Performance",
+    )["blocks"]
+    rolling_line = next(
+        block
+        for block in performance_blocks
+        if block.get("title") == "Rolling 36-month excess return"
+    )
+    performance_blocks.remove(rolling_line)
+    contract_regressions.append(
+        (
+            "brief review missing second performance line and typed fallback",
+            PORTFOLIO_REVIEW_VALIDATOR,
+            missing_benchmark_line,
+        )
+    )
+
+    missing_drawdown_window = cloned_fixture("portfolio.json")
+    next(
+        tile
+        for tile in missing_drawdown_window["executive"]["tiles"]
+        if tile.get("label") == "Max drawdown"
+    )["sub"] = "2022-01 to 2023-10 [S3][S4]"
+    contract_regressions.append(
+        (
+            "brief review max drawdown without since-inception window",
+            PORTFOLIO_REVIEW_VALIDATOR,
+            missing_drawdown_window,
+        )
+    )
+
+    missing_forward_basis = cloned_fixture("portfolio.json")
+    summary_blocks = report_section(missing_forward_basis, "Summary")["blocks"]
+    for block in summary_blocks:
+        if isinstance(block, dict) and isinstance(block.get("text"), str):
+            block["text"] = block["text"].replace(
+                "forward assumption",
+                "assumption",
+            )
+    contract_regressions.append(
+        (
+            "brief review omits forward-assumption objective basis",
+            PORTFOLIO_REVIEW_VALIDATOR,
+            missing_forward_basis,
         )
     )
 

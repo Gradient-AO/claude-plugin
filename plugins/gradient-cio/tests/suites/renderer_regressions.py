@@ -5,8 +5,10 @@ from suites.harness import _renderer_module
 import check_layout as _check_layout_module
 from report_layout import (
     LAYOUT_GROUP_EVIDENCE_ANALYSIS,
+    LAYOUT_GROUP_LINE_BARS,
     LAYOUT_GROUP_TITLE_ROWS,
     LAYOUT_GROUPS_FIELD,
+    SIGNAL_LABEL_MAX_CHARACTERS,
     LayoutPolicyError,
     build_post_render_layout_contract,
     lint_report_design,
@@ -172,6 +174,34 @@ def chart_renderer():
         and "<table" not in categorical_line,
         "categorical-x chart hints render as labelled lines",
     )
+    annual_line = _renderer_module.b_line({
+        "title": "Indexed value",
+        "series": [{
+            "name": "Portfolio",
+            "points": [
+                ["2022-06-30", 97],
+                ["2023-06-30", 101],
+                ["2024-06-30", 103],
+                ["2025-06-30", 99],
+            ],
+        }],
+        "ref": {"value": 100, "label": "Base 100"},
+        "x_bands": [{
+            "start": "2022-06-30",
+            "end": "2022-12-31",
+            "label": "2022 drawdown",
+        }],
+        "decimals": 0,
+    })
+    check(
+        all(label in annual_line for label in ("Jan 2023", "Jan 2024", "Jan 2025"))
+        and ">100</text>" in annual_line
+        and "Base 100" in annual_line
+        and 'fill-opacity="0.10"' in annual_line
+        and "2022 drawdown" in annual_line
+        and _renderer_module._nice_y_bounds(97, 103) == (96.0, 104.0, 2.0),
+        "line charts use year ticks, nice bounds, base-100 references, and drawdown bands",
+    )
     signed_bars = _renderer_module.b_chart({"chart": {
         "chart_id": "signed-bars-test",
         "title": "Attribution effects",
@@ -191,6 +221,32 @@ def chart_renderer():
         and _renderer_module.CORAL in signed_bars
         and "<table" not in signed_bars,
         "negative chart hints render as signed bars",
+    )
+    band = _renderer_module.b_band({
+        "title": "Policy ranges",
+        "items": [{
+            "label": "Public equity",
+            "value": 40,
+            "display": "40%",
+            "low": 20,
+            "high": 50,
+            "target": 40,
+        }],
+    })
+    band_target = re.search(
+        r'<line x1="([\d.]+)" x2="[\d.]+"[^>]+stroke-width="2"/>',
+        band,
+    )
+    band_current = re.search(r'<circle cx="([\d.]+)"', band)
+    check(
+        "40% · 20%–50%" in band
+        and band.count(">20%</text>") == 1
+        and band.count(">50%</text>") == 1
+        and '>60</text></svg>' in band
+        and band_target is not None
+        and band_current is not None
+        and float(band_target.group(1)) > float(band_current.group(1)),
+        "band charts start at zero, round headroom, label ranges, and separate coincident targets",
     )
     forty_row_table = _renderer_module.b_chart({"chart": {
         "chart_id": "forty-row-table-test",
@@ -239,6 +295,46 @@ def chart_renderer():
         in coverage_document
         and "overflow-wrap:anywhere" in coverage_document,
         "coverage rows reserve complete chip width while notes wrap",
+    )
+    signal_report = {
+        "meta": {
+            "title": "Signal regression (TEST)",
+            "header_label": "Regression",
+            "data_as_of": "2026-10-12",
+            "signal": {
+                "level": "watch",
+                "label": "x" * SIGNAL_LABEL_MAX_CHARACTERS,
+            },
+        },
+        "sections": [],
+    }
+    accepted_signal = prepare_report_for_render(signal_report)
+    overlong_signal = json.loads(json.dumps(signal_report))
+    overlong_signal["meta"]["signal"]["label"] += "x"
+    try:
+        prepare_report_for_render(overlong_signal)
+        signal_limit_rejected = False
+    except LayoutPolicyError as error:
+        signal_limit_rejected = any(
+            "meta.signal.label" in issue for issue in error.errors
+        )
+    executive_document = _renderer_module.body_html({
+        **signal_report,
+        "executive": {"bottom_line": "Bounded signal label."},
+        "sections": [{
+            "id": "executive",
+            "title": "Executive",
+            "blocks": [],
+        }],
+    })
+    check(
+        accepted_signal["meta"]["signal"]["label"]
+        == "x" * SIGNAL_LABEL_MAX_CHARACTERS
+        and signal_limit_rejected
+        and "grid-template-columns:minmax(230px,250px) minmax(0,1fr)"
+        in executive_document
+        and "font-size:clamp(12pt,2.15vw,15pt)" in executive_document,
+        "executive signal labels use a reusable metadata cap and responsive wider box",
     )
     cover_reference_document = _renderer_module.cover_html({
         "meta": {
@@ -341,6 +437,40 @@ def chart_renderer():
         and source_table.count("<tr>") == 7
         and all(f"S{index}" in source_table for index in range(1, 7)),
         "source tables use one pageable body without a forced short tail",
+    )
+    canonical_sources = _renderer_module.b_table({
+        "title": "Sources",
+        "columns": ["Tag", "Evidence", "Validation", "Digest"],
+        "rows": [[
+            "S1",
+            "Fictional governed evidence (TEST)",
+            "check_alpha_beta,check_gamma_delta",
+            "sha256:" + "a" * 64,
+        ]],
+    })
+    check(
+        canonical_sources.count('data-column-weight="2"') == 1
+        and canonical_sources.count('data-column-weight="1.5"') == 1
+        and canonical_sources.count('data-column-weight="1"') == 2
+        and "check_<wbr>alpha_<wbr>beta,<wbr>check_<wbr>gamma_<wbr>delta"
+        in canonical_sources,
+        "canonical sources tables weight Evidence and Validation and expose safe check-ID wraps",
+    )
+    explicit_source_widths = _renderer_module.b_table({
+        "columns": ["Tag", "Evidence", "Validation"],
+        "widths": ["10%", "60%", "30%"],
+        "rows": [["S1", "Evidence", "check_one"]],
+    })
+    markdown_validation = "".join(_renderer_module.md_to_html(
+        "| Tag | Validation |\n"
+        "| --- | --- |\n"
+        "| S1 | check_one,check_two |"
+    ))
+    check(
+        'data-column-weight=' not in explicit_source_widths
+        and 'style="width:60%"' in explicit_source_widths
+        and "check_<wbr>one,<wbr>check_<wbr>two" in markdown_validation,
+        "authored table widths win while markdown validation IDs keep safe wrap points",
     )
     table_pagination_results = []
     for row_count in (3, 4, 5, 12, 13):
@@ -754,6 +884,65 @@ def chart_renderer():
         and grouped_html.index("Titled evidence chart (TEST)")
         < grouped_html.index("Analysis — Compact conclusion"),
         "PDF renderer consumes title-row and bounded evidence-analysis layout groups",
+    )
+    line_bars_source = {
+        "meta": {
+            "title": "Visual pair regression (TEST)",
+            "header_label": "Regression",
+            "data_as_of": "2026-10-12",
+        },
+        "sections": [{
+            "id": "visual-pair",
+            "title": "Visual pair",
+            "blocks": [
+                {
+                    "type": "line",
+                    "title": "Trend",
+                    "series": [{
+                        "name": "Portfolio",
+                        "points": [["2025-01-01", 100], ["2026-01-01", 105]],
+                    }],
+                    "height": 180,
+                },
+                {
+                    "type": "bars",
+                    "title": "Drivers",
+                    "items": [
+                        {"label": "Allocation", "value": 2},
+                        {"label": "Selection", "value": -1},
+                    ],
+                },
+            ],
+        }],
+    }
+    line_bars_prepared = prepare_report_for_render(line_bars_source)
+    line_block, bars_block = line_bars_prepared["sections"][0]["blocks"]
+    line_group_ids = {
+        group["id"]
+        for group in line_block[LAYOUT_GROUPS_FIELD]
+        if group.get("kind") == LAYOUT_GROUP_LINE_BARS
+    }
+    bars_group_ids = {
+        group["id"]
+        for group in bars_block[LAYOUT_GROUPS_FIELD]
+        if group.get("kind") == LAYOUT_GROUP_LINE_BARS
+    }
+    oversized_pair = json.loads(json.dumps(line_bars_source))
+    oversized_pair["sections"][0]["blocks"][1]["items"] = [
+        {"label": f"Driver {index}", "value": index}
+        for index in range(20)
+    ]
+    oversized_prepared = prepare_report_for_render(oversized_pair)
+    check(
+        len(line_group_ids & bars_group_ids) == 1
+        and "keep layout-line-bars"
+        in _renderer_module.body_html(line_bars_source)
+        and not any(
+            group.get("kind") == LAYOUT_GROUP_LINE_BARS
+            for block in oversized_prepared["sections"][0]["blocks"]
+            for group in block.get(LAYOUT_GROUPS_FIELD, [])
+        ),
+        "bounded adjacent line and bars stay together while oversized pairs remain splittable",
     )
     canonical_pdf = {
         "target_pages": {"min": 1, "max": 12},

@@ -22,8 +22,8 @@ apply its specific repair levers and rerun until clean.
 
 - Root `attribution_report_mode`: `standard`.
 - `meta.eyebrow` and `meta.header_label`: `Portfolio Attribution Report`.
-- `meta.title`: portfolio name, with the standard illustrative suffix when
-  required.
+- `meta.title`: portfolio name only. Put the exact illustrative label in
+  `meta.data_scope_banner` when required; never append it to the title.
 - `meta.subtitle`: `Historical and governed ex ante attribution · period to
   <date> · prepared for <audience>`.
 - `meta.signal_title`: `Attribution evidence`.

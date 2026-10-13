@@ -4,7 +4,7 @@
   "forced_breaks": [],
   "pdf": {
     "target_pages": {
-      "min": 5,
+      "min": 6,
       "max": 8
     },
     "hard_max_pages": 10,
@@ -23,7 +23,7 @@
     "brief": {
       "pdf": {
         "target_pages": {
-          "min": 5,
+          "min": 6,
           "max": 8
         },
         "hard_max_pages": 10,
@@ -44,7 +44,8 @@
           },
           "2": {
             "role": "analytical",
-            "requires_analysis": true
+            "requires_analysis": true,
+            "max_visuals": 5
           },
           "3": {
             "role": "analytical",
@@ -56,11 +57,13 @@
           },
           "5": {
             "role": "analytical",
-            "requires_analysis": true
+            "requires_analysis": true,
+            "max_visuals": 5
           },
           "6": {
             "role": "analytical",
-            "requires_analysis": true
+            "requires_analysis": true,
+            "max_visuals": 5
           },
           "7": {
             "role": "reference",

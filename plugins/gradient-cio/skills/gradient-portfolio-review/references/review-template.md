@@ -2,30 +2,61 @@
 
 ## Brief mode
 
-Use this fixed order when `review_mode` is `brief`. The soft target is 5–8
+Use this fixed order when `meta.mode` is `brief`. The soft target is 6–8
 pages and the hard ceiling is 10. Keep unavailable sections in place with a
 typed `Not available — <returned reason>` block. Use section IDs exactly as
 shown.
 
-1. `id: 1`, **Summary** — the four executive tiles followed by three to five
-   sourced `Key judgment —` callouts.
-2. `id: 2`, **Performance** — a Growth of 100 `line`, signed calendar-period
-   excess-return `bars`, and one to three sourced `Analysis —` callouts.
-3. `id: 3`, **Allocation** — a governed policy-range `band` and one to three
-   sourced `Analysis —` callouts.
-4. `id: 4`, **Look-through** — returned concentration `bars` or `heat` evidence
-   and one to three sourced `Analysis —` callouts. Preserve filing lag, scope,
-   coverage and FX caveats.
-5. `id: 5`, **Risk** — an unchanged governed `chart`, or returned `bars` or
-   `band`, and one to three sourced `Analysis —` callouts. Keep observed risk
-   separate from policy status.
-6. `id: 6`, **Outlook** — forward-context `tiles`, returned CMA `bars`, and one
-   to three sourced `Analysis —` callouts. State `Assumptions, not forecasts`.
+1. `id: executive`, `num: "1"`, **Summary** — the four executive tiles, a
+   one-line `statement` verdict strip, then three to five sourced
+   `Key judgment —` callouts. Tiles are Trailing 1Y, Since inception (ann.),
+   Excess vs policy (1Y), and Max drawdown. The Max drawdown sub-text states
+   `Since inception` and its peak/trough dates. When the policy return objective
+   is breached, one key judgment states that the comparison is target-weighted
+   expected return versus objective — a forward assumption, not realized return.
+2. `id: 2`, **Performance** — a dual-series Growth of 100 `line` (portfolio
+   versus policy benchmark), signed calendar-year excess-return `bars` for
+   2017–2025 plus YTD with partial periods flagged, a rolling 36-month excess
+   `line` with a zero reference, and one to three sourced `Analysis —` callouts.
+   Shade or annotate the returned 2022 drawdown interval on Growth of 100.
+3. `id: 3`, **Allocation** — a governed policy-range `band`, a one-bar
+   liquidity-tier `stacked` visual (T1, T2, T3, locked) with the governed
+   illiquid cap in its note, and one to three sourced `Analysis —` callouts.
+4. `id: 4`, **Look-through** — a manager × asset-class `% NAV` `heat` matrix
+   from exposure aggregates and one to three sourced `Analysis —` callouts.
+   Put the governed manager and issuer caps in the note. Preserve filing lag,
+   scope, coverage and FX caveats.
+5. `id: 5`, **Risk** — portfolio-versus-policy-benchmark drawdown `line`, rolling
+   36-month portfolio and benchmark volatility `line` with the governed policy
+   limit as a reference, and one to three sourced `Analysis —` callouts. Keep
+   observed risk separate from policy status and explicitly explain when the
+   since-inception drawdown tile and trailing policy-risk window use different
+   bases.
+6. `id: 6`, **Outlook** — forward-context `tiles`, returned CMA expected-return
+   by asset class beside policy target weights in `bars`, and a two-series
+   10Y–2Y / 10Y–3M spread `line`. If CMA is blocked, use governed
+   expected-return-versus-objective `bars` from `check_portfolio_policy`.
+   State `Assumptions, not forecasts`.
 7. `id: 7`, **Coverage** — a `coverage` block followed by a concise closing
    perspective that states the principal limitation without recommending an
    action.
 8. `id: A`, **Appendix — Sources and methods**, plus further appendices only
    when applicable.
+
+Every chart or visual block carries an `[S#]` source tag that resolves to the
+source row containing the exact returned payload digest. Plot only returned
+points; never derive a time series in the report.
+
+Fallbacks are explicit:
+
+- If calendar-year benchmark returns are unavailable, use signed
+  **Standard-period excess returns** for 3M, YTD, 1Y, 3Y, 5Y and ITD and label
+  the bars exactly that way.
+- If benchmark growth is unavailable, render the returned portfolio Growth of
+  100 line plus `Not available — benchmark series not returned`. Do not derive
+  a benchmark line.
+- If macro histories are unavailable, use a typed unavailable block in place
+  of the spread line.
 
 Every brief analytical section ends with `Analysis — <message>` callouts. Each
 uses no more than six message words and 60 words of text in this order:
@@ -42,7 +73,7 @@ python scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfol
 
 ## Comprehensive mode
 
-Use this template when `review_mode` is `comprehensive`. Keep the section titles and order exactly as shown.
+Use this template when `meta.mode` is `comprehensive`. Keep the section titles and order exactly as shown.
 The report is a monitoring document, not a decision memo. It analyzes evidence and identifies considerations;
 it does not recommend trades, allocation changes, manager actions or votes.
 
@@ -71,10 +102,9 @@ apply its specific repair levers and rerun until clean.
 
 Use JSON block mode. Set:
 
-- Root `review_mode`: `comprehensive`.
+- `meta.mode`: `comprehensive`. Do not add root `review_mode`.
 - `meta.eyebrow` and `meta.header_label`: `Comprehensive Portfolio Review`.
-- `meta.title`: portfolio name. Append
-  `— Illustrative, Gradient Maintained — demo data, not the client's holdings or managers` when required.
+- `meta.title`: portfolio name only. Never append an illustrative label.
 - `meta.subtitle`: `<Quarterly|Annual|On-demand> comprehensive review · period to <date> · prepared for <audience>`.
 - `meta.running_head`: `<short portfolio name> · period to <date>`.
 - `meta.cover_facts`: Period end, Base currency, Total NAV, Policy benchmark, Review mode

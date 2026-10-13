@@ -207,10 +207,11 @@ def contract_manifest():
     }
     minimum_probe_ids = set(minimum.get("required_probe_ids", []))
     check(
-        minimum.get("minimum_service_version") == "0.9.0"
+        contracts.get("version") == "2026-10-12"
+        and minimum.get("minimum_service_version") == "0.9.0"
         and minimum.get("compatibility_epoch") == 3
         and set(minimum.get("required_tools", [])) == expected_minimum_tools,
-        "minimum connector contract pins service, epoch, and required tools",
+        "minimum connector contract pins document version, service, epoch, and required tools",
     )
     check(
         {
@@ -551,6 +552,9 @@ def contract_manifest():
         returns_probe["args"].get("sections") == [
             "standard_periods",
             "calendar_years",
+            "cumulative_growth",
+            "drawdown_series",
+            "rolling",
             "risk_metrics",
             "benchmark_relative",
         ]
@@ -886,10 +890,21 @@ def contract_manifest():
         "Portfolio Analytics probes cover the illustrative portfolio surface",
     )
     exposure_probe = by_id["portfolio_exposure"]
+    minimum_exposure_paths = set(
+        minimum.get("required_response_field_paths", {}).get(
+            "get_portfolio_exposure",
+            [],
+        )
+    )
+    pme_readiness_paths = {
+        "exposures[0].pme_ready",
+        "exposures[0].cash_flow_coverage",
+    }
     check(
         exposure_probe["args"].get("asset_classification") == "fixed_income"
         and {
             "exposures[0].asset_classification",
+            *pme_readiness_paths,
             "exposures[0].fixed_income_metrics.weighting_basis",
             "portfolio_totals.market_value_base",
             "aggregates_by_asset_classification.scope",
@@ -900,7 +915,11 @@ def contract_manifest():
             "aggregates_by_asset_classification.rows[0].fixed_income_metrics.yield_to_maturity_decimal",
             "methodology",
         } <= set(exposure_probe.get("required", [])),
-        "portfolio-exposure probe covers aggregate scope and fixed-income paths",
+        "portfolio-exposure probe covers PME readiness, aggregate scope, and fixed-income paths",
+    )
+    check(
+        pme_readiness_paths <= minimum_exposure_paths,
+        "minimum portfolio-exposure contract requires PME readiness fields",
     )
     exposure_equals = exposure_probe.get("equals", {})
     check(
@@ -939,6 +958,9 @@ def contract_manifest():
             "display",
             "standard_periods",
             "calendar_years",
+            "cumulative_growth",
+            "drawdown_series",
+            "rolling",
             "risk_metrics",
             "benchmark_relative",
         ]
@@ -1181,16 +1203,27 @@ def contract_manifest():
     )
     pme_builder = by_id["strategy_pme_builder"]
     pme_probe = by_id["strategy_pme"]
+    pme_sensitivity_builder = by_id["strategy_pme_sensitivity_builder"]
+    pme_sensitivity_probe = by_id["strategy_pme_sensitivity"]
     pme_test_ids = {
         "portfolio_id": "10000000-0000-4000-8000-000000000001",
         "commitment_id": "60000000-0000-4000-8000-000000000001",
         "benchmark_id": "b0000000-0000-0000-0000-000000000001",
+    }
+    pme_sensitivity_test_ids = {
+        **pme_test_ids,
+        "benchmark_id": "b0000000-0000-0000-0000-000000000002",
     }
     check(
         pme_builder["tool"] == "build_strategy_lab_session"
         and pme_builder["args"] == {
             "domain": "private-markets-pme",
             **pme_test_ids,
+        }
+        and pme_sensitivity_builder["tool"] == "build_strategy_lab_session"
+        and pme_sensitivity_builder["args"] == {
+            "domain": "private-markets-pme",
+            **pme_sensitivity_test_ids,
         }
         and {
             "status",
@@ -1204,13 +1237,46 @@ def contract_manifest():
         } <= set(pme_builder.get("required", []))
         and "status" not in pme_builder.get("equals", {})
         and "strategy_lab_session" not in pme_builder.get("non_null", []),
-        "PME builder probe uses fictional IDs and accepts typed availability",
+        "PME builder probes use the strict fictional portfolio, commitment, and benchmark ID path",
+    )
+    pme_series_names = (
+        "cash_flow_series",
+        "multiples_series",
+        "pme_series",
+        "irr_series",
+    )
+    pme_series_paths = {
+        f"{series}.{field}"
+        for series in pme_series_names
+        for field in (
+            "status",
+            "date_basis",
+            "currency",
+            "method",
+            "payload_digest",
+            "points",
+        )
+    } | set(pme_series_names)
+    pme_output_paths = pme_series_paths | {
+        "benchmark_comparisons[0].benchmark_window_return",
+    }
+    minimum_pme_paths = set(
+        minimum.get("required_response_field_paths", {}).get(
+            "run_strategy_lab_private_markets_pme",
+            [],
+        )
     )
     check(
         pme_probe["tool"] == "run_strategy_lab_private_markets_pme"
         and pme_probe["depends_on"] == ["strategy_pme_builder"]
         and pme_probe["args"].get("strategy_lab_session")
         == "<strategy_pme_builder:strategy_lab_session>"
+        and pme_sensitivity_probe["tool"]
+        == "run_strategy_lab_private_markets_pme"
+        and pme_sensitivity_probe["depends_on"]
+        == ["strategy_pme_sensitivity_builder"]
+        and pme_sensitivity_probe["args"].get("strategy_lab_session")
+        == "<strategy_pme_sensitivity_builder:strategy_lab_session>"
         and {
             "ks_pme",
             "direct_alpha",
@@ -1221,8 +1287,22 @@ def contract_manifest():
             "benchmark_comparisons",
             "result_rows",
         } <= set(pme_probe.get("required", []))
+        and pme_output_paths <= set(pme_probe.get("required", []))
+        and pme_output_paths <= set(pme_sensitivity_probe.get("required", []))
+        and pme_output_paths <= minimum_pme_paths
         and "second, separate builder call" in contract_guidance,
-        "PME setup probes preserve primary and sensitivity request separation",
+        "PME setup probes require chart series metadata and benchmark-window return",
+    )
+    skill_requirements = SKILL_REQUIREMENTS.read_text(encoding="utf-8")
+    check(
+        "`pme_ready`" in skill_requirements
+        and "`cash_flow_coverage`" in skill_requirements
+        and all(f"`{field}`" in skill_requirements for field in pme_series_names)
+        and "`benchmark_window_return`" in skill_requirements
+        and "`portfolio_id`, `commitment_id`, and `benchmark_id`"
+        in skill_requirements
+        and "`demo_set_id` or `return_series_ids`" in skill_requirements,
+        "setup guidance documents strict PME inputs and output evidence",
     )
     relative_args = by_id["strategy_relative_return"]["args"]
     relative_required = set(by_id["strategy_relative_return"].get("required", []))
@@ -1296,7 +1376,6 @@ def contract_manifest():
         and "beta_alpha" not in minimum_relative_paths,
         "Strategy Lab relative-return contract requires typed series-view metadata and scoped beta/alpha",
     )
-    skill_requirements = SKILL_REQUIREMENTS.read_text(encoding="utf-8")
     check(
         "`series_views: true`" in skill_requirements
         and "`simulated_metrics.beta_alpha`" in skill_requirements
