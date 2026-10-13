@@ -281,18 +281,26 @@ def section_page_ranges(
     sections: list[dict[str, str]],
 ) -> dict[str, dict[str, Any]]:
     """Return inclusive start/end pages and pages touched for each section."""
-    starts: list[tuple[str, str, int]] = []
+    starts: list[tuple[str, str, int, int]] = []
     for section in sections:
-        page_number = next(
+        heading = next(
             (
-                index
-                for index, lines in enumerate(page_text, start=1)
-                if any(is_heading_line(line, section["title"]) for line in lines)
+                (page_number, line_number)
+                for page_number, lines in enumerate(page_text, start=1)
+                for line_number, line in enumerate(lines)
+                if is_heading_line(line, section["title"])
             ),
             None,
         )
-        if page_number is not None:
-            starts.append((section["num"], section["title"], page_number))
+        if heading is not None:
+            starts.append(
+                (
+                    section["num"],
+                    section["title"],
+                    heading[0],
+                    heading[1],
+                )
+            )
     generated_start = next(
         (
             index
@@ -309,16 +317,25 @@ def section_page_ranges(
         None,
     )
     if generated_start is not None:
-        starts.append(("_generated_chart_data", "Chart data", generated_start))
-    starts.sort(key=lambda value: value[2])
+        starts.append(("_generated_chart_data", "Chart data", generated_start, 0))
+    starts.sort(key=lambda value: (value[2], value[3]))
     ranges: dict[str, dict[str, Any]] = {}
-    for index, (number, title, start) in enumerate(starts):
-        next_start = (
-            starts[index + 1][2]
+    for index, (number, title, start, _heading_line) in enumerate(starts):
+        next_heading = (
+            starts[index + 1]
             if index + 1 < len(starts)
+            else None
+        )
+        next_start = (
+            next_heading[2]
+            if next_heading is not None
             else len(page_text) + 1
         )
-        end = max(start, next_start - 1)
+        shares_next_page = (
+            next_heading is not None
+            and next_heading[3] > 1
+        )
+        end = max(start, next_start if shares_next_page else next_start - 1)
         ranges[number] = {
             "number": number,
             "title": title,

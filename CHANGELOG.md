@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.6.0
+- Expanded portfolio attribution into a validator-enforced 7–9 page report with cumulative linked effects, monthly segment heat, active-risk attribution, return context, depth-1 drill-down and aligned historical-versus-ex-ante comparison visuals.
+- Aligned the attribution template, source appendix, reconciliation layout, manager-resolution workflow, field projections and allocation-tree limits with the live connector contract.
+- Improved report heat maps, multi-series line labels, time-axis density, y-axis bounds and shared-page section mapping.
+- Added `passed_with_warnings`, role-scoped judgment citations, explicit `not_applicable` guidance and mixed-scope handling to shared report validation.
+- Corrected regime-state reasons, demo diligence links, user-selected regime labeling and projection metadata semantics in the GradientCIO server contract.
+
 ## 5.5.0
 - Made private-markets PME collection fail fast on commitment cash-flow readiness, with canonical commitment resolution and a deterministic chat-only unavailable response.
 - Added server-traceable J-curve, PME-path, multiples and since-inception IRR series, benchmark-window sensitivity evidence and per-view payload-digest lineage.

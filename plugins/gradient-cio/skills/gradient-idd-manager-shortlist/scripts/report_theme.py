@@ -150,6 +150,7 @@ STATUS_COLOR = {
     "available": LIME,
     "used": LIME,
     "passed": LIME,
+    "passed_with_warnings": AMBER,
     "aligned": LIME,
     "degraded": AMBER,
     "advisory": AMBER,

@@ -140,9 +140,10 @@ write a branding file in the working directory (logo path relative to it) and pa
 - ISO dates; currency in $B/$M (or the report's currency) with 1–2 decimals; percentages to 1 dp; spreads in bps.
 - Absence is not evidence: an empty or unavailable result is reported as such, never as "none occurred".
 - Source-table `Validation` cells may be strings or `{chip, status}` objects.
-  Normalize chip text to `passed`, `advisory`, `degraded`, `partial`, `failed`,
-  `unavailable`, `not_run`, or `not_applicable`; the last requires a reason or
-  disclosure.
+  Normalize chip text to `passed`, `passed_with_warnings`, `advisory`,
+  `degraded`, `partial`, `failed`, `unavailable`, `not_run`, or
+  `not_applicable`; the last requires `not_applicable: <reason>`, including on
+  metadata rows.
   Payloads require their returned `sha256:` digest. Use
   `not_available:no_payload` only with a validation value that explicitly
   discloses the absent payload. Metadata responses retain

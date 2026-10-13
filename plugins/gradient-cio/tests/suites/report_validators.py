@@ -881,7 +881,7 @@ def connector_cutover():
         "`sha256:` + `provenance.reproducibility.payload_digest`"
         in writing_standards
         and "`not_available:no_payload`" in writing_standards
-        and "`passed`, `partial`, `failed`, `unavailable`, `not_run`, or"
+        and "`passed`, `passed_with_warnings`, `partial`, `failed`, `unavailable`,"
         in writing_standards
         and "no duplicate sources-appendix note is required"
         in writing_standards
@@ -1765,6 +1765,122 @@ def connector_cutover():
                 errors="replace",
             )
 
+        residual_bars = json.loads(json.dumps(attribution_fixture))
+        residual_bars["sections"][6]["blocks"][0] = {
+            "type": "bars",
+            "title": "Residual vs tolerance (bp)",
+            "items": [
+                {
+                    "label": "Historical",
+                    "value": 0.2,
+                    "tolerance": 1.0,
+                    "display": "0.2 bp",
+                    "note": "Tolerance 1.0 bp [S4]",
+                },
+                {
+                    "label": "Ex ante",
+                    "value": 0.0,
+                    "tolerance": 1.0,
+                    "display": "0.0 bp",
+                    "note": "Tolerance 1.0 bp [S5]",
+                },
+            ],
+        }
+        check(
+            run_attribution_case(
+                "attribution-residual-bars-over-threshold",
+                residual_bars,
+            ).returncode
+            == 0,
+            "attribution validator accepts residual bars above the display threshold",
+        )
+
+        unnecessary_residual_bars = json.loads(json.dumps(residual_bars))
+        unnecessary_residual_bars["sections"][6]["blocks"][0]["items"][0][
+            "value"
+        ] = 0.05
+        unnecessary_result = run_attribution_case(
+            "attribution-unnecessary-residual-bars",
+            unnecessary_residual_bars,
+        )
+        check(
+            unnecessary_result.returncode == 1
+            and "use the pass strip otherwise"
+            in (unnecessary_result.stdout + unnecessary_result.stderr),
+            "attribution validator rejects residual bars below the display threshold",
+        )
+
+        invalid_residual_strip = json.loads(json.dumps(attribution_fixture))
+        invalid_residual_strip["sections"][6]["blocks"][0]["tiles"][0][
+            "residual"
+        ] = 0.2
+        invalid_strip_result = run_attribution_case(
+            "attribution-invalid-residual-strip",
+            invalid_residual_strip,
+        )
+        check(
+            invalid_strip_result.returncode == 1
+            and "within 10% of positive tolerance"
+            in (invalid_strip_result.stdout + invalid_strip_result.stderr),
+            "attribution validator rejects pass strips above the display threshold",
+        )
+
+        def find_attribution_block(blocks, title):
+            for block in blocks:
+                if block.get("title") == title:
+                    return block
+                for side in ("left", "right"):
+                    nested = block.get(side)
+                    if isinstance(nested, list):
+                        match = find_attribution_block(nested, title)
+                        if match is not None:
+                            return match
+            return None
+
+        required_attribution_visuals = (
+            ("Historical Returns Context", "Growth of 100"),
+            ("Historical Returns Context", "Rolling 12-month excess"),
+            ("Historical Returns Context", "Drawdown"),
+            ("Historical Attribution", "Cumulative linked effects"),
+            ("Historical Attribution", "Segment × month linked total effect"),
+            ("Historical Attribution", "Contribution to tracking error"),
+            ("Historical Attribution", "Return effect share"),
+            ("Historical Attribution", "Inside Public equity"),
+            ("Governed Ex Ante Attribution", "Expected return by segment"),
+            (
+                "Historical-versus-Ex-Ante Scope and Comparison",
+                "Historical vs ex ante segment effects",
+            ),
+            (
+                "Historical-versus-Ex-Ante Scope and Comparison",
+                "Sign agreement",
+            ),
+        )
+        for case_index, (section_title, visual_title) in enumerate(
+            required_attribution_visuals
+        ):
+            missing_visual = json.loads(json.dumps(attribution_fixture))
+            visual_section = next(
+                section
+                for section in missing_visual["sections"]
+                if section["title"] == section_title
+            )
+            visual_block = find_attribution_block(
+                visual_section["blocks"],
+                visual_title,
+            )
+            if visual_block is not None:
+                visual_block["title"] = f"Missing required visual {case_index}"
+            missing_visual_result = run_attribution_case(
+                f"attribution-missing-uplift-visual-{case_index}",
+                missing_visual,
+            )
+            check(
+                visual_block is not None
+                and missing_visual_result.returncode == 1,
+                f"attribution validator requires {visual_title}",
+            )
+
         check(
             ILLUSTRATIVE_LABEL
             == (
@@ -1783,6 +1899,38 @@ def connector_cutover():
         check(
             normal_prose_result.returncode == 0,
             "ordinary illustrative prose does not trigger scope labeling",
+        )
+
+        non_illustrative_scope = json.loads(json.dumps(attribution_fixture))
+        source_table(non_illustrative_scope)["rows"][0][6] = (
+            "Live (non-Illustrative)"
+        )
+        non_illustrative_result = run_attribution_case(
+            "attribution-non-illustrative-scope",
+            non_illustrative_scope,
+        )
+        check(
+            non_illustrative_result.returncode == 0,
+            "negated illustrative wording does not trigger scope labeling",
+        )
+
+        plain_callout = json.loads(json.dumps(attribution_fixture))
+        basis_callout = next(
+            block
+            for section in plain_callout["sections"]
+            for block in section["blocks"]
+            if block.get("title") == "Basis difference"
+        )
+        basis_callout["text"] = (
+            "Historical and ex ante effects use different governed bases."
+        )
+        plain_callout_result = run_attribution_case(
+            "attribution-plain-callout",
+            plain_callout,
+        )
+        check(
+            plain_callout_result.returncode == 0,
+            "plain callouts without judgment roles do not require source tags",
         )
 
         illustrative = json.loads(json.dumps(attribution_fixture))
@@ -1888,6 +2036,20 @@ def connector_cutover():
         check(
             metadata_result.returncode == 0,
             "gradient-governed report accepts a public-tool metadata row",
+        )
+
+        passed_with_warnings = json.loads(json.dumps(attribution_fixture))
+        source_table(passed_with_warnings)["rows"][0][7] = {
+            "chip": "Passed with warnings",
+            "status": "passed_with_warnings",
+        }
+        passed_with_warnings_result = run_attribution_case(
+            "attribution-passed-with-warnings",
+            passed_with_warnings,
+        )
+        check(
+            passed_with_warnings_result.returncode == 0,
+            "source Validation accepts passed_with_warnings",
         )
 
         invalid_metadata_digest = json.loads(json.dumps(metadata_row))

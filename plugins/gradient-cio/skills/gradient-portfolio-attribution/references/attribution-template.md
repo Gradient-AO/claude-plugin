@@ -1,6 +1,6 @@
 # Portfolio Attribution Report Template
 
-Keep the titles and order exactly as shown. The soft target is 7–10 pages when evidence supports the full
+Keep the titles and order exactly as shown. The soft target is 7–9 pages when evidence supports the full
 report and the hard ceiling is 13. Missing evidence keeps its section and becomes
 `Not available — <reason>`. Before delivery run
 `python scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Portfolio Attribution Report" --budget references/layout-budget.json`;
@@ -62,7 +62,10 @@ apply its specific repair levers and rerun until clean.
 - `table` **Standard periods**: Period, Portfolio, Benchmark, Excess, Coverage.
 - Label Benchmark and Excess as policy benchmark entity values from historical
   returns; do not present them as attribution-summary values.
-- `line` **Growth of 100** using only returned points.
+- `line` **Growth of 100** using the full returned monthly portfolio and policy
+  benchmark series, with the attribution window in `x_bands`.
+- Put `line` **Rolling 12-month excess** and `line` **Drawdown** beside each
+  other in `two_col`; use only returned `rolling` and `drawdown_series` values.
 - End with one to three sourced `Analysis —` callouts; do not infer attribution
   causes from return context.
 
@@ -75,6 +78,15 @@ apply its specific repair levers and rerun until clean.
   Interaction, Total.
 - Signed `bars` **Top segment effects** and a `waterfall` **Allocation → selection
   → interaction** without recalculation.
+- `line` **Cumulative linked effects** from `periods[]`, with allocation,
+  selection, interaction and total as separate returned series.
+- `heat` **Segment × month linked total effect** from
+  `periods[].segments[].linked_total_effect`.
+- Put `bars` **Contribution to tracking error** from
+  `active_risk.segments[].contribution_share` beside `bars` **Return effect
+  share** in `two_col`; disclose the deterministic presentation-only share
+  denominator and never recalculate an effect.
+- `bars` **Inside <largest detractor>** from the depth-1 attribution rerun.
 - Put the waterfall and `kv` **Historical reconciliation and method** beside
   each other in `two_col`; include active return, total effects, residual,
   tolerance, method, linking, period, basis and currency.
@@ -95,29 +107,42 @@ apply its specific repair levers and rerun until clean.
 - `table` **Ex ante segment effects**: Segment, Portfolio weight, Benchmark
   weight, Portfolio expected return, Benchmark expected return, Allocation,
   Selection, Interaction, Total.
-- At least one polished `bars`, `waterfall` or returned `chart` visual from
-  segment totals without recalculation.
+- `bars` **Expected return by segment** pairs portfolio and benchmark expected
+  returns for every returned segment.
+- At least one additional polished `bars`, `waterfall` or returned `chart`
+  visual from segment totals without recalculation.
 - `kv` **Ex ante reconciliation and method**: expected active return, total
   effects, residual, tolerance, method, formula version, horizon, basis,
   currency, return sources, assumption set and regime.
+- Put `table` **Ex ante total effects** and `kv` **Ex ante reconciliation and
+  method** beside each other in one `two_col`, then place the segment table
+  after that layout. Do not emit three consecutive table/KV blocks.
 - End with one to three sourced `Analysis —` callouts.
 
 ### 6. Historical-versus-Ex-Ante Scope and Comparison
 
 - `callout` **Basis difference** before any comparison.
-- `table` **Directional comparison**: Segment, Historical total effect,
-  Ex ante total effect, Direction (`Same sign`, `Changed sign`, `Not
-  comparable`), Basis note.
+- `table` **Directional comparison**: Segment, Historical total effect, Ex ante
+  total effect, Direction (`Same sign`, `Changed sign`, `Not comparable`),
+  Basis note.
 - Direction may be assigned from returned signs; do not calculate effect
   differences.
-- `heat` **Segment × lane effects** with historical and ex ante values.
+- `bars` **Historical vs ex ante segment effects** with paired historical and
+  ex ante marks per segment.
+- `tiles` **Sign agreement** with one compact same-sign, changed-sign, or not
+  comparable result per segment.
 - End with one to three sourced `Analysis —` callouts on rank, sign and
   concentration. No forecast language.
 
 ### 7. Diagnostics and Limitations
 
-- Lead with signed `bars` **Residual vs tolerance (bp)**, one item per lane,
-  using returned residuals and tolerance notes without recalculation.
+- When every lane's absolute residual is at most 10% of its returned tolerance,
+  lead with `tiles` **Residual tolerance checks**, one tile per lane carrying
+  numeric `residual`, `tolerance` and `within_tolerance` fields plus the
+  displayed residual, tolerance and pass mark.
+- Otherwise lead with signed `bars` **Residual vs tolerance (bp)**, one item per
+  lane, with numeric `value` and `tolerance` in the same bp unit. Bars are not
+  permitted when every lane is at or below the 10% threshold.
 - `table` **Reconciliation diagnostics**: Lane, Coverage, Residual, Tolerance,
   Within tolerance, Warnings.
 - `bullets`: historical coverage/linking limitations, ex ante assumption and
@@ -139,10 +164,13 @@ All sections flow by default. Do not set `new_page: true` or
 `page_break: "force"`; QA controls pagination from content and the layout
 budget.
 
-### Appendix A — Sources
+### Appendix A — Sources and methods
 
-- `table`: Tag, Evidence, Tool / view, Key parameters, As of, Data scope,
-  Validation, Digest.
+- In normalized JSON use title `Appendix — Sources and methods`, `num: "A"`.
+- `table`: Tag, Evidence, Basis, Tool / view, Key parameters, As of, Data
+  scope, Validation, Digest.
+- `Validation` may use `passed_with_warnings`. Write not-applicable values as
+  `not_applicable: <reason>`, including `gradient_tool_metadata` rows.
 
 ### Appendix B — Server Metric Methods and Disclosures
 

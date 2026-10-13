@@ -5,9 +5,9 @@
   "pdf": {
     "target_pages": {
       "min": 7,
-      "max": 10
+      "max": 9
     },
-    "hard_max_pages": 13,
+    "hard_max_pages": 9,
     "minimum_body_fill": 0.4,
     "orphan_tail_max_fill": 0.2
   },
@@ -33,7 +33,7 @@
       "3": {
         "max_pages": 2,
         "max_words": 450,
-        "max_visuals": 3,
+        "max_visuals": 4,
         "role": "analytical",
         "requires_analysis": true,
         "max_body_table_rows": 20
@@ -41,7 +41,7 @@
       "4": {
         "max_pages": 3,
         "max_words": 550,
-        "max_visuals": 4,
+        "max_visuals": 7,
         "role": "analytical",
         "requires_analysis": true,
         "max_body_table_rows": 24

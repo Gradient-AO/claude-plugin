@@ -199,8 +199,79 @@ def chart_renderer():
         and "Base 100" in annual_line
         and 'fill-opacity="0.10"' in annual_line
         and "2022 drawdown" in annual_line
-        and _renderer_module._nice_y_bounds(97, 103) == (96.0, 104.0, 2.0),
+        and _renderer_module._nice_y_bounds(97, 103) == (96.0, 104.0, 1.0),
         "line charts use year ticks, nice bounds, base-100 references, and drawdown bands",
+    )
+    dense_line = _renderer_module.b_line({
+        "title": "Cumulative effects",
+        "series": [
+            {
+                "name": name,
+                "points": [
+                    ["2023-01-31", start],
+                    ["2024-01-31", start + 0.2],
+                    ["2025-01-31", start + 0.4],
+                    ["2026-01-31", start + 0.6],
+                ],
+            }
+            for name, start in (
+                ("Allocation", -2.1),
+                ("Selection", -0.5),
+                ("Interaction", 0.2),
+                ("Total", 0.5),
+            )
+        ],
+        "decimals": 1,
+    }, W=360)
+    check(
+        all(name in dense_line for name in (
+            "Allocation",
+            "Selection",
+            "Interaction",
+            "Total",
+        ))
+        and dense_line.count("Jan ") <= 3
+        and _renderer_module._nice_y_bounds(-2.1, 1.1)
+        == (-2.5, 1.5, 0.5),
+        "multi-series lines use a legend, collision-thinned ticks, and tight bounds",
+    )
+    aligned_heat = _renderer_module.b_heat({
+        "title": "Segment effects",
+        "columns": ["Historical", "Ex ante"],
+        "rows": [
+            {"label": "Public equity", "values": [0.14, -0.01]},
+            {"label": "Cash", "values": [-0.001, 0.04]},
+        ],
+        "decimals": 1,
+    })
+    check(
+        "<th></th><th>Historical</th><th>Ex ante</th>" in aligned_heat
+        and f"background:{_renderer_module.WASH}" in aligned_heat
+        and ">0.1</td>" in aligned_heat
+        and ">0.0</td>" in aligned_heat
+        and "-0.0" not in aligned_heat,
+        "heat maps align headers, style row labels, honor decimals, and suppress negative zero",
+    )
+    shared_page_ranges = _check_layout_module.section_page_ranges(
+        [
+            ["Portfolio Attribution Report"],
+            ["Running header", "04 Historical Attribution", "Historical totals"],
+            [
+                "Running header",
+                "Historical segment table",
+                "05 Governed Ex Ante Attribution",
+                "Ex ante totals",
+            ],
+        ],
+        [
+            {"num": "4", "title": "Historical Attribution"},
+            {"num": "5", "title": "Governed Ex Ante Attribution"},
+        ],
+    )
+    check(
+        shared_page_ranges["4"]["end_page"] == 3
+        and shared_page_ranges["5"]["start_page"] == 3,
+        "section page ranges count shared transition pages for both sections",
     )
     signed_bars = _renderer_module.b_chart({"chart": {
         "chart_id": "signed-bars-test",
@@ -1530,12 +1601,12 @@ def chart_renderer():
         "$" in cashflow_line
         and "M" in cashflow_line
         and "005437.4" not in cashflow_line
-        and len(label_positions) == 4
+        and label_positions == []
         and all(
-            right - left >= 10.9
-            for left, right in zip(label_positions, label_positions[1:])
+            label in cashflow_line
+            for label in ("Capital calls", "Distributions", "NAV", "Unfunded")
         ),
-        "cash-flow axes use compact currency labels and series end labels do not overlap",
+        "cash-flow axes use compact currency labels and multi-series legends",
     )
     pptx_path = ROOT / "shared" / "gradient_pptx.py"
     pptx_spec = importlib.util.spec_from_file_location(

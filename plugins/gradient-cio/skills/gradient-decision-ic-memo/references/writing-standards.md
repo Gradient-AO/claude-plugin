@@ -64,9 +64,10 @@ availability or presentation rules.
 - A `gradient_tool` row names only tools in the packaged public catalog.
   `Validation` may be a string or a renderer chip object
   `{"chip": "<value>", "status": "<status>"}`. Its normalized value must be
-  `passed`, `partial`, `failed`, `unavailable`, `not_run`, or
-  `not_applicable`. `not_applicable` requires an explicit reason or disclosure
-  and is not a silent success state.
+  `passed`, `passed_with_warnings`, `partial`, `failed`, `unavailable`,
+  `not_run`, or `not_applicable`. `not_applicable` requires an explicit
+  `not_applicable: <reason>` disclosure, including for
+  `gradient_tool_metadata` rows, and is not a silent success state.
 - When a response payload exists, set `Digest` to the exact concatenation
   `sha256:` + `provenance.reproducibility.payload_digest`; do not hash or
   derive a replacement locally. Use the exact sentinel

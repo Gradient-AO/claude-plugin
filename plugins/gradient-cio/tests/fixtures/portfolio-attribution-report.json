@@ -263,70 +263,109 @@
       "kicker": "Observed performance provides context, not causal attribution",
       "blocks": [
         {
-          "type": "chart",
-          "chart": {
-            "chart_id": "test-attribution-growth-context",
-            "title": "Growth of 100 (TEST)",
-            "status": "ok",
-            "currency": "USD",
-            "columns": [
-              {
-                "key": "date",
-                "title": "Date",
-                "format": "date",
-                "decimals": null
-              },
-              {
-                "key": "portfolio",
-                "title": "Portfolio",
-                "format": "number",
-                "decimals": 1
-              },
-              {
-                "key": "benchmark",
-                "title": "Benchmark",
-                "format": "number",
-                "decimals": 1
-              }
-            ],
-            "rows": [
-              [
-                "2025-07-31",
-                100.0,
-                100.0
-              ],
-              [
-                "2025-10-31",
-                102.4,
-                102.7
-              ],
-              [
-                "2026-01-31",
-                104.6,
-                105.0
-              ],
-              [
-                "2026-04-30",
-                106.3,
-                106.8
-              ],
-              [
-                "2026-06-30",
-                108.4,
-                109.0
+          "type": "line",
+          "title": "Growth of 100",
+          "series": [
+            {
+              "name": "Portfolio",
+              "points": [
+                ["2025-07-31", 100.0],
+                ["2025-08-31", 100.8],
+                ["2025-09-30", 101.5],
+                ["2025-10-31", 102.4],
+                ["2025-11-30", 103.2],
+                ["2025-12-31", 103.8],
+                ["2026-01-31", 104.6],
+                ["2026-02-28", 105.1],
+                ["2026-03-31", 105.7],
+                ["2026-04-30", 106.3],
+                ["2026-05-31", 107.1],
+                ["2026-06-30", 108.4]
               ]
-            ],
-            "truncated": false,
-            "render_hint": {
-              "block": "line",
-              "x": "date",
-              "y": [
-                "portfolio",
-                "benchmark"
+            },
+            {
+              "name": "Policy benchmark",
+              "points": [
+                ["2025-07-31", 100.0],
+                ["2025-08-31", 100.9],
+                ["2025-09-30", 101.7],
+                ["2025-10-31", 102.7],
+                ["2025-11-30", 103.5],
+                ["2025-12-31", 104.1],
+                ["2026-01-31", 105.0],
+                ["2026-02-28", 105.5],
+                ["2026-03-31", 106.1],
+                ["2026-04-30", 106.8],
+                ["2026-05-31", 107.7],
+                ["2026-06-30", 109.0]
               ]
             }
-          },
-          "source": "[S1]"
+          ],
+          "x_bands": [
+            {
+              "start": "2025-07-31",
+              "end": "2026-06-30",
+              "label": "Attribution window"
+            }
+          ],
+          "decimals": 1,
+          "note": "Full returned monthly series on the policy-benchmark entity basis [S3]."
+        },
+        {
+          "type": "two_col",
+          "left": [
+            {
+              "type": "line",
+              "title": "Rolling 12-month excess",
+              "series": [
+                {
+                  "name": "Excess",
+                  "points": [
+                    ["2026-01-31", -0.2],
+                    ["2026-02-28", -0.3],
+                    ["2026-03-31", -0.3],
+                    ["2026-04-30", -0.4],
+                    ["2026-05-31", -0.5],
+                    ["2026-06-30", -0.6]
+                  ]
+                }
+              ],
+              "y_suffix": "pp",
+              "decimals": 1,
+              "note": "Returned rolling 12-month arithmetic excess [S3]."
+            }
+          ],
+          "right": [
+            {
+              "type": "line",
+              "title": "Drawdown",
+              "series": [
+                {
+                  "name": "Portfolio",
+                  "points": [
+                    ["2025-07-31", 0.0],
+                    ["2025-10-31", -0.8],
+                    ["2026-01-31", -1.2],
+                    ["2026-04-30", -0.4],
+                    ["2026-06-30", 0.0]
+                  ]
+                },
+                {
+                  "name": "Policy benchmark",
+                  "points": [
+                    ["2025-07-31", 0.0],
+                    ["2025-10-31", -0.6],
+                    ["2026-01-31", -0.9],
+                    ["2026-04-30", -0.3],
+                    ["2026-06-30", 0.0]
+                  ]
+                }
+              ],
+              "y_suffix": "%",
+              "decimals": 1,
+              "note": "Returned drawdown series [S3]."
+            }
+          ]
         },
         {
           "type": "table",
@@ -518,6 +557,108 @@
           "source": "[S1]"
         },
         {
+          "type": "line",
+          "title": "Cumulative linked effects",
+          "series": [
+            {
+              "name": "Allocation",
+              "points": [
+                ["2025-07-31", 0.0],
+                ["2026-01-31", 0.1],
+                ["2026-05-31", 0.1],
+                ["2026-06-30", 0.1]
+              ]
+            },
+            {
+              "name": "Selection",
+              "points": [
+                ["2025-07-31", -0.1],
+                ["2026-01-31", -0.3],
+                ["2026-05-31", -0.6],
+                ["2026-06-30", -0.8]
+              ]
+            },
+            {
+              "name": "Interaction",
+              "points": [
+                ["2025-07-31", 0.0],
+                ["2026-01-31", 0.0],
+                ["2026-05-31", 0.1],
+                ["2026-06-30", 0.1]
+              ]
+            },
+            {
+              "name": "Total",
+              "points": [
+                ["2025-07-31", -0.1],
+                ["2026-01-31", -0.2],
+                ["2026-05-31", -0.4],
+                ["2026-06-30", -0.6]
+              ]
+            }
+          ],
+          "y_suffix": "pp",
+          "decimals": 1,
+          "note": "Returned cumulative symmetric-Carino linked effects [S4]."
+        },
+        {
+          "type": "heat",
+          "title": "Segment × month linked total effect",
+          "columns": ["Jul 2025", "Jan 2026", "May 2026", "Jun 2026"],
+          "rows": [
+            {
+              "label": "Public equity",
+              "values": [-0.1, -0.2, -0.2, -0.1]
+            },
+            {
+              "label": "Fixed income",
+              "values": [0.0, 0.1, 0.1, 0.1]
+            },
+            {
+              "label": "Private assets",
+              "values": [0.0, -0.1, -0.3, 0.0]
+            }
+          ],
+          "decimals": 1,
+          "note": "Returned monthly linked total effects by segment [S4]."
+        },
+        {
+          "type": "two_col",
+          "left": [
+            {
+              "type": "bars",
+              "title": "Contribution to tracking error",
+              "items": [
+                {"label": "Public equity", "value": 26.0, "display": "26%"},
+                {"label": "Fixed income", "value": 30.0, "display": "30%"},
+                {"label": "Private assets", "value": 44.0, "display": "44%"}
+              ],
+              "note": "Returned active-risk contribution shares [S4]."
+            }
+          ],
+          "right": [
+            {
+              "type": "bars",
+              "title": "Return effect share",
+              "items": [
+                {"label": "Public equity", "value": -50.0, "display": "-50%"},
+                {"label": "Fixed income", "value": 25.0, "display": "+25%"},
+                {"label": "Private assets", "value": -25.0, "display": "-25%"}
+              ],
+              "note": "Returned total effect divided by the sum of absolute returned segment effects [S4]."
+            }
+          ]
+        },
+        {
+          "type": "bars",
+          "title": "Inside Public equity",
+          "items": [
+            {"label": "US equity", "value": -0.4, "display": "-0.4pp"},
+            {"label": "International equity", "value": -0.2, "display": "-0.2pp"}
+          ],
+          "note": "Depth-1 attribution rerun for the largest root detractor [S4]."
+        },
+        {
           "type": "table",
           "title": "Historical total effects",
           "columns": [
@@ -654,45 +795,79 @@
           "source": "[S1]"
         },
         {
+          "type": "bars",
+          "title": "Expected return by segment",
+          "items": [
+            {"label": "Public equity · Portfolio", "value": 7.8, "display": "7.8%"},
+            {"label": "Public equity · Benchmark", "value": 7.5, "display": "7.5%"},
+            {"label": "Fixed income · Portfolio", "value": 4.8, "display": "4.8%"},
+            {"label": "Fixed income · Benchmark", "value": 4.1, "display": "4.1%"},
+            {"label": "Private assets · Portfolio", "value": 8.0, "display": "8.0%"},
+            {"label": "Private assets · Benchmark", "value": 9.3, "display": "9.3%"}
+          ],
+          "note": "Returned portfolio and policy-benchmark expected returns [S5]."
+        },
+        {
           "type": "callout",
           "tone": "warning",
           "title": "Assumptions, not forecasts",
           "text": "The one-year expected returns and resulting effects are assumptions, not forecasts or guarantees [S5]."
         },
         {
-          "type": "table",
-          "title": "Ex ante total effects",
-          "columns": [
-            "Effect",
-            "Contribution",
-            "Source"
+          "type": "two_col",
+          "left": [
+            {
+              "type": "table",
+              "title": "Ex ante total effects",
+              "columns": [
+                "Effect",
+                "Contribution",
+                "Source"
+              ],
+              "align": [
+                "l",
+                "r",
+                "n"
+              ],
+              "rows": [
+                [
+                  "Allocation",
+                  "+0.1pp",
+                  "[S5]"
+                ],
+                [
+                  "Selection",
+                  "+0.2pp",
+                  "[S5]"
+                ],
+                [
+                  "Interaction",
+                  "+0.1pp",
+                  "[S5]"
+                ],
+                [
+                  "Total attribution",
+                  "+0.4pp",
+                  "[S5]"
+                ]
+              ]
+            }
           ],
-          "align": [
-            "l",
-            "r",
-            "n"
-          ],
-          "rows": [
-            [
-              "Allocation",
-              "+0.1pp",
-              "[S5]"
-            ],
-            [
-              "Selection",
-              "+0.2pp",
-              "[S5]"
-            ],
-            [
-              "Interaction",
-              "+0.1pp",
-              "[S5]"
-            ],
-            [
-              "Total attribution",
-              "+0.4pp",
-              "[S5]"
-            ]
+          "right": [
+            {
+              "type": "kv",
+              "title": "Ex ante reconciliation and method",
+              "rows": [
+                ["Expected active return", "+0.4pp", "S5"],
+                ["Total effects", "+0.4pp", "S5"],
+                ["Residual", "0.0bp", "S5"],
+                ["Method / version", "Expected Brinson-Fachler / 1.0.0", "S5"],
+                ["Horizon / linking", "One year / none", "S5"],
+                ["Return sources", "Allocation and benchmark expected return base", "S5"],
+                ["Assumption set / regime", "Not linked / Not linked", "S5"],
+                ["Currency", "USD", "S5"]
+              ]
+            }
           ]
         },
         {
@@ -759,58 +934,6 @@
         },
         {
           "type": "callout",
-          "tone": "info",
-          "title": "Reconciliation basis",
-          "text": "The reconciliation below preserves the returned expected-active-return, residual, method, horizon, source, and currency fields [S5]."
-        },
-        {
-          "type": "kv",
-          "title": "Ex ante reconciliation and method",
-          "rows": [
-            [
-              "Expected active return",
-              "+0.4pp",
-              "S5"
-            ],
-            [
-              "Total effects",
-              "+0.4pp",
-              "S5"
-            ],
-            [
-              "Residual",
-              "0.0bp",
-              "S5"
-            ],
-            [
-              "Method / version",
-              "Expected Brinson-Fachler / 1.0.0",
-              "S5"
-            ],
-            [
-              "Horizon / linking",
-              "One year / none",
-              "S5"
-            ],
-            [
-              "Return sources",
-              "Allocation and benchmark expected return base",
-              "S5"
-            ],
-            [
-              "Assumption set / regime",
-              "Not linked / Not linked",
-              "S5"
-            ],
-            [
-              "Currency",
-              "USD",
-              "S5"
-            ]
-          ]
-        },
-        {
-          "type": "callout",
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Assumption lineage remains incomplete",
@@ -823,38 +946,41 @@
       "kicker": "Directional comparison with explicit basis separation",
       "blocks": [
         {
-          "type": "heat",
-          "title": "Segment effects by attribution lane",
-          "columns": [
-            "Historical",
-            "Ex ante"
+          "type": "bars",
+          "title": "Historical vs ex ante segment effects",
+          "items": [
+            {"label": "Public equity · Historical", "value": -0.6, "display": "-0.6pp"},
+            {"label": "Public equity · Ex ante", "value": 0.3, "display": "+0.3pp"},
+            {"label": "Fixed income · Historical", "value": 0.3, "display": "+0.3pp"},
+            {"label": "Fixed income · Ex ante", "value": 0.3, "display": "+0.3pp"},
+            {"label": "Private assets · Historical", "value": -0.3, "display": "-0.3pp"},
+            {"label": "Private assets · Ex ante", "value": -0.2, "display": "-0.2pp"}
           ],
-          "rows": [
+          "note": "Paired returned effects; lanes retain different bases [S4][S5]."
+        },
+        {
+          "type": "tiles",
+          "title": "Sign agreement",
+          "tiles": [
             {
               "label": "Public equity",
-              "values": [
-                -0.6,
-                0.3
-              ]
+              "value": "Changed sign",
+              "sub": "Historical − · ex ante + [S4][S5]",
+              "tone": "watch"
             },
             {
               "label": "Fixed income",
-              "values": [
-                0.3,
-                0.3
-              ]
+              "value": "Same sign",
+              "sub": "Historical + · ex ante + [S4][S5]",
+              "tone": "good"
             },
             {
               "label": "Private assets",
-              "values": [
-                -0.3,
-                -0.2
-              ]
+              "value": "Same sign",
+              "sub": "Historical − · ex ante − [S4][S5]",
+              "tone": "good"
             }
-          ],
-          "format": "percentage points",
-          "decimals": 1,
-          "note": "Returned effects; lanes use different bases [S4][S5]."
+          ]
         },
         {
           "type": "callout",
@@ -926,21 +1052,26 @@
       "kicker": "Reconciliation, coverage and model boundaries",
       "blocks": [
         {
-          "type": "bars",
-          "title": "Residual vs tolerance (bp)",
-          "all_accent": false,
-          "items": [
+          "type": "tiles",
+          "title": "Residual tolerance checks",
+          "tiles": [
             {
               "label": "Historical",
-              "value": 0.0,
-              "display": "0.0 bp",
-              "note": "Tolerance 0.000001 bp [S4]"
+              "value": "0.0 bp",
+              "sub": "Tolerance 0.000001 bp · ✓ [S4]",
+              "tone": "good",
+              "residual": 0.0,
+              "tolerance": 0.000001,
+              "within_tolerance": true
             },
             {
               "label": "Ex ante",
-              "value": 0.0,
-              "display": "0.0 bp",
-              "note": "Tolerance 0.000001 bp [S5]"
+              "value": "0.0 bp",
+              "sub": "Tolerance 0.000001 bp · ✓ [S5]",
+              "tone": "good",
+              "residual": 0.0,
+              "tolerance": 0.000001,
+              "within_tolerance": true
             }
           ]
         },
@@ -1191,6 +1322,41 @@
               "Single-period expected Brinson-Fachler",
               "1.0.0",
               "Annualized expected return; decimal fraction; 1e-10 [S5]"
+            ],
+            [
+              "Historical returns",
+              "Growth, rolling excess, drawdown",
+              "Server-returned indexed growth, rolling-window excess and peak-to-trough drawdown",
+              "governed-historical-returns-v1",
+              "Monthly observations; index / percentage / percentage [S3]"
+            ],
+            [
+              "Historical active risk",
+              "Tracking-error contribution",
+              "Server-returned segment contribution to total active risk",
+              "governed-portfolio-attribution-v1",
+              "Annualized tracking error; contribution share [S4]"
+            ],
+            [
+              "Historical periods",
+              "Cumulative and segment-month linked effects",
+              "Server-returned symmetric-Carino effects from periods and period segments",
+              "governed-portfolio-attribution-v1",
+              "Monthly and cumulative percentage-point effects [S4]"
+            ],
+            [
+              "Ex ante assumptions",
+              "Portfolio and benchmark expected return by segment",
+              "Server-returned expected returns applied to actual and policy segment weights",
+              "1.0.0",
+              "Annualized expected return; percentage [S5]"
+            ],
+            [
+              "Comparison",
+              "Segment effect pairing and sign agreement",
+              "Direct presentation of server-returned historical and ex ante segment effects",
+              "report-contract-v1",
+              "Percentage-point effects; no cross-lane rebasing [S4][S5]"
             ]
           ]
         },
