@@ -52,6 +52,41 @@ PROHIBITED_ANALYSIS_PATTERNS = (
     + NEUTRAL_APPROVAL_ALLOCATION_PATTERNS
 )
 
+
+def _typed_unavailable_scopes(section: dict[str, JsonValue]) -> set[str]:
+    """Return only explicit visual/section scopes on typed-unavailable blocks."""
+    scopes: set[str] = set()
+    for block in block_objects(section):
+        if "unavailable_for" not in block:
+            continue
+        if not has_typed_unavailable({"blocks": [block]}):
+            continue
+        value = block.get("unavailable_for")
+        values = value if isinstance(value, list) else [value]
+        scopes.update(item for item in values if isinstance(item, str))
+    return scopes
+
+
+def _unavailable_for(section: dict[str, JsonValue], visual_title: str) -> bool:
+    """Allow only an exact title or an explicit whole-section scope."""
+    scopes = _typed_unavailable_scopes(section)
+    return visual_title in scopes or bool(scopes.intersection({"section", "all"}))
+
+
+def _direct_block_index(
+    section: dict[str, JsonValue],
+    title: str,
+) -> int | None:
+    """Find a titled direct block without flattening layout containers."""
+    blocks = section.get("blocks")
+    if not isinstance(blocks, list):
+        return None
+    for index, block in enumerate(blocks):
+        if isinstance(block, dict) and block.get("title") == title:
+            return index
+    return None
+
+
 SPEC = ReportSpec(
     name="portfolio attribution report",
     section_rules=tuple(
@@ -168,7 +203,7 @@ SPEC = ReportSpec(
         "Historical active return",
         "Largest historical effect",
         "Ex ante active return",
-        "Ex ante residual",
+        "Largest sub-allocation effect",
     ),
     require_tile_sources=True,
     allowed_tones=ATTRIBUTION_VOCAB.allowed_tones,
@@ -204,6 +239,22 @@ def validate(document: JsonValue) -> list[str]:
             errors.append(
                 f"{section.get('title', 'Untitled section')} has an unapproved forced page break"
             )
+        for block in block_objects(section):
+            typed_block = (
+                block.get("type") == "unavailable"
+                or block.get("role") == "unavailable"
+                or str(block.get("title", "")).casefold().startswith(
+                    "not available"
+                )
+            )
+            if typed_block and not _typed_unavailable_scopes(
+                {"blocks": [block]}
+            ):
+                errors.append(
+                    f"{section.get('title', 'Untitled section')} typed "
+                    "unavailability requires unavailable_for with an exact "
+                    "visual title, 'section', or 'all'"
+                )
 
     historical = by_title.get("Historical Attribution")
     if historical is not None and not block_objects(historical):
@@ -237,7 +288,7 @@ def validate(document: JsonValue) -> list[str]:
     }
     for section_title, visual_contracts in required_visuals.items():
         section = by_title.get(section_title)
-        if section is None or has_typed_unavailable(section):
+        if section is None:
             continue
         section_blocks = block_objects(section)
         for block_type, block_title in visual_contracts:
@@ -245,20 +296,135 @@ def validate(document: JsonValue) -> list[str]:
                 block.get("type") == block_type
                 and block.get("title") == block_title
                 for block in section_blocks
-            ):
+            ) and not _unavailable_for(section, block_title):
                 errors.append(
                     f"{section_title} requires {block_type} titled "
                     f"'{block_title}'"
                 )
-    if historical is not None and not has_typed_unavailable(historical):
-        if not any(
-            block.get("type") == "bars"
-            and str(block.get("title", "")).startswith("Inside ")
-            for block in block_objects(historical)
+
+    returns_context = by_title.get("Historical Returns Context")
+    if returns_context is not None:
+        for title in ("Growth of 100", "Rolling 12-month excess", "Drawdown"):
+            if _unavailable_for(returns_context, title):
+                continue
+            index = _direct_block_index(returns_context, title)
+            if index is None:
+                errors.append(
+                    f"Historical Returns Context requires full-width line titled '{title}'"
+                )
+        rolling_index = _direct_block_index(
+            returns_context, "Rolling 12-month excess"
+        )
+        drawdown_index = _direct_block_index(returns_context, "Drawdown")
+        if (
+            rolling_index is not None
+            and drawdown_index is not None
+            and drawdown_index != rolling_index + 1
         ):
             errors.append(
-                "Historical Attribution requires depth-1 bars titled "
-                "'Inside <largest detractor>'"
+                "Historical Returns Context must stack Rolling 12-month excess "
+                "immediately before Drawdown"
+            )
+
+    if historical is not None:
+        historical_blocks = block_objects(historical)
+        if any(
+            block.get("type") == "bars"
+            and block.get("title") == "Top segment effects"
+            for block in historical_blocks
+        ):
+            errors.append("Historical Attribution must not include Top segment effects bars")
+        depth_lines = [
+            block
+            for block in historical_blocks
+            if block.get("type") == "line"
+            and str(block.get("title", "")).startswith(
+                "Cumulative selection inside "
+            )
+        ]
+        if not depth_lines and not any(
+            str(scope).startswith("Cumulative selection inside ")
+            for scope in _typed_unavailable_scopes(historical)
+        ) and not _typed_unavailable_scopes(historical).intersection(
+            {"section", "all"}
+        ):
+            errors.append(
+                "Historical Attribution requires a depth-1 line titled "
+                "'Cumulative selection inside <largest sub-detractor>'"
+            )
+        heat_index = _direct_block_index(
+            historical, "Segment × month linked total effect"
+        )
+        segment_table_index = _direct_block_index(
+            historical, "Historical segment effects"
+        )
+        if (
+            heat_index is not None
+            and segment_table_index is not None
+            and heat_index >= segment_table_index
+        ):
+            errors.append(
+                "Historical Attribution must place segment heat before segment tables"
+            )
+
+    if ex_ante is not None and not _unavailable_for(
+        ex_ante, "Expected return by segment"
+    ):
+        expected_return = next(
+            (
+                block
+                for block in block_objects(ex_ante)
+                if block.get("type") == "bars"
+                and block.get("title") == "Expected return by segment"
+            ),
+            None,
+        )
+        paired_ok = False
+        if expected_return is not None:
+            mark = str(expected_return.get("mark", "")).casefold()
+            series = expected_return.get("series")
+            items = expected_return.get("items")
+            paired_ok = (
+                mark in {"dots", "paired-dot", "paired_dot"}
+                and isinstance(series, list)
+                and [entry.get("name") for entry in series if isinstance(entry, dict)]
+                == ["Portfolio", "Policy benchmark"]
+                and isinstance(items, list)
+                and bool(items)
+                and all(
+                    isinstance(item, dict)
+                    and isinstance(item.get("values"), list)
+                    and len(item["values"]) == 2
+                    for item in items
+                )
+            )
+        if not paired_ok:
+            errors.append(
+                "Expected return by segment must use paired-dot bars with "
+                "Portfolio and Policy benchmark series"
+            )
+
+    comparison = by_title.get(
+        "Historical-versus-Ex-Ante Scope and Comparison"
+    )
+    if comparison is not None:
+        basis_index = _direct_block_index(comparison, "Basis difference")
+        comparison_indices = [
+            index
+            for title in (
+                "Historical vs ex ante segment effects",
+                "Sign agreement",
+                "Directional comparison",
+            )
+            if (index := _direct_block_index(comparison, title)) is not None
+        ]
+        if (
+            comparison_indices
+            and (basis_index is None or basis_index >= min(comparison_indices))
+        ):
+            errors.append(
+                "Historical-versus-Ex-Ante Scope and Comparison must place "
+                "Basis difference before comparison evidence"
             )
 
     diagnostics = by_title.get("Diagnostics and Limitations")
@@ -350,6 +516,19 @@ def validate(document: JsonValue) -> list[str]:
                     "Residual bars require at least one lane over 10% of "
                     "its tolerance; use the pass strip otherwise"
                 )
+
+    for section in sections:
+        if section.get("title") == "Diagnostics and Limitations":
+            continue
+        if re.search(
+            r"\bresidual\b",
+            "\n".join(collect_strings(section)),
+            re.IGNORECASE,
+        ):
+            errors.append(
+                f"{section.get('title', 'Untitled section')} must keep "
+                "residual evidence in Diagnostics and Limitations only"
+            )
 
     all_text = "\n".join(collect_strings(root))
     for pattern in PROHIBITED_REPORT_PATTERNS:

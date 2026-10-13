@@ -1,5 +1,13 @@
 # Changelog
 
+## 5.7.0
+- Tightened the single-portfolio attribution contract around an 11-page hard ceiling, scoped visual unavailability, paired-dot expected returns, full-width return context, depth-1 cumulative selection and diagnostics-only residuals.
+- Added safe direct-series imports for saved JSON tool responses and a plugin-version preflight that blocks only when a newer duplicate install exists.
+- Redesigned shared PDF and PowerPoint covers with cleaner hierarchy, four-fact layouts, plain-language assessment labels and compact illustrative disclosures.
+- Rewrote every shipped report example as a polished Investment Committee, investor or diligence deliverable using realistic illustrative subjects instead of test and renderer jargon.
+- Kept setup as a distinct operational readiness report while moving connector versions, probes and contract-check detail off the cover.
+- Added full public-sample disclosure to sources appendices, synchronized the internal GIPS renderer and added regression checks for cover copy, disclosure and cross-format parity.
+
 ## 5.6.0
 - Expanded portfolio attribution into a validator-enforced 7–9 page report with cumulative linked effects, monthly segment heat, active-risk attribution, return context, depth-1 drill-down and aligned historical-versus-ex-ante comparison visuals.
 - Aligned the attribution template, source appendix, reconciliation layout, manager-resolution workflow, field projections and allocation-tree limits with the live connector contract.

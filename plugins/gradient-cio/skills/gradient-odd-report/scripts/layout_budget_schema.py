@@ -259,8 +259,35 @@ def _section_identifiers(section: dict[str, Any], index: int) -> set[str]:
         re.IGNORECASE,
     )
     if appendix is not None:
-        resolved.add((appendix.group(1) or "A").upper())
+        explicit_letter = appendix.group(1)
+        section_number = str(section.get("num", "")).strip().upper()
+        if explicit_letter:
+            resolved.add(explicit_letter.upper())
+        elif not re.fullmatch(r"[A-Z]", section_number):
+            resolved.add("A")
     return resolved
+
+
+def _resolve_section_matches(
+    sections: list[Any],
+    identifier: object,
+) -> list[dict[str, Any]]:
+    """Prefer authored identifiers, then fall back to one-based position."""
+    normalized = str(identifier).strip().lstrip("0") or "0"
+    explicit = [
+        section
+        for index, section in enumerate(sections, start=1)
+        if isinstance(section, dict)
+        and normalized in _section_identifiers(section, index)
+    ]
+    if explicit:
+        return explicit
+    return [
+        section
+        for index, section in enumerate(sections, start=1)
+        if isinstance(section, dict)
+        and normalized == str(index)
+    ]
 
 
 def _report_sections(report: dict[str, Any]) -> list[Any]:
@@ -278,15 +305,9 @@ def _validate_resolution(
     sections = budget.get("content", {}).get("sections", {})
     if not isinstance(sections, dict):
         return
-    resolved: dict[str, list[dict[str, Any]]] = {}
-    for index, section in enumerate(_report_sections(report), start=1):
-        if not isinstance(section, dict):
-            continue
-        for identifier in _section_identifiers(section, index):
-            resolved.setdefault(identifier, []).append(section)
+    report_sections = _report_sections(report)
     for configured in sections:
-        normalized = configured.lstrip("0") or "0"
-        matches = resolved.get(normalized, [])
+        matches = _resolve_section_matches(report_sections, configured)
         if len(matches) != 1:
             errors.append(
                 f"configured section {configured!r} resolves {len(matches)} "
@@ -295,8 +316,7 @@ def _validate_resolution(
     for configured in budget.get("forced_breaks", []):
         if not isinstance(configured, str):
             continue
-        normalized = configured.lstrip("0") or "0"
-        matches = resolved.get(normalized, [])
+        matches = _resolve_section_matches(report_sections, configured)
         if len(matches) != 1:
             errors.append(
                 f"forced break {configured!r} resolves {len(matches)} "

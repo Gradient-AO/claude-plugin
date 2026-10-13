@@ -14,7 +14,7 @@
       ]}],
       "after": [
         {"type": "callout", "role": "key_judgment", "tone": "good", "title": "Key judgment — return history is present", "text": "The report presents annual gross, net and benchmark returns for the required periods [S1]. This three-series history supports performance comparison, while completeness still depends on the accompanying disclosures, calculation basis and any period-specific qualifications in the reviewed report."},
-        {"type": "callout", "role": "key_judgment", "tone": "good", "title": "Key judgment — composite identity is clear", "text": "The disclosure schedule identifies the fictional composite and its mandate [S2]. That pairing anchors the presented results to a named strategy, although identity alone does not resolve whether every account assignment and historical definition remained consistent."},
+      {"type": "callout", "role": "key_judgment", "tone": "good", "title": "Key judgment — composite identity is clear", "text": "The disclosure schedule identifies the illustrative composite and its mandate [S2]. That pairing anchors the presented results to a named strategy, although identity alone does not resolve whether every account assignment and historical definition remained consistent."},
         {"type": "callout", "role": "key_judgment", "tone": "bad", "title": "Key judgment — event timing is absent", "text": "The report names one significant event without the effective date needed to place it in the record [S1]. Readers therefore cannot align the event with reported returns, and dated evidence is required before assessing its period-specific relevance."},
         {"type": "callout", "role": "key_judgment", "tone": "watch", "title": "Key judgment — fee text is incomplete", "text": "The disclosure schedule does not clearly state whether a performance fee applies [S2]. That omission limits net-return interpretation because readers cannot determine whether the reported result reflects every applicable fee or compare the basis consistently."}
       ]
@@ -46,7 +46,7 @@
         {"label": "Composite description", "values": [1, 0]},
         {"label": "Fee disclosure", "values": [0, 1]},
         {"label": "Significant events", "values": [0, 1]}
-      ], "decimals": 0, "note": "Preparer-facing status from the fictional report and schedule [S1][S2]."}],
+    ], "decimals": 0, "note": "Preparer-facing status from the illustrative report and schedule [S1][S2]."}],
       "after": []
     },
     "4. Follow-up Requests": {

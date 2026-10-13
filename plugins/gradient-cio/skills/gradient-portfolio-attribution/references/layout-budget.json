@@ -7,7 +7,7 @@
       "min": 7,
       "max": 9
     },
-    "hard_max_pages": 9,
+    "hard_max_pages": 11,
     "minimum_body_fill": 0.4,
     "orphan_tail_max_fill": 0.2
   },

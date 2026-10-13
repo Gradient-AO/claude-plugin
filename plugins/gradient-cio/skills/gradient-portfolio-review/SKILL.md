@@ -2,7 +2,7 @@
 name: gradient-portfolio-review
 description: "Create a portfolio monitoring review for a board or committee. Triggers: 'review our total portfolio', 'prepare a quarterly portfolio review', 'monitor portfolio risks'. For a decision memo use gradient-decision-ic-memo."
 metadata:
-  style_contract: "2.2.0"
+  style_contract: "2.3.0"
   group: "Portfolio Analytics"
   subject: "total portfolio"
   output: "review"

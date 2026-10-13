@@ -132,6 +132,13 @@ def contract_manifest():
             or "layout-budget.json" not in guidance
             or target != {"min": minimum, "max": maximum}
             or not isinstance(hard_ceiling, int)
+            or (
+                case_name == "portfolio_attribution_report"
+                and (
+                    hard_ceiling != 11
+                    or "hard ceiling is 11" not in guidance
+                )
+            )
         ):
             budget_errors.append(
                 f"{case_name}: expected QA command and soft target "

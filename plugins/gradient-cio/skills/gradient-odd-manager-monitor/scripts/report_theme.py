@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 
-THEME_VERSION = "2.2.0"
+THEME_VERSION = "2.3.0"
 FONT_FAMILY = "Inter"
 FONT_FALLBACK = ("Arial", "sans-serif")
 
@@ -104,12 +104,19 @@ COVER_FIELD_LIMITS = {
     "header_label": 48,
     "running_head": 72,
     "data_scope_banner": 120,
+    "cover_disclosure": 80,
     "cover_fact_label": 36,
     "cover_fact_value": 80,
     "cover_facts": 6,
 }
 
 BRAND_NAME = "GradientCIO.com"
+DEFAULT_COVER_DISCLOSURE = "Illustrative sample · not client data"
+FULL_SAMPLE_DISCLOSURE = (
+    "Illustrative, Gradient Maintained — demo data, not the client's holdings "
+    "or managers. All organizations, portfolios, managers and results in this "
+    "public example are illustrative."
+)
 BRANDING_ALLOWED_FIELDS = frozenset(
     {"brand", "client_name", "client_logo", "confidentiality", "powered_by"}
 )

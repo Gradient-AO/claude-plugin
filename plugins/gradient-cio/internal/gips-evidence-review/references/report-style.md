@@ -137,9 +137,9 @@ write a branding file in the working directory (logo path relative to it) and pa
 - ISO dates; currency in $B/$M (or the report's currency) with 1–2 decimals; percentages to 1 dp; spreads in bps.
 - Absence is not evidence: an empty or unavailable result is reported as such, never as "none occurred".
 - No adjectives the data cannot support ("robust", "best-in-class", "strong").
-- Label illustrative data exactly **Illustrative, Gradient Maintained — demo data, not the client's holdings
-  or managers** on the cover (`confidentiality`), in the banner, in the first affected section, and in every
-  affected source row.
+- Use **Illustrative sample · not client data** in the cover footer. Place the full label
+  **Illustrative, Gradient Maintained — demo data, not the client's holdings or managers** in Appendix A,
+  the first affected section, and every affected source row.
 - Every report ends with an appendix: sources (tag, evidence, tool, as-of, validation, digest), server metric
   methods (formula identity/version, basis, units and coverage where returned), and a disclaimer (not
   investment, legal or compliance advice; Form ADV is adviser-reported).

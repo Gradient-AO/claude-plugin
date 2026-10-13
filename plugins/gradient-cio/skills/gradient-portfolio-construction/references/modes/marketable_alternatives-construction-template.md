@@ -10,8 +10,8 @@ apply its specific repair levers and rerun until clean.
 
 - Root `construction_mode`: `marketable_alternatives`.
 - `meta.eyebrow` and `meta.header_label`: `Marketable Alternatives Portfolio Construction`.
-- Cover facts: As of, Base currency, Total NAV, Marketable-alternatives weight, Policy benchmark, Data scope.
-- `meta.signal_title`: `Marketable-alternatives portfolio status`.
+- Cover facts: As of, Total NAV, Portfolio weight, Policy benchmark.
+- `meta.signal_title`: `Overall view`; `meta.meter_title`: `Scope reviewed`.
 - `executive.label`: `Recommendation`.
 - `executive.bottom_line`: recommendation, requested committee action, principal evidence and largest risk.
 - Four tiles: Marketable-alternatives weight, Active weight, Relative return, Liquid share.

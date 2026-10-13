@@ -11,6 +11,7 @@ from report_layout import (
     SIGNAL_LABEL_MAX_CHARACTERS,
     LayoutPolicyError,
     build_post_render_layout_contract,
+    estimate_block_height_points,
     lint_report_design,
     prepare_report_for_render,
     repair_preferred_breaks,
@@ -199,8 +200,43 @@ def chart_renderer():
         and "Base 100" in annual_line
         and 'fill-opacity="0.10"' in annual_line
         and "2022 drawdown" in annual_line
+        and 'class="ax x-band-label"' in annual_line
         and _renderer_module._nice_y_bounds(97, 103) == (96.0, 104.0, 1.0),
-        "line charts use year ticks, nice bounds, base-100 references, and drawdown bands",
+        "line charts use year ticks, nice bounds, references, and bottom-lane band labels",
+    )
+    collision_line = _renderer_module.b_line({
+        "series": [
+            {
+                "name": "Portfolio",
+                "points": [["2024-01-01", 100], ["2026-01-01", 103]],
+            },
+            {
+                "name": "Policy",
+                "points": [["2024-01-01", 99], ["2026-01-01", 101]],
+            },
+        ],
+        "x_bands": [{
+            "start": "2025-01-01",
+            "end": "2025-12-31",
+            "label": "Review window",
+        }],
+    })
+    band_label_y = re.search(
+        r'y="([\d.]+)" class="ax x-band-label">Review window</text>',
+        collision_line,
+    )
+    end_label_ys = [
+        float(value)
+        for value in re.findall(
+            r'<text x="[^"]+" y="([\d.]+)" class="cl"[^>]*style="fill:',
+            collision_line,
+        )
+    ]
+    check(
+        band_label_y is not None
+        and end_label_ys
+        and float(band_label_y.group(1)) > max(end_label_ys),
+        "x-band labels occupy a dedicated lane below all series end labels",
     )
     dense_line = _renderer_module.b_line({
         "title": "Cumulative effects",
@@ -234,6 +270,131 @@ def chart_renderer():
         and _renderer_module._nice_y_bounds(-2.1, 1.1)
         == (-2.5, 1.5, 0.5),
         "multi-series lines use a legend, collision-thinned ticks, and tight bounds",
+    )
+    narrow_line_document = _renderer_module.b_two_col({
+        "left": [{
+            "type": "line",
+            "title": "Narrow trend",
+            "series": [
+                {
+                    "name": "Portfolio",
+                    "points": [
+                        [f"202{year}-01-01", 96 + year]
+                        for year in range(1, 7)
+                    ],
+                },
+                {
+                    "name": "Policy",
+                    "points": [
+                        [f"202{year}-01-01", 94 + year * 1.4]
+                        for year in range(1, 7)
+                    ],
+                },
+            ],
+        }],
+        "right": [{"type": "text", "text": "Context."}],
+    })
+    narrow_line_svg = re.search(
+        r'(<svg viewBox="0 0 360 [^"]+"[^>]+class="chart narrow-line".*?</svg>)',
+        narrow_line_document,
+        re.DOTALL,
+    )
+    check(
+        narrow_line_svg is not None
+        and all(
+            name in narrow_line_svg.group(1)
+            for name in ("Portfolio", "Policy")
+        )
+        and narrow_line_svg.group(1).count('class="ax y-tick"') <= 5
+        and 'style="fill:' not in narrow_line_svg.group(1)
+        and ".chart.narrow-line .ax{font-size:10px}"
+        in _renderer_module.CSS,
+        "two-column lines use a 360px legend profile with at most five readable y ticks",
+    )
+    grouped_bars = _renderer_module.b_bars({
+        "title": "Expected return by segment",
+        "series": [
+            {"name": "Current", "color": "#52606D"},
+            {"name": "Proposed", "color": "#A8D830"},
+        ],
+        "items": [
+            {
+                "label": "Public equity",
+                "values": [6.1, 7.0],
+                "displays": ["6.1%", "7.0%"],
+            },
+            {
+                "label": "Fixed income",
+                "values": [4.2, 4.8],
+                "displays": ["4.2%", "4.8%"],
+            },
+        ],
+    })
+    paired_dots = _renderer_module.b_bars({
+        "title": "Expected return by segment",
+        "mark": "dots",
+        "series": [
+            {"name": "Current", "color": "#52606D"},
+            {"name": "Proposed", "color": "#A8D830"},
+        ],
+        "gap_label": "Gap",
+        "decimals": 1,
+        "suffix": "%",
+        "items": [
+            {"label": "Public equity", "values": [6.1, 7.0]},
+            {
+                "label": "Fixed income",
+                "values": [4.2, 4.8],
+                "gap_display": "Gap +0.6%",
+            },
+        ],
+    })
+    invalid_grouped_rejected = False
+    try:
+        _renderer_module.b_bars({
+            "series": [{"name": "A"}, {"name": "B"}],
+            "items": [{"label": "Mismatch", "values": [1.0]}],
+        })
+    except SystemExit:
+        invalid_grouped_rejected = True
+    check(
+        all(
+            value in grouped_bars
+            for value in (
+                "Current",
+                "Proposed",
+                "Public equity",
+                "6.1%",
+                "7.0%",
+                "#52606D",
+                "#A8D830",
+            )
+        )
+        and grouped_bars.count("<rect") >= 8
+        and invalid_grouped_rejected,
+        "named-series bars align grouped finite values and preserve legacy validation",
+    )
+    check(
+        paired_dots.count("<circle") == 4
+        and "Gap +0.9%" in paired_dots
+        and "Gap +0.6%" in paired_dots
+        and all(name in paired_dots for name in ("Current", "Proposed")),
+        "paired-dot bars use the same schema and print unit-aware second-minus-first gaps",
+    )
+    check(
+        estimate_block_height_points({
+            "type": "bars",
+            "items": [{"label": "A", "value": 1}, {"label": "B", "value": 2}],
+        })
+        < estimate_block_height_points({
+            "type": "bars",
+            "series": [{"name": "A"}, {"name": "B"}],
+            "items": [
+                {"label": "A", "values": [1, 2]},
+                {"label": "B", "values": [2, 3]},
+            ],
+        }),
+        "layout estimates account for named-series legends and grouped mark rows",
     )
     aligned_heat = _renderer_module.b_heat({
         "title": "Segment effects",
@@ -272,6 +433,29 @@ def chart_renderer():
         shared_page_ranges["4"]["end_page"] == 3
         and shared_page_ranges["5"]["start_page"] == 3,
         "section page ranges count shared transition pages for both sections",
+    )
+    next_page_heading_ranges = _check_layout_module.section_page_ranges(
+        [
+            ["Portfolio Attribution Report"],
+            ["Running header", "04 Historical Attribution", "Historical totals"],
+            [
+                "Running header",
+                "3",
+                "05 Governed Ex Ante Attribution",
+                "Ex ante totals",
+            ],
+        ],
+        [
+            {"num": "4", "title": "Historical Attribution"},
+            {"num": "5", "title": "Governed Ex Ante Attribution"},
+        ],
+    )
+    check(
+        next_page_heading_ranges["4"]["start_page"] == 2
+        and next_page_heading_ranges["4"]["end_page"] == 2
+        and next_page_heading_ranges["4"]["pages_touched"] == 1
+        and next_page_heading_ranges["5"]["start_page"] == 3,
+        "section ranges ignore running furniture before a lower next-page heading",
     )
     signed_bars = _renderer_module.b_chart({"chart": {
         "chart_id": "signed-bars-test",
@@ -339,11 +523,18 @@ def chart_renderer():
         "chart tables preserve all 40 returned rows",
     )
     coverage_html = _renderer_module.b_coverage({
-        "items": [{
-            "name": "Long evidence domain",
-            "status": "not_assessed",
-            "note": "A long note wraps independently from the complete status chip.",
-        }]
+        "items": [
+            {
+                "name": "Long evidence domain",
+                "status": "not_assessed",
+                "note": "A long note wraps independently from the complete status chip.",
+            },
+            {
+                "name": "Validation",
+                "status": "passed_with_warnings",
+                "note": "Warnings remain visible.",
+            },
+        ]
     })
     coverage_document = _renderer_module.body_html({
         "meta": {
@@ -361,11 +552,17 @@ def chart_renderer():
         }]}],
     })
     check(
-        "not assessed" in coverage_html
+        "not<wbr> assessed" in coverage_html
+        and 'data-status="not_assessed"' in coverage_html
+        and 'data-status="passed_with_warnings"' in coverage_html
+        and "passed ⚠" in coverage_html
+        and _renderer_module.STATUS_COLOR["passed_with_warnings"]
+        in coverage_html
         and "grid-template-columns:minmax(0,32%) max-content minmax(0,1fr)"
         in coverage_document
-        and "overflow-wrap:anywhere" in coverage_document,
-        "coverage rows reserve complete chip width while notes wrap",
+        and ".chip-label{overflow-wrap:normal;word-break:normal}"
+        in coverage_document,
+        "status chips retain raw color semantics and wrap only at underscore boundaries",
     )
     signal_report = {
         "meta": {
@@ -710,8 +907,8 @@ def chart_renderer():
         '<td class="validation-cell">' + long_failed_value + "</td>"
         in validation_document
         and ".grid td.validation-cell{white-space:normal;"
-        "overflow-wrap:anywhere;word-break:break-word}" in validation_document,
-        "validation cells wrap long failed values",
+        "overflow-wrap:normal;word-break:normal}" in validation_document,
+        "validation cells use authored delimiters without arbitrary mid-word breaks",
     )
     appendix_document = _renderer_module.body_html({
         "meta": {
@@ -1204,14 +1401,15 @@ def chart_renderer():
                 "Scope banner regression (TEST)",
                 "Subtitle remains visible.",
                 "Confidential (TEST)",
-                "Illustrative, Gradient Maintained",
+                "Illustrative sample · not client data",
             )
         )
+        and "Illustrative, Gradient Maintained" not in banner_cover
         and "Illustrative, Gradient Maintained" in banner_header
         and "Scope banner regression (TEST)" in banner_header
         and "Confidential (TEST)" in banner_footer
         and "Evidence" in banner_body,
-        "PDF cover and running header add the data-scope banner without replacing metadata",
+        "PDF cover shortens the disclosure while the running header retains scope",
     )
     overlong_banner = json.loads(json.dumps(banner_report))
     overlong_banner["meta"]["data_scope_banner"] = "x" * (
@@ -1627,10 +1825,134 @@ def chart_renderer():
             == '$0.0,,"M"',
             "PowerPoint currency axes use the same compact scale",
         )
+        invalid_bar_errors = pptx_module.validate_report_shape({
+            "meta": {"title": "Invalid bars (TEST)"},
+            "sections": [{
+                "title": "Bars",
+                "blocks": [{
+                    "type": "bars",
+                    "series": [{"name": "A"}, {"name": "B"}],
+                    "items": [{"label": "Mismatch", "values": [1.0]}],
+                }],
+            }],
+        })
+        check(
+            any("values length must match series" in error
+                for error in invalid_bar_errors),
+            "PowerPoint validates named-series value lengths before rendering",
+        )
+        pptx_bar_report = {
+            "meta": {
+                "title": "Paired marks regression (TEST)",
+                "header_label": "Regression",
+                "data_as_of": "2026-10-13",
+            },
+            "sections": [
+                {
+                    "title": "Grouped bars",
+                    "blocks": [{
+                        "type": "bars",
+                        "title": "Expected return by segment",
+                        "series": [
+                            {"name": "Current", "color": "#52606D"},
+                            {"name": "Proposed", "color": "#A8D830"},
+                        ],
+                        "items": [
+                            {
+                                "label": "Public equity",
+                                "values": [6.1, 7.0],
+                                "displays": ["6.1%", "7.0%"],
+                            },
+                            {
+                                "label": "Fixed income",
+                                "values": [4.2, 4.8],
+                                "displays": ["4.2%", "4.8%"],
+                            },
+                        ],
+                    }],
+                },
+                {
+                    "title": "Paired dots",
+                    "blocks": [{
+                        "type": "bars",
+                        "mark": "dots",
+                        "title": "Expected return gap",
+                        "series": [
+                            {"name": "Current", "color": "#52606D"},
+                            {"name": "Proposed", "color": "#A8D830"},
+                        ],
+                        "gap_label": "Gap",
+                        "suffix": "%",
+                        "items": [
+                            {
+                                "label": "Public equity",
+                                "values": [6.1, 7.0],
+                            },
+                            {
+                                "label": "Fixed income",
+                                "values": [4.2, 4.8],
+                            },
+                        ],
+                    }],
+                },
+            ],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            paired_marks_pptx = pathlib.Path(directory) / "paired-marks.pptx"
+            pptx_module.render_report(pptx_bar_report, paired_marks_pptx)
+            from pptx import Presentation
+            from pptx.enum.chart import XL_CHART_TYPE
+            from pptx.enum.shapes import MSO_SHAPE_TYPE
+
+            paired_presentation = Presentation(paired_marks_pptx)
+            paired_charts = [
+                shape.chart
+                for slide in paired_presentation.slides
+                for shape in slide.shapes
+                if getattr(shape, "has_chart", False)
+            ]
+            paired_text = "\n".join(
+                shape.text
+                for slide in paired_presentation.slides
+                for shape in slide.shapes
+                if getattr(shape, "has_text_frame", False)
+            )
+            paired_has_picture = any(
+                shape.shape_type == MSO_SHAPE_TYPE.PICTURE
+                for slide in paired_presentation.slides
+                for shape in slide.shapes
+            )
+            with zipfile.ZipFile(paired_marks_pptx) as archive:
+                paired_chart_xml = "\n".join(
+                    archive.read(name).decode("utf-8", errors="ignore")
+                    for name in archive.namelist()
+                    if name.startswith("ppt/charts/chart")
+                    and name.endswith(".xml")
+                )
+        check(
+            len(paired_charts) == 1
+            and paired_charts[0].chart_type == XL_CHART_TYPE.BAR_CLUSTERED
+            and paired_charts[0].has_legend
+            and len(paired_charts[0].series) == 2
+            and all(
+                name in paired_text
+                for name in (
+                    "Current",
+                    "Proposed",
+                    "Gap +0.9%",
+                    "Gap +0.6%",
+                )
+            )
+            and all(
+                display in paired_chart_xml
+                for display in ("6.1%", "7.0%", "4.2%", "4.8%")
+            )
+            and not paired_has_picture,
+            "PowerPoint keeps grouped bars, authored labels, and paired dots native and editable",
+        )
         with tempfile.TemporaryDirectory() as directory:
             pptx_output = pathlib.Path(directory) / "scope-banner.pptx"
             pptx_module.render_report(banner_report, pptx_output)
-            from pptx import Presentation
 
             presentation = Presentation(pptx_output)
             slide_text = [
@@ -1643,7 +1965,9 @@ def chart_renderer():
             ]
         check(
             len(slide_text) == 2
-            and all(ILLUSTRATIVE_LABEL in text for text in slide_text)
+            and "Illustrative sample · not client data" in slide_text[0]
+            and ILLUSTRATIVE_LABEL not in slide_text[0]
+            and ILLUSTRATIVE_LABEL in slide_text[1]
             and all(
                 value in slide_text[0]
                 for value in (
@@ -1654,14 +1978,12 @@ def chart_renderer():
             )
             and "Evidence" in slide_text[1]
             and "Confidential (TEST)" in slide_text[1],
-            "PowerPoint cover and running header add the data-scope banner without replacing metadata",
+            "PowerPoint cover shortens the disclosure while content slides retain scope",
         )
         with tempfile.TemporaryDirectory() as directory:
             attribution_pptx = pathlib.Path(directory) / "attribution-fallback.pptx"
             pptx_module.render_report(fallback_report, attribution_pptx)
             attribution_presentation = Presentation(attribution_pptx)
-            from pptx.enum.chart import XL_CHART_TYPE
-            from pptx.enum.shapes import MSO_SHAPE_TYPE
 
             attribution_charts = [
                 shape.chart

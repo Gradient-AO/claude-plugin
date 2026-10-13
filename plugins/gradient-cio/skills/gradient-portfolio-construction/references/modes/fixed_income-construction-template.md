@@ -10,8 +10,8 @@ apply its specific repair levers and rerun until clean.
 
 - Root `construction_mode`: `fixed_income`.
 - `meta.eyebrow` and `meta.header_label`: `Fixed Income Portfolio Construction`.
-- Cover facts: As of, Base currency, Total NAV, Fixed-income weight, Policy benchmark, Data scope.
-- `meta.signal_title`: `Fixed-income portfolio status`.
+- Cover facts: As of, Total NAV, Fixed-income weight, Policy benchmark.
+- `meta.signal_title`: `Overall view`; `meta.meter_title`: `Scope reviewed`.
 - `executive.label`: `Recommendation`.
 - `executive.bottom_line`: recommendation, requested committee action, principal evidence and largest risk.
 - Four tiles: Fixed-income weight, Active weight, Relative return, Liquid share.

@@ -1,6 +1,6 @@
-# Alder Ridge Composite (TEST) — GIPS Report Review
+# Alder Ridge Composite — GIPS Report Review
 
-> SYNTHETIC TEST handoff for committee-memo regression coverage. This paste-ready authoritative markdown reviews a fictional composite report and invented disclosure schedule.
+> Review of the composite presentation and disclosure schedule for Investment Committee use.
 
 ## 1. Summary
 
@@ -34,11 +34,14 @@ gross, net and benchmark return history is present [S1][S2].
 
 ## Appendix A — Sources and methods
 
+Illustrative, Gradient Maintained — demo data, not the client's holdings or managers. All organizations,
+portfolios, managers and results in this public example are illustrative.
+
 | Tag | Source | Detail | As of | Validation |
 |---|---|---|---|---|
-| S1 | Composite report (TEST) | Fictional pages 1–4 | 2025-12-31 | Synthetic document |
-| S2 | Disclosure schedule (TEST) | Fictional fee and composite notes | 2026-03-31 | Synthetic document |
+| S1 | Composite report | Pages 1–4 | 2025-12-31 | Illustrative document |
+| S2 | Disclosure schedule | Fee and composite notes | 2026-03-31 | Illustrative document |
 
 ## Appendix C — Method & Disclaimer
 
-This fictional report review tests the shared GIPS handoff contract. It is not verification, certification, legal advice or an assessment of any real product.
+This illustrative review is not verification, certification, legal advice or an assessment of any real product.

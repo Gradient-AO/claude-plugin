@@ -3,7 +3,7 @@ name: gradient-portfolio-attribution-compare
 description: "Create a multi-lane portfolio-attribution comparison report. Triggers: 'compare historical and ex ante attribution', 'show persistent attribution sources', 'compare realized expected and simulated effects'. For one lane use gradient-portfolio-attribution."
 metadata:
   version: "3.0.0"
-  style_contract: "2.2.0"
+  style_contract: "2.3.0"
   group: "Portfolio Analytics"
   subject: "portfolio attribution comparison"
   output: "comparison report"

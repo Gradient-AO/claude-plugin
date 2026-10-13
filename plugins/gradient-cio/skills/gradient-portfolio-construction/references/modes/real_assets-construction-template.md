@@ -10,8 +10,8 @@ apply its specific repair levers and rerun until clean.
 
 - Root `construction_mode`: `real_assets`.
 - `meta.eyebrow` and `meta.header_label`: `Real Assets Portfolio Construction`.
-- Cover facts: As of, Base currency, Total NAV, Real-assets weight, Unfunded commitments, Data scope.
-- `meta.signal_title`: `Real-assets portfolio status`.
+- Cover facts: As of, Total NAV, Real-assets weight, Unfunded commitments.
+- `meta.signal_title`: `Overall view`; `meta.meter_title`: `Scope reviewed`.
 - `executive.label`: `Recommendation`.
 - `executive.bottom_line`: recommendation, requested committee action, principal evidence and largest risk.
 - Four tiles: Real-assets weight, Marketable share, Unfunded commitments, Policy status.

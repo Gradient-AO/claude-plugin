@@ -1,52 +1,46 @@
 {
   "meta": {
-    "mode": "global_public_equity",
-    "eyebrow": "Global Public Equity Portfolio Construction",
-    "header_label": "Global Public Equity Portfolio Construction",
-    "title": "Northstar Global Public Equity Portfolio (TEST)",
-    "subtitle": "Decision pack · prepared for the Investment Committee (TEST)",
-    "running_head": "Northstar Global Public Equity Portfolio (TEST)",
-    "data_as_of": "2026-06-30",
-    "confidentiality": "TEST DATA — fictional portfolio for rendering tests only",
-    "cover_facts": [
-      [
-        "As of",
-        "2026-06-30"
-      ],
-      [
-        "Base currency",
-        "USD"
-      ],
-      [
-        "Total NAV",
-        "$1,000.0M"
-      ],
-      [
-        "Public-equity weight",
-        "42.0%"
-      ],
-      [
-        "Policy benchmark",
-        "Example Global Equity Index (TEST)"
-      ],
-      [
-        "Data scope",
-        "Fictional TEST data"
-      ]
+  "mode": "global_public_equity",
+  "eyebrow": "Global Public Equity Portfolio Construction",
+  "header_label": "Global Public Equity Portfolio Construction",
+  "title": "Northstar Global Public Equity Portfolio",
+  "subtitle": "Portfolio construction review · prepared for the Investment Committee",
+  "running_head": "Northstar Global Public Equity Portfolio",
+  "data_as_of": "2026-06-30",
+  "confidentiality": "Confidential — Investment Committee",
+  "cover_facts": [
+    [
+      "As of",
+      "2026-06-30"
     ],
-    "signal_title": "Global public-equity portfolio status",
-    "signal": {
-      "level": "watch",
-      "label": "Manager and issuer concentration on watch"
-    },
-    "completeness": {
-      "used": 9,
-      "expected": 10,
-      "state": "partial"
-    },
-    "meter_title": "Evidence completeness",
-    "data_basis": "gradient_governed"
+    [
+      "Total NAV",
+      "$1,000.0M"
+    ],
+    [
+      "Public-equity weight",
+      "42.0%"
+    ],
+    [
+      "Policy benchmark",
+      "Northstar Global Equity Index"
+    ]
+  ],
+  "signal_title": "Overall view",
+  "signal": {
+    "level": "watch",
+    "label": "Manager and issuer concentration on watch"
   },
+  "completeness": {
+    "used": 9,
+    "expected": 10,
+    "state": "partial"
+  },
+  "meter_title": "Scope reviewed",
+  "data_basis": "gradient_governed",
+  "cover_disclosure": "Illustrative sample · not client data",
+  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
+},
   "executive": {
     "label": "Recommendation",
     "bottom_line": "We recommend retaining the 42.0% total-fund public-equity allocation while moving 4.0 percentage points of the sleeve from concentrated active mandates to a global passive completion mandate [S3][S4][S7]. Committee action requested: approve the target manager structure and phased funding, subject to manager diligence and concentration limits [S3][S8].",
@@ -138,21 +132,21 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a manager-and-issuer concentration signal above the clear threshold [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+          "text": "Observation: The sample report carries a manager-and-issuer concentration signal above the clear threshold [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Public-equity weight is 42.0% in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
+          "text": "Observation: Public-equity weight is 42.0% in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Largest concentration is 2.3% NAV in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
+          "text": "Observation: Largest concentration is 2.3% NAV in the review evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
@@ -164,7 +158,7 @@
           "rows": [
             [
               "Portfolio",
-              "Northstar Total Fund (TEST)",
+              "Northstar Total Fund",
               "S2"
             ],
             [
@@ -174,7 +168,7 @@
             ],
             [
               "Benchmark",
-              "Example Global Equity Index (TEST)",
+              "Northstar Global Equity Index",
               "S5"
             ],
             [
@@ -189,7 +183,7 @@
             ],
             [
               "Data scope",
-              "Fictional TEST data [S1]",
+              "Illustrative sample data [S1]",
               "S1"
             ]
           ]
@@ -246,7 +240,7 @@
           "type": "chart",
           "chart": {
             "chart_id": "test-equity-region",
-            "title": "Public-equity regional exposure (TEST)",
+            "title": "Public-equity regional exposure",
             "status": "ok",
             "columns": [
               {
@@ -304,7 +298,7 @@
           ],
           "rows": [
             [
-              "Example Active Global Manager A (TEST)",
+              "Example Active Global Manager A",
               "Active core",
               "$150.0M",
               "15.0%",
@@ -312,7 +306,7 @@
               "2026-06-30 [S4]"
             ],
             [
-              "Example Active Global Manager B (TEST)",
+              "Example Active Global Manager B",
               "Active core",
               "$90.0M",
               "9.0%",
@@ -320,7 +314,7 @@
               "2026-06-30 [S4]"
             ],
             [
-              "Example Global Index Fund (TEST)",
+              "Example Global Index Fund",
               "Passive completion",
               "$120.0M",
               "12.0%",
@@ -328,7 +322,7 @@
               "2026-06-30 [S4]"
             ],
             [
-              "Example Emerging Manager (TEST)",
+              "Example Emerging Manager",
               "Emerging markets",
               "$60.0M",
               "6.0%",
@@ -339,7 +333,7 @@
         },
         {
           "type": "text",
-          "text": "Manager roles are from the fictional mandate; regional weights are returned portfolio analytics and retain their stated basis [S4][S8]."
+          "text": "Manager roles are from the illustrative mandate; regional weights are returned portfolio analytics and retain their stated basis [S4][S8]."
         }
       ]
     },
@@ -647,7 +641,7 @@
           "type": "chart",
           "chart": {
             "chart_id": "test-equity-factor",
-            "title": "Active factor exposure (TEST)",
+            "title": "Active factor exposure",
             "status": "ok",
             "columns": [
               {
@@ -776,7 +770,7 @@
           "rows": [
             [
               "Assumption set",
-              "2026 Strategic CMA (TEST)",
+              "2026 Strategic CMA",
               "S6"
             ],
             [
@@ -805,7 +799,7 @@
           "type": "chart",
           "chart": {
             "chart_id": "test-equity-forward",
-            "title": "Global equity forward assumptions (TEST)",
+            "title": "Global equity forward assumptions",
             "status": "ok",
             "currency": "USD",
             "columns": [
@@ -912,7 +906,7 @@
           ],
           "rows": [
             [
-              "Example Active Global Manager A (TEST)",
+              "Example Active Global Manager A",
               "Active core",
               "15.0% NAV",
               "Current [S8]",
@@ -920,7 +914,7 @@
               "Review funding schedule"
             ],
             [
-              "Example Active Global Manager B (TEST)",
+              "Example Active Global Manager B",
               "Active core",
               "9.0% NAV",
               "Current [S8]",
@@ -928,7 +922,7 @@
               "Complete performance review"
             ],
             [
-              "Example Global Index Fund (TEST)",
+              "Example Global Index Fund",
               "Passive completion",
               "12.0% NAV",
               "Current [S8]",
@@ -950,7 +944,7 @@
           ],
           "rows": [
             [
-              "Example Technology Issuer A (TEST)",
+              "Example Technology Issuer A",
               "$23.0M",
               "2.3%",
               "2",
@@ -958,7 +952,7 @@
               "Near policy watch level [S7]"
             ],
             [
-              "Example Consumer Issuer B (TEST)",
+              "Example Consumer Issuer B",
               "$15.0M",
               "1.5%",
               "2",
@@ -1189,7 +1183,7 @@
             {
               "name": "Portfolio and allocation",
               "status": "available",
-              "note": "Fictional TEST data [S2]"
+              "note": "Illustrative sample data [S2]"
             },
             {
               "name": "Policy",
@@ -1219,7 +1213,7 @@
             {
               "name": "Manager evidence",
               "status": "available",
-              "note": "Fictional mandate [S8]"
+              "note": "illustrative mandate [S8]"
             },
             {
               "name": "Scenario and cost evidence",
@@ -1275,7 +1269,7 @@
               "list_organizations; get_gradient_capabilities",
               "organization=test",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1286,7 +1280,7 @@
               "list_portfolios; get_portfolio_structure",
               "allocation_tree",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1297,7 +1291,7 @@
               "check_portfolio_policy",
               "portfolio=test",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1308,7 +1302,7 @@
               "get_portfolio_exposure; get_chart_data",
               "public_equity; allocations",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1319,7 +1313,7 @@
               "get_portfolio_historical_returns; get_portfolio_attribution",
               "all sections",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "degraded",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1330,7 +1324,7 @@
               "get_capital_market_assumptions",
               "baseline",
               "2026-06-15",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1341,7 +1335,7 @@
               "get_cross_domain_research",
               "portfolio_13f_lookthrough",
               "2026-05-15",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "advisory",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1350,9 +1344,9 @@
               "Manager mandate evidence",
               "gradient_tool",
               "get_gradient_capabilities",
-              "fictional",
+              "illustrative",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1361,9 +1355,9 @@
               "Scenario and cost coverage",
               "gradient_tool",
               "get_gradient_capabilities",
-              "fictional",
+              "illustrative",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "advisory",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ]

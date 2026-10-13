@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from report_theme import COVER_FIELD_LIMITS, THEME_VERSION
+from report_theme import COVER_FIELD_LIMITS, FULL_SAMPLE_DISCLOSURE, THEME_VERSION
 
 TOOLS_ROOT = Path(__file__).resolve().parent.parent / "tools"
 if str(TOOLS_ROOT) not in sys.path:
@@ -65,6 +65,7 @@ BOUNDED_METADATA_FIELDS = {
     "header_label": COVER_FIELD_LIMITS["header_label"],
     "running_head": COVER_FIELD_LIMITS["running_head"],
     "data_scope_banner": COVER_FIELD_LIMITS["data_scope_banner"],
+    "cover_disclosure": COVER_FIELD_LIMITS["cover_disclosure"],
     "signal_title": 48,
     "meter_title": 48,
     "confidentiality": 180,
@@ -506,9 +507,22 @@ def estimate_block_height_points(block: dict[str, Any]) -> int | None:
         items = block.get("items")
         if not isinstance(items, list) or not items:
             return None
-        row_height = 34 if len(items) <= 9 and block.get("_deck_mode") else 22
+        series = block.get("series")
+        series_count = len(series) if isinstance(series, list) else 1
+        mark = str(
+            block.get("mark") or block.get("style") or "bars"
+        ).strip().casefold()
+        if mark in {"dots", "paired-dot", "paired_dot"}:
+            row_height = 27
+        elif isinstance(series, list):
+            row_height = max(22, 8 + 15 * series_count)
+        else:
+            row_height = 22
+        if len(items) <= 9 and block.get("_deck_mode"):
+            row_height = max(row_height, 34)
+        legend_height = 22 if isinstance(series, list) else 0
         return (
-            round((row_height * len(items) + 8) * 0.75)
+            round((row_height * len(items) + legend_height + 8) * 0.75)
             + (20 if _block_title(block) else 0)
             + (18 if block.get("note") else 0)
         )
@@ -680,6 +694,48 @@ def _normalize_appendices(sections: list[dict[str, Any]]) -> None:
         section.setdefault("num", letter)
         section["title"] = f"Appendix — {remainder}" if remainder else "Appendix"
 
+def _prepare_sample_disclosure(
+    sections: list[dict[str, Any]],
+    metadata: dict[str, Any],
+) -> None:
+    """Add the full public-sample disclosure to the sources appendix once."""
+    if not str(metadata.get("cover_disclosure") or "").strip():
+        return
+    for section in sections:
+        title = str(section.get("title", ""))
+        if section.get("num") != "A" and "Sources and methods" not in title:
+            continue
+        if any(
+            "Illustrative, Gradient Maintained" in text
+            for text in _strings(section)
+        ):
+            return
+        blocks = section.setdefault("blocks", [])
+        if not isinstance(blocks, list):
+            raise LayoutPolicyError(["sources appendix blocks must be a list"])
+        source_table = next(
+            (
+                block
+                for block in blocks
+                if isinstance(block, dict) and block.get("type") == "table"
+            ),
+            None,
+        )
+        if source_table is None:
+            raise LayoutPolicyError(
+                ["sample sources appendix requires a table for disclosure"]
+            )
+        existing_note = str(source_table.get("note") or "").strip()
+        source_table["note"] = " ".join(
+            value
+            for value in (existing_note, FULL_SAMPLE_DISCLOSURE)
+            if value
+        )
+        return
+    raise LayoutPolicyError(
+        ["meta.cover_disclosure requires Appendix A — Sources and methods"]
+    )
+
 
 def prepare_report_for_render(report: dict[str, Any]) -> dict[str, Any]:
     """Return an immutable, idempotently prepared report copy."""
@@ -702,6 +758,7 @@ def prepare_report_for_render(report: dict[str, Any]) -> dict[str, Any]:
         raise LayoutPolicyError(["every report section must be an object"])
     prepared["sections"] = section_objects
     _normalize_appendices(section_objects)
+    _prepare_sample_disclosure(section_objects, prepared["meta"])
     _prepare_page_breaks(section_objects)
     _prepare_chart_appendix(section_objects)
     _prepare_layout_groups(section_objects)
@@ -973,15 +1030,9 @@ def _validate_layout_budget_legacy(
                 allow_roles=version == SCHEMA_VERSION,
             )
         if report is not None:
-            resolved: dict[str, list[dict[str, Any]]] = {}
-            for index, section in enumerate(_report_sections(report), start=1):
-                if not isinstance(section, dict):
-                    continue
-                identifiers = _section_identifiers(section, index)
-                for identifier in identifiers - {""}:
-                    resolved.setdefault(identifier, []).append(section)
+            report_sections = _report_sections(report)
             for configured in sections:
-                matches = resolved.get(str(configured).lstrip("0") or "0", [])
+                matches = _resolve_section_matches(report_sections, configured)
                 if len(matches) != 1:
                     errors.append(
                         f"configured section {configured!r} resolves {len(matches)} times; expected exactly once"
@@ -991,7 +1042,7 @@ def _validate_layout_budget_legacy(
                 for configured in forced_breaks:
                     if not isinstance(configured, str):
                         continue
-                    matches = resolved.get(configured.lstrip("0") or "0", [])
+                    matches = _resolve_section_matches(report_sections, configured)
                     if len(matches) != 1:
                         errors.append(
                             f"forced break {configured!r} resolves {len(matches)} times; expected exactly once"
@@ -1029,8 +1080,35 @@ def _section_identifiers(section: dict[str, Any], index: int) -> set[str]:
         re.IGNORECASE,
     )
     if appendix_match is not None:
-        resolved.add((appendix_match.group(1) or "A").upper())
+        explicit_letter = appendix_match.group(1)
+        section_number = str(section.get("num", "")).strip().upper()
+        if explicit_letter:
+            resolved.add(explicit_letter.upper())
+        elif not re.fullmatch(r"[A-Z]", section_number):
+            resolved.add("A")
     return resolved
+
+
+def _resolve_section_matches(
+    sections: list[Any],
+    identifier: object,
+) -> list[tuple[int, dict[str, Any]]]:
+    """Prefer authored identifiers, then fall back to one-based position."""
+    normalized = str(identifier).strip().lstrip("0") or "0"
+    explicit = [
+        (index, section)
+        for index, section in enumerate(sections, start=1)
+        if isinstance(section, dict)
+        and normalized in _section_identifiers(section, index)
+    ]
+    if explicit:
+        return explicit
+    return [
+        (index, section)
+        for index, section in enumerate(sections, start=1)
+        if isinstance(section, dict)
+        and normalized == str(index)
+    ]
 
 
 def forced_break_contracts(
@@ -1047,13 +1125,7 @@ def forced_break_contracts(
         if not isinstance(value, str) or not value.strip():
             continue
         identifier = value.strip()
-        normalized = identifier.lstrip("0") or "0"
-        matches = [
-            (index, section)
-            for index, section in enumerate(sections, start=1)
-            if isinstance(section, dict)
-            and normalized in _section_identifiers(section, index)
-        ]
+        matches = _resolve_section_matches(sections, identifier)
         if len(matches) != 1:
             continue
         index, section = matches[0]
@@ -1334,27 +1406,33 @@ def lint_report_design(
     )
     configured = _content_sections(effective_budget)
     configured = configured if isinstance(configured, dict) else {}
+    report_sections = _report_sections(report)
     forced_breaks = effective_budget.get("forced_breaks", [])
     allowed_breaks = {
         str(value).strip()
         for value in forced_breaks
         if isinstance(value, str)
     }
-    allowed_breaks |= {
-        value.lstrip("0") or "0"
+    allowed_break_indexes = {
+        matches[0][0]
         for value in allowed_breaks
-        if value.isdigit()
+        if len(matches := _resolve_section_matches(report_sections, value))
+        == 1
     }
-    for index, section in enumerate(_report_sections(report), start=1):
+    section_configs: dict[int, dict[str, Any]] = {}
+    for identifier, candidate in configured.items():
+        matches = _resolve_section_matches(report_sections, identifier)
+        if len(matches) == 1 and isinstance(candidate, dict):
+            section_configs[matches[0][0]] = candidate
+    for index, section in enumerate(report_sections, start=1):
         if not isinstance(section, dict):
             continue
-        identifiers = _section_identifiers(section, index)
         generated_appendix = section.get("id") == "chart-data-appendix"
         forced = section.get("page_break") == "force" or (
             section.get("new_page") is True
             and section.get("page_break") in {None, "force"}
         )
-        if forced and not generated_appendix and not identifiers & allowed_breaks:
+        if forced and not generated_appendix and index not in allowed_break_indexes:
             diagnostics.append(
                 _diagnostic(
                     "design-forced-break-not-allowlisted",
@@ -1363,7 +1441,7 @@ def lint_report_design(
                     index,
                 )
             )
-        if identifiers & allowed_breaks and not forced:
+        if index in allowed_break_indexes and not forced:
             diagnostics.append(
                 _diagnostic(
                     "design-configured-forced-break-missing",
@@ -1402,12 +1480,7 @@ def lint_report_design(
         if prepared_layout:
             diagnostics.extend(_lint_layout_groups(blocks, section, index))
         diagnostics.extend(_lint_table_runs(blocks, section, index))
-        section_config: dict[str, Any] = {}
-        for identifier in identifiers:
-            candidate = configured.get(identifier)
-            if isinstance(candidate, dict):
-                section_config = candidate
-                break
+        section_config = section_configs.get(index, {})
         if section_config.get("role") == "analytical":
             has_evidence = False
             for block in walked:

@@ -2,7 +2,7 @@
 name: gradient-decision-ic-memo
 description: "Create a sourced decision memo for an investment committee. Triggers: 'draft an IC memo', 'prepare an allocation vote', 'write a manager hire memo'. For portfolio monitoring use gradient-portfolio-review."
 metadata:
-  style_contract: "2.2.0"
+  style_contract: "2.3.0"
   group: "Investment memos"
   subject: "investment committee"
   output: "memo"

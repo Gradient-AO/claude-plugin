@@ -1,6 +1,6 @@
-# Northstar Public Trust (TEST) — GIPS Asset Owner Review
+# Northstar Public Trust — GIPS Asset Owner Review
 
-> SYNTHETIC TEST handoff for committee-memo regression coverage. This paste-ready authoritative markdown is based only on fictional policy, board-report and custodian evidence.
+> Review of policy, board-report and custodian evidence for Investment Committee use.
 
 ## 1. Summary
 
@@ -36,12 +36,15 @@ needed to understand the reporting control framework [S3].
 
 ## Appendix A — Sources and methods
 
+Illustrative, Gradient Maintained — demo data, not the client's holdings or managers. All organizations,
+portfolios, managers and results in this public example are illustrative.
+
 | Tag | Source | Detail | As of | Validation |
 |---|---|---|---|---|
-| S1 | Board performance report (TEST) | Total-fund pages 2–6 | 2026-06-30 | Synthetic document |
-| S2 | Investment policy (TEST) | Benchmark section | 2026-01-01 | Synthetic document |
-| S3 | Custodian package (TEST) | Performance schedules | 2026-06-30 | Synthetic document |
+| S1 | Board performance report | Total-fund pages 2–6 | 2026-06-30 | Illustrative document |
+| S2 | Investment policy | Benchmark section | 2026-01-01 | Illustrative document |
+| S3 | Custodian package | Performance schedules | 2026-06-30 | Illustrative document |
 
 ## Appendix C — Method & Disclaimer
 
-This fictional asset-owner review tests the shared GIPS handoff contract. It is not verification, certification, legal advice or an assessment of any real organization.
+This illustrative asset-owner review is not verification, certification, legal advice or an assessment of any real organization.

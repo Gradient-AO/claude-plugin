@@ -1,52 +1,46 @@
 {
  "meta": {
-  "mode": "fixed_income",
-  "eyebrow": "Fixed Income Portfolio Construction",
-  "header_label": "Fixed Income Portfolio Construction",
-  "title": "Northstar Fixed Income Portfolio (TEST)",
-  "subtitle": "Decision pack · prepared for the Investment Committee (TEST)",
-  "running_head": "Northstar Fixed Income Portfolio (TEST)",
-  "data_as_of": "2026-06-30",
-  "confidentiality": "TEST DATA — fictional portfolio for rendering tests only",
-  "cover_facts": [
-   [
-    "As of",
-    "2026-06-30"
-   ],
-   [
-    "Base currency",
-    "USD"
-   ],
-   [
-    "Total NAV",
-    "$1,000.0M"
-   ],
-   [
-    "Fixed-income weight",
-    "28.0%"
-   ],
-   [
-    "Policy benchmark",
-    "Example Aggregate Bond Index (TEST)"
-   ],
-   [
-    "Data scope",
-    "Fictional TEST data"
-   ]
+ "mode": "fixed_income",
+ "eyebrow": "Fixed Income Portfolio Construction",
+ "header_label": "Fixed Income Portfolio Construction",
+ "title": "Northstar Fixed Income Portfolio",
+ "subtitle": "Portfolio construction review · prepared for the Investment Committee",
+ "running_head": "Northstar Fixed Income Portfolio",
+ "data_as_of": "2026-06-30",
+ "confidentiality": "Confidential — Investment Committee",
+ "cover_facts": [
+  [
+   "As of",
+   "2026-06-30"
   ],
-  "signal_title": "Fixed-income portfolio status",
-  "signal": {
-   "level": "watch",
-   "label": "Credit allocation proposed"
-  },
-  "completeness": {
-   "used": 8,
-   "expected": 9,
-   "state": "partial"
-  },
-  "meter_title": "Evidence completeness",
-  "data_basis": "gradient_governed"
+  [
+   "Total NAV",
+   "$1,000.0M"
+  ],
+  [
+   "Fixed-income weight",
+   "28.0%"
+  ],
+  [
+   "Policy benchmark",
+   "Northstar Aggregate Bond Index"
+  ]
+ ],
+ "signal_title": "Overall view",
+ "signal": {
+  "level": "watch",
+  "label": "Credit allocation proposed"
  },
+ "completeness": {
+  "used": 8,
+  "expected": 9,
+  "state": "partial"
+ },
+ "meter_title": "Scope reviewed",
+ "data_basis": "gradient_governed",
+ "cover_disclosure": "Illustrative sample · not client data",
+ "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
+},
  "executive": {
   "label": "Recommendation",
   "bottom_line": "We recommend shifting 3.0 percentage points of the fixed-income sleeve from core-plus credit to core government and investment-grade bonds while retaining the 28.0% total-fund allocation [S3][S4]. Committee action requested: approve the target structure and a two-stage implementation subject to benchmark and liquidity checks [S3][S8].",
@@ -138,21 +132,21 @@
      "role": "key_judgment",
      "tone": "watch",
      "title": "Key judgment — headline signal",
-     "text": "Observation: The fictional TEST report carries a credit-allocation signal above the prior neutral baseline [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+     "text": "Observation: The sample report carries a credit-allocation signal above the prior neutral baseline [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
     },
     {
      "type": "callout",
      "role": "key_judgment",
      "tone": "info",
      "title": "Key judgment — primary measure",
-     "text": "Observation: Fixed-income weight is 28.0% in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
+     "text": "Observation: Fixed-income weight is 28.0% in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
     },
     {
      "type": "callout",
      "role": "key_judgment",
      "tone": "info",
      "title": "Key judgment — monitoring priority",
-     "text": "Observation: Liquid share is 96.0% in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
+     "text": "Observation: Liquid share is 96.0% in the review evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
     }
    ]
   },
@@ -164,7 +158,7 @@
      "rows": [
       [
        "Portfolio",
-       "Northstar Total Fund (TEST)",
+       "Northstar Total Fund",
        "S2"
       ],
       [
@@ -174,7 +168,7 @@
       ],
       [
        "Benchmark",
-       "Example Aggregate Bond Index (TEST)",
+       "Northstar Aggregate Bond Index",
        "S5"
       ],
       [
@@ -189,7 +183,7 @@
       ],
       [
        "Data scope",
-       "Fictional TEST data [S1]",
+       "Illustrative sample data [S1]",
        "S1"
       ]
      ]
@@ -246,7 +240,7 @@
      "type": "chart",
      "chart": {
       "chart_id": "test-fi-allocation",
-      "title": "Fixed-income allocation (TEST)",
+      "title": "Fixed-income allocation",
       "status": "ok",
       "currency": "USD",
       "columns": [
@@ -643,7 +637,7 @@
      "type": "chart",
      "chart": {
       "chart_id": "test-fi-spreads",
-      "title": "Credit spreads (TEST)",
+      "title": "Credit spreads",
       "status": "ok",
       "columns": [
        {
@@ -757,7 +751,7 @@
      "rows": [
       [
        "Assumption set",
-       "2026 Strategic CMA (TEST)",
+       "2026 Strategic CMA",
        "S7"
       ],
       [
@@ -786,7 +780,7 @@
      "type": "chart",
      "chart": {
       "chart_id": "test-fi-forward",
-      "title": "Fixed-income forward assumptions (TEST)",
+      "title": "Fixed-income forward assumptions",
       "status": "ok",
       "currency": "USD",
       "columns": [
@@ -854,10 +848,10 @@
    "blocks": [
     {
      "type": "stacked",
-     "title": "Liquidity composition (TEST)",
+     "title": "Liquidity composition",
      "items": [
       {
-       "label": "Portfolio (TEST)",
+       "label": "Portfolio",
        "segments": [
         {
          "label": "Liquid / marketable",
@@ -953,7 +947,7 @@
     },
     {
      "type": "text",
-     "text": "The connector does not return security-level duration, spread duration, yield, convexity or key-rate exposure for this fixture [S8]."
+     "text": "The connector does not return security-level duration, spread duration, yield, convexity or key-rate exposure for this public sample [S8]."
     }
    ]
   },
@@ -970,7 +964,7 @@
        "display": "+4.7%"
       }
      ],
-     "note": "Rate and spread shocks are unavailable in the governed TEST evidence [S8]."
+     "note": "Rate and spread shocks are unavailable in the governed review evidence [S8]."
     },
     {
      "type": "table",
@@ -1164,7 +1158,7 @@
       {
        "name": "Portfolio and allocation",
        "status": "available",
-       "note": "Fictional TEST data [S2]"
+       "note": "Illustrative sample data [S2]"
       },
       {
        "name": "Policy",
@@ -1225,7 +1219,7 @@
        "list_organizations; get_gradient_capabilities",
        "organization=test",
        "2026-06-30",
-       "Fictional TEST data",
+       "Illustrative sample data",
        "passed",
        "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       ],
@@ -1236,7 +1230,7 @@
        "list_portfolios; get_portfolio_structure",
        "allocation_tree",
        "2026-06-30",
-       "Fictional TEST data",
+       "Illustrative sample data",
        "passed",
        "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       ],
@@ -1247,7 +1241,7 @@
        "check_portfolio_policy",
        "portfolio=test",
        "2026-06-30",
-       "Fictional TEST data",
+       "Illustrative sample data",
        "passed",
        "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       ],
@@ -1258,7 +1252,7 @@
        "get_portfolio_exposure",
        "fixed_income",
        "2026-06-30",
-       "Fictional TEST data",
+       "Illustrative sample data",
        "passed",
        "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       ],
@@ -1269,7 +1263,7 @@
        "get_portfolio_historical_returns; get_portfolio_attribution",
        "all sections",
        "2026-06-30",
-       "Fictional TEST data",
+       "Illustrative sample data",
        "passed",
        "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       ],
@@ -1280,7 +1274,7 @@
        "get_macro_conditions",
        "credit_spreads",
        "2026-06-30",
-       "Fictional TEST data",
+       "Illustrative sample data",
        "passed",
        "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       ],
@@ -1291,7 +1285,7 @@
        "get_capital_market_assumptions",
        "baseline",
        "2026-06-15",
-       "Fictional TEST data",
+       "Illustrative sample data",
        "passed",
        "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       ],
@@ -1300,9 +1294,9 @@
        "Mandate and evidence gaps",
        "gradient_tool",
        "get_gradient_capabilities",
-       "fictional",
+       "illustrative",
        "2026-06-30",
-       "Fictional TEST data",
+       "Illustrative sample data",
        "advisory",
        "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       ]

@@ -46,6 +46,14 @@ Use `periods[]` exactly as returned for the cumulative linked-effects line and
 segment-by-month heat. Use `active_risk.segments[].contribution_share` for
 tracking-error contribution; do not substitute standalone volatility.
 
+For large returned line series saved as JSON, the canonical composer accepts a
+`series_imports` directive on a `line` block. Each entry names `source_file`,
+`row_path`, `x_field`, `y_field`, and the series `name`. Relative files resolve
+beside the visual file first, then from the invocation directory. The composer
+copies returned x/y values verbatim into ordinary `line.series`; it rejects
+missing, non-scalar, or invalid mappings and never calculates returns, effects,
+differences, or indexes.
+
 ### Benchmark and excess boundary
 
 Attribution `summary.benchmark_return` is the linked segment benchmark
@@ -104,3 +112,9 @@ Retry once only when `retryable: true`. Preserve error code and request ID in
 Coverage. Entitlement errors are `Not licensed`, not outages. If either core
 attribution result is unavailable, the report is Partial but still renders
 the fixed section with `Not available — <reason>`.
+
+If portfolio exposure cannot resolve a held manager, use exactly
+`Manager findings: Not assessed — <error_code>; request ID <request_id>.`
+Optional broader diligence can appear only as
+`Organization-wide context — not verified as held`; never describe that
+context as a portfolio holding.

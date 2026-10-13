@@ -1,108 +1,127 @@
 {
   "meta": {
-    "eyebrow": "Investment Due Diligence",
-    "header_label": "Private Markets PME",
-    "title": "Northstar Growth Fund III PME (TEST)",
-    "subtitle": "Commitment cash-flow evidence versus public markets",
-    "running_head": "Northstar Growth Fund III PME (TEST)",
-    "data_as_of": "2025-12-31",
-    "cover_facts": [
-      ["Mode", "Commitment PME"],
-      ["Scope", "Fictional TEST fund"]
+  "eyebrow": "Investment Due Diligence",
+  "header_label": "Private Markets PME",
+  "title": "Northstar Growth Fund III PME",
+  "subtitle": "Commitment cash-flow performance versus public markets",
+  "running_head": "Northstar Growth Fund III PME",
+  "data_as_of": "2025-12-31",
+  "cover_facts": [
+    [
+      "Review",
+      "Commitment PME"
     ],
-    "signal": {
-      "level": "clear",
-      "label": "PME positive across both benchmarks"
+    [
+      "Fund",
+      "Northstar Growth Fund III"
+    ],
+    [
+      "Audience",
+      "Investment Committee"
+    ],
+    [
+      "Data as of",
+      "2025-12-31"
+    ]
+  ],
+  "signal": {
+    "level": "clear",
+    "label": "PME positive across both benchmarks"
+  },
+  "completeness": {
+    "used": 7,
+    "expected": 7,
+    "state": "complete"
+  },
+  "handoff": {
+    "schema_version": "gradient-idd-odd-ic-handoff/v1",
+    "stage": "idd",
+    "subject": {
+      "fund_id": "70000000-0000-4000-8000-000000000001",
+      "name": "Northstar Growth Fund III",
+      "identity_status": "canonical"
     },
-    "completeness": {
-      "used": 7,
-      "expected": 7,
-      "state": "complete"
-    },
-    "handoff": {
-      "schema_version": "gradient-idd-odd-ic-handoff/v1",
-      "stage": "idd",
-      "subject": {
-        "fund_id": "70000000-0000-4000-8000-000000000001",
-        "name": "Northstar Growth Fund III (TEST)",
-        "identity_status": "canonical"
+    "return_series": [],
+    "evidence": [
+      {
+        "source_tag": "S1",
+        "tool": "list_portfolios",
+        "as_of": "2025-12-31",
+        "methodology_version": "portfolio-catalog/v1",
+        "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "status": "ok"
       },
-      "return_series": [],
-      "evidence": [
-        {
-          "source_tag": "S1",
-          "tool": "list_portfolios",
-          "as_of": "2025-12-31",
-          "methodology_version": "portfolio-catalog/v1",
-          "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
-          "status": "ok"
-        },
-        {
-          "source_tag": "S2",
-          "tool": "get_portfolio_exposure",
-          "as_of": "2025-12-31",
-          "methodology_version": "portfolio-exposure/v1",
-          "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
-          "status": "ok"
-        },
-        {
-          "source_tag": "S3",
-          "tool": "get_private_markets_holdings",
-          "as_of": "2025-12-31",
-          "methodology_version": "private-markets-holdings/v1",
-          "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
-          "status": "ok"
-        },
-        {
-          "source_tag": "S4",
-          "tool": "get_benchmarks",
-          "as_of": "2025-12-31",
-          "methodology_version": "benchmark-catalog/v1",
-          "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
-          "status": "ok"
-        },
-        {
-          "source_tag": "S5",
-          "tool": "build_strategy_lab_session",
-          "as_of": "2025-12-31",
-          "methodology_version": "strategy-lab-session-builder/v1",
-          "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
-          "status": "ok"
-        },
-        {
-          "source_tag": "S6",
-          "tool": "run_strategy_lab_private_markets_pme",
-          "as_of": "2025-12-31",
-          "methodology_version": "private-markets-pme/v1",
-          "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
-          "status": "ok"
-        },
-        {
-          "source_tag": "S7",
-          "tool": "run_strategy_lab_private_markets_pme",
-          "as_of": "2025-12-31",
-          "methodology_version": "private-markets-pme/v1",
-          "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
-          "status": "ok"
-        }
-      ],
-      "limitations": [
-        "The two returned benchmarks bound one public-market comparison range but do not represent every investable alternative.",
-        "Holdings and ILPA company detail are contextual and were not used as PME calculator inputs."
-      ],
-      "selection": {
-        "status": "not_assessed",
-        "rationale": "PME evidence informs investment diligence but does not determine a manager-selection decision."
+      {
+        "source_tag": "S2",
+        "tool": "get_portfolio_exposure",
+        "as_of": "2025-12-31",
+        "methodology_version": "portfolio-exposure/v1",
+        "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "status": "ok"
+      },
+      {
+        "source_tag": "S3",
+        "tool": "get_private_markets_holdings",
+        "as_of": "2025-12-31",
+        "methodology_version": "private-markets-holdings/v1",
+        "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "status": "ok"
+      },
+      {
+        "source_tag": "S4",
+        "tool": "get_benchmarks",
+        "as_of": "2025-12-31",
+        "methodology_version": "benchmark-catalog/v1",
+        "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "status": "ok"
+      },
+      {
+        "source_tag": "S5",
+        "tool": "build_strategy_lab_session",
+        "as_of": "2025-12-31",
+        "methodology_version": "strategy-lab-session-builder/v1",
+        "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+        "status": "ok"
+      },
+      {
+        "source_tag": "S6",
+        "tool": "run_strategy_lab_private_markets_pme",
+        "as_of": "2025-12-31",
+        "methodology_version": "private-markets-pme/v1",
+        "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+        "status": "ok"
+      },
+      {
+        "source_tag": "S7",
+        "tool": "run_strategy_lab_private_markets_pme",
+        "as_of": "2025-12-31",
+        "methodology_version": "private-markets-pme/v1",
+        "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+        "status": "ok"
       }
-    },
-    "report_kind": "private_markets_pme",
-    "data_basis": "gradient_governed",
-    "evidence_flags": {
-      "cash_flow_series_returned": true
+    ],
+    "limitations": [
+      "The two returned benchmarks bound one public-market comparison range but do not represent every investable alternative.",
+      "Holdings and ILPA company detail are contextual and were not used as PME calculator inputs."
+    ],
+    "selection": {
+      "status": "not_assessed",
+      "rationale": "PME evidence informs investment diligence but does not determine a manager-selection decision."
     }
   },
+  "report_kind": "private_markets_pme",
+  "data_basis": "gradient_governed",
+  "evidence_flags": {
+    "cash_flow_series_returned": true
+  },
+  "confidentiality": "Confidential — private markets review",
+  "signal_title": "Overall view",
+  "meter_title": "Scope reviewed",
+  "cover_disclosure": "Illustrative sample · not client data",
+  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
+},
   "executive": {
-    "bottom_line": "Verdict: Northstar Growth Fund III (TEST) modestly outperformed both returned public-market paths, with 1.08x primary KS-PME, 12.6% net IRR, and 1.41x TVPI through 2025-12-31; the result remains substantially unrealized [S6][S7].",
+    "bottom_line": "Verdict: Northstar Growth Fund III modestly outperformed both returned public-market paths, with 1.08x primary KS-PME, 12.6% net IRR, and 1.41x TVPI through 2025-12-31; the result remains substantially unrealized [S6][S7].",
     "tiles": [
       {
         "label": "Net IRR",
@@ -193,9 +212,9 @@
           "prefix": "$",
           "suffix": "m",
           "items": [
-            {"label": "Aster Cloud (TEST)", "value": 18.4, "display": "$18.4m", "source": "S3"},
-            {"label": "Beacon Health (TEST)", "value": 14.1, "display": "$14.1m", "source": "S3"},
-            {"label": "Cedar Payments (TEST)", "value": 11.7, "display": "$11.7m", "source": "S3"}
+            {"label": "Aster Cloud", "value": 18.4, "display": "$18.4m", "source": "S3"},
+            {"label": "Beacon Health", "value": 14.1, "display": "$14.1m", "source": "S3"},
+            {"label": "Cedar Payments", "value": 11.7, "display": "$11.7m", "source": "S3"}
           ],
           "note": "Reported holdings context; no value enters the PME calculator [S3].",
           "evidence_metadata": {
@@ -485,8 +504,8 @@
             "Source"
           ],
           "rows": [
-            ["Primary", "Northstar Public Growth Index (TEST)", "62.0%", "1.08x", "+1.9%", "S6"],
-            ["Sensitivity", "Northstar Broad Equity Index (TEST)", "54.0%", "1.03x", "+0.8%", "S7"]
+            ["Primary", "Northstar Public Growth Index", "62.0%", "1.08x", "+1.9%", "S6"],
+            ["Sensitivity", "Northstar Broad Equity Index", "54.0%", "1.03x", "+0.8%", "S7"]
           ],
           "note": "benchmark_window_return values are copied from each server response, not recomputed [S6][S7]."
         },
@@ -536,7 +555,7 @@
       "id": "7",
       "num": "A",
       "title": "Appendix — Sources and methods",
-      "kicker": "Saved fictional commitment, benchmark, builder and PME evidence",
+      "kicker": "Saved illustrative commitment, benchmark, builder and PME evidence",
       "blocks": [
         {
           "type": "table",
@@ -552,10 +571,10 @@
             "Digest"
           ],
           "rows": [
-            ["S1", "Canonical portfolio", "gradient_tool", "list_portfolios", "portfolio_id=10000000-0000-4000-8000-000000000001", "2025-12-31", "Fictional TEST portfolio", "passed", "sha256:1111111111111111111111111111111111111111111111111111111111111111"],
-            ["S2", "Canonical commitment", "gradient_tool", "get_portfolio_exposure", "commitment_id=60000000-0000-4000-8000-000000000001", "2025-12-31", "Fictional TEST commitment", "passed", "sha256:2222222222222222222222222222222222222222222222222222222222222222"],
+            ["S1", "Canonical portfolio", "gradient_tool", "list_portfolios", "portfolio_id=10000000-0000-4000-8000-000000000001", "2025-12-31", "sample portfolio", "passed", "sha256:1111111111111111111111111111111111111111111111111111111111111111"],
+            ["S2", "Canonical commitment", "gradient_tool", "get_portfolio_exposure", "commitment_id=60000000-0000-4000-8000-000000000001", "2025-12-31", "sample commitment", "passed", "sha256:2222222222222222222222222222222222222222222222222222222222222222"],
             ["S3", "Holdings and ILPA context", "gradient_tool", "get_private_markets_holdings", "portfolio_id=10000000-0000-4000-8000-000000000001; commitment_id=60000000-0000-4000-8000-000000000001", "2025-12-31", "Context only — not a PME input", "partial", "sha256:3333333333333333333333333333333333333333333333333333333333333333"],
-            ["S4", "Primary and sensitivity benchmark identities", "gradient_tool", "get_benchmarks", "benchmark_ids=b0000000-0000-0000-0000-000000000001,b0000000-0000-0000-0000-000000000002", "2025-12-31", "Fictional TEST catalog", "passed", "sha256:4444444444444444444444444444444444444444444444444444444444444444"],
+            ["S4", "Primary and sensitivity benchmark identities", "gradient_tool", "get_benchmarks", "benchmark_ids=b0000000-0000-0000-0000-000000000001,b0000000-0000-0000-0000-000000000002", "2025-12-31", "sample catalog", "passed", "sha256:4444444444444444444444444444444444444444444444444444444444444444"],
             ["S5", "Primary commitment-scoped session", "gradient_tool", "build_strategy_lab_session", "domain=private-markets-pme; benchmark_id=b0000000-0000-0000-0000-000000000001", "2025-12-31", "Primary builder call", "passed", "sha256:5555555555555555555555555555555555555555555555555555555555555555"],
             ["S6", "Primary PME metrics", "gradient_tool", "run_strategy_lab_private_markets_pme", "session=primary; benchmark_id=b0000000-0000-0000-0000-000000000001", "2025-12-31", "Server-computed PME evidence", "passed", "sha256:6666666666666666666666666666666666666666666666666666666666666666"],
             ["S7", "Sensitivity PME metrics", "gradient_tool", "run_strategy_lab_private_markets_pme", "session=sensitivity; benchmark_id=b0000000-0000-0000-0000-000000000002", "2025-12-31", "Server-computed PME evidence", "passed", "sha256:7777777777777777777777777777777777777777777777777777777777777777"]

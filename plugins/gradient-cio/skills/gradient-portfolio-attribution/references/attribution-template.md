@@ -1,8 +1,12 @@
 # Portfolio Attribution Report Template
 
 Keep the titles and order exactly as shown. The soft target is 7–9 pages when evidence supports the full
-report and the hard ceiling is 13. Missing evidence keeps its section and becomes
-`Not available — <reason>`. Before delivery run
+report and the hard ceiling is 11. Every visual remains required. Missing
+evidence keeps its section and becomes `Not available — <reason>` with
+`unavailable_for` set to the exact missing visual title. Use
+`unavailable_for: "section"` or `"all"` only when the entire section is
+explicitly unavailable; one scoped unavailable block never exempts another
+visual. Before delivery run
 `python scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Portfolio Attribution Report" --budget references/layout-budget.json`;
 apply its specific repair levers and rerun until clean.
 
@@ -26,14 +30,14 @@ apply its specific repair levers and rerun until clean.
   `meta.data_scope_banner` when required; never append it to the title.
 - `meta.subtitle`: `Historical and governed ex ante attribution · period to
   <date> · prepared for <audience>`.
-- `meta.signal_title`: `Attribution evidence`.
+- `meta.signal_title`: `Overall view`; `meta.meter_title`: `Scope reviewed`.
 - Signal is `satisfactory` when both results are available and reconcile;
   `watch` when either is partial or has a warning; `insufficient` when either
   core result is unavailable.
 - Executive label: `Attribution conclusion`.
 - Tiles: Historical active return, Largest historical effect, Ex ante active
-  return, Ex ante residual, in that order. Use exactly these four tiles and
-  cite an `[S#]` tag in each tile.
+  return, Largest sub-allocation effect, in that order. Use exactly these four
+  tiles and cite an `[S#]` tag in each tile. Residual is diagnostics-only.
 
 ## Sections
 
@@ -64,32 +68,38 @@ apply its specific repair levers and rerun until clean.
   returns; do not present them as attribution-summary values.
 - `line` **Growth of 100** using the full returned monthly portfolio and policy
   benchmark series, with the attribution window in `x_bands`.
-- Put `line` **Rolling 12-month excess** and `line` **Drawdown** beside each
-  other in `two_col`; use only returned `rolling` and `drawdown_series` values.
+- Stack full-width `line` **Rolling 12-month excess** and full-width `line`
+  **Drawdown**, in that order; do not put them in `two_col`. Use only returned
+  `rolling` and `drawdown_series` values.
 - End with one to three sourced `Analysis —` callouts; do not infer attribution
   causes from return context.
 
 ### 4. Historical Attribution
 
-- Visual-first: put the waterfall/reconciliation `two_col` and signed segment
-  visual before either attribution table.
+- Visual-first: put the waterfall/reconciliation `two_col`, cumulative effects
+  and segment heat before either segment table.
 - `table` **Historical total effects**: Effect, Contribution, Source.
 - `table` **Historical segment effects**: Segment, Allocation, Selection,
   Interaction, Total.
-- Signed `bars` **Top segment effects** and a `waterfall` **Allocation → selection
-  → interaction** without recalculation.
+- `waterfall` **Allocation → selection → interaction** without recalculation.
+  Do not add **Top segment effects** bars.
 - `line` **Cumulative linked effects** from `periods[]`, with allocation,
   selection, interaction and total as separate returned series.
 - `heat` **Segment × month linked total effect** from
-  `periods[].segments[].linked_total_effect`.
+  `periods[].segments[].linked_total_effect`; place it before the segment
+  tables.
 - Put `bars` **Contribution to tracking error** from
   `active_risk.segments[].contribution_share` beside `bars` **Return effect
   share** in `two_col`; disclose the deterministic presentation-only share
   denominator and never recalculate an effect.
-- `bars` **Inside <largest detractor>** from the depth-1 attribution rerun.
+- `line` **Cumulative selection inside <largest sub-detractor>** from the
+  depth-1 attribution rerun. Use each returned period's cumulative selection
+  value verbatim; the title contract is generic even when the example
+  sub-detractor is Venture Capital.
 - Put the waterfall and `kv` **Historical reconciliation and method** beside
-  each other in `two_col`; include active return, total effects, residual,
-  tolerance, method, linking, period, basis and currency.
+  each other in `two_col`; include active return, total effects, method,
+  linking, period, basis and currency. Keep residual and tolerance values in
+  Diagnostics only.
 - Label attribution summary benchmark and excess as linked segment benchmark composite
   values. When historical-return policy-benchmark-entity values also appear,
   include the returned `diagnostics.entity_return_reconciliation` window,
@@ -107,13 +117,15 @@ apply its specific repair levers and rerun until clean.
 - `table` **Ex ante segment effects**: Segment, Portfolio weight, Benchmark
   weight, Portfolio expected return, Benchmark expected return, Allocation,
   Selection, Interaction, Total.
-- `bars` **Expected return by segment** pairs portfolio and benchmark expected
-  returns for every returned segment.
+- Paired-dot `bars` **Expected return by segment** pairs `Portfolio` and
+  `Policy benchmark` named series for every returned segment (`mark: "dots"`,
+  two `values` per segment).
 - At least one additional polished `bars`, `waterfall` or returned `chart`
   visual from segment totals without recalculation.
 - `kv` **Ex ante reconciliation and method**: expected active return, total
-  effects, residual, tolerance, method, formula version, horizon, basis,
-  currency, return sources, assumption set and regime.
+  effects, method, formula version, horizon, basis, currency, return sources,
+  assumption set and regime. Keep residual and tolerance values in Diagnostics
+  only.
 - Put `table` **Ex ante total effects** and `kv` **Ex ante reconciliation and
   method** beside each other in one `two_col`, then place the segment table
   after that layout. Do not emit three consecutive table/KV blocks.

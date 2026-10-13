@@ -1,49 +1,44 @@
 {
  "meta": {
-  "eyebrow": "Setup & Readiness",
-  "header_label": "Readiness Check",
-  "title": "Gradient",
-  "subtitle": "GradientCIO connection, access and data readiness",
-  "running_head": "Gradient \u00b7 readiness 2026-10-04",
-  "data_as_of": "2026-10-04",
-  "signal": {
-   "level": "partial",
-   "label": "Ready, with limits"
-  },
-  "signal_title": "Readiness",
-  "completeness": {
-   "used": 13,
-   "expected": 14,
-   "state": "partial"
-  },
-  "meter_title": "Checks passed",
-  "cover_facts": [
-   [
-    "Organization",
-    "Gradient"
-   ],
-   [
-    "Role",
-    "Admin"
-   ],
-   [
-    "Licensed modules",
-    "4 of 7"
-   ],
-   [
-    "Roster funds",
-    "1 of 3 slots"
-   ],
-   [
-    "MCP version",
-    "gradient-mcp 0.7.0"
-   ],
-   [
-    "Checked",
-    "2026-10-04"
-   ]
-  ]
+ "eyebrow": "Platform Readiness",
+ "header_label": "Readiness Review",
+ "title": "Northstar Investment Office",
+ "subtitle": "Access, licensed capabilities and data coverage",
+ "running_head": "Northstar · readiness 2026-10-04",
+ "data_as_of": "2026-10-04",
+ "signal": {
+  "level": "partial",
+  "label": "Ready, with limits"
  },
+ "signal_title": "Readiness",
+ "completeness": {
+  "used": 13,
+  "expected": 14,
+  "state": "partial"
+ },
+ "meter_title": "Capabilities reviewed",
+ "cover_facts": [
+  [
+   "Organization",
+   "Northstar Investment Office"
+  ],
+  [
+   "Access",
+   "Connected"
+  ],
+  [
+   "Licensed capabilities",
+   "4 of 7"
+  ],
+  [
+   "Reviewed",
+   "2026-10-04"
+  ]
+ ],
+ "confidentiality": "Confidential — operational readiness review",
+ "cover_disclosure": "Illustrative sample · not client data",
+ "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
+},
  "executive": {
   "bottom_line": "GradientCIO is connected and healthy for organization Gradient [S1][S2]. Nineteen of twenty-one skills are ready; the macro briefing has one unavailable view, and the IC memo needs the Portfolio and Strategy Lab modules for live portfolio data [S2]. 13 of 14 contract checks passed; macro regime state returned Not available (HTTP 500) [S3].",
   "tiles": [
@@ -56,13 +51,13 @@
    {
     "label": "Partial",
     "value": "2",
-    "sub": "Macro brief \u00b7 IC memo",
+    "sub": "Macro brief · IC memo",
     "tone": "watch"
    },
    {
     "label": "Not licensed",
     "value": "2 modules",
-    "sub": "Portfolio \u00b7 Strategy Lab",
+    "sub": "Portfolio · Strategy Lab",
     "tone": "watch"
    },
    {
@@ -390,7 +385,7 @@
         "chip": "Not available",
         "status": "watch"
        },
-       "\u2014",
+       "",
        "HTTP 500 MCP_TOOL_EXECUTION_FAILED; retried once"
       ],
       [
@@ -449,7 +444,7 @@
    ]
   },
   {
-   "title": "Appendix \u2014 Sources and methods",
+   "title": "Appendix — Sources and methods",
    "num": "A",
    "blocks": [
     {

@@ -1,52 +1,46 @@
 {
   "meta": {
-    "mode": "comprehensive",
-    "eyebrow": "Comprehensive Portfolio Review",
-    "header_label": "Comprehensive Portfolio Review",
-    "title": "Example Comprehensive Portfolio (TEST)",
-    "subtitle": "Quarterly comprehensive review · period to 2026-06-30 · prepared for the Investment Committee (TEST)",
-    "running_head": "Example Comprehensive Portfolio (TEST) · period to 2026-06-30",
-    "data_as_of": "2026-06-30 (portfolio); 2026-05-15 (Form 13F)",
-    "confidentiality": "TEST DATA — fictional portfolio for rendering tests only",
-    "cover_facts": [
-      [
-        "Period end",
-        "2026-06-30"
-      ],
-      [
-        "Base currency",
-        "USD"
-      ],
-      [
-        "Total NAV",
-        "$1,500.0M"
-      ],
-      [
-        "Policy benchmark",
-        "Example Policy Benchmark (TEST)"
-      ],
-      [
-        "Review mode",
-        "Comprehensive"
-      ],
-      [
-        "Data scope",
-        "Fictional TEST data"
-      ]
+  "mode": "comprehensive",
+  "eyebrow": "Comprehensive Portfolio Review",
+  "header_label": "Comprehensive Portfolio Review",
+  "title": "Northstar Total Fund",
+  "subtitle": "Quarterly portfolio review · prepared for the Investment Committee",
+  "running_head": "Northstar Total Fund · period to 2026-06-30",
+  "data_as_of": "2026-06-30 (portfolio); 2026-05-15 (Form 13F)",
+  "confidentiality": "Confidential — Investment Committee",
+  "cover_facts": [
+    [
+      "Period end",
+      "2026-06-30"
     ],
-    "signal_title": "Portfolio status",
-    "signal": {
-      "level": "watch",
-      "label": "2 policy items on watch"
-    },
-    "completeness": {
-      "used": 10,
-      "expected": 12,
-      "state": "partial"
-    },
-    "meter_title": "Evidence completeness",
-    "data_basis": "gradient_governed"
+    [
+      "Total NAV",
+      "$1,500.0M"
+    ],
+    [
+      "Policy benchmark",
+      "Northstar Policy Benchmark"
+    ],
+    [
+      "Review",
+      "Comprehensive"
+    ]
+  ],
+  "signal_title": "Overall view",
+  "signal": {
+    "level": "watch",
+    "label": "2 policy items on watch"
   },
+  "completeness": {
+    "used": 10,
+    "expected": 12,
+    "state": "partial"
+  },
+  "meter_title": "Scope reviewed",
+  "data_basis": "gradient_governed",
+  "cover_disclosure": "Illustrative sample · not client data",
+  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
+},
   "executive": {
     "label": "Review conclusion",
     "bottom_line": "The portfolio returned 8.4% over the year to 2026-06-30, 0.6pp behind the policy benchmark [S4]. Historical attribution identifies public-equity selection as the largest negative effect for the review period [S5]. All allocation bands remain compliant, while private assets and manager concentration are on watch [S3]. Realized volatility was 9.1%, and the forward assumptions indicate a 6.2% expected return with 10.4% expected volatility [S4][S8].",
@@ -158,21 +152,21 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a 2 policy items on watch signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+          "text": "Observation: The sample report carries a 2 policy items on watch signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Trailing 1Y is 8.4% in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
+          "text": "Observation: Trailing 1Y is 8.4% in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Liquid share is 63.0% in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
+          "text": "Observation: Liquid share is 63.0% in the review evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
@@ -185,12 +179,12 @@
           "rows": [
             [
               "Portfolio",
-              "Example Comprehensive Portfolio (TEST)",
+              "Northstar Total Fund",
               "S2"
             ],
             [
               "Organization",
-              "Example Institution (TEST)",
+              "Example Institution",
               "S1"
             ],
             [
@@ -205,7 +199,7 @@
             ],
             [
               "Policy benchmark",
-              "Example Policy Benchmark (TEST)",
+              "Northstar Policy Benchmark",
               "S4"
             ],
             [
@@ -215,12 +209,12 @@
             ],
             [
               "Assumption set / regime",
-              "Example 2026 CMA (TEST) / Baseline",
+              "Example 2026 CMA / Baseline",
               "S8"
             ],
             [
               "Data scope",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "S1"
             ]
           ],
@@ -310,7 +304,7 @@
           "type": "chart",
           "chart": {
             "chart_id": "test-market-context",
-            "title": "Selected market returns for context (TEST)",
+            "title": "Selected market returns for context",
             "status": "ok",
             "currency": "USD",
             "columns": [
@@ -366,7 +360,7 @@
       "blocks": [
         {
           "type": "line",
-          "title": "Growth of 100 since 2022-06-30 (TEST)",
+          "title": "Growth of 100 since 2022-06-30",
           "decimals": 0,
           "series": [
             {
@@ -903,7 +897,7 @@
           "type": "chart",
           "chart": {
             "chart_id": "test-allocation-weights",
-            "title": "Actual allocation by asset class (TEST)",
+            "title": "Actual allocation by asset class",
             "status": "ok",
             "currency": "USD",
             "columns": [
@@ -1209,7 +1203,7 @@
           ],
           "rows": [
             [
-              "Example Manager A (TEST)",
+              "Example Manager A",
               "Public equity",
               "$192.0M",
               "12.8%",
@@ -1217,7 +1211,7 @@
               "Current [S6]"
             ],
             [
-              "Example Manager B (TEST)",
+              "Example Manager B",
               "Private equity",
               "$171.0M",
               "11.4%",
@@ -1225,7 +1219,7 @@
               "Lagged [S6]"
             ],
             [
-              "Example Manager C (TEST)",
+              "Example Manager C",
               "Fixed income",
               "$157.5M",
               "10.5%",
@@ -1233,7 +1227,7 @@
               "Current [S6]"
             ],
             [
-              "Example Issuer E (TEST)",
+              "Example Issuer E",
               "13F look-through",
               "$28.5M",
               "1.9%",
@@ -1326,7 +1320,7 @@
           "type": "chart",
           "chart": {
             "chart_id": "test-risk-contribution",
-            "title": "Risk contribution by asset class (TEST)",
+            "title": "Risk contribution by asset class",
             "status": "ok",
             "currency": "USD",
             "columns": [
@@ -1518,7 +1512,7 @@
         },
         {
           "type": "band",
-          "title": "Forward assumption range (TEST)",
+          "title": "Forward assumption range",
           "items": [
             {
               "label": "Expected return",
@@ -1543,7 +1537,7 @@
           "rows": [
             [
               "Assumption set",
-              "Example 2026 CMA (TEST)",
+              "Example 2026 CMA",
               "S8"
             ],
             [
@@ -1681,7 +1675,7 @@
           "type": "chart",
           "chart": {
             "chart_id": "test-commitment-pacing",
-            "title": "Projected calls and distributions (TEST)",
+            "title": "Projected calls and distributions",
             "status": "ok",
             "currency": "USD",
             "columns": [
@@ -1850,7 +1844,7 @@
             {
               "name": "Organization and capabilities",
               "status": "available",
-              "note": "Live fictional TEST scope [S1]"
+              "note": "Live sample scope [S1]"
             },
             {
               "name": "Portfolio record and allocation tree",
@@ -1885,7 +1879,7 @@
             {
               "name": "Capital-market assumptions",
               "status": "available",
-              "note": "Example 2026 CMA (TEST) [S8]"
+              "note": "Example 2026 CMA [S8]"
             },
             {
               "name": "Market context",
@@ -1957,7 +1951,7 @@
               "list_organizations; get_gradient_capabilities",
               "organization_id=test",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1968,7 +1962,7 @@
               "list_portfolios; get_portfolio_structure",
               "view=allocation_tree",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1979,7 +1973,7 @@
               "check_portfolio_policy",
               "portfolio_id=test",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1990,7 +1984,7 @@
               "get_portfolio_historical_returns",
               "all six sections",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -2001,7 +1995,7 @@
               "get_portfolio_attribution",
               "summary, segments, diagnostics",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "{'chip': 'partial', 'status': 'partial'}",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -2012,7 +2006,7 @@
               "get_portfolio_exposure",
               "all pages",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -2023,7 +2017,7 @@
               "get_chart_data",
               "allocations, commitments",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -2034,7 +2028,7 @@
               "get_capital_market_assumptions",
               "view=baseline",
               "2026-06-15",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -2045,7 +2039,7 @@
               "get_the_read",
               "visuals=none",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -2056,7 +2050,7 @@
               "get_cross_domain_research",
               "portfolio_13f_lookthrough",
               "2026-05-15",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "{'chip': 'partial', 'status': 'partial'}",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -2067,7 +2061,7 @@
               "get_manager_diligence_findings",
               "view=open; resolved portfolio managers",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -2078,7 +2072,7 @@
               "get_macro_signals",
               "view=gradient_signal",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ]

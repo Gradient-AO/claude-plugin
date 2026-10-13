@@ -7,6 +7,26 @@ Usage:
 Placements may be keyed by a section number (``"3"``), source heading, or
 display title. A visual file can use ``{"sections": {...}}`` or place section
 keys at its root. Each placement supports ``before``, ``after`` and ``analysis``.
+
+Saved JSON tool responses can feed an ordinary line block without local
+calculation. Add ``series_imports`` to the line block, with one directive per
+series::
+
+    {
+      "type": "line",
+      "title": "Returned series",
+      "series_imports": [{
+        "name": "Portfolio",
+        "source_file": "responses/returns.json",
+        "row_path": "data.points",
+        "x_field": "date",
+        "y_field": "portfolio"
+      }]
+    }
+
+Relative source files resolve first beside the visual file and then from the
+current invocation directory. Imported x/y values are copied verbatim. The
+composer does not calculate returns, effects, differences or indexes.
 """
 
 from __future__ import annotations
@@ -14,6 +34,7 @@ from __future__ import annotations
 import copy
 import argparse
 import json
+import math
 import os
 import re
 import tempfile
@@ -46,13 +67,16 @@ def normalize_unavailable(block: dict[str, Any]) -> dict[str, Any]:
     """Convert the compose-layer unavailable shorthand to a report callout."""
     if block.get("type") == "unavailable":
         tags = " ".join(f"[{tag}]" for tag in block.get("source_tags", []))
-        return {
+        normalized = {
             "type": "callout",
             "role": "unavailable",
             "tone": "info",
             "title": block.get("title", "Unavailable"),
             "text": f"Not available — {block.get('reason', 'reason not supplied')} {tags}".strip(),
         }
+        if "unavailable_for" in block:
+            normalized["unavailable_for"] = copy.deepcopy(block["unavailable_for"])
+        return normalized
     result = copy.deepcopy(block)
     if result.get("type") == "two_col":
         result["left"] = [
@@ -61,6 +85,128 @@ def normalize_unavailable(block: dict[str, Any]) -> dict[str, Any]:
         result["right"] = [
             normalize_unavailable(child) for child in result.get("right", [])
         ]
+    return result
+
+
+def _mapped_value(value: Any, path: str, label: str) -> Any:
+    """Resolve a dot-separated object path with deterministic failures."""
+    if not isinstance(path, str) or not path.strip():
+        raise ValueError(f"{label} must be a non-empty dot-separated path")
+    current = value
+    for component in path.split("."):
+        if not component or not isinstance(current, dict) or component not in current:
+            raise ValueError(f"{label} path '{path}' is missing component '{component}'")
+        current = current[component]
+    return current
+
+
+def _source_path(
+    source_file: str,
+    visual_path: Path | None,
+    invocation_dir: Path | None,
+) -> Path:
+    """Resolve one saved response beside visuals, then from the invocation."""
+    source = Path(source_file)
+    if source.is_absolute():
+        candidates = [source]
+    else:
+        candidates = []
+        if visual_path is not None:
+            candidates.append(visual_path.resolve().parent / source)
+        candidates.append((invocation_dir or Path.cwd()).resolve() / source)
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    searched = ", ".join(str(candidate) for candidate in candidates)
+    raise ValueError(f"direct-series source_file '{source_file}' was not found ({searched})")
+
+
+def import_direct_series(
+    directive: dict[str, Any],
+    visual_path: Path | None = None,
+    invocation_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Load one returned x/y series without transforming either value."""
+    required = ("name", "source_file", "row_path", "x_field", "y_field")
+    missing = [field for field in required if not directive.get(field)]
+    if missing:
+        raise ValueError(
+            "direct-series directive is missing required field(s): "
+            + ", ".join(missing)
+        )
+    source_path = _source_path(
+        str(directive["source_file"]),
+        visual_path,
+        invocation_dir,
+    )
+    try:
+        payload = json.loads(source_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError(
+            f"unable to load direct-series source '{source_path}': {error}"
+        ) from error
+    rows = _mapped_value(payload, str(directive["row_path"]), "row_path")
+    if not isinstance(rows, list) or not rows:
+        raise ValueError("direct-series row_path must resolve to a non-empty array")
+    points: list[list[Any]] = []
+    for index, row in enumerate(rows):
+        if not isinstance(row, dict):
+            raise ValueError(f"direct-series row {index} must be an object")
+        x_value = _mapped_value(row, str(directive["x_field"]), "x_field")
+        y_value = _mapped_value(row, str(directive["y_field"]), "y_field")
+        if (
+            not isinstance(x_value, (str, int, float))
+            or isinstance(x_value, bool)
+            or not isinstance(y_value, (int, float))
+            or isinstance(y_value, bool)
+            or not math.isfinite(float(y_value))
+        ):
+            raise ValueError(
+                f"direct-series row {index} requires scalar x and finite numeric y values"
+            )
+        points.append([x_value, y_value])
+    series = {"name": str(directive["name"]), "points": points}
+    for optional in ("color", "dash"):
+        if optional in directive:
+            series[optional] = copy.deepcopy(directive[optional])
+    return series
+
+
+def resolve_direct_series_imports(
+    value: Any,
+    visual_path: Path | None = None,
+    invocation_dir: Path | None = None,
+) -> Any:
+    """Replace line ``series_imports`` directives recursively."""
+    if isinstance(value, list):
+        return [
+            resolve_direct_series_imports(item, visual_path, invocation_dir)
+            for item in value
+        ]
+    if not isinstance(value, dict):
+        return copy.deepcopy(value)
+    result = {
+        key: resolve_direct_series_imports(item, visual_path, invocation_dir)
+        for key, item in value.items()
+        if key != "series_imports"
+    }
+    if "series_imports" not in value:
+        return result
+    if value.get("type") != "line":
+        raise ValueError("series_imports is permitted only on line blocks")
+    if "series" in value:
+        raise ValueError("line blocks cannot combine series and series_imports")
+    directives = value["series_imports"]
+    if (
+        not isinstance(directives, list)
+        or not directives
+        or not all(isinstance(item, dict) for item in directives)
+    ):
+        raise ValueError("series_imports must be a non-empty array of objects")
+    result["series"] = [
+        import_direct_series(item, visual_path, invocation_dir)
+        for item in directives
+    ]
     return result
 
 
@@ -156,9 +302,18 @@ def analysis_blocks(value: Any, key_judgments: bool = False) -> list[dict[str, A
 
 
 def compose(
-    markdown: str, visuals: dict[str, Any], meta: dict[str, Any]
+    markdown: str,
+    visuals: dict[str, Any],
+    meta: dict[str, Any],
+    visual_path: Path | None = None,
+    invocation_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Merge source layers without rewriting authoritative markdown."""
+    visuals = resolve_direct_series_imports(
+        visuals,
+        visual_path=visual_path,
+        invocation_dir=invocation_dir,
+    )
     report = md_document_to_report(markdown, copy.deepcopy(meta))
     placements = placement_map(visuals)
     for section in report["sections"]:
@@ -227,7 +382,17 @@ def main() -> int:
         for error in errors:
             print(f"  - {error}")
         return 1
-    report = compose(markdown, visuals, meta)
+    try:
+        report = compose(
+            markdown,
+            visuals,
+            meta,
+            visual_path=visuals_path,
+            invocation_dir=Path.cwd(),
+        )
+    except ValueError as error:
+        print(f"FAIL — composition issue: {error}")
+        return 1
     if args.budget:
         try:
             budget = load_layout_budget(args.budget)

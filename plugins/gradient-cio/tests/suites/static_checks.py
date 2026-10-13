@@ -1,5 +1,7 @@
 """Dependency-free static repository checks and suite ordering."""
 
+import importlib.util
+
 from suites.harness import *
 from suites.connector_contracts import (
     contract_checker,
@@ -9,6 +11,8 @@ from suites.connector_contracts import (
 from suites.renderer_regressions import chart_renderer
 from suites.report_validators import connector_cutover
 from report_json_validator import block_objects, validate_sources_appendix_identity
+from report_layout import prepare_report_for_render
+from report_theme import DEFAULT_COVER_DISCLOSURE, FULL_SAMPLE_DISCLOSURE
 
 
 ANALYSIS_EXAMPLE_CONTRACTS = {
@@ -575,14 +579,14 @@ def attribution_compare_contract_checks():
         for point in series.get("points", [])
     }
     check(
-        fallback["meta"]["title"].startswith(
-            "Total Plan - Demo Portfolio "
-            "(Illustrative, Gradient Maintained)"
-        )
+        fallback["meta"]["title"]
+        == "Northstar Total Fund Attribution Comparison"
         and fallback["meta"]["data_as_of"] == "2026-09-30"
         and dict(fallback["meta"]["cover_facts"]).get("Benchmark")
         == "Policy benchmark"
-        and dict(fallback["meta"]["cover_facts"]).get("Cohort") == "Root cohort"
+        and dict(fallback["meta"]["cover_facts"]).get("Cohort") == "Total fund"
+        and fallback["meta"]["cover_disclosure"]
+        == "Illustrative sample · not client data"
         and fallback["executive"]["tiles"][0]["sub"]
         == "Realized 12 months · 2025-10-31 to 2026-09-30 [S2]"
         and section(fallback, "Executive Comparison")["blocks"][0]["text"]
@@ -1084,6 +1088,114 @@ def attribution_compare_contract_checks():
         "lineage, availability and pagination mutations"
         + (f": {failures}" if failures else ""),
     )
+
+def public_example_cover_checks():
+    """Keep committed examples polished while retaining truthful disclosure."""
+    generator_path = ROOT / "tools" / "generate_examples.py"
+    spec = importlib.util.spec_from_file_location(
+        "public_example_generator_checks",
+        generator_path,
+    )
+    if spec is None or spec.loader is None:
+        check(False, "public example generator can be loaded")
+        return
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    forbidden = re.compile(
+        r"(?i)\b(?:test|fixture|render test|synthetic test|mcp|probe|"
+        r"contract checks?|request[_ -]?id)\b"
+    )
+    public_source_forbidden = re.compile(
+        r"\bTEST\b|(?i:\b(?:fixture|fictional|render test|synthetic test)\b)"
+    )
+    errors = []
+    for filename in sorted(set(module.DIRECT_SOURCES.values())):
+        report = json.loads((FIX / filename).read_text(encoding="utf-8"))
+        source_match = public_source_forbidden.search(
+            json.dumps(report, ensure_ascii=False)
+        )
+        if source_match:
+            errors.append(
+                f"{filename}: public report contains {source_match.group(0)!r}"
+            )
+        metadata = report.get("meta", {})
+        cover_values = [
+            metadata.get(field, "")
+            for field in (
+                "title",
+                "subtitle",
+                "eyebrow",
+                "running_head",
+                "confidentiality",
+                "signal_title",
+                "meter_title",
+            )
+        ]
+        cover_values.extend(
+            value
+            for fact in metadata.get("cover_facts", [])
+            for value in fact
+        )
+        match = forbidden.search(" ".join(str(value) for value in cover_values))
+        if match:
+            errors.append(f"{filename}: cover contains {match.group(0)!r}")
+        if metadata.get("cover_disclosure") != DEFAULT_COVER_DISCLOSURE:
+            errors.append(f"{filename}: missing compact cover disclosure")
+        facts = metadata.get("cover_facts", [])
+        if not isinstance(facts, list) or not 1 <= len(facts) <= 4:
+            errors.append(f"{filename}: cover must use one to four facts")
+        try:
+            prepared = prepare_report_for_render(report)
+        except Exception as error:
+            errors.append(f"{filename}: disclosure preparation failed: {error}")
+            continue
+        appendix = next(
+            (
+                section
+                for section in prepared.get("sections", [])
+                if section.get("num") == "A"
+                or "Sources and methods" in str(section.get("title", ""))
+            ),
+            {},
+        )
+        appendix_text = " ".join(
+            json.dumps(appendix, ensure_ascii=False)
+            .replace("\\r", " ")
+            .replace("\\n", " ")
+            .split()
+        )
+        disclosure_text = " ".join(FULL_SAMPLE_DISCLOSURE.split())
+        if disclosure_text not in appendix_text:
+            errors.append(f"{filename}: appendix lacks full sample disclosure")
+    for markdown_name, visuals_name, metadata_name in module.GIPS_SOURCES.values():
+        metadata = json.loads((FIX / metadata_name).read_text(encoding="utf-8"))
+        markdown = (FIX / markdown_name).read_text(encoding="utf-8")
+        visuals = (FIX / visuals_name).read_text(encoding="utf-8")
+        source_match = public_source_forbidden.search(
+            f"{markdown}\n{visuals}\n{json.dumps(metadata, ensure_ascii=False)}"
+        )
+        if source_match:
+            errors.append(
+                f"{markdown_name}: public report contains {source_match.group(0)!r}"
+            )
+        cover_text = json.dumps(metadata, ensure_ascii=False)
+        match = forbidden.search(cover_text)
+        if match:
+            errors.append(f"{metadata_name}: cover contains {match.group(0)!r}")
+        if metadata.get("cover_disclosure") != DEFAULT_COVER_DISCLOSURE:
+            errors.append(f"{metadata_name}: missing compact cover disclosure")
+        if len(metadata.get("cover_facts", [])) != 4:
+            errors.append(f"{metadata_name}: cover must use four facts")
+        markdown_text = " ".join(markdown.split())
+        disclosure_text = " ".join(FULL_SAMPLE_DISCLOSURE.split())
+        if disclosure_text not in markdown_text:
+            errors.append(f"{markdown_name}: appendix lacks full sample disclosure")
+    check(
+        not errors,
+        "public example covers are committee-ready and fully disclosed"
+        + (f": {errors}" if errors else ""),
+    )
+
 
 def analysis_example_checks():
     missing_files = []
@@ -1599,11 +1711,104 @@ def sources_appendix_contract_checks():
     )
 
 
+def plugin_version_preflight_checks():
+    script = ROOT / "tools" / "check_plugin_version.py"
+    spec = importlib.util.spec_from_file_location(
+        "gradient_plugin_version_preflight",
+        script,
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    def write_plugin(path, version):
+        manifest = path / ".claude-plugin" / "plugin.json"
+        manifest.parent.mkdir(parents=True)
+        manifest.write_text(
+            json.dumps({"name": "gradient-cio", "version": version}),
+            encoding="utf-8",
+        )
+
+    with tempfile.TemporaryDirectory() as temporary:
+        root = pathlib.Path(temporary)
+        active = root / "workspace" / "plugins" / "gradient-cio"
+        installs = root / "cache"
+        write_plugin(active, "5.7.0")
+        write_plugin(installs / "older" / "gradient-cio", "5.6.9")
+        write_plugin(installs / "equal" / "gradient-cio", "5.7.0")
+        active_version, duplicates, newer = module.evaluate_versions(
+            active,
+            [installs],
+        )
+        no_newer_ok = (
+            active_version == "5.7.0"
+            and sorted(version for _path, version in duplicates)
+            == ["5.6.9", "5.7.0"]
+            and newer == []
+        )
+        write_plugin(installs / "newer" / "gradient-cio", "5.8.0")
+        _active_version, _duplicates, newer = module.evaluate_versions(
+            active,
+            [installs],
+        )
+        newer_ok = [version for _path, version in newer] == ["5.8.0"]
+    check(
+        no_newer_ok and newer_ok,
+        "plugin version preflight stops only for newer duplicate installs",
+    )
+
+
+def attribution_skill_contract_checks():
+    skill_root = ROOT / "skills" / "gradient-portfolio-attribution"
+    skill = (skill_root / "SKILL.md").read_text(encoding="utf-8")
+    template = (
+        skill_root / "references" / "attribution-template.md"
+    ).read_text(encoding="utf-8")
+    data_map = (skill_root / "references" / "data-map.md").read_text(
+        encoding="utf-8"
+    )
+    normalized_skill = " ".join(skill.split())
+    normalized_data_map = " ".join(data_map.split())
+    requirements = SKILL_REQUIREMENTS.read_text(encoding="utf-8")
+    budget = json.loads(
+        (skill_root / "references" / "layout-budget.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    manager_fallback = (
+        "Manager findings: Not assessed — <error_code>; "
+        "request ID <request_id>."
+    )
+    organization_context = "Organization-wide context — not verified as held"
+    check(
+        "7–9 PDF pages with a hard ceiling of 11" in skill
+        and "hard ceiling is 11" in template
+        and budget["pdf"]["target_pages"] == {"min": 7, "max": 9}
+        and budget["pdf"]["hard_max_pages"] == 11
+        and "every required visual retained" in requirements,
+        "attribution page budget retains soft target and 11-page ceiling",
+    )
+    check(
+        manager_fallback in normalized_skill
+        and manager_fallback in normalized_data_map
+        and organization_context in normalized_skill
+        and organization_context in normalized_data_map,
+        "attribution manager fallback and non-held context labels are exact",
+    )
+    check(
+        "series_imports" in data_map
+        and "copies returned x/y values verbatim" in data_map
+        and (ROOT / "tools" / "check_plugin_version.py").is_file(),
+        "attribution documents direct-series import and version preflight",
+    )
+
+
 def static(allow_branded):
     print("Static checks")
     pj = json.loads((ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
     check(re.fullmatch(r"[a-z0-9-]+", pj.get("name", "")) is not None, f"plugin name kebab-case ({pj.get('name')})")
     check(re.fullmatch(r"\d+\.\d+\.\d+", pj.get("version", "")) is not None, f"plugin version semver ({pj.get('version')})")
+    plugin_version_preflight_checks()
+    attribution_skill_contract_checks()
     mcp = json.loads((ROOT / ".mcp.json").read_text(encoding="utf-8"))
     url = mcp.get("mcpServers", {}).get("GradientCIO", {}).get("url", "")
     check(url.startswith("https://"), f"GradientCIO connector url https ({url})")
@@ -1799,6 +2004,7 @@ def static(allow_branded):
     registered_json_validator_checks(validator_manifest)
     handoff_contract_checks()
     attribution_compare_contract_checks()
+    public_example_cover_checks()
     analysis_example_checks()
     private_markets_pme_contract_checks()
     manager_performance_modes = (
