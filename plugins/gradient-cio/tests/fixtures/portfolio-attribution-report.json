@@ -1,6 +1,7 @@
 {
   "attribution_report_mode": "standard",
   "meta": {
+    "mode": "single",
     "eyebrow": "Portfolio Attribution Report",
     "header_label": "Portfolio Attribution Report",
     "title": "Northstar Total Fund",

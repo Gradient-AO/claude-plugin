@@ -128,6 +128,40 @@ QUIET_SPEC = ReportSpec(
     require_tile_sources=True,
 )
 
+TRIAGE_SPEC = ReportSpec(
+    name="diligence roster triage report",
+    section_rules=tuple(
+        SectionRule(re.escape(title), title)
+        for title in (
+            "Executive summary",
+            "Roster detail",
+            SOURCES_APPENDIX_TITLE,
+        )
+    ),
+    appendix_pattern=SOURCES_APPENDIX_TITLE,
+    signal_levels=DILIGENCE_VOCAB.signal_levels,
+    completeness_states=DILIGENCE_VOCAB.completeness_states,
+    allowed_tones=DILIGENCE_VOCAB.allowed_tones,
+    allowed_statuses=DILIGENCE_VOCAB.allowed_statuses,
+    slot_rules=(
+        SlotRule(
+            r"Executive summary",
+            frozenset({"table"}),
+            "flagged-funds table",
+        ),
+        SlotRule(r"Roster detail", frozenset({"table"}), "roster table"),
+        SlotRule(
+            SOURCES_APPENDIX_TITLE,
+            frozenset({"table"}),
+            "sources table",
+        ),
+    ),
+    forbidden_body_patterns=(
+        r"\b(?:hire|fire|terminate|redeem from|allocate to)\b",
+    ),
+    require_action_row_sources=True,
+)
+
 ATTENTION_REASON_POLICY: dict[str, tuple[str, dict[str, str | None]]] = {
     "identity_attention": (
         "high",
@@ -567,7 +601,7 @@ def _validate_quiet_layout(root: dict[str, JsonValue]) -> list[str]:
 
 
 def main(argv: list[str]) -> int:
-    """Validate active- and quiet-week monitoring report variants."""
+    """Validate monitoring digest and roster triage report variants."""
     if len(argv) != 2:
         print(f"usage: {Path(argv[0]).name} <report.json>")
         return 2
@@ -585,6 +619,37 @@ def main(argv: list[str]) -> int:
         return 1
 
     meta = as_object(root.get("meta"))
+    mode = meta.get("mode") if meta is not None else None
+    if mode not in {"digest", "triage"}:
+        errors = ["meta.mode must be 'digest' or 'triage'"]
+        errors.extend(validate_report(document, ACTIVE_SPEC))
+        print(f"FAIL — manager monitoring report: {len(errors)} issue(s)")
+        for error in errors:
+            print(f"  - {error}")
+        print_quality_notes(
+            document,
+            structured=ACTIVE_SPEC.require_analysis_structure,
+        )
+        return 1
+
+    if mode == "triage":
+        errors = validate_report(document, TRIAGE_SPEC)
+        if errors:
+            print(f"FAIL — {TRIAGE_SPEC.name}: {len(errors)} issue(s)")
+            for error in errors:
+                print(f"  - {error}")
+            print_quality_notes(
+                document,
+                structured=TRIAGE_SPEC.require_analysis_structure,
+            )
+            return 1
+        print(f"PASS — {TRIAGE_SPEC.name} JSON contract is valid.")
+        print_quality_notes(
+            document,
+            structured=TRIAGE_SPEC.require_analysis_structure,
+        )
+        return 0
+
     declared_week_kind = meta.get("week_kind") if meta is not None else None
     quiet = (
         declared_week_kind == "quiet"

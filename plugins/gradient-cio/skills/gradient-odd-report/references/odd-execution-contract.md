@@ -2,28 +2,6 @@
 
 Read only the section needed for the current workflow step.
 
-## Roster triage and report modes
-
-One full report covers one fund or firm. For no named subject or two or more
-funds, call `get_fund_diligence_monitoring` for the roster fund IDs, then call
-`get_manager_diligence_attention_queue` with `view: red_flags` and
-`view: changes_since_review`, page with `limit: 50`, and join by canonical ID.
-Use the governed fund `review_status`, evidence status, attention reasons, and
-next-review date; do not reconstruct them from roster dates. Do not call the
-large diligence brief or per-fund review history during triage.
-
-Triage level: elevated for a high flag, Item 11 disclosure, or tier-1 alert;
-watch for a medium concern, tier-2 alert, ownership/control change, or overdue
-review; clear only when a complete queue row has none; insufficient when the
-queue row is missing or unreadable. This is not the full ODD evidence signal.
-
-Show the ranked triage table and ask once whether to create flagged full
-reports, a 2–3 page roster summary, both, or selected reports. In an unattended
-run create the summary plus reports for elevated funds. If all funds are
-requested, disclose the PDF/page count first. Use `report_mode: roster_summary`
-for the summary and `report_mode: full` for each subject report. Reuse
-firm-level evidence across funds sharing a parent.
-
 ## Full-report evidence
 
 Call `get_gradient_capabilities`, then:

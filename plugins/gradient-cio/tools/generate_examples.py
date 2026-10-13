@@ -28,19 +28,20 @@ DIRECT_SOURCES = {
     "gradient-idd-manager-performance-single": "idd-manager-performance-single.json",
     "gradient-idd-manager-performance-compare": "idd-manager-performance-compare.json",
     "gradient-idd-manager-performance-robustness": "idd-manager-performance-robustness.json",
+    "gradient-idd-manager-performance-shortlist": "idd-shortlist.json",
     "gradient-idd-manager-portfolio-fit": "idd-portfolio-fit.json",
-    "gradient-idd-manager-shortlist": "idd-shortlist.json",
     "gradient-idd-private-markets-pme": "idd-private-markets-pme.json",
     "gradient-portfolio-construction-fixed-income": "construction-fixed-income.json",
     "gradient-portfolio-construction-global-public-equity": "construction-global-public-equity.json",
     "gradient-decision-ic-memo": "ic-memo.json",
-    "gradient-odd-manager-compare": "compare.json",
+    "gradient-odd-report-compare": "compare.json",
     "gradient-odd-manager-monitor": "digest.json",
+    "gradient-odd-manager-monitor-triage": "triage.json",
     "gradient-portfolio-construction-marketable-alternatives": "construction-marketable-alternatives.json",
     "gradient-odd-report": "odd.json",
     "gradient-portfolio-attribution": "portfolio-attribution-report.json",
-    "gradient-portfolio-attribution-compare-fallback": "attribution-compare-fallback.json",
-    "gradient-portfolio-attribution-compare-three-lane": "attribution-compare-three-lane.json",
+    "gradient-portfolio-attribution-lanes-fallback": "attribution-compare-fallback.json",
+    "gradient-portfolio-attribution-lanes-three-lane": "attribution-compare-three-lane.json",
     "gradient-portfolio-review": "portfolio-comprehensive.json",
     "gradient-portfolio-construction-private-markets": "construction-private-markets.json",
     "gradient-portfolio-construction-real-assets": "construction-real-assets.json",
@@ -67,8 +68,12 @@ def skill_for_artifact(artifact: str) -> str:
         return "gradient-portfolio-construction"
     if artifact.startswith("gradient-idd-manager-performance-"):
         return "gradient-idd-manager-performance"
-    if artifact.startswith("gradient-portfolio-attribution-compare-"):
-        return "gradient-portfolio-attribution-compare"
+    if artifact.startswith("gradient-odd-report-"):
+        return "gradient-odd-report"
+    if artifact.startswith("gradient-odd-manager-monitor-"):
+        return "gradient-odd-manager-monitor"
+    if artifact.startswith("gradient-portfolio-attribution-lanes-"):
+        return "gradient-portfolio-attribution"
     return artifact
 
 
@@ -76,6 +81,31 @@ def budget_for_artifact(artifact: str) -> Path:
     """Resolve public-skill and internal-module layout budgets."""
     if artifact.startswith("internal-gips-review-"):
         return ROOT / "internal" / "gips-evidence-review" / "references" / "layout-budget.json"
+    mode_budgets = {
+        "gradient-idd-manager-performance-shortlist": (
+            "gradient-idd-manager-performance",
+            "references/modes/shortlist-layout-budget.json",
+        ),
+        "gradient-odd-report-compare": (
+            "gradient-odd-report",
+            "references/layout-budget-compare.json",
+        ),
+        "gradient-odd-manager-monitor-triage": (
+            "gradient-odd-manager-monitor",
+            "references/layout-budget-triage.json",
+        ),
+        "gradient-portfolio-attribution-lanes-fallback": (
+            "gradient-portfolio-attribution",
+            "references/modes/compare-lanes-layout-budget.json",
+        ),
+        "gradient-portfolio-attribution-lanes-three-lane": (
+            "gradient-portfolio-attribution",
+            "references/modes/compare-lanes-layout-budget.json",
+        ),
+    }
+    if artifact in mode_budgets:
+        skill, relative_path = mode_budgets[artifact]
+        return ROOT / "skills" / skill / relative_path
     return (
         ROOT
         / "skills"

@@ -816,9 +816,9 @@ def connector_cutover():
             "manager shortlist",
             ROOT
             / "skills"
-            / "gradient-idd-manager-shortlist"
+            / "gradient-idd-manager-performance"
             / "scripts"
-            / "validate_manager_shortlist.py",
+            / "validate_manager_performance.py",
             "idd-shortlist.json",
         ),
         (

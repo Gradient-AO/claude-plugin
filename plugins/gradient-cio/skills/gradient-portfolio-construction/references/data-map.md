@@ -65,7 +65,7 @@ construction readiness rating by itself.
 | Macro regime | `get_macro_signals`; `view: gradient_signal`, plus `view: regime_state` when available | Preserve GRIP availability/degradation reasons and returned regime status; context only, never a forecast |
 | Broader context | `get_the_read`; `visuals: none` | Facts only; at most two short paragraphs |
 | Selected-series diagnostics | `build_strategy_lab_session` for the selected `return_series_ids`, then `run_strategy_lab_expected_statistics`, `run_strategy_lab_relative_return` or `run_strategy_lab_date_window_robustness` with the returned session | Selected-series sandbox; never use portfolio ID |
-| Manager evidence | `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve; use `gradient-odd-manager-compare` / `gradient-odd-report` for deeper work | Preserve entity scope and severity; never infer that an unmatched holding has no findings |
+| Manager evidence | `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve; use `gradient-odd-report` in `compare` or `full` mode for deeper work | Preserve entity scope and severity; never infer that an unmatched holding has no findings |
 | User documents | IPS, benchmark specification, holdings analytics, transition plan | Tag as user documents with date and scope |
 
 ## Fallbacks
@@ -128,7 +128,7 @@ fields, and never compare or conflate the two excess values.
 | 13F look-through | `get_cross_domain_research`; `view: portfolio_13f_lookthrough`, selected portfolio, top 10 managers, limit 20 | Preserve join basis, filing dates, coverage and data-scope label |
 | CMA comparison | `get_cma_consensus_check`; held public-equity classes | Preserve positioning and coverage |
 | Macro regime | `get_macro_signals`; `view: gradient_signal`, plus `view: regime_state` when available | Preserve GRIP availability/degradation reasons and returned regime status; context only, never a forecast |
-| Manager evidence | `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve; use `gradient-odd-manager-compare` / `gradient-odd-report` for deeper work | Preserve entity scope and severity; never infer that an unmatched holding has no findings |
+| Manager evidence | `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve; use `gradient-odd-report` in `compare` or `full` mode for deeper work | Preserve entity scope and severity; never infer that an unmatched holding has no findings |
 | Issuer question | `get_public_equity_fundamentals`, `get_public_equity_filing_evidence`, `get_market_positioning` | Only for named concentrations inside global-public-equity construction; do not expand into a standalone research report |
 | Selected-series diagnostics | Pass selected `return_series_ids` directly to `run_strategy_lab_expected_statistics` or `run_strategy_lab_date_window_robustness`; add `benchmark_id` for `run_strategy_lab_relative_return`. Do not also pass a `strategy_lab_session` stub. | Selected-series sandbox; never use portfolio ID |
 | User documents | IPS, benchmark specification, manager structure or transition plan | Tag as user documents with date and scope |
@@ -288,7 +288,7 @@ fields, and never compare or conflate the two excess values.
 | CMA positioning | `get_cma_consensus_check`; `mode: asset_class`, held private-market classes | Preserve returned positioning and coverage |
 | Macro regime | `get_macro_signals`; `view: gradient_signal`, plus `view: regime_state` when available | Preserve GRIP availability/degradation reasons and returned regime status; context only, never a forecast |
 | Manager evidence | `get_manager_diligence_brief`, `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve | Preserve entity scope and severity; separate server evidence from plugin conclusions |
-| Manager shortlist | Return-based shortlist through `gradient-idd-manager-shortlist`; Form ADV screen (`search_managers`, `screen_managers`) through `gradient-odd-manager-compare` | Handoff rather than duplicating a comparison |
+| Manager shortlist | Return-based shortlist through `gradient-idd-manager-performance` in `shortlist` mode; Form ADV screen (`search_managers`, `screen_managers`) through `gradient-odd-report` in `compare` mode | Handoff rather than duplicating a comparison |
 | Selected-series robustness | Pass selected `return_series_ids` directly to a supported `run_strategy_lab_*` tool and add the required benchmark field. Do not also pass a `strategy_lab_session` stub. | Optional sandbox only; never pass `portfolio_id` |
 | User documents | IPS, pacing plan, cash-flow forecast or consultant recommendation | Tag as user document with document date and scope |
 

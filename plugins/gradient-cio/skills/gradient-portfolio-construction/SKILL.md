@@ -2,7 +2,7 @@
 name: gradient-portfolio-construction
 description: "Create a portfolio-construction report for private markets, fixed income, global public equity, marketable alternatives, or real assets. Triggers: 'design a sleeve strategy mix', 'build an allocation', 'review portfolio construction'. For one-manager fit use gradient-idd-manager-portfolio-fit."
 metadata:
-  version: "3.0.0"
+  version: "3.0.1"
   style_contract: "2.3.0"
   group: "Portfolio Analytics"
   subject: "portfolio construction"
@@ -68,7 +68,7 @@ Deliver PDF by default, PowerPoint when requested, or both from the same validat
 
 - One manager's return evidence → `gradient-idd-manager-performance`.
 - One manager's add-or-replace effect → `gradient-idd-manager-portfolio-fit`.
-- Candidate operations or Form ADV comparison → `gradient-odd-manager-compare`.
-- Manager or fund diligence → `gradient-odd-report`.
+- Candidate operations or Form ADV comparison → `gradient-odd-report` in `compare` mode.
+- Manager or fund diligence → `gradient-odd-report` in `full` mode.
 - Formal committee vote → `gradient-decision-ic-memo`.
 - Ongoing monitoring → `gradient-portfolio-review`.

@@ -1,5 +1,6 @@
 {
   "meta": {
+  "mode": "compare",
   "eyebrow": "Manager Comparison",
   "header_label": "Manager Comparison",
   "title": "Global Macro Mandate",

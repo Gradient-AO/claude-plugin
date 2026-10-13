@@ -30,7 +30,7 @@ Set `meta.data_basis` to `gradient_governed` or `mixed`. The sources appendix is
 
 Validate and attach a `gradient-idd-odd-ic-handoff/v1` object using `references/contracts/idd-odd-ic-handoff.schema.json`. Include canonical or advisory identity status, return-series and benchmark IDs, evidence, limitations, and selection rationale.
 
-Selected finalists → `gradient-odd-report`; operational comparison of the same candidates → `gradient-odd-manager-compare`; a hire decision → `gradient-decision-ic-memo`.
+Selected finalists → `gradient-odd-report`; operational comparison of the same candidates → `gradient-odd-report` compare mode; a hire decision → `gradient-decision-ic-memo`.
 
 ## 5. Validate and deliver
 

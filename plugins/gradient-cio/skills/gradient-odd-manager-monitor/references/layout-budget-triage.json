@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "design_profile": "analytical",
+  "forced_breaks": [],
+  "pdf": {
+    "target_pages": {
+      "min": 6,
+      "max": 8
+    },
+    "hard_max_pages": 10,
+    "minimum_body_fill": 0.4,
+    "orphan_tail_max_fill": 0.2
+  },
+  "content": {
+    "defaults": {
+      "max_pages": 2,
+      "max_words": 550,
+      "max_body_table_rows": 24,
+      "max_visuals": 4
+    },
+    "sections": {
+      "executive": {
+        "role": "summary",
+        "requires_analysis": false,
+        "max_body_table_rows": 0,
+        "max_visuals": 1
+      },
+      "firm-profile-ownership": {
+        "role": "analytical",
+        "requires_analysis": true,
+        "max_body_table_rows": 16,
+        "max_visuals": 4
+      },
+      "regulatory-conflicts-custody": {
+        "role": "analytical",
+        "requires_analysis": true,
+        "max_body_table_rows": 16,
+        "max_visuals": 2
+      },
+      "peer-positioning": {
+        "role": "analytical",
+        "requires_analysis": true,
+        "max_body_table_rows": 0,
+        "max_visuals": 2
+      },
+      "fund-operations-service-providers": {
+        "role": "analytical",
+        "requires_analysis": true,
+        "max_body_table_rows": 16,
+        "max_visuals": 2
+      },
+      "reported-equity-holdings": {
+        "role": "analytical",
+        "requires_analysis": true,
+        "max_body_table_rows": 20,
+        "max_visuals": 2
+      },
+      "monitoring-findings-ddq": {
+        "role": "analytical",
+        "requires_analysis": true,
+        "max_body_table_rows": 12,
+        "max_visuals": 3
+      },
+      "follow-up-open-items": {
+        "role": "closing",
+        "requires_analysis": false,
+        "max_body_table_rows": 16,
+        "max_visuals": 0
+      },
+      "sources-method": {
+        "role": "appendix",
+        "requires_analysis": false,
+        "max_pages": 3,
+        "max_words": 350,
+        "max_body_table_rows": 18,
+        "max_visuals": 0
+      }
+    }
+  }
+}

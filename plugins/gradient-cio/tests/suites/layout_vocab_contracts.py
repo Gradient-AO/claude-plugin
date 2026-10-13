@@ -28,13 +28,14 @@ TRACKED_BUDGETS = (
     ROOT / "skills" / "gradient-decision-ic-memo" / "references" / "layout-budget.json",
     ROOT / "skills" / "gradient-idd-manager-performance" / "references" / "layout-budget.json",
     ROOT / "skills" / "gradient-idd-manager-portfolio-fit" / "references" / "layout-budget.json",
-    ROOT / "skills" / "gradient-idd-manager-shortlist" / "references" / "layout-budget.json",
+    ROOT / "skills" / "gradient-idd-manager-performance" / "references" / "modes" / "shortlist-layout-budget.json",
     ROOT / "skills" / "gradient-idd-private-markets-pme" / "references" / "layout-budget.json",
     ROOT / "skills" / "gradient-odd-ddq-reconcile" / "references" / "layout-budget.json",
-    ROOT / "skills" / "gradient-odd-manager-compare" / "references" / "layout-budget.json",
+    ROOT / "skills" / "gradient-odd-report" / "references" / "layout-budget-compare.json",
     ROOT / "skills" / "gradient-odd-manager-monitor" / "references" / "layout-budget.json",
+    ROOT / "skills" / "gradient-odd-manager-monitor" / "references" / "layout-budget-triage.json",
     ROOT / "skills" / "gradient-odd-report" / "references" / "layout-budget.json",
-    ROOT / "skills" / "gradient-portfolio-attribution-compare" / "references" / "layout-budget.json",
+    ROOT / "skills" / "gradient-portfolio-attribution" / "references" / "modes" / "compare-lanes-layout-budget.json",
     ROOT / "skills" / "gradient-portfolio-attribution" / "references" / "layout-budget.json",
     ROOT / "skills" / "gradient-portfolio-construction" / "references" / "layout-budget.json",
     ROOT / "skills" / "gradient-portfolio-review" / "references" / "layout-budget.json",
@@ -55,7 +56,7 @@ def layout_vocab_contracts():
     }
     check(
         not errors,
-        "all 15 tracked layout budgets satisfy strict schema v2"
+        "all 16 tracked layout budgets satisfy strict schema v2"
         + (f": {errors}" if errors else ""),
     )
 
@@ -252,11 +253,10 @@ def layout_vocab_contracts():
         ROOT / "internal" / "gips-evidence-review" / "scripts" / "validate_gips_report.py",
         ROOT / "skills" / "gradient-decision-ic-memo" / "scripts" / "validate_memo.py",
         ROOT / "skills" / "gradient-odd-ddq-reconcile" / "scripts" / "validate_ddq_report.py",
-        ROOT / "skills" / "gradient-odd-manager-compare" / "scripts" / "validate_manager_compare.py",
         ROOT / "skills" / "gradient-odd-manager-monitor" / "scripts" / "validate_monitor_digest.py",
         ROOT / "skills" / "gradient-odd-report" / "scripts" / "validate_odd_report.py",
         ROOT / "skills" / "gradient-portfolio-attribution" / "scripts" / "validate_attribution.py",
-        ROOT / "skills" / "gradient-portfolio-attribution-compare" / "scripts" / "validate_attribution_compare.py",
+        ROOT / "skills" / "gradient-portfolio-attribution" / "scripts" / "validate_attribution_compare.py",
         ROOT / "skills" / "gradient-portfolio-review" / "scripts" / "validate_review.py",
     )
     check(
@@ -270,9 +270,9 @@ def layout_vocab_contracts():
     bootstrap_validator = (
         ROOT
         / "skills"
-        / "gradient-odd-manager-compare"
+        / "gradient-odd-report"
         / "scripts"
-        / "validate_manager_compare.py"
+        / "validate_odd_report.py"
     )
     bootstrapped = subprocess.run(
         [sys.executable, str(bootstrap_validator)],

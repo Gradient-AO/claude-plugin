@@ -196,34 +196,6 @@ CONTRACTS = {
             ),
         ),
     ),
-}
-
-NAMED_CONTRACTS = {
-    "portfolio_fit": IddContract(
-        "portfolio_fit",
-        _spec(
-            "manager portfolio-fit report",
-            (
-                "Executive conclusion",
-                "Baseline and proposed scenario",
-                "Correlation and diversification",
-                "Return and risk impact",
-                "Simulation and stress",
-                "Constraints and follow-ups",
-                SOURCES_APPENDIX_TITLE,
-            ),
-            (
-                "Correlation and diversification",
-                "Return and risk impact",
-                "Simulation and stress",
-            ),
-            (
-                SlotRule(re.escape("Correlation and diversification"), VISUALS, "diversification visual"),
-                SlotRule(re.escape("Return and risk impact"), VISUALS, "return/risk visual"),
-                SlotRule(re.escape("Simulation and stress"), VISUALS, "simulation visual"),
-            ),
-        ),
-    ),
     "shortlist": IddContract(
         "shortlist",
         _spec(
@@ -250,6 +222,34 @@ NAMED_CONTRACTS = {
                     VISUALS,
                     "selection-rationale visual",
                 ),
+            ),
+        ),
+    ),
+}
+
+NAMED_CONTRACTS = {
+    "portfolio_fit": IddContract(
+        "portfolio_fit",
+        _spec(
+            "manager portfolio-fit report",
+            (
+                "Executive conclusion",
+                "Baseline and proposed scenario",
+                "Correlation and diversification",
+                "Return and risk impact",
+                "Simulation and stress",
+                "Constraints and follow-ups",
+                SOURCES_APPENDIX_TITLE,
+            ),
+            (
+                "Correlation and diversification",
+                "Return and risk impact",
+                "Simulation and stress",
+            ),
+            (
+                SlotRule(re.escape("Correlation and diversification"), VISUALS, "diversification visual"),
+                SlotRule(re.escape("Return and risk impact"), VISUALS, "return/risk visual"),
+                SlotRule(re.escape("Simulation and stress"), VISUALS, "simulation visual"),
             ),
         ),
     ),

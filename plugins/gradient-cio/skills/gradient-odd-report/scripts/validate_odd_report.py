@@ -131,13 +131,17 @@ FULL_SPEC = ReportSpec(
     require_tile_sources=True,
 )
 
-ROSTER_SPEC = ReportSpec(
-    name="roster ODD summary",
+COMPARE_SPEC = ReportSpec(
+    name="manager comparison report",
     section_rules=tuple(
-        SectionRule(re.escape(title), title)
+        SectionRule(title, title)
         for title in (
             "Executive summary",
-            "Roster detail",
+            "Side-by-side comparison",
+            "Operational flags",
+            "Form 13F overlap",
+            "ADV–13F consistency and events",
+            "Coverage and next steps",
             SOURCES_APPENDIX_TITLE,
         )
     ),
@@ -147,36 +151,124 @@ ROSTER_SPEC = ReportSpec(
     allowed_tones=DILIGENCE_VOCAB.allowed_tones,
     allowed_statuses=DILIGENCE_VOCAB.allowed_statuses,
     slot_rules=(
-        SlotRule(r"Executive summary", frozenset({"table"}), "flagged-funds table"),
-        SlotRule(r"Roster detail", frozenset({"table"}), "roster table"),
         SlotRule(
-            SOURCES_APPENDIX_TITLE, frozenset({"table"}), "sources table"
+            r"Executive summary",
+            frozenset({"table"}),
+            "shortlist-at-a-glance table",
+        ),
+        SlotRule(
+            r"Side-by-side comparison",
+            frozenset({"table"}),
+            "side-by-side table",
+        ),
+        SlotRule(
+            r"Side-by-side comparison",
+            frozenset({"bars"}),
+            "RAUM, clients and disclosure bars",
+            minimum=3,
+        ),
+        SlotRule(
+            r"Side-by-side comparison",
+            frozenset({"percentiles"}),
+            "per-manager cohort percentile strips",
+        ),
+        SlotRule(
+            r"Operational flags",
+            frozenset({"findings"}),
+            "per-manager findings",
+        ),
+        SlotRule(
+            r"Operational flags",
+            frozenset({"bars"}),
+            "flag severity bars",
+        ),
+        SlotRule(
+            r"Form 13F overlap",
+            frozenset({"heat"}),
+            "overlap heat matrix",
+        ),
+        SlotRule(
+            r"ADV–13F consistency and events",
+            frozenset({"table"}),
+            "consistency table",
+        ),
+        SlotRule(
+            r"ADV–13F consistency and events",
+            frozenset({"timeline"}),
+            "events timeline",
+        ),
+        SlotRule(
+            r"Coverage and next steps",
+            frozenset({"two_col"}),
+            "paired coverage and next-steps layout",
+        ),
+        SlotRule(
+            r"Coverage and next steps",
+            frozenset({"coverage"}),
+            "coverage block",
+        ),
+        SlotRule(
+            r"Coverage and next steps",
+            frozenset({"table"}),
+            "next-steps table",
+        ),
+        SlotRule(
+            SOURCES_APPENDIX_TITLE,
+            frozenset({"table"}),
+            "sources table",
         ),
     ),
     forbidden_body_patterns=(
+        r"\b(?:best|preferred|top-tier|best-in-class)\s+(?:manager|adviser|firm)\b",
         r"\b(?:hire|fire|terminate|redeem from|allocate to)\b",
     ),
     require_action_row_sources=True,
+    analysis_section_patterns=(
+        r"Side-by-side comparison",
+        r"Operational flags",
+        r"Form 13F overlap",
+        r"ADV–13F consistency and events",
+    ),
+    analytical_section_patterns=(
+        r"Side-by-side comparison",
+        r"Operational flags",
+        r"Form 13F overlap",
+        r"ADV–13F consistency and events",
+    ),
+    require_message_first_kickers=True,
+    require_visual_before_first_table=True,
+    key_judgment_section_patterns=(r"Executive summary",),
+    executive_tile_labels=(
+        "Managers compared",
+        "Managers with flags",
+        "13F overlap pairs",
+        "Item 11 disclosures",
+    ),
+    require_tile_sources=True,
 )
 
 
 def select_spec(document: JsonValue) -> tuple[ReportSpec, list[str]]:
-    """Select the established full-report or roster-summary workflow."""
+    """Select the full or comparison ODD workflow from meta.mode."""
     root = as_object(document)
     if root is None:
         return FULL_SPEC, []
-    mode = root.get("report_mode")
-    if mode == "roster_summary":
-        return ROSTER_SPEC, []
-    if mode in (None, "full"):
+    meta = as_object(root.get("meta")) or {}
+    mode = meta.get("mode")
+    if mode == "full":
         return FULL_SPEC, []
-    return FULL_SPEC, ["report_mode must be 'full' or 'roster_summary'"]
+    if mode == "compare":
+        return COMPARE_SPEC, []
+    return FULL_SPEC, ["meta.mode must be 'full' or 'compare'"]
 
 
 def validate_full_layout(document: JsonValue) -> list[str]:
     """Enforce stable full-report IDs and governed layout choices."""
     root = as_object(document)
-    if root is None or root.get("report_mode") == "roster_summary":
+    if root is None:
+        return []
+    meta = as_object(root.get("meta")) or {}
+    if meta.get("mode") != "full":
         return []
     sections = section_objects(root)
     expected_ids = (

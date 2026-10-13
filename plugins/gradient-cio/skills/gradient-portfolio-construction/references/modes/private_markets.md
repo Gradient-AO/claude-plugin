@@ -128,10 +128,10 @@ open-item count, plus the requested file(s).
 ## 5. Handoffs
 
 - Candidate-manager returns against benchmarks → `gradient-idd-manager-performance`; return-based mandate
-  shortlist → `gradient-idd-manager-shortlist`.
-- Candidate-manager operations or a Form ADV screen → `gradient-odd-manager-compare`.
+  shortlist → `gradient-idd-manager-performance` in `shortlist` mode.
+- Candidate-manager operations or a Form ADV screen → `gradient-odd-report` in `compare` mode.
 - One private fund's cash-flow performance against public markets → `gradient-idd-private-markets-pme`.
-- Manager or fund diligence, including GIPS claims and performance integrity → `gradient-odd-report`.
+- Manager or fund diligence, including GIPS claims and performance integrity → `gradient-odd-report` in `full` mode.
 - Hedge-fund or liquid-alternatives construction → `gradient-portfolio-construction`.
 - Broad liquid/illiquid real-assets construction → `gradient-portfolio-construction`.
 - Formal 16-section committee memo → `gradient-decision-ic-memo` with memo type `New Commitment` or

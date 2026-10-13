@@ -120,10 +120,10 @@ recommendation, fixed-income policy status, open-item count, plus the requested 
 ## 5. Handoffs
 
 - Candidate-manager returns against benchmarks → `gradient-idd-manager-performance`; return-based mandate
-  shortlist → `gradient-idd-manager-shortlist`.
-- Candidate-manager operations or a Form ADV screen → `gradient-odd-manager-compare`.
+  shortlist → `gradient-idd-manager-performance` in `shortlist` mode.
+- Candidate-manager operations or a Form ADV screen → `gradient-odd-report` in `compare` mode.
 - One manager's effect on this sleeve's diversification → `gradient-idd-manager-portfolio-fit`.
-- Manager diligence, including GIPS claims and performance integrity → `gradient-odd-report`.
+- Manager diligence, including GIPS claims and performance integrity → `gradient-odd-report` in `full` mode.
 - Macro evidence stays in this mode's rates-and-credit context; no separate research skill is installed.
 - Formal 16-section vote memo → `gradient-decision-ic-memo` with memo type `Allocation Change` or `Rebalance`.
 - Ongoing monitoring → `gradient-portfolio-review`.

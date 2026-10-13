@@ -57,7 +57,7 @@
       "rationale": "Insufficient governed evidence."
     }
   },
-  "report_kind": "shortlist",
+  "mode": "shortlist",
   "data_basis": "gradient_governed",
   "confidentiality": "Confidential — manager selection review",
   "signal_title": "Overall view",
