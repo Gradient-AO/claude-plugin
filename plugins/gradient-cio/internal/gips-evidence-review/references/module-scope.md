@@ -93,6 +93,6 @@ Gradient's canonical example portfolio; Strategy Lab uses the named demo set and
 join either module's demo records to client holdings, managers, or decisions.
 
 For `record_kind: example`, `access_mode: illustrative`, or `provenance.data_scope.kind: illustrative`, use
-the exact label **Illustrative, Gradient Maintained — demo data, not the client's holdings or managers** on
-the cover, in the first affected section, and in every affected source row. Never describe illustrative data
-as client-authorized or live.
+the compact cover-footer disclosure **Illustrative sample · not client data** and the full label
+**Illustrative, Gradient Maintained — demo data, not the client's holdings or managers** in Appendix A and
+every affected source row. Never describe illustrative data as client-authorized or live.

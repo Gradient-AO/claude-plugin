@@ -2,7 +2,7 @@
 name: gradient-odd-ddq-reconcile
 description: "Create a DDQ reconciliation report against Form ADV evidence. Triggers: 'reconcile this DDQ', 'verify questionnaire answers', 'check DDQ discrepancies'. For a full operational review use gradient-odd-report."
 metadata:
-  style_contract: "2.2.0"
+  style_contract: "2.3.0"
   group: "Operational due diligence"
   subject: "DDQ"
   output: "reconciliation"

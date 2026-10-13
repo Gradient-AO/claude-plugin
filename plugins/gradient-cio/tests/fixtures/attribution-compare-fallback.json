@@ -1,61 +1,66 @@
 {
   "meta": {
-    "mode": "fallback",
-    "eyebrow": "Portfolio Attribution Comparison",
-    "header_label": "Attribution Comparison",
-    "title": "Total Plan - Demo Portfolio (Illustrative, Gradient Maintained) Attribution Comparison",
-    "subtitle": "Historical and ex ante lanes · planned capabilities unavailable",
-    "running_head": "Total Plan - Demo Portfolio attribution comparison",
-    "data_as_of": "2026-09-30",
-    "cover_facts": [
-      [
-        "Portfolio",
-        "Total Plan - Demo Portfolio (Illustrative, Gradient Maintained)"
-      ],
-      [
-        "Benchmark",
-        "Policy benchmark"
-      ],
-      [
-        "Cohort",
-        "Root cohort"
-      ],
-      [
-        "Mode",
-        "Fallback"
-      ]
+  "mode": "fallback",
+  "eyebrow": "Portfolio Attribution Comparison",
+  "header_label": "Attribution Comparison",
+  "title": "Northstar Total Fund Attribution Comparison",
+  "subtitle": "Historical and forward attribution · available evidence review",
+  "running_head": "Northstar Total Fund · attribution comparison",
+  "data_as_of": "2026-09-30",
+  "cover_facts": [
+    [
+      "Portfolio",
+      "Northstar Total Fund"
     ],
-    "signal": {
-      "level": "watch",
-      "label": "Two governed lanes available"
-    },
-    "completeness": {
-      "used": 2,
-      "expected": 4,
-      "state": "partial"
-    },
-    "capability_gate": {
-      "simulate_portfolio_attribution": {
-        "contract": "planned_conditional",
-        "status": "unavailable",
-        "reason": "planned"
-      },
-      "compare_portfolio_attribution": {
-        "contract": "planned_conditional",
-        "status": "unavailable",
-        "reason": "planned"
-      }
-    },
-    "evidence_flags": {
-      "entity_return_reconciliation_available": true,
-      "historical_summary_available": true,
-      "ex_ante_summary_available": true,
-      "historical_periods_available": true,
-      "historical_cumulative_growth_available": false,
-      "compatible_lane_count": 2
-    },
-    "data_basis": "gradient_governed"
+    [
+      "Benchmark",
+      "Policy benchmark"
+    ],
+    [
+      "Cohort",
+      "Total fund"
+    ],
+    [
+      "Available views",
+      "Historical and forward"
+    ]
+  ],
+  "signal": {
+    "level": "watch",
+    "label": "Two governed lanes available"
   },
+  "completeness": {
+    "used": 2,
+    "expected": 4,
+    "state": "partial"
+  },
+  "capability_gate": {
+    "simulate_portfolio_attribution": {
+      "contract": "planned_conditional",
+      "status": "unavailable",
+      "reason": "planned"
+    },
+    "compare_portfolio_attribution": {
+      "contract": "planned_conditional",
+      "status": "unavailable",
+      "reason": "planned"
+    }
+  },
+  "evidence_flags": {
+    "entity_return_reconciliation_available": true,
+    "historical_summary_available": true,
+    "ex_ante_summary_available": true,
+    "historical_periods_available": true,
+    "historical_cumulative_growth_available": false,
+    "compatible_lane_count": 2
+  },
+  "data_basis": "gradient_governed",
+  "confidentiality": "Confidential — Investment Committee",
+  "signal_title": "Overall view",
+  "meter_title": "Scope reviewed",
+  "cover_disclosure": "Illustrative sample · not client data",
+  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
+},
   "executive": {
     "bottom_line": "Realized shortfall comes from selection; expected gain comes from selection; Alternatives drives both [S2][S3].",
     "tiles": [
@@ -628,7 +633,7 @@
           "rows": [
             [
               "assumption_set_name",
-              "2026 Strategic CMA (TEST)",
+              "2026 Strategic CMA",
               "S3"
             ],
             [
@@ -1016,9 +1021,9 @@
               "Capability gate",
               "gradient_tool",
               "get_gradient_capabilities",
-              "fixture=true",
+              "illustrative sample",
               "2026-09-30",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1027,9 +1032,9 @@
               "Historical attribution",
               "gradient_tool",
               "get_portfolio_attribution",
-              "fixture=true",
+              "illustrative sample",
               "2026-09-30",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "passed",
               "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
             ],
@@ -1038,9 +1043,9 @@
               "Ex ante attribution",
               "gradient_tool",
               "get_portfolio_ex_ante_attribution",
-              "fixture=true",
+              "illustrative sample",
               "2026-09-30",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "passed",
               "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
             ]

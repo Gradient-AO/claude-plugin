@@ -1,50 +1,44 @@
 {
   "meta": {
-    "eyebrow": "Operational Due Diligence Report",
-    "header_label": "Operational Due Diligence",
-    "signal_title": "ODD evidence signal",
-    "meter_title": "Evidence completeness",
-    "title": "Ridgeview Example Advisors, LP (TEST)",
-    "subtitle": "Example City, ST · SEC-registered adviser · RENDER TEST",
-    "running_head": "Ridgeview · ODD (render test)",
-    "data_as_of": "2026-10-01 (Form ADV); 2026-08-14 (Form 13F)",
-    "confidentiality": "RENDER TEST — partial sample, not a full ODD report",
-    "cover_facts": [
-      [
-        "Adviser CRD",
-        "999901"
-      ],
-      [
-        "SEC file no.",
-        "801-00000"
-      ],
-      [
-        "Regulatory AUM",
-        "$12.40B"
-      ],
-      [
-        "Form ADV report date",
-        "2026-10-01"
-      ],
-      [
-        "Prepared for",
-        "Gradient"
-      ],
-      [
-        "Report date",
-        "2026-10-04"
-      ]
+  "eyebrow": "Operational Due Diligence Report",
+  "header_label": "Operational Due Diligence",
+  "signal_title": "Overall view",
+  "meter_title": "Scope reviewed",
+  "title": "Ridgeview Advisors, LP",
+  "subtitle": "Operational due diligence review · SEC-registered adviser",
+  "running_head": "Ridgeview · ODD",
+  "data_as_of": "2026-10-01 (Form ADV); 2026-08-14 (Form 13F)",
+  "confidentiality": "Confidential — operational due diligence review",
+  "cover_facts": [
+    [
+      "Adviser CRD",
+      "999901"
     ],
-    "signal": {
-      "level": "clear"
-    },
-    "completeness": {
-      "used": 5,
-      "expected": 7,
-      "state": "partial"
-    },
-    "data_basis": "mixed"
+    [
+      "Regulatory AUM",
+      "$12.40B"
+    ],
+    [
+      "Form ADV report",
+      "2026-10-01"
+    ],
+    [
+      "Report date",
+      "2026-10-04"
+    ]
+  ],
+  "signal": {
+    "level": "clear"
   },
+  "completeness": {
+    "used": 5,
+    "expected": 7,
+    "state": "partial"
+  },
+  "data_basis": "mixed",
+  "cover_disclosure": "Illustrative sample · not client data",
+  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
+},
   "executive": {
     "bottom_line": "Ridgeview reports $12.40B regulatory AUM, 38 private funds and no Item 11 disclosures [S1]. No cohort metric is in the top quartile; the highest is AUM per adviser representative at the 62.6th percentile [S1]. Firm events are not yet published, so completeness is degraded and this is not a clean bill of health.",
     "tiles": [
@@ -78,7 +72,7 @@
     {
       "id": "executive",
       "title": "Executive summary",
-      "kicker": "Render test of the shared renderer with ODD blocks",
+      "kicker": "public sample of the shared renderer with ODD blocks",
       "blocks": [
         {
           "type": "coverage",
@@ -111,21 +105,21 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries one clear headline signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+          "text": "Observation: The sample report carries one clear headline signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Regulatory AUM is $12.4B in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
+          "text": "Observation: Regulatory AUM is $12.4B in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Composite is 32.4 in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
+          "text": "Observation: Composite is 32.4 in the review evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
@@ -172,7 +166,7 @@
               "rows": [
                 [
                   "Legal name",
-                  "Ridgeview Example Advisors, LP (TEST)",
+                  "Ridgeview Advisors, LP",
                   "S1"
                 ],
                 [
@@ -239,7 +233,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Scale frames the operating review",
-          "text": "Observation: The TEST adviser reports $12.4B of RAUM and 38 private funds [S1]. Why it matters: Scale raises the importance of ownership and provider controls. Uncertainty: The compact fixture omits detailed owner records. What would change the view: Corroborated ownership records changing the control assessment."
+          "text": "Observation: The adviser reports $12.4B of RAUM and 38 private funds [S1]. Why it matters: Scale raises the importance of ownership and provider controls. Uncertainty: The public sample omits detailed owner records. What would change the view: Corroborated ownership records changing the control assessment."
         }
       ]
     },
@@ -251,20 +245,20 @@
           "type": "callout",
           "tone": "watch",
           "title": "Regulatory evidence unavailable",
-          "text": "Not available — this compact TEST fixture does not return governed regulatory rows [S1]."
+          "text": "Not available — the reviewed evidence does not include detailed regulatory rows [S1]."
         },
         {
           "type": "callout",
           "tone": "info",
           "title": "Not available",
-          "text": "Not available — this compact render fixture does not include regulatory detail [S1]."
+          "text": "Not available — regulatory detail was not included in the reviewed evidence [S1]."
         },
         {
           "type": "callout",
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Regulatory detail remains an evidence gap",
-          "text": "Observation: Zero detailed conflict or custody rows are available in this compact TEST record [S1]. Why it matters: The signal cannot be read as a clean bill of health. Uncertainty: Missing rows may contain neutral or adverse items. What would change the view: A complete validated ADV response set."
+          "text": "Observation: Zero detailed conflict or custody rows are available in the reviewed evidence [S1]. Why it matters: The signal cannot be read as a clean bill of health. Uncertainty: Missing rows may contain neutral or adverse items. What would change the view: A complete validated ADV response set."
         }
       ],
       "kicker": "The filing evidence identifies custody and conflict items for review"
@@ -333,23 +327,23 @@
           "type": "callout",
           "tone": "watch",
           "title": "Service-provider evidence unavailable",
-          "text": "Not available — this compact TEST fixture does not return governed administrator, auditor or custodian rows [S1]."
+          "text": "Not available — the reviewed evidence does not include administrator, auditor or custodian rows [S1]."
         },
         {
           "type": "callout",
           "tone": "info",
           "title": "Not available",
-          "text": "Not available — this compact render fixture omits fund operations [S1]."
+          "text": "Not available — fund-operations detail was not included in the reviewed evidence [S1]."
         },
         {
           "type": "callout",
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Fund operations are not yet corroborated",
-          "text": "Observation: Zero fund-level provider records appear in the compact TEST fixture [S1]. Why it matters: Independence among operating parties cannot yet be assessed. Uncertainty: Missing provider coverage is not affirmative adverse evidence. What would change the view: Validated records naming the administrator, auditor and custodian."
+          "text": "Observation: Zero fund-level provider records appear in the reviewed evidence [S1]. Why it matters: Independence among operating parties cannot yet be assessed. Uncertainty: Missing provider coverage is not affirmative adverse evidence. What would change the view: Validated records naming the administrator, auditor and custodian."
         }
       ],
-      "kicker": "Service-provider evidence remains incomplete in the compact TEST record"
+      "kicker": "Service-provider evidence remains incomplete"
     },
     {
       "id": "reported-equity-holdings",
@@ -359,20 +353,20 @@
           "type": "callout",
           "tone": "watch",
           "title": "Holding rows unavailable",
-          "text": "Not available — the governed Form 13F snapshot is present, but this compact TEST fixture omits its holding rows [S3]."
+          "text": "Not available — the governed Form 13F snapshot is present, but its holding rows are unavailable [S3]."
         },
         {
           "type": "callout",
           "tone": "info",
           "title": "Not available",
-          "text": "Not available — this compact render fixture omits holding rows [S3]."
+          "text": "Not available — holding rows were not included in the reviewed evidence [S3]."
         },
         {
           "type": "callout",
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Holdings evidence remains partial",
-          "text": "Observation: One Form 13F snapshot exists, but holding rows are omitted from this TEST fixture [S3]. Why it matters: Concentration cannot be interpreted from the summary alone. Uncertainty: Form 13F coverage is lagged and partial. What would change the view: Complete holding records plus successful identity reconciliation."
+          "text": "Observation: One Form 13F snapshot exists, but its holding rows are unavailable [S3]. Why it matters: Concentration cannot be interpreted from the summary alone. Uncertainty: Form 13F coverage is lagged and partial. What would change the view: Complete holding records plus successful identity reconciliation."
         }
       ],
       "kicker": "Lagged holdings provide a partial concentration lens"
@@ -400,7 +394,7 @@
             {
               "date": "Not available",
               "title": "Firm and fund events",
-              "detail": "Event publication is not yet available in the TEST record [S2].",
+              "detail": "Event publication is not yet available in the reviewed evidence [S2].",
               "tone": "watch"
             }
           ]
@@ -409,7 +403,7 @@
           "type": "callout",
           "tone": "info",
           "title": "Not available",
-          "text": "Not available — this compact render fixture omits monitoring details [S2]."
+          "text": "Not available — monitoring details were not included in the reviewed evidence [S2]."
         },
         {
           "type": "callout",
@@ -429,7 +423,7 @@
           "type": "callout",
           "tone": "info",
           "title": "Not available",
-          "text": "Not available — no follow-up questions are included in this compact render fixture [S1]."
+          "text": "Not available — no follow-up questions are included in this review [S1]."
         }
       ]
     },
@@ -469,9 +463,9 @@
               "Form ADV profile",
               "gradient_tool",
               "get_manager_odd_profile",
-              "fixture=true",
+              "illustrative sample",
               "2026-10-01",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "{'chip': 'not_run', 'status': 'not_run'}",
               "sha256:273814b06d98b1737c111b83024663b8e8600d4b69330958b9c6b9c61b827814"
             ],
@@ -480,9 +474,9 @@
               "Manager Monitor",
               "gradient_tool",
               "get_manager_monitor_evidence",
-              "fixture=true",
+              "illustrative sample",
               "2026-10-01",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:2bdcc27a6e4cd1e329899b4d04e170b5c8d8495ae3ac85508662595e0ddba249"
             ],
@@ -491,9 +485,9 @@
               "Form 13F snapshot",
               "gradient_tool",
               "get_firm_13f_portfolio_review",
-              "fixture=true",
+              "illustrative sample",
               "2026-08-14",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:b978ab9ea42f3266f45899cd2105866e57f56016496c2bd775d7260eab4fd245"
             ]
@@ -504,7 +498,7 @@
           "items": [
             "Method: the ODD signal applies the governed Item 11, finding, alert, ownership-change and cohort-percentile rules to available evidence; unavailable evidence degrades completeness rather than becoming zero [S1] [S2] [S3].",
             "Form ADV is adviser-reported. Gradient cohort percentiles describe positioning, not quality or performance. Form 13F is firm-level, lagged and partial [S1] [S3].",
-            "This fictional TEST report is a diligence aid, not investment, legal or compliance advice. No hire, fire, redemption, termination or allocation recommendation is made."
+            "This sample report is a diligence aid, not investment, legal or compliance advice. No hire, fire, redemption, termination or allocation recommendation is made."
           ]
         }
       ]

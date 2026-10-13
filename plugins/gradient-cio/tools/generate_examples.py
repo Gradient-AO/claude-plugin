@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate one fictional PDF and editable PowerPoint example per skill."""
+"""Generate one illustrative PDF and editable PowerPoint example per skill."""
 
 from __future__ import annotations
 
@@ -132,7 +132,7 @@ def gips_source(skill: str, directory: Path) -> Path:
 
 
 def main() -> int:
-    """Generate the public fictional reference set."""
+    """Generate the public illustrative reference set."""
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--out",
@@ -192,7 +192,7 @@ def main() -> int:
             "Layout QA warnings for: " + ", ".join(failed),
             file=sys.stderr,
         )
-    print(f"Generated {len(sources)} fictional examples in {args.out}")
+    print(f"Generated {len(sources)} illustrative examples in {args.out}")
     return 0
 
 

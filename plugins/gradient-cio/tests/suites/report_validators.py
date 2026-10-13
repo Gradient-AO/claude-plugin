@@ -1,6 +1,7 @@
 """Report and composer validator regression checks."""
 
 from suites.harness import *  # noqa: I001
+from report_json_validator import block_objects
 from report_layout import resolve_layout_budget
 
 
@@ -883,7 +884,7 @@ def connector_cutover():
         and "`not_available:no_payload`" in writing_standards
         and "`passed`, `passed_with_warnings`, `partial`, `failed`, `unavailable`,"
         in writing_standards
-        and "no duplicate sources-appendix note is required"
+        and "include the full label once in"
         in writing_standards
         and "`Not available — series views not published`" in writing_standards,
         "canonical writing standards define source validation, scope, and digest contracts",
@@ -1691,6 +1692,30 @@ def connector_cutover():
     attribution_fixture = json.loads(
         (FIX / "portfolio-attribution-report.json").read_text(encoding="utf-8")
     )
+    attribution_sources = next(
+        block
+        for section in attribution_fixture["sections"]
+        if str(section.get("title", "")).startswith("Appendix")
+        and not str(section.get("title", "")).startswith("Appendix B")
+        for block in section["blocks"]
+        if block.get("type") == "table"
+    )
+    attribution_analysis = [
+        block
+        for section in attribution_fixture["sections"]
+        for block in block_objects(section)
+        if block.get("role") in {"analysis", "key_judgment"}
+    ]
+    check(
+        len(attribution_sources.get("rows", [])) == 7
+        and all(
+            isinstance(row, list)
+            and len(row) == len(attribution_sources.get("columns", []))
+            for row in attribution_sources.get("rows", [])
+        )
+        and len(attribution_analysis) == 7,
+        "attribution golden retains complete source rows and analysis",
+    )
     with tempfile.TemporaryDirectory() as attribution_tmp:
         tmp_dir = pathlib.Path(attribution_tmp)
         unavailable = json.loads(json.dumps(attribution_fixture))
@@ -1702,11 +1727,13 @@ def connector_cutover():
         unavailable_section["blocks"] = [
             {
                 "type": "callout",
+                "role": "unavailable",
                 "tone": "warning",
                 "title": "Not available",
                 "text": (
                     "Not available — missing_portfolio_expected_return [S5]."
                 ),
+                "unavailable_for": "section",
             },
             {
                 "type": "callout",
@@ -1845,7 +1872,7 @@ def connector_cutover():
             ("Historical Attribution", "Segment × month linked total effect"),
             ("Historical Attribution", "Contribution to tracking error"),
             ("Historical Attribution", "Return effect share"),
-            ("Historical Attribution", "Inside Public equity"),
+            ("Historical Attribution", "Cumulative selection inside US equity"),
             ("Governed Ex Ante Attribution", "Expected return by segment"),
             (
                 "Historical-versus-Ex-Ante Scope and Comparison",
@@ -1880,6 +1907,242 @@ def connector_cutover():
                 and missing_visual_result.returncode == 1,
                 f"attribution validator requires {visual_title}",
             )
+
+        rolling_unavailable = json.loads(json.dumps(attribution_fixture))
+        rolling_section = next(
+            section
+            for section in rolling_unavailable["sections"]
+            if section["title"] == "Historical Returns Context"
+        )
+        rolling_section["blocks"] = [
+            block
+            for block in rolling_section["blocks"]
+            if block.get("title") != "Rolling 12-month excess"
+        ]
+        rolling_section["blocks"].insert(
+            1,
+            {
+                "type": "callout",
+                "role": "unavailable",
+                "tone": "info",
+                "title": "Not available",
+                "text": "Not available — rolling series was not returned [S3].",
+                "unavailable_for": "Rolling 12-month excess",
+            },
+        )
+        check(
+            run_attribution_case(
+                "attribution-rolling-scoped-unavailable",
+                rolling_unavailable,
+            ).returncode
+            == 0,
+            "attribution validator accepts exact-title visual unavailability",
+        )
+        for missing_title in ("Growth of 100", "Drawdown"):
+            overbroad = json.loads(json.dumps(rolling_unavailable))
+            overbroad_section = next(
+                section
+                for section in overbroad["sections"]
+                if section["title"] == "Historical Returns Context"
+            )
+            overbroad_section["blocks"] = [
+                block
+                for block in overbroad_section["blocks"]
+                if block.get("title") != missing_title
+            ]
+            overbroad_result = run_attribution_case(
+                f"attribution-rolling-does-not-exempt-{missing_title}",
+                overbroad,
+            )
+            check(
+                overbroad_result.returncode == 1
+                and missing_title
+                in (overbroad_result.stdout + overbroad_result.stderr),
+                f"rolling unavailability does not exempt {missing_title}",
+            )
+
+        unscoped_unavailable = json.loads(json.dumps(rolling_unavailable))
+        unscoped_section = next(
+            section
+            for section in unscoped_unavailable["sections"]
+            if section["title"] == "Historical Returns Context"
+        )
+        next(
+            block
+            for block in unscoped_section["blocks"]
+            if block.get("role") == "unavailable"
+        ).pop("unavailable_for")
+        unscoped_result = run_attribution_case(
+            "attribution-unscoped-unavailable",
+            unscoped_unavailable,
+        )
+        check(
+            unscoped_result.returncode == 1
+            and "requires unavailable_for"
+            in (unscoped_result.stdout + unscoped_result.stderr),
+            "attribution validator rejects unscoped typed unavailability",
+        )
+
+        invalid_paired = json.loads(json.dumps(attribution_fixture))
+        invalid_expected = find_attribution_block(
+            next(
+                section
+                for section in invalid_paired["sections"]
+                if section["title"] == "Governed Ex Ante Attribution"
+            )["blocks"],
+            "Expected return by segment",
+        )
+        invalid_expected.pop("mark")
+        invalid_paired_result = run_attribution_case(
+            "attribution-expected-return-not-paired-dot",
+            invalid_paired,
+        )
+        check(
+            invalid_paired_result.returncode == 1
+            and "must use paired-dot bars"
+            in (invalid_paired_result.stdout + invalid_paired_result.stderr),
+            "attribution validator requires paired-dot expected returns",
+        )
+
+        nested_returns = json.loads(json.dumps(attribution_fixture))
+        nested_section = next(
+            section
+            for section in nested_returns["sections"]
+            if section["title"] == "Historical Returns Context"
+        )
+        nested_rolling = next(
+            block
+            for block in nested_section["blocks"]
+            if block.get("title") == "Rolling 12-month excess"
+        )
+        nested_drawdown = next(
+            block
+            for block in nested_section["blocks"]
+            if block.get("title") == "Drawdown"
+        )
+        nested_section["blocks"] = [
+            block
+            for block in nested_section["blocks"]
+            if block not in (nested_rolling, nested_drawdown)
+        ]
+        nested_section["blocks"].insert(
+            1,
+            {
+                "type": "two_col",
+                "left": [nested_rolling],
+                "right": [nested_drawdown],
+            },
+        )
+        nested_result = run_attribution_case(
+            "attribution-return-series-not-full-width",
+            nested_returns,
+        )
+        check(
+            nested_result.returncode == 1
+            and "requires full-width line"
+            in (nested_result.stdout + nested_result.stderr),
+            "attribution validator rejects nested rolling and drawdown lines",
+        )
+
+        bad_heat_order = json.loads(json.dumps(attribution_fixture))
+        heat_section = next(
+            section
+            for section in bad_heat_order["sections"]
+            if section["title"] == "Historical Attribution"
+        )
+        heat_block = next(
+            block
+            for block in heat_section["blocks"]
+            if block.get("title") == "Segment × month linked total effect"
+        )
+        heat_section["blocks"].remove(heat_block)
+        segment_table_index = next(
+            index
+            for index, block in enumerate(heat_section["blocks"])
+            if block.get("title") == "Historical segment effects"
+        )
+        heat_section["blocks"].insert(segment_table_index + 1, heat_block)
+        heat_result = run_attribution_case(
+            "attribution-heat-after-segment-table",
+            bad_heat_order,
+        )
+        check(
+            heat_result.returncode == 1
+            and "segment heat before segment tables"
+            in (heat_result.stdout + heat_result.stderr),
+            "attribution validator enforces heat-before-table order",
+        )
+
+        bad_comparison_order = json.loads(json.dumps(attribution_fixture))
+        comparison_section = next(
+            section
+            for section in bad_comparison_order["sections"]
+            if section["title"]
+            == "Historical-versus-Ex-Ante Scope and Comparison"
+        )
+        basis_block = next(
+            block
+            for block in comparison_section["blocks"]
+            if block.get("title") == "Basis difference"
+        )
+        comparison_section["blocks"].remove(basis_block)
+        comparison_section["blocks"].append(basis_block)
+        comparison_result = run_attribution_case(
+            "attribution-basis-after-comparison",
+            bad_comparison_order,
+        )
+        check(
+            comparison_result.returncode == 1
+            and "Basis difference before comparison evidence"
+            in (comparison_result.stdout + comparison_result.stderr),
+            "attribution validator enforces basis-first comparison order",
+        )
+
+        top_effects = json.loads(json.dumps(attribution_fixture))
+        top_effects_section = next(
+            section
+            for section in top_effects["sections"]
+            if section["title"] == "Historical Attribution"
+        )
+        top_effects_section["blocks"].insert(
+            1,
+            {
+                "type": "bars",
+                "title": "Top segment effects",
+                "items": [{"label": "Public equity", "value": -0.6}],
+            },
+        )
+        top_effects_result = run_attribution_case(
+            "attribution-top-segment-effects",
+            top_effects,
+        )
+        check(
+            top_effects_result.returncode == 1
+            and "must not include Top segment effects"
+            in (top_effects_result.stdout + top_effects_result.stderr),
+            "attribution validator rejects removed top-segment bars",
+        )
+
+        misplaced_residual = json.loads(json.dumps(attribution_fixture))
+        historical_method = find_attribution_block(
+            next(
+                section
+                for section in misplaced_residual["sections"]
+                if section["title"] == "Historical Attribution"
+            )["blocks"],
+            "Historical reconciliation and method",
+        )
+        historical_method["rows"].append(["Residual", "0.0bp", "S4"])
+        misplaced_result = run_attribution_case(
+            "attribution-residual-outside-diagnostics",
+            misplaced_residual,
+        )
+        check(
+            misplaced_result.returncode == 1
+            and "residual evidence in Diagnostics"
+            in (misplaced_result.stdout + misplaced_result.stderr),
+            "attribution validator keeps residual evidence diagnostics-only",
+        )
 
         check(
             ILLUSTRATIVE_LABEL
@@ -2002,6 +2265,7 @@ def connector_cutover():
             )
         )
         row_scope_missing_banner = json.loads(json.dumps(attribution_fixture))
+        row_scope_missing_banner["meta"].pop("data_scope_banner", None)
         source_table(row_scope_missing_banner)["rows"][0][6] = (
             "Illustrative — synthetic TEST data"
         )

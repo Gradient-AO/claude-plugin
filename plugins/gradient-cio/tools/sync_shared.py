@@ -28,6 +28,9 @@ FILES = {"shared/gradient_report.py": "scripts/gradient_report.py",
 TREES = {
     "shared/contracts": "references/contracts",
 }
+INTERNAL_RENDER_TARGETS = (
+    ROOT / "internal" / "gips-evidence-review",
+)
 
 CHAT_DELIVERY = re.compile(r"^\s+delivery:\s*chat\s*$", re.MULTILINE)
 
@@ -68,6 +71,21 @@ def main():
             else:
                 d.parent.mkdir(parents=True, exist_ok=True); shutil.copyfile(s, d)
                 print(f"synced {skill.name}/{rel} ({digest(s)})")
+    for target in INTERNAL_RENDER_TARGETS:
+        for src, rel in FILES.items():
+            if not rel.startswith("scripts/"):
+                continue
+            s, d = ROOT / src, target / rel
+            if check:
+                if not d.exists() or digest(d) != digest(s):
+                    print(f"OUT OF SYNC: {target.relative_to(ROOT)}/{rel}")
+                    bad += 1
+            else:
+                d.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(s, d)
+                print(
+                    f"synced {target.relative_to(ROOT)}/{rel} ({digest(s)})"
+                )
     if check:
         print("all copies in sync" if not bad else f"{bad} copies out of sync")
         sys.exit(1 if bad else 0)

@@ -16,6 +16,7 @@ from copy import deepcopy
 from io import BytesIO
 from pathlib import Path
 from typing import Any, TypeAlias, cast
+from xml.sax.saxutils import escape as xml_escape
 
 from report_layout import (
     LayoutPolicyError,
@@ -26,6 +27,7 @@ from report_theme import (
     AMBER as THEME_AMBER,
     BRAND_NAME,
     CORAL as THEME_CORAL,
+    DEFAULT_COVER_DISCLOSURE,
     FONT_FAMILY,
     INK as THEME_INK,
     INK2 as THEME_INK_2,
@@ -188,6 +190,12 @@ def _compact(value: JsonValue | object, words: int = 28) -> str:
         return " ".join(tokens)
     return " ".join(tokens[:words]).rstrip(".,;:") + "…"
 
+def _cover_disclosure(meta: JsonObject) -> str:
+    explicit = _text(meta.get("cover_disclosure")).strip()
+    if explicit:
+        return explicit
+    return DEFAULT_COVER_DISCLOSURE if _text(meta.get("data_scope_banner")).strip() else ""
+
 
 def _source_tags(value: JsonValue | object) -> list[str]:
     encoded = json.dumps(value, ensure_ascii=False)
@@ -206,9 +214,149 @@ def _tone_color(tone: str) -> str:
 
 
 def _status_color(status: str) -> str:
-    normalized = status.lower().replace("_", " ")
-    color = THEME_STATUS_COLOR.get(normalized)
+    raw = status.lower()
+    color = THEME_STATUS_COLOR.get(raw) or THEME_STATUS_COLOR.get(
+        raw.replace("_", " ")
+    )
     return pptx_hex(color) if color else SLATE
+
+def _status_display(status: str, label: str = "") -> str:
+    """Return compact display text while retaining status for color semantics."""
+    raw = status.strip() or label.strip()
+    normalized = raw.casefold().replace(" ", "_")
+    if normalized == "passed_with_warnings":
+        return "passed ⚠"
+    authored = label.strip() or raw
+    if "_" in raw and authored.casefold().replace(" ", "_") == normalized:
+        return raw.replace("_", " ")
+    return authored
+
+def _bars_mark(block: JsonObject) -> str:
+    mark = _text(block.get("mark") or block.get("style") or "bars").strip().casefold()
+    return "dots" if mark in {"dots", "paired-dot", "paired_dot"} else "bars"
+
+def _normalized_bars(
+    block: JsonObject,
+) -> tuple[list[JsonObject], list[JsonObject], bool]:
+    """Normalize validated legacy or named-series bars for rendering."""
+    raw_items = [_object(value) for value in _array(block.get("items"))]
+    raw_series = block.get("series")
+    if raw_series is None:
+        items: list[JsonObject] = []
+        for item in raw_items:
+            value = _number(item.get("value"))
+            items.append({
+                **item,
+                "values": [value],
+                "displays": [item.get("display", item.get("value", value))],
+                "_authored_displays": item.get("display") is not None,
+            })
+        return [{"name": "Value"}], items, False
+    series = [_object(value) for value in _array(raw_series)]
+    items = []
+    for item in raw_items:
+        values = [_number(value) for value in _array(item.get("values"))]
+        displays = (
+            _array(item.get("displays"))
+            if item.get("displays") is not None
+            else cast(list[JsonValue], values)
+        )
+        items.append({
+            **item,
+            "values": values,
+            "displays": displays,
+            "_authored_displays": item.get("displays") is not None,
+        })
+    return series, items, True
+
+def _bars_validation_errors(block: JsonObject, prefix: str) -> list[str]:
+    errors: list[str] = []
+    items = [_object(value) for value in _array(block.get("items"))]
+    raw_series = block.get("series")
+    if raw_series is None:
+        if any(
+            not isinstance(item.get("value"), (int, float))
+            or isinstance(item.get("value"), bool)
+            or not math.isfinite(float(cast(float, item.get("value"))))
+            for item in items
+        ):
+            errors.append(f"{prefix} requires finite numeric values")
+        if _bars_mark(block) == "dots":
+            errors.append(f"{prefix} paired-dot mode requires named series")
+        return errors
+    series = [_object(value) for value in _array(raw_series)]
+    if not series or any(not _text(item.get("name")).strip() for item in series):
+        errors.append(f"{prefix} requires non-empty named series")
+        return errors
+    for item_index, item in enumerate(items, start=1):
+        values = _array(item.get("values"))
+        if len(values) != len(series):
+            errors.append(
+                f"{prefix} item {item_index} values length must match series"
+            )
+            continue
+        if any(
+            not isinstance(value, (int, float))
+            or isinstance(value, bool)
+            or not math.isfinite(float(value))
+            for value in values
+        ):
+            errors.append(f"{prefix} item {item_index} requires finite values")
+        displays = item.get("displays")
+        if displays is not None and len(_array(displays)) != len(series):
+            errors.append(
+                f"{prefix} item {item_index} displays length must match series"
+            )
+    if _bars_mark(block) == "dots" and len(series) != 2:
+        errors.append(f"{prefix} paired-dot mode requires exactly two series")
+    return errors
+
+def _bar_gap_display(item: JsonObject, difference: float, block: JsonObject) -> str:
+    authored = item.get("gap_display")
+    if authored is not None:
+        return _text(authored)
+    decimals = max(0, int(_number(block.get("decimals"), 1)))
+    suffix = _text(block.get("suffix") or block.get("y_suffix"))
+    label = _text(block.get("gap_label"), "Gap")
+    rounded = round(difference, decimals)
+    if rounded == 0:
+        rounded = 0.0
+    return f"{label} {rounded:+.{decimals}f}{suffix}"
+
+def _set_native_data_label_text(chart_series: Any, labels: list[str]) -> None:
+    """Attach editable custom text labels to one native chart series."""
+    from pptx.oxml import parse_xml
+    from pptx.oxml.ns import nsdecls, qn
+
+    series_element = chart_series._element
+    existing = series_element.find(qn("c:dLbls"))
+    if existing is not None:
+        series_element.remove(existing)
+    label_xml = "".join(
+        (
+            f'<c:dLbl><c:idx val="{index}"/><c:tx><c:rich>'
+            '<a:bodyPr/><a:lstStyle/><a:p><a:r>'
+            f'<a:rPr lang="en-US" sz="800"/><a:t>{xml_escape(label)}</a:t>'
+            '</a:r></a:p></c:rich></c:tx><c:dLblPos val="outEnd"/>'
+            '<c:showLegendKey val="0"/><c:showVal val="0"/>'
+            '<c:showCatName val="0"/><c:showSerName val="0"/>'
+            '<c:showPercent val="0"/><c:showBubbleSize val="0"/></c:dLbl>'
+        )
+        for index, label in enumerate(labels)
+    )
+    data_labels = parse_xml(
+        f'<c:dLbls {nsdecls("c", "a")}>{label_xml}'
+        '<c:dLblPos val="outEnd"/><c:showLegendKey val="0"/>'
+        '<c:showVal val="0"/><c:showCatName val="0"/>'
+        '<c:showSerName val="0"/><c:showPercent val="0"/>'
+        '<c:showBubbleSize val="0"/></c:dLbls>'
+    )
+    insert_at = len(series_element)
+    for index, child in enumerate(series_element):
+        if child.tag in {qn("c:cat"), qn("c:val")}:
+            insert_at = index
+            break
+    series_element.insert(insert_at, data_labels)
 
 
 def _collect_strings(value: JsonValue) -> list[str]:
@@ -287,6 +435,8 @@ def _validate_block_data(block: JsonObject, prefix: str) -> list[str]:
         series = [_object(value) for value in _array(block.get("series"))]
         if not series or not any(_array(item.get("points")) for item in series):
             errors.append(f"{prefix} has no line points")
+    if block_type == "bars":
+        errors.extend(_bars_validation_errors(block, prefix))
     if block_type == "pie":
         values = [
             value
@@ -607,56 +757,45 @@ class PptxRenderer:
                 MUTED,
                 align="right",
             )
-        data_scope_banner = _text(self._meta.get("data_scope_banner"))
-        if data_scope_banner:
-            self._shape(slide, 0.75, 1.34, 8.9, 0.36, PANEL, LIME)
-            self._text_box(
-                slide,
-                0.9,
-                1.43,
-                8.6,
-                0.18,
-                data_scope_banner,
-                7.2,
-                LIME,
-                bold=True,
-            )
         self._text_box(
             slide,
             0.75,
-            2.0,
+            1.82,
             10.9,
             0.3,
             _text(self._meta.get("eyebrow") or self._meta.get("header_label")).upper(),
-            9,
+            8.5,
             LIME,
             bold=True,
         )
         self._text_box(
             slide,
             0.75,
-            2.38,
+            2.2,
             10.9,
             1.35,
             _text(self._meta.get("title")),
-            34,
+            33,
             PAPER,
             bold=True,
         )
         subtitle = _text(self._meta.get("subtitle"))
         if subtitle:
-            self._text_box(slide, 0.75, 3.78, 10.6, 0.7, subtitle, 15, SLATE)
-        self._shape(slide, 0.75, 4.65, 1.1, 0.06, LIME, LIME)
+            self._text_box(slide, 0.75, 3.58, 10.6, 0.65, subtitle, 14, SLATE)
+        self._shape(slide, 0.75, 4.38, 0.9, 0.05, LIME, LIME)
         facts = [_array(value) for value in _array(self._meta.get("cover_facts"))]
+        fact_columns = 2 if len(facts) <= 4 else 3
+        fact_step = 5.65 if fact_columns == 2 else 3.8
+        fact_width = 5.15 if fact_columns == 2 else 3.35
         for index, fact in enumerate(facts[:6]):
             if len(fact) < 2:
                 continue
-            column = index % 3
-            row = index // 3
-            x = 0.75 + column * 3.8
-            y = 5.0 + row * 0.72
-            self._text_box(slide, x, y, 3.35, 0.2, _text(fact[0]).upper(), 7, MUTED, bold=True)
-            self._text_box(slide, x, y + 0.22, 3.35, 0.35, _text(fact[1]), 10, PAPER, bold=True)
+            column = index % fact_columns
+            row = index // fact_columns
+            x = 0.75 + column * fact_step
+            y = 4.72 + row * 0.68
+            self._text_box(slide, x, y, fact_width, 0.2, _text(fact[0]).upper(), 7, MUTED, bold=True)
+            self._text_box(slide, x, y + 0.21, fact_width, 0.34, _text(fact[1]), 10, PAPER, bold=True)
         signal = _object(self._meta.get("signal"))
         if signal:
             signal_level = _text(signal.get("level"), "info")
@@ -674,15 +813,26 @@ class PptxRenderer:
                 if signal_level in THEME_SIGNAL
                 else _tone_color(signal_level)
             )
-            self._shape(slide, 0.75, 6.38, 3.35, 0.42, signal_color, signal_color)
+            self._shape(slide, 0.75, 6.22, 3.65, 0.58, signal_color, signal_color)
             self._text_box(
                 slide,
                 0.9,
-                6.49,
-                3.05,
-                0.18,
+                6.3,
+                3.35,
+                0.14,
+                _text(self._meta.get("signal_title"), "Overall view").upper(),
+                6.2,
+                INK,
+                bold=True,
+            )
+            self._text_box(
+                slide,
+                0.9,
+                6.47,
+                3.35,
+                0.2,
                 signal_label,
-                8,
+                9,
                 INK,
                 bold=True,
             )
@@ -692,12 +842,12 @@ class PptxRenderer:
             expected = int(_number(completeness.get("expected")))
             meter_label = _text(
                 self._meta.get("meter_title"),
-                "Evidence completeness",
+                "Scope reviewed",
             )
             self._text_box(
                 slide,
-                4.35,
-                6.37,
+                4.7,
+                6.27,
                 3.4,
                 0.18,
                 meter_label.upper(),
@@ -707,8 +857,8 @@ class PptxRenderer:
             )
             self._text_box(
                 slide,
-                4.35,
-                6.56,
+                4.7,
+                6.49,
                 3.4,
                 0.22,
                 f"{used} of {expected} · {_text(completeness.get('state')).title()}",
@@ -720,7 +870,10 @@ class PptxRenderer:
             self._meta.get("confidentiality"),
             default_confidentiality(self._branding),
         )
-        self._text_box(slide, 0.75, 7.08, 8.8, 0.2, confidentiality, 7, MUTED)
+        self._text_box(slide, 0.75, 7.0, 8.8, 0.16, confidentiality, 7, MUTED)
+        disclosure = _cover_disclosure(self._meta)
+        if disclosure:
+            self._text_box(slide, 0.75, 7.17, 8.8, 0.14, disclosure, 6.5, MUTED)
         footer_brand = (
             f"Powered by {BRAND_NAME}"
             if client_name and bool(self._branding.get("powered_by", True))
@@ -1087,8 +1240,16 @@ class PptxRenderer:
                 object_value = _object(value)
                 if object_value.get("chip") is not None:
                     label = _text(object_value.get("chip"))
-                    fill = _status_color(_text(object_value.get("status") or label))
-                    self._cell(table.cell(row_index + source_index, column_index), f"● {label}", WASH, fill, True, body_font_size)
+                    raw_status = _text(object_value.get("status") or label)
+                    fill = _status_color(raw_status)
+                    self._cell(
+                        table.cell(row_index + source_index, column_index),
+                        f"● {_status_display(raw_status, label)}",
+                        WASH,
+                        fill,
+                        True,
+                        body_font_size,
+                    )
                 else:
                     fill = PAPER if source_index % 2 == 0 else WASH
                     self._cell(
@@ -1130,14 +1291,37 @@ class PptxRenderer:
         self, slide: Any, block: JsonObject, x: float, y: float, width: float, height: float
     ) -> None:
         from pptx.chart.data import CategoryChartData
-        from pptx.enum.chart import XL_CHART_TYPE, XL_LABEL_POSITION
+        from pptx.enum.chart import (
+            XL_CHART_TYPE,
+            XL_LABEL_POSITION,
+            XL_LEGEND_POSITION,
+        )
         from pptx.util import Inches, Pt
 
         title_offset = self._block_title(slide, block, x, y, width)
-        items = [_object(value) for value in _array(block.get("items"))]
+        series, items, grouped = _normalized_bars(block)
+        if _bars_mark(block) == "dots":
+            self._paired_dots(
+                slide,
+                block,
+                series,
+                items,
+                x,
+                y + title_offset,
+                width,
+                max(0.8, height - title_offset),
+            )
+            return
         data = CategoryChartData()
         data.categories = [_text(item.get("label")) for item in items]
-        data.add_series("Value", [_number(item.get("value")) for item in items])
+        for series_index, entry in enumerate(series):
+            data.add_series(
+                _text(entry.get("name"), "Value"),
+                [
+                    _number(_array(item.get("values"))[series_index])
+                    for item in items
+                ],
+            )
         chart = slide.shapes.add_chart(
             XL_CHART_TYPE.BAR_CLUSTERED,
             Inches(x),
@@ -1146,25 +1330,201 @@ class PptxRenderer:
             Inches(max(0.8, height - title_offset)),
             data,
         ).chart
-        chart.has_legend = False
+        chart.has_legend = grouped
+        if chart.has_legend:
+            chart.legend.position = XL_LEGEND_POSITION.BOTTOM
+            chart.legend.font.size = Pt(7)
         chart.value_axis.has_major_gridlines = True
         chart.value_axis.tick_labels.font.size = Pt(8)
         chart.category_axis.tick_labels.font.size = Pt(8)
         plot = chart.plots[0]
-        plot.gap_width = 55
+        plot.gap_width = 70 if grouped else 55
         plot.has_data_labels = True
         plot.data_labels.position = XL_LABEL_POSITION.OUTSIDE_END
         plot.data_labels.font.size = Pt(8)
-        series = plot.series[0]
-        series.format.fill.solid()
-        series.format.fill.fore_color.rgb = self._rgb(INK)
-        for point, item in zip(series.points, items):
-            configured = _text(item.get("color")).lstrip("#")
-            point.format.fill.solid()
-            point.format.fill.fore_color.rgb = self._rgb(
+        authored_displays = any(
+            bool(item.get("_authored_displays")) for item in items
+        )
+        for series_index, chart_series in enumerate(plot.series):
+            configured = _text(series[series_index].get("color")).lstrip("#")
+            chart_series.format.fill.solid()
+            chart_series.format.fill.fore_color.rgb = self._rgb(
                 configured
-                or (LIME if _number(item.get("value")) >= 0 else CORAL)
+                or (
+                    SERIES[series_index % len(SERIES)]
+                    if grouped
+                    else INK
+                )
             )
+            if authored_displays:
+                _set_native_data_label_text(
+                    chart_series,
+                    [
+                        _text(_array(item.get("displays"))[series_index])
+                        for item in items
+                    ],
+                )
+            if grouped:
+                continue
+            for point, item in zip(chart_series.points, items):
+                value = _number(_array(item.get("values"))[0])
+                point_color = _text(item.get("color")).lstrip("#")
+                point.format.fill.solid()
+                point.format.fill.fore_color.rgb = self._rgb(
+                    point_color or (LIME if value >= 0 else CORAL)
+                )
+
+    def _paired_dots(
+        self,
+        slide: Any,
+        block: JsonObject,
+        series: list[JsonObject],
+        items: list[JsonObject],
+        x: float,
+        y: float,
+        width: float,
+        height: float,
+    ) -> None:
+        """Render compact paired dots as editable native PowerPoint shapes."""
+        values = [
+            _number(value)
+            for item in items
+            for value in _array(item.get("values"))
+        ]
+        low, high = min(0.0, min(values)), max(0.0, max(values))
+        if block.get("min") is not None:
+            low = min(low, _number(block.get("min")))
+        if block.get("max") is not None:
+            high = max(high, _number(block.get("max")))
+        if low == high:
+            high = low + 1.0
+        label_width = min(1.7, width * 0.28)
+        gap_width = min(1.25, width * 0.22)
+        plot_x = x + label_width
+        plot_width = max(0.8, width - label_width - gap_width)
+        legend_height = 0.32
+        row_height = max(0.34, (height - legend_height - 0.22) / len(items))
+        legend_x = plot_x
+        for index, entry in enumerate(series):
+            color = _text(entry.get("color")).lstrip("#") or SERIES[
+                index % len(SERIES)
+            ]
+            self._shape(
+                slide,
+                legend_x,
+                y + 0.04,
+                0.10,
+                0.10,
+                color,
+                color,
+                "oval",
+            )
+            name = _text(entry.get("name"))
+            legend_text_width = min(
+                max(0.65, len(name) * 0.065),
+                max(0.65, plot_x + plot_width - legend_x),
+            )
+            self._text_box(
+                slide,
+                legend_x + 0.14,
+                y,
+                legend_text_width,
+                0.2,
+                name,
+                7,
+                INK_2,
+            )
+            legend_x += legend_text_width + 0.27
+        scale_x = lambda value: (
+            plot_x + plot_width * (float(value) - low) / (high - low)
+        )
+        for item_index, item in enumerate(items):
+            row_y = y + legend_height + item_index * row_height
+            middle_y = row_y + row_height * 0.45
+            self._text_box(
+                slide,
+                x,
+                row_y,
+                label_width - 0.10,
+                row_height * 0.8,
+                _text(item.get("label")),
+                7.5,
+                INK,
+                bold=True,
+                align="right",
+            )
+            self._shape(
+                slide,
+                plot_x,
+                middle_y,
+                plot_width,
+                0.01,
+                RULE,
+                RULE,
+            )
+            item_values = [_number(value) for value in _array(item.get("values"))]
+            positions = [scale_x(value) for value in item_values]
+            self._shape(
+                slide,
+                min(positions),
+                middle_y - 0.01,
+                max(0.01, abs(positions[1] - positions[0])),
+                0.02,
+                RULE,
+                RULE,
+            )
+            for series_index, position in enumerate(positions):
+                color = (
+                    _text(series[series_index].get("color")).lstrip("#")
+                    or SERIES[series_index % len(SERIES)]
+                )
+                self._shape(
+                    slide,
+                    position - 0.055,
+                    middle_y - 0.055,
+                    0.11,
+                    0.11,
+                    color,
+                    PAPER,
+                    "oval",
+                )
+            self._text_box(
+                slide,
+                plot_x + plot_width + 0.08,
+                row_y,
+                gap_width - 0.08,
+                row_height * 0.8,
+                _bar_gap_display(
+                    item,
+                    item_values[1] - item_values[0],
+                    block,
+                ),
+                7,
+                INK,
+                bold=True,
+            )
+        axis_y = y + legend_height + len(items) * row_height
+        self._text_box(
+            slide,
+            plot_x,
+            axis_y,
+            0.6,
+            0.18,
+            f"{low:g}",
+            7,
+            MUTED,
+        )
+        self._text_box(
+            slide,
+            plot_x + plot_width - 0.6,
+            axis_y,
+            0.6,
+            0.18,
+            f"{high:g}",
+            7,
+            MUTED,
+            align="right",
+        )
 
     def _pie(
         self, slide: Any, block: JsonObject, x: float, y: float, width: float, height: float
@@ -1268,9 +1628,11 @@ class PptxRenderer:
             Inches(max(0.8, height - title_offset)),
             data,
         ).chart
+        narrow = width < 7.0
         chart.has_legend = len(series) > 1
         if chart.has_legend:
             chart.legend.position = XL_LEGEND_POSITION.BOTTOM
+            chart.legend.font.size = Pt(7)
         chart.value_axis.has_major_gridlines = True
         chart.value_axis.tick_labels.font.size = Pt(8)
         values = [
@@ -1280,6 +1642,27 @@ class PptxRenderer:
             if len(point := _array(value)) >= 2
         ]
         if values:
+            if narrow:
+                low, high = min(values), max(values)
+                if low == high:
+                    padding = abs(low) * 0.1 or 1.0
+                    low, high = low - padding, high + padding
+                raw_step = (high - low) / 4
+                magnitude = 10 ** math.floor(math.log10(raw_step))
+                fraction = raw_step / magnitude
+                nice_fraction = next(
+                    candidate
+                    for candidate in (1.0, 2.0, 2.5, 5.0, 10.0)
+                    if fraction <= candidate
+                )
+                major_unit = nice_fraction * magnitude
+                chart.value_axis.minimum_scale = (
+                    math.floor(low / major_unit) * major_unit
+                )
+                chart.value_axis.maximum_scale = (
+                    math.ceil(high / major_unit) * major_unit
+                )
+                chart.value_axis.major_unit = major_unit
             chart.value_axis.tick_labels.number_format = _axis_number_format(
                 max(values, key=abs),
                 decimals=int(_number(block.get("decimals"), 1)),
@@ -1593,10 +1976,11 @@ class PptxRenderer:
         rows: list[JsonValue] = []
         for value in _array(block.get("items")):
             item = _object(value)
+            raw_status = _text(item.get("status"))
             rows.append(
                 [
                     item.get("name", ""),
-                    {"chip": _text(item.get("status")).replace("_", " "), "status": item.get("status", "")},
+                    {"chip": raw_status, "status": raw_status},
                     item.get("note", ""),
                 ]
             )

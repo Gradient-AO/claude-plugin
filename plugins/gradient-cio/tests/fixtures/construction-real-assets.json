@@ -1,52 +1,46 @@
 {
   "meta": {
-    "mode": "real_assets",
-    "eyebrow": "Real Assets Portfolio Construction",
-    "header_label": "Real Assets Portfolio Construction",
-    "title": "Northstar Real Assets Portfolio (TEST)",
-    "subtitle": "Decision pack · prepared for the Investment Committee (TEST)",
-    "running_head": "Northstar Real Assets Portfolio (TEST)",
-    "data_as_of": "2026-06-30",
-    "confidentiality": "TEST DATA — fictional portfolio for rendering tests only",
-    "cover_facts": [
-      [
-        "As of",
-        "2026-06-30"
-      ],
-      [
-        "Base currency",
-        "USD"
-      ],
-      [
-        "Total NAV",
-        "$1,000.0M"
-      ],
-      [
-        "Real-assets weight",
-        "15.0%"
-      ],
-      [
-        "Unfunded commitments",
-        "$28.0M"
-      ],
-      [
-        "Data scope",
-        "Fictional TEST data"
-      ]
+  "mode": "real_assets",
+  "eyebrow": "Real Assets Portfolio Construction",
+  "header_label": "Real Assets Portfolio Construction",
+  "title": "Northstar Real Assets Portfolio",
+  "subtitle": "Portfolio construction review · prepared for the Investment Committee",
+  "running_head": "Northstar Real Assets Portfolio",
+  "data_as_of": "2026-06-30",
+  "confidentiality": "Confidential — Investment Committee",
+  "cover_facts": [
+    [
+      "As of",
+      "2026-06-30"
     ],
-    "signal_title": "Real-assets portfolio status",
-    "signal": {
-      "level": "watch",
-      "label": "Valuation lag and structure mix on watch"
-    },
-    "completeness": {
-      "used": 8,
-      "expected": 9,
-      "state": "partial"
-    },
-    "meter_title": "Evidence completeness",
-    "data_basis": "gradient_governed"
+    [
+      "Total NAV",
+      "$1,000.0M"
+    ],
+    [
+      "Real-assets weight",
+      "15.0%"
+    ],
+    [
+      "Unfunded commitments",
+      "$28.0M"
+    ]
+  ],
+  "signal_title": "Overall view",
+  "signal": {
+    "level": "watch",
+    "label": "Valuation lag and structure mix on watch"
   },
+  "completeness": {
+    "used": 8,
+    "expected": 9,
+    "state": "partial"
+  },
+  "meter_title": "Scope reviewed",
+  "data_basis": "gradient_governed",
+  "cover_disclosure": "Illustrative sample · not client data",
+  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
+},
   "executive": {
     "label": "Recommendation",
     "bottom_line": "We recommend retaining the 15.0% real-assets allocation while shifting 2.0 percentage points from listed real estate to infrastructure and natural resources across marketable and drawdown sleeves [S3][S4]. Committee action requested: approve the target structure and phased implementation, subject to valuation refresh, manager diligence and liquidity tests [S3][S7][S8].",
@@ -138,21 +132,21 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a valuation-lag signal above the clear threshold [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+          "text": "Observation: The sample report carries a valuation-lag signal above the clear threshold [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Real-assets weight is 15.0% in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
+          "text": "Observation: Real-assets weight is 15.0% in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Policy status is Watch rather than Clear in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
+          "text": "Observation: Policy status is Watch rather than Clear in the review evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
@@ -164,7 +158,7 @@
           "rows": [
             [
               "Portfolio",
-              "Northstar Total Fund (TEST)",
+              "Northstar Total Fund",
               "S2"
             ],
             [
@@ -189,7 +183,7 @@
             ],
             [
               "Data scope",
-              "Fictional TEST data [S1]",
+              "Illustrative sample data [S1]",
               "S1"
             ]
           ]
@@ -246,7 +240,7 @@
           "type": "chart",
           "chart": {
             "chart_id": "test-ra-allocation",
-            "title": "Real-assets allocation by sub-segment (TEST)",
+            "title": "Real-assets allocation by sub-segment",
             "status": "ok",
             "currency": "USD",
             "columns": [
@@ -742,7 +736,7 @@
           "type": "chart",
           "chart": {
             "chart_id": "test-ra-factor",
-            "title": "Model-implied real-assets factors (TEST)",
+            "title": "Model-implied real-assets factors",
             "status": "ok",
             "columns": [
               {
@@ -860,7 +854,7 @@
           "rows": [
             [
               "Assumption set",
-              "2026 Strategic CMA (TEST)",
+              "2026 Strategic CMA",
               "S6"
             ],
             [
@@ -889,7 +883,7 @@
           "type": "chart",
           "chart": {
             "chart_id": "test-ra-forward",
-            "title": "Real-assets forward assumptions (TEST)",
+            "title": "Real-assets forward assumptions",
             "status": "ok",
             "currency": "USD",
             "columns": [
@@ -1007,7 +1001,7 @@
           "type": "chart",
           "chart": {
             "chart_id": "test-ra-pacing",
-            "title": "Drawdown real-assets calls and distributions (TEST)",
+            "title": "Drawdown real-assets calls and distributions",
             "status": "ok",
             "currency": "USD",
             "columns": [
@@ -1172,7 +1166,7 @@
           ],
           "rows": [
             [
-              "Example Real Estate Manager (TEST)",
+              "Example Real Estate Manager",
               "Private real estate",
               "$30.0M",
               "Current [S7]",
@@ -1180,7 +1174,7 @@
               "Close valuation follow-up"
             ],
             [
-              "Example Infrastructure Manager (TEST)",
+              "Example Infrastructure Manager",
               "Private infrastructure",
               "$25.0M",
               "Current [S7]",
@@ -1188,7 +1182,7 @@
               "Refresh annual ODD"
             ],
             [
-              "Proposed Natural Resources Manager (TEST)",
+              "Proposed Natural Resources Manager",
               "Natural resources",
               "Not funded",
               "Not assessed [S7]",
@@ -1428,7 +1422,7 @@
             {
               "name": "Portfolio and allocation",
               "status": "available",
-              "note": "Fictional TEST data [S2]"
+              "note": "Illustrative sample data [S2]"
             },
             {
               "name": "Policy",
@@ -1494,7 +1488,7 @@
               "list_organizations; get_gradient_capabilities",
               "organization=test",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1505,7 +1499,7 @@
               "list_portfolios; get_portfolio_structure",
               "allocation_tree",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1516,7 +1510,7 @@
               "check_portfolio_policy",
               "portfolio=test",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1527,7 +1521,7 @@
               "get_portfolio_exposure",
               "all pages",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1538,7 +1532,7 @@
               "get_portfolio_historical_returns; get_portfolio_attribution",
               "all sections",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "degraded",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1549,7 +1543,7 @@
               "get_chart_data; get_capital_market_assumptions",
               "commitments; baseline",
               "2026-06-15",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1558,9 +1552,9 @@
               "Macro context and diligence",
               "gradient_tool",
               "get_macro_conditions",
-              "fictional",
+              "illustrative",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "degraded",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1569,9 +1563,9 @@
               "Mandate mappings and gaps",
               "gradient_tool",
               "get_gradient_capabilities",
-              "fictional",
+              "illustrative",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "advisory",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ]

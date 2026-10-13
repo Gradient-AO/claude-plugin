@@ -28,6 +28,7 @@ from the plugin's `assets/fonts/` and make no network requests. If Playwright is
 | `running_head` | Short subject in the running header (right side). |
 | `data_as_of` | Data dates shown in the footer, e.g. "2026-10-01 (Form ADV); 2026-08-14 (Form 13F)". |
 | `data_scope_banner` | Required for structured illustrative scope. Use exactly "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers". |
+| `cover_disclosure` | Optional short cover-footer disclosure. Public samples use exactly "Illustrative sample · not client data". |
 | `confidentiality` | Footer text. Default form: "Confidential — prepared for <organization> internal use". |
 | `cover_facts` | Up to 6 `[label, value]` pairs on the cover. |
 | `signal` | `{"level": <level>, "label": "<optional override>"}` — the headline assessment. |
@@ -40,6 +41,19 @@ Signal levels (colour): `clear`, `consistent`, `compliant`, `satisfactory`, `rea
 `follow_ups`, `partial` (amber) · `elevated`, `discrepancies`, `breach`, `material_concern`, `not_ready` (coral) ·
 `insufficient`, `not_applicable`, `not_assessed` (slate). Use only the levels the skill names for its report type.
 
+### Cover profiles
+
+- **Investment / investor:** lead with the portfolio, mandate, manager or decision. Use the subtitle for the
+  audience, review period or decision scope. Prefer 3–4 decision-relevant cover facts and plain-language
+  captions such as `Overall view` and `Scope reviewed`. Do not put tool names, request IDs, connector or
+  package versions, probes, contract checks, fixture labels or test terminology on the cover.
+- **Operational readiness:** keep readiness as the headline status. Cover facts may show the organization,
+  access, licensed capabilities, data coverage and review date. Put connector versions, probe names and
+  contract-check detail in the sources and methods appendix, not on the cover.
+- Public examples read like live committee or investor deliverables. They use realistic illustrative subjects,
+  `cover_disclosure: "Illustrative sample · not client data"` in the footer and the full illustrative statement
+  in Appendix A. Do not add `(TEST)`, `RENDER TEST`, `SYNTHETIC TEST` or similar labels to user-visible copy.
+
 Executive band: `executive.bottom_line` (3–5 sentences with source tags), optional `executive.label`
 (default "Bottom line") and up to 4 `executive.tiles` (`{label, value, sub, tone: good|watch|bad}`).
 
@@ -48,8 +62,13 @@ Executive band: `executive.bottom_line` (3–5 sentences with source tags), opti
 `text {text}` · `bullets {items}` · `kv {title?, rows:[[k, v, srcTag?]]}` ·
 `table {title?, columns, rows, align? (l|r|c|n=nowrap), widths?, nowrap?, note?}` (a cell may be
 `{"chip": label, "status": s}`) ·
-`tiles {tiles}` · `bars {title?, items:[{label, value, display}], max?, narrow?, all_accent?, note?}` (signed
-finite `value`; retain negative signs) ·
+`tiles {tiles}` · `bars {title?, items:[{label, value, display?}], max?, narrow?, all_accent?, note?}` or
+`bars {title?, series:[{name, color?}], items:[{label, values:[number,...], displays?:[string,...],
+gap_display?}], mark?:"bars"|"dots", gap_label?, decimals?, suffix?, min?, max?, note?}`. Legacy `value`
+remains valid. Named-series `values` and optional `displays` must match `series` length and every value must
+be finite. The default mark renders grouped bars aligned by category with a legend. `mark:"dots"` requires
+exactly two series and renders compact paired dots plus the second-minus-first gap (`gap_display` may supply
+the exact unit-aware label). Retain raw signed values and negative signs ·
 `pie {title?, items:[{label, value, display?, color?}], center?, note?}` (finite nonnegative `value`; one to
 eight positive slices) ·
 `percentiles {title?, items:[{label, percentile, value_display}], threshold, note?}` ·
@@ -63,6 +82,9 @@ eight positive slices) ·
 `two_col {left:[blocks], right:[blocks]}` · `markdown {text}` · `pagebreak {}` ·
 `line {title?, series:[{name, points:[[date, value]]}], y_suffix?, decimals?, ref?:{value,label}, x_bands?:[{start,end,label?}], height?, note?}`
 (time series only from returned series, never invented) · `statement {text, sub?, tone?}` (one large message).
+Lines nested in `two_col` automatically use the narrow profile: approximately 360 CSS pixels, a legend
+instead of end labels, no more than five y-axis ticks, and axis/legend text of at least 7pt. Labeled
+`x_bands` use a dedicated strip below the plot so they cannot collide with series end labels.
 `chart {chart:<one chart item returned by get_chart_data>}` renders from `render_hint`: line, bars, pie, or a
 formatted table fallback. Pass the returned chart object unchanged; do not remap chart IDs in a skill.
 
@@ -88,6 +110,8 @@ unavailable, failed, missing, breach, not met, contradicted, material concern, h
 not_applicable, not_run, not_assessed, not found, n/a, unverifiable, low (slate) · monitoring and setup words:
 new, changed, stale, conditional (amber) · resolved, ready, connected, ok (lime) · not ready, error (coral) ·
 no change, not licensed (slate).
+Renderers retain the raw status for color and semantics. `passed_with_warnings` displays compactly as
+`passed ⚠`; other underscore-delimited statuses may wrap only at underscore boundaries, never mid-word.
 
 ## Slide decks
 
@@ -156,9 +180,9 @@ write a branding file in the working directory (logo path relative to it) and pa
   managers**. Classify every source row from its own provenance-backed `Data
   scope`: an illustrative report-level scope does not make live rows
   illustrative. Keep `Illustrative` in each illustrative row's `Data scope`
-  and do not repeat the full label in `Evidence`. The banner is the canonical
-  full-label placement; a duplicate sources-appendix note is not required. No
-  title, subtitle or confidentiality placement is required.
+  and do not repeat the full label in `Evidence`. On covers the renderer reduces
+  this to the compact `cover_disclosure`; include the full label once in
+  Appendix A. No title or subtitle placement is required.
 - Every report includes its sources appendix with exact rendered title
   `Appendix A — Sources and methods`. In normalized report JSON use
   `title: "Appendix — Sources and methods"` with `num: "A"`; Markdown uses

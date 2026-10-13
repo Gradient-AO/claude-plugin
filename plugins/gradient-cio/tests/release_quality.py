@@ -252,6 +252,7 @@ def run_source_checks(check: Check) -> None:
                             "title": "Optional evidence",
                             "reason": "fictional source omitted",
                             "source_tags": ["S1"],
+                            "unavailable_for": "Optional evidence",
                         }
                     ],
                     "analysis": [
@@ -269,6 +270,7 @@ def run_source_checks(check: Check) -> None:
     check(
         [block["role"] for block in blocks if "role" in block]
         == ["unavailable", "analysis"]
+        and blocks[0].get("unavailable_for") == "Optional evidence"
         and any(
             block.get("type") == "markdown"
             and block.get("text") == "Authoritative body [S1]."
@@ -276,6 +278,111 @@ def run_source_checks(check: Check) -> None:
         ),
         "generic composition preserves markdown and typed placements",
     )
+
+    with tempfile.TemporaryDirectory() as series_tmp:
+        series_root = pathlib.Path(series_tmp)
+        visual_dir = series_root / "visuals"
+        invocation_dir = series_root / "invocation"
+        visual_dir.mkdir()
+        invocation_dir.mkdir()
+        response_path = visual_dir / "saved-response.json"
+        response_path.write_text(
+            json.dumps(
+                {
+                    "result": {
+                        "rows": [
+                            {"date": "2026-01-31", "returned": 1.25},
+                            {"date": "2026-02-28", "returned": -0.5},
+                        ]
+                    }
+                }
+            ),
+            encoding="utf-8",
+        )
+        direct_visuals = {
+            "sections": {
+                "1": {
+                    "before": [
+                        {
+                            "type": "line",
+                            "title": "Returned direct series",
+                            "series_imports": [
+                                {
+                                    "name": "Returned",
+                                    "source_file": "saved-response.json",
+                                    "row_path": "result.rows",
+                                    "x_field": "date",
+                                    "y_field": "returned",
+                                }
+                            ],
+                        }
+                    ]
+                }
+            }
+        }
+        direct_report = composer.compose(
+            "# Direct series (TEST)\n\n## 1. Summary\n\nEvidence.",
+            direct_visuals,
+            {"title": "Direct series (TEST)"},
+            visual_path=visual_dir / "visuals.json",
+            invocation_dir=invocation_dir,
+        )
+        direct_line = direct_report["sections"][0]["blocks"][0]
+        bad_path = invocation_dir / "bad-response.json"
+        bad_path.write_text(
+            json.dumps({"rows": [{"date": "2026-01-31", "value": [1.0]}]}),
+            encoding="utf-8",
+        )
+        invalid_directives = [
+            {
+                "name": "Bad",
+                "source_file": "bad-response.json",
+                "row_path": "rows",
+                "x_field": "date",
+                "y_field": "value",
+            },
+            {
+                "name": "Missing field",
+                "source_file": "bad-response.json",
+                "row_path": "rows",
+                "x_field": "date",
+            },
+            {
+                "name": "Missing path",
+                "source_file": "bad-response.json",
+                "row_path": "result.rows",
+                "x_field": "date",
+                "y_field": "value",
+            },
+        ]
+        rejected_invalid = 0
+        for invalid_directive in invalid_directives:
+            try:
+                composer.resolve_direct_series_imports(
+                    {
+                        "type": "line",
+                        "series_imports": [invalid_directive],
+                    },
+                    visual_path=visual_dir / "visuals.json",
+                    invocation_dir=invocation_dir,
+                )
+            except ValueError:
+                rejected_invalid += 1
+        check(
+            direct_line.get("series")
+            == [
+                {
+                    "name": "Returned",
+                    "points": [
+                        ["2026-01-31", 1.25],
+                        ["2026-02-28", -0.5],
+                    ],
+                }
+            ]
+            and "series_imports" not in direct_line
+            and rejected_invalid == len(invalid_directives),
+            "composer imports returned line values verbatim and rejects invalid mappings",
+        )
 
     original_bbox = layout.bbox_pages
     original_lines = layout.page_lines
@@ -662,9 +769,11 @@ def run_artifact_checks(check: Check, output_directory: pathlib.Path) -> None:
     )
     check(
         odd_result.returncode == 0
-        and "Ridgeview Example Advisors, LP (TEST)" in odd_cover
+        and "Ridgeview Advisors, LP" in odd_cover
         and "No flags identified" in odd_cover
         and "5 of 7" in odd_cover
+        and "Illustrative sample · not client data" in odd_cover
+        and "TEST" not in odd_cover
         and "Executive summary" in odd_first_body
         and "Data as of 2026-10-01" in odd_first_body,
         "ODD fixture anchors the shared PowerPoint cover and body visual contract",

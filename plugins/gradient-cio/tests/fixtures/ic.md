@@ -1,4 +1,4 @@
-# Investment Committee Memo — Rebalance: Gradient Global Growth III (Illustrative, Gradient Maintained — demo data, not the client's holdings or managers)
+# Investment Committee Memo — Rebalance: Northstar Global Growth Fund
 
 > **ILLUSTRATIVE DATA** — Figures marked [S#] use the scope
 > "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers."
@@ -6,8 +6,8 @@
 | Field | Value |
 |---|---|
 | Memo type | Rebalance |
-| Portfolio | Gradient Global Growth III (example-portfolio-id; Illustrative, Gradient Maintained — demo data, not the client's holdings or managers) |
-| Organization | Example Foundation |
+| Portfolio | Northstar Global Growth Fund (example-portfolio-id) |
+| Organization | Northstar Foundation |
 | Prepared for | Investment Committee |
 | Meeting date | 2026-10-15 |
 | Data as of | 2026-09-30 |
@@ -280,6 +280,9 @@ estimate. The CIO reports completion, exceptions and the five open items in Sect
 ---
 
 ## Appendix A — Sources and methods
+
+Illustrative, Gradient Maintained — demo data, not the client's holdings or managers. All organizations,
+portfolios, managers and results in this public example are illustrative.
 
 | Ref | Evidence | Basis | Tool / view | Key parameters | As of | Data scope | Validation | Digest |
 |---|---|---|---|---|---|---|---|---|

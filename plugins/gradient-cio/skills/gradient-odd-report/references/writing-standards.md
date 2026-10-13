@@ -48,7 +48,7 @@ availability or presentation rules.
 - Make the Observation specific, tie Why it matters to this report's decision or monitoring purpose, name the
   actual limitation, and identify a measurable trigger or named evidence item that would change the view.
 - Use `references/analysis-examples.md` for a worked pattern for each required analysis section. Never reuse
-  the fictional example values in a client report.
+  the illustrative example values in a client report.
 - The validator prints non-blocking quality notes after its contract result. Revise a callout whenever a
   quality note appears; the notes do not change validation PASS/FAIL or exit codes.
 
@@ -92,8 +92,19 @@ availability or presentation rules.
   each source row from its own provenance-backed `Data scope`; illustrative
   report metadata does not convert live rows to illustrative. Every
   illustrative row keeps `Illustrative` in `Data scope` and does not repeat
-  the full label in `Evidence`. The banner is the canonical full-label
-  placement, so no duplicate sources-appendix note is required.
+  the full label in `Evidence`. The cover uses the compact disclosure
+  **Illustrative sample · not client data**; include the full label once in
+  Appendix A — Sources and methods.
+- Write public examples as decision-grade committee or investor deliverables
+  for realistic illustrative subjects. Do not use `(TEST)`, `RENDER TEST`,
+  `SYNTHETIC TEST`, fixture labels, test request IDs or implementation jargon
+  in user-visible copy. Keep the compact disclosure in the cover footer and
+  the full disclosure in Appendix A.
+- Investment and investor covers lead with the subject or decision, use the
+  subtitle for audience or scope, and prefer 3–4 decision-relevant facts.
+  Setup/readiness covers may show access, licensed capabilities and data
+  coverage, but connector versions, probe names and contract checks belong in
+  Appendix A.
 - Every factual number, governed status and analytical judgment carries an `[S#]` tag.
 - Preserve returned dates, units, bases, formula identity and version, coverage, validation state and
   unavailable reason.

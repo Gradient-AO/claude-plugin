@@ -3,18 +3,18 @@
   "meta": {
     "eyebrow": "Portfolio Attribution Report",
     "header_label": "Portfolio Attribution Report",
-    "title": "Example Attribution Portfolio (TEST)",
-    "subtitle": "Historical and governed ex ante attribution · period to 2026-06-30 · prepared for the Investment Committee (TEST)",
-    "running_head": "Example Attribution Portfolio (TEST) · attribution",
+    "title": "Northstar Total Fund",
+    "subtitle": "Historical and governed ex ante attribution · prepared for the Investment Committee",
+    "running_head": "Northstar Total Fund · attribution",
     "data_as_of": "2026-06-30 historical; 2026-10-08 ex ante",
-    "confidentiality": "TEST DATA — fictional portfolio for rendering tests only",
+    "confidentiality": "Confidential — Investment Committee",
     "cover_facts": [
       [
         "Historical period",
         "2025-07-31 to 2026-06-30"
       ],
       [
-        "Ex ante as of",
+        "Forward view as of",
         "2026-10-08"
       ],
       [
@@ -24,17 +24,9 @@
       [
         "Benchmark role",
         "Policy"
-      ],
-      [
-        "Parent cohort",
-        "Root"
-      ],
-      [
-        "Data scope",
-        "Fictional TEST data"
       ]
     ],
-    "signal_title": "Attribution evidence",
+    "signal_title": "Overall view",
     "signal": {
       "level": "satisfactory",
       "label": "Both lanes reconcile"
@@ -44,8 +36,10 @@
       "expected": 5,
       "state": "complete"
     },
-    "meter_title": "Evidence completeness",
-    "data_basis": "gradient_governed"
+    "meter_title": "Scope reviewed",
+    "data_basis": "gradient_governed",
+    "cover_disclosure": "Illustrative sample · not client data",
+    "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
   },
   "executive": {
     "label": "Attribution conclusion",
@@ -70,10 +64,10 @@
         "tone": "good"
       },
       {
-        "label": "Ex ante residual",
-        "value": "0.0bp",
-        "sub": "Within tolerance [S5]",
-        "tone": "good"
+        "label": "Largest sub-allocation effect",
+        "value": "-0.4pp",
+        "sub": "US equity cumulative selection [S4]",
+        "tone": "watch"
       }
     ]
   },
@@ -131,7 +125,7 @@
             ],
             [
               "Coverage",
-              "All required fictional TEST sources are available [S1][S2][S3][S4][S5].",
+              "All required sample sources are available [S1][S2][S3][S4][S5].",
               {
                 "chip": "Complete",
                 "status": "available"
@@ -150,21 +144,21 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a reconciled-lanes signal versus the prior unresolved status [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+          "text": "Observation: The sample report carries a reconciled-lanes signal versus the prior unresolved status [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Historical active return is -0.6pp in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
+          "text": "Observation: Historical active return is -0.6pp in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Ex ante residual is 0.0bp in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
+          "text": "Observation: US equity cumulative selection is the largest sub-allocation effect at -0.4pp [S4]. Why it matters: The depth-1 result identifies where the root detractor is concentrated. Uncertainty: The rerun covers only returned child allocations. What would change the view: A refreshed depth-1 result identifying another leading sub-allocation."
         }
       ]
     },
@@ -177,7 +171,7 @@
           "rows": [
             [
               "Portfolio",
-              "Example Attribution Portfolio (TEST)",
+              "Northstar Total Fund",
               "S2"
             ],
             [
@@ -212,7 +206,7 @@
             ],
             [
               "Data scope",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "S1"
             ]
           ],
@@ -269,35 +263,107 @@
             {
               "name": "Portfolio",
               "points": [
-                ["2025-07-31", 100.0],
-                ["2025-08-31", 100.8],
-                ["2025-09-30", 101.5],
-                ["2025-10-31", 102.4],
-                ["2025-11-30", 103.2],
-                ["2025-12-31", 103.8],
-                ["2026-01-31", 104.6],
-                ["2026-02-28", 105.1],
-                ["2026-03-31", 105.7],
-                ["2026-04-30", 106.3],
-                ["2026-05-31", 107.1],
-                ["2026-06-30", 108.4]
+                [
+                  "2025-07-31",
+                  100.0
+                ],
+                [
+                  "2025-08-31",
+                  100.8
+                ],
+                [
+                  "2025-09-30",
+                  101.5
+                ],
+                [
+                  "2025-10-31",
+                  102.4
+                ],
+                [
+                  "2025-11-30",
+                  103.2
+                ],
+                [
+                  "2025-12-31",
+                  103.8
+                ],
+                [
+                  "2026-01-31",
+                  104.6
+                ],
+                [
+                  "2026-02-28",
+                  105.1
+                ],
+                [
+                  "2026-03-31",
+                  105.7
+                ],
+                [
+                  "2026-04-30",
+                  106.3
+                ],
+                [
+                  "2026-05-31",
+                  107.1
+                ],
+                [
+                  "2026-06-30",
+                  108.4
+                ]
               ]
             },
             {
               "name": "Policy benchmark",
               "points": [
-                ["2025-07-31", 100.0],
-                ["2025-08-31", 100.9],
-                ["2025-09-30", 101.7],
-                ["2025-10-31", 102.7],
-                ["2025-11-30", 103.5],
-                ["2025-12-31", 104.1],
-                ["2026-01-31", 105.0],
-                ["2026-02-28", 105.5],
-                ["2026-03-31", 106.1],
-                ["2026-04-30", 106.8],
-                ["2026-05-31", 107.7],
-                ["2026-06-30", 109.0]
+                [
+                  "2025-07-31",
+                  100.0
+                ],
+                [
+                  "2025-08-31",
+                  100.9
+                ],
+                [
+                  "2025-09-30",
+                  101.7
+                ],
+                [
+                  "2025-10-31",
+                  102.7
+                ],
+                [
+                  "2025-11-30",
+                  103.5
+                ],
+                [
+                  "2025-12-31",
+                  104.1
+                ],
+                [
+                  "2026-01-31",
+                  105.0
+                ],
+                [
+                  "2026-02-28",
+                  105.5
+                ],
+                [
+                  "2026-03-31",
+                  106.1
+                ],
+                [
+                  "2026-04-30",
+                  106.8
+                ],
+                [
+                  "2026-05-31",
+                  107.7
+                ],
+                [
+                  "2026-06-30",
+                  109.0
+                ]
               ]
             }
           ],
@@ -312,60 +378,101 @@
           "note": "Full returned monthly series on the policy-benchmark entity basis [S3]."
         },
         {
-          "type": "two_col",
-          "left": [
+          "type": "line",
+          "title": "Rolling 12-month excess",
+          "series": [
             {
-              "type": "line",
-              "title": "Rolling 12-month excess",
-              "series": [
-                {
-                  "name": "Excess",
-                  "points": [
-                    ["2026-01-31", -0.2],
-                    ["2026-02-28", -0.3],
-                    ["2026-03-31", -0.3],
-                    ["2026-04-30", -0.4],
-                    ["2026-05-31", -0.5],
-                    ["2026-06-30", -0.6]
-                  ]
-                }
-              ],
-              "y_suffix": "pp",
-              "decimals": 1,
-              "note": "Returned rolling 12-month arithmetic excess [S3]."
+              "name": "Excess",
+              "points": [
+                [
+                  "2026-01-31",
+                  -0.2
+                ],
+                [
+                  "2026-02-28",
+                  -0.3
+                ],
+                [
+                  "2026-03-31",
+                  -0.3
+                ],
+                [
+                  "2026-04-30",
+                  -0.4
+                ],
+                [
+                  "2026-05-31",
+                  -0.5
+                ],
+                [
+                  "2026-06-30",
+                  -0.6
+                ]
+              ]
             }
           ],
-          "right": [
+          "y_suffix": "pp",
+          "decimals": 1,
+          "note": "Returned rolling 12-month arithmetic excess [S3]."
+        },
+        {
+          "type": "line",
+          "title": "Drawdown",
+          "series": [
             {
-              "type": "line",
-              "title": "Drawdown",
-              "series": [
-                {
-                  "name": "Portfolio",
-                  "points": [
-                    ["2025-07-31", 0.0],
-                    ["2025-10-31", -0.8],
-                    ["2026-01-31", -1.2],
-                    ["2026-04-30", -0.4],
-                    ["2026-06-30", 0.0]
-                  ]
-                },
-                {
-                  "name": "Policy benchmark",
-                  "points": [
-                    ["2025-07-31", 0.0],
-                    ["2025-10-31", -0.6],
-                    ["2026-01-31", -0.9],
-                    ["2026-04-30", -0.3],
-                    ["2026-06-30", 0.0]
-                  ]
-                }
-              ],
-              "y_suffix": "%",
-              "decimals": 1,
-              "note": "Returned drawdown series [S3]."
+              "name": "Portfolio",
+              "points": [
+                [
+                  "2025-07-31",
+                  0.0
+                ],
+                [
+                  "2025-10-31",
+                  -0.8
+                ],
+                [
+                  "2026-01-31",
+                  -1.2
+                ],
+                [
+                  "2026-04-30",
+                  -0.4
+                ],
+                [
+                  "2026-06-30",
+                  0.0
+                ]
+              ]
+            },
+            {
+              "name": "Policy benchmark",
+              "points": [
+                [
+                  "2025-07-31",
+                  0.0
+                ],
+                [
+                  "2025-10-31",
+                  -0.6
+                ],
+                [
+                  "2026-01-31",
+                  -0.9
+                ],
+                [
+                  "2026-04-30",
+                  -0.3
+                ],
+                [
+                  "2026-06-30",
+                  0.0
+                ]
+              ]
             }
-          ]
+          ],
+          "y_suffix": "%",
+          "decimals": 1,
+          "note": "Returned drawdown series [S3]."
         },
         {
           "type": "table",
@@ -483,16 +590,6 @@
                   "S4"
                 ],
                 [
-                  "Residual",
-                  "0.0bp",
-                  "S4"
-                ],
-                [
-                  "Tolerance",
-                  "0.00000001pp",
-                  "S4"
-                ],
-                [
                   "Method",
                   "Realized Brinson-Fachler",
                   "S4"
@@ -515,7 +612,7 @@
           "type": "chart",
           "chart": {
             "chart_id": "test-historical-attribution-effects",
-            "title": "Historical segment total effects (TEST)",
+            "title": "Historical segment total effects",
             "status": "ok",
             "columns": [
               {
@@ -563,37 +660,85 @@
             {
               "name": "Allocation",
               "points": [
-                ["2025-07-31", 0.0],
-                ["2026-01-31", 0.1],
-                ["2026-05-31", 0.1],
-                ["2026-06-30", 0.1]
+                [
+                  "2025-07-31",
+                  0.0
+                ],
+                [
+                  "2026-01-31",
+                  0.1
+                ],
+                [
+                  "2026-05-31",
+                  0.1
+                ],
+                [
+                  "2026-06-30",
+                  0.1
+                ]
               ]
             },
             {
               "name": "Selection",
               "points": [
-                ["2025-07-31", -0.1],
-                ["2026-01-31", -0.3],
-                ["2026-05-31", -0.6],
-                ["2026-06-30", -0.8]
+                [
+                  "2025-07-31",
+                  -0.1
+                ],
+                [
+                  "2026-01-31",
+                  -0.3
+                ],
+                [
+                  "2026-05-31",
+                  -0.6
+                ],
+                [
+                  "2026-06-30",
+                  -0.8
+                ]
               ]
             },
             {
               "name": "Interaction",
               "points": [
-                ["2025-07-31", 0.0],
-                ["2026-01-31", 0.0],
-                ["2026-05-31", 0.1],
-                ["2026-06-30", 0.1]
+                [
+                  "2025-07-31",
+                  0.0
+                ],
+                [
+                  "2026-01-31",
+                  0.0
+                ],
+                [
+                  "2026-05-31",
+                  0.1
+                ],
+                [
+                  "2026-06-30",
+                  0.1
+                ]
               ]
             },
             {
               "name": "Total",
               "points": [
-                ["2025-07-31", -0.1],
-                ["2026-01-31", -0.2],
-                ["2026-05-31", -0.4],
-                ["2026-06-30", -0.6]
+                [
+                  "2025-07-31",
+                  -0.1
+                ],
+                [
+                  "2026-01-31",
+                  -0.2
+                ],
+                [
+                  "2026-05-31",
+                  -0.4
+                ],
+                [
+                  "2026-06-30",
+                  -0.6
+                ]
               ]
             }
           ],
@@ -604,19 +749,39 @@
         {
           "type": "heat",
           "title": "Segment × month linked total effect",
-          "columns": ["Jul 2025", "Jan 2026", "May 2026", "Jun 2026"],
+          "columns": [
+            "Jul 2025",
+            "Jan 2026",
+            "May 2026",
+            "Jun 2026"
+          ],
           "rows": [
             {
               "label": "Public equity",
-              "values": [-0.1, -0.2, -0.2, -0.1]
+              "values": [
+                -0.1,
+                -0.2,
+                -0.2,
+                -0.1
+              ]
             },
             {
               "label": "Fixed income",
-              "values": [0.0, 0.1, 0.1, 0.1]
+              "values": [
+                0.0,
+                0.1,
+                0.1,
+                0.1
+              ]
             },
             {
               "label": "Private assets",
-              "values": [0.0, -0.1, -0.3, 0.0]
+              "values": [
+                0.0,
+                -0.1,
+                -0.3,
+                0.0
+              ]
             }
           ],
           "decimals": 1,
@@ -629,9 +794,21 @@
               "type": "bars",
               "title": "Contribution to tracking error",
               "items": [
-                {"label": "Public equity", "value": 26.0, "display": "26%"},
-                {"label": "Fixed income", "value": 30.0, "display": "30%"},
-                {"label": "Private assets", "value": 44.0, "display": "44%"}
+                {
+                  "label": "Public equity",
+                  "value": 26.0,
+                  "display": "26%"
+                },
+                {
+                  "label": "Fixed income",
+                  "value": 30.0,
+                  "display": "30%"
+                },
+                {
+                  "label": "Private assets",
+                  "value": 44.0,
+                  "display": "44%"
+                }
               ],
               "note": "Returned active-risk contribution shares [S4]."
             }
@@ -641,22 +818,55 @@
               "type": "bars",
               "title": "Return effect share",
               "items": [
-                {"label": "Public equity", "value": -50.0, "display": "-50%"},
-                {"label": "Fixed income", "value": 25.0, "display": "+25%"},
-                {"label": "Private assets", "value": -25.0, "display": "-25%"}
+                {
+                  "label": "Public equity",
+                  "value": -50.0,
+                  "display": "-50%"
+                },
+                {
+                  "label": "Fixed income",
+                  "value": 25.0,
+                  "display": "+25%"
+                },
+                {
+                  "label": "Private assets",
+                  "value": -25.0,
+                  "display": "-25%"
+                }
               ],
               "note": "Returned total effect divided by the sum of absolute returned segment effects [S4]."
             }
           ]
         },
         {
-          "type": "bars",
-          "title": "Inside Public equity",
-          "items": [
-            {"label": "US equity", "value": -0.4, "display": "-0.4pp"},
-            {"label": "International equity", "value": -0.2, "display": "-0.2pp"}
+          "type": "line",
+          "title": "Cumulative selection inside US equity",
+          "series": [
+            {
+              "name": "Selection",
+              "points": [
+                [
+                  "2025-07-31",
+                  -0.1
+                ],
+                [
+                  "2026-01-31",
+                  -0.2
+                ],
+                [
+                  "2026-05-31",
+                  -0.3
+                ],
+                [
+                  "2026-06-30",
+                  -0.4
+                ]
+              ]
+            }
           ],
-          "note": "Depth-1 attribution rerun for the largest root detractor [S4]."
+          "y_suffix": "pp",
+          "decimals": 1,
+          "note": "Returned cumulative selection from the depth-1 attribution rerun [S4]."
         },
         {
           "type": "table",
@@ -753,7 +963,7 @@
           "type": "chart",
           "chart": {
             "chart_id": "test-ex-ante-attribution-effects",
-            "title": "Governed ex ante segment total effects (TEST)",
+            "title": "Governed ex ante segment total effects",
             "status": "ok",
             "columns": [
               {
@@ -797,13 +1007,54 @@
         {
           "type": "bars",
           "title": "Expected return by segment",
+          "mark": "dots",
+          "series": [
+            {
+              "name": "Portfolio",
+              "color": "#52606D"
+            },
+            {
+              "name": "Policy benchmark",
+              "color": "#A8D830"
+            }
+          ],
+          "gap_label": "Active expected return",
+          "decimals": 1,
+          "suffix": "%",
           "items": [
-            {"label": "Public equity · Portfolio", "value": 7.8, "display": "7.8%"},
-            {"label": "Public equity · Benchmark", "value": 7.5, "display": "7.5%"},
-            {"label": "Fixed income · Portfolio", "value": 4.8, "display": "4.8%"},
-            {"label": "Fixed income · Benchmark", "value": 4.1, "display": "4.1%"},
-            {"label": "Private assets · Portfolio", "value": 8.0, "display": "8.0%"},
-            {"label": "Private assets · Benchmark", "value": 9.3, "display": "9.3%"}
+            {
+              "label": "Public equity",
+              "values": [
+                7.8,
+                7.5
+              ],
+              "displays": [
+                "7.8%",
+                "7.5%"
+              ]
+            },
+            {
+              "label": "Fixed income",
+              "values": [
+                4.8,
+                4.1
+              ],
+              "displays": [
+                "4.8%",
+                "4.1%"
+              ]
+            },
+            {
+              "label": "Private assets",
+              "values": [
+                8.0,
+                9.3
+              ],
+              "displays": [
+                "8.0%",
+                "9.3%"
+              ]
+            }
           ],
           "note": "Returned portfolio and policy-benchmark expected returns [S5]."
         },
@@ -858,14 +1109,41 @@
               "type": "kv",
               "title": "Ex ante reconciliation and method",
               "rows": [
-                ["Expected active return", "+0.4pp", "S5"],
-                ["Total effects", "+0.4pp", "S5"],
-                ["Residual", "0.0bp", "S5"],
-                ["Method / version", "Expected Brinson-Fachler / 1.0.0", "S5"],
-                ["Horizon / linking", "One year / none", "S5"],
-                ["Return sources", "Allocation and benchmark expected return base", "S5"],
-                ["Assumption set / regime", "Not linked / Not linked", "S5"],
-                ["Currency", "USD", "S5"]
+                [
+                  "Expected active return",
+                  "+0.4pp",
+                  "S5"
+                ],
+                [
+                  "Total effects",
+                  "+0.4pp",
+                  "S5"
+                ],
+                [
+                  "Method / version",
+                  "Expected Brinson-Fachler / 1.0.0",
+                  "S5"
+                ],
+                [
+                  "Horizon / linking",
+                  "One year / none",
+                  "S5"
+                ],
+                [
+                  "Return sources",
+                  "Allocation and benchmark expected return base",
+                  "S5"
+                ],
+                [
+                  "Assumption set / regime",
+                  "Not linked / Not linked",
+                  "S5"
+                ],
+                [
+                  "Currency",
+                  "USD",
+                  "S5"
+                ]
               ]
             }
           ]
@@ -946,15 +1224,45 @@
       "kicker": "Directional comparison with explicit basis separation",
       "blocks": [
         {
+          "type": "callout",
+          "tone": "warning",
+          "title": "Basis difference",
+          "text": "Historical effects use realized monthly observations and symmetric-Carino linking; ex ante effects use current normalized cohort weights and one expected period. The values are not directly interchangeable [S4][S5]."
+        },
+        {
           "type": "bars",
           "title": "Historical vs ex ante segment effects",
           "items": [
-            {"label": "Public equity · Historical", "value": -0.6, "display": "-0.6pp"},
-            {"label": "Public equity · Ex ante", "value": 0.3, "display": "+0.3pp"},
-            {"label": "Fixed income · Historical", "value": 0.3, "display": "+0.3pp"},
-            {"label": "Fixed income · Ex ante", "value": 0.3, "display": "+0.3pp"},
-            {"label": "Private assets · Historical", "value": -0.3, "display": "-0.3pp"},
-            {"label": "Private assets · Ex ante", "value": -0.2, "display": "-0.2pp"}
+            {
+              "label": "Public equity · Historical",
+              "value": -0.6,
+              "display": "-0.6pp"
+            },
+            {
+              "label": "Public equity · Ex ante",
+              "value": 0.3,
+              "display": "+0.3pp"
+            },
+            {
+              "label": "Fixed income · Historical",
+              "value": 0.3,
+              "display": "+0.3pp"
+            },
+            {
+              "label": "Fixed income · Ex ante",
+              "value": 0.3,
+              "display": "+0.3pp"
+            },
+            {
+              "label": "Private assets · Historical",
+              "value": -0.3,
+              "display": "-0.3pp"
+            },
+            {
+              "label": "Private assets · Ex ante",
+              "value": -0.2,
+              "display": "-0.2pp"
+            }
           ],
           "note": "Paired returned effects; lanes retain different bases [S4][S5]."
         },
@@ -981,12 +1289,6 @@
               "tone": "good"
             }
           ]
-        },
-        {
-          "type": "callout",
-          "tone": "warning",
-          "title": "Basis difference",
-          "text": "Historical effects use realized monthly observations and symmetric-Carino linking; ex ante effects use current normalized cohort weights and one expected period. The values are not directly interchangeable [S4][S5]."
         },
         {
           "type": "table",
@@ -1061,7 +1363,7 @@
               "sub": "Tolerance 0.000001 bp · ✓ [S4]",
               "tone": "good",
               "residual": 0.0,
-              "tolerance": 0.000001,
+              "tolerance": 1e-06,
               "within_tolerance": true
             },
             {
@@ -1070,7 +1372,7 @@
               "sub": "Tolerance 0.000001 bp · ✓ [S5]",
               "tone": "good",
               "residual": 0.0,
-              "tolerance": 0.000001,
+              "tolerance": 1e-06,
               "within_tolerance": true
             }
           ]
@@ -1141,7 +1443,7 @@
             {
               "name": "Capabilities",
               "status": "available",
-              "note": "Portfolio Analytics live fictional TEST access [S1]"
+              "note": "Portfolio Analytics live sample access [S1]"
             },
             {
               "name": "Portfolio and structure",
@@ -1156,12 +1458,12 @@
             {
               "name": "Historical attribution",
               "status": "available",
-              "note": "12 monthly periods; residual within tolerance [S4]"
+              "note": "12 monthly periods; governed result available [S4]"
             },
             {
               "name": "Governed ex ante attribution",
               "status": "available",
-              "note": "One-year expected basis; residual within tolerance [S5]"
+              "note": "One-year expected basis; governed result available [S5]"
             },
             {
               "name": "Largest-detractor manager findings",
@@ -1213,8 +1515,11 @@
               "get_gradient_capabilities",
               "detail=full",
               "2026-10-08",
-              "Fictional TEST data",
-              "{'chip': 'passed', 'status': 'passed'}",
+              "Illustrative sample data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "not_applicable_metadata_response"
             ],
             [
@@ -1224,8 +1529,11 @@
               "list_portfolios; get_portfolio_structure",
               "view=allocation_tree",
               "2026-10-08",
-              "Fictional TEST data",
-              "{'chip': 'passed', 'status': 'passed'}",
+              "Illustrative sample data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:2222222222222222222222222222222222222222222222222222222222222222"
             ],
             [
@@ -1235,8 +1543,11 @@
               "get_portfolio_historical_returns",
               "five sections",
               "2026-06-30",
-              "Fictional TEST data",
-              "{'chip': 'passed', 'status': 'passed'}",
+              "Illustrative sample data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:3333333333333333333333333333333333333333333333333333333333333333"
             ],
             [
@@ -1246,8 +1557,11 @@
               "get_portfolio_attribution",
               "policy; root; all sections",
               "2026-06-30",
-              "Fictional TEST data",
-              "{'chip': 'passed', 'status': 'passed'}",
+              "Illustrative sample data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:4444444444444444444444444444444444444444444444444444444444444444"
             ],
             [
@@ -1257,8 +1571,11 @@
               "get_portfolio_ex_ante_attribution",
               "policy; root; all sections",
               "2026-10-08",
-              "Fictional TEST data",
-              "{'chip': 'passed', 'status': 'passed'}",
+              "Illustrative sample data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:5555555555555555555555555555555555555555555555555555555555555555"
             ],
             [
@@ -1268,8 +1585,11 @@
               "get_manager_diligence_findings",
               "view=open; public-equity managers",
               "2026-06-30",
-              "Fictional TEST data",
-              "{'chip': 'passed', 'status': 'passed'}",
+              "Illustrative sample data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:6666666666666666666666666666666666666666666666666666666666666666"
             ],
             [
@@ -1279,8 +1599,11 @@
               "get_macro_signals",
               "view=gradient_signal; regime_state",
               "2026-06-30",
-              "Fictional TEST data",
-              "{'chip': 'passed', 'status': 'passed'}",
+              "Illustrative sample data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:7777777777777777777777777777777777777777777777777777777777777777"
             ]
           ]
@@ -1343,6 +1666,13 @@
               "Server-returned symmetric-Carino effects from periods and period segments",
               "governed-portfolio-attribution-v1",
               "Monthly and cumulative percentage-point effects [S4]"
+            ],
+            [
+              "Historical drill-down",
+              "Largest sub-allocation cumulative selection",
+              "Server-returned depth-1 period selection effects without local reconstruction",
+              "governed-portfolio-attribution-v1",
+              "Cumulative percentage-point selection effect [S4]"
             ],
             [
               "Ex ante assumptions",

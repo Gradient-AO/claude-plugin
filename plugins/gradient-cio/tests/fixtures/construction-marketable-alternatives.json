@@ -1,52 +1,46 @@
 {
   "meta": {
-    "mode": "marketable_alternatives",
-    "eyebrow": "Marketable Alternatives Portfolio Construction",
-    "header_label": "Marketable Alternatives Portfolio Construction",
-    "title": "Northstar Hedge Fund Portfolio (TEST)",
-    "subtitle": "Decision pack · prepared for the Investment Committee (TEST)",
-    "running_head": "Northstar Hedge Fund Portfolio (TEST)",
-    "data_as_of": "2026-06-30",
-    "confidentiality": "TEST DATA — fictional portfolio for rendering tests only",
-    "cover_facts": [
-      [
-        "As of",
-        "2026-06-30"
-      ],
-      [
-        "Base currency",
-        "USD"
-      ],
-      [
-        "Total NAV",
-        "$1,000.0M"
-      ],
-      [
-        "Marketable-alternatives weight",
-        "12.0%"
-      ],
-      [
-        "Policy benchmark",
-        "Example Absolute Return Index (TEST)"
-      ],
-      [
-        "Data scope",
-        "Fictional TEST data"
-      ]
+  "mode": "marketable_alternatives",
+  "eyebrow": "Marketable Alternatives Portfolio Construction",
+  "header_label": "Marketable Alternatives Portfolio Construction",
+  "title": "Northstar Hedge Fund Portfolio",
+  "subtitle": "Portfolio construction review · prepared for the Investment Committee",
+  "running_head": "Northstar Hedge Fund Portfolio",
+  "data_as_of": "2026-06-30",
+  "confidentiality": "Confidential — Investment Committee",
+  "cover_facts": [
+    [
+      "As of",
+      "2026-06-30"
     ],
-    "signal_title": "Marketable-alternatives portfolio status",
-    "signal": {
-      "level": "watch",
-      "label": "Liquidity terms require confirmation"
-    },
-    "completeness": {
-      "used": 8,
-      "expected": 9,
-      "state": "partial"
-    },
-    "meter_title": "Evidence completeness",
-    "data_basis": "gradient_governed"
+    [
+      "Total NAV",
+      "$1,000.0M"
+    ],
+    [
+      "Portfolio weight",
+      "12.0%"
+    ],
+    [
+      "Policy benchmark",
+      "Northstar Absolute Return Index"
+    ]
+  ],
+  "signal_title": "Overall view",
+  "signal": {
+    "level": "watch",
+    "label": "Liquidity terms require confirmation"
   },
+  "completeness": {
+    "used": 8,
+    "expected": 9,
+    "state": "partial"
+  },
+  "meter_title": "Scope reviewed",
+  "data_basis": "gradient_governed",
+  "cover_disclosure": "Illustrative sample · not client data",
+  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
+},
   "executive": {
     "label": "Recommendation",
     "bottom_line": "We recommend retaining the 12.0% marketable-alternatives allocation while shifting 2.0 percentage points from equity long/short to macro and relative-value roles [S3][S4]. Committee action requested: approve the target structure and staged manager review, subject to verified redemption terms and completed diligence [S3][S7][S8].",
@@ -138,21 +132,21 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a liquidity-terms signal above the clear monitoring threshold [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+          "text": "Observation: The sample report carries a liquidity-terms signal above the clear monitoring threshold [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Marketable-alternatives weight is 12.0% in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
+          "text": "Observation: Marketable-alternatives weight is 12.0% in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Liquid share is 8.0% in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
+          "text": "Observation: Liquid share is 8.0% in the review evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
@@ -164,7 +158,7 @@
           "rows": [
             [
               "Portfolio",
-              "Northstar Total Fund (TEST)",
+              "Northstar Total Fund",
               "S2"
             ],
             [
@@ -174,7 +168,7 @@
             ],
             [
               "Benchmark",
-              "Example Absolute Return Index (TEST)",
+              "Northstar Absolute Return Index",
               "S5"
             ],
             [
@@ -189,7 +183,7 @@
             ],
             [
               "Data scope",
-              "Fictional TEST data [S1]",
+              "Illustrative sample data [S1]",
               "S1"
             ]
           ]
@@ -246,7 +240,7 @@
           "type": "chart",
           "chart": {
             "chart_id": "test-ma-allocation",
-            "title": "Hedge-fund strategy allocation (TEST)",
+            "title": "Hedge-fund strategy allocation",
             "status": "ok",
             "columns": [
               {
@@ -304,7 +298,7 @@
           ],
           "rows": [
             [
-              "Example Alpha Partners (TEST)",
+              "Example Alpha Partners",
               "Equity long/short",
               "$50.0M",
               "5.0%",
@@ -312,7 +306,7 @@
               "2026-06-30 [S4]"
             ],
             [
-              "Example Macro Fund (TEST)",
+              "Example Macro Fund",
               "Macro",
               "$25.0M",
               "2.5%",
@@ -320,7 +314,7 @@
               "2026-06-30 [S4]"
             ],
             [
-              "Example Relative Value Fund (TEST)",
+              "Example Relative Value Fund",
               "Relative value",
               "$15.0M",
               "1.5%",
@@ -328,7 +322,7 @@
               "2026-06-30 [S4]"
             ],
             [
-              "Example Multi-Strategy Fund (TEST)",
+              "Example Multi-Strategy Fund",
               "Multi-strategy",
               "$30.0M",
               "3.0%",
@@ -697,7 +691,7 @@
           "type": "chart",
           "chart": {
             "chart_id": "test-ma-factor",
-            "title": "Model-implied factor exposures (TEST)",
+            "title": "Model-implied factor exposures",
             "status": "ok",
             "columns": [
               {
@@ -826,7 +820,7 @@
           "rows": [
             [
               "Assumption set",
-              "2026 Strategic CMA (TEST)",
+              "2026 Strategic CMA",
               "S6"
             ],
             [
@@ -855,7 +849,7 @@
           "type": "chart",
           "chart": {
             "chart_id": "test-ma-forward",
-            "title": "Marketable-alternatives forward assumptions (TEST)",
+            "title": "Marketable-alternatives forward assumptions",
             "status": "ok",
             "currency": "USD",
             "columns": [
@@ -918,10 +912,10 @@
       "blocks": [
         {
           "type": "stacked",
-          "title": "Liquidity composition (TEST)",
+          "title": "Liquidity composition",
           "items": [
             {
-              "label": "Portfolio (TEST)",
+              "label": "Portfolio",
               "segments": [
                 {
                   "label": "Liquid / marketable",
@@ -984,28 +978,28 @@
           ],
           "rows": [
             [
-              "Example Alpha Partners (TEST)",
+              "Example Alpha Partners",
               "Quarterly",
               "60 days",
               "Not available — terms not returned",
               "[S8]"
             ],
             [
-              "Example Macro Fund (TEST)",
+              "Example Macro Fund",
               "Monthly",
               "30 days",
               "No gate reported",
               "[S8]"
             ],
             [
-              "Example Relative Value Fund (TEST)",
+              "Example Relative Value Fund",
               "Monthly",
               "45 days",
               "Not available — terms not returned",
               "[S8]"
             ],
             [
-              "Example Multi-Strategy Fund (TEST)",
+              "Example Multi-Strategy Fund",
               "Quarterly",
               "90 days",
               "Not available — terms not returned",
@@ -1035,7 +1029,7 @@
           ],
           "rows": [
             [
-              "Example Alpha Partners (TEST)",
+              "Example Alpha Partners",
               "Equity long/short",
               "$50.0M",
               "Current; 1 Medium finding [S7]",
@@ -1043,7 +1037,7 @@
               "Confirm notice and gate"
             ],
             [
-              "Example Macro Fund (TEST)",
+              "Example Macro Fund",
               "Macro",
               "$25.0M",
               "Current [S7]",
@@ -1051,7 +1045,7 @@
               "Refresh ODD"
             ],
             [
-              "Proposed Relative Value Manager (TEST)",
+              "Proposed Relative Value Manager",
               "Relative value",
               "Not funded",
               "Not assessed [S7]",
@@ -1268,7 +1262,7 @@
             {
               "name": "Portfolio and allocation",
               "status": "available",
-              "note": "Fictional TEST data [S2]"
+              "note": "Illustrative sample data [S2]"
             },
             {
               "name": "Policy",
@@ -1334,7 +1328,7 @@
               "list_organizations; get_gradient_capabilities",
               "organization=test",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1345,7 +1339,7 @@
               "list_portfolios; get_portfolio_structure",
               "allocation_tree",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1356,7 +1350,7 @@
               "check_portfolio_policy",
               "portfolio=test",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1367,7 +1361,7 @@
               "get_portfolio_exposure",
               "all pages",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1378,7 +1372,7 @@
               "get_portfolio_historical_returns; get_portfolio_attribution",
               "all sections",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "degraded",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1389,7 +1383,7 @@
               "get_capital_market_assumptions",
               "baseline",
               "2026-06-15",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1398,9 +1392,9 @@
               "Diligence and look-through",
               "gradient_tool",
               "get_cross_domain_research",
-              "fictional",
+              "illustrative",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "degraded",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1409,9 +1403,9 @@
               "Mandate, redemption terms and gaps",
               "gradient_tool",
               "get_gradient_capabilities",
-              "fictional",
+              "illustrative",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "advisory",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ]

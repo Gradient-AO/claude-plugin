@@ -1133,9 +1133,38 @@ def validate_quantitative_blocks(value: JsonValue, path: str = "$") -> list[str]
         if items is None:
             errors.append(f"{path}.items must be an array")
         else:
+            series = as_array(value.get("series")) if block_type == "bars" else None
+            grouped_bars = series is not None
+            if grouped_bars and (
+                not series
+                or any(
+                    (entry := as_object(child)) is None
+                    or not str(entry.get("name", "")).strip()
+                    for child in series
+                )
+            ):
+                errors.append(f"{path}.series must contain named series")
             positive_values = 0
             for index, child in enumerate(items):
                 item = as_object(child)
+                if grouped_bars:
+                    amounts = as_array(item.get("values")) if item is not None else None
+                    if amounts is None or len(amounts) != len(series):
+                        errors.append(
+                            f"{path}.items[{index}].values must match series length"
+                        )
+                        continue
+                    for value_index, amount in enumerate(amounts):
+                        if (
+                            not isinstance(amount, (int, float))
+                            or isinstance(amount, bool)
+                            or not math.isfinite(amount)
+                        ):
+                            errors.append(
+                                f"{path}.items[{index}].values[{value_index}] "
+                                "must be a finite signed number"
+                            )
+                    continue
                 amount = item.get("value") if item is not None else None
                 if (
                     not isinstance(amount, (int, float))

@@ -281,6 +281,47 @@ def section_page_ranges(
     sections: list[dict[str, str]],
 ) -> dict[str, dict[str, Any]]:
     """Return inclusive start/end pages and pages touched for each section."""
+    normalized_pages = [
+        {
+            " ".join(line.split()).casefold()
+            for line in lines
+            if " ".join(line.split())
+        }
+        for lines in page_text
+    ]
+    recurring_lines = {
+        line
+        for lines in normalized_pages
+        for line in lines
+        if sum(line in page for page in normalized_pages) > 1
+    }
+
+    def substantive_before_heading(
+        page_number: int,
+        heading_line: int,
+    ) -> bool:
+        """Ignore repeated furniture and count only prior-section body content."""
+        for line in page_text[page_number - 1][:heading_line]:
+            normalized = " ".join(line.split())
+            folded = normalized.casefold()
+            if not normalized:
+                continue
+            if folded in recurring_lines:
+                continue
+            if re.fullmatch(
+                r"(?:page\s*)?\d+(?:\s*(?:/|of)\s*\d+)?",
+                folded,
+            ):
+                continue
+            if (
+                folded.startswith(("data as of", "confidential", "powered by"))
+                or "gradientcio" in folded
+                or folded == "running header"
+            ):
+                continue
+            return True
+        return False
+
     starts: list[tuple[str, str, int, int]] = []
     for section in sections:
         heading = next(
@@ -333,7 +374,10 @@ def section_page_ranges(
         )
         shares_next_page = (
             next_heading is not None
-            and next_heading[3] > 1
+            and substantive_before_heading(
+                next_heading[2],
+                next_heading[3],
+            )
         )
         end = max(start, next_start if shares_next_page else next_start - 1)
         ranges[number] = {

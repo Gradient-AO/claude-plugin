@@ -1,51 +1,45 @@
 {
   "meta": {
-    "eyebrow": "DDQ Reconciliation Report",
-    "title": "Ridgeview Example Advisors, LP (TEST)",
-    "subtitle": "Synthetic test DDQ · Global Macro Fund III, Ltd. · CRD 999901 · Example City, ST",
-    "running_head": "Ridgeview · DDQ reconciliation (TEST)",
-    "data_as_of": "2026-10-01 (Form ADV); DDQ responses as of 2026-09-30",
-    "confidentiality": "TEST FIXTURE — synthetic DDQ, not a manager document",
-    "cover_facts": [
-      [
-        "Adviser CRD",
-        "999901"
-      ],
-      [
-        "DDQ as of",
-        "2026-09-30"
-      ],
-      [
-        "Form ADV report",
-        "2026-10-01"
-      ],
-      [
-        "ADV filing date",
-        "2026-08-18"
-      ],
-      [
-        "Prepared for",
-        "Gradient"
-      ],
-      [
-        "Report date",
-        "2026-10-04"
-      ]
+  "eyebrow": "DDQ Reconciliation Report",
+  "title": "Ridgeview Advisors, LP",
+  "subtitle": "DDQ reconciliation · Global Macro Fund III · Form ADV cross-check",
+  "running_head": "Ridgeview · DDQ reconciliation",
+  "data_as_of": "2026-10-01 (Form ADV); DDQ responses as of 2026-09-30",
+  "confidentiality": "Confidential — manager diligence review",
+  "cover_facts": [
+    [
+      "Adviser CRD",
+      "999901"
     ],
-    "signal": {
-      "level": "discrepancies",
-      "label": "4 discrepancies found"
-    },
-    "completeness": {
-      "used": 20,
-      "expected": 21,
-      "state": "partial"
-    },
-    "header_label": "DDQ Reconciliation",
-    "signal_title": "Reconciliation result",
-    "meter_title": "Fields assessed",
-    "data_basis": "mixed"
+    [
+      "DDQ as of",
+      "2026-09-30"
+    ],
+    [
+      "Form ADV report",
+      "2026-10-01"
+    ],
+    [
+      "Report date",
+      "2026-10-04"
+    ]
+  ],
+  "signal": {
+    "level": "discrepancies",
+    "label": "4 discrepancies found"
   },
+  "completeness": {
+    "used": 20,
+    "expected": 21,
+    "state": "partial"
+  },
+  "header_label": "DDQ Reconciliation",
+  "signal_title": "Overall view",
+  "meter_title": "Scope reviewed",
+  "data_basis": "mixed",
+  "cover_disclosure": "Illustrative sample · not client data",
+  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
+},
   "executive": {
     "bottom_line": "Of 20 checkable DDQ answers, **13 are consistent** with Form ADV and Schedule D, **4 are contradicted** and **3 need review** [S1][S2]. The most serious gap is the **fund administrator**: the DDQ names Example Fund Administration, while Schedule D lists Example Trust Company [S1][S2]. The DDQ also overstates headcount by 105 people and private funds by 3, and understates the fund minimum by $1.67M; these gaps are returned by the governed reconciliation [S1]. The source DDQ is preserved by digest [S3].",
     "tiles": [
@@ -109,21 +103,21 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a 4 discrepancies found signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+          "text": "Observation: The sample report carries a 4 discrepancies found signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Contradicted is 4 in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
+          "text": "Observation: Contradicted is 4 in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Not checkable is 0 in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
+          "text": "Observation: Not checkable is 0 in the review evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
@@ -179,7 +173,7 @@
               ]
             }
           ],
-          "note": "Governed and analyst-classified verdict counts for the fictional TEST claims [S1][S2]."
+          "note": "Governed and analyst-classified verdict counts for the sample claims [S1][S2]."
         },
         {
           "type": "findings",
@@ -606,12 +600,12 @@
                 {
                   "name": "Fund status",
                   "status": "not_assessed",
-                  "note": "Not stated in the synthetic DDQ [S3]"
+                  "note": "Not stated in the manager DDQ [S3]"
                 },
                 {
                   "name": "Workpaper saved",
                   "status": "not_run",
-                  "note": "No run ID was returned; this TEST report is the record [S1]"
+                  "note": "No saved reconciliation record was returned; this report preserves the review [S1]"
                 }
               ]
             }
@@ -621,7 +615,7 @@
               "type": "callout",
               "tone": "watch",
               "title": "Out of scope",
-              "text": "Not available — No out-of-scope evidence was identified in the fictional TEST DDQ [S3]."
+              "text": "Not available — No out-of-scope evidence was identified in the sample DDQ [S3]."
             }
           ]
         }
@@ -663,9 +657,9 @@
               "DDQ reconciliation, 20 claims with governed numeric gaps",
               "gradient_tool",
               "reconcile_manager_ddq_claims",
-              "fixture=true",
+              "illustrative sample",
               "2026-10-01",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:f7d651b2f80f66bfed38fc7041a906cab927de85ad580cf8dc38713fbc66bafa"
             ],
@@ -674,9 +668,9 @@
               "Form ADV profile incl. Schedule D 7.B.1",
               "gradient_tool",
               "get_manager_odd_profile",
-              "fixture=true",
+              "illustrative sample",
               "2026-10-01",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "{'chip': 'not run', 'status': 'not_run'}",
               "sha256:a04715c67d5ce3adfd18b7b78a12cf0cbf791f70803e2feffcd7826418a2b647"
             ],
@@ -685,9 +679,9 @@
               "Synthetic DDQ file (sha256)",
               "user_document",
               "User-supplied document",
-              "fixture=true",
+              "illustrative sample",
               "2026-09-30",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "not_applicable: user document validation is not applicable",
               "1b448613"
             ]
@@ -756,7 +750,7 @@
           "type": "callout",
           "tone": "info",
           "title": "Disclaimer",
-          "text": "TEST FIXTURE. The DDQ is synthetic and was written by Gradient for QA; it was not issued by Ridgeview Example Advisors. Filed values are Form ADV data reported by the adviser and normalized by Gradient; they are not SEC verification. Not investment advice."
+          "text": "Illustrative sample. The DDQ is synthetic and was written by Gradient for QA; it was not issued by Ridgeview Advisors. Filed values are Form ADV data reported by the adviser and normalized by Gradient; they are not SEC verification. Not investment advice."
         }
       ]
     }

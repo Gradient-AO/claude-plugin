@@ -1,51 +1,64 @@
 {
   "meta": {
-    "mode": "three_lane",
-    "eyebrow": "Portfolio Attribution Comparison",
-    "header_label": "Attribution Comparison",
-    "title": "Northstar Attribution Comparison (TEST)",
-    "subtitle": "Historical, ex ante and simulated lanes ? governed server comparison",
-    "running_head": "Northstar attribution comparison (TEST)",
-    "data_as_of": "2026-06-30",
-    "cover_facts": [
-      [
-        "Portfolio",
-        "Northstar (TEST)"
-      ],
-      [
-        "Mode",
-        "Three lane"
-      ]
+  "mode": "three_lane",
+  "eyebrow": "Portfolio Attribution Comparison",
+  "header_label": "Attribution Comparison",
+  "title": "Northstar Attribution Comparison",
+  "subtitle": "Historical, forward and simulated views",
+  "running_head": "Northstar · attribution comparison",
+  "data_as_of": "2026-06-30",
+  "cover_facts": [
+    [
+      "Portfolio",
+      "Northstar Total Fund"
     ],
-    "signal": {
-      "level": "satisfactory",
-      "label": "Three compatible lanes compared"
-    },
-    "completeness": {
-      "used": 4,
-      "expected": 4,
-      "state": "complete"
-    },
-    "capability_gate": {
-      "simulate_portfolio_attribution": {
-        "contract": "planned_conditional",
-        "status": "available"
-      },
-      "compare_portfolio_attribution": {
-        "contract": "planned_conditional",
-        "status": "available"
-      }
-    },
-    "evidence_flags": {
-      "entity_return_reconciliation_available": true,
-      "historical_summary_available": true,
-      "ex_ante_summary_available": true,
-      "historical_periods_available": true,
-      "historical_cumulative_growth_available": true,
-      "compatible_lane_count": 3
-    },
-    "data_basis": "gradient_governed"
+    [
+      "Views",
+      "Three"
+    ],
+    [
+      "Audience",
+      "Investment Committee"
+    ],
+    [
+      "Data as of",
+      "2026-10-08"
+    ]
+  ],
+  "signal": {
+    "level": "satisfactory",
+    "label": "Three compatible lanes compared"
   },
+  "completeness": {
+    "used": 4,
+    "expected": 4,
+    "state": "complete"
+  },
+  "capability_gate": {
+    "simulate_portfolio_attribution": {
+      "contract": "planned_conditional",
+      "status": "available"
+    },
+    "compare_portfolio_attribution": {
+      "contract": "planned_conditional",
+      "status": "available"
+    }
+  },
+  "evidence_flags": {
+    "entity_return_reconciliation_available": true,
+    "historical_summary_available": true,
+    "ex_ante_summary_available": true,
+    "historical_periods_available": true,
+    "historical_cumulative_growth_available": true,
+    "compatible_lane_count": 3
+  },
+  "data_basis": "gradient_governed",
+  "confidentiality": "Confidential — Investment Committee",
+  "signal_title": "Overall view",
+  "meter_title": "Scope reviewed",
+  "cover_disclosure": "Illustrative sample · not client data",
+  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
+},
   "executive": {
     "bottom_line": "Historical, ex ante, and simulated effects are compatible, and governed comparison metrics are available [S2][S3][S4][S5].",
     "tiles": [
@@ -636,7 +649,7 @@
               "rows": [
                 [
                   "assumption_set_name",
-                  "2026 Strategic CMA (TEST)",
+                  "2026 Strategic CMA",
                   "S3"
                 ],
                 [
@@ -794,19 +807,19 @@
           "rows": [
             [
               "scenario-base-test",
-              "Base scenario (TEST)",
+              "Base scenario",
               "Yes",
               "1-year simulated"
             ],
             [
               "scenario-down-test",
-              "Downside scenario (TEST)",
+              "Downside scenario",
               "No",
               "1-year simulated"
             ],
             [
               "scenario-up-test",
-              "Upside scenario (TEST)",
+              "Upside scenario",
               "No",
               "1-year simulated"
             ]
@@ -1180,9 +1193,9 @@
               "Capability gate",
               "gradient_tool",
               "get_gradient_capabilities",
-              "fixture=true",
+              "illustrative sample",
               "2026-06-30",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1191,9 +1204,9 @@
               "Historical attribution",
               "gradient_tool",
               "get_portfolio_attribution",
-              "fixture=true",
+              "illustrative sample",
               "2026-06-30",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "passed",
               "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
             ],
@@ -1202,9 +1215,9 @@
               "Ex ante attribution",
               "gradient_tool",
               "get_portfolio_ex_ante_attribution",
-              "fixture=true",
+              "illustrative sample",
               "2026-06-30",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "passed",
               "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
             ],
@@ -1213,9 +1226,9 @@
               "Simulated attribution",
               "gradient_tool",
               "get_gradient_capabilities",
-              "fixture=true",
+              "illustrative sample",
               "2026-06-30",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "passed",
               "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
             ],
@@ -1224,9 +1237,9 @@
               "Cross-lane comparison",
               "gradient_tool",
               "get_gradient_capabilities",
-              "fixture=true",
+              "illustrative sample",
               "2026-06-30",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "passed",
               "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
             ],
@@ -1235,9 +1248,9 @@
               "Historical return context",
               "gradient_tool",
               "get_portfolio_historical_returns",
-              "fields=cumulative_growth; limit=100; fixture=true",
+              "fields=cumulative_growth; limit=100; illustrative sample",
               "2026-06-30",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "passed",
               "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
             ]

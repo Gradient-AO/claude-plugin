@@ -47,7 +47,7 @@
         {"label": "Benchmark change", "values": [0, 1, 0]},
         {"label": "Valuation controls", "values": [0, 0, 1]},
         {"label": "Error correction", "values": [0, 0, 1]}
-      ], "decimals": 0, "note": "Board-facing evidence status from the fictional review record [S1][S2][S3]."}],
+    ], "decimals": 0, "note": "Board-facing evidence status from the illustrative review record [S1][S2][S3]."}],
       "after": []
     },
     "4. Follow-up Requests": {

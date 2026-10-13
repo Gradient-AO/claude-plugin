@@ -10,8 +10,8 @@ apply its specific repair levers and rerun until clean.
 
 - `meta.mode`: `private_markets`.
 - `meta.eyebrow` and `meta.header_label`: `Private Markets Portfolio Construction`.
-- Cover facts: As of, Base currency, Total NAV, Private-markets NAV, Unfunded commitments, Data scope.
-- `meta.signal_title`: `Private-markets program status`.
+- Cover facts: As of, Private-markets NAV, Unfunded commitments, Review.
+- `meta.signal_title`: `Overall view`; `meta.meter_title`: `Scope reviewed`.
 - `meta.evidence.private_markets_holdings`: connector status, data status, mapped-company count,
   aggregate completeness, selected-artifact count, unknown-grain count, exact draft label, source tag,
   aggregate basis and artifact/parser/projection lineage.

@@ -107,9 +107,9 @@ Use JSON block mode. Set:
 - `meta.title`: portfolio name only. Never append an illustrative label.
 - `meta.subtitle`: `<Quarterly|Annual|On-demand> comprehensive review · period to <date> · prepared for <audience>`.
 - `meta.running_head`: `<short portfolio name> · period to <date>`.
-- `meta.cover_facts`: Period end, Base currency, Total NAV, Policy benchmark, Review mode
-  (`Comprehensive`), and Data scope.
-- `meta.signal_title`: `Portfolio status`.
+- `meta.cover_facts`: Period end, Total NAV, Policy benchmark, and Review
+  (`Comprehensive`).
+- `meta.signal_title`: `Overall view`; `meta.meter_title`: `Scope reviewed`.
 - `meta.completeness`: sources used versus expected for the selected mode.
 - `executive.label`: `Review conclusion`.
 - `executive.bottom_line`: three to five sourced sentences covering performance, attribution, policy,

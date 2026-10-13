@@ -1,69 +1,64 @@
 {
   "meta": {
-    "eyebrow": "Manager Monitoring Digest",
-    "header_label": "Monitoring Digest",
-    "title": "Gradient",
-    "subtitle": "Week of 2026-09-28 – 2026-10-04 · Diligence Roster",
-    "running_head": "Gradient · week to 2026-10-04",
-    "data_as_of": "2026-10-01 (Form ADV); queue 2026-10-04",
-    "signal": {
-      "level": "watch",
-      "label": "1 item to review"
-    },
-    "signal_title": "This week",
-    "completeness": {
-      "used": 2,
-      "expected": 2,
-      "state": "complete",
-      "distinct_funds": 1,
-      "unique_parent_firms": 1,
-      "evaluated_subjects": 2,
-      "not_evaluated_subjects": 0
-    },
-    "week_kind": "active",
-    "event_date_from": "2026-09-28",
-    "event_date_to": "2026-10-04",
-    "latest_published_event": null,
-    "not_evaluated_count": 0,
-    "attention_items": [
-      {
-        "subject_kind": "firm",
-        "attention_reason": "material_change",
-        "severity": "medium",
-        "action": "Review new ADV filing"
-      }
-    ],
-    "meter_title": "Subjects fully covered",
-    "cover_facts": [
-      [
-        "Roster funds",
-        "1 of 3 slots"
-      ],
-      [
-        "Managers",
-        "1"
-      ],
-      [
-        "New alerts",
-        "0"
-      ],
-      [
-        "Changes since review",
-        "1"
-      ],
-      [
-        "Open findings",
-        "0"
-      ],
-      [
-        "ADV data as of",
-        "2026-10-01"
-      ]
-    ],
-    "data_basis": "mixed"
+  "eyebrow": "Manager Monitoring Digest",
+  "header_label": "Monitoring Digest",
+  "title": "Northstar Investment Office",
+  "subtitle": "Manager monitoring digest · week of 2026-09-28 to 2026-10-04",
+  "running_head": "Northstar · week to 2026-10-04",
+  "data_as_of": "2026-10-01 (Form ADV); queue 2026-10-04",
+  "signal": {
+    "level": "watch",
+    "label": "1 item to review"
   },
+  "signal_title": "This week",
+  "completeness": {
+    "used": 2,
+    "expected": 2,
+    "state": "complete",
+    "distinct_funds": 1,
+    "unique_parent_firms": 1,
+    "evaluated_subjects": 2,
+    "not_evaluated_subjects": 0
+  },
+  "week_kind": "active",
+  "event_date_from": "2026-09-28",
+  "event_date_to": "2026-10-04",
+  "latest_published_event": null,
+  "not_evaluated_count": 0,
+  "attention_items": [
+    {
+      "subject_kind": "firm",
+      "attention_reason": "material_change",
+      "severity": "medium",
+      "action": "Review new ADV filing"
+    }
+  ],
+  "meter_title": "Roster reviewed",
+  "cover_facts": [
+    [
+      "Roster funds",
+      "1 of 3 slots"
+    ],
+    [
+      "Managers",
+      "1"
+    ],
+    [
+      "New alerts",
+      "0"
+    ],
+    [
+      "Changes since review",
+      "1"
+    ]
+  ],
+  "data_basis": "mixed",
+  "confidentiality": "Confidential — Investment Committee",
+  "cover_disclosure": "Illustrative sample · not client data",
+  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
+},
   "executive": {
-    "bottom_line": "One item needs attention: Ridgeview Example Advisors filed a new Form ADV snapshot dated 2026-10-01, two days after its last review on 2026-09-29 [S2]. The monitor processed that filing and raised no alerts in any category [S3], and there are no open findings [S4]. Review the new filing and decide whether an ODD refresh is needed; Global Macro Fund II has no new activity. The firm and fund event feed is not yet published, so absence of events is not evidence of none [S5].",
+    "bottom_line": "One item needs attention: Ridgeview Advisors filed a new Form ADV snapshot dated 2026-10-01, two days after its last review on 2026-09-29 [S2]. The monitor processed that filing and raised no alerts in any category [S3], and there are no open findings [S4]. Review the new filing and decide whether an ODD refresh is needed; Global Macro Fund II has no new activity. The firm and fund event feed is not yet published, so absence of events is not evidence of none [S5].",
     "tiles": [
       {
         "label": "New alerts",
@@ -125,7 +120,7 @@
           "items": [
             {
               "severity": "medium",
-              "title": "Ridgeview Example Advisors — review new ADV filing",
+              "title": "Ridgeview Advisors — review new ADV filing",
               "detail": "A Form ADV snapshot dated 2026-10-01 was filed after the 2026-09-29 review [S2]."
             }
           ],
@@ -137,21 +132,21 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a 1 item to review signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+          "text": "Observation: The sample report carries a 1 item to review signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: New alerts is 0 in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
+          "text": "Observation: New alerts is 0 in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Reviews due ≤30d is 0 in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
+          "text": "Observation: Reviews due ≤30d is 0 in the review evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
@@ -179,7 +174,7 @@
             },
             {
               "type": "kv",
-              "title": "Ridgeview Example Advisors — change since last review",
+              "title": "Ridgeview Advisors — change since last review",
               "rows": [
                 [
                   "Change",
@@ -229,7 +224,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Why this is medium",
-          "text": "Observation: One unavailable event-coverage item supports the fictional TEST medium finding [S3]. Why it matters: It focuses review on the principal monitoring gap. Uncertainty: The compact fixture omits some corroborating event detail. What would change the view: Refreshed governed event records resolving the unavailable item."
+          "text": "Observation: One unavailable event-coverage item supports the sample medium finding [S3]. Why it matters: It focuses review on the principal monitoring gap. Uncertainty: The public sample omits some corroborating event detail. What would change the view: Refreshed governed event records resolving the unavailable item."
         }
       ]
     },
@@ -282,7 +277,7 @@
               }
             ],
             [
-              "Ridgeview Example Advisors (parent firm)",
+              "Ridgeview Advisors (parent firm)",
               "2026-09-29",
               "2027-09-29",
               {
@@ -380,9 +375,9 @@
               "Diligence Roster and capacity",
               "gradient_tool",
               "get_diligence_roster_funds",
-              "fixture=true",
+              "illustrative sample",
               "2026-10-04",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -391,9 +386,9 @@
               "Attention queue, changes since review, red flags",
               "gradient_tool",
               "get_manager_diligence_attention_queue",
-              "fixture=true",
+              "illustrative sample",
               "2026-10-04",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
             ],
@@ -402,31 +397,31 @@
               "Monitor alerts and coverage",
               "gradient_tool",
               "get_manager_monitor_evidence",
-              "fixture=true",
+              "illustrative sample",
               "2026-10-01",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
             ],
             [
               "S4",
-              "Open findings — Ridgeview Example Advisors",
+              "Open findings — Ridgeview Advisors",
               "gradient_tool",
               "get_manager_diligence_findings",
-              "fixture=true",
+              "illustrative sample",
               "2026-10-04",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "{'chip': 'advisory', 'status': 'advisory'}",
               "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
             ],
             [
               "S5",
-              "Firm and fund events — Ridgeview Example Advisors",
+              "Firm and fund events — Ridgeview Advisors",
               "gradient_tool",
               "get_firm_fund_events",
-              "event_date_from=2026-09-28; event_date_to=2026-10-04; fixture=true",
+              "event_date_from=2026-09-28; event_date_to=2026-10-04; illustrative sample",
               "2026-10-04",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
             ],
@@ -435,9 +430,9 @@
               "Research watchlist changes",
               "gradient_tool",
               "get_research_watchlist_changes",
-              "fixture=true",
+              "illustrative sample",
               "2026-10-04",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "{'chip': 'passed', 'status': 'passed'}",
               "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
             ]

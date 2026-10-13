@@ -1,74 +1,68 @@
 {
   "meta": {
-    "mode": "private_markets",
-    "eyebrow": "Private Markets Portfolio Construction",
-    "header_label": "Private Markets Portfolio Construction",
-    "title": "Northstar Private Markets Program (TEST)",
-    "subtitle": "Decision pack · prepared for the Investment Committee (TEST)",
-    "running_head": "Northstar Private Markets Program (TEST)",
-    "data_as_of": "2026-06-30",
-    "confidentiality": "TEST DATA — fictional portfolio for rendering tests only",
-    "cover_facts": [
-      [
-        "As of",
-        "2026-06-30"
-      ],
-      [
-        "Base currency",
-        "USD"
-      ],
-      [
-        "Total NAV",
-        "$1,000.0M"
-      ],
-      [
-        "Private-markets NAV",
-        "$230.0M"
-      ],
-      [
-        "Unfunded commitments",
-        "$92.0M"
-      ],
-      [
-        "Data scope",
-        "Fictional TEST data"
-      ]
+  "mode": "private_markets",
+  "eyebrow": "Private Markets Portfolio Construction",
+  "header_label": "Private Markets Portfolio Construction",
+  "title": "Northstar Private Markets Program",
+  "subtitle": "Portfolio construction review · prepared for the Investment Committee",
+  "running_head": "Northstar Private Markets Program",
+  "data_as_of": "2026-06-30",
+  "confidentiality": "Confidential — Investment Committee",
+  "cover_facts": [
+    [
+      "As of",
+      "2026-06-30"
     ],
-    "signal_title": "Private-markets program status",
-    "signal": {
-      "level": "watch",
-      "label": "Pacing and concentration on watch"
-    },
-    "completeness": {
-      "used": 9,
-      "expected": 10,
-      "state": "partial"
-    },
-    "meter_title": "Evidence completeness",
-    "evidence": {
-      "private_markets_holdings": {
-        "connector_status": "available",
-        "data_status": "partial",
-        "mapped_company_count": 2,
-        "aggregate_complete": false,
-        "selected_artifact_count": 1,
-        "draft_label": "Draft — July 22, 2026",
-        "source_tag": "S9",
-        "aggregate_basis": "canonical_portfolio_company_nav_base_non_additive_to_commitment_exposure",
-        "unknown_grain_count": 1,
-        "lineage": {
-          "artifact_ids": [
-            "fictional-ilpa-artifact-test"
-          ],
-          "parser_id": "ilpa_portfolio_company_draft_2026_07_22",
-          "parser_version": "1.0.0",
-          "projection_registry_id": "private-markets-holding-exact-to-range-v1",
-          "projection_registry_checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        }
-      }
-    },
-    "data_basis": "gradient_governed"
+    [
+      "Private-markets NAV",
+      "$230.0M"
+    ],
+    [
+      "Unfunded commitments",
+      "$92.0M"
+    ],
+    [
+      "Review",
+      "Program construction"
+    ]
+  ],
+  "signal_title": "Overall view",
+  "signal": {
+    "level": "watch",
+    "label": "Pacing and concentration on watch"
   },
+  "completeness": {
+    "used": 9,
+    "expected": 10,
+    "state": "partial"
+  },
+  "meter_title": "Scope reviewed",
+  "evidence": {
+    "private_markets_holdings": {
+      "connector_status": "available",
+      "data_status": "partial",
+      "mapped_company_count": 2,
+      "aggregate_complete": false,
+      "selected_artifact_count": 1,
+      "draft_label": "Draft — July 22, 2026",
+      "source_tag": "S9",
+      "aggregate_basis": "canonical_portfolio_company_nav_base_non_additive_to_commitment_exposure",
+      "unknown_grain_count": 1,
+      "lineage": {
+        "artifact_ids": [
+          "illustrative-ilpa-artifact-test"
+        ],
+        "parser_id": "ilpa_portfolio_company_draft_2026_07_22",
+        "parser_version": "1.0.0",
+        "projection_registry_id": "private-markets-holding-exact-to-range-v1",
+        "projection_registry_checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    }
+  },
+  "data_basis": "gradient_governed",
+  "cover_disclosure": "Illustrative sample · not client data",
+  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
+},
   "executive": {
     "label": "Recommendation",
     "bottom_line": "We recommend a two-year $80.0M commitment program that shifts new commitments toward infrastructure and secondary private equity while keeping private-markets exposure inside the 15.0%–30.0% policy range [S3][S6]. Committee action requested: approve the program ceiling and first-year pacing, subject to manager diligence and quarterly liquidity tests [S3][S7].",
@@ -161,21 +155,21 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a pacing-and-concentration signal above the clear threshold [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+          "text": "Observation: The sample report carries a pacing-and-concentration signal above the clear threshold [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — primary measure",
-          "text": "Observation: Private-markets weight is 23.0% in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
+          "text": "Observation: Private-markets weight is 23.0% in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
           "title": "Key judgment — monitoring priority",
-          "text": "Observation: Policy status is Watch rather than Clear in the TEST evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
+          "text": "Observation: Policy status is Watch rather than Clear in the review evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
         }
       ]
     },
@@ -188,7 +182,7 @@
           "rows": [
             [
               "Portfolio",
-              "Northstar Total Fund (TEST)",
+              "Northstar Total Fund",
               "S2"
             ],
             [
@@ -213,7 +207,7 @@
             ],
             [
               "Data scope",
-              "Fictional TEST data [S1]",
+              "Illustrative sample data [S1]",
               "S1"
             ]
           ]
@@ -271,7 +265,7 @@
           "type": "chart",
           "chart": {
             "chart_id": "test-private-allocation",
-            "title": "Private-markets NAV by strategy (TEST)",
+            "title": "Private-markets NAV by strategy",
             "status": "ok",
             "currency": "USD",
             "columns": [
@@ -603,7 +597,7 @@
         },
         {
           "type": "text",
-          "text": "Targets are a committee proposal from the fictional mandate and returned policy headroom; they are not changes saved to GradientCIO [S3][S7]."
+          "text": "Targets are a committee proposal from the illustrative mandate and returned policy headroom; they are not changes saved to GradientCIO [S3][S7]."
         }
       ]
     },
@@ -744,7 +738,7 @@
           "rows": [
             [
               "Assumption set",
-              "2026 Strategic CMA (TEST)",
+              "2026 Strategic CMA",
               "S5"
             ],
             [
@@ -773,7 +767,7 @@
           "type": "chart",
           "chart": {
             "chart_id": "test-pm-forward",
-            "title": "Private-market forward assumptions (TEST)",
+            "title": "Private-market forward assumptions",
             "status": "ok",
             "currency": "USD",
             "columns": [
@@ -886,13 +880,13 @@
               ]
             }
           ],
-          "note": "Returned TEST projection [S6]."
+          "note": "Illustrative projection for committee review [S6]."
         },
         {
           "type": "chart",
           "chart": {
             "chart_id": "test-pm-pacing",
-            "title": "Projected calls and distributions (TEST)",
+            "title": "Projected calls and distributions",
             "status": "ok",
             "currency": "USD",
             "columns": [
@@ -988,7 +982,7 @@
     },
     {
       "title": "Liquidity and Denominator Risk",
-      "kicker": "Coverage remains adequate under the fictional TEST stress case",
+      "kicker": "Coverage remains adequate under the sample stress case",
       "blocks": [
         {
           "type": "bars",
@@ -1004,10 +998,10 @@
         },
         {
           "type": "stacked",
-          "title": "Liquidity composition (TEST)",
+          "title": "Liquidity composition",
           "items": [
             {
-              "label": "Portfolio (TEST)",
+              "label": "Portfolio",
               "segments": [
                 {
                   "label": "Liquid / marketable",
@@ -1145,7 +1139,7 @@
           "rows": [
             [
               "Manager",
-              "Example Private Manager A (TEST)",
+              "Example Private Manager A",
               "11.4%",
               "12.0%",
               {
@@ -1167,7 +1161,7 @@
             ],
             [
               "Portfolio company",
-              "Fictional Company A (TEST)",
+              "illustrative Company A",
               "24.0% of valued company NAV",
               "Not assessed",
               {
@@ -1206,7 +1200,7 @@
           ],
           "rows": [
             [
-              "Fictional Company A (TEST)",
+              "illustrative Company A",
               "$24.0M",
               "FMV $24.0M in USD",
               "2026-06-30 / 2026-06-30",
@@ -1218,7 +1212,7 @@
               "[S9]"
             ],
             [
-              "Fictional Company B (TEST)",
+              "illustrative Company B",
               "$18.0M",
               "FMV $18.0M in USD",
               "2026-06-30 / 2026-06-30",
@@ -1233,7 +1227,7 @@
         },
         {
           "type": "text",
-          "text": "Selected artifact fictional-ilpa-artifact-test, version 1; parser ilpa_portfolio_company_draft_2026_07_22 version 1.0.0; projection registry private-markets-holding-exact-to-range-v1, checksum aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa. Draft — July 22, 2026. Canonical values, exact ILPA source values and projected Gradient ranges remain separate [S9]."
+          "text": "Selected artifact illustrative-ilpa-artifact-test, version 1; parser ilpa_portfolio_company_draft_2026_07_22 version 1.0.0; projection registry private-markets-holding-exact-to-range-v1, checksum aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa. Draft — July 22, 2026. Canonical values, exact ILPA source values and projected Gradient ranges remain separate [S9]."
         },
         {
           "type": "table",
@@ -1247,7 +1241,7 @@
           ],
           "rows": [
             [
-              "Example Private Manager A (TEST)",
+              "Example Private Manager A",
               "$114.0M",
               "Current [S7]",
               "1 Medium [S7]",
@@ -1432,7 +1426,7 @@
             {
               "name": "Portfolio and allocation",
               "status": "available",
-              "note": "Fictional TEST data [S2]"
+              "note": "Illustrative sample data [S2]"
             },
             {
               "name": "Policy",
@@ -1452,7 +1446,7 @@
             {
               "name": "Forward assumptions",
               "status": "available",
-              "note": "2026 Strategic CMA (TEST) [S5]"
+              "note": "2026 Strategic CMA [S5]"
             },
             {
               "name": "Commitments charts",
@@ -1523,7 +1517,7 @@
               "list_organizations; get_gradient_capabilities",
               "org=test",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1534,7 +1528,7 @@
               "list_portfolios; get_portfolio_structure",
               "allocation_tree",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1545,7 +1539,7 @@
               "check_portfolio_policy",
               "portfolio=test",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1556,7 +1550,7 @@
               "get_portfolio_exposure",
               "all pages",
               "2026-03-31",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1567,7 +1561,7 @@
               "get_capital_market_assumptions",
               "baseline",
               "2026-06-15",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1578,7 +1572,7 @@
               "get_chart_data",
               "commitments",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1587,9 +1581,9 @@
               "Manager / mandate",
               "gradient_tool",
               "get_gradient_capabilities",
-              "fictional",
+              "illustrative",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "advisory",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1600,7 +1594,7 @@
               "get_portfolio_historical_returns; get_portfolio_attribution",
               "all sections",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "degraded",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1611,7 +1605,7 @@
               "get_private_markets_holdings",
               "paged; server aggregates",
               "2026-06-30",
-              "Fictional TEST data",
+              "Illustrative sample data",
               "partial",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ]

@@ -1,57 +1,70 @@
 {
   "meta": {
-    "eyebrow": "Investment Due Diligence",
-    "header_label": "Manager Performance",
-    "title": "Northstar shortlist report (TEST)",
-    "subtitle": "Governed return evidence",
-    "running_head": "Northstar comparison (TEST)",
-    "data_as_of": "2025-12-31",
-    "cover_facts": [
-      [
-        "Mode",
-        "Compare"
-      ],
-      [
-        "Scope",
-        "Fictional TEST managers"
-      ]
+  "eyebrow": "Investment Due Diligence",
+  "header_label": "Manager Performance",
+  "title": "Northstar Manager Shortlist",
+  "subtitle": "Candidate screening for Investment Committee review",
+  "running_head": "Northstar manager shortlist",
+  "data_as_of": "2025-12-31",
+  "cover_facts": [
+    [
+      "Review",
+      "Manager shortlist"
     ],
-    "signal": {
-      "level": "insufficient",
-      "label": "Insufficient governed evidence"
-    },
-    "completeness": {
-      "used": 1,
-      "expected": 4,
-      "state": "partial"
-    },
-    "handoff": {
-      "schema_version": "gradient-idd-odd-ic-handoff/v1",
-      "stage": "idd",
-      "subject": {
-        "name": "Northstar managers (TEST)",
-        "identity_status": "advisory"
-      },
-      "return_series": [],
-      "evidence": [
-        {
-          "source_tag": "S1",
-          "tool": "get_gradient_capabilities",
-          "as_of": "2025-12-31",
-          "methodology_version": "connector/v1"
-        }
-      ],
-      "limitations": [
-        "Governed analytical evidence is unavailable in this test fixture."
-      ],
-      "selection": {
-        "status": "not_assessed",
-        "rationale": "Insufficient governed evidence."
-      }
-    },
-    "report_kind": "shortlist",
-    "data_basis": "gradient_governed"
+    [
+      "Evidence",
+      "Governed manager data"
+    ],
+    [
+      "Audience",
+      "Investment Committee"
+    ],
+    [
+      "Data as of",
+      "2026-10-01"
+    ]
+  ],
+  "signal": {
+    "level": "insufficient",
+    "label": "Insufficient governed evidence"
   },
+  "completeness": {
+    "used": 1,
+    "expected": 4,
+    "state": "partial"
+  },
+  "handoff": {
+    "schema_version": "gradient-idd-odd-ic-handoff/v1",
+    "stage": "idd",
+    "subject": {
+      "name": "Northstar managers",
+      "identity_status": "advisory"
+    },
+    "return_series": [],
+    "evidence": [
+      {
+        "source_tag": "S1",
+        "tool": "get_gradient_capabilities",
+        "as_of": "2025-12-31",
+        "methodology_version": "connector/v1"
+      }
+    ],
+    "limitations": [
+      "Governed analytical evidence is unavailable in this public sample."
+    ],
+    "selection": {
+      "status": "not_assessed",
+      "rationale": "Insufficient governed evidence."
+    }
+  },
+  "report_kind": "shortlist",
+  "data_basis": "gradient_governed",
+  "confidentiality": "Confidential — manager selection review",
+  "signal_title": "Overall view",
+  "meter_title": "Scope reviewed",
+  "cover_disclosure": "Illustrative sample · not client data",
+  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
+},
   "executive": {
     "bottom_line": "The comparison remains insufficient because required governed results are unavailable [S1].",
     "tiles": [
@@ -107,7 +120,7 @@
     },
     {
       "title": "Mandate and screening coverage",
-      "kicker": "Benchmark identity remains advisory for the test candidates",
+      "kicker": "Benchmark identity remains advisory for the reviewed candidates",
       "blocks": [
         {
           "type": "coverage",
@@ -199,7 +212,7 @@
     {
       "num": "A",
       "title": "Appendix — Sources and methods",
-      "kicker": "Saved fictional test evidence",
+      "kicker": "Saved illustrative sample evidence",
       "blocks": [
         {
           "type": "table",
@@ -220,9 +233,9 @@
               "Typed unavailable test response",
               "gradient_tool",
               "get_gradient_capabilities",
-              "fixture=true",
+              "illustrative sample",
               "2025-12-31",
-              "Gradient-governed TEST evidence",
+              "Gradient-governed review evidence",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ]

@@ -15,7 +15,7 @@
     "before": [
       {
         "type": "band",
-        "title": "Decision ranges (TEST)",
+        "title": "Decision ranges",
         "items": [
           {
             "label": "Public equity",
@@ -184,7 +184,7 @@
       },
       {
         "type": "heat",
-        "title": "Policy status matrix (TEST)",
+        "title": "Policy status matrix",
         "columns": [
           "Constraint",
           "Status score"
@@ -328,7 +328,7 @@
         "type": "chart",
         "chart": {
           "chart_id": "bar-portfolio-factor-currency-exposure",
-          "title": "Factor and currency exposure (TEST)",
+          "title": "Factor and currency exposure",
           "status": "ok",
           "columns": [
             {
@@ -493,7 +493,7 @@
       },
       {
         "type": "stacked",
-        "title": "Liquidity tier mix (TEST)",
+        "title": "Liquidity tier mix",
         "items": [
           {
             "label": "Portfolio",
@@ -528,7 +528,7 @@
         "type": "chart",
         "chart": {
           "chart_id": "commitments-liquidity-scorecard",
-          "title": "Commitments liquidity scorecard (TEST)",
+          "title": "Commitments liquidity scorecard",
           "status": "ok",
           "columns": [
             {
@@ -564,7 +564,7 @@
         "type": "chart",
         "chart": {
           "chart_id": "commitments-pacing",
-          "title": "Commitment pacing (TEST)",
+          "title": "Commitment pacing",
           "status": "ok",
           "columns": [
             {
@@ -606,7 +606,7 @@
         "type": "chart",
         "chart": {
           "chart_id": "commitments-cashflow",
-          "title": "Commitment cash flow (TEST)",
+          "title": "Commitment cash flow",
           "status": "ok",
           "columns": [
             {

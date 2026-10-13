@@ -8,7 +8,7 @@ This repo is a **public** Claude plugin marketplace. Clients install from it dir
 - `CHANGELOG.md`, `README.md` (client install instructions).
 
 ## Rules
-1. **Never commit secrets, client data or client names.** No API keys, tokens, real portfolio data or client-specific branding. `branding.json` stays blank on `main`. Test fixtures use fictional names marked (TEST).
+1. **Never commit secrets, client data or client names.** No API keys, tokens, real portfolio data or client-specific branding. `branding.json` stays blank on `main`. Public report examples use illustrative names with a compact `not client data` cover disclosure and a full appendix disclosure; CI-only fixtures may use `(TEST)`.
 2. Edit shared files in `plugins/gradient-cio/shared/`, then run `python plugins/gradient-cio/tools/sync_shared.py` to copy them into every skill. Never hand-edit the per-skill copies.
 3. Skill folder name = `name:` in its SKILL.md frontmatter.
 

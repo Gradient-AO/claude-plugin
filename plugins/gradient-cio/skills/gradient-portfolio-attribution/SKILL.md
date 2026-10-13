@@ -2,7 +2,7 @@
 name: gradient-portfolio-attribution
 description: "Create a single-lane attribution report for one saved portfolio. Triggers: 'prepare an attribution report', 'run Brinson analysis', 'show sources of active return'. For multi-lane attribution use gradient-portfolio-attribution-compare."
 metadata:
-  style_contract: "2.2.0"
+  style_contract: "2.3.0"
   group: "Portfolio Analytics"
   subject: "portfolio attribution"
   output: "report"
@@ -17,7 +17,9 @@ metadata:
 
 Use for a focused saved-portfolio historical and governed ex ante attribution
 pack. Deliver **"<Portfolio> - Portfolio Attribution Report <YYYY-MM-DD>"**,
-normally 7–9 PDF pages. This is monitoring, not a recommendation.
+normally 7–9 PDF pages with a hard ceiling of 11. This is monitoring, not a
+recommendation. Every required visual remains required; page pressure is
+resolved by tightening prose and layout, not deleting evidence.
 
 ## Non-negotiable rules
 
@@ -46,6 +48,11 @@ focused question only for unresolved ambiguity.
 
 Read `references/module-scope.md` before tool selection.
 
+Run `python ../../tools/check_plugin_version.py` from this skill directory
+before collection. Record the active version and duplicate scan. Continue when
+duplicates are equal or older; stop only when the preflight reports a newer
+`gradient-cio` copy. Do not delete or modify external installs.
+
 ## 2. Collect
 
 Immediately before calls read `references/data-map.md#required-calls`. Save
@@ -56,6 +63,11 @@ series), historical periods and active risk, both attribution lanes, relevant
 manager findings, and macro regime context. Resolve held fund/firm IDs for the
 largest detractor through filtered portfolio exposure before requesting open
 findings, and rerun historical attribution for that detractor's allocation ID.
+If held-manager resolution fails, use exactly `Manager findings: Not assessed
+— <error_code>; request ID <request_id>.` Optional
+organization-wide diligence may follow only under the label
+`Organization-wide context — not verified as held`; never imply it belongs to
+the portfolio.
 
 Retry only once when `retryable: true`; entitlement is Not licensed. Preserve
 partial return coverage, `no_subject_returns`, `not_yet_funded`, partial 2016

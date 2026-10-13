@@ -25,12 +25,16 @@ OBSERVATION_SPECIFIC = re.compile(
     r"increased?|decreased?|rose|fell)\b)",
     re.IGNORECASE,
 )
-LIMITATION = re.compile(
-    r"\b(?:coverage|lags?|lagged|staleness|stale|bases?|models?|assumptions?|"
-    r"samples?|provisional|partial|limited|excludes?|omits?|outside|"
-    r"supplied|dated|dates?|timing|newer|older|prior-day|as-of|only|"
-    r"unavailable|availability|missing|not supplied|not provided|"
-    r"not reported|not disclosed|not evidenced|unclear|unknown)\b",
+UNCERTAINTY_PREDICATE = re.compile(
+    r"\b(?:is|are|was|were|has|have|had|uses?|covers?|includes?|excludes?|"
+    r"omits?|lacks?|returned?|failed|ends?|starts?|cannot|could|may|might|"
+    r"does|did|remains?|depends?|rates?|advisory|caller-selected|synthetic)\b",
+    re.IGNORECASE,
+)
+UNCERTAINTY_BOILERPLATE = re.compile(
+    r"^(?:the\s+)?(?:data|evidence|results?)\s+(?:is|are|may be)\s+limited\.?$|"
+    r"^(?:further|more)\s+(?:analysis|research)\s+is\s+(?:needed|required)\.?$|"
+    r"^results?\s+may\s+vary\.?$|^there\s+are\s+limitations\.?$",
     re.IGNORECASE,
 )
 TRIGGER = re.compile(
@@ -125,8 +129,14 @@ def review_callout(title: str, text: str, structured: bool) -> list[str]:
             f"not boilerplate such as '{matched_boilerplate}'"
         )
 
-    if LIMITATION.search(parts["Uncertainty"]) is None:
-        notes.append("Uncertainty should name the actual evidence or model limitation")
+    uncertainty = parts["Uncertainty"].strip()
+    if (
+        UNCERTAINTY_PREDICATE.search(uncertainty) is None
+        or UNCERTAINTY_BOILERPLATE.fullmatch(uncertainty) is not None
+    ):
+        notes.append(
+            "Uncertainty should state a specific limitation in substantive prose"
+        )
 
     if TRIGGER.search(parts["What would change the view"]) is None:
         notes.append(

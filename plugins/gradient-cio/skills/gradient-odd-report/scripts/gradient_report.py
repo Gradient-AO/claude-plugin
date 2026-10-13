@@ -23,6 +23,7 @@ from report_theme import (
     CORAL,
     DARK_METER,
     DARK_RULE,
+    DEFAULT_COVER_DISCLOSURE,
     FONT_FAMILY,
     INK,
     INK2,
@@ -63,8 +64,8 @@ from report_layout import (
 BRAND = BRAND_NAME
 VERSION = "1.2.0"
 DEFAULT_HEADER_LABEL = "Gradient Report"
-DEFAULT_SIGNAL_TITLE = "Assessment"
-DEFAULT_METER_TITLE = "Evidence completeness"
+DEFAULT_SIGNAL_TITLE = "Overall view"
+DEFAULT_METER_TITLE = "Scope reviewed"
 SEV_COLOR = SEVERITY_COLOR
 
 # ---- client branding ---------------------------------------------------------
@@ -103,6 +104,12 @@ def client_name():
 def default_confidentiality():
     return theme_default_confidentiality(BRANDING)
 
+def cover_disclosure(meta):
+    explicit = str(meta.get("cover_disclosure") or "").strip()
+    if explicit:
+        return explicit
+    return DEFAULT_COVER_DISCLOSURE if meta.get("data_scope_banner") else ""
+
 def gradient_mark(size="12pt", on_dark=True):
     return (f'<span style="font-weight:800;font-size:{size};letter-spacing:-.01em;color:{TEXT_ON_DARK if on_dark else INK}">'
             f'Gradient<span style="color:{LIME if on_dark else LIME_DK}">CIO</span></span>')
@@ -132,9 +139,26 @@ def rich(s):
     t = re.sub(r"\[(S\d+(?:,\s*S\d+)*)\]", r'<span class="src">\1</span>', t)
     return t
 
+def _status_chip_label(text, status):
+    """Return compact chip HTML without discarding the raw status value."""
+    raw = str(status or text).strip()
+    normalized = raw.casefold().replace(" ", "_")
+    if normalized == "passed_with_warnings":
+        return "passed ⚠"
+    authored = str(text or raw).strip()
+    if "_" in raw and authored.casefold().replace(" ", "_") == normalized:
+        return "<wbr> ".join(esc(part) for part in raw.split("_"))
+    return esc(authored)
+
 def chip(text, status):
-    c = STATUS_COLOR.get(str(status).lower(), SLATE)
-    return f'<span class="chip"><i style="background:{c}"></i>{esc(text)}</span>'
+    raw = str(status or text).strip()
+    c = STATUS_COLOR.get(raw.lower(), SLATE)
+    label = _status_chip_label(text, raw)
+    return (
+        f'<span class="chip" data-status="{esc(raw)}">'
+        f'<i style="background:{c}"></i><span class="chip-label">{label}</span>'
+        "</span>"
+    )
 
 # ---- blocks ----------------------------------------------------------------
 def b_text(b):    return f'<p class="body">{rich(b["text"])}</p>'
@@ -442,11 +466,106 @@ def _svg_text_width(value, bold=False):
             width += 6.1
     return width * (1.04 if bold else 1.0)
 
+def _bars_data(b):
+    """Validate and normalize legacy or named-series bars."""
+    items = b.get("items")
+    if not isinstance(items, list) or not items:
+        raise SystemExit("bars require a non-empty items array")
+    series = b.get("series")
+    if series is None:
+        normalized_items = []
+        for item in items:
+            if not isinstance(item, dict) or "value" not in item:
+                raise SystemExit("legacy bars items require value")
+            value = item["value"]
+            if (
+                not isinstance(value, (int, float))
+                or isinstance(value, bool)
+                or not math.isfinite(float(value))
+            ):
+                raise SystemExit("bars items require finite numeric values")
+            normalized_items.append({
+                **item,
+                "values": [float(value)],
+                "displays": [item.get("display", value)],
+            })
+        return [{"name": "Value"}], normalized_items, False
+    if not isinstance(series, list) or not series:
+        raise SystemExit("bars series must be a non-empty array")
+    normalized_series = []
+    for entry in series:
+        if not isinstance(entry, dict) or not str(entry.get("name", "")).strip():
+            raise SystemExit("bars series require non-empty names")
+        normalized_series.append(entry)
+    normalized_items = []
+    for item in items:
+        if not isinstance(item, dict) or not str(item.get("label", "")).strip():
+            raise SystemExit("bars items require labels")
+        values = item.get("values")
+        if not isinstance(values, list) or len(values) != len(normalized_series):
+            raise SystemExit("bars item values must match series length")
+        if any(
+            not isinstance(value, (int, float))
+            or isinstance(value, bool)
+            or not math.isfinite(float(value))
+            for value in values
+        ):
+            raise SystemExit("bars item values require finite numeric values")
+        displays = item.get("displays")
+        if displays is not None and (
+            not isinstance(displays, list)
+            or len(displays) != len(normalized_series)
+        ):
+            raise SystemExit("bars item displays must match series length")
+        normalized_items.append({
+            **item,
+            "values": [float(value) for value in values],
+            "displays": (
+                list(displays) if displays is not None else list(values)
+            ),
+        })
+    return normalized_series, normalized_items, True
+
+def _bars_mark(b):
+    mark = str(b.get("mark") or b.get("style") or "bars").strip().casefold()
+    return "dots" if mark in {"dots", "paired-dot", "paired_dot"} else "bars"
+
+def _bar_legend(series, start_x, y):
+    legend = []
+    cursor = float(start_x)
+    for index, entry in enumerate(series):
+        color = entry.get("color") or SERIES[index % len(SERIES)]
+        name = str(entry["name"])
+        legend.append(
+            f'<rect x="{cursor:.1f}" y="{y-8}" width="9" height="9" rx="2" '
+            f'fill="{color}"/><text x="{cursor+14:.1f}" y="{y}" '
+            f'class="ax">{esc(name)}</text>'
+        )
+        cursor += 24 + _svg_text_width(name)
+    return "".join(legend)
+
+def _bar_gap_display(item, difference, block):
+    authored = item.get("gap_display")
+    if authored is not None:
+        return str(authored)
+    decimals = max(0, int(block.get("decimals", 1)))
+    suffix = str(block.get("suffix", block.get("y_suffix", "")))
+    label = str(block.get("gap_label", "Gap"))
+    rounded = round(float(difference), decimals)
+    if rounded == 0:
+        rounded = 0.0
+    return f"{label} {rounded:+.{decimals}f}{suffix}"
+
 def b_bars(b):
-    items = b["items"]
-    values = [float(i["value"]) for i in items]
-    if not values or any(not math.isfinite(value) for value in values):
-        raise SystemExit("bars items require finite numeric values")
+    series, items, grouped = _bars_data(b)
+    mark = _bars_mark(b)
+    if mark == "dots" and (not grouped or len(series) != 2):
+        raise SystemExit("paired-dot bars require exactly two named series")
+    values = [
+        value
+        for item in items
+        for value in item["values"]
+    ]
     low = min(0.0, min(values))
     high = max(0.0, max(values))
     if b.get("min") is not None:
@@ -456,47 +575,122 @@ def b_bars(b):
     if low == high:
         high = low + 1
     narrow = bool(b.get("narrow"))
-    W, rh = (360, 22) if narrow else (640, 22)
+    series_count = len(series)
+    rh = (
+        27 if mark == "dots"
+        else max(22, 8 + 15 * series_count) if grouped
+        else 22
+    )
+    W = 360 if narrow else 640
     category_width = max(_svg_text_width(i["label"]) for i in items)
     negative_width = max(
-        (_svg_text_width(i.get("display", i["value"]), bold=True)
-         for i, value in zip(items, values) if value < 0),
+        (
+            _svg_text_width(display, bold=True)
+            for item in items
+            for value, display in zip(item["values"], item["displays"])
+            if value < 0
+        ),
         default=0,
     )
     positive_width = max(
-        (_svg_text_width(i.get("display", i["value"]), bold=True)
-         for i, value in zip(items, values) if value >= 0),
+        (
+            _svg_text_width(display, bold=True)
+            for item in items
+            for value, display in zip(item["values"], item["displays"])
+            if value >= 0
+        ),
         default=0,
     )
+    if mark == "dots":
+        positive_width = max(
+            positive_width,
+            max(
+                _svg_text_width(
+                    _bar_gap_display(
+                        item,
+                        item["values"][1] - item["values"][0],
+                        b,
+                    ),
+                    bold=True,
+                )
+                for item in items
+            ),
+        )
     negative_gutter = math.ceil(negative_width) + 16 if negative_width else 0
     lw = math.ceil(category_width) + negative_gutter + 18
     rw = max(24, math.ceil(positive_width) + 16)
     W = max(W, lw + rw + (90 if narrow else 180))
     if DECK_MODE:
-        rh = 34 if len(items) <= 9 else 26
-    H = rh * len(items) + 8
+        rh = max(rh, 34 if len(items) <= 9 else 26)
+    legend_height = 22 if grouped else 0
+    H = rh * len(items) + legend_height + 8
     x0, x1 = lw, W - rw
     sx = lambda value: x0 + (x1 - x0) * (value - low) / (high - low)
     zero = sx(0)
     svg = [_svg_start(W, H, b.get("title"), b.get("description") or b.get("note"))]
+    if grouped:
+        svg.append(_bar_legend(series, lw, 12))
     svg.append(
-        f'<line x1="{zero:.1f}" x2="{zero:.1f}" y1="1" y2="{H-2}" '
+        f'<line x1="{zero:.1f}" x2="{zero:.1f}" y1="{legend_height+1}" y2="{H-2}" '
         f'stroke="{MUTED}" stroke-width="1"/>'
     )
     for k, i in enumerate(items):
-        y = 4 + k * rh
-        value = float(i["value"])
-        end = sx(value)
-        x = min(zero, end)
-        w = max(1.5, abs(end - zero))
-        col = i.get("color") or (LIME if value >= 0 else CORAL)
-        label_x = min(W - rw + 8, end + 8) if value >= 0 else end - 8
-        anchor = "start" if value >= 0 else "end"
+        y = legend_height + 4 + k * rh
         category_x = lw - negative_gutter - 10
-        svg.append(f'<text x="{category_x}" y="{y+14}" text-anchor="end" class="cl">{esc(i["label"])}</text>'
-                   f'<rect x="{x0}" y="{y+3}" width="{x1-x0}" height="{rh-8}" rx="2" fill="{WASH}"/>'
-                   f'<rect x="{x:.1f}" y="{y+3}" width="{w:.1f}" height="{rh-8}" rx="2" fill="{col}"/>'
-                   f'<text x="{label_x:.1f}" y="{y+14}" text-anchor="{anchor}" class="cv">{esc(i.get("display", i["value"]))}</text>')
+        svg.append(
+            f'<text x="{category_x}" y="{y+rh/2+4:.1f}" text-anchor="end" '
+            f'class="cl">{esc(i["label"])}</text>'
+            f'<rect x="{x0}" y="{y+2}" width="{x1-x0}" height="{rh-5}" '
+            f'rx="2" fill="{WASH}"/>'
+        )
+        if mark == "dots":
+            first, second = i["values"]
+            left, right = sorted((sx(first), sx(second)))
+            middle_y = y + rh / 2
+            svg.append(
+                f'<line x1="{left:.1f}" x2="{right:.1f}" '
+                f'y1="{middle_y:.1f}" y2="{middle_y:.1f}" '
+                f'stroke="{RULE}" stroke-width="2"/>'
+            )
+            for index, value in enumerate(i["values"]):
+                color = series[index].get("color") or SERIES[index % len(SERIES)]
+                svg.append(
+                    f'<circle cx="{sx(value):.1f}" cy="{middle_y:.1f}" r="5" '
+                    f'fill="{color}" stroke="{PAPER}" stroke-width="1.5"/>'
+                )
+            gap_display = _bar_gap_display(i, second - first, b)
+            svg.append(
+                f'<text x="{x1+8:.1f}" y="{middle_y+4:.1f}" '
+                f'class="cv">{esc(gap_display)}</text>'
+            )
+            continue
+        bar_height = max(6.0, min(12.0, (rh - 6) / series_count))
+        group_height = bar_height * series_count
+        group_y = y + (rh - group_height) / 2
+        for index, (value, display) in enumerate(
+            zip(i["values"], i["displays"])
+        ):
+            end = sx(value)
+            x = min(zero, end)
+            width = max(1.5, abs(end - zero))
+            color = (
+                i.get("color")
+                or series[index].get("color")
+                or (
+                    SERIES[index % len(SERIES)]
+                    if grouped
+                    else LIME if value >= 0 else CORAL
+                )
+            )
+            bar_y = group_y + index * bar_height
+            label_x = min(W - rw + 8, end + 8) if value >= 0 else end - 8
+            anchor = "start" if value >= 0 else "end"
+            svg.append(
+                f'<rect x="{x:.1f}" y="{bar_y:.1f}" width="{width:.1f}" '
+                f'height="{max(4.0, bar_height-2):.1f}" rx="2" fill="{color}"/>'
+                f'<text x="{label_x:.1f}" y="{bar_y+bar_height-2:.1f}" '
+                f'text-anchor="{anchor}" class="cv">{esc(display)}</text>'
+            )
     svg.append("</svg>")
     title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
     note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
@@ -840,7 +1034,7 @@ def b_two_col(b):
     def narrow(blocks):
         adjusted = copy.deepcopy(blocks)
         for block in adjusted:
-            if block.get("type") in {"bars", "band"}:
+            if block.get("type") in {"bars", "band", "line"}:
                 block["narrow"] = True
             if block.get("type") == "two_col":
                 block["left"] = narrow(block.get("left", []))
@@ -913,14 +1107,14 @@ def _nice_step(span, target_intervals=4):
     )
     return nice_fraction * magnitude
 
-def _nice_y_bounds(low, high):
+def _nice_y_bounds(low, high, target_intervals=8):
     """Expand finite data bounds to stable, readable grid boundaries."""
     low, high = float(low), float(high)
     if low == high:
         pad = abs(low) * 0.1 or 1.0
         low, high = low - pad, high + pad
     span = high - low
-    step = _nice_step(span, target_intervals=8)
+    step = _nice_step(span, target_intervals=target_intervals)
     pad = span * 0.04
     return (
         math.floor((low - pad) / step) * step,
@@ -942,6 +1136,24 @@ def _axis_ticks(low, high, step):
     ):
         ticks.append(100.0)
     return sorted(set(ticks))
+
+def _limited_ticks(ticks, maximum, priority=None):
+    """Thin ordered ticks while retaining endpoints and an optional reference."""
+    values = list(ticks)
+    if len(values) <= maximum:
+        return values
+    indexes = {
+        round(index * (len(values) - 1) / (maximum - 1))
+        for index in range(maximum)
+    }
+    selected = [values[index] for index in sorted(indexes)]
+    if priority is not None and priority in values and priority not in selected:
+        replace_at = min(
+            range(1, len(selected) - 1),
+            key=lambda index: abs(selected[index] - priority),
+        )
+        selected[replace_at] = priority
+    return sorted(set(selected))
 
 def _date_ticks(low, high):
     """Return January 1 ticks for multi-year date axes, bounded for legibility."""
@@ -965,6 +1177,9 @@ def _date_ticks(low, high):
 def b_line(b, W=640, H=None):
     """Line chart. series: [{name, points: [[date|category|x, value], ...]}]."""
     series = [sr for sr in b["series"] if sr.get("points")]
+    narrow = bool(b.get("narrow"))
+    if narrow and W == 640:
+        W = 360
     H = H or b.get("height", 220)
     raw_xs = [p[0] for sr in series for p in sr["points"]]
     x_kind = _line_x_kind(raw_xs)
@@ -985,11 +1200,21 @@ def b_line(b, W=640, H=None):
     xs = [x_value(value) for value in raw_xs]; ys = [float(p[1]) for sr in series for p in sr["points"]]
     if b.get("ref") is not None: ys.append(float(b["ref"]["value"]))
     x0, x1 = min(xs), max(xs); y0, y1 = min(ys), max(ys)
-    y0, y1, y_step = _nice_y_bounds(y0, y1)
+    y0, y1, y_step = _nice_y_bounds(
+        y0,
+        y1,
+        target_intervals=4 if narrow else 8,
+    )
     if b.get("y_min") is not None: y0 = float(b["y_min"])
     if b.get("y_max") is not None: y1 = float(b["y_max"])
     dec = b.get("decimals", 1); suf = b.get("y_suffix", "")
     y_ticks = _axis_ticks(y0, y1, y_step)
+    if narrow:
+        y_ticks = _limited_ticks(
+            y_ticks,
+            5,
+            100.0 if y0 <= 100 <= y1 else None,
+        )
     axis_labels = [
         _format_axis_value(
             value,
@@ -1001,30 +1226,53 @@ def b_line(b, W=640, H=None):
         for value in y_ticks
     ]
     pl = max(46, 10 + max(_svg_text_width(label) for label in axis_labels))
-    use_legend = len(series) > 2
+    use_legend = narrow or len(series) > 2
     show_end_labels = (
         b.get("end_labels", True)
         and len(series) > 1
         and not use_legend
     )
-    pr, pt, pb = 16 + (8 if show_end_labels else 0), 24 if use_legend else 14, 26
+    band_label_lane = (
+        18 if any(band.get("label") for band in b.get("x_bands", [])) else 0
+    )
+    pr = 16 + (8 if show_end_labels else 0)
+    legend_layout = []
+    legend_row = 0
+    legend_x = pl
+    if use_legend:
+        for j, sr in enumerate(series):
+            name = str(sr.get("name", ""))
+            entry_width = 24 + _svg_text_width(name)
+            if legend_x > pl and legend_x + entry_width > W - pr:
+                legend_row += 1
+                legend_x = pl
+            legend_layout.append((j, sr, legend_x, 9 + legend_row * 14))
+            legend_x += entry_width
+    pt = 24 + legend_row * 14 if use_legend else 14
+    pb = 26 + band_label_lane
     end_w = 0
     if show_end_labels:
         end_w = 8 + 6.2 * max(len(sr.get("name", "")) for sr in series)
     iw = W - pl - pr - end_w; ih = H - pt - pb
     sx = lambda x: pl + iw * ((x - x0) / ((x1 - x0) or 1)); sy = lambda y: pt + ih * (1 - (y - y0) / ((y1 - y0) or 1))
-    o = [_svg_start(W, H, b.get("title"), b.get("description") or b.get("note"))]
+    o = [_svg_start(
+        W,
+        H,
+        b.get("title"),
+        b.get("description") or b.get("note"),
+        "chart narrow-line" if narrow else "chart",
+    )]
     if use_legend:
-        legend_x = pl
-        for j, sr in enumerate(series):
+        for j, sr, legend_x, legend_y in legend_layout:
             col = sr.get("color") or SERIES[j % len(SERIES)]
             name = str(sr.get("name", ""))
             o.append(
-                f'<line x1="{legend_x:.1f}" x2="{legend_x+12:.1f}" y1="9" y2="9" '
+                f'<line x1="{legend_x:.1f}" x2="{legend_x+12:.1f}" '
+                f'y1="{legend_y}" y2="{legend_y}" '
                 f'stroke="{col}" stroke-width="2"/>'
-                f'<text x="{legend_x+16:.1f}" y="12" class="ax">{esc(name)}</text>'
+                f'<text x="{legend_x+16:.1f}" y="{legend_y+3}" '
+                f'class="ax">{esc(name)}</text>'
             )
-            legend_x += 24 + _svg_text_width(name)
     for band in b.get("x_bands", []):
         if x_kind not in {"date", "numeric"}:
             raise SystemExit("line x_bands require a date or numeric x axis")
@@ -1040,13 +1288,16 @@ def b_line(b, W=640, H=None):
         )
         if band.get("label"):
             o.append(
-                f'<text x="{band_x + 4:.1f}" y="{pt + 10:.1f}" '
-                f'class="ax">{esc(band["label"])}</text>'
+                f'<rect x="{band_x:.1f}" y="{pt+ih+3:.1f}" '
+                f'width="{band_width:.1f}" height="13" fill="{AMBER}" '
+                f'fill-opacity="0.16"/>'
+                f'<text x="{band_x + 4:.1f}" y="{pt+ih+13:.1f}" '
+                f'class="ax x-band-label">{esc(band["label"])}</text>'
             )
     for yv, axis_label in zip(y_ticks, axis_labels):
         y = sy(yv)
         o.append(f'<line x1="{pl}" x2="{pl+iw:.1f}" y1="{y:.1f}" y2="{y:.1f}" stroke="{RULE}"/>'
-                 f'<text x="{pl-6}" y="{y+3:.1f}" text-anchor="end" class="ax">{esc(axis_label)}</text>')
+                 f'<text x="{pl-6}" y="{y+3:.1f}" text-anchor="end" class="ax y-tick">{esc(axis_label)}</text>')
     if y0 < 0 < y1:
         o.append(f'<line x1="{pl}" x2="{pl+iw:.1f}" y1="{sy(0):.1f}" y2="{sy(0):.1f}" stroke="{MUTED}" stroke-width="1"/>')
     if b.get("ref") is not None:
@@ -1428,12 +1679,13 @@ thead{{display:table-header-group}} tr{{break-inside:avoid}}
 .grid{{font-size:8.2pt}} .grid th{{text-align:left;font-size:6.9pt;letter-spacing:.07em;text-transform:uppercase;color:{PAPER};background:{INK};padding:6px 8px;font-weight:650}}
 .grid td{{padding:5px 8px;border-bottom:1px solid {RULE};vertical-align:top}} .grid tbody tr:nth-child(even) td{{background:{WASH}}}
 .grid .n{{white-space:nowrap}} .grid .r{{white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}} .grid .c{{text-align:center}}
-.grid td.validation-cell{{white-space:normal;overflow-wrap:anywhere;word-break:break-word}}
+.grid td.validation-cell{{white-space:normal;overflow-wrap:normal;word-break:normal}}
 .grid td.digest-cell{{white-space:nowrap;font-variant-numeric:tabular-nums}}
 .digest-note{{white-space:normal;overflow-wrap:anywhere;word-break:break-all}}
 .note{{font-size:7.3pt;color:{MUTED};margin-top:5px;line-height:1.4}}
-.chip{{display:inline-flex;align-items:center;gap:5px;font-size:7.4pt;font-weight:600;text-transform:capitalize;white-space:nowrap}}
-.chip i{{display:inline-block;width:8px;height:8px;border-radius:50%}}
+.chip{{display:inline-flex;align-items:center;gap:5px;max-width:100%;font-size:7.4pt;font-weight:600;white-space:normal}}
+.chip i{{display:inline-block;flex:0 0 8px;width:8px;height:8px;border-radius:50%}}
+.chip-label{{overflow-wrap:normal;word-break:normal}}
 .tiles{{display:grid;gap:8px}} .tiles.n4{{grid-template-columns:repeat(4,1fr)}} .tiles.n3{{grid-template-columns:repeat(3,1fr)}} .tiles.n2{{grid-template-columns:repeat(2,1fr)}} .tiles.n1{{grid-template-columns:1fr}}
 .tile{{background:{WASH};border-radius:4px;padding:10px 11px 9px;border-top:3px solid var(--bar)}}
 .tile .tl{{font-size:6.8pt;letter-spacing:.08em;text-transform:uppercase;color:{INK2};font-weight:650}}
@@ -1443,6 +1695,7 @@ thead{{display:table-header-group}} tr{{break-inside:avoid}}
 .tile.dark{{background:{PANEL};color:{TEXT_ON_DARK}}} .tile.dark .tl{{color:{TEXT_ON_DARK_MUTED}}} .tile.dark .tv{{color:{LIME}}} .tile.dark .ts{{color:{TEXT_ON_DARK_MUTED}}}
 .chart{{display:block}} .chart .cl{{font-size:10.5px;fill:{INK};font-family:GradientInter,Inter,Arial}} .chart .cv{{font-size:10.5px;font-weight:650;fill:{INK};font-family:GradientInter,Inter,Arial}}
 .chart .ax{{font-size:9px;fill:{MUTED};font-family:GradientInter,Inter,Arial}}
+.chart.narrow-line .ax{{font-size:10px}} .chart.narrow-line .cl,.chart.narrow-line .cv{{font-size:10.5px}}
 .callout{{border-left:4px solid var(--c);background:{WASH};padding:10px 13px;border-radius:0 4px 4px 0}}
 .callout .ct{{font-weight:700;margin-bottom:2px}}
 .covwrap{{border-top:1px solid {RULE}}} .cov{{display:grid;grid-template-columns:minmax(0,32%) max-content minmax(0,1fr);gap:8px;padding:4px 0;border-bottom:1px solid {RULE};align-items:start}}
@@ -1496,7 +1749,10 @@ def cover_html(r):
     page_name, page_width, page_height = page_spec(m)
     sig = m.get("signal"); c = m.get("completeness")
     slabel, scol, stxt = SIGNAL[sig["level"]] if sig else ("", SLATE, INK)
-    facts = "".join(f'<div><div class="fk">{esc(k)}</div><div class="fv">{rich(v)}</div></div>' for k, v in m.get("cover_facts", []))
+    cover_facts = m.get("cover_facts", [])
+    fact_columns = 2 if len(cover_facts) <= 4 else 3
+    facts = "".join(f'<div><div class="fk">{esc(k)}</div><div class="fv">{rich(v)}</div></div>' for k, v in cover_facts)
+    disclosure = cover_disclosure(m)
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>{esc(m["title"])}</title>{FONT_LINK}<style>{CSS}
 @page{{size:{page_name};margin:0}}
 body{{background:{INK}}}
@@ -1504,20 +1760,20 @@ body{{background:{INK}}}
 .glow{{position:absolute;right:-2.2in;top:-2.2in;width:6.4in;height:6.4in;border-radius:50%;background:radial-gradient(circle,{LIME}33 0%,{LIME}10 40%,transparent 70%)}}
 .lines{{position:absolute;right:0;top:0;width:5in;height:11in;opacity:.18}}
 .brand{{font-weight:800;font-size:12pt;letter-spacing:-.01em}} .brand span{{color:{LIME}}}
-.eyebrow{{margin-top:2.25in;color:{LIME};font-weight:750;font-size:9pt;letter-spacing:.18em;text-transform:uppercase}}
-.h1{{font-size:38pt;font-weight:800;line-height:1.02;letter-spacing:-.035em;margin-top:14px;max-width:6.4in}}
-.h2{{font-size:15pt;font-weight:500;color:{TEXT_ON_DARK_MUTED};margin-top:12px;max-width:6.4in;line-height:1.3}}
-.scope-banner{{display:inline-block;margin-top:14px;padding:5px 9px;border:1px solid {LIME};border-radius:3px;color:{LIME};font-size:7.4pt;font-weight:700;line-height:1.3;letter-spacing:.03em;max-width:6.4in}}
-.rule{{width:1.1in;height:5px;background:{LIME};margin:28px 0 26px;border-radius:1px}}
-.facts{{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 22px;max-width:6.6in}}
+.eyebrow{{margin-top:2.05in;color:{LIME};font-weight:750;font-size:8.5pt;letter-spacing:.18em;text-transform:uppercase}}
+.h1{{font-size:36pt;font-weight:800;line-height:1.04;letter-spacing:-.035em;margin-top:13px;max-width:6.25in}}
+.h2{{font-size:14pt;font-weight:500;color:{TEXT_ON_DARK_MUTED};margin-top:11px;max-width:6.15in;line-height:1.35}}
+.rule{{width:.9in;height:4px;background:{LIME};margin:30px 0 24px;border-radius:1px}}
+.facts{{display:grid;grid-template-columns:repeat({fact_columns},minmax(0,1fr));gap:18px 28px;max-width:6.25in}}
 .fk{{font-size:6.8pt;letter-spacing:.12em;text-transform:uppercase;color:{POWERED_BY_MUTED};font-weight:700}} .fv{{font-size:10.5pt;font-weight:600;margin-top:2px}}
-.sigrow{{display:flex;gap:12px;margin-top:34px;align-items:stretch}}
-.sg{{background:{scol};color:{stxt};border-radius:5px;padding:12px 16px;min-width:2.3in}}
+.sigrow{{display:flex;gap:12px;margin-top:30px;align-items:stretch}}
+.sg{{background:{scol};color:{stxt};border-radius:5px;padding:11px 15px;min-width:2.55in}}
 .sg .k{{font-size:6.8pt;letter-spacing:.12em;text-transform:uppercase;font-weight:800;opacity:.7}} .sg .v{{font-size:16pt;font-weight:800;margin-top:3px}}
-.cm{{background:{PANEL};border-radius:5px;padding:12px 16px;min-width:2.3in}}
+.cm{{background:{PANEL};border-radius:5px;padding:11px 15px;min-width:2.55in}}
 .cm .k{{font-size:6.8pt;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:{POWERED_BY_MUTED}}} .cm .v{{font-size:16pt;font-weight:800;margin-top:3px}}
 .cm .bars{{display:flex;gap:3px;margin-top:7px}} .cm .bars i{{flex:1;height:6px;background:{DARK_METER};border-radius:1px}} .cm .bars i.on{{background:{LIME}}}
-.foot{{position:absolute;left:.75in;right:.75in;bottom:.6in;display:flex;justify-content:space-between;font-size:7.4pt;color:{POWERED_BY_MUTED};border-top:1px solid {DARK_RULE};padding-top:10px}}
+.foot{{position:absolute;left:.75in;right:.75in;bottom:.55in;display:flex;justify-content:space-between;align-items:flex-end;font-size:7.4pt;color:{POWERED_BY_MUTED};border-top:1px solid {DARK_RULE};padding-top:10px}}
+.foot .disc{{color:{TEXT_ON_DARK_MUTED};font-size:6.8pt;margin-top:3px;letter-spacing:.02em}}
 </style></head><body><div class="cvr">
 <div class="glow"></div>
 <svg class="lines" viewBox="0 0 500 1100" preserveAspectRatio="none">{"".join(f'<line x1="{60+i*36}" y1="0" x2="{-340+i*36}" y2="1100" stroke="{LIME}" stroke-width="1"/>' for i in range(14))}</svg>
@@ -1525,14 +1781,13 @@ body{{background:{INK}}}
 <div class="eyebrow">{esc(m.get("eyebrow", m.get("header_label", "")))}</div>
 <div class="h1">{esc(m["title"])}</div>
 <div class="h2">{rich(m.get("subtitle",""))}</div>
-{f'<div class="scope-banner">{esc(m["data_scope_banner"])}</div>' if m.get("data_scope_banner") else ""}
 <div class="rule"></div>
 <div class="facts">{facts}</div>
 <div class="sigrow">
  {f'<div class="sg"><div class="k">{esc(m.get("signal_title", DEFAULT_SIGNAL_TITLE))}</div><div class="v">{esc(sig.get("label") or slabel)}</div></div>' if sig else ""}
  {meter_cover(m, c) if c else ""}
 </div>
-<div class="foot"><div>{esc(m.get("confidentiality") or default_confidentiality())}</div><div>{esc(footer_brand())}</div></div>
+<div class="foot"><div><div>{esc(m.get("confidentiality") or default_confidentiality())}</div>{f'<div class="disc">{esc(disclosure)}</div>' if disclosure else ""}</div><div>{esc(footer_brand())}</div></div>
 </div></body></html>"""
 
 def _bars(c, cap=30):
@@ -1736,6 +1991,7 @@ body{{font-size:12pt;line-height:1.42}}
 .s-take{{position:absolute;left:.7in;right:.7in;bottom:.62in;background:{INK};color:{TEXT_ON_DARK};border-radius:5px;padding:10px 16px;display:flex;gap:14px;align-items:baseline;font-size:11pt}}
 .s-take b{{color:{LIME};font-size:8pt;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}}
 .s-f{{position:absolute;left:.7in;right:.7in;bottom:.25in;display:flex;justify-content:space-between;font-size:7.5pt;color:{MUTED}}}
+.s-f .cover-disc{{display:block;font-size:6.6pt;margin-top:2px;color:{POWERED_BY_MUTED}}}
 .slide .grid{{font-size:10.5pt}} .slide .grid td{{padding:8px 10px}} .slide .grid th{{padding:8px 10px}} .slide .kv th,.slide .kv td{{padding:8px 10px 8px 0}} .slide .grid th{{font-size:7.6pt}} .slide .tile .tv{{font-size:22pt}} .slide .tile .tl{{font-size:7.6pt}} .slide .tile .ts{{font-size:8.6pt}}
 .slide .btitle{{font-size:8.4pt}} .slide .note{{font-size:8pt}} .slide .bul li{{margin-bottom:7px}} .slide .fd{{font-size:10pt}}
 .slide .chart .cl,.slide .chart .cv{{font-size:13px}} .slide .chart .ax{{font-size:10.5px}}
@@ -1747,9 +2003,8 @@ body{{font-size:12pt;line-height:1.42}}
 .dcv .brand{{font-size:12pt}} .dcv .eyebrow{{margin-top:1.45in;color:{LIME};font-weight:750;font-size:10pt;letter-spacing:.18em;text-transform:uppercase}}
 .dcv .h1{{font-size:44pt;font-weight:800;line-height:1.02;letter-spacing:-.035em;margin-top:14px;max-width:10.5in}}
 .dcv .h2{{font-size:16pt;font-weight:500;color:{TEXT_ON_DARK_MUTED};margin-top:12px;max-width:10in}}
-.dcv .scope-banner{{display:inline-block;margin-top:13px;padding:5px 9px;border:1px solid {LIME};border-radius:3px;color:{LIME};font-size:8pt;font-weight:700;line-height:1.25;max-width:10in}}
-.dcv .rule{{width:1.1in;height:5px;background:{LIME};margin:26px 0 24px;border-radius:1px}}
-.dcv .facts{{display:grid;grid-template-columns:repeat(4,auto);gap:14px 40px;justify-content:start}}
+.dcv .rule{{width:1.1in;height:5px;background:{LIME};margin:30px 0 24px;border-radius:1px}}
+.dcv .facts{{display:grid;gap:14px 40px;justify-content:start}}
 .dcv .fk{{font-size:7.4pt;letter-spacing:.12em;text-transform:uppercase;color:{POWERED_BY_MUTED};font-weight:700}} .dcv .fv{{font-size:12pt;font-weight:600;margin-top:2px}}
 .s-scope{{position:absolute;top:.20in;left:.7in;right:1.45in;text-align:right;color:{LIME_DK};font-size:7pt;font-weight:700;letter-spacing:.02em}}
 .slide.dark .s-scope{{color:{LIME}}}
@@ -1758,19 +2013,24 @@ body{{font-size:12pt;line-height:1.42}}
 def _deck_footer(m, n, total, dark=False):
     left = (esc(client_name()) + " &nbsp;·&nbsp; " if client_name() else "") + esc(m.get("header_label", "Briefing"))
     mid = esc(m.get("confidentiality") or default_confidentiality()) + (f' &nbsp;·&nbsp; Data as of {esc(m["data_as_of"])}' if m.get("data_as_of") else "")
+    disclosure = cover_disclosure(m) if dark and n == 1 else ""
+    if disclosure:
+        mid += f'<span class="cover-disc">{esc(disclosure)}</span>'
     right = (esc(footer_brand()) + " &nbsp;·&nbsp; " if footer_brand() else "") + f"{n} / {total}"
     return f'<div class="s-f"><span>{left}</span><span>{mid}</span><span>{right}</span></div>'
 
 def deck_html(d):
     m = d["meta"]; slides = d["slides"]; total = len(slides) + 1
-    facts = "".join(f'<div><div class="fk">{esc(k)}</div><div class="fv">{rich(v)}</div></div>' for k, v in m.get("cover_facts", []))
+    cover_facts = m.get("cover_facts", [])
+    fact_columns = 2 if len(cover_facts) <= 4 else 3
+    facts = "".join(f'<div><div class="fk">{esc(k)}</div><div class="fv">{rich(v)}</div></div>' for k, v in cover_facts)
     lines = "".join(f'<line x1="{60+i*36}" y1="0" x2="{-340+i*36}" y2="750" stroke="{LIME}" stroke-width="1"/>' for i in range(16))
     out = [f"""<section class="slide dark dcv"><div class="glow"></div>
 <svg style="position:absolute;right:0;top:0;width:5.5in;height:{PPTX_SLIDE_HEIGHT_IN}in;opacity:.18" viewBox="0 0 500 750" preserveAspectRatio="none">{lines}</svg>
 {cover_brand()}<div class="eyebrow">{esc(m.get("eyebrow", m.get("header_label", "")))}</div>
 <div class="h1">{esc(m["title"])}</div><div class="h2">{rich(m.get("subtitle", ""))}</div>
-{f'<div class="scope-banner">{esc(m["data_scope_banner"])}</div>' if m.get("data_scope_banner") else ""}<div class="rule"></div>
-<div class="facts">{facts}</div>{_deck_footer(m, 1, total, True)}</section>"""]
+<div class="rule"></div>
+<div class="facts" style="grid-template-columns:repeat({fact_columns},auto)">{facts}</div>{_deck_footer(m, 1, total, True)}</section>"""]
     num = 0
     for k, sl in enumerate(slides, start=2):
         lay = sl.get("layout", "full")

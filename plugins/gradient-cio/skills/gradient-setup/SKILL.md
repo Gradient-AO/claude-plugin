@@ -2,7 +2,7 @@
 name: gradient-setup
 description: "Create a readiness report for GradientCIO access and data. Triggers: 'check GradientCIO setup', 'test connector readiness', 'which workflows are ready'. For workflow selection use gradient-menu."
 metadata:
-  style_contract: "2.2.0"
+  style_contract: "2.3.0"
   group: "Start"
   subject: "connection and readiness"
   output: "report"
@@ -120,10 +120,10 @@ analytical. It is exempt from the four-tile analytical-band labels, page-2 key
 judgments, visual-before-table rule and `Analysis —` callout requirement. Keep
 its established readiness tiles and diagnostic flow.
 
-Meta: `eyebrow` "Setup & Readiness", `header_label` "Readiness Check", `title` the organization name,
-`subtitle` "GradientCIO connection, access and data readiness", `signal_title` "Readiness",
-`meter_title` "Checks passed", `completeness` = probes passed / probes run.
-`cover_facts`: Organization, Role, Licensed modules (count), Roster funds, MCP version, Checked (date).
+Meta: `eyebrow` "Platform Readiness", `header_label` "Readiness Review", `title` the organization name,
+`subtitle` "Access, licensed capabilities and data coverage", `signal_title` "Readiness",
+`meter_title` "Capabilities reviewed", `completeness` = capabilities available / capabilities reviewed.
+`cover_facts`: Organization, Access, Licensed capabilities, Reviewed (date). Keep role, roster capacity, connector version, probes and contract-check detail in the report body or sources appendix, never on the cover.
 
 Signal: `ready` (connected, all core skills ready, no new failures) · `partial` (connected, but some skills
 partial or not licensed, or degradable failures are present) · `not_ready` (not connected, auth failed, or any
