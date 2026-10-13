@@ -24,7 +24,7 @@ Allowed status values:
 
 Evidence cites the source tag, document name and page or record. Preserve source dates, scope and validation
 status when supplied. Do not derive report values locally. Present status, severity, findings and analysis in
-`## 2. Findings`; Appendix A contains checklist tables only.
+`## 2. Findings`; Appendix B contains checklist tables only.
 
 ## Workflow body
 
@@ -96,10 +96,10 @@ Write `review.md` with these headings exactly:
 ## 4. Follow-up Requests
 <Numbered list: request, provision and evidence that would close it.>
 
-## Appendix A — Findings Checklist
+## Appendix B — Findings Checklist
 <Checklist tables only, grouped under `### <Area>` headings.>
 
-## Appendix B — Sources
+## Appendix A — Sources and methods
 | Tag | Source | Detail | As of | Validation |
 |---|---|---|---|---|
 
@@ -120,8 +120,8 @@ Follow `report-layout.md`. `visuals.json` must contain:
 
 Analysis is non-prescriptive. “What would change the view” may point only to numbered requests already present
 in `## 4. Follow-up Requests`; it must not add a recommendation or action. Keep the analytical body to 3–4
-pages; the full checklist begins Appendix A. Review-skill schema-v2 budgets force the break with stable section
-ID `appendix-a`. Market charts are not required.
+pages; the full checklist is Appendix B. Review-skill schema-v2 budgets force the sources break with stable
+section ID `appendix-a`. Market charts are not required.
 
 Write `meta.json` in the existing shape:
 

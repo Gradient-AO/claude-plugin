@@ -140,7 +140,7 @@ apply its specific repair levers and rerun until clean.
   because peerIntelligence is not available for this organization. This
   construction report uses portfolio evidence only.`
 
-### Appendix A — Sources
+### Appendix — Sources and methods (`num: "A"`)
 
 - `table`: Tag, Evidence, Basis, Tool / view, Key parameters, As of, Data scope, Validation, Digest.
 

@@ -25,7 +25,8 @@ from layout_budget_schema import (  # noqa: E402
 
 
 SCHEMA_VERSION = 2
-CHART_TABLE_PREVIEW_ROWS = 12
+ATOMIC_TABLE_ROW_LIMIT = 12
+CHART_TABLE_PREVIEW_ROWS = ATOMIC_TABLE_ROW_LIMIT
 DESIGN_PROFILES = frozenset({"analytical", "reference", "deck"})
 SECTION_ROLES = frozenset(
     {"summary", "analytical", "list", "closing", "appendix", "reference"}
@@ -103,6 +104,61 @@ class LayoutPolicyError(ValueError):
     def __init__(self, errors: list[str]) -> None:
         super().__init__("\n".join(errors))
         self.errors = errors
+
+
+def _resolve_mode_aware_forced_breaks(
+    budget: dict[str, Any],
+    report: dict[str, Any] | None,
+) -> tuple[dict[str, Any], list[str]]:
+    """Resolve a forced-break map by meta.mode while retaining list budgets."""
+    normalized = copy.deepcopy(budget)
+    configured = normalized.get("forced_breaks")
+    if not isinstance(configured, dict):
+        return normalized, []
+    errors: list[str] = []
+    if not configured:
+        errors.append(
+            "layout budget mode-aware forced_breaks must be a non-empty object"
+        )
+    for mode, values in configured.items():
+        location = f"layout budget forced_breaks.{mode}"
+        if not isinstance(mode, str) or not mode.strip():
+            errors.append(
+                "layout budget forced_breaks mode keys must be non-empty strings"
+            )
+            continue
+        if not isinstance(values, list):
+            errors.append(f"{location} must be a list")
+            continue
+        if any(
+            not isinstance(value, str) or not value.strip()
+            for value in values
+        ):
+            errors.append(f"{location} entries must be non-empty strings")
+        if len(values) != len(set(values)):
+            errors.append(f"{location} entries must be unique")
+    if errors:
+        return normalized, errors
+    if report is None:
+        normalized["forced_breaks"] = []
+        return normalized, []
+    metadata = report.get("meta")
+    metadata = metadata if isinstance(metadata, dict) else {}
+    mode = metadata.get("mode")
+    selected_mode = mode.strip() if isinstance(mode, str) and mode.strip() else None
+    selected_key = (
+        selected_mode
+        if selected_mode in configured
+        else "default" if "default" in configured else None
+    )
+    if selected_key is None:
+        available = ", ".join(sorted(configured))
+        return normalized, [
+            "layout budget mode-aware forced_breaks has no entry for "
+            f"meta.mode {selected_mode!r}; available: {available}"
+        ]
+    normalized["forced_breaks"] = copy.deepcopy(configured[selected_key])
+    return normalized, []
 
 
 def _strings(value: Any) -> list[str]:
@@ -625,9 +681,12 @@ def resolve_layout_budget(
     budget: dict[str, Any],
     report: dict[str, Any],
 ) -> dict[str, Any]:
-    """Resolve a canonical schema-v2 budget while preserving the public API."""
+    """Resolve canonical modes and mode-aware forced breaks."""
+    normalized, errors = _resolve_mode_aware_forced_breaks(budget, report)
+    if errors:
+        raise LayoutPolicyError(errors)
     try:
-        return resolve_canonical_layout_budget(budget, report)
+        return resolve_canonical_layout_budget(normalized, report)
     except LayoutBudgetSchemaError as error:
         raise LayoutPolicyError(error.errors) from error
 
@@ -674,7 +733,12 @@ def validate_layout_budget(
     report: dict[str, Any] | None = None,
 ) -> list[str]:
     """Return strict canonical schema-v2 and section-resolution errors."""
-    return validate_canonical_layout_budget(budget, report)
+    if not isinstance(budget, dict):
+        return ["layout budget root must be an object"]
+    normalized, errors = _resolve_mode_aware_forced_breaks(budget, report)
+    if errors:
+        return errors
+    return validate_canonical_layout_budget(normalized, report)
 
 
 def _validate_layout_budget_legacy(

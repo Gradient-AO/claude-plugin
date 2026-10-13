@@ -2,7 +2,7 @@
 name: gradient-idd-manager-performance
 description: "Create a manager performance report for single-manager meaningfulness, benchmark comparisons, and rolling-window robustness. Triggers: 'assess one track record', 'compare manager performance', 'test performance persistence'. For operational diligence use gradient-odd-report."
 metadata:
-  version: "3.0.0"
+  version: "4.0.0"
   style_contract: "2.2.0"
   group: "Investment due diligence"
   subject: "manager performance"
@@ -43,7 +43,7 @@ Set `meta.mode` to the selected value before validation. Do not combine modes in
 - The sources appendix table uses exactly these columns in order: `Tag`, `Evidence`, `Basis`, `Tool / view`, `Key parameters`, `As of`, `Data scope`, `Validation`, `Digest`.
 - `Basis` is one of `gradient_tool`, `user_document`, or `regulatory_filing`.
 - For a successful `gradient_tool` call, `Digest` is the SHA-256 digest of the saved response in `sha256:<64 lowercase hex>` form. For a failed or unavailable call, use the typed no-payload sentinel required by `references/writing-standards.md`; preserve its error code and request ID in `Validation`, never in `Digest`.
-- Use `num: "A"` and title `Appendix — Sources and methods` for the sources appendix.
+- Use normalized JSON title `Appendix — Sources and methods` with `num: "A"`; it renders as exact title `Appendix A — Sources and methods`.
 
 ## Collect, assess and hand off
 
@@ -55,7 +55,7 @@ Viable finalists → `gradient-odd-report`; operational comparison → `gradient
 
 ## Validate and deliver
 
-Build one `report.json` with the exact section order required by the selected mode. Deliver PDF by default and PowerPoint only when requested.
+Build one `report.json` with the exact section order required by the selected mode. In `single` mode, use the redesigned analytical spine in `references/modes/single.md`, including native series views, explicit chart lineage, the optional second-benchmark section only when governed evidence exists, and a combined limitations-and-follow-ups close. Deliver PDF by default and PowerPoint only when requested.
 
 ```text
 python <skill>/scripts/validate_manager_performance.py report.json

@@ -66,7 +66,7 @@ Sections, in order:
 5. `coverage-scope` — **Coverage and scope**, one closing `two_col` section
    combining coverage and out-of-scope evidence. When no out-of-scope evidence
    exists, the right column contains typed unavailability.
-6. `sources-method` — **Appendix — Sources and method**.
+6. `sources-method` — **Appendix — Sources and methods** (`num: "A"`).
 
 Fund layout is deterministic after the authored per-fund table rows are
 counted, excluding visual rows. When the total is **24 rows or fewer**, emit

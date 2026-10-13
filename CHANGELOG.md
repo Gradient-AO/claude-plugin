@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.3.0
+- Tightened attribution-comparison capability truthfulness and mode-specific page-layout contracts, including explicit planned-tool unavailable states.
+- Standardized comparison charts and added native editable PowerPoint output for fallback and three-lane attribution examples.
+- Fixed renderer table pagination and full source-digest wrapping.
+- Standardized sources appendices as `Appendix — Sources and methods` with appendix number `A`.
+- Added governed attribution period, Carino, active-weight and active-return lineage while keeping simulation and comparison capabilities planned.
+
 ## 5.2.0
 - Completed Punch List 4 private-markets PME integration with commitment-scoped setup probes, separate primary and sensitivity sessions, and PME-native partial-evidence reporting.
 - Added typed IDD handoff status propagation, a chat-only zero-evidence branch, source-mapping checks, and synchronized Workstream K contracts across report skills.

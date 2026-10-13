@@ -27,6 +27,7 @@ from report_json_validator import (  # noqa: E402
 from report_vocab import DDQ_VOCAB  # noqa: E402
 
 
+SOURCES_APPENDIX_TITLE = "Appendix — Sources and methods"
 SPEC = ReportSpec(
     name="DDQ reconciliation report",
     section_rules=(
@@ -40,9 +41,9 @@ SPEC = ReportSpec(
             maximum=20,
         ),
         SectionRule(r"Coverage and scope", "Coverage and scope"),
-        SectionRule(r"Appendix — Sources and method", "Appendix — Sources and method"),
+        SectionRule(SOURCES_APPENDIX_TITLE, SOURCES_APPENDIX_TITLE),
     ),
-    appendix_pattern=r"Appendix — Sources and method",
+    appendix_pattern=SOURCES_APPENDIX_TITLE,
     signal_levels=DDQ_VOCAB.signal_levels,
     completeness_states=DDQ_VOCAB.completeness_states,
     allowed_tones=DDQ_VOCAB.allowed_tones,
@@ -85,7 +86,7 @@ SPEC = ReportSpec(
         ),
         SlotRule(r"Coverage and scope", frozenset({"two_col"}), "coverage and scope"),
         SlotRule(
-            r"Appendix — Sources and method",
+            SOURCES_APPENDIX_TITLE,
             frozenset({"table"}),
             "sources table",
         ),
@@ -274,9 +275,9 @@ def validate_ddq_contract(document: object) -> list[str]:
         if len(blocks) != 1 or blocks[0].get("type") != "two_col":
             errors.append("Coverage and scope must be one two_col block")
 
-    appendix = by_title.get("Appendix — Sources and method")
+    appendix = by_title.get(SOURCES_APPENDIX_TITLE)
     if appendix is not None and appendix.get("id") != "sources-method":
-        errors.append("Appendix — Sources and method must use id 'sources-method'")
+        errors.append(f"{SOURCES_APPENDIX_TITLE} must use id 'sources-method'")
 
     for section in sections:
         for block in block_objects(section):

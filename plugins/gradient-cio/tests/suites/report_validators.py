@@ -1,9 +1,35 @@
 """Report and composer validator regression checks."""
 
-from suites.harness import *
+from suites.harness import *  # noqa: I001
 from report_layout import resolve_layout_budget
 
+
 def connector_cutover():
+    manager_pptx = (
+        ROOT
+        / "assets"
+        / "examples"
+        / "gradient-idd-manager-performance-single.pptx"
+    )
+    native_line_charts = 0
+    chart_parts: list[str] = []
+    if manager_pptx.is_file():
+        with zipfile.ZipFile(manager_pptx) as archive:
+            chart_parts = [
+                name
+                for name in archive.namelist()
+                if name.startswith("ppt/charts/chart") and name.endswith(".xml")
+            ]
+            native_line_charts = sum(
+                b"lineChart" in archive.read(name)
+                for name in chart_parts
+            )
+    check(
+        manager_pptx.is_file()
+        and len(chart_parts) >= 4
+        and native_line_charts >= 4,
+        "single-manager golden PowerPoint contains at least four native editable line charts",
+    )
     removed_scripts = [
         ROOT / "skills" / "gradient-decision-ic-memo" / "scripts" / "memo_calcs.py",
         ROOT / "skills" / "gradient-portfolio-review" / "scripts" / "review_calcs.py",
@@ -318,6 +344,15 @@ def connector_cutover():
                 "findings",
                 body_ids[prefix],
                 "follow-up-requests",
+                "appendix-b",
+                "appendix-a",
+                "appendix-c",
+            ]
+            expected_budget_ids = [
+                "executive",
+                "findings",
+                body_ids[prefix],
+                "follow-up-requests",
                 "appendix-a",
                 "appendix-b",
                 "appendix-c",
@@ -342,15 +377,15 @@ def connector_cutover():
             check(
                 budget.get("schema_version") == 2
                 and budget.get("forced_breaks") == ["appendix-a"]
-                and list(budget_sections) == expected_ids
+                and list(budget_sections) == expected_budget_ids
                 and [
                     budget_sections[section_id].get("role")
-                    for section_id in expected_ids
+                    for section_id in expected_budget_ids
                 ]
                 == expected_roles
                 and [
                     budget_sections[section_id].get("requires_analysis")
-                    for section_id in expected_ids
+                    for section_id in expected_budget_ids
                 ]
                 == [False, True, False, False, False, False, False],
                 f"GIPS {label} budget retains exact stable IDs, roles and analysis flags",
@@ -378,17 +413,25 @@ def connector_cutover():
                 for section in composed_document.get("sections", [])
                 if section.get("id") == "findings"
             ).get("blocks", [])
-            appendix_blocks = next(
+            checklist_blocks = next(
+                section
+                for section in composed_document.get("sections", [])
+                if section.get("id") == "appendix-b"
+            ).get("blocks", [])
+            sources_appendix = next(
                 section
                 for section in composed_document.get("sections", [])
                 if section.get("id") == "appendix-a"
-            ).get("blocks", [])
+            )
             check(
                 [block.get("type") for block in findings_blocks[:3]]
                 == ["stacked", "bars", "findings"]
-                and len(appendix_blocks) == 1
-                and appendix_blocks[0].get("type") == "markdown",
-                f"GIPS {label} keeps findings visual-first and Appendix A checklist-only",
+                and len(checklist_blocks) == 1
+                and checklist_blocks[0].get("type") == "markdown"
+                and sources_appendix.get("title")
+                == "Appendix — Sources and methods"
+                and sources_appendix.get("num") == "A",
+                f"GIPS {label} keeps findings visual-first and canonical sources",
             )
 
             expected_bodies = markdown_handoff_bodies(
@@ -582,6 +625,24 @@ def connector_cutover():
             == [],
             "clear limitation prose does not require a preferred keyword",
         )
+        advisory_mapping = (
+            "Observation: The manager returned 8.4% against the selected benchmark "
+            "[S2]. Why it matters: Relative interpretation depends on a defensible "
+            "comparison series. Uncertainty: The server rates this caller-selected "
+            "benchmark mapping as advisory only. What would change the view: A "
+            "refreshed response containing a server-matched benchmark."
+        )
+        check(
+            not any(
+                "specific limitation" in note
+                for note in review_callout(
+                    "Analysis — Benchmark mapping is advisory",
+                    advisory_mapping,
+                    structured=True,
+                )
+            ),
+            "caller-selected advisory benchmark prose is a specific limitation",
+        )
         keyword_stuffing = (
             "Observation: The manager returned 8.4% against the selected benchmark "
             "[S2]. Why it matters: Relative interpretation depends on a defensible "
@@ -681,6 +742,408 @@ def connector_cutover():
             + (
                 f": {(validated_report.stderr or validated_report.stdout).strip()}"
                 if validated_report.returncode != 0
+                else ""
+            ),
+        )
+
+    idd_validators = (
+        (
+            "manager performance",
+            ROOT
+            / "skills"
+            / "gradient-idd-manager-performance"
+            / "scripts"
+            / "validate_manager_performance.py",
+            "idd-manager-performance-single.json",
+        ),
+        (
+            "manager portfolio fit",
+            ROOT
+            / "skills"
+            / "gradient-idd-manager-portfolio-fit"
+            / "scripts"
+            / "validate_manager_portfolio_fit.py",
+            "idd-portfolio-fit.json",
+        ),
+        (
+            "manager shortlist",
+            ROOT
+            / "skills"
+            / "gradient-idd-manager-shortlist"
+            / "scripts"
+            / "validate_manager_shortlist.py",
+            "idd-shortlist.json",
+        ),
+        (
+            "private-markets PME",
+            ROOT
+            / "skills"
+            / "gradient-idd-private-markets-pme"
+            / "scripts"
+            / "validate_private_markets_pme.py",
+            "idd-private-markets-pme.json",
+        ),
+    )
+    recommendation_phrases = (
+        "Hire Example Manager.",
+        "Fire Example Manager.",
+        "Terminate Example Manager.",
+        "Allocate to Example Manager.",
+        "Allocate-to Example Manager.",
+        "Redeem from Example Manager.",
+        "Redeem-from Example Manager.",
+        "This is the best manager.",
+        "This is the top manager.",
+        "This is the preferred manager.",
+    )
+    recommendation_failures = []
+    with tempfile.TemporaryDirectory() as idd_recommendation_tmp:
+        tmp_dir = pathlib.Path(idd_recommendation_tmp)
+        for validator_label, validator, fixture_name in idd_validators:
+            source = json.loads((FIX / fixture_name).read_text(encoding="utf-8"))
+            for phrase_index, phrase in enumerate(recommendation_phrases):
+                mutated = json.loads(json.dumps(source))
+                mutated["sections"][0]["blocks"].append(
+                    {"type": "markdown", "text": phrase}
+                )
+                path = tmp_dir / f"{validator_label}-{phrase_index}.json"
+                path.write_text(json.dumps(mutated), encoding="utf-8")
+                result = subprocess.run(
+                    [sys.executable, str(validator), str(path)],
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
+                )
+                if result.returncode != 1:
+                    recommendation_failures.append(
+                        f"{validator_label}: {phrase}"
+                    )
+    check(
+        not recommendation_failures,
+        "every IDD ReportSpec rejects direct recommendations and manager rankings"
+        + (
+            f": {recommendation_failures}"
+            if recommendation_failures
+            else ""
+        ),
+    )
+    writing_standards = (
+        ROOT / "shared" / "writing-standards.md"
+    ).read_text(encoding="utf-8")
+    check(
+        "`sha256:` + `provenance.reproducibility.payload_digest`"
+        in writing_standards
+        and "`not_available:no_payload`" in writing_standards
+        and "`Not available — series views not published`" in writing_standards,
+        "canonical writing standards define payload digest and series fallback contracts",
+    )
+
+    manager_performance_validator = idd_validators[0][1]
+    modern_single = json.loads(
+        (FIX / "idd-manager-performance-single.json").read_text(encoding="utf-8")
+    )
+    modern_sections = modern_single["sections"]
+    assert [section["title"] for section in modern_sections] == [
+        "Executive conclusion",
+        "Track record over time",
+        "Data and benchmark coverage",
+        "Absolute risk and return",
+        "Relative performance",
+        "Reliability and date-window sensitivity",
+        "Benchmark sensitivity",
+        "Limitations and follow-ups",
+        "Appendix — Sources and methods",
+    ]
+    modern_appendix = modern_sections[-1]
+    modern_sources = next(
+        block
+        for block in modern_appendix["blocks"]
+        if block.get("title") == "Sources"
+    )
+    modern_lineage = next(
+        block
+        for block in modern_appendix["blocks"]
+        if block.get("title") == "Series view lineage"
+    )
+    expected_series_views = [
+        "cumulative_growth_base100",
+        "drawdown",
+        "rolling_return_12",
+        "rolling_return_36",
+        "rolling_excess_36",
+        "rolling_sharpe_12",
+        "rolling_sharpe_36",
+        "calendar_years",
+        "capture",
+        "distribution",
+    ]
+    check(
+        modern_lineage["columns"]
+        == ["Source tag", "View", "Payload digest"]
+        and [row[1] for row in modern_lineage["rows"]] == expected_series_views
+        and {row[0] for row in modern_lineage["rows"]} == {"S2"}
+        and next(row for row in modern_sources["rows"] if row[0] == "S2")[8]
+        == "sha256:" + "b" * 64
+        and all(row[2] != "sha256:" + "b" * 64 for row in modern_lineage["rows"]),
+        "modern single-manager fixture uses exact relative-return series-view lineage",
+    )
+    plotted_blocks = [
+        block
+        for section in modern_sections[:-1]
+        for block in section["blocks"]
+        if block.get("type") in {
+            "chart", "line", "bars", "percentiles",
+            "waterfall", "band", "stacked", "heat",
+        }
+    ]
+    check(
+        plotted_blocks
+        and all("evidence_metadata" in block for block in plotted_blocks)
+        and any(
+            len(block["evidence_metadata"].get("lineage", [])) == 2
+            for block in plotted_blocks
+        )
+        and next(
+            block
+            for block in plotted_blocks
+            if block.get("view") == "distribution"
+            or block.get("evidence_metadata", {}).get("view") == "distribution"
+        )["title"]
+        == "Realized monthly return distribution [S2]"
+        and any(
+            block.get("title") == "Model outputs (simulated)"
+            and block.get("type") == "table"
+            for section in modern_sections
+            for block in section["blocks"]
+        ),
+        "modern single-manager plots have lineage and isolate simulated outputs",
+    )
+
+    def run_idd_case(tmp_dir, name, document):
+        path = tmp_dir / f"{name}.json"
+        path.write_text(json.dumps(document), encoding="utf-8")
+        return subprocess.run(
+            [sys.executable, str(manager_performance_validator), str(path)],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+
+    with tempfile.TemporaryDirectory() as modern_single_tmp:
+        tmp_dir = pathlib.Path(modern_single_tmp)
+        modern_result = run_idd_case(tmp_dir, "modern-single", modern_single)
+        check(
+            modern_result.returncode == 0,
+            "modern single-manager section and tile contract validates"
+            + (
+                f": {(modern_result.stdout + modern_result.stderr).strip()}"
+                if modern_result.returncode != 0
+                else ""
+            ),
+        )
+
+        outer_digest_changed = json.loads(json.dumps(modern_single))
+        changed_outer_digest = "sha256:" + "f" * 64
+        next(
+            row
+            for row in next(
+                block
+                for block in outer_digest_changed["sections"][-1]["blocks"]
+                if block.get("title") == "Sources"
+            )["rows"]
+            if row[0] == "S2"
+        )[8] = changed_outer_digest
+        next(
+            evidence
+            for evidence in outer_digest_changed["meta"]["handoff"]["evidence"]
+            if evidence["source_tag"] == "S2"
+        )["digest"] = changed_outer_digest
+        check(
+            run_idd_case(
+                tmp_dir,
+                "modern-single-independent-outer-digest",
+                outer_digest_changed,
+            ).returncode
+            == 0,
+            "series-view lineage remains independent of the canonical outer digest",
+        )
+
+        for legacy_mode in ("compare", "robustness"):
+            legacy_document = json.loads(
+                (FIX / f"idd-manager-performance-{legacy_mode}.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            check(
+                run_idd_case(
+                    tmp_dir,
+                    f"legacy-{legacy_mode}",
+                    legacy_document,
+                ).returncode
+                == 0,
+                f"manager-performance {legacy_mode} fixture retains compatibility",
+            )
+
+        no_sensitivity = json.loads(json.dumps(modern_single))
+        no_sensitivity["sections"] = [
+            section
+            for section in no_sensitivity["sections"]
+            if section["title"] != "Benchmark sensitivity"
+        ]
+        check(
+            run_idd_case(
+                tmp_dir,
+                "modern-single-no-sensitivity",
+                no_sensitivity,
+            ).returncode
+            == 0,
+            "modern single-manager benchmark sensitivity section is optional",
+        )
+
+        exact_fallback = json.loads(json.dumps(modern_single))
+        next(
+            section
+            for section in exact_fallback["sections"]
+            if section["title"] == "Track record over time"
+        )["blocks"] = [
+            {
+                "type": "callout",
+                "tone": "watch",
+                "title": "Not available",
+                "text": "Not available — series views not published",
+            }
+        ]
+        check(
+            run_idd_case(
+                tmp_dir,
+                "modern-single-series-fallback",
+                exact_fallback,
+            ).returncode
+            == 0,
+            "modern single-manager accepts the exact series-view fallback",
+        )
+
+        modern_mutations = []
+
+        one_line = json.loads(json.dumps(modern_single))
+        one_line_track = next(
+            section
+            for section in one_line["sections"]
+            if section["title"] == "Track record over time"
+        )
+        one_line_track["blocks"] = [
+            next(
+                block
+                for block in one_line_track["blocks"]
+                if block.get("type") == "line"
+            )
+        ]
+        modern_mutations.append(("one track-record line", one_line))
+
+        wrong_fallback = json.loads(json.dumps(exact_fallback))
+        next(
+            section
+            for section in wrong_fallback["sections"]
+            if section["title"] == "Track record over time"
+        )["blocks"][0]["text"] = "Not available — no series"
+        modern_mutations.append(("non-canonical series fallback", wrong_fallback))
+
+        too_few_questions = json.loads(json.dumps(modern_single))
+        too_few_question_block = next(
+            block
+            for block in next(
+                section
+                for section in too_few_questions["sections"]
+                if section["title"] == "Limitations and follow-ups"
+            )["blocks"]
+            if block["type"] == "questions"
+        )
+        too_few_question_block["items"] = too_few_question_block["items"][:2]
+        modern_mutations.append(("fewer than three questions", too_few_questions))
+
+        too_few_limitations = json.loads(json.dumps(modern_single))
+        too_few_limitation_block = next(
+            block
+            for block in next(
+                section
+                for section in too_few_limitations["sections"]
+                if section["title"] == "Limitations and follow-ups"
+            )["blocks"]
+            if block.get("title") == "Limitations"
+        )
+        too_few_limitation_block["items"] = too_few_limitation_block["items"][:2]
+        modern_mutations.append(("fewer than three limitations", too_few_limitations))
+
+        unlabeled_simulation = json.loads(json.dumps(modern_single))
+        next(
+            section
+            for section in unlabeled_simulation["sections"]
+            if section["title"] == "Benchmark sensitivity"
+        )["blocks"].append(
+            {
+                "type": "text",
+                "title": "Projected result",
+                "text": "The simulated value is 12.0% [S1].",
+            }
+        )
+        modern_mutations.append(("unlabeled simulated value", unlabeled_simulation))
+
+        unlineaged_bars = json.loads(json.dumps(modern_single))
+        next(
+            block
+            for section in unlineaged_bars["sections"]
+            for block in section["blocks"]
+            if block.get("type") == "bars"
+        ).pop("evidence_metadata")
+        modern_mutations.append(
+            ("non-line visual without lineage", unlineaged_bars)
+        )
+
+        combined_digest_mismatch = json.loads(json.dumps(modern_single))
+        combined_block = next(
+            block
+            for section in combined_digest_mismatch["sections"]
+            for block in section["blocks"]
+            if len(block.get("evidence_metadata", {}).get("lineage", [])) == 2
+        )
+        combined_block["evidence_metadata"]["lineage"][0]["payload_digest"] = (
+            "sha256:" + "f" * 64
+        )
+        modern_mutations.append(
+            ("combined visual view digest mismatch", combined_digest_mismatch)
+        )
+
+        for field, value in (
+            ("source_tag", "S999"),
+            ("view", "wrong_view"),
+            ("payload_digest", "b" * 64),
+        ):
+            mismatch = json.loads(json.dumps(modern_single))
+            track = next(
+                section
+                for section in mismatch["sections"]
+                if section["title"] == "Track record over time"
+            )
+            track["blocks"][0]["evidence_metadata"][field] = value
+            modern_mutations.append((f"visual evidence {field} mismatch", mismatch))
+
+        rejected_modern_mutations = []
+        for index, (label, document) in enumerate(modern_mutations):
+            result = run_idd_case(
+                tmp_dir,
+                f"modern-single-invalid-{index}",
+                document,
+            )
+            if result.returncode != 1:
+                rejected_modern_mutations.append(label)
+        check(
+            not rejected_modern_mutations,
+            "modern single-manager validator rejects focused contract mutations"
+            + (
+                f": {rejected_modern_mutations}"
+                if rejected_modern_mutations
                 else ""
             ),
         )
@@ -825,7 +1288,7 @@ def connector_cutover():
             ("firm-reconciliation", "Firm reconciliation"),
             ("fund-reconciliation", "Fund reconciliation"),
             ("coverage-scope", "Coverage and scope"),
-            ("sources-method", "Appendix — Sources and method"),
+            ("sources-method", "Appendix — Sources and methods"),
         ],
         "DDQ fixture retains exact schema-v2 section IDs and order",
     )

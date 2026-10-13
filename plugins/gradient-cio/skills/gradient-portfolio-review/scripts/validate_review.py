@@ -38,6 +38,7 @@ from report_constants import (  # noqa: E402
 from report_vocab import REVIEW_VOCAB  # noqa: E402
 
 
+SOURCES_APPENDIX_TITLE = "Appendix — Sources and methods"
 NEUTRAL_PATTERNS = (
     NEUTRAL_RECOMMENDATION_PATTERNS
     + NEUTRAL_DIRECTION_PATTERNS
@@ -62,10 +63,10 @@ BRIEF_SPEC = ReportSpec(
             "Risk",
             "Outlook",
             "Coverage",
-            "Appendix — Sources and method",
+            SOURCES_APPENDIX_TITLE,
         )
     ),
-    appendix_pattern=r"Appendix — Sources and method",
+    appendix_pattern=SOURCES_APPENDIX_TITLE,
     signal_levels=REVIEW_VOCAB.signal_levels,
     completeness_states=REVIEW_VOCAB.completeness_states,
     allowed_tones=REVIEW_VOCAB.allowed_tones,
@@ -86,7 +87,7 @@ BRIEF_SPEC = ReportSpec(
         SlotRule(r"Outlook", frozenset({"bars"}), "CMA bars"),
         SlotRule(r"Coverage", frozenset({"coverage"}), "coverage block"),
         SlotRule(
-            r"Appendix — Sources and method",
+            SOURCES_APPENDIX_TITLE,
             frozenset({"table"}),
             "sources table",
         ),
@@ -140,11 +141,11 @@ COMPREHENSIVE_SPEC = ReportSpec(
             "Projected Return and Risk Decomposition",
             "Liquidity and Commitments",
             "Coverage",
-            "Appendix A — Sources",
+            SOURCES_APPENDIX_TITLE,
             "Appendix B — Server Metric Methods and Disclosures",
         )
     ),
-    appendix_pattern=r"Appendix A — Sources",
+    appendix_pattern=SOURCES_APPENDIX_TITLE,
     signal_levels=REVIEW_VOCAB.signal_levels,
     completeness_states=REVIEW_VOCAB.completeness_states,
     allowed_tones=REVIEW_VOCAB.allowed_tones,
@@ -193,7 +194,7 @@ COMPREHENSIVE_SPEC = ReportSpec(
             "liquidity stacked visual",
         ),
         SlotRule(r"Coverage", frozenset({"coverage"}), "coverage block"),
-        SlotRule(r"Appendix A — Sources", frozenset({"table"}), "sources table"),
+        SlotRule(SOURCES_APPENDIX_TITLE, frozenset({"table"}), "sources table"),
     ),
     forbidden_body_patterns=COMPREHENSIVE_NEUTRAL_PATTERNS,
     illustrative_label=ILLUSTRATIVE_LABEL,

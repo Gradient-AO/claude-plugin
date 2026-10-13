@@ -53,7 +53,8 @@
       "blocks": [{"type": "text", "text": "Limitations remain explicit [S1]."}]
     },
     {
-      "title": "Appendix A — Sources and methods",
+      "num": "A",
+      "title": "Appendix — Sources and methods",
       "blocks": [{"type": "text", "text": "S1 — TEST evidence."}]
     }
   ]

@@ -18,6 +18,7 @@ from report_json_validator import (  # noqa: E402
 )
 from report_vocab import DILIGENCE_VOCAB  # noqa: E402
 
+SOURCES_APPENDIX_TITLE = "Appendix — Sources and methods"
 
 SPEC = ReportSpec(
     name="manager comparison report",
@@ -30,10 +31,10 @@ SPEC = ReportSpec(
             "Form 13F overlap",
             "ADV–13F consistency and events",
             "Coverage and next steps",
-            "Appendix A — Sources and method",
+            SOURCES_APPENDIX_TITLE,
         )
     ),
-    appendix_pattern=r"Appendix A — Sources and method",
+    appendix_pattern=SOURCES_APPENDIX_TITLE,
     signal_levels=DILIGENCE_VOCAB.signal_levels,
     completeness_states=DILIGENCE_VOCAB.completeness_states,
     allowed_tones=DILIGENCE_VOCAB.allowed_tones,
@@ -95,7 +96,7 @@ SPEC = ReportSpec(
             "next-steps table",
         ),
         SlotRule(
-            r"Appendix A — Sources and method",
+            SOURCES_APPENDIX_TITLE,
             frozenset({"table"}),
             "sources table",
         ),

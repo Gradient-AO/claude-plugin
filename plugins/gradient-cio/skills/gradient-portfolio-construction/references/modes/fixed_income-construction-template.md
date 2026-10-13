@@ -129,7 +129,7 @@ apply its specific repair levers and rerun until clean.
 
 - `coverage` block with every expected source and its typed status.
 
-### Appendix A — Sources
+### Appendix — Sources and methods (`num: "A"`)
 
 - `table`: Tag, Evidence, Basis, Tool / view, Key parameters, As of, Data scope, Validation, Digest.
 

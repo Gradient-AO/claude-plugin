@@ -15,7 +15,7 @@ A GIPS Composite Report must disclose the fee schedule appropriate to the report
 
 - Ask for the fee schedule if the report omits it.
 
-## Appendix A — Sources
+## Appendix A — Sources and methods
 
 | Tag | Source | Detail |
 |---|---|---|

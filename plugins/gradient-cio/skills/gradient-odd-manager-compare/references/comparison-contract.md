@@ -84,7 +84,7 @@ criterion failed. Never make a hire, fire, allocation, or quality ranking.
 
 Use fixed sections: Executive summary; Side-by-side comparison; Operational
 flags; Form 13F overlap; ADV–13F consistency and events; Coverage and next
-steps; Appendix A — Sources and method. Keep missing sections and show typed
+steps; Appendix — Sources and methods (`num: "A"`). Keep missing sections and show typed
 gaps.
 Use the exact layouts and block schemas in `report-style.md`; include comparison
 bars, per-manager cohort percentile strips, a returned overlap heat matrix,

@@ -29,11 +29,11 @@ When both appear, preserve `diagnostics.entity_return_reconciliation`, including
 
 ## Unavailability
 
-An exact planned-tool row absent from `get_gradient_capabilities` renders as `Not available — not listed by get_gradient_capabilities` with a citation to the capability response. Missing lanes and server-derived comparisons otherwise render as typed unavailable evidence. If more than half of required report slots are unavailable, `meta.signal.level` is `insufficient`.
+A listed but unavailable planned-tool row renders as `Not available — <availability_reason> per get_gradient_capabilities [S#]`. An exact planned-tool row absent from `get_gradient_capabilities` renders as `Not available — not listed by get_gradient_capabilities [S#]`. The section callout and executive tile subtext use the same canonical text. Missing lanes and server-derived comparisons otherwise render as typed unavailable evidence. If more than half of required report slots are unavailable, `meta.signal.level` is `insufficient`.
 
 ## Report structure
 
-Executive tile subtitles identify their basis: historical is `realized 12 months` with the period, ex ante is `1-year expected`, and simulated and comparison tiles state their returned basis or the typed capability unavailability. Simulated Attribution, Cross-Lane Comparison and Appendix A — Sources and Methods use `page_break: "force"`.
+Executive tile subtitles identify their basis: historical is `realized 12 months` with the period, ex ante is `1-year expected`, and simulated and comparison tiles state their returned basis or the typed capability unavailability. In `three_lane` mode, Simulated Attribution, Cross-Lane Comparison and `Appendix — Sources and methods` use `page_break: "force"`; fallback mode authors no break on those sections so they can flow together.
 
 ## Provenance
 

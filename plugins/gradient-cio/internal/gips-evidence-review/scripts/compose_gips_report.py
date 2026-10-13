@@ -35,12 +35,16 @@ SECTION_MAPPINGS: dict[str, tuple[str, str, str | None]] = {
         "03",
     ),
     "4. Follow-up Requests": ("follow-up-requests", "Follow-up requests", "04"),
-    "Appendix A — Findings Checklist": (
-        "appendix-a",
+    "Appendix B — Findings Checklist": (
+        "appendix-b",
         "Appendix — Findings checklist",
+        "B",
+    ),
+    "Appendix A — Sources and methods": (
+        "appendix-a",
+        "Appendix — Sources and methods",
         "A",
     ),
-    "Appendix B — Sources": ("appendix-b", "Appendix — Sources", "B"),
     "Appendix C — Method & Disclaimer": (
         "appendix-c",
         "Appendix — Method & disclaimer",

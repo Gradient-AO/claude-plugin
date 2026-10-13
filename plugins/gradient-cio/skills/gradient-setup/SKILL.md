@@ -148,7 +148,7 @@ Sections (soft target 4–5 pages; hard ceiling 7):
 5. **Try next** — `questions` block with 3 prompts tailored to what is ready, e.g. "Run an ODD report on
    <first roster fund>", "Give me this week's manager monitoring digest", "Build the macro briefing deck for
    Thursday's committee".
-6. **Appendix A — Sources** — tool, as-of, validation status, payload digest for each call.
+6. **Appendix A — Sources and methods** (`num: "A"`) — tool, as-of, validation status, payload digest for each call.
 
 Then follow "Check and deliver" in `references/report-style.md`. Apply the
 canonical QA command's specific repair levers and rerun it until clean.

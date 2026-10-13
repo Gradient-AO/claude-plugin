@@ -50,6 +50,7 @@ TYPED_VISUAL_UNAVAILABLE_PATTERN = re.compile(
 CONSTRUCTION_VISUALS = frozenset(
     {"chart", "line", "bars", "percentiles", "waterfall", "band", "stacked", "heat"}
 )
+SOURCES_APPENDIX_TITLE = "Appendix — Sources and methods"
 
 
 @dataclass(frozen=True)
@@ -77,7 +78,7 @@ def _spec(
     return ReportSpec(
         name=name,
         section_rules=_rules(*titles),
-        appendix_pattern=r"Appendix A — Sources",
+        appendix_pattern=re.escape(SOURCES_APPENDIX_TITLE),
         signal_levels=CONSTRUCTION_VOCAB.signal_levels,
         completeness_states=CONSTRUCTION_VOCAB.completeness_states,
         slot_rules=slots,
@@ -122,7 +123,7 @@ CONTRACTS = {
                 "Proposed Program and Implementation",
                 "Risks, Open Items and Approvals",
                 "Coverage",
-                "Appendix A — Sources",
+                SOURCES_APPENDIX_TITLE,
                 "Appendix B — Server Metric Methods and Disclosures",
             ),
             tiles=(
@@ -185,7 +186,7 @@ CONTRACTS = {
                 "Implementation Plan",
                 "Risks, Open Items and Approvals",
                 "Coverage",
-                "Appendix A — Sources",
+                SOURCES_APPENDIX_TITLE,
                 "Appendix B — Server Metric Methods and Disclosures",
             ),
             tiles=(
@@ -254,7 +255,7 @@ CONTRACTS = {
                 "Implementation Plan",
                 "Risks, Open Items and Approvals",
                 "Coverage",
-                "Appendix A — Sources",
+                SOURCES_APPENDIX_TITLE,
                 "Appendix B — Server Metric Methods and Disclosures",
             ),
             tiles=(
@@ -320,7 +321,7 @@ CONTRACTS = {
                 "Implementation Plan",
                 "Risks, Open Items and Approvals",
                 "Coverage",
-                "Appendix A — Sources",
+                SOURCES_APPENDIX_TITLE,
                 "Appendix B — Server Metric Methods and Disclosures",
             ),
             tiles=(
@@ -390,7 +391,7 @@ CONTRACTS = {
                 "Implementation Plan",
                 "Risks, Open Items and Approvals",
                 "Coverage",
-                "Appendix A — Sources",
+                SOURCES_APPENDIX_TITLE,
                 "Appendix B — Server Metric Methods and Disclosures",
             ),
             tiles=(

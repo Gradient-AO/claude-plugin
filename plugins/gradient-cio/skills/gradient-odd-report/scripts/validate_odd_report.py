@@ -26,6 +26,7 @@ from report_json_validator import (  # noqa: E402
 from report_vocab import DILIGENCE_VOCAB  # noqa: E402
 
 
+SOURCES_APPENDIX_TITLE = "Appendix — Sources and methods"
 FULL_SPEC = ReportSpec(
     name="ODD report",
     section_rules=tuple(
@@ -39,10 +40,10 @@ FULL_SPEC = ReportSpec(
             "Reported equity holdings (Form 13F)",
             "Monitoring, findings & DDQ",
             "Follow-up questions & open items",
-            "Appendix — sources & method",
+            SOURCES_APPENDIX_TITLE,
         )
     ),
-    appendix_pattern=r"Appendix — sources & method",
+    appendix_pattern=SOURCES_APPENDIX_TITLE,
     signal_levels=DILIGENCE_VOCAB.signal_levels,
     completeness_states=DILIGENCE_VOCAB.completeness_states,
     allowed_tones=DILIGENCE_VOCAB.allowed_tones,
@@ -95,7 +96,7 @@ FULL_SPEC = ReportSpec(
             "existing follow-ups",
         ),
         SlotRule(
-            r"Appendix — sources & method", frozenset({"table"}), "sources table"
+            SOURCES_APPENDIX_TITLE, frozenset({"table"}), "sources table"
         ),
     ),
     forbidden_body_patterns=(
@@ -137,10 +138,10 @@ ROSTER_SPEC = ReportSpec(
         for title in (
             "Executive summary",
             "Roster detail",
-            "Appendix — sources & method",
+            SOURCES_APPENDIX_TITLE,
         )
     ),
-    appendix_pattern=r"Appendix — sources & method",
+    appendix_pattern=SOURCES_APPENDIX_TITLE,
     signal_levels=DILIGENCE_VOCAB.signal_levels,
     completeness_states=DILIGENCE_VOCAB.completeness_states,
     allowed_tones=DILIGENCE_VOCAB.allowed_tones,
@@ -149,7 +150,7 @@ ROSTER_SPEC = ReportSpec(
         SlotRule(r"Executive summary", frozenset({"table"}), "flagged-funds table"),
         SlotRule(r"Roster detail", frozenset({"table"}), "roster table"),
         SlotRule(
-            r"Appendix — sources & method", frozenset({"table"}), "sources table"
+            SOURCES_APPENDIX_TITLE, frozenset({"table"}), "sources table"
         ),
     ),
     forbidden_body_patterns=(

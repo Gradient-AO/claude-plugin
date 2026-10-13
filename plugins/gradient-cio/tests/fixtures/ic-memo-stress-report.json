@@ -102,6 +102,12 @@
         {
           "type": "text",
           "text": "The fictional pacing series is intentionally long. The body must remain concise while complete returned rows and the source truncation disclosure remain available in the Chart data appendix [S1]."
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Layout stress boundary",
+          "text": "The compact chart, complete-row appendix, and explicit truncation disclosure must remain readable without creating a sparse body page [S1]."
         }
       ]
     },
@@ -138,7 +144,7 @@
     },
     {
       "num": "A",
-      "title": "Appendix A — Sources",
+      "title": "Appendix — Sources and methods",
       "blocks": [
         {
           "type": "table",

@@ -4,48 +4,167 @@
   "forced_breaks": [],
   "pdf": {
     "target_pages": {
-      "min": 4,
-      "max": 9
+      "min": 6,
+      "max": 8
     },
-    "hard_max_pages": 12,
+    "hard_max_pages": 10,
     "minimum_body_fill": 0.4,
     "orphan_tail_max_fill": 0.2
   },
   "content": {
-    "defaults": {
-      "max_pages": 2,
-      "max_words": 500,
-      "max_visuals": 4,
-      "max_body_table_rows": 24
+    "defaults": {},
+    "sections": {}
+  },
+  "selector": {
+    "path": "meta.mode",
+    "default": "single"
+  },
+  "modes": {
+    "single": {
+      "pdf": {
+        "target_pages": {
+          "min": 6,
+          "max": 8
+        },
+        "hard_max_pages": 10,
+        "minimum_body_fill": 0.4,
+        "orphan_tail_max_fill": 0.2
+      },
+      "content": {
+        "defaults": {
+          "max_pages": 2,
+          "max_words": 550,
+          "max_visuals": 5,
+          "max_body_table_rows": 24
+        },
+        "sections": {
+          "1": {
+            "role": "summary",
+            "requires_analysis": false
+          },
+          "2": {
+            "role": "analytical",
+            "requires_analysis": false
+          },
+          "3": {
+            "role": "reference",
+            "requires_analysis": false
+          },
+          "4": {
+            "role": "analytical",
+            "requires_analysis": true
+          },
+          "5": {
+            "role": "analytical",
+            "requires_analysis": true
+          },
+          "6": {
+            "role": "analytical",
+            "requires_analysis": true
+          },
+          "A": {
+            "role": "appendix",
+            "requires_analysis": false
+          }
+        }
+      }
     },
-    "sections": {
-      "1": {
-        "role": "summary",
-        "requires_analysis": false
+    "compare": {
+      "pdf": {
+        "target_pages": {
+          "min": 4,
+          "max": 9
+        },
+        "hard_max_pages": 12,
+        "minimum_body_fill": 0.4,
+        "orphan_tail_max_fill": 0.2
       },
-      "2": {
-        "role": "reference",
-        "requires_analysis": false
+      "content": {
+        "defaults": {
+          "max_pages": 2,
+          "max_words": 500,
+          "max_visuals": 4,
+          "max_body_table_rows": 24
+        },
+        "sections": {
+          "1": {
+            "role": "summary",
+            "requires_analysis": false
+          },
+          "2": {
+            "role": "reference",
+            "requires_analysis": false
+          },
+          "3": {
+            "role": "analytical",
+            "requires_analysis": true
+          },
+          "4": {
+            "role": "analytical",
+            "requires_analysis": true
+          },
+          "5": {
+            "role": "analytical",
+            "requires_analysis": true
+          },
+          "6": {
+            "role": "closing",
+            "requires_analysis": false
+          },
+          "A": {
+            "role": "appendix",
+            "requires_analysis": false
+          }
+        }
+      }
+    },
+    "robustness": {
+      "pdf": {
+        "target_pages": {
+          "min": 4,
+          "max": 9
+        },
+        "hard_max_pages": 12,
+        "minimum_body_fill": 0.4,
+        "orphan_tail_max_fill": 0.2
       },
-      "3": {
-        "role": "analytical",
-        "requires_analysis": true
-      },
-      "4": {
-        "role": "analytical",
-        "requires_analysis": true
-      },
-      "5": {
-        "role": "analytical",
-        "requires_analysis": true
-      },
-      "6": {
-        "role": "closing",
-        "requires_analysis": false
-      },
-      "A": {
-        "role": "appendix",
-        "requires_analysis": false
+      "content": {
+        "defaults": {
+          "max_pages": 2,
+          "max_words": 500,
+          "max_visuals": 4,
+          "max_body_table_rows": 24
+        },
+        "sections": {
+          "1": {
+            "role": "summary",
+            "requires_analysis": false
+          },
+          "2": {
+            "role": "reference",
+            "requires_analysis": false
+          },
+          "3": {
+            "role": "analytical",
+            "requires_analysis": true
+          },
+          "4": {
+            "role": "analytical",
+            "requires_analysis": true
+          },
+          "5": {
+            "role": "analytical",
+            "requires_analysis": true
+          },
+          "6": {
+            "role": "closing",
+            "requires_analysis": false
+          },
+          "A": {
+            "role": "appendix",
+            "requires_analysis": false
+          }
+        }
       }
     }
   }

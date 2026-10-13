@@ -22,7 +22,7 @@ gross, net and benchmark return history is present [S1][S2].
 1. Provide the significant-event effective date and the approved disclosure text (4.C.19) [S1].
 2. Provide the complete fee schedule and approved disclosure text (4.C.11) [S2].
 
-## Appendix A — Findings Checklist
+## Appendix B — Findings Checklist
 
 | Area | Requirement | Provision | Status | Evidence | Finding / follow-up |
 |---|---|---|---|---|---|
@@ -32,7 +32,7 @@ gross, net and benchmark return history is present [S1][S2].
 | Fees | Fee disclosure | 4.C.11 | Partially met | Schedule [S2] | Performance fee unclear |
 | Events | Significant-event disclosure | 4.C.19 | Not met | Report [S1] | Event date absent |
 
-## Appendix B — Sources
+## Appendix A — Sources and methods
 
 | Tag | Source | Detail | As of | Validation |
 |---|---|---|---|---|

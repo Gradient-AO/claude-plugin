@@ -3,194 +3,1172 @@
     "mode": "single",
     "eyebrow": "Investment Due Diligence",
     "header_label": "Manager Performance",
-    "title": "Northstar Manager Single (TEST)",
-    "subtitle": "Governed return evidence",
-    "running_head": "Northstar comparison (TEST)",
+    "title": "Northstar Select Equity Composite (TEST)",
+    "subtitle": "Single-manager performance assessment · fictional TEST data",
+    "running_head": "Northstar Select Equity Composite (TEST)",
     "data_as_of": "2025-12-31",
+    "confidentiality": "TEST DATA — fictional manager and benchmarks for rendering tests only",
     "cover_facts": [
       [
         "Mode",
-        "Single"
+        "Single manager"
       ],
       [
-        "Scope",
-        "Fictional TEST managers"
+        "Observation window",
+        "2020-01-31 to 2025-12-31"
+      ],
+      [
+        "Observations",
+        "72 monthly"
+      ],
+      [
+        "Primary benchmark",
+        "Northstar Core Equity Benchmark (TEST)"
+      ],
+      [
+        "Benchmark status",
+        "Server matched"
+      ],
+      [
+        "Data scope",
+        "Fictional Gradient-governed TEST evidence"
       ]
     ],
+    "signal_title": "Performance verdict",
     "signal": {
-      "level": "insufficient",
-      "label": "Insufficient governed evidence"
+      "level": "watch",
+      "label": "Positive edge; moderate reliability"
     },
     "completeness": {
-      "used": 1,
-      "expected": 4,
-      "state": "partial"
+      "used": 5,
+      "expected": 5,
+      "state": "complete"
     },
+    "meter_title": "Evidence completeness",
     "handoff": {
       "schema_version": "gradient-idd-odd-ic-handoff/v1",
       "stage": "idd",
       "subject": {
-        "name": "Northstar managers (TEST)",
-        "identity_status": "advisory"
+        "manager_id": "manager-test-northstar-select",
+        "firm_id": "firm-test-northstar",
+        "fund_id": null,
+        "name": "Northstar Select Equity Composite (TEST)",
+        "identity_status": "canonical"
       },
-      "return_series": [],
+      "return_series": [
+        {
+          "return_series_id": "returns-test-northstar-select",
+          "benchmark_series_id": "benchmark-test-northstar-core-equity",
+          "benchmark_status": "server_matched",
+          "benchmark_rationale": "Server-matched fictional mandate benchmark.",
+          "start_date": "2020-01-31",
+          "end_date": "2025-12-31",
+          "observation_count": 72
+        }
+      ],
       "evidence": [
         {
           "source_tag": "S1",
-          "tool": "get_gradient_capabilities",
+          "tool": "analyze_strategy_lab_compare",
           "as_of": "2025-12-31",
-          "methodology_version": "connector/v1"
+          "methodology_version": "strategy-lab-compare/v2",
+          "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "status": "ok"
+        },
+        {
+          "source_tag": "S2",
+          "tool": "run_strategy_lab_relative_return",
+          "as_of": "2025-12-31",
+          "methodology_version": "strategy-lab-relative/v2",
+          "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "status": "ok"
+        },
+        {
+          "source_tag": "S3",
+          "tool": "run_strategy_lab_date_window_robustness",
+          "as_of": "2025-12-31",
+          "methodology_version": "strategy-lab-window/v2",
+          "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "status": "ok"
+        },
+        {
+          "source_tag": "S4",
+          "tool": "run_strategy_lab_expected_statistics",
+          "as_of": "2025-12-31",
+          "methodology_version": "strategy-lab-expected-statistics/v2",
+          "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "status": "ok"
+        },
+        {
+          "source_tag": "S5",
+          "tool": "analyze_strategy_lab_compare",
+          "as_of": "2025-12-31",
+          "methodology_version": "strategy-lab-compare/v2",
+          "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "status": "ok"
         }
       ],
       "limitations": [
-        "Governed analytical evidence is unavailable in this test fixture."
+        "The observed history contains 72 monthly observations [S1].",
+        "The primary benchmark is server matched, while the alternative benchmark is advisory [S1][S5].",
+        "Capture statistics are conditional on the returned up- and down-month classifications [S2].",
+        "The 10-year expected-statistics outputs are simulated model evidence, not realized performance [S4]."
       ],
       "selection": {
         "status": "not_assessed",
-        "rationale": "Insufficient governed evidence."
+        "rationale": "Performance evidence supports continued diligence but does not determine a hire or allocation decision."
       }
     },
     "data_basis": "gradient_governed"
   },
   "executive": {
-    "bottom_line": "The comparison remains insufficient because required governed results are unavailable [S1].",
+    "bottom_line": "The manager produced a positive full-window edge, but a 0.32 information ratio and 72 monthly observations support only a moderate-reliability conclusion [S1][S2][S3].",
     "tiles": [
       {
         "label": "Result",
-        "value": "Insufficient",
-        "sub": "Governed evidence gap [S1]"
+        "value": "6.5% annualized",
+        "sub": "2020-01-31 to 2025-12-31 [S1]",
+        "tone": "good"
       },
       {
         "label": "Benchmark",
-        "value": "Advisory",
-        "sub": "Match not confirmed [S1]"
+        "value": "+1.4pp excess",
+        "sub": "Server-matched primary benchmark [S2]",
+        "tone": "good"
       },
       {
         "label": "Coverage",
-        "value": "1 / 4",
-        "sub": "Required reads [S1]"
+        "value": "0.32 IR",
+        "sub": "72 monthly observations [S2]",
+        "tone": "watch"
       },
       {
         "label": "Reliability",
-        "value": "Not assessed",
-        "sub": "Window result unavailable [S1]"
+        "value": "-18.2% drawdown",
+        "sub": "Observed through 2025-12-31 [S1]",
+        "tone": "watch"
       }
     ]
   },
   "sections": [
     {
       "title": "Executive conclusion",
-      "kicker": "Evidence does not support a comparative conclusion",
+      "kicker": "Positive full-window edge with moderate risk-adjusted reliability",
       "blocks": [
         {
+          "type": "tiles",
+          "tiles": [
+            {
+              "label": "Annualized return",
+              "value": "6.5%",
+              "sub": "2020-01-31 to 2025-12-31 [S1]",
+              "tone": "good"
+            },
+            {
+              "label": "Excess vs benchmark",
+              "value": "+1.4pp",
+              "sub": "Annualized, same 72 months [S2]",
+              "tone": "good"
+            },
+            {
+              "label": "Information ratio",
+              "value": "0.32",
+              "sub": "2020-01-31 to 2025-12-31 [S2]",
+              "tone": "watch"
+            },
+            {
+              "label": "Max drawdown",
+              "value": "-18.2%",
+              "sub": "Observed through 2025-12-31 [S1]",
+              "tone": "watch"
+            }
+          ]
+        },
+        {
+          "type": "statement",
+          "title": "Verdict strip",
+          "text": "Positive observed edge; reliability remains moderate.",
+          "sub": "The manager outpaced the matched benchmark across every returned start-date window, but the 0.32 information ratio and 72-month sample do not establish persistence. A negative rolling 36-month excess path or downside capture above 100% would weaken the view [S2][S3]."
+        },
+        {
           "type": "callout",
           "role": "key_judgment",
-          "tone": "watch",
-          "title": "Key judgment — Coverage",
-          "text": "Observation: Coverage is incomplete [S1]. Why it matters: Comparison is constrained. Uncertainty: Missing reads may change results. What would change the view: Governed comparison evidence."
+          "tone": "good",
+          "title": "Key judgment — full-window outcome",
+          "text": "Observation: The manager returned 6.5% annualized versus 5.1% for the matched benchmark from 2020-01-31 through 2025-12-31 [S1]. Why it matters: The observed track record compounded to a higher ending value. Uncertainty: Only 72 monthly observations cover one severe market decline. What would change the view: A governed 84-month common-window refresh with annualized excess at or below 0.0 percentage points."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
-          "title": "Key judgment — Benchmarks",
-          "text": "Observation: Benchmark matching is advisory [S1]. Why it matters: Relative evidence is bounded. Uncertainty: Mandate fit is unconfirmed. What would change the view: Canonical matches."
+          "title": "Key judgment — relative efficiency",
+          "text": "Observation: Annualized excess return was 1.4 percentage points with a 0.32 information ratio [S2]. Why it matters: Positive relative return was achieved with only moderate efficiency. Uncertainty: The 72-observation tracking-error estimate may shift as history extends. What would change the view: A governed information ratio below zero or above 0.50 over at least 84 months."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
-          "title": "Key judgment — Reliability",
-          "text": "Observation: Robustness is unavailable [S1]. Why it matters: Persistence is unknown. Uncertainty: Window sensitivity is untested. What would change the view: Governed robustness results."
+          "title": "Key judgment — benchmark dependence",
+          "text": "Observation: Excess return narrows to 0.5 percentage points against the advisory alternative benchmark [S5]. Why it matters: The sign remains positive, but the strength of the relative conclusion depends on benchmark choice. Uncertainty: The alternative benchmark is not the canonical server match. What would change the view: Mandate confirmation that replaces the primary match or returns negative alternative-benchmark excess."
+        }
+      ]
+    },
+    {
+      "title": "Track record over time",
+      "kicker": "The ending wealth advantage survived the deepest observed drawdown",
+      "blocks": [
+        {
+          "type": "line",
+          "title": "Cumulative growth of 100 · 2019-12-31 to 2025-12-31 [S2]",
+          "decimals": 1,
+          "series": [
+            {
+              "name": "Northstar Select Equity Composite (TEST)",
+              "points": [
+                [
+                  "2019-12-31",
+                  100.0
+                ],
+                [
+                  "2020-12-31",
+                  108.0
+                ],
+                [
+                  "2021-12-31",
+                  121.0
+                ],
+                [
+                  "2022-12-31",
+                  104.0
+                ],
+                [
+                  "2023-12-31",
+                  119.6
+                ],
+                [
+                  "2024-12-31",
+                  132.8
+                ],
+                [
+                  "2025-12-31",
+                  146.1
+                ]
+              ]
+            },
+            {
+              "name": "Northstar Core Equity Benchmark (TEST)",
+              "points": [
+                [
+                  "2019-12-31",
+                  100.0
+                ],
+                [
+                  "2020-12-31",
+                  107.0
+                ],
+                [
+                  "2021-12-31",
+                  117.7
+                ],
+                [
+                  "2022-12-31",
+                  98.9
+                ],
+                [
+                  "2023-12-31",
+                  112.7
+                ],
+                [
+                  "2024-12-31",
+                  124.0
+                ],
+                [
+                  "2025-12-31",
+                  135.1
+                ]
+              ]
+            }
+          ],
+          "note": "Returned cumulative-growth observations; no local interpolation [S2].",
+          "evidence_metadata": {
+            "source_tag": "S2",
+            "view": "cumulative_growth_base100",
+            "payload_digest": "sha256:0101010101010101010101010101010101010101010101010101010101010101"
+          }
+        },
+        {
+          "type": "line",
+          "title": "Observed drawdown path · 2020-01-31 to 2025-12-31 [S2]",
+          "y_suffix": "%",
+          "decimals": 1,
+          "series": [
+            {
+              "name": "Manager drawdown",
+              "points": [
+                [
+                  "2020-01-31",
+                  0.0
+                ],
+                [
+                  "2020-03-31",
+                  -11.0
+                ],
+                [
+                  "2020-12-31",
+                  -2.0
+                ],
+                [
+                  "2021-12-31",
+                  0.0
+                ],
+                [
+                  "2022-03-31",
+                  -6.0
+                ],
+                [
+                  "2022-06-30",
+                  -18.2
+                ],
+                [
+                  "2022-12-31",
+                  -10.5
+                ],
+                [
+                  "2023-06-30",
+                  -4.0
+                ],
+                [
+                  "2023-12-31",
+                  0.0
+                ],
+                [
+                  "2024-12-31",
+                  0.0
+                ],
+                [
+                  "2025-12-31",
+                  -1.5
+                ]
+              ]
+            },
+            {
+              "name": "Benchmark drawdown",
+              "points": [
+                [
+                  "2020-01-31",
+                  0.0
+                ],
+                [
+                  "2020-03-31",
+                  -12.5
+                ],
+                [
+                  "2020-12-31",
+                  -2.8
+                ],
+                [
+                  "2021-12-31",
+                  0.0
+                ],
+                [
+                  "2022-03-31",
+                  -7.4
+                ],
+                [
+                  "2022-06-30",
+                  -20.1
+                ],
+                [
+                  "2022-12-31",
+                  -12.4
+                ],
+                [
+                  "2023-06-30",
+                  -5.1
+                ],
+                [
+                  "2023-12-31",
+                  0.0
+                ],
+                [
+                  "2024-12-31",
+                  -0.8
+                ],
+                [
+                  "2025-12-31",
+                  -2.2
+                ]
+              ]
+            }
+          ],
+          "note": "Returned peak-to-trough observations [S2].",
+          "evidence_metadata": {
+            "source_tag": "S2",
+            "view": "drawdown",
+            "payload_digest": "sha256:0202020202020202020202020202020202020202020202020202020202020202"
+          }
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Ending wealth advantage survived drawdown",
+          "text": "Observation: Growth ended at 146.1 versus 135.1, with drawdowns of -18.2% and -20.1% [S2]. Why it matters: The wealth advantage survived the deepest loss. Uncertainty: Returned annual display points omit monthly path detail. What would change the view: An ending value below 135.1 or manager drawdown below -20.1%."
         }
       ]
     },
     {
       "title": "Data and benchmark coverage",
-      "kicker": "Benchmark identity remains advisory for the test candidates",
+      "kicker": "Complete monthly coverage with a server-matched primary benchmark",
       "blocks": [
         {
           "type": "coverage",
+          "title": "Evidence coverage",
           "items": [
             {
-              "name": "Benchmark mapping",
-              "status": "unavailable",
-              "note": "Canonical match unavailable [S1]"
+              "name": "Manager return series",
+              "status": "complete",
+              "note": "72 of 72 monthly observations, 2020-01-31 to 2025-12-31 [S1]"
+            },
+            {
+              "name": "Primary benchmark",
+              "status": "complete",
+              "note": "Northstar Core Equity Benchmark (TEST), server matched [S1]"
+            },
+            {
+              "name": "Relative and capture views",
+              "status": "complete",
+              "note": "Common 72-month window [S2]"
+            },
+            {
+              "name": "Date-window robustness",
+              "status": "complete",
+              "note": "Four returned start dates [S3]"
+            },
+            {
+              "name": "Alternative benchmark",
+              "status": "partial",
+              "note": "Governed comparison returned; mapping remains advisory [S5]"
             }
           ]
+        },
+        {
+          "type": "kv",
+          "title": "Series and benchmark identity",
+          "rows": [
+            [
+              "Manager series",
+              "returns-test-northstar-select",
+              "S1"
+            ],
+            [
+              "Primary benchmark series",
+              "benchmark-test-northstar-core-equity",
+              "S1"
+            ],
+            [
+              "Frequency / observations",
+              "Monthly / 72",
+              "S1"
+            ],
+            [
+              "Return basis",
+              "Total return, net of reported manager fees",
+              "S1"
+            ],
+            [
+              "Currency",
+              "USD",
+              "S1"
+            ],
+            [
+              "Alternative benchmark",
+              "Northstar Broad Equity Benchmark (TEST), advisory",
+              "S5"
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Coverage boundary",
+          "text": "The report uses the common returned window and preserves the server-matched primary benchmark. The advisory alternative benchmark is isolated in its own sensitivity section and does not replace the primary result [S1][S5]."
         }
       ]
     },
     {
       "title": "Absolute risk and return",
-      "kicker": "Risk and return comparison is unavailable",
+      "kicker": "Positive compounding came with double-digit volatility and an 18.2% drawdown",
       "blocks": [
         {
-          "type": "callout",
-          "tone": "watch",
-          "role": "availability",
-          "title": "Not available",
-          "text": "Not available — governed comparison result missing [S1]."
+          "type": "bars",
+          "title": "Calendar-year returns · grouped manager and benchmark bars [S2]",
+          "suffix": "%",
+          "items": [
+            {
+              "label": "2020 Manager",
+              "value": 8.0,
+              "display": "8.0%"
+            },
+            {
+              "label": "2020 Benchmark",
+              "value": 7.0,
+              "display": "7.0%"
+            },
+            {
+              "label": "2021 Manager",
+              "value": 12.0,
+              "display": "12.0%"
+            },
+            {
+              "label": "2021 Benchmark",
+              "value": 10.0,
+              "display": "10.0%"
+            },
+            {
+              "label": "2022 Manager",
+              "value": -14.0,
+              "display": "-14.0%"
+            },
+            {
+              "label": "2022 Benchmark",
+              "value": -16.0,
+              "display": "-16.0%"
+            },
+            {
+              "label": "2023 Manager",
+              "value": 15.0,
+              "display": "15.0%"
+            },
+            {
+              "label": "2023 Benchmark",
+              "value": 14.0,
+              "display": "14.0%"
+            },
+            {
+              "label": "2024 Manager",
+              "value": 11.0,
+              "display": "11.0%"
+            },
+            {
+              "label": "2024 Benchmark",
+              "value": 10.0,
+              "display": "10.0%"
+            },
+            {
+              "label": "2025 Manager",
+              "value": 10.0,
+              "display": "10.0%"
+            },
+            {
+              "label": "2025 Benchmark",
+              "value": 9.0,
+              "display": "9.0%"
+            }
+          ],
+          "note": "Adjacent bars form each calendar-year manager/benchmark group [S2].",
+          "evidence_metadata": {
+            "source_tag": "S2",
+            "view": "calendar_years",
+            "payload_digest": "sha256:0808080808080808080808080808080808080808080808080808080808080808"
+          }
+        },
+        {
+          "type": "table",
+          "title": "Calendar-year return detail [S2]",
+          "columns": [
+            "Year",
+            "Manager",
+            "Benchmark",
+            "Excess",
+            "Source"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "r",
+            "l"
+          ],
+          "rows": [
+            [
+              "2020",
+              "8.0%",
+              "7.0%",
+              "+1.0pp",
+              "S2"
+            ],
+            [
+              "2021",
+              "12.0%",
+              "10.0%",
+              "+2.0pp",
+              "S2"
+            ],
+            [
+              "2022",
+              "-14.0%",
+              "-16.0%",
+              "+2.0pp",
+              "S2"
+            ],
+            [
+              "2023",
+              "15.0%",
+              "14.0%",
+              "+1.0pp",
+              "S2"
+            ],
+            [
+              "2024",
+              "11.0%",
+              "10.0%",
+              "+1.0pp",
+              "S2"
+            ],
+            [
+              "2025",
+              "10.0%",
+              "9.0%",
+              "+1.0pp",
+              "S2"
+            ]
+          ]
+        },
+        {
+          "type": "bars",
+          "title": "Realized monthly return distribution [S2]",
+          "suffix": " months",
+          "items": [
+            {
+              "label": "Below -5%",
+              "value": 5,
+              "display": "5 months"
+            },
+            {
+              "label": "-5% to 0%",
+              "value": 20,
+              "display": "20 months"
+            },
+            {
+              "label": "0% to 5%",
+              "value": 34,
+              "display": "34 months"
+            },
+            {
+              "label": "Above 5%",
+              "value": 13,
+              "display": "13 months"
+            }
+          ],
+          "note": "Returned distribution of the 72 realized monthly manager returns [S2].",
+          "evidence_metadata": {
+            "source_tag": "S2",
+            "view": "distribution",
+            "payload_digest": "sha256:0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+          }
+        },
+        {
+          "type": "table",
+          "title": "Model outputs (simulated)",
+          "columns": [
+            "10-year output",
+            "Returned value",
+            "Source"
+          ],
+          "rows": [
+            [
+              "Expected annualized return",
+              "6.8%",
+              "S4"
+            ],
+            [
+              "Expected annualized volatility",
+              "12.1%",
+              "S4"
+            ],
+            [
+              "10-year terminal wealth median",
+              "193.4",
+              "S4"
+            ]
+          ],
+          "note": "Server-returned 10-year simulated outputs from the outer response; not realized series-view evidence [S4]."
+        },
+        {
+          "type": "table",
+          "title": "Risk and return by common window [S1]",
+          "columns": [
+            "Window",
+            "Series",
+            "Ann. return",
+            "Ann. volatility",
+            "Sharpe",
+            "Max drawdown",
+            "Source"
+          ],
+          "align": [
+            "l",
+            "l",
+            "r",
+            "r",
+            "r",
+            "r",
+            "l"
+          ],
+          "rows": [
+            [
+              "2020-01-31 to 2025-12-31",
+              "Manager",
+              "6.5%",
+              "12.4%",
+              "0.45",
+              "-18.2%",
+              "S1"
+            ],
+            [
+              "2020-01-31 to 2025-12-31",
+              "Benchmark",
+              "5.1%",
+              "11.8%",
+              "0.36",
+              "-20.1%",
+              "S1"
+            ],
+            [
+              "2021-01-31 to 2025-12-31",
+              "Manager",
+              "6.2%",
+              "12.8%",
+              "0.41",
+              "-18.2%",
+              "S1"
+            ],
+            [
+              "2021-01-31 to 2025-12-31",
+              "Benchmark",
+              "4.8%",
+              "12.1%",
+              "0.32",
+              "-20.1%",
+              "S1"
+            ],
+            [
+              "2023-01-31 to 2025-12-31",
+              "Manager",
+              "12.0%",
+              "10.9%",
+              "0.92",
+              "-7.1%",
+              "S1"
+            ],
+            [
+              "2023-01-31 to 2025-12-31",
+              "Benchmark",
+              "11.0%",
+              "10.5%",
+              "0.86",
+              "-8.0%",
+              "S1"
+            ]
+          ]
         },
         {
           "type": "callout",
           "role": "analysis",
-          "tone": "info",
-          "title": "Analysis — Comparison unavailable",
-          "text": "Observation: Comparative metrics are unavailable [S1]. Why it matters: No ranking is supportable. Uncertainty: Missing evidence may differ by manager. What would change the view: A governed comparison result."
+          "tone": "watch",
+          "title": "Analysis — Return retained absolute risk",
+          "text": "Observation: The manager returned 6.5% with 12.4% volatility and -18.2% drawdown [S1]. Why it matters: Positive compounding required material loss tolerance. Uncertainty: Seventy-two months include one major drawdown. What would change the view: An 84-month governed update below 5.1% return or below -20.1% drawdown."
         }
       ]
     },
     {
       "title": "Relative performance",
-      "kicker": "Relative and capture evidence is unavailable",
+      "kicker": "Capture was favorable, while the information ratio remained moderate",
       "blocks": [
         {
-          "type": "callout",
-          "tone": "watch",
-          "role": "availability",
-          "title": "Not available",
-          "text": "Not available — relative-return result missing [S1]."
+          "type": "bars",
+          "title": "Upside and downside capture · 2020-01-31 to 2025-12-31 [S2]",
+          "suffix": "%",
+          "items": [
+            {
+              "label": "Upside capture",
+              "value": 105.0,
+              "display": "105%"
+            },
+            {
+              "label": "Downside capture",
+              "value": 92.0,
+              "display": "92%"
+            }
+          ],
+          "note": "Benchmark up/down month classifications returned by the relative-performance view [S2].",
+          "evidence_metadata": {
+            "source_tag": "S2",
+            "view": "capture",
+            "payload_digest": "sha256:0909090909090909090909090909090909090909090909090909090909090909"
+          }
+        },
+        {
+          "type": "line",
+          "title": "Rolling 36-month annualized excess return · relative view [S2]",
+          "y_suffix": "%",
+          "decimals": 1,
+          "ref": {
+            "value": 0.0,
+            "label": "0% excess"
+          },
+          "series": [
+            {
+              "name": "36-month excess return",
+              "points": [
+                [
+                  "2022-12-31",
+                  1.0
+                ],
+                [
+                  "2023-06-30",
+                  1.2
+                ],
+                [
+                  "2023-12-31",
+                  1.3
+                ],
+                [
+                  "2024-06-30",
+                  1.0
+                ],
+                [
+                  "2024-12-31",
+                  0.8
+                ],
+                [
+                  "2025-06-30",
+                  1.1
+                ],
+                [
+                  "2025-12-31",
+                  1.4
+                ]
+              ]
+            }
+          ],
+          "note": "Repeated here to pair path evidence with the realized relative table [S2].",
+          "evidence_metadata": {
+            "source_tag": "S2",
+            "view": "rolling_excess_36",
+            "payload_digest": "sha256:0505050505050505050505050505050505050505050505050505050505050505"
+          }
+        },
+        {
+          "type": "table",
+          "title": "Realized relative performance [S2]",
+          "columns": [
+            "Window",
+            "Manager",
+            "Benchmark",
+            "Excess",
+            "Tracking error",
+            "Information ratio",
+            "Source"
+          ],
+          "align": [
+            "l",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "l"
+          ],
+          "rows": [
+            [
+              "6 years",
+              "6.5%",
+              "5.1%",
+              "+1.4pp",
+              "4.3%",
+              "0.32",
+              "S2"
+            ],
+            [
+              "5 years",
+              "6.2%",
+              "4.8%",
+              "+1.4pp",
+              "4.5%",
+              "0.31",
+              "S2"
+            ],
+            [
+              "3 years",
+              "12.0%",
+              "11.0%",
+              "+1.0pp",
+              "3.8%",
+              "0.26",
+              "S2"
+            ]
+          ]
         },
         {
           "type": "callout",
           "role": "analysis",
-          "tone": "info",
-          "title": "Analysis — Relative evidence missing",
-          "text": "Observation: Relative evidence is unavailable [S1]. Why it matters: Benchmark-relative behavior is unknown. Uncertainty: Capture may vary by window. What would change the view: A governed relative-return result."
+          "tone": "watch",
+          "title": "Analysis — Positive edge, moderate efficiency",
+          "text": "Observation: Excess return was 1.4 points, information ratio 0.32, and capture 105% upside / 92% downside [S2]. Why it matters: Participation was favorable but only moderately efficient. Uncertainty: Only 72 monthly observations are available for both estimates. What would change the view: Downside capture above 100% or information ratio below zero."
         }
       ]
     },
     {
       "title": "Reliability and date-window sensitivity",
-      "kicker": "Persistence and correlation evidence is unavailable",
+      "kicker": "All returned start dates preserved positive excess, but outcomes varied materially",
       "blocks": [
         {
-          "type": "callout",
-          "tone": "watch",
-          "role": "availability",
-          "title": "Not available",
-          "text": "Not available — governed robustness and correlation results missing [S1]."
+          "type": "line",
+          "title": "Rolling Sharpe reliability check [S2]",
+          "decimals": 2,
+          "ref": {
+            "value": 0.0,
+            "label": "Zero"
+          },
+          "series": [
+            {
+              "name": "12-month Sharpe",
+              "points": [
+                [
+                  "2022-12-31",
+                  -0.95
+                ],
+                [
+                  "2023-06-30",
+                  0.4
+                ],
+                [
+                  "2023-12-31",
+                  1.1
+                ],
+                [
+                  "2024-06-30",
+                  0.92
+                ],
+                [
+                  "2024-12-31",
+                  0.78
+                ],
+                [
+                  "2025-06-30",
+                  0.89
+                ],
+                [
+                  "2025-12-31",
+                  0.84
+                ]
+              ]
+            },
+            {
+              "name": "36-month Sharpe",
+              "points": [
+                [
+                  "2022-12-31",
+                  0.24
+                ],
+                [
+                  "2023-06-30",
+                  0.31
+                ],
+                [
+                  "2023-12-31",
+                  0.38
+                ],
+                [
+                  "2024-06-30",
+                  0.45
+                ],
+                [
+                  "2024-12-31",
+                  0.5
+                ],
+                [
+                  "2025-06-30",
+                  0.53
+                ],
+                [
+                  "2025-12-31",
+                  0.55
+                ]
+              ]
+            }
+          ],
+          "note": "The shorter window crossed below zero in 2022; the 36-month measure remained positive [S2].",
+          "evidence_metadata": {
+            "source_tag": "S2",
+            "lineage": [
+              {
+                "view": "rolling_sharpe_12",
+                "payload_digest": "sha256:0606060606060606060606060606060606060606060606060606060606060606"
+              },
+              {
+                "view": "rolling_sharpe_36",
+                "payload_digest": "sha256:0707070707070707070707070707070707070707070707070707070707070707"
+              }
+            ]
+          }
+        },
+        {
+          "type": "table",
+          "title": "Date-window sensitivity detail [S3]",
+          "columns": [
+            "Start",
+            "End",
+            "Months",
+            "Manager ann. return",
+            "Benchmark ann. return",
+            "Excess",
+            "Source"
+          ],
+          "align": [
+            "l",
+            "l",
+            "r",
+            "r",
+            "r",
+            "r",
+            "l"
+          ],
+          "rows": [
+            [
+              "2020-01-31",
+              "2025-12-31",
+              "72",
+              "6.5%",
+              "5.1%",
+              "+1.4pp",
+              "S3"
+            ],
+            [
+              "2021-01-31",
+              "2025-12-31",
+              "60",
+              "6.2%",
+              "4.8%",
+              "+1.4pp",
+              "S3"
+            ],
+            [
+              "2022-01-31",
+              "2025-12-31",
+              "48",
+              "4.8%",
+              "3.5%",
+              "+1.3pp",
+              "S3"
+            ],
+            [
+              "2023-01-31",
+              "2025-12-31",
+              "36",
+              "12.0%",
+              "11.0%",
+              "+1.0pp",
+              "S3"
+            ]
+          ]
         },
         {
           "type": "callout",
           "role": "analysis",
-          "tone": "info",
-          "title": "Analysis — Robustness unavailable",
-          "text": "Observation: Robustness evidence is unavailable [S1]. Why it matters: Persistence cannot be assessed. Uncertainty: Results may depend on dates. What would change the view: Governed window tests."
+          "tone": "watch",
+          "title": "Analysis — Stable sign, sensitive magnitude",
+          "text": "Observation: Four windows had positive excess, while manager returns ranged from 4.8% to 12.0% [S3]. Why it matters: Relative sign was stable but absolute outcome varied. Uncertainty: The shortest window has 36 post-decline observations. What would change the view: A negative returned window or 36-month Sharpe below zero."
         }
       ]
     },
     {
-      "title": "Follow-ups",
-      "kicker": "One governed evidence request remains",
+      "title": "Benchmark sensitivity",
+      "kicker": "The alternative benchmark preserves the sign but weakens the relative case",
       "blocks": [
         {
+          "type": "table",
+          "title": "Second-benchmark comparison [S5]",
+          "columns": [
+            "Benchmark",
+            "Status",
+            "Ann. benchmark return",
+            "Manager excess",
+            "Information ratio",
+            "Source"
+          ],
+          "align": [
+            "l",
+            "l",
+            "r",
+            "r",
+            "r",
+            "l"
+          ],
+          "rows": [
+            [
+              "Northstar Core Equity Benchmark (TEST)",
+              "Server matched",
+              "5.1%",
+              "+1.4pp",
+              "0.32",
+              "S1 / S2"
+            ],
+            [
+              "Northstar Broad Equity Benchmark (TEST)",
+              "Advisory",
+              "6.0%",
+              "+0.5pp",
+              "0.11",
+              "S5"
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "watch",
+          "title": "Analysis — Benchmark choice changes strength, not sign",
+          "text": "Observation: Excess return narrows from 1.4 percentage points to 0.5 percentage points and information ratio falls from 0.32 to 0.11 against the advisory alternative [S2][S5]. Why it matters: The relative case is less persuasive under a broader comparator. Uncertainty: The alternative benchmark is advisory rather than server matched. What would change the view: A canonical alternative benchmark with annualized excess at or below 0.0 percentage points."
+        }
+      ]
+    },
+    {
+      "title": "Limitations and follow-ups",
+      "kicker": "Four bounded gaps define the next diligence cycle",
+      "blocks": [
+        {
+          "type": "bullets",
+          "role": "limitations",
+          "title": "Limitations",
+          "items": [
+            "The realized sample contains 72 monthly observations and one major drawdown episode, limiting inference about persistence [S1].",
+            "The primary benchmark is server matched, but mandate documentation was not included in the governed response [S1].",
+            "Capture ratios depend on returned up- and down-month classifications and may change as the sample extends [S2].",
+            "The 10-year expected-statistics outputs are model evidence and cannot be treated as realized manager performance [S4]."
+          ]
+        },
+        {
           "type": "questions",
+          "title": "Follow-up questions",
           "items": [
             {
-              "q": "Return canonical benchmark and comparison evidence.",
-              "why": "Required to assess manager-relative performance [S1]."
+              "q": "Can the manager provide mandate documentation confirming that the server-matched primary benchmark reflects the strategy actually managed during the full window?",
+              "why": "Benchmark fit determines whether the 1.4-point annualized excess return is decision-useful [S1]."
+            },
+            {
+              "q": "What process or portfolio changes explain the -18.2% drawdown and subsequent recovery?",
+              "why": "The largest observed loss is the central absolute-risk event in the returned history [S1]."
+            },
+            {
+              "q": "Can the manager reconcile gross, net, and composite return definitions for all 72 observations?",
+              "why": "Return-basis consistency is required before extending the performance conclusion to an investment vehicle [S1]."
+            },
+            {
+              "q": "Would a governed refresh with at least 84 months preserve positive 36-month excess return and downside capture below 100%?",
+              "why": "Those thresholds would directly test persistence and defensive participation [S2][S3]."
             }
           ]
         }
@@ -199,10 +1177,72 @@
     {
       "num": "A",
       "title": "Appendix — Sources and methods",
-      "kicker": "Saved fictional test evidence",
+      "kicker": "Saved fictional TEST responses and reproducibility lineage",
       "blocks": [
         {
           "type": "table",
+          "title": "Series view lineage",
+          "columns": [
+            "Source tag",
+            "View",
+            "Payload digest"
+          ],
+          "rows": [
+            [
+              "S2",
+              "cumulative_growth_base100",
+              "sha256:0101010101010101010101010101010101010101010101010101010101010101"
+            ],
+            [
+              "S2",
+              "drawdown",
+              "sha256:0202020202020202020202020202020202020202020202020202020202020202"
+            ],
+            [
+              "S2",
+              "rolling_return_12",
+              "sha256:0303030303030303030303030303030303030303030303030303030303030303"
+            ],
+            [
+              "S2",
+              "rolling_return_36",
+              "sha256:0404040404040404040404040404040404040404040404040404040404040404"
+            ],
+            [
+              "S2",
+              "rolling_excess_36",
+              "sha256:0505050505050505050505050505050505050505050505050505050505050505"
+            ],
+            [
+              "S2",
+              "rolling_sharpe_12",
+              "sha256:0606060606060606060606060606060606060606060606060606060606060606"
+            ],
+            [
+              "S2",
+              "rolling_sharpe_36",
+              "sha256:0707070707070707070707070707070707070707070707070707070707070707"
+            ],
+            [
+              "S2",
+              "calendar_years",
+              "sha256:0808080808080808080808080808080808080808080808080808080808080808"
+            ],
+            [
+              "S2",
+              "capture",
+              "sha256:0909090909090909090909090909090909090909090909090909090909090909"
+            ],
+            [
+              "S2",
+              "distribution",
+              "sha256:0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+            ]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Sources",
           "columns": [
             "Tag",
             "Evidence",
@@ -217,34 +1257,60 @@
           "rows": [
             [
               "S1",
-              "Typed unavailable test response",
+              "Observed manager and primary-benchmark summary metrics",
               "gradient_tool",
-              "get_gradient_capabilities",
-              "fixture=true",
+              "analyze_strategy_lab_compare",
+              "manager=returns-test-northstar-select; benchmark=benchmark-test-northstar-core-equity; start=2020-01-31; end=2025-12-31",
               "2025-12-31",
-              "Gradient-governed TEST evidence",
-              "passed",
+              "72 monthly observations; USD total return; fictional TEST data",
+              "passed; request_id=req-test-s1",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            [
+              "S2",
+              "Realized paths, rolling statistics, relative metrics, capture, and distribution",
+              "gradient_tool",
+              "run_strategy_lab_relative_return",
+              "manager=returns-test-northstar-select; benchmark=benchmark-test-northstar-core-equity; rolling_months=12,36",
+              "2025-12-31",
+              "Common 72-month manager/benchmark window; fictional TEST data",
+              "passed; request_id=req-test-s2",
+              "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            ],
+            [
+              "S3",
+              "Date-window robustness",
+              "gradient_tool",
+              "run_strategy_lab_date_window_robustness",
+              "starts=2020-01-31,2021-01-31,2022-01-31,2023-01-31; end=2025-12-31",
+              "2025-12-31",
+              "Four returned start-date windows; fictional TEST data",
+              "passed; request_id=req-test-s3",
+              "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            ],
+            [
+              "S4",
+              "10-year simulated expected-statistics outputs",
+              "gradient_tool",
+              "run_strategy_lab_expected_statistics",
+              "horizon=10y; outputs=annualized_return,annualized_volatility,terminal_wealth_median",
+              "2025-12-31",
+              "Server-returned model outputs; fictional TEST data",
+              "passed; request_id=req-test-s4",
+              "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+            ],
+            [
+              "S5",
+              "Alternative-benchmark sensitivity",
+              "gradient_tool",
+              "analyze_strategy_lab_compare",
+              "manager=returns-test-northstar-select; benchmark=benchmark-test-northstar-broad-equity; status=advisory",
+              "2025-12-31",
+              "Same 72-month window; fictional TEST data",
+              "passed; request_id=req-test-s5",
+              "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
             ]
           ]
-        },
-        {
-          "type": "callout",
-          "tone": "info",
-          "title": "Governed evidence boundary",
-          "text": "The report preserves the returned subject identity, benchmark mapping, observation window, units, methods, coverage status and request provenance [S1]. Missing performance, correlation, capture, simulation or regime fields remain unavailable. No local statistics, substitutions, rankings or neutral defaults are introduced."
-        },
-        {
-          "type": "callout",
-          "tone": "info",
-          "title": "Decision-use boundary",
-          "text": "Typed unavailability limits the conclusion and drives the insufficient signal where most required slots are absent [S1]. The evidence supports follow-up collection only; operational diligence and committee decisions remain separate handoffs with their own governed evidence and validation contracts. Every unresolved field remains reader-visible in the delivered report."
-        },
-        {
-          "type": "callout",
-          "tone": "info",
-          "title": "Metric and digest interpretation",
-          "text": "Historical claims must use returned realized metrics with their exact periods, while path-distribution statistics must remain explicitly simulated [S1]. Successful tool evidence records the SHA-256 digest of the saved response; a failed call instead uses the typed no-payload sentinel and preserves its error code and request ID in the validation field. These controls prevent simulated statistics or request identifiers from being presented as observed evidence. The source row also retains the tool name, key parameters, as-of date and data scope so a reviewer can reproduce the evidence boundary without treating an unavailable payload as a successful observation. Advisory benchmark selections remain visibly advisory throughout the report and handoff. This distinction tells reviewers which comparisons are server-matched and which still require independent benchmark confirmation."
         }
       ]
     }

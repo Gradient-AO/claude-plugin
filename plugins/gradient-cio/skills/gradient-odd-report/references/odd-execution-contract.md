@@ -98,7 +98,7 @@ Sections use these exact IDs and titles, in order:
 6. `reported-equity-holdings` / Reported equity holdings (Form 13F)
 7. `monitoring-findings-ddq` / Monitoring, findings & DDQ
 8. `follow-up-open-items` / Follow-up questions & open items
-9. `sources-method` / Appendix — sources & method
+9. `sources-method` / Appendix — Sources and methods (`num: "A"`)
 
 The governed visual slots are exact:
 - Executive summary: evidence `coverage`.
@@ -116,7 +116,7 @@ The governed visual slots are exact:
 - Monitoring, findings & DDQ: `findings` or `kv`, plus returned event
   `timeline`; use a typed unavailable callout for an unavailable event feed.
 - Follow-up questions & open items: `questions` or `table`.
-- Appendix — sources & method: source `table`.
+- Appendix — Sources and methods: source `table`.
 
 Keep missing sections with specific typed unavailability; generic `Visual
 evidence` placeholders are forbidden. Do not force page breaks in the full

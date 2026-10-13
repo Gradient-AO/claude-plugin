@@ -56,7 +56,7 @@ in the reviewed manual [S1][S2].
 5. Identify the portability documentation owner and required acquired-record inventory [S1].
 6. Define verifier independence review ownership and cadence [S1].
 
-## Appendix A — Findings Checklist
+## Appendix B — Findings Checklist
 
 ### Governance and portfolio scope
 
@@ -90,7 +90,7 @@ in the reviewed manual [S1][S2].
 | Record retention | Supporting-record schedule | 1.A.5 | Not found | Manual [S1] | Schedule not located |
 | Verification | Independence and scope review | Verification standards | Partially met | Manual §13 [S1] | Review cadence undefined |
 
-## Appendix B — Sources
+## Appendix A — Sources and methods
 
 | Tag | Source | Detail | As of | Validation |
 |---|---|---|---|---|

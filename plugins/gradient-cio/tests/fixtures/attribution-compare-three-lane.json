@@ -27,8 +27,22 @@
       "state": "complete"
     },
     "capability_gate": {
-      "simulation": "available",
-      "comparison": "available"
+      "simulate_portfolio_attribution": {
+        "contract": "planned_conditional",
+        "status": "available"
+      },
+      "compare_portfolio_attribution": {
+        "contract": "planned_conditional",
+        "status": "available"
+      }
+    },
+    "evidence_flags": {
+      "entity_return_reconciliation_available": true,
+      "historical_summary_available": true,
+      "ex_ante_summary_available": true,
+      "historical_periods_available": true,
+      "historical_cumulative_growth_available": true,
+      "compatible_lane_count": 3
     },
     "data_basis": "gradient_governed"
   },
@@ -64,6 +78,130 @@
       "kicker": "Three compatible governed lanes have server-returned comparison metrics",
       "blocks": [
         {
+          "type": "statement",
+          "title": "Comparison verdict",
+          "text": "Three governed returned lanes and comparison metrics are available [S2][S3][S4][S5].",
+          "sub": "Returned evidence only; no local subtraction or accumulation.",
+          "tone": "good",
+          "source": "[S2][S3][S4][S5]",
+          "lineage": [
+            {
+              "source": "[S2]",
+              "returned_field_paths": [
+                "result.summary.total_attribution"
+              ],
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            {
+              "source": "[S3]",
+              "returned_field_paths": [
+                "result.summary.total_attribution"
+              ],
+              "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            },
+            {
+              "source": "[S4]",
+              "returned_field_paths": [
+                "result.summary.total_attribution"
+              ],
+              "response_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+            },
+            {
+              "source": "[S5]",
+              "returned_field_paths": [
+                "result.compatibility.verdict"
+              ],
+              "response_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+            }
+          ]
+        },
+        {
+          "type": "waterfall",
+          "title": "Realized summary effects",
+          "items": [
+            {
+              "label": "Allocation",
+              "value": 0.2,
+              "display": "+0.2pp"
+            },
+            {
+              "label": "Selection",
+              "value": -0.8,
+              "display": "-0.8pp"
+            },
+            {
+              "label": "Interaction",
+              "value": 0.0,
+              "display": "0.0pp"
+            },
+            {
+              "label": "Total",
+              "value": -0.6,
+              "display": "-0.6pp",
+              "total": true
+            }
+          ],
+          "source": "[S2]",
+          "returned_field_path": "result.summary",
+          "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "lineage": [
+            {
+              "source": "[S2]",
+              "returned_field_paths": [
+                "result.summary.allocation_effect",
+                "result.summary.selection_effect",
+                "result.summary.interaction_effect",
+                "result.summary.total_attribution"
+              ],
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            }
+          ],
+          "note": "Each plotted value is a returned summary field [S2]."
+        },
+        {
+          "type": "waterfall",
+          "title": "Expected summary effects",
+          "items": [
+            {
+              "label": "Allocation",
+              "value": 0.4,
+              "display": "+0.4pp"
+            },
+            {
+              "label": "Selection",
+              "value": -0.1,
+              "display": "-0.1pp"
+            },
+            {
+              "label": "Interaction",
+              "value": 0.05,
+              "display": "+0.05pp"
+            },
+            {
+              "label": "Total",
+              "value": 0.35,
+              "display": "+0.35pp",
+              "total": true
+            }
+          ],
+          "source": "[S3]",
+          "returned_field_path": "result.summary",
+          "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "lineage": [
+            {
+              "source": "[S3]",
+              "returned_field_paths": [
+                "result.summary.allocation_effect",
+                "result.summary.selection_effect",
+                "result.summary.interaction_effect",
+                "result.summary.total_attribution"
+              ],
+              "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          ],
+          "note": "Each plotted value is a returned summary field [S3]."
+        },
+        {
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
@@ -92,6 +230,29 @@
       "kicker": "Portfolio, benchmark, cohort and currency identifiers match",
       "blocks": [
         {
+          "type": "statement",
+          "title": "Compatibility verdict",
+          "text": "Compatible for governed three-lane comparison",
+          "sub": "The returned compatibility receipt matches portfolio, benchmark role, parent cohort and calculation currency [S5].",
+          "tone": "good",
+          "source": "[S5]",
+          "returned_field_path": "result.compatibility.verdict",
+          "response_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "lineage": [
+            {
+              "source": "[S5]",
+              "returned_field_paths": [
+                "result.compatibility.portfolio_id_match",
+                "result.compatibility.benchmark_role_match",
+                "result.compatibility.parent_cohort_match",
+                "result.compatibility.calculation_currency_match",
+                "result.compatibility.verdict"
+              ],
+              "response_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+            }
+          ]
+        },
+        {
           "type": "coverage",
           "items": [
             {
@@ -110,21 +271,279 @@
       "page_break": "prefer",
       "blocks": [
         {
-          "type": "bars",
-          "title": "Historical effects",
+          "type": "stacked",
+          "title": "Historical effects by segment",
           "items": [
             {
-              "label": "Selection",
-              "value": -0.8,
-              "display": "-0.8pp"
+              "label": "Public Equity",
+              "segments": [
+                {
+                  "label": "Allocation",
+                  "value": 0.3,
+                  "display": "+0.3pp"
+                },
+                {
+                  "label": "Selection",
+                  "value": -0.2,
+                  "display": "-0.2pp"
+                },
+                {
+                  "label": "Interaction",
+                  "value": 0.1,
+                  "display": "+0.1pp"
+                }
+              ]
             },
             {
-              "label": "Allocation",
-              "value": 0.2,
-              "display": "+0.2pp"
+              "label": "Alternatives",
+              "segments": [
+                {
+                  "label": "Allocation",
+                  "value": -0.1,
+                  "display": "-0.1pp"
+                },
+                {
+                  "label": "Selection",
+                  "value": -0.6,
+                  "display": "-0.6pp"
+                },
+                {
+                  "label": "Interaction",
+                  "value": -0.1,
+                  "display": "-0.1pp"
+                }
+              ]
             }
           ],
-          "source": "[S2]"
+          "source": "[S2]",
+          "returned_field_path": "result.segments",
+          "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "lineage": [
+            {
+              "source": "[S2]",
+              "returned_field_paths": [
+                "result.segments[].allocation_name",
+                "result.segments[].allocation_effect",
+                "result.segments[].selection_effect",
+                "result.segments[].interaction_effect"
+              ],
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            }
+          ],
+          "note": "Returned allocation, selection and interaction effects by segment [S2]."
+        },
+        {
+          "type": "bars",
+          "title": "Historical portfolio and benchmark average weights",
+          "items": [
+            {
+              "label": "Public Equity · portfolio",
+              "value": 60.0,
+              "display": "60.0%"
+            },
+            {
+              "label": "Public Equity · benchmark",
+              "value": 55.0,
+              "display": "55.0%"
+            },
+            {
+              "label": "Alternatives · portfolio",
+              "value": 40.0,
+              "display": "40.0%"
+            },
+            {
+              "label": "Alternatives · benchmark",
+              "value": 45.0,
+              "display": "45.0%"
+            }
+          ],
+          "source": "[S2]",
+          "returned_field_path": "result.segments",
+          "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "lineage": [
+            {
+              "source": "[S2]",
+              "returned_field_paths": [
+                "result.segments[].allocation_name",
+                "result.segments[].average_portfolio_weight",
+                "result.segments[].average_benchmark_weight"
+              ],
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            }
+          ],
+          "note": "Returned arithmetic average beginning weights; no local difference [S2]."
+        },
+        {
+          "type": "line",
+          "title": "Cumulative linked effects",
+          "series": [
+            {
+              "name": "Allocation",
+              "points": [
+                [
+                  "2025-09-30",
+                  0.05
+                ],
+                [
+                  "2025-12-31",
+                  0.11
+                ],
+                [
+                  "2026-06-30",
+                  0.2
+                ]
+              ]
+            },
+            {
+              "name": "Selection",
+              "points": [
+                [
+                  "2025-09-30",
+                  -0.2
+                ],
+                [
+                  "2025-12-31",
+                  -0.5
+                ],
+                [
+                  "2026-06-30",
+                  -0.8
+                ]
+              ]
+            },
+            {
+              "name": "Interaction",
+              "points": [
+                [
+                  "2025-09-30",
+                  0.02
+                ],
+                [
+                  "2025-12-31",
+                  0.01
+                ],
+                [
+                  "2026-06-30",
+                  0.0
+                ]
+              ]
+            },
+            {
+              "name": "Total",
+              "points": [
+                [
+                  "2025-09-30",
+                  -0.13
+                ],
+                [
+                  "2025-12-31",
+                  -0.38
+                ],
+                [
+                  "2026-06-30",
+                  -0.6
+                ]
+              ]
+            }
+          ],
+          "y_suffix": "pp",
+          "decimals": 2,
+          "source": "[S2]",
+          "returned_field_path": "result.periods",
+          "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "lineage": [
+            {
+              "source": "[S2]",
+              "returned_field_paths": [
+                "result.periods[].period_date",
+                "result.periods[].cumulative_linked_allocation_effect",
+                "result.periods[].cumulative_linked_selection_effect",
+                "result.periods[].cumulative_linked_interaction_effect",
+                "result.periods[].cumulative_linked_total_effect"
+              ],
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            }
+          ],
+          "note": "Server-returned cumulative linked fields; no local accumulation [S2]."
+        },
+        {
+          "type": "line",
+          "title": "Cumulative Alternatives selection",
+          "series": [
+            {
+              "name": "Alternatives selection",
+              "points": [
+                [
+                  "2025-09-30",
+                  -0.1
+                ],
+                [
+                  "2025-12-31",
+                  -0.35
+                ],
+                [
+                  "2026-06-30",
+                  -0.6
+                ]
+              ]
+            }
+          ],
+          "y_suffix": "pp",
+          "decimals": 2,
+          "source": "[S2]",
+          "returned_field_path": "result.periods[].segments",
+          "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "lineage": [
+            {
+              "source": "[S2]",
+              "returned_field_paths": [
+                "result.periods[].period_date",
+                "result.periods[].segments[].allocation_name",
+                "result.periods[].segments[].cumulative_linked_selection_effect"
+              ],
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            }
+          ],
+          "note": "Returned rows filtered to allocation_name=Alternatives; no local accumulation [S2]."
+        },
+        {
+          "type": "line",
+          "title": "Returned cumulative growth context",
+          "series": [
+            {
+              "name": "Portfolio cumulative growth",
+              "points": [
+                [
+                  "2025-07-31",
+                  100.8
+                ],
+                [
+                  "2025-12-31",
+                  104.2
+                ],
+                [
+                  "2026-06-30",
+                  107.1
+                ]
+              ]
+            }
+          ],
+          "y_suffix": "",
+          "decimals": 1,
+          "source": "[S6]",
+          "returned_field_path": "result.cumulative_growth",
+          "response_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "lineage": [
+            {
+              "source": "[S6]",
+              "returned_field_paths": [
+                "result.cumulative_growth[].period_date",
+                "result.cumulative_growth[].portfolio_growth"
+              ],
+              "response_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            }
+          ],
+          "note": "Optional context rendered only from returned cumulative_growth rows [S6]."
         },
         {
           "type": "callout",
@@ -147,21 +566,161 @@
       "kicker": "Returned expected effects are shown as assumptions",
       "blocks": [
         {
-          "type": "bars",
-          "title": "Ex ante effects",
+          "type": "stacked",
+          "title": "Expected effects by segment",
           "items": [
             {
-              "label": "Allocation",
-              "value": 0.4,
-              "display": "+0.4pp"
+              "label": "Public Equity",
+              "segments": [
+                {
+                  "label": "Allocation",
+                  "value": 0.3,
+                  "display": "+0.3pp"
+                },
+                {
+                  "label": "Selection",
+                  "value": -0.05,
+                  "display": "-0.05pp"
+                },
+                {
+                  "label": "Interaction",
+                  "value": 0.02,
+                  "display": "+0.02pp"
+                }
+              ]
             },
             {
-              "label": "Selection",
-              "value": -0.1,
-              "display": "-0.1pp"
+              "label": "Alternatives",
+              "segments": [
+                {
+                  "label": "Allocation",
+                  "value": 0.1,
+                  "display": "+0.1pp"
+                },
+                {
+                  "label": "Selection",
+                  "value": -0.05,
+                  "display": "-0.05pp"
+                },
+                {
+                  "label": "Interaction",
+                  "value": 0.03,
+                  "display": "+0.03pp"
+                }
+              ]
             }
           ],
-          "source": "[S3]"
+          "source": "[S3]",
+          "returned_field_path": "result.segments",
+          "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "lineage": [
+            {
+              "source": "[S3]",
+              "returned_field_paths": [
+                "result.segments[].allocation_name",
+                "result.segments[].allocation_effect",
+                "result.segments[].selection_effect",
+                "result.segments[].interaction_effect"
+              ],
+              "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          ],
+          "note": "Returned expected allocation, selection and interaction by segment [S3]."
+        },
+        {
+          "type": "two_col",
+          "left": [
+            {
+              "type": "kv",
+              "title": "Ex ante assumptions",
+              "rows": [
+                [
+                  "assumption_set_name",
+                  "2026 Strategic CMA (TEST)",
+                  "S3"
+                ],
+                [
+                  "regime_name",
+                  "user-defined regime",
+                  "S3"
+                ],
+                [
+                  "horizon",
+                  "1 year",
+                  "S3"
+                ],
+                [
+                  "portfolio_return_source",
+                  "allocation_expected_return_base",
+                  "S3"
+                ],
+                [
+                  "benchmark_return_source",
+                  "benchmark_expected_return_base",
+                  "S3"
+                ]
+              ],
+              "source": "[S3]",
+              "returned_field_path": "result.assumptions",
+              "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "lineage": [
+                {
+                  "source": "[S3]",
+                  "returned_field_paths": [
+                    "result.assumptions.assumption_set_name",
+                    "result.assumptions.regime_name",
+                    "result.horizon.horizon_years",
+                    "result.assumptions.portfolio_return_source",
+                    "result.assumptions.benchmark_return_source"
+                  ],
+                  "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+                }
+              ]
+            }
+          ],
+          "right": [
+            {
+              "type": "bars",
+              "title": "Expected portfolio and benchmark returns",
+              "items": [
+                {
+                  "label": "Public Equity · portfolio",
+                  "value": 7.5,
+                  "display": "7.5%"
+                },
+                {
+                  "label": "Public Equity · benchmark",
+                  "value": 6.8,
+                  "display": "6.8%"
+                },
+                {
+                  "label": "Alternatives · portfolio",
+                  "value": 5.5,
+                  "display": "5.5%"
+                },
+                {
+                  "label": "Alternatives · benchmark",
+                  "value": 5.9,
+                  "display": "5.9%"
+                }
+              ],
+              "source": "[S3]",
+              "returned_field_path": "result.segments",
+              "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "lineage": [
+                {
+                  "source": "[S3]",
+                  "returned_field_paths": [
+                    "result.segments[].allocation_name",
+                    "result.segments[].portfolio_expected_return",
+                    "result.segments[].benchmark_expected_return"
+                  ],
+                  "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+                }
+              ],
+              "note": "Returned expected returns grouped without local subtraction [S3]."
+            }
+          ]
         },
         {
           "type": "callout",
@@ -178,44 +737,104 @@
       "kicker": "Governed simulation returns scenario effects",
       "blocks": [
         {
-          "type": "bars",
-          "title": "Simulated effects",
+          "type": "band",
+          "title": "Simulated effect bands",
           "items": [
             {
               "label": "Allocation",
+              "low": 0.1,
+              "high": 0.5,
               "value": 0.3,
-              "display": "+0.3pp"
+              "target": 0.3,
+              "display": "0.1pp to 0.5pp"
             },
             {
               "label": "Selection",
+              "low": -0.5,
+              "high": 0.1,
               "value": -0.2,
-              "display": "-0.2pp"
+              "target": -0.2,
+              "display": "-0.5pp to +0.1pp"
+            },
+            {
+              "label": "Interaction",
+              "low": -0.1,
+              "high": 0.2,
+              "value": 0.04,
+              "target": 0.04,
+              "display": "-0.1pp to +0.2pp"
             }
           ],
-          "source": "[S4]"
+          "source": "[S4]",
+          "returned_field_path": "result.effect_bands",
+          "response_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "lineage": [
+            {
+              "source": "[S4]",
+              "returned_field_paths": [
+                "result.effect_bands[].effect",
+                "result.effect_bands[].low",
+                "result.effect_bands[].high",
+                "result.effect_bands[].selected_value"
+              ],
+              "response_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+            }
+          ],
+          "note": "Server-returned scenario bands and selected values [S4]."
+        },
+        {
+          "type": "table",
+          "title": "Scenario selector",
+          "columns": [
+            "Scenario ID",
+            "Scenario",
+            "Selected",
+            "Basis"
+          ],
+          "rows": [
+            [
+              "scenario-base-test",
+              "Base scenario (TEST)",
+              "Yes",
+              "1-year simulated"
+            ],
+            [
+              "scenario-down-test",
+              "Downside scenario (TEST)",
+              "No",
+              "1-year simulated"
+            ],
+            [
+              "scenario-up-test",
+              "Upside scenario (TEST)",
+              "No",
+              "1-year simulated"
+            ]
+          ],
+          "source": "[S4]",
+          "returned_field_path": "result.scenario_selector",
+          "response_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "lineage": [
+            {
+              "source": "[S4]",
+              "returned_field_paths": [
+                "result.scenario_selector[].scenario_id",
+                "result.scenario_selector[].scenario_name",
+                "result.scenario_selector[].selected",
+                "result.scenario_selector[].basis"
+              ],
+              "response_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+            }
+          ],
+          "note": "Returned scenario selector; no locally invented scenarios [S4]."
         },
         {
           "type": "coverage",
           "items": [
             {
-              "name": "Capability",
+              "name": "Capability gate",
               "status": "available",
-              "note": "Capability-gated before invocation [S1]"
-            },
-            {
-              "name": "Invocation",
-              "status": "available",
-              "note": "Called only after exact availability [S1][S4]"
-            },
-            {
-              "name": "Lane identity",
-              "status": "available",
-              "note": "Portfolio, cohort, currency and basis preserved [S4]"
-            },
-            {
-              "name": "Uncertainty",
-              "status": "available",
-              "note": "Returned simulation method retained [S4]"
+              "note": "Exact simulation capability was available before invocation [S1][S4]"
             }
           ]
         },
@@ -223,8 +842,8 @@
           "type": "callout",
           "role": "analysis",
           "tone": "info",
-          "title": "Analysis — Scenario effects returned",
-          "text": "Observation: Simulated allocation is positive [S4]. Why it matters: Scenario attribution is available. Uncertainty: Results depend on governed scenario inputs. What would change the view: A revised simulation result."
+          "title": "Analysis — Scenario range returned",
+          "text": "Observation: The governed simulation returned effect bands and a selected base scenario [S4]. Why it matters: Scenario context is explicit. Uncertainty: Results depend on governed scenario inputs. What would change the view: A revised simulation receipt."
         }
       ],
       "page_break": "force"
@@ -235,33 +854,276 @@
       "kicker": "Governed comparison returns compatible cross-lane metrics",
       "blocks": [
         {
+          "type": "heat",
+          "title": "Returned cross-lane effect matrix",
+          "columns": [
+            "Realized",
+            "Expected",
+            "Simulated"
+          ],
+          "rows": [
+            {
+              "label": "Allocation",
+              "values": [
+                0.2,
+                0.4,
+                0.3
+              ]
+            },
+            {
+              "label": "Selection",
+              "values": [
+                -0.8,
+                -0.1,
+                -0.2
+              ]
+            },
+            {
+              "label": "Interaction",
+              "values": [
+                0.0,
+                0.05,
+                0.04
+              ]
+            }
+          ],
+          "format": "pp",
+          "decimals": 2,
+          "source": "[S5]",
+          "lineage": [
+            {
+              "source": "[S5]",
+              "returned_field_paths": [
+                "result.effect_matrix[].effect",
+                "result.effect_matrix[].historical",
+                "result.effect_matrix[].ex_ante",
+                "result.effect_matrix[].simulated"
+              ],
+              "response_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+            }
+          ],
+          "note": "Server-returned three-lane effect matrix [S5].",
+          "returned_field_path": "result.effect_matrix",
+          "response_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        },
+        {
+          "type": "two_col",
+          "title": "Returned effects side by side",
+          "source": "[S2][S3]",
+          "lineage": [
+            {
+              "source": "[S2]",
+              "returned_field_paths": [
+                "result.summary.allocation_effect",
+                "result.summary.selection_effect",
+                "result.summary.interaction_effect"
+              ],
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            {
+              "source": "[S3]",
+              "returned_field_paths": [
+                "result.summary.allocation_effect",
+                "result.summary.selection_effect",
+                "result.summary.interaction_effect"
+              ],
+              "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          ],
+          "left": [
+            {
+              "type": "bars",
+              "title": "Realized returned effects",
+              "items": [
+                {
+                  "label": "Allocation",
+                  "value": 0.2,
+                  "display": "+0.2pp"
+                },
+                {
+                  "label": "Selection",
+                  "value": -0.8,
+                  "display": "-0.8pp"
+                },
+                {
+                  "label": "Interaction",
+                  "value": 0.0,
+                  "display": "0.0pp"
+                }
+              ],
+              "source": "[S2]",
+              "returned_field_path": "result.summary",
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "lineage": [
+                {
+                  "source": "[S2]",
+                  "returned_field_paths": [
+                    "result.summary.allocation_effect",
+                    "result.summary.selection_effect",
+                    "result.summary.interaction_effect"
+                  ],
+                  "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+                }
+              ],
+              "note": "Displayed unchanged [S2]."
+            }
+          ],
+          "right": [
+            {
+              "type": "bars",
+              "title": "Expected returned effects",
+              "items": [
+                {
+                  "label": "Allocation",
+                  "value": 0.4,
+                  "display": "+0.4pp"
+                },
+                {
+                  "label": "Selection",
+                  "value": -0.1,
+                  "display": "-0.1pp"
+                },
+                {
+                  "label": "Interaction",
+                  "value": 0.05,
+                  "display": "+0.05pp"
+                }
+              ],
+              "source": "[S3]",
+              "returned_field_path": "result.summary",
+              "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "lineage": [
+                {
+                  "source": "[S3]",
+                  "returned_field_paths": [
+                    "result.summary.allocation_effect",
+                    "result.summary.selection_effect",
+                    "result.summary.interaction_effect"
+                  ],
+                  "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+                }
+              ],
+              "note": "Displayed unchanged [S3]."
+            }
+          ]
+        },
+        {
           "type": "bars",
-          "title": "Returned lane comparison",
+          "title": "Returned lane differences",
+          "items": [
+            {
+              "label": "Expected minus realized · allocation",
+              "value": 0.2,
+              "display": "+0.2pp"
+            },
+            {
+              "label": "Expected minus realized · selection",
+              "value": 0.7,
+              "display": "+0.7pp"
+            },
+            {
+              "label": "Simulated minus expected · selection",
+              "value": -0.1,
+              "display": "-0.1pp"
+            }
+          ],
+          "source": "[S5]",
+          "returned_field_path": "result.lane_differences",
+          "response_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "lineage": [
+            {
+              "source": "[S5]",
+              "returned_field_paths": [
+                "result.lane_differences[].label",
+                "result.lane_differences[].value"
+              ],
+              "response_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+            }
+          ],
+          "note": "Differences are returned by the comparison tool, not calculated here [S5]."
+        },
+        {
+          "type": "bars",
+          "title": "Returned concentration",
           "items": [
             {
               "label": "Historical",
-              "value": -0.6,
-              "display": "-0.6pp"
+              "value": 0.74,
+              "display": "0.74"
             },
             {
-              "label": "Ex ante",
-              "value": 0.3,
-              "display": "+0.3pp"
+              "label": "Expected",
+              "value": 0.62,
+              "display": "0.62"
             },
             {
               "label": "Simulated",
-              "value": 0.1,
-              "display": "+0.1pp"
+              "value": 0.58,
+              "display": "0.58"
             }
           ],
-          "source": "[S5]"
+          "source": "[S5]",
+          "returned_field_path": "result.concentration",
+          "response_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "lineage": [
+            {
+              "source": "[S5]",
+              "returned_field_paths": [
+                "result.concentration[].lane",
+                "result.concentration[].score"
+              ],
+              "response_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+            }
+          ],
+          "note": "Server-returned concentration scores [S5]."
+        },
+        {
+          "type": "table",
+          "title": "Returned persistence",
+          "columns": [
+            "Effect",
+            "Returned lanes",
+            "Persistence status"
+          ],
+          "rows": [
+            [
+              "Allocation",
+              "Historical · Expected · Simulated",
+              "Persistent"
+            ],
+            [
+              "Selection",
+              "Historical · Expected · Simulated",
+              "Persistent negative"
+            ],
+            [
+              "Interaction",
+              "Expected · Simulated",
+              "Partial"
+            ]
+          ],
+          "source": "[S5]",
+          "returned_field_path": "result.persistence",
+          "response_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "lineage": [
+            {
+              "source": "[S5]",
+              "returned_field_paths": [
+                "result.persistence[].effect",
+                "result.persistence[].lanes",
+                "result.persistence[].status"
+              ],
+              "response_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+            }
+          ],
+          "note": "Server-returned persistence labels [S5]."
         },
         {
           "type": "callout",
           "role": "analysis",
           "tone": "info",
-          "title": "Analysis — Lanes differ in sign",
-          "text": "Observation: Returned lane signs differ [S5]. Why it matters: Realized and expected sources are not interchangeable. Uncertainty: Each lane uses a distinct governed basis. What would change the view: A refreshed comparison receipt."
+          "title": "Analysis — Governed comparison fields returned",
+          "text": "Observation: The server returned differences, concentration and persistence for three compatible lanes [S5]. Why it matters: Cross-lane claims use governed fields. Uncertainty: One receipt limits time-series interpretation. What would change the view: A later comparison receipt returning different statuses."
         }
       ],
       "page_break": "force"
@@ -295,7 +1157,8 @@
     },
     {
       "id": "appendix-a",
-      "title": "Appendix A — Sources and Methods",
+      "num": "A",
+      "title": "Appendix — Sources and methods",
       "kicker": "Governed source inventory",
       "blocks": [
         {
@@ -366,7 +1229,101 @@
               "Gradient-governed TEST evidence",
               "passed",
               "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+            ],
+            [
+              "S6",
+              "Historical return context",
+              "gradient_tool",
+              "get_portfolio_historical_returns",
+              "fields=cumulative_growth; limit=100; fixture=true",
+              "2026-06-30",
+              "Gradient-governed TEST evidence",
+              "passed",
+              "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
             ]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Returned sign by segment",
+          "columns": [
+            "Lane",
+            "Segment",
+            "Returned effect",
+            "Returned sign",
+            "Source"
+          ],
+          "rows": [
+            [
+              "Historical",
+              "Public Equity",
+              "+0.2pp",
+              "Positive",
+              "[S2]"
+            ],
+            [
+              "Historical",
+              "Alternatives",
+              "-0.8pp",
+              "Negative",
+              "[S2]"
+            ],
+            [
+              "Governed ex ante",
+              "Public Equity",
+              "+0.27pp",
+              "Positive",
+              "[S3]"
+            ],
+            [
+              "Governed ex ante",
+              "Alternatives",
+              "+0.08pp",
+              "Positive",
+              "[S3]"
+            ],
+            [
+              "Simulated",
+              "Public Equity",
+              "+0.3pp",
+              "Positive",
+              "[S4]"
+            ],
+            [
+              "Simulated",
+              "Alternatives",
+              "-0.2pp",
+              "Negative",
+              "[S4]"
+            ]
+          ],
+          "note": "Signs are returned or directly classified per lane; no local lane subtraction [S2][S3][S4].",
+          "source": "[S2][S3][S4]",
+          "lineage": [
+            {
+              "source": "[S2]",
+              "returned_field_paths": [
+                "result.segments[].allocation_name",
+                "result.segments[].total_effect"
+              ],
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            {
+              "source": "[S3]",
+              "returned_field_paths": [
+                "result.segments[].allocation_name",
+                "result.segments[].total_effect"
+              ],
+              "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            },
+            {
+              "source": "[S4]",
+              "returned_field_paths": [
+                "result.segments[].allocation_name",
+                "result.segments[].total_effect"
+              ],
+              "response_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+            }
           ]
         },
         {

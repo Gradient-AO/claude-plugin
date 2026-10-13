@@ -2,8 +2,8 @@
 
 ## Simulated Attribution
 
-**Strong example (TEST):** Observation: As of June 2026, simulation is not listed by get_gradient_capabilities [S1]. Why it matters: Scenario attribution cannot enter the lane comparison. Uncertainty: Simulation contract availability is missing from the server. What would change the view: A capability response listing the exact simulation tool.
+**Strong example (TEST):** Observation: As of June 2026, simulation is returned as planned by get_gradient_capabilities [S1]. Why it matters: Scenario attribution cannot enter the lane comparison. Uncertainty: Planned capability timing is not a returned field. What would change the view: A capability response marking the exact simulation tool available.
 
 ## Cross-Lane Comparison
 
-**Strong example (TEST):** Observation: As of June 2026, comparison is not listed by get_gradient_capabilities [S1]. Why it matters: Two returned lanes cannot support persistence claims. Uncertainty: Comparison metric coverage is unavailable for both lanes. What would change the view: A governed comparison result covering all compatible lanes.
+**Strong example (TEST):** Observation: As of June 2026, comparison is returned as planned by get_gradient_capabilities [S1]. Why it matters: Two returned lanes cannot support persistence claims. Uncertainty: Planned capability timing is not a returned field. What would change the view: A governed comparison result covering both compatible lanes.

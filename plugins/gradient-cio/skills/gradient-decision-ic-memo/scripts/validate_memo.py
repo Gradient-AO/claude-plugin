@@ -42,7 +42,7 @@ REQUIRED = [
     r"^## 14\. Risks & Mitigants$",
     r"^## 15\. Open Items & Conditions$",
     r"^## 16\. Approvals$",
-    r"^## Appendix A — Sources$",
+    r"^## Appendix A — Sources and methods$",
     r"^## Appendix B — Server Metric Methods$",
     r"^## Appendix C — Methodology & Disclosures$",
 ]

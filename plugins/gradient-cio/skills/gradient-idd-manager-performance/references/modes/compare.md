@@ -12,7 +12,7 @@ Compare 2–10 selected manager return series against the separately matched ben
 
 ## 1. Resolve and collect
 
-Resolve the organization, selected return-series IDs, canonical entity links, date window, and benchmark mapping. Use `analyze_strategy_lab_compare`, `run_strategy_lab_expected_statistics`, `run_strategy_lab_relative_return`, and `run_strategy_lab_date_window_robustness`. Run independent reads in parallel and save large payloads. If a required public capability is unavailable or not licensed, show that typed status and continue only with independent evidence. Correlation and risk-contribution evidence are typed unavailable unless returned by one of those governed results.
+Resolve the organization, selected return-series IDs, canonical entity links, date window, and benchmark mapping. Use `analyze_strategy_lab_compare`, `run_strategy_lab_expected_statistics`, `run_strategy_lab_relative_return`, and `run_strategy_lab_date_window_robustness`. Run independent reads in parallel and save large payloads. When a pre-N1 connector rejects a catalog benchmark with `demo_series_not_found` or otherwise cannot place it in return-series space, do not substitute another ID; record compare as `not_run:benchmark_not_in_series_space` with Digest `not_available:no_payload`. N1-capable connectors run compare normally. If a required public capability is unavailable or not licensed, show that typed status and continue only with independent evidence. Correlation and risk-contribution evidence are typed unavailable unless returned by one of those governed results.
 
 ## 2. Assess
 
