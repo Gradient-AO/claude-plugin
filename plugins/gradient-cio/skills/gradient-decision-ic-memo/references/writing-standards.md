@@ -62,8 +62,10 @@ availability or presentation rules.
   `Basis` is `gradient_tool`, `gradient_tool_metadata`, `user_document`, or
   `regulatory_filing`.
 - A successful `gradient_tool` row names only tools in the packaged public
-  catalog and records the SHA-256 digest of the saved response as
-  `sha256:<64 lowercase hex>`. A failed or unavailable call uses a typed
+  catalog. Set `Digest` to the exact concatenation
+  `sha256:` + `provenance.reproducibility.payload_digest`; do not hash or
+  derive a replacement locally. When that payload digest is absent, use the
+  exact sentinel `not_available:no_payload`. A failed or unavailable call uses a typed
   `Validation` value (`failed:<reason>`, `unavailable:<reason>` or
   `not_run:<reason>`) and the exact Digest sentinel
   `not_available:no_payload`; keep any error code and request ID in
@@ -89,6 +91,9 @@ availability or presentation rules.
 - Absence is not zero, no exposure, no event or no issue. Write `Not available — <reason>`.
 - Empty or unavailable evidence collapses to one compact typed unavailable callout in the expected visual
   position. Do not emit a table of N/A rows or a generic `Visual evidence` placeholder.
+- In a single-manager `Track record over time` section, use the exact typed fallback
+  `Not available — series views not published` when the governed series views are absent. Do not substitute
+  locally reconstructed return paths, tables of unavailable points or a generic availability message.
 - A visual may use only returned values, user-supplied evidence or allowed display-only scaling and rounding.
   Never calculate a replacement series locally.
 

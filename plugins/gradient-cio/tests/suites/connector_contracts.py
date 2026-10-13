@@ -1225,6 +1225,46 @@ def contract_manifest():
         "PME setup probes preserve primary and sensitivity request separation",
     )
     relative_args = by_id["strategy_relative_return"]["args"]
+    relative_required = set(by_id["strategy_relative_return"].get("required", []))
+    minimum_relative_paths = set(
+        minimum.get("required_response_field_paths", {}).get(
+            "run_strategy_lab_relative_return",
+            [],
+        )
+    )
+    series_view_names = (
+        "cumulative_growth_base100",
+        "drawdown",
+        "rolling_return_12",
+        "rolling_return_36",
+        "rolling_excess_36",
+        "rolling_sharpe_12",
+        "rolling_sharpe_36",
+        "calendar_years",
+        "capture",
+        "distribution",
+    )
+    series_view_metadata_paths = {
+        f"series_views.{view}.{field}"
+        for view in series_view_names
+        for field in (
+            "status",
+            "method",
+            "basis",
+            "window",
+            "observation_count",
+            "payload_digest",
+            "payload",
+        )
+    }
+    relative_series_view_paths = {
+        "series_views.series_id",
+        "series_views.benchmark_series_id",
+        "series_views.period_start",
+        "series_views.period_end",
+        "series_views.alignment_basis",
+        *series_view_metadata_paths,
+    }
     check(
         relative_args.get("return_series_ids") == [
             "<strategy_benchmarks:demo_set.manager_fund_series[0].series_id>",
@@ -1233,10 +1273,36 @@ def contract_manifest():
         ]
         and relative_args.get("benchmark_id")
         == "<strategy_benchmarks:benchmarks[0].benchmark_id>"
+        and relative_args.get("series_views") is True
         and "strategy_lab_session" not in relative_args
         and by_id["strategy_relative_return"]["equals"].get("result_row_count")
         == 3,
-        "Strategy Lab relative-return probe covers all three demo series",
+        "Strategy Lab relative-return probe covers all three demo series and opts into series views",
+    )
+    check(
+        relative_series_view_paths
+        | {
+            "simulated_metrics.beta_alpha",
+            "provenance.source_as_of",
+        }
+        <= relative_required
+        and relative_series_view_paths
+        | {
+            "simulated_metrics.beta_alpha",
+            "provenance.source_as_of",
+        }
+        <= minimum_relative_paths
+        and "beta_alpha" not in relative_required
+        and "beta_alpha" not in minimum_relative_paths,
+        "Strategy Lab relative-return contract requires typed series-view metadata and scoped beta/alpha",
+    )
+    skill_requirements = SKILL_REQUIREMENTS.read_text(encoding="utf-8")
+    check(
+        "`series_views: true`" in skill_requirements
+        and "`simulated_metrics.beta_alpha`" in skill_requirements
+        and "`provenance.source_as_of`" in skill_requirements
+        and "retrieval time" in skill_requirements,
+        "setup guidance documents series-view opt-in and source-as-of semantics",
     )
     check(
         "envelope" not in relative_args and "fields" not in relative_args,

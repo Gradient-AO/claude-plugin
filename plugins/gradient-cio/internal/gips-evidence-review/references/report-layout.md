@@ -129,7 +129,7 @@ reinterpret or expand the checklist or follow-up requests.
       ],
       "after": []
     },
-    "Appendix A — Findings Checklist": {
+    "Appendix B — Findings Checklist": {
       "before": [],
       "after": []
     }
@@ -164,7 +164,7 @@ Keep the other six keys and their order unchanged.
 - Findings begins with exactly one stacked status block, one severity bars block and one findings block, in
   that order, followed by one to three sourced Analysis callouts.
 - The workflow body starts with a workflow-specific `heat` block (or typed `unavailable` block).
-- Follow-up Requests starts with one `questions` block. Appendix A has no visual blocks.
+- Follow-up Requests starts with one `questions` block. Appendix B has no visual blocks.
 - Use message-first section kickers where the report schema provides them. In analytical table sections, put
   a visual or typed unavailable block in `before`; do not place more than two tables consecutively in any
   nested block list. Quantitative marks use signed finite values.

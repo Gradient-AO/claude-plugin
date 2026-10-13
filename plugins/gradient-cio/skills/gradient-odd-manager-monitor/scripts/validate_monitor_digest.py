@@ -28,6 +28,8 @@ from report_json_validator import (
 )
 from report_vocab import DILIGENCE_VOCAB
 
+SOURCES_APPENDIX_TITLE = "Appendix — Sources and methods"
+
 ACTIVE_SPEC = ReportSpec(
     name="manager monitoring digest",
     section_rules=tuple(
@@ -37,10 +39,10 @@ ACTIVE_SPEC = ReportSpec(
             "Changes and alerts",
             "Review calendar",
             "Coverage and freshness",
-            "Appendix A — Sources and method",
+            SOURCES_APPENDIX_TITLE,
         )
     ),
-    appendix_pattern=r"Appendix A — Sources and method",
+    appendix_pattern=SOURCES_APPENDIX_TITLE,
     signal_levels=DILIGENCE_VOCAB.signal_levels,
     completeness_states=DILIGENCE_VOCAB.completeness_states,
     slot_rules=(
@@ -59,7 +61,7 @@ ACTIVE_SPEC = ReportSpec(
             "coverage block",
         ),
         SlotRule(
-            r"Appendix A — Sources and method",
+            SOURCES_APPENDIX_TITLE,
             frozenset({"table"}),
             "sources table",
         ),
@@ -89,10 +91,10 @@ QUIET_SPEC = ReportSpec(
             "This week",
             "Review calendar",
             "Coverage and freshness",
-            "Appendix A — Sources and method",
+            SOURCES_APPENDIX_TITLE,
         )
     ),
-    appendix_pattern=r"Appendix A — Sources and method",
+    appendix_pattern=SOURCES_APPENDIX_TITLE,
     signal_levels=DILIGENCE_VOCAB.signal_levels,
     completeness_states=DILIGENCE_VOCAB.completeness_states,
     slot_rules=(
@@ -105,7 +107,7 @@ QUIET_SPEC = ReportSpec(
             "coverage block",
         ),
         SlotRule(
-            r"Appendix A — Sources and method",
+            SOURCES_APPENDIX_TITLE,
             frozenset({"table"}),
             "sources table",
         ),

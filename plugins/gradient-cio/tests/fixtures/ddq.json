@@ -629,7 +629,8 @@
     },
     {
       "id": "sources-method",
-      "title": "Appendix — Sources and method",
+      "num": "A",
+      "title": "Appendix — Sources and methods",
       "blocks": [
         {
           "type": "table",

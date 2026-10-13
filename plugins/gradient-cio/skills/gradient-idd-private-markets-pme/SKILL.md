@@ -65,7 +65,7 @@ Keep investment evidence separate from Form ADV, Form 13F, and other operational
 
 ## 3. Build the report
 
-Use these fixed sections: Executive conclusion; Cash-flow and benchmark coverage; PME and direct alpha; IRR and multiple context; Benchmark sensitivity; Limitations and follow-ups; Appendix A — Sources and methods. Keep each section even when evidence is unavailable. Every figure carries a unit, date, and `[S#]` source tag.
+Use these fixed sections: Executive conclusion; Cash-flow and benchmark coverage; PME and direct alpha; IRR and multiple context; Benchmark sensitivity; Limitations and follow-ups; Appendix A — Sources and methods (`num: "A"`). Keep each section even when evidence is unavailable. Every figure carries a unit, date, and `[S#]` source tag.
 
 Read `references/report-style.md` and `references/writing-standards.md`. Build one validated `report.json`; do not hand-build HTML, Word, PDF, or slides and do not override the shared theme.
 

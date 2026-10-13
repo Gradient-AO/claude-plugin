@@ -55,6 +55,8 @@ SOURCE_COLUMNS = (
     "Validation",
     "Digest",
 )
+SOURCES_APPENDIX_TITLE = "Appendix — Sources and methods"
+SOURCES_APPENDIX_NUM = "A"
 SHA256_DIGEST_PATTERN = re.compile(r"sha256:[0-9a-f]{64}")
 FAILED_VALIDATION_PATTERN = re.compile(
     r"(?:failed|unavailable|not_run):\S",
@@ -694,6 +696,26 @@ def validate_section_order(
     return errors
 
 
+def validate_sources_appendix_identity(
+    sections: list[dict[str, JsonValue]],
+) -> list[str]:
+    """Require one exact title/number identity for every sources appendix."""
+    errors: list[str] = []
+    for section in sections:
+        title = str(section.get("title", ""))
+        if "source" not in title.casefold() or "appendix" not in title.casefold():
+            continue
+        if title != SOURCES_APPENDIX_TITLE:
+            errors.append(
+                f"Sources appendix title must be exactly '{SOURCES_APPENDIX_TITLE}'"
+            )
+        if section.get("num") != SOURCES_APPENDIX_NUM:
+            errors.append(
+                f"Sources appendix num must be exactly '{SOURCES_APPENDIX_NUM}'"
+            )
+    return errors
+
+
 def validate_slots(
     sections: list[dict[str, JsonValue]], rules: tuple[SlotRule, ...]
 ) -> list[str]:
@@ -1310,6 +1332,7 @@ def validate_report(document: JsonValue, spec: ReportSpec) -> list[str]:
         errors.append("Missing or empty sections array")
         return errors
 
+    errors.extend(validate_sources_appendix_identity(sections))
     errors.extend(validate_section_order(sections, spec.section_rules))
     errors.extend(validate_slots(sections, spec.slot_rules))
     errors.extend(validate_required_slot_availability(root, sections, spec.slot_rules))

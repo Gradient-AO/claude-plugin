@@ -217,7 +217,7 @@ CASES = [
     ("portfolio_attribution_report", ["portfolio-attribution-report.json", "OUT"], 7, 10, ["Portfolio Attribution Report", "Historical Attribution", "Governed Ex Ante Attribution", "Analysis —"]),
     ("portfolio_attribution_compare_fallback", ["attribution-compare-fallback.json", "OUT"], 6, 10, ["Attribution Comparison", "Historical Attribution", "Cross-Lane Comparison"]),
     ("portfolio_attribution_compare_three_lane", ["attribution-compare-three-lane.json", "OUT"], 6, 10, ["Attribution Comparison", "Simulated Attribution", "Cross-Lane Comparison"]),
-    ("idd_manager_performance_single", ["idd-manager-performance-single.json", "OUT"], 3, 9, ["Manager Single", "Absolute risk and return", "Reliability and date-window sensitivity"]),
+    ("idd_manager_performance_single", ["idd-manager-performance-single.json", "OUT"], 3, 9, ["Northstar Select Equity Composite", "Absolute risk and return", "Reliability and date-window sensitivity"]),
     ("idd_manager_performance_compare", ["idd-manager-performance-compare.json", "OUT"], 3, 9, ["Manager Comparison", "Relative performance and capture", "Correlation and robustness"]),
     ("idd_manager_performance_robustness", ["idd-manager-performance-robustness.json", "OUT"], 3, 9, ["Manager Robustness", "Window sensitivity", "Rolling evidence"]),
     ("idd_manager_portfolio_fit", ["idd-portfolio-fit.json", "OUT"], 3, 9, ["portfolio-fit report", "Correlation and diversification", "Simulation and stress"]),

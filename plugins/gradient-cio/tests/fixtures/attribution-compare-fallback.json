@@ -3,14 +3,22 @@
     "mode": "fallback",
     "eyebrow": "Portfolio Attribution Comparison",
     "header_label": "Attribution Comparison",
-    "title": "Northstar Attribution Comparison (TEST)",
+    "title": "Total Plan - Demo Portfolio (Illustrative, Gradient Maintained) Attribution Comparison",
     "subtitle": "Historical and ex ante lanes · planned capabilities unavailable",
-    "running_head": "Northstar attribution comparison (TEST)",
-    "data_as_of": "2026-06-30",
+    "running_head": "Total Plan - Demo Portfolio attribution comparison",
+    "data_as_of": "2026-09-30",
     "cover_facts": [
       [
         "Portfolio",
-        "Northstar (TEST)"
+        "Total Plan - Demo Portfolio (Illustrative, Gradient Maintained)"
+      ],
+      [
+        "Benchmark",
+        "Policy benchmark"
+      ],
+      [
+        "Cohort",
+        "Root cohort"
       ],
       [
         "Mode",
@@ -26,15 +34,35 @@
       "expected": 4,
       "state": "partial"
     },
+    "capability_gate": {
+      "simulate_portfolio_attribution": {
+        "contract": "planned_conditional",
+        "status": "unavailable",
+        "reason": "planned"
+      },
+      "compare_portfolio_attribution": {
+        "contract": "planned_conditional",
+        "status": "unavailable",
+        "reason": "planned"
+      }
+    },
+    "evidence_flags": {
+      "entity_return_reconciliation_available": true,
+      "historical_summary_available": true,
+      "ex_ante_summary_available": true,
+      "historical_periods_available": true,
+      "historical_cumulative_growth_available": false,
+      "compatible_lane_count": 2
+    },
     "data_basis": "gradient_governed"
   },
   "executive": {
-    "bottom_line": "Historical and ex ante effects are available, while simulation and server comparison capabilities are not published [S1][S2][S3].",
+    "bottom_line": "Realized shortfall comes from selection; expected gain comes from selection; Alternatives drives both [S2][S3].",
     "tiles": [
       {
         "label": "Historical lane",
         "value": "Available",
-        "sub": "Realized 12 months · 2025-07-01 to 2026-06-30 [S2]"
+        "sub": "Realized 12 months · 2025-10-31 to 2026-09-30 [S2]"
       },
       {
         "label": "Ex ante lane",
@@ -44,12 +72,12 @@
       {
         "label": "Simulated lane",
         "value": "Unavailable",
-        "sub": "Not available — not listed by get_gradient_capabilities [S1]"
+        "sub": "Not available — planned per get_gradient_capabilities [S1]"
       },
       {
         "label": "Comparison coverage",
         "value": "Fallback",
-        "sub": "Not available — not listed by get_gradient_capabilities [S1]"
+        "sub": "Not available — planned per get_gradient_capabilities [S1]"
       }
     ]
   },
@@ -60,18 +88,150 @@
       "kicker": "Two governed lanes are available without server comparison metrics",
       "blocks": [
         {
+          "type": "statement",
+          "title": "Comparison verdict",
+          "text": "Realized shortfall from selection; expected gain from selection; Alternatives drives both [S2][S3].",
+          "sub": "Returned evidence only; no local subtraction or accumulation.",
+          "tone": "watch",
+          "source": "[S2][S3]",
+          "lineage": [
+            {
+              "source": "[S2]",
+              "returned_field_paths": [
+                "result.summary.benchmark_return",
+                "result.summary.selection_effect",
+                "result.summary.portfolio_return",
+                "result.segments[].allocation_name",
+                "result.segments[].selection_effect"
+              ],
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            {
+              "source": "[S3]",
+              "returned_field_paths": [
+                "result.summary.expected_benchmark_return",
+                "result.summary.selection_effect",
+                "result.summary.expected_portfolio_return",
+                "result.segments[].allocation_name",
+                "result.segments[].selection_effect"
+              ],
+              "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          ]
+        },
+        {
+          "type": "waterfall",
+          "title": "Realized summary effects",
+          "items": [
+            {
+              "label": "Benchmark return",
+              "value": 2.75,
+              "display": "+2.75%",
+              "total": true
+            },
+            {
+              "label": "Allocation",
+              "value": -0.45,
+              "display": "-0.45pp"
+            },
+            {
+              "label": "Selection",
+              "value": -5.4,
+              "display": "-5.40pp"
+            },
+            {
+              "label": "Interaction",
+              "value": -0.25,
+              "display": "-0.25pp"
+            },
+            {
+              "label": "Portfolio return",
+              "value": -3.35,
+              "display": "-3.35%",
+              "total": true
+            }
+          ],
+          "source": "[S2]",
+          "returned_field_path": "result.summary",
+          "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "lineage": [
+            {
+              "source": "[S2]",
+              "returned_field_paths": [
+                "result.summary.benchmark_return",
+                "result.summary.allocation_effect",
+                "result.summary.selection_effect",
+                "result.summary.interaction_effect",
+                "result.summary.portfolio_return"
+              ],
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            }
+          ],
+          "note": "Each plotted value is a returned summary field [S2]."
+        },
+        {
+          "type": "waterfall",
+          "title": "Expected summary effects",
+          "items": [
+            {
+              "label": "Benchmark return",
+              "value": 6.2,
+              "display": "6.20%",
+              "total": true
+            },
+            {
+              "label": "Allocation",
+              "value": 0.28,
+              "display": "+0.28pp"
+            },
+            {
+              "label": "Selection",
+              "value": 1.25,
+              "display": "+1.25pp"
+            },
+            {
+              "label": "Interaction",
+              "value": 0.15,
+              "display": "+0.15pp"
+            },
+            {
+              "label": "Portfolio return",
+              "value": 7.88,
+              "display": "7.88%",
+              "total": true
+            }
+          ],
+          "source": "[S3]",
+          "returned_field_path": "result.summary",
+          "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "lineage": [
+            {
+              "source": "[S3]",
+              "returned_field_paths": [
+                "result.summary.expected_benchmark_return",
+                "result.summary.allocation_effect",
+                "result.summary.selection_effect",
+                "result.summary.interaction_effect",
+                "result.summary.expected_portfolio_return"
+              ],
+              "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          ],
+          "note": "Each plotted value is a returned summary field [S3]."
+        },
+        {
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — Historical",
-          "text": "Observation: Historical effects are returned [S2]. Why it matters: Realized sources can be described. Uncertainty: One period may not persist. What would change the view: A later governed period."
+          "text": "Observation: Selection is the dominant returned realized shortfall, driven by Alternatives [S2]. Why it matters: It bridges the +2.75% benchmark return to the -3.35% portfolio return. Uncertainty: One realized window may not persist. What would change the view: A later governed period with a different returned selection effect."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — Ex ante",
-          "text": "Observation: Ex ante effects are returned [S3]. Why it matters: Expected sources can be described. Uncertainty: Inputs are assumptions. What would change the view: Refreshed governed inputs."
+          "text": "Observation: Selection is the dominant returned expected gain, driven by Alternatives [S3]. Why it matters: It bridges the 6.20% expected benchmark return to the 7.88% expected portfolio return. Uncertainty: Inputs are governed assumptions. What would change the view: Refreshed inputs with a different returned selection effect."
         },
         {
           "type": "callout",
@@ -87,6 +247,38 @@
       "title": "Scope and Compatibility",
       "kicker": "Portfolio, benchmark, cohort and currency identifiers match",
       "blocks": [
+        {
+          "type": "statement",
+          "title": "Compatibility verdict",
+          "text": "Compatible for display-only fallback",
+          "sub": "Portfolio, benchmark role, parent cohort and calculation currency match [S2][S3].",
+          "tone": "watch",
+          "source": "[S2][S3]",
+          "returned_field_path": "result.compatibility",
+          "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "lineage": [
+            {
+              "source": "[S2]",
+              "returned_field_paths": [
+                "result.portfolio.portfolio_id",
+                "result.filters.benchmark_role",
+                "result.filters.parent_allocation_id",
+                "result.currency.calculation_currency"
+              ],
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            {
+              "source": "[S3]",
+              "returned_field_paths": [
+                "result.portfolio.portfolio_id",
+                "result.filters.benchmark_role",
+                "result.filters.parent_allocation_id",
+                "result.currency.calculation_currency"
+              ],
+              "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          ]
+        },
         {
           "type": "coverage",
           "items": [
@@ -106,28 +298,254 @@
       "page_break": "prefer",
       "blocks": [
         {
-          "type": "bars",
-          "title": "Historical effects",
+          "type": "stacked",
+          "title": "Historical effects by segment",
           "items": [
             {
-              "label": "Selection",
-              "value": -0.8,
-              "display": "-0.8pp"
+              "label": "Public Equity",
+              "segments": [
+                {
+                  "label": "Allocation",
+                  "value": -0.1,
+                  "display": "-0.10pp"
+                },
+                {
+                  "label": "Selection",
+                  "value": -0.55,
+                  "display": "-0.55pp"
+                },
+                {
+                  "label": "Interaction",
+                  "value": -0.05,
+                  "display": "-0.05pp"
+                }
+              ]
             },
             {
-              "label": "Allocation",
-              "value": 0.2,
-              "display": "+0.2pp"
+              "label": "Alternatives",
+              "segments": [
+                {
+                  "label": "Allocation",
+                  "value": -0.35,
+                  "display": "-0.35pp"
+                },
+                {
+                  "label": "Selection",
+                  "value": -4.85,
+                  "display": "-4.85pp"
+                },
+                {
+                  "label": "Interaction",
+                  "value": -0.2,
+                  "display": "-0.20pp"
+                }
+              ]
             }
           ],
-          "source": "[S2]"
+          "source": "[S2]",
+          "returned_field_path": "result.segments",
+          "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "lineage": [
+            {
+              "source": "[S2]",
+              "returned_field_paths": [
+                "result.segments[].allocation_name",
+                "result.segments[].allocation_effect",
+                "result.segments[].selection_effect",
+                "result.segments[].interaction_effect"
+              ],
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            }
+          ],
+          "note": "Returned allocation, selection and interaction effects by segment [S2]."
+        },
+        {
+          "type": "bars",
+          "title": "Historical portfolio and benchmark average weights",
+          "items": [
+            {
+              "label": "Public Equity · portfolio",
+              "value": 60.0,
+              "display": "60.0%"
+            },
+            {
+              "label": "Public Equity · benchmark",
+              "value": 55.0,
+              "display": "55.0%"
+            },
+            {
+              "label": "Alternatives · portfolio",
+              "value": 40.0,
+              "display": "40.0%"
+            },
+            {
+              "label": "Alternatives · benchmark",
+              "value": 45.0,
+              "display": "45.0%"
+            }
+          ],
+          "source": "[S2]",
+          "returned_field_path": "result.segments",
+          "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "lineage": [
+            {
+              "source": "[S2]",
+              "returned_field_paths": [
+                "result.segments[].allocation_name",
+                "result.segments[].average_portfolio_weight",
+                "result.segments[].average_benchmark_weight"
+              ],
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            }
+          ],
+          "note": "Returned arithmetic average beginning weights; no local difference [S2]."
+        },
+        {
+          "type": "line",
+          "title": "Cumulative linked effects",
+          "series": [
+            {
+              "name": "Allocation",
+              "points": [
+                [
+                  "2025-10-31",
+                  -0.05
+                ],
+                [
+                  "2026-03-31",
+                  -0.22
+                ],
+                [
+                  "2026-09-30",
+                  -0.45
+                ]
+              ]
+            },
+            {
+              "name": "Selection",
+              "points": [
+                [
+                  "2025-10-31",
+                  -0.4
+                ],
+                [
+                  "2026-03-31",
+                  -2.75
+                ],
+                [
+                  "2026-09-30",
+                  -5.4
+                ]
+              ]
+            },
+            {
+              "name": "Interaction",
+              "points": [
+                [
+                  "2025-10-31",
+                  -0.02
+                ],
+                [
+                  "2026-03-31",
+                  -0.11
+                ],
+                [
+                  "2026-09-30",
+                  -0.25
+                ]
+              ]
+            },
+            {
+              "name": "Total",
+              "points": [
+                [
+                  "2025-10-31",
+                  -0.47
+                ],
+                [
+                  "2026-03-31",
+                  -3.08
+                ],
+                [
+                  "2026-09-30",
+                  -6.1
+                ]
+              ]
+            }
+          ],
+          "y_suffix": "pp",
+          "decimals": 2,
+          "source": "[S2]",
+          "returned_field_path": "result.periods",
+          "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "lineage": [
+            {
+              "source": "[S2]",
+              "returned_field_paths": [
+                "result.periods[].period_date",
+                "result.periods[].cumulative_linked_allocation_effect",
+                "result.periods[].cumulative_linked_selection_effect",
+                "result.periods[].cumulative_linked_interaction_effect",
+                "result.periods[].cumulative_linked_total_effect"
+              ],
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            }
+          ],
+          "note": "Server-returned cumulative linked fields; no local accumulation [S2]."
+        },
+        {
+          "type": "line",
+          "title": "Cumulative Alternatives selection",
+          "series": [
+            {
+              "name": "Alternatives selection",
+              "points": [
+                [
+                  "2025-10-31",
+                  -0.35
+                ],
+                [
+                  "2026-03-31",
+                  -2.4
+                ],
+                [
+                  "2026-09-30",
+                  -4.85
+                ]
+              ]
+            }
+          ],
+          "y_suffix": "pp",
+          "decimals": 2,
+          "source": "[S2]",
+          "returned_field_path": "result.periods[].segments",
+          "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "lineage": [
+            {
+              "source": "[S2]",
+              "returned_field_paths": [
+                "result.periods[].period_date",
+                "result.periods[].segments[].allocation_name",
+                "result.periods[].segments[].cumulative_linked_selection_effect"
+              ],
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            }
+          ],
+          "note": "Returned rows filtered to allocation_name=Alternatives; no local accumulation [S2]."
+        },
+        {
+          "type": "callout",
+          "title": "Returned cumulative growth context",
+          "text": "Not available — cumulative_growth was not returned.",
+          "tone": "watch",
+          "role": "availability"
         },
         {
           "type": "callout",
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Selection leads detractors",
-          "text": "Observation: Returned selection is negative [S2]. Why it matters: Selection leads realized detractors. Uncertainty: The evidence covers one linked period. What would change the view: A later historical result."
+          "text": "Observation: Returned selection is the -5.40pp dominant realized shortfall and Alternatives contributes -4.85pp [S2]. Why it matters: Selection drives the returned bridge from +2.75% benchmark return to -3.35% portfolio return. Uncertainty: The evidence covers one linked window. What would change the view: A later historical result with a different returned selection effect."
         },
         {
           "type": "callout",
@@ -143,40 +561,173 @@
       "kicker": "Returned expected effects are shown as assumptions",
       "blocks": [
         {
-          "type": "bars",
-          "title": "Ex ante effects",
+          "type": "stacked",
+          "title": "Expected effects by segment",
           "items": [
             {
-              "label": "Allocation",
-              "value": 0.4,
-              "display": "+0.4pp"
+              "label": "Public Equity",
+              "segments": [
+                {
+                  "label": "Allocation",
+                  "value": 0.15,
+                  "display": "+0.15pp"
+                },
+                {
+                  "label": "Selection",
+                  "value": 0.2,
+                  "display": "+0.20pp"
+                },
+                {
+                  "label": "Interaction",
+                  "value": 0.05,
+                  "display": "+0.05pp"
+                }
+              ]
             },
             {
-              "label": "Selection",
-              "value": -0.1,
-              "display": "-0.1pp"
+              "label": "Alternatives",
+              "segments": [
+                {
+                  "label": "Allocation",
+                  "value": 0.13,
+                  "display": "+0.13pp"
+                },
+                {
+                  "label": "Selection",
+                  "value": 1.05,
+                  "display": "+1.05pp"
+                },
+                {
+                  "label": "Interaction",
+                  "value": 0.1,
+                  "display": "+0.10pp"
+                }
+              ]
             }
           ],
-          "source": "[S3]"
+          "source": "[S3]",
+          "returned_field_path": "result.segments",
+          "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "lineage": [
+            {
+              "source": "[S3]",
+              "returned_field_paths": [
+                "result.segments[].allocation_name",
+                "result.segments[].allocation_effect",
+                "result.segments[].selection_effect",
+                "result.segments[].interaction_effect"
+              ],
+              "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          ],
+          "note": "Returned expected allocation, selection and interaction by segment [S3]."
+        },
+        {
+          "type": "kv",
+          "title": "Ex ante assumptions",
+          "rows": [
+            [
+              "assumption_set_name",
+              "2026 Strategic CMA (TEST)",
+              "S3"
+            ],
+            [
+              "regime_name",
+              "user-defined regime",
+              "S3"
+            ],
+            [
+              "horizon",
+              "1 year",
+              "S3"
+            ],
+            [
+              "portfolio_return_source",
+              "allocation_expected_return_base",
+              "S3"
+            ],
+            [
+              "benchmark_return_source",
+              "benchmark_expected_return_base",
+              "S3"
+            ]
+          ],
+          "source": "[S3]",
+          "returned_field_path": "result.assumptions",
+          "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "lineage": [
+            {
+              "source": "[S3]",
+              "returned_field_paths": [
+                "result.assumptions.assumption_set_name",
+                "result.assumptions.regime_name",
+                "result.horizon.horizon_years",
+                "result.assumptions.portfolio_return_source",
+                "result.assumptions.benchmark_return_source"
+              ],
+              "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          ]
+        },
+        {
+          "type": "bars",
+          "title": "Expected portfolio and benchmark returns",
+          "items": [
+            {
+              "label": "Public Equity · portfolio",
+              "value": 6.5,
+              "display": "6.50%"
+            },
+            {
+              "label": "Public Equity · benchmark",
+              "value": 6.3,
+              "display": "6.30%"
+            },
+            {
+              "label": "Alternatives · portfolio",
+              "value": 9.95,
+              "display": "9.95%"
+            },
+            {
+              "label": "Alternatives · benchmark",
+              "value": 6.05,
+              "display": "6.05%"
+            }
+          ],
+          "source": "[S3]",
+          "returned_field_path": "result.segments",
+          "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "lineage": [
+            {
+              "source": "[S3]",
+              "returned_field_paths": [
+                "result.segments[].allocation_name",
+                "result.segments[].portfolio_expected_return",
+                "result.segments[].benchmark_expected_return"
+              ],
+              "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          ],
+          "note": "Returned expected returns grouped without local subtraction [S3]."
         },
         {
           "type": "callout",
           "role": "analysis",
           "tone": "info",
-          "title": "Analysis — Allocation leads expectations",
-          "text": "Observation: Returned allocation is positive [S3]. Why it matters: Allocation leads expected effects. Uncertainty: Inputs are assumptions. What would change the view: A refreshed ex ante result."
+          "title": "Analysis — Selection leads expectations",
+          "text": "Observation: Returned selection is the +1.25pp dominant expected gain and Alternatives contributes +1.05pp [S3]. Why it matters: Selection drives the returned bridge from 6.20% expected benchmark return to 7.88% expected portfolio return. Uncertainty: Inputs are governed assumptions. What would change the view: A refreshed ex ante result with a different returned selection effect."
         }
       ]
     },
     {
       "id": "simulated",
       "title": "Simulated Attribution",
-      "kicker": "Simulation capability is not published",
+      "kicker": "Simulation capability is planned",
       "blocks": [
         {
           "type": "callout",
           "title": "Not available",
-          "text": "Not available — not listed by get_gradient_capabilities [S1].",
+          "text": "Not available — planned per get_gradient_capabilities [S1].",
           "tone": "watch",
           "role": "availability"
         },
@@ -186,22 +737,12 @@
             {
               "name": "Capability",
               "status": "unavailable",
-              "note": "Capability-gated before invocation [S1]"
+              "note": "Planned per capability source [S1]"
             },
             {
               "name": "Invocation",
               "status": "unavailable",
-              "note": "Not called because capability is absent [S1]"
-            },
-            {
-              "name": "Lane identity",
-              "status": "unavailable",
-              "note": "No simulated payload [S1]"
-            },
-            {
-              "name": "Uncertainty",
-              "status": "unavailable",
-              "note": "No server uncertainty result [S1]"
+              "note": "Not called because capability is unavailable [S1]"
             }
           ]
         },
@@ -210,22 +751,177 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Simulation unavailable",
-          "text": "Observation: Simulation is not listed by get_gradient_capabilities [S1]. Why it matters: Scenario effects cannot be assessed. Uncertainty: Capability may be added later. What would change the view: A capability response listing the exact simulation tool."
+          "text": "Observation: Simulation is planned per the capability source [S1]. Why it matters: Scenario effects cannot be assessed. Uncertainty: Capability readiness may change. What would change the view: A capability response marking the exact simulation tool available."
         }
-      ],
-      "page_break": "force"
+      ]
     },
     {
       "id": "comparison",
       "title": "Cross-Lane Comparison",
-      "kicker": "Server-derived comparison metrics are not published",
+      "kicker": "Returned lanes are displayed while comparison remains planned",
       "blocks": [
         {
           "type": "callout",
           "title": "Not available",
-          "text": "Not available — not listed by get_gradient_capabilities [S1].",
+          "text": "Not available — planned per get_gradient_capabilities [S1].",
           "tone": "watch",
           "role": "availability"
+        },
+        {
+          "type": "heat",
+          "title": "Returned cross-lane effect matrix",
+          "columns": [
+            "Realized",
+            "Expected"
+          ],
+          "rows": [
+            {
+              "label": "Allocation",
+              "values": [
+                0.2,
+                0.4
+              ]
+            },
+            {
+              "label": "Selection",
+              "values": [
+                -0.8,
+                -0.1
+              ]
+            },
+            {
+              "label": "Interaction",
+              "values": [
+                0.0,
+                0.05
+              ]
+            }
+          ],
+          "format": "pp",
+          "decimals": 2,
+          "source": "[S2][S3]",
+          "lineage": [
+            {
+              "source": "[S2]",
+              "returned_field_paths": [
+                "result.summary.allocation_effect",
+                "result.summary.selection_effect",
+                "result.summary.interaction_effect"
+              ],
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            {
+              "source": "[S3]",
+              "returned_field_paths": [
+                "result.summary.allocation_effect",
+                "result.summary.selection_effect",
+                "result.summary.interaction_effect"
+              ],
+              "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          ],
+          "note": "Side-by-side returned summary fields; no local differences [S2][S3]."
+        },
+        {
+          "type": "two_col",
+          "title": "Returned effects side by side",
+          "source": "[S2][S3]",
+          "lineage": [
+            {
+              "source": "[S2]",
+              "returned_field_paths": [
+                "result.summary.allocation_effect",
+                "result.summary.selection_effect",
+                "result.summary.interaction_effect"
+              ],
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            {
+              "source": "[S3]",
+              "returned_field_paths": [
+                "result.summary.allocation_effect",
+                "result.summary.selection_effect",
+                "result.summary.interaction_effect"
+              ],
+              "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          ],
+          "left": [
+            {
+              "type": "bars",
+              "title": "Realized returned effects",
+              "items": [
+                {
+                  "label": "Allocation",
+                  "value": 0.2,
+                  "display": "+0.2pp"
+                },
+                {
+                  "label": "Selection",
+                  "value": -0.8,
+                  "display": "-0.8pp"
+                },
+                {
+                  "label": "Interaction",
+                  "value": 0.0,
+                  "display": "0.0pp"
+                }
+              ],
+              "source": "[S2]",
+              "returned_field_path": "result.summary",
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "lineage": [
+                {
+                  "source": "[S2]",
+                  "returned_field_paths": [
+                    "result.summary.allocation_effect",
+                    "result.summary.selection_effect",
+                    "result.summary.interaction_effect"
+                  ],
+                  "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+                }
+              ],
+              "note": "Displayed unchanged [S2]."
+            }
+          ],
+          "right": [
+            {
+              "type": "bars",
+              "title": "Expected returned effects",
+              "items": [
+                {
+                  "label": "Allocation",
+                  "value": 0.4,
+                  "display": "+0.4pp"
+                },
+                {
+                  "label": "Selection",
+                  "value": -0.1,
+                  "display": "-0.1pp"
+                },
+                {
+                  "label": "Interaction",
+                  "value": 0.05,
+                  "display": "+0.05pp"
+                }
+              ],
+              "source": "[S3]",
+              "returned_field_path": "result.summary",
+              "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "lineage": [
+                {
+                  "source": "[S3]",
+                  "returned_field_paths": [
+                    "result.summary.allocation_effect",
+                    "result.summary.selection_effect",
+                    "result.summary.interaction_effect"
+                  ],
+                  "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+                }
+              ],
+              "note": "Displayed unchanged [S3]."
+            }
+          ]
         },
         {
           "type": "callout",
@@ -260,60 +956,18 @@
           ]
         },
         {
-          "type": "table",
-          "title": "Returned sign by segment",
-          "columns": [
-            "Lane",
-            "Segment",
-            "Returned effect",
-            "Returned sign",
-            "Source"
-          ],
-          "rows": [
-            [
-              "Historical",
-              "Public Equity",
-              "-0.8pp",
-              "Negative",
-              "[S2]"
-            ],
-            [
-              "Historical",
-              "Fixed Income",
-              "+0.2pp",
-              "Positive",
-              "[S2]"
-            ],
-            [
-              "Governed ex ante",
-              "Public Equity",
-              "+0.4pp",
-              "Positive",
-              "[S3]"
-            ],
-            [
-              "Governed ex ante",
-              "Fixed Income",
-              "-0.1pp",
-              "Negative",
-              "[S3]"
-            ]
-          ]
-        },
-        {
           "type": "callout",
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Comparison unavailable",
-          "text": "Observation: Comparison is not listed by get_gradient_capabilities [S1]. Why it matters: No persistence claim is supported. Uncertainty: Future metrics may alter context. What would change the view: A governed comparison result."
+          "text": "Observation: Comparison is planned per get_gradient_capabilities [S1]. Why it matters: No persistence claim is supported. Uncertainty: Planned capability timing is not returned. What would change the view: A governed comparison result."
         }
-      ],
-      "page_break": "force"
+      ]
     },
     {
       "id": "coverage",
       "title": "Coverage and Limitations",
-      "kicker": "Two live lanes and two capability gaps define coverage",
+      "kicker": "Two live lanes and two planned capabilities define coverage",
       "blocks": [
         {
           "type": "coverage",
@@ -331,7 +985,7 @@
             {
               "name": "Planned tools",
               "status": "unavailable",
-              "note": "Not published [S1]"
+              "note": "Simulation and comparison are planned [S1]"
             }
           ]
         }
@@ -339,7 +993,8 @@
     },
     {
       "id": "appendix-a",
-      "title": "Appendix A — Sources and Methods",
+      "num": "A",
+      "title": "Appendix — Sources and methods",
       "kicker": "Governed source inventory",
       "blocks": [
         {
@@ -362,7 +1017,7 @@
               "gradient_tool",
               "get_gradient_capabilities",
               "fixture=true",
-              "2026-06-30",
+              "2026-09-30",
               "Gradient-governed TEST evidence",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
@@ -373,7 +1028,7 @@
               "gradient_tool",
               "get_portfolio_attribution",
               "fixture=true",
-              "2026-06-30",
+              "2026-09-30",
               "Gradient-governed TEST evidence",
               "passed",
               "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
@@ -384,11 +1039,72 @@
               "gradient_tool",
               "get_portfolio_ex_ante_attribution",
               "fixture=true",
-              "2026-06-30",
+              "2026-09-30",
               "Gradient-governed TEST evidence",
               "passed",
               "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
             ]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Returned sign by segment",
+          "columns": [
+            "Lane",
+            "Segment",
+            "Returned effect",
+            "Returned sign",
+            "Source"
+          ],
+          "rows": [
+            [
+              "Historical",
+              "Public Equity",
+              "+0.2pp",
+              "Positive",
+              "[S2]"
+            ],
+            [
+              "Historical",
+              "Alternatives",
+              "-0.8pp",
+              "Negative",
+              "[S2]"
+            ],
+            [
+              "Governed ex ante",
+              "Public Equity",
+              "+0.27pp",
+              "Positive",
+              "[S3]"
+            ],
+            [
+              "Governed ex ante",
+              "Alternatives",
+              "+0.08pp",
+              "Positive",
+              "[S3]"
+            ]
+          ],
+          "note": "Signs classify returned effects only; no cross-lane arithmetic [S2][S3].",
+          "source": "[S2][S3]",
+          "lineage": [
+            {
+              "source": "[S2]",
+              "returned_field_paths": [
+                "result.segments[].allocation_name",
+                "result.segments[].total_effect"
+              ],
+              "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            {
+              "source": "[S3]",
+              "returned_field_paths": [
+                "result.segments[].allocation_name",
+                "result.segments[].total_effect"
+              ],
+              "response_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
           ]
         },
         {
@@ -403,8 +1119,7 @@
           "title": "Comparison boundary",
           "text": "Cross-lane differences, concentration, overlap, reconciliation and persistence are reported only when the governed comparison capability returns them. Capability absence is an evidence limitation, not a zero value or a failed lane. Request IDs, diagnostics, residuals and coverage remain attached to their source payloads [S1]."
         }
-      ],
-      "page_break": "force"
+      ]
     }
   ]
 }

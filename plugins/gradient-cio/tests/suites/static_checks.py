@@ -8,6 +8,7 @@ from suites.connector_contracts import (
 )
 from suites.renderer_regressions import chart_renderer
 from suites.report_validators import connector_cutover
+from report_json_validator import block_objects, validate_sources_appendix_identity
 
 
 ANALYSIS_EXAMPLE_CONTRACTS = {
@@ -424,125 +425,665 @@ def attribution_compare_contract_checks():
             item for item in document["sections"] if item.get("title") == title
         )
 
-    mutations = []
+    def titled_block(document, section_title, block_title):
+        return next(
+            block
+            for block in all_blocks(section(document, section_title))
+            if block.get("title") == block_title
+        )
+
+    def all_blocks(container):
+        found = []
+        for block in container.get("blocks", []):
+            if not isinstance(block, dict):
+                continue
+            found.append(block)
+            for key in ("left", "right"):
+                found.extend(all_blocks({"blocks": block.get(key, [])}))
+        return found
+
+    def validate_document(document, directory, name):
+        path = directory / name
+        path.write_text(json.dumps(document), encoding="utf-8")
+        return subprocess.run(
+            [sys.executable, str(validator), str(path)],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+
     fallback = documents["fallback"]
-
-    wrong_unavailable = json.loads(json.dumps(fallback))
-    section(wrong_unavailable, "Simulated Attribution")["blocks"][0]["text"] = (
-        "Not available — capability not published [S1]."
+    three_lane = documents["three_lane"]
+    budget = json.loads(
+        (
+            ROOT
+            / "skills"
+            / "gradient-portfolio-attribution-compare"
+            / "references"
+            / "layout-budget.json"
+        ).read_text(encoding="utf-8")
     )
-    mutations.append(("non-canonical capability unavailability", wrong_unavailable))
+    check(
+        budget.get("selector") == {
+            "path": "meta.mode",
+            "default": "fallback",
+        }
+        and budget.get("modes", {}).get("fallback", {}).get("forced_breaks") == []
+        and budget.get("modes", {}).get("three_lane", {}).get("forced_breaks")
+        == ["simulated", "comparison", "appendix-a"]
+        and budget.get("content", {}).get("sections", {}).get(
+            "historical", {}
+        ).get("max_visuals")
+        == 5
+        and budget.get("content", {}).get("sections", {}).get(
+            "comparison", {}
+        ).get("max_visuals")
+        == 5
+        and budget.get("modes", {})
+        .get("three_lane", {})
+        .get("content", {})
+        .get("sections", {})
+        .get("3", {})
+        .get("max_visuals")
+        == 5
+        and budget.get("modes", {})
+        .get("three_lane", {})
+        .get("content", {})
+        .get("sections", {})
+        .get("6", {})
+        .get("max_visuals")
+        == 5,
+        "attribution-compare layout budget makes forced breaks mode-specific",
+    )
+    from report_layout import validate_layout_budget, validate_report_budget
 
-    missing_sign_table = json.loads(json.dumps(fallback))
-    comparison_blocks = section(
-        missing_sign_table, "Cross-Lane Comparison"
-    )["blocks"]
-    comparison_blocks[:] = [
+    three_lane_budget_errors = validate_layout_budget(
+        budget, three_lane
+    ) + validate_report_budget(three_lane, budget)
+    check(
+        not three_lane_budget_errors,
+        "attribution three-lane fixture passes its pre-render layout budget"
+        + (
+            f": {three_lane_budget_errors}"
+            if three_lane_budget_errors
+            else ""
+        ),
+    )
+    fallback_flow_titles = (
+        "Simulated Attribution",
+        "Cross-Lane Comparison",
+        "Appendix — Sources and methods",
+    )
+    check(
+        all(
+            "page_break" not in section(fallback, title)
+            for title in fallback_flow_titles
+        )
+        and all(
+            section(three_lane, title).get("page_break") == "force"
+            for title in fallback_flow_titles
+        ),
+        "attribution fixtures use fallback automatic flow and three-lane forced breaks",
+    )
+
+    fallback_capabilities = fallback["meta"]["capability_gate"]
+    check(
+        set(fallback_capabilities) == {
+            "simulate_portfolio_attribution",
+            "compare_portfolio_attribution",
+        }
+        and all(
+            row == {
+                "contract": "planned_conditional",
+                "status": "unavailable",
+                "reason": "planned",
+            }
+            for row in fallback_capabilities.values()
+        )
+        and fallback["executive"]["tiles"][2]["sub"]
+        == "Not available — planned per get_gradient_capabilities [S1]"
+        and fallback["executive"]["tiles"][3]["sub"]
+        == "Not available — planned per get_gradient_capabilities [S1]"
+        and section(fallback, "Simulated Attribution")["blocks"][0]["text"]
+        == "Not available — planned per get_gradient_capabilities [S1]."
+        and section(fallback, "Cross-Lane Comparison")["blocks"][0]["text"]
+        == "Not available — planned per get_gradient_capabilities [S1].",
+        "attribution fallback reports planned status from capability source",
+    )
+
+    executive_visuals = [
         block
-        for block in comparison_blocks
-        if block.get("title") != "Returned sign by segment"
+        for block in section(fallback, "Executive Comparison")["blocks"]
+        if block.get("type") == "waterfall"
     ]
-    mutations.append(("missing returned-sign table", missing_sign_table))
+    executive_waterfalls = {
+        block["title"]: block for block in executive_visuals
+    }
+    expected_bridge_labels = [
+        "Benchmark return",
+        "Allocation",
+        "Selection",
+        "Interaction",
+        "Portfolio return",
+    ]
+    historical_line_dates = {
+        point[0]
+        for block in section(fallback, "Historical Attribution")["blocks"]
+        if block.get("type") == "line"
+        for series in block.get("series", [])
+        for point in series.get("points", [])
+    }
+    check(
+        fallback["meta"]["title"].startswith(
+            "Total Plan - Demo Portfolio "
+            "(Illustrative, Gradient Maintained)"
+        )
+        and fallback["meta"]["data_as_of"] == "2026-09-30"
+        and dict(fallback["meta"]["cover_facts"]).get("Benchmark")
+        == "Policy benchmark"
+        and dict(fallback["meta"]["cover_facts"]).get("Cohort") == "Root cohort"
+        and fallback["executive"]["tiles"][0]["sub"]
+        == "Realized 12 months · 2025-10-31 to 2026-09-30 [S2]"
+        and section(fallback, "Executive Comparison")["blocks"][0]["text"]
+        == (
+            "Realized shortfall from selection; expected gain from selection; "
+            "Alternatives drives both [S2][S3]."
+        )
+        and [
+            item["label"]
+            for item in executive_waterfalls["Realized summary effects"]["items"]
+        ]
+        == expected_bridge_labels
+        and [
+            item["value"]
+            for item in executive_waterfalls["Realized summary effects"]["items"]
+        ]
+        == [2.75, -0.45, -5.4, -0.25, -3.35]
+        and [
+            item["label"]
+            for item in executive_waterfalls["Expected summary effects"]["items"]
+        ]
+        == expected_bridge_labels
+        and [
+            item["value"]
+            for item in executive_waterfalls["Expected summary effects"]["items"]
+        ]
+        == [6.2, 0.28, 1.25, 0.15, 7.88]
+        and historical_line_dates
+        == {"2025-10-31", "2026-03-31", "2026-09-30"},
+        "attribution fallback matches the named acceptance retest",
+    )
+    historical_titles = {
+        block.get("title")
+        for block in section(fallback, "Historical Attribution")["blocks"]
+    }
+    ex_ante_titles = {
+        block.get("title")
+        for block in section(fallback, "Governed Ex Ante Attribution")["blocks"]
+    }
+    comparison_titles = {
+        block.get("title")
+        for block in all_blocks(section(fallback, "Cross-Lane Comparison"))
+    }
+    three_lane_titles = {
+        block.get("title")
+        for block in all_blocks(section(three_lane, "Cross-Lane Comparison"))
+    }
+    simulated_titles = {
+        block.get("title")
+        for block in section(three_lane, "Simulated Attribution")["blocks"]
+    }
+    check(
+        [block.get("title") for block in executive_visuals]
+        == ["Realized summary effects", "Expected summary effects"]
+        and {
+            "Historical effects by segment",
+            "Historical portfolio and benchmark average weights",
+            "Cumulative linked effects",
+            "Cumulative Alternatives selection",
+            "Returned cumulative growth context",
+        }
+        <= historical_titles
+        and {
+            "Ex ante assumptions",
+            "Expected effects by segment",
+            "Expected portfolio and benchmark returns",
+        }
+        <= ex_ante_titles
+        and {
+            "Returned cross-lane effect matrix",
+            "Returned effects side by side",
+            "Realized returned effects",
+            "Expected returned effects",
+        }
+        <= comparison_titles
+        and {
+            "Returned lane differences",
+            "Returned concentration",
+            "Returned persistence",
+        }
+        <= three_lane_titles
+        and {"Simulated effect bands", "Scenario selector"} <= simulated_titles,
+        "attribution fixtures carry the S1-S8 returned-field exhibit inventory",
+    )
 
-    aggregate_sign_count = json.loads(json.dumps(fallback))
-    sign_table = next(
-        block
-        for block in section(
-            aggregate_sign_count, "Cross-Lane Comparison"
-        )["blocks"]
-        if block.get("title") == "Returned sign by segment"
-    )
-    sign_table["rows"][0][1] = "2 of 5 segments"
-    mutations.append(("aggregate fallback sign count", aggregate_sign_count))
+    mutations = []
 
-    combined_segment_row = json.loads(json.dumps(fallback))
-    sign_table = next(
-        block
-        for block in section(
-            combined_segment_row, "Cross-Lane Comparison"
-        )["blocks"]
-        if block.get("title") == "Returned sign by segment"
-    )
-    sign_table["rows"][0][1] = "Public Equity; Fixed Income"
-    mutations.append(("multiple segments in one sign row", combined_segment_row))
+    def mutate(label, mode, apply):
+        changed = json.loads(json.dumps(documents[mode]))
+        apply(changed)
+        mutations.append((label, changed))
 
-    unsourced_reconciliation = json.loads(json.dumps(fallback))
-    boundary = next(
-        block
-        for block in section(
-            unsourced_reconciliation, "Historical Attribution"
-        )["blocks"]
-        if "entity_return_reconciliation" in block.get("text", "")
+    mutate(
+        "planned capability section uses non-source reason",
+        "fallback",
+        lambda value: section(value, "Simulated Attribution")["blocks"][0].update(
+            {
+                "text": (
+                    "Not available — disabled per capability response [S1]."
+                )
+            }
+        ),
     )
-    boundary["text"] = boundary["text"].replace(" [S2]", "")
-    mutations.append(
-        ("unsourced historical reconciliation callout", unsourced_reconciliation)
+    mutate(
+        "planned capability tile says not listed",
+        "fallback",
+        lambda value: value["executive"]["tiles"][2].update(
+            {
+                "sub": (
+                    "Not available — not listed by "
+                    "get_gradient_capabilities [S1]"
+                )
+            }
+        ),
     )
+    mutate(
+        "absent capability still uses listed-row reason",
+        "fallback",
+        lambda value: value["meta"]["capability_gate"].pop(
+            "simulate_portfolio_attribution"
+        ),
+    )
+    mutate(
+        "missing returned-sign table",
+        "fallback",
+        lambda value: section(value, "Appendix — Sources and methods").update(
+            {
+                "blocks": [
+                    block
+                    for block in section(
+                        value, "Appendix — Sources and methods"
+                    )["blocks"]
+                    if block.get("title") != "Returned sign by segment"
+                ]
+            }
+        ),
+    )
+    mutate(
+        "aggregate fallback sign count",
+        "fallback",
+        lambda value: titled_block(
+            value,
+            "Appendix — Sources and methods",
+            "Returned sign by segment",
+        )["rows"][0].__setitem__(1, "2 of 4 segments"),
+    )
+    mutate(
+        "missing ex-ante assumption set name",
+        "fallback",
+        lambda value: titled_block(
+            value,
+            "Governed Ex Ante Attribution",
+            "Ex ante assumptions",
+        ).update(
+            {
+                "rows": [
+                    row
+                    for row in titled_block(
+                        value,
+                        "Governed Ex Ante Attribution",
+                        "Ex ante assumptions",
+                    )["rows"]
+                    if row[0] != "assumption_set_name"
+                ]
+            }
+        ),
+    )
+    mutate(
+        "raw USER regime display",
+        "fallback",
+        lambda value: next(
+            row
+            for row in titled_block(
+                value,
+                "Governed Ex Ante Attribution",
+                "Ex ante assumptions",
+            )["rows"]
+            if row[0] == "regime_name"
+        ).__setitem__(1, "USER"),
+    )
+    mutate(
+        "missing realized executive waterfall",
+        "fallback",
+        lambda value: section(value, "Executive Comparison").update(
+            {
+                "blocks": [
+                    block
+                    for block in section(value, "Executive Comparison")["blocks"]
+                    if block.get("title") != "Realized summary effects"
+                ]
+            }
+        ),
+    )
+    mutate(
+        "third executive waterfall",
+        "fallback",
+        lambda value: section(value, "Executive Comparison")["blocks"].append(
+            json.loads(
+                json.dumps(
+                    titled_block(
+                        value,
+                        "Executive Comparison",
+                        "Realized summary effects",
+                    )
+                )
+            )
+        ),
+    )
+    mutate(
+        "realized waterfall bridge labels out of order",
+        "fallback",
+        lambda value: titled_block(
+            value,
+            "Executive Comparison",
+            "Realized summary effects",
+        )["items"].__setitem__(
+            slice(1, 3),
+            list(
+                reversed(
+                    titled_block(
+                        value,
+                        "Executive Comparison",
+                        "Realized summary effects",
+                    )["items"][1:3]
+                )
+            ),
+        ),
+    )
+    mutate(
+        "expected waterfall lineage missing returned endpoint",
+        "fallback",
+        lambda value: titled_block(
+            value,
+            "Executive Comparison",
+            "Expected summary effects",
+        )["lineage"][0].update(
+            {
+                "returned_field_paths": [
+                    "result.summary.allocation_effect",
+                    "result.summary.selection_effect",
+                    "result.summary.interaction_effect",
+                    "result.summary.expected_portfolio_return",
+                ]
+            }
+        ),
+    )
+    mutate(
+        "historical stacked effects missing",
+        "fallback",
+        lambda value: titled_block(
+            value, "Historical Attribution", "Historical effects by segment"
+        ).update({"type": "bars"}),
+    )
+    mutate(
+        "historical average weights missing",
+        "fallback",
+        lambda value: titled_block(
+            value,
+            "Historical Attribution",
+            "Historical portfolio and benchmark average weights",
+        ).update({"title": "Renamed weights"}),
+    )
+    mutate(
+        "ex-ante stacked effects missing",
+        "fallback",
+        lambda value: titled_block(
+            value, "Governed Ex Ante Attribution", "Expected effects by segment"
+        ).update({"type": "bars"}),
+    )
+    mutate(
+        "ex-ante expected returns missing",
+        "fallback",
+        lambda value: titled_block(
+            value,
+            "Governed Ex Ante Attribution",
+            "Expected portfolio and benchmark returns",
+        ).update({"title": "Renamed expected returns"}),
+    )
+    mutate(
+        "required cumulative line missing",
+        "fallback",
+        lambda value: titled_block(
+            value, "Historical Attribution", "Cumulative linked effects"
+        ).update({"type": "bars"}),
+    )
+    mutate(
+        "period flag conflicts with returned lines",
+        "fallback",
+        lambda value: value["meta"]["evidence_flags"].update(
+            {"historical_periods_available": False}
+        ),
+    )
+    mutate(
+        "growth flag conflicts with returned line",
+        "three_lane",
+        lambda value: value["meta"]["evidence_flags"].update(
+            {"historical_cumulative_growth_available": False}
+        ),
+    )
+    mutate(
+        "two compatible lanes missing heat",
+        "fallback",
+        lambda value: titled_block(
+            value,
+            "Cross-Lane Comparison",
+            "Returned cross-lane effect matrix",
+        ).update({"type": "bars"}),
+    )
+    mutate(
+        "one compatible lane still has heat",
+        "fallback",
+        lambda value: value["meta"]["evidence_flags"].update(
+            {"compatible_lane_count": 1}
+        ),
+    )
+    mutate(
+        "missing side-by-side returned effects",
+        "fallback",
+        lambda value: titled_block(
+            value,
+            "Cross-Lane Comparison",
+            "Returned effects side by side",
+        ).update({"type": "callout", "text": "Not available."}),
+    )
+    mutate(
+        "visual lineage missing exact returned path",
+        "fallback",
+        lambda value: titled_block(
+            value,
+            "Historical Attribution",
+            "Cumulative linked effects",
+        )["lineage"][0].update(
+            {
+                "returned_field_paths": [
+                    "result.periods[].period_date",
+                    "result.periods[].linked_total_effect",
+                ]
+            }
+        ),
+    )
+    mutate(
+        "visual lineage digest mismatches source",
+        "fallback",
+        lambda value: titled_block(
+            value,
+            "Governed Ex Ante Attribution",
+            "Expected effects by segment",
+        )["lineage"][0].update({"response_digest": "sha256:" + "9" * 64}),
+    )
+    mutate(
+        "three-lane simulated band missing",
+        "three_lane",
+        lambda value: titled_block(
+            value, "Simulated Attribution", "Simulated effect bands"
+        ).update({"type": "bars"}),
+    )
+    mutate(
+        "three-lane scenario selector missing",
+        "three_lane",
+        lambda value: titled_block(
+            value, "Simulated Attribution", "Scenario selector"
+        ).update({"title": "Renamed selector"}),
+    )
+    for title in (
+        "Returned lane differences",
+        "Returned concentration",
+        "Returned persistence",
+    ):
+        mutate(
+            f"three-lane {title} missing",
+            "three_lane",
+            lambda value, block_title=title: titled_block(
+                value, "Cross-Lane Comparison", block_title
+            ).update({"title": f"Renamed {block_title}"}),
+        )
 
     for title in (
         "Simulated Attribution",
         "Cross-Lane Comparison",
-        "Appendix A — Sources and Methods",
+        "Appendix — Sources and methods",
     ):
-        missing_break = json.loads(json.dumps(fallback))
-        section(missing_break, title).pop("page_break", None)
-        mutations.append((f"missing forced break on {title}", missing_break))
+        for fallback_break in ("prefer", "force", "auto"):
+            mutate(
+                f"fallback authored {fallback_break} break on {title}",
+                "fallback",
+                lambda value, section_title=title, page_break=fallback_break: section(
+                    value, section_title
+                ).update({"page_break": page_break}),
+            )
+        mutate(
+            f"missing three-lane forced break on {title}",
+            "three_lane",
+            lambda value, section_title=title: section(
+                value, section_title
+            ).pop("page_break", None),
+        )
+        mutate(
+            f"preferred three-lane break on {title}",
+            "three_lane",
+            lambda value, section_title=title: section(
+                value, section_title
+            ).update({"page_break": "prefer"}),
+        )
 
-    bad_tile_subs = (
-        ("fallback historical tile basis", "fallback", 0, "Realized effects [S2]"),
-        ("fallback ex-ante tile basis", "fallback", 1, "Expected effects [S3]"),
+    unavailable = json.loads(json.dumps(fallback))
+    unavailable["meta"]["evidence_flags"]["historical_periods_available"] = False
+    unavailable["meta"]["evidence_flags"][
+        "historical_cumulative_growth_available"
+    ] = False
+    historical_blocks = section(unavailable, "Historical Attribution")["blocks"]
+    historical_blocks[:] = [
         (
-            "fallback simulated tile basis",
-            "fallback",
-            2,
-            "Capability unavailable [S1]",
-        ),
-        (
-            "fallback comparison tile basis",
-            "fallback",
-            3,
-            "No server metrics [S1]",
-        ),
-        (
-            "three-lane simulated tile basis",
-            "three_lane",
-            2,
-            "Governed scenario [S4]",
-        ),
-        (
-            "three-lane comparison tile basis",
-            "three_lane",
-            3,
-            "Server comparison [S5]",
-        ),
+            {
+                "type": "callout",
+                "title": block["title"],
+                "text": (
+                    "Not available — cumulative_growth was not returned."
+                    if block["title"] == "Returned cumulative growth context"
+                    else "Not available — historical periods were not returned."
+                ),
+                "tone": "watch",
+                "role": "availability",
+            }
+            if block.get("title")
+            in {
+                "Cumulative linked effects",
+                "Cumulative Alternatives selection",
+                "Returned cumulative growth context",
+            }
+            else block
+        )
+        for block in historical_blocks
+    ]
+    source_table = next(
+        block
+        for block in section(
+            unavailable, "Appendix — Sources and methods"
+        )["blocks"]
+        if block.get("type") == "table"
+        and block.get("columns", [None])[0] == "Tag"
     )
-    for label, mode, tile_index, sub in bad_tile_subs:
-        bad_tile = json.loads(json.dumps(documents[mode]))
-        bad_tile["executive"]["tiles"][tile_index]["sub"] = sub
-        mutations.append((label, bad_tile))
+    source_table["rows"] = [
+        row for row in source_table["rows"] if row[0] != "S4"
+    ]
+
+    absent_capability = json.loads(json.dumps(fallback))
+    absent_capability["meta"]["capability_gate"].pop(
+        "simulate_portfolio_attribution"
+    )
+    absent_capability["executive"]["tiles"][2]["sub"] = (
+        "Not available — not listed by get_gradient_capabilities [S1]"
+    )
+    section(absent_capability, "Simulated Attribution")["blocks"][0]["text"] = (
+        "Not available — not listed by get_gradient_capabilities [S1]."
+    )
 
     failures = []
     with tempfile.TemporaryDirectory() as temporary:
         temporary_path = pathlib.Path(temporary)
+        unavailable_result = validate_document(
+            unavailable,
+            temporary_path,
+            "valid-unavailable.json",
+        )
+        absent_capability_result = validate_document(
+            absent_capability,
+            temporary_path,
+            "valid-absent-capability.json",
+        )
         for index, (label, document) in enumerate(mutations):
-            path = temporary_path / f"invalid-{index}.json"
-            path.write_text(json.dumps(document), encoding="utf-8")
-            result = subprocess.run(
-                [sys.executable, str(validator), str(path)],
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
+            result = validate_document(
+                document,
+                temporary_path,
+                f"invalid-{index}.json",
             )
             if result.returncode == 0:
                 failures.append(label)
     check(
+        unavailable_result.returncode == 0,
+        "attribution-compare validator accepts exact typed line unavailability"
+        + (
+            f": {unavailable_result.stdout or unavailable_result.stderr}"
+            if unavailable_result.returncode
+            else ""
+        ),
+    )
+    check(
+        absent_capability_result.returncode == 0,
+        "attribution-compare validator accepts exact absent capability wording"
+        + (
+            f": {absent_capability_result.stdout or absent_capability_result.stderr}"
+            if absent_capability_result.returncode
+            else ""
+        ),
+    )
+    check(
         not failures,
-        "attribution-compare validator rejects capability, fallback, basis, "
-        "reconciliation and pagination mutations"
+        "attribution-compare validator rejects S1-S8 capability, exhibit, "
+        "lineage, availability and pagination mutations"
         + (f": {failures}" if failures else ""),
     )
-
 
 def analysis_example_checks():
     missing_files = []
@@ -634,7 +1175,8 @@ def private_markets_pme_contract_checks():
     source_rows = next(
         block["rows"]
         for section in document["sections"]
-        if section.get("title") == "Appendix A — Sources and methods"
+        if section.get("title") == "Appendix — Sources and methods"
+        and section.get("num") == "A"
         for block in section["blocks"]
         if block.get("type") == "table"
         and block.get("columns", [])[:4]
@@ -861,6 +1403,66 @@ def registered_json_validator_checks(validator_manifest):
     )
 
 
+def sources_appendix_contract_checks():
+    canonical_title = "Appendix — Sources and methods"
+    canonical_heading = "Appendix A — Sources and methods"
+    fixture_errors = []
+    for path in sorted(FIX.glob("*.json")):
+        try:
+            document = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(document, dict):
+            continue
+        for section in document.get("sections", []):
+            if not isinstance(section, dict):
+                continue
+            title = str(section.get("title", ""))
+            if "appendix" not in title.casefold() or "source" not in title.casefold():
+                continue
+            if title != canonical_title or section.get("num") != "A":
+                fixture_errors.append(
+                    f"{path.name}: title={title!r}, num={section.get('num')!r}"
+                )
+
+    markdown_errors = []
+    for path in sorted(FIX.glob("*.md")):
+        headings = re.findall(
+            r"(?m)^##\s+(Appendix[^\n]*(?:Sources|sources)[^\n]*)$",
+            path.read_text(encoding="utf-8"),
+        )
+        markdown_errors.extend(
+            f"{path.name}: {heading!r}"
+            for heading in headings
+            if heading != canonical_heading
+        )
+
+    check(
+        not fixture_errors and not markdown_errors,
+        "sources appendices use exact title and num A"
+        + (
+            f": {fixture_errors + markdown_errors}"
+            if fixture_errors or markdown_errors
+            else ""
+        ),
+    )
+    canonical = [{"title": canonical_title, "num": "A", "blocks": []}]
+    alternate_case = [{"title": "Appendix — Sources and Methods", "num": "A"}]
+    missing_a = [{"title": canonical_title}]
+    mismatched = [{"title": canonical_heading, "num": "A"}]
+    check(
+        validate_sources_appendix_identity(canonical) == []
+        and validate_sources_appendix_identity(alternate_case)
+        == [
+            f"Sources appendix title must be exactly '{canonical_title}'",
+        ]
+        and validate_sources_appendix_identity(missing_a)
+        == ["Sources appendix num must be exactly 'A'"]
+        and len(validate_sources_appendix_identity(mismatched)) == 1,
+        "sources appendix validator rejects capitalization, missing A, and mismatch",
+    )
+
+
 def static(allow_branded):
     print("Static checks")
     pj = json.loads((ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
@@ -1034,6 +1636,7 @@ def static(allow_branded):
         "every output skill has a registered validator and fixture"
         + (f": {manifest_errors}" if manifest_errors else ""),
     )
+    sources_appendix_contract_checks()
     registered_json_validator_checks(validator_manifest)
     handoff_contract_checks()
     attribution_compare_contract_checks()

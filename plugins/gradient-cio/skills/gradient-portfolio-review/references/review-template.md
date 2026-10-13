@@ -24,7 +24,7 @@ shown.
 7. `id: 7`, **Coverage** — a `coverage` block followed by a concise closing
    perspective that states the principal limitation without recommending an
    action.
-8. `id: A`, **Appendix — Sources and method**, plus further appendices only
+8. `id: A`, **Appendix — Sources and methods**, plus further appendices only
    when applicable.
 
 Every brief analytical section ends with `Analysis — <message>` callouts. Each
@@ -210,7 +210,7 @@ decision or vote.
 - Include **Peer allocation intelligence**. When unlicensed, use status `not licensed` and note
   `Not licensed — peerIntelligence is not available for this organization`.
 
-### Appendix A — Sources
+### Appendix — Sources and methods (`num: "A"`)
 
 - `table` with columns `Tag`, `Evidence`, `Basis`, `Tool / view`, `Key parameters`, `As of`, `Data scope`,
   `Validation`, `Digest`.

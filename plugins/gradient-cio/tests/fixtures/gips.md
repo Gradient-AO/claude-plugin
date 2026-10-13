@@ -38,7 +38,7 @@ latest report period, a Low finding [S1][S2][S3].
 2. Provide the full fee schedule including the performance fee (4.C.11) [S1].
 3. Provide the current list of composite descriptions (4.C.15) [S1].
 
-## Appendix A — Findings Checklist
+## Appendix B — Findings Checklist
 
 ### Claim & verification
 
@@ -58,7 +58,7 @@ latest report period, a Low finding [S1][S2][S3].
 | Disclosures | Benchmark description | 4.C.32 | Met | GIPS Report p.3 | — |
 | Policies | List of composite descriptions available | 4.C.15 | Not found | — | Request |
 
-## Appendix B — Sources
+## Appendix A — Sources and methods
 
 | Tag | Source | Detail | As of | Validation |
 |---|---|---|---|---|

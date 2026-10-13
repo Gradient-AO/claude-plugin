@@ -342,6 +342,176 @@ def chart_renderer():
         and all(f"S{index}" in source_table for index in range(1, 7)),
         "source tables use one pageable body without a forced short tail",
     )
+    table_pagination_results = []
+    for row_count in (3, 4, 5, 12, 13):
+        table_document = _renderer_module.body_html({
+            "meta": {
+                "title": f"{row_count}-row table regression (TEST)",
+                "header_label": "Regression",
+                "data_as_of": "2026-10-12",
+            },
+            "sections": [{
+                "title": "Table pagination",
+                "blocks": [{
+                    "type": "table",
+                    "title": f"Rows-{row_count}-block",
+                    "columns": ["Item", "Value"],
+                    "rows": [
+                        [f"Fictional row {index:02d} (TEST)", index]
+                        for index in range(1, row_count + 1)
+                    ],
+                }],
+            }],
+        })
+        expected_class = (
+            "blk table-block keep atomic-table layout-title-rows"
+            if row_count <= 12
+            else "blk table-block paginated-table layout-title-rows"
+        )
+        table_pagination_results.append(
+            f'class="{expected_class}"' in table_document
+            and table_document.count("<table") == 1
+            and table_document.count("<thead>") == 1
+            and table_document.count("<tbody>") == 1
+            and table_document.count("<tr>") == row_count + 1
+            and table_document.count(f"Rows-{row_count}-block") == 1
+        )
+    check(
+        all(table_pagination_results),
+        "3, 4, 5, and 12-row tables stay atomic while 13 rows use one native pageable table",
+    )
+    fallback_report = json.loads(
+        (FIX / "attribution-compare-fallback.json").read_text(encoding="utf-8")
+    )
+    fallback_document = _renderer_module.body_html(fallback_report)
+    returned_sign_match = re.search(
+        r'<div class="btitle">Returned sign by segment</div>'
+        r'(<table class="grid">.*?</table>)',
+        fallback_document,
+        re.DOTALL,
+    )
+    appendix_html = fallback_document.split(
+        "Appendix — Sources and Methods",
+        1,
+    )[-1]
+    source_table_match = re.search(
+        r'(<table class="grid">.*?</table>)',
+        appendix_html,
+        re.DOTALL,
+    )
+    returned_sign_table = (
+        returned_sign_match.group(1) if returned_sign_match else ""
+    )
+    attribution_source_table = (
+        source_table_match.group(1) if source_table_match else ""
+    )
+    check(
+        returned_sign_match is not None
+        and returned_sign_table.count("<thead>") == 1
+        and returned_sign_table.count("<tbody>") == 1
+        and returned_sign_table.count("<tr>") == 5
+        and all(
+            value in returned_sign_table
+            for value in (
+                "Historical",
+                "Governed ex ante",
+                "Public Equity",
+                "Alternatives",
+            )
+        )
+        and fallback_document.count("Returned sign by segment") == 1,
+        "attribution fallback keeps Returned sign by segment as one semantic table",
+    )
+    source_rows = next(
+        block["rows"]
+        for section in fallback_report["sections"]
+        if section.get("id") == "appendix-a"
+        for block in section.get("blocks", [])
+        if block.get("type") == "table"
+    )
+    fixture_digests = [row[-1] for row in source_rows]
+    displayed_digests = [
+        f"sha256:{digest.removeprefix('sha256:')[:12]}"
+        for digest in fixture_digests
+    ]
+    check(
+        source_table_match is not None
+        and attribution_source_table.count("<thead>") == 1
+        and attribution_source_table.count("<tbody>") == 1
+        and attribution_source_table.count("<tr>") == len(source_rows) + 1
+        and attribution_source_table.count('class="digest-cell"')
+        == len(source_rows)
+        and all(
+            (
+                f'<td class="digest-cell" data-full-digest="{digest}">'
+                f"{display}</td>"
+            )
+            in attribution_source_table
+            for digest, display in zip(fixture_digests, displayed_digests)
+        )
+        and (
+            ".grid td.digest-cell"
+            "{white-space:nowrap;font-variant-numeric:tabular-nums}"
+        )
+        in fallback_document
+        and '<div class="note digest-note">Full digests — ' in fallback_document
+        and all(digest in fallback_document for digest in fixture_digests)
+        and (
+            ".digest-note{white-space:normal;overflow-wrap:anywhere;"
+            "word-break:break-all}"
+        )
+        in fallback_document
+        and "table-layout:fixed" not in fallback_document,
+        "attribution fallback bounds digest display and prints full digest notes",
+    )
+    markdown_digest = "".join(_renderer_module.md_to_html(
+        "| Evidence | Digest |\n"
+        "| --- | --- |\n"
+        f"| Fictional source (TEST) | {fixture_digests[0]} |"
+    ))
+    check(
+        (
+            f'data-full-digest="{fixture_digests[0]}">'
+            f"{displayed_digests[0]}</td>"
+        )
+        in markdown_digest
+        and markdown_digest.count(fixture_digests[0]) == 1,
+        "markdown digest cells preserve the same bounded lineage contract",
+    )
+    check(
+        (
+            ".layout-title-rows .btitle,.layout-title-rows thead,"
+            ".layout-title-rows tbody tr:first-child{break-after:avoid}"
+        )
+        in fallback_document,
+        "single pageable tables keep titles, headers, and the first two data rows together",
+    )
+    long_failed_value = (
+        "failed: governed-validation-value-without-natural-breaks-"
+        + "x" * 120
+    )
+    validation_document = _renderer_module.body_html({
+        "meta": {
+            "title": "Validation wrapping regression (TEST)",
+            "header_label": "Regression",
+            "data_as_of": "2026-10-12",
+        },
+        "sections": [{
+            "title": "Validation",
+            "blocks": [{
+                "type": "table",
+                "columns": ["Tag", "Validation"],
+                "rows": [["S1", long_failed_value]],
+            }],
+        }],
+    })
+    check(
+        '<td class="validation-cell">' + long_failed_value + "</td>"
+        in validation_document
+        and ".grid td.validation-cell{white-space:normal;"
+        "overflow-wrap:anywhere;word-break:break-word}" in validation_document,
+        "validation cells wrap long failed values",
+    )
     appendix_document = _renderer_module.body_html({
         "meta": {
             "title": "Appendix regression (TEST)",
@@ -361,6 +531,75 @@ def chart_renderer():
         and "Appendix — Sources and methods" in appendix_document
         and "07 Appendix A" not in appendix_document,
         "JSON appendices normalize to the lettered rendering convention",
+    )
+    appendix_pullup_report = {
+        "meta": {
+            "title": "Appendix pull-up regression (TEST)",
+            "header_label": "Regression",
+            "data_as_of": "2026-10-12",
+        },
+        "sections": [
+            {
+                "id": "closing",
+                "num": "04",
+                "title": "Closing",
+                "blocks": [{
+                    "type": "text",
+                    "text": "Short honest closing content.",
+                }],
+            },
+            {
+                "id": "sources",
+                "num": "A",
+                "title": "Appendix A — Sources",
+                "blocks": [{
+                    "type": "table",
+                    "columns": ["Tag", "Source"],
+                    "rows": [["S1", "Fictional source (TEST)"]],
+                }],
+            },
+        ],
+    }
+    appendix_pullup_html = _renderer_module.body_html(appendix_pullup_report)
+    appendix_pullup_contract = build_post_render_layout_contract(
+        appendix_pullup_report,
+        {
+            "schema_version": 2,
+            "design_profile": "analytical",
+            "forced_breaks": [],
+            "pdf": {
+                "target_pages": {"min": 1, "max": 4},
+                "hard_max_pages": 4,
+                "minimum_body_fill": 0.40,
+                "orphan_tail_max_fill": 0.20,
+            },
+            "content": {
+                "defaults": {},
+                "sections": {
+                    "closing": {
+                        "role": "closing",
+                        "requires_analysis": False,
+                    },
+                    "sources": {
+                        "role": "appendix",
+                        "requires_analysis": False,
+                    },
+                },
+            },
+        },
+    )
+    check(
+        re.search(
+            r'<section class="sec">.*?<div class="sn">A</div>'
+            r'.*?Appendix — Sources',
+            appendix_pullup_html,
+            re.DOTALL,
+        )
+        is not None
+        and '<section class="sec new-page"><div class="keep section-atomic-table">'
+        '<div class="sh"><div class="sn">A</div>' not in appendix_pullup_html
+        and appendix_pullup_contract["appendix_fill"][0]["eligible"] is True,
+        "first eligible appendix may follow a short closing section",
     )
     long_pacing_table = _renderer_module.b_chart({"chart": {
         "chart_id": "commitments-pacing",
@@ -867,6 +1106,48 @@ def chart_renderer():
         and set(resolved_mode["content"]["sections"]) == {"summary", "2"},
         "mode budgets inherit root design profile, breaks, defaults, and sections",
     )
+    mode_break_budget = json.loads(json.dumps(schema_v2_budget))
+    mode_break_budget["forced_breaks"] = {
+        "single": ["summary"],
+        "compare": ["2"],
+        "default": [],
+    }
+    single_mode_report = {
+        **schema_v2_report,
+        "meta": {"mode": "single"},
+    }
+    compare_mode_report = {
+        **schema_v2_report,
+        "meta": {"mode": "compare"},
+    }
+    default_mode_report = {
+        **schema_v2_report,
+        "meta": {"mode": "fallback"},
+    }
+    check(
+        validate_layout_budget(mode_break_budget, single_mode_report) == []
+        and resolve_layout_budget(
+            mode_break_budget,
+            single_mode_report,
+        )["forced_breaks"]
+        == ["summary"]
+        and resolve_layout_budget(
+            mode_break_budget,
+            compare_mode_report,
+        )["forced_breaks"]
+        == ["2"]
+        and resolve_layout_budget(
+            mode_break_budget,
+            default_mode_report,
+        )["forced_breaks"]
+        == []
+        and resolve_layout_budget(
+            schema_v2_budget,
+            schema_v2_report,
+        )["forced_breaks"]
+        == [],
+        "forced breaks resolve by report meta.mode while list budgets remain compatible",
+    )
     lint_budget = {
         "schema_version": 2,
         "design_profile": "analytical",
@@ -1115,6 +1396,87 @@ def chart_renderer():
             and "Confidential (TEST)" in slide_text[1],
             "PowerPoint cover and running header add the data-scope banner without replacing metadata",
         )
+        with tempfile.TemporaryDirectory() as directory:
+            attribution_pptx = pathlib.Path(directory) / "attribution-fallback.pptx"
+            pptx_module.render_report(fallback_report, attribution_pptx)
+            attribution_presentation = Presentation(attribution_pptx)
+            from pptx.enum.chart import XL_CHART_TYPE
+            from pptx.enum.shapes import MSO_SHAPE_TYPE
+
+            attribution_charts = [
+                shape.chart
+                for slide in attribution_presentation.slides
+                for shape in slide.shapes
+                if getattr(shape, "has_chart", False)
+            ]
+            heat_slides = [
+                slide
+                for slide in attribution_presentation.slides
+                if "returned cross-lane effect matrix"
+                in "\n".join(
+                    shape.text
+                    for shape in slide.shapes
+                    if getattr(shape, "has_text_frame", False)
+                ).casefold()
+            ]
+            heat_tables = [
+                shape.table
+                for slide in heat_slides
+                for shape in slide.shapes
+                if getattr(shape, "has_table", False)
+            ]
+            heat_cells = {
+                cell.text
+                for table in heat_tables
+                for row in table.rows
+                for cell in row.cells
+            }
+            heat_has_picture = any(
+                shape.shape_type == MSO_SHAPE_TYPE.PICTURE
+                for slide in heat_slides
+                for shape in slide.shapes
+            )
+            with zipfile.ZipFile(attribution_pptx) as archive:
+                attribution_chart_xml = "\n".join(
+                    archive.read(name).decode("utf-8", errors="ignore")
+                    for name in archive.namelist()
+                    if name.startswith("ppt/charts/chart")
+                    and name.endswith(".xml")
+                )
+                attribution_slide_xml = "\n".join(
+                    archive.read(name).decode("utf-8", errors="ignore")
+                    for name in archive.namelist()
+                    if name.startswith("ppt/slides/slide")
+                    and name.endswith(".xml")
+                )
+        check(
+            sum(
+                chart.chart_type == XL_CHART_TYPE.COLUMN_STACKED
+                for chart in attribution_charts
+            )
+            >= 2
+            and sum(
+                chart.chart_type == XL_CHART_TYPE.LINE_MARKERS
+                for chart in attribution_charts
+            )
+            >= 2
+            and "<c:barChart" in attribution_chart_xml
+            and '<c:grouping val="stacked"' in attribution_chart_xml
+            and "<c:lineChart" in attribution_chart_xml,
+            "attribution fallback waterfalls and lines remain editable native chart XML",
+        )
+        check(
+            len(heat_slides) == 1
+            and bool(heat_tables)
+            and {"Realized", "Expected", "Allocation", "Selection", "Interaction"}
+            <= heat_cells
+            and not heat_has_picture
+            and "<a:tbl>" in attribution_slide_xml
+            and "<p:pic>" not in "\n".join(
+                slide.element.xml for slide in heat_slides
+            ),
+            "attribution fallback heat matrix remains native editable table content",
+        )
 
 def render(keep):
     print("Render checks")
@@ -1145,6 +1507,45 @@ def render(keep):
         norm = lambda t: re.sub(r"\s+", "", t).upper()   # tolerate CSS uppercase and letter-spacing
         missing = [m for m in must if norm(m) not in norm(text)]
         check(not missing, f"{name}: contains {must}" + (f" — missing {missing}" if missing else ""))
+        if name == "portfolio_attribution_compare_fallback" and external_pdf_tools:
+            layout_json = out / f"{name}-layout.json"
+            layout_checked = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "shared" / "check_layout.py"),
+                    str(pdf),
+                    "--report",
+                    str(FIX / "attribution-compare-fallback.json"),
+                    "--min-fill",
+                    "0.40",
+                    "--exclude",
+                    "1",
+                    "--json",
+                    str(layout_json),
+                ],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+            layout_result = (
+                json.loads(layout_json.read_text(encoding="utf-8"))
+                if layout_json.is_file()
+                else {}
+            )
+            check(
+                layout_checked.returncode == 0
+                and not any(
+                    item.get("code") == "page-underfill"
+                    for item in layout_result.get("diagnostics", [])
+                ),
+                "attribution fallback tables preserve the 40% body-fill floor"
+                + (
+                    f": {(layout_checked.stderr or layout_checked.stdout).strip()[-500:]}"
+                    if layout_checked.returncode
+                    else ""
+                ),
+            )
         if name == "deck":
             check(
                 page_width is not None

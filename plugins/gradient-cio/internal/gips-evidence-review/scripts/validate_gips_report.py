@@ -45,8 +45,8 @@ COMMON_SECTION_IDS = {
     "1. Summary": "executive",
     "2. Findings": "findings",
     "4. Follow-up Requests": "follow-up-requests",
-    "Appendix A — Findings Checklist": "appendix-a",
-    "Appendix B — Sources": "appendix-b",
+    "Appendix B — Findings Checklist": "appendix-b",
+    "Appendix A — Sources and methods": "appendix-a",
     "Appendix C — Method & Disclaimer": "appendix-c",
 }
 TILE_LABELS = ["Met", "Partially met", "Not met", "Not found"]
@@ -105,8 +105,8 @@ def workflow_contract(markdown: str) -> tuple[list[str], list[str], list[str]]:
         "2. Findings",
         body_heading,
         "4. Follow-up Requests",
-        "Appendix A — Findings Checklist",
-        "Appendix B — Sources",
+        "Appendix B — Findings Checklist",
+        "Appendix A — Sources and methods",
         "Appendix C — Method & Disclaimer",
     ]
     ids = [
@@ -114,8 +114,8 @@ def workflow_contract(markdown: str) -> tuple[list[str], list[str], list[str]]:
         "findings",
         body_id,
         "follow-up-requests",
-        "appendix-a",
         "appendix-b",
+        "appendix-a",
         "appendix-c",
     ]
     return headings, ids, []
@@ -174,9 +174,9 @@ def markdown_sections(markdown: str) -> tuple[list[str], dict[str, str]]:
 
 
 def source_tags(markdown: str) -> set[str]:
-    """Read source tags declared in Appendix B table rows."""
+    """Read source tags declared in Appendix A table rows."""
     _, sections = markdown_sections(markdown)
-    appendix = sections.get("Appendix B — Sources", "")
+    appendix = sections.get("Appendix A — Sources and methods", "")
     return set(re.findall(r"^\|\s*\[?S(\d+)\]?\s*\|", appendix, re.MULTILINE))
 
 
@@ -208,7 +208,7 @@ def collect_strings(value: Any) -> list[str]:
 def checklist_counts(markdown: str) -> Counter[str]:
     """Count allowed checklist statuses from markdown tables."""
     _, sections = markdown_sections(markdown)
-    lines = sections.get("Appendix A — Findings Checklist", "").splitlines()
+    lines = sections.get("Appendix B — Findings Checklist", "").splitlines()
     counts: Counter[str] = Counter()
     header: list[str] | None = None
     for line in lines:
@@ -480,8 +480,8 @@ def validate_visuals(
             )
 
         for appendix in (
-            "Appendix A — Findings Checklist",
-            "Appendix B — Sources",
+            "Appendix B — Findings Checklist",
+            "Appendix A — Sources and methods",
             "Appendix C — Method & Disclaimer",
         ):
             if placed(appendix, "before") or placed(appendix, "after"):
@@ -746,11 +746,11 @@ def validate_visuals(
             if number not in declared_tags:
                 errors.append(
                     f"unavailable block {block.get('title')!r} cites {tag} "
-                    "but Appendix B does not declare it"
+                    "but Appendix A does not declare it"
                 )
     unknown_tags = cited_tags(visuals) - declared_tags
     for tag in sorted(unknown_tags, key=int):
-        errors.append(f"visuals cite [S{tag}] but Appendix B does not declare S{tag}")
+        errors.append(f"visuals cite [S{tag}] but Appendix A does not declare S{tag}")
     return errors
 
 
@@ -767,13 +767,13 @@ def validate_markdown(markdown: str) -> list[str]:
             "markdown headings must exactly match the workflow order: "
             + ", ".join(expected_headings)
         )
-    if "Status" not in sections.get("Appendix A — Findings Checklist", ""):
+    if "Status" not in sections.get("Appendix B — Findings Checklist", ""):
         errors.append("Findings Checklist must contain a Status column")
     counts = checklist_counts(markdown)
     if sum(counts.values()) == 0:
         errors.append("Findings Checklist contains no recognized status rows")
     if not source_tags(markdown):
-        errors.append("Appendix B must declare at least one S# source row")
+        errors.append("Appendix A must declare at least one S# source row")
     if re.search(r"<[^<>\n]{2,80}>", markdown):
         errors.append("markdown contains an unresolved <placeholder>")
     return errors
@@ -844,7 +844,7 @@ def validate_meta(
         errors.append("meta.executive.bottom_line is required")
     unknown_tags = cited_tags(meta) - declared_tags
     for tag in sorted(unknown_tags, key=int):
-        errors.append(f"meta cites [S{tag}] but Appendix B does not declare S{tag}")
+        errors.append(f"meta cites [S{tag}] but Appendix A does not declare S{tag}")
     return errors
 
 
@@ -979,6 +979,14 @@ def source_bundle_from_report(
     )
     if not isinstance(appendix_a, dict) or appendix_a.get("new_page") is not True:
         errors.append("appendix-a must carry the stable forced-break marker new_page=true")
+    if isinstance(appendix_a, dict) and (
+        appendix_a.get("title") != "Appendix — Sources and methods"
+        or appendix_a.get("num") != "A"
+    ):
+        errors.append(
+            "appendix-a must normalize exact title "
+            "'Appendix A — Sources and methods' with num 'A'"
+        )
     return "\n\n".join(markdown_parts), visuals, meta, errors
 
 

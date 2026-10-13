@@ -51,6 +51,7 @@ from report_theme import (
     normalize_branding,
 )
 from report_layout import (
+    ATOMIC_TABLE_ROW_LIMIT,
     LAYOUT_GROUP_EVIDENCE_ANALYSIS,
     LAYOUT_GROUP_TITLE_ROWS,
     LAYOUT_GROUPS_FIELD,
@@ -145,9 +146,24 @@ def b_kv(b):
     title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
     return f'{title}<table class="kv">{rows}</table>'
 
+SHA256_DIGEST_VALUE = re.compile(r"^sha256:([0-9a-fA-F]{64})$")
+SHA256_DISPLAY_HEX_LENGTH = 12
+
+
+def _digest_display(value):
+    """Return bounded display text and the full machine-readable digest."""
+    full_digest = str(value).strip()
+    match = SHA256_DIGEST_VALUE.fullmatch(full_digest)
+    if match is None:
+        return None
+    return (
+        f"sha256:{match.group(1)[:SHA256_DISPLAY_HEX_LENGTH]}",
+        full_digest,
+    )
+
 def b_table(b):
     al = b.get("align") or ["l"] * len(b["columns"])
-    cls = lambda i: {"r": ' class="r"', "c": ' class="c"', "n": ' class="n"'}.get(al[i], "")
+    cls = lambda i: {"r": "r", "c": "c", "n": "n"}.get(al[i], "")
     nowrap = set(b.get("nowrap") or [])
     widths = b.get("widths") or []
     colgroup = ""
@@ -155,25 +171,55 @@ def b_table(b):
         colgroup = "<colgroup>" + "".join(
             f'<col style="width:{esc(width)}">' for width in widths
         ) + "</colgroup>"
-    head = "".join(f"<th{cls(i)}>{esc(c)}</th>" for i, c in enumerate(b["columns"]))
+    head = "".join(
+        f'<th{f" class={json.dumps(cls(i))}" if cls(i) else ""}>{esc(c)}</th>'
+        for i, c in enumerate(b["columns"])
+    )
     rendered_rows = []
+    digest_notes = []
     for r in b["rows"]:
         cells = []
         for i, c in enumerate(r):
-            cell_cls = cls(i)
+            classes = [cls(i)] if cls(i) else []
             if i in nowrap or (i < len(b["columns"]) and b["columns"][i] in nowrap):
-                cell_cls = ' class="n"' if not cell_cls else cell_cls[:-1] + ' n"'
+                classes.append("n")
+            column_name = str(b["columns"][i]) if i < len(b["columns"]) else ""
+            if column_name.strip().casefold() == "validation":
+                classes.append("validation-cell")
             if isinstance(c, dict) and "chip" in c:
-                cells.append(f"<td{cell_cls}>{chip(c['chip'], c.get('status', c['chip']))}</td>")
+                attributes = f' class="{" ".join(dict.fromkeys(classes))}"' if classes else ""
+                cells.append(f"<td{attributes}>{chip(c['chip'], c.get('status', c['chip']))}</td>")
             else:
-                cells.append(f"<td{cell_cls}>{rich(c)}</td>")
+                digest = (
+                    SHA256_DIGEST_VALUE.fullmatch(str(c))
+                    if column_name.strip().casefold() == "digest"
+                    else None
+                )
+                if digest:
+                    full_digest = str(c)
+                    classes.append("digest-cell")
+                    digest_display, full_digest = _digest_display(full_digest)
+                    content = esc(digest_display)
+                    row_label = str(r[0]).strip() if r else f"row {len(rendered_rows) + 1}"
+                    digest_notes.append(f"{row_label}: {full_digest}")
+                else:
+                    content = rich(c)
+                attributes = f' class="{" ".join(dict.fromkeys(classes))}"' if classes else ""
+                if digest:
+                    attributes += f' data-full-digest="{esc(full_digest)}"'
+                cells.append(f"<td{attributes}>{content}</td>")
         rendered_rows.append("<tr>" + "".join(cells) + "</tr>")
     body = "<tbody>" + "".join(rendered_rows) + "</tbody>"
     title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
     note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
-    return f'{title}<table class="grid">{colgroup}<thead><tr>{head}</tr></thead>{body}</table>{note}'
+    digest_note = (
+        f'<div class="note digest-note">Full digests — {esc("; ".join(digest_notes))}</div>'
+        if digest_notes
+        else ""
+    )
+    return f'{title}<table class="grid">{colgroup}<thead><tr>{head}</tr></thead>{body}</table>{note}{digest_note}'
 
-CHART_TABLE_ROW_CAP = 12
+CHART_TABLE_ROW_CAP = ATOMIC_TABLE_ROW_LIMIT
 
 def _display_rows(rows, cap=CHART_TABLE_ROW_CAP):
     """Return a deterministic display sample with endpoints and interior coverage."""
@@ -205,7 +251,12 @@ def _chart_table(c, columns, cap=None):
         if c.get("_chart_data_appendix") and c.get("truncated"):
             notes.append(
                 "Connector output was truncated at source; this appendix contains "
-                "all returned rows, not the complete dataset"
+                f"all {len(rows)} returned rows, not the complete dataset. "
+                "The report preserves the governed payload exactly and does not "
+                "infer omitted observations. Any complete-period conclusion "
+                "requires a refreshed untruncated connector response. The "
+                "connector's published row limit remains an explicit evidence "
+                "constraint"
             )
         elif c.get("_source_truncated") or c.get("truncated"):
             notes.append("Connector output was truncated at source")
@@ -905,6 +956,25 @@ def _md_cell(t, chip_col=False):
         return chip(re.sub(r"[*_`]", "", s).strip(), key)
     return rich(s)
 
+def _md_table_cell(value, heading, numeric=False):
+    classes = ["r"] if numeric else []
+    normalized_heading = str(heading).strip().casefold()
+    if normalized_heading == "validation":
+        classes.append("validation-cell")
+    attributes = f' class="{" ".join(classes)}"' if classes else ""
+    digest = _digest_display(value) if normalized_heading == "digest" else None
+    if digest:
+        display, full_digest = digest
+        classes.append("digest-cell")
+        attributes = (
+            f' class="{" ".join(classes)}"'
+            f' data-full-digest="{esc(full_digest)}"'
+        )
+        content = esc(display)
+    else:
+        content = _md_cell(value, bool(_CHIP_COLS.search(str(heading))))
+    return f"<td{attributes}>{content}</td>"
+
 def _is_sep(line):
     return bool(re.match(r"^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$", line))
 
@@ -939,8 +1009,25 @@ def md_to_html(md):
             num = [all(re.match(r"^[\s+\-−–]*[\d.,]+\s*(%|bps|x|m|bn|k)?\s*$", (r[k] if k < len(r) else "")) or not (r[k] if k < len(r) else "").strip() for r in rows) and rows for k in range(len(head))]
             RCLS = ' class="r"'
             th = "".join("<th" + (RCLS if num[k] else "") + ">" + rich(h) + "</th>" for k, h in enumerate(head))
-            body = "".join("<tr>" + "".join("<td" + (RCLS if (k < len(num) and num[k]) else "") + ">" + _md_cell(c, k < len(head) and bool(_CHIP_COLS.search(head[k]))) + "</td>" for k, c in enumerate(r)) + "</tr>" for r in rows)
-            out.append(f'<table class="grid md"><thead><tr>{th}</tr></thead><tbody>{body}</tbody></table>'); continue
+            body = "".join(
+                "<tr>"
+                + "".join(
+                    _md_table_cell(
+                        c,
+                        head[k] if k < len(head) else "",
+                        k < len(num) and bool(num[k]),
+                    )
+                    for k, c in enumerate(r)
+                )
+                + "</tr>"
+                for r in rows
+            )
+            table = f'<table class="grid md"><thead><tr>{th}</tr></thead><tbody>{body}</tbody></table>'
+            out.append(
+                f'<div class="keep atomic-table">{table}</div>'
+                if len(rows) <= CHART_TABLE_ROW_CAP
+                else f'<div class="paginated-table">{table}</div>'
+            ); continue
         if line.lstrip().startswith(">"):
             buf = []
             while i < n and lines[i].lstrip().startswith(">"):
@@ -1013,7 +1100,6 @@ def render_blocks(blocks):
         fn = BLOCKS.get(block["type"])
         if not fn:
             raise SystemExit(f"Unknown block type: {block['type']}")
-        classes = "blk table-block" if block["type"] in {"table", "heat"} else "blk"
         title_row_groups = _layout_group_ids(block, LAYOUT_GROUP_TITLE_ROWS)
         row_container = (
             block.get("chart")
@@ -1026,37 +1112,23 @@ def render_blocks(blocks):
             if isinstance(row_container, dict)
             else None
         )
-        if not title_row_groups or not isinstance(rows, list) or len(rows) <= 2:
-            rendered = f'<div class="{classes}">{fn(block)}</div>'
-            return (
-                f'<div class="keep layout-title-rows">{rendered}</div>'
-                if title_row_groups
-                else rendered
+        is_table = (
+            block.get("type") in {"table", "heat"}
+            or (
+                block.get("type") == "chart"
+                and effective_chart_mode(block.get("chart") or {}) == "table"
             )
-        opening = copy.deepcopy(block)
-        opening_container = (
-            opening.get("chart")
-            if opening.get("type") == "chart"
-            else opening
         )
-        opening_container["rows"] = rows[:2]
-        opening_container.pop("note", None)
-        if opening.get("type") == "chart":
-            opening_container["_layout_suppress_note"] = True
-        remainder = copy.deepcopy(block)
-        remainder_container = (
-            remainder.get("chart")
-            if remainder.get("type") == "chart"
-            else remainder
-        )
-        remainder_container["rows"] = rows[2:]
-        remainder_container.pop("title", None)
-        if remainder.get("type") == "chart":
-            remainder_container["_layout_leading_rows"] = 2
-        return (
-            f'<div class="keep layout-title-rows"><div class="{classes}">'
-            f'{fn(opening)}</div></div><div class="{classes}">{fn(remainder)}</div>'
-        )
+        classes = ["blk"]
+        if is_table:
+            classes.append("table-block")
+            if isinstance(rows, list) and len(rows) <= CHART_TABLE_ROW_CAP:
+                classes.extend(("keep", "atomic-table"))
+            else:
+                classes.append("paginated-table")
+        if title_row_groups:
+            classes.append("layout-title-rows")
+        return f'<div class="{" ".join(classes)}">{fn(block)}</div>'
 
     out = []
     index = 0
@@ -1142,12 +1214,12 @@ b{{font-weight:650}} code{{font-family:'DejaVu Sans Mono',Menlo,monospace;font-s
 .src{{display:inline-block;font-size:6.6pt;font-weight:600;color:{LIME_DK};background:#F1FAD6;border-radius:3px;padding:0 4px;line-height:1.5;vertical-align:1px;white-space:nowrap}}
 .cvr .src,.slide.dark .src{{color:{INK};background:{LIME};vertical-align:1px}}
 .sec{{break-before:auto;margin-top:22px}} .sec.first{{break-before:auto;margin-top:0}} .sec.new-page{{break-before:page;margin-top:0}}
-.sh{{display:flex;align-items:flex-end;gap:14px;border-bottom:2px solid {INK};padding-bottom:8px;margin-bottom:14px}}
+.sh{{display:flex;align-items:flex-end;gap:14px;border-bottom:2px solid {INK};padding-bottom:8px;margin-bottom:14px;break-after:avoid}}
 .sn{{background:{LIME};color:{INK};font-weight:800;font-size:15pt;line-height:1;padding:8px 9px 6px;border-radius:3px;letter-spacing:-.02em}}
 .st{{font-size:17pt;font-weight:750;letter-spacing:-.015em;line-height:1.1}}
 .sk{{color:{INK2};font-size:8.6pt;margin-top:3px}}
 .blk{{margin-bottom:13px;break-inside:avoid}} .blk.table-block{{break-inside:auto}}
-.btitle{{font-size:7.4pt;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:{INK2};margin-bottom:6px}}
+.btitle{{font-size:7.4pt;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:{INK2};margin-bottom:6px;break-after:avoid}}
 p.body{{color:#1E2631}}
 .bul{{padding-left:0;list-style:none}} .bul li{{position:relative;padding-left:15px;margin-bottom:4px;color:#1E2631}}
 .bul li:before{{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;background:{LIME};border-radius:1px}}
@@ -1158,6 +1230,9 @@ thead{{display:table-header-group}} tr{{break-inside:avoid}}
 .grid{{font-size:8.2pt}} .grid th{{text-align:left;font-size:6.9pt;letter-spacing:.07em;text-transform:uppercase;color:{PAPER};background:{INK};padding:6px 8px;font-weight:650}}
 .grid td{{padding:5px 8px;border-bottom:1px solid {RULE};vertical-align:top}} .grid tbody tr:nth-child(even) td{{background:{WASH}}}
 .grid .n{{white-space:nowrap}} .grid .r{{white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}} .grid .c{{text-align:center}}
+.grid td.validation-cell{{white-space:normal;overflow-wrap:anywhere;word-break:break-word}}
+.grid td.digest-cell{{white-space:nowrap;font-variant-numeric:tabular-nums}}
+.digest-note{{white-space:normal;overflow-wrap:anywhere;word-break:break-all}}
 .note{{font-size:7.3pt;color:{MUTED};margin-top:5px;line-height:1.4}}
 .chip{{display:inline-flex;align-items:center;gap:5px;font-size:7.4pt;font-weight:600;text-transform:capitalize;white-space:nowrap}}
 .chip i{{display:inline-block;width:8px;height:8px;border-radius:50%}}
@@ -1191,8 +1266,10 @@ thead{{display:table-header-group}} tr{{break-inside:avoid}}
 .two .stm-t{{font-size:14pt;line-height:1.25;font-weight:750}}
 .pb{{break-after:page}}
 .keep{{break-inside:avoid}}
-.layout-title-rows>.blk:last-child,.layout-evidence-analysis>.blk:last-child{{margin-bottom:0}}
-.opening-table table{{break-inside:avoid}}
+.atomic-table,.atomic-table table{{break-inside:avoid}}
+.paginated-table,.paginated-table table{{break-inside:auto}}
+.layout-title-rows .btitle,.layout-title-rows thead,.layout-title-rows tbody tr:first-child{{break-after:avoid}}
+.layout-title-rows:last-child,.layout-evidence-analysis>.blk:last-child{{margin-bottom:0}}
 .md .h3{{font-size:11pt;font-weight:750;margin:14px 0 6px;letter-spacing:-.01em}} .md .h4{{font-size:7.4pt;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:{INK2};margin:10px 0 5px}}
 .md > *{{margin-bottom:9px}} .md table.grid{{break-inside:auto}} .md table.grid tr{{break-inside:avoid}}
 .heat th:first-child{{text-align:left}} .heat td{{text-align:center;font-variant-numeric:tabular-nums}}
@@ -1290,7 +1367,6 @@ def exec_band(r):
 def body_html(r):
     r = prepare_report_for_render(r)
     parts = []
-    first_appendix = True
     for n, s in enumerate(r["sections"]):
         num = s.get("num", f"{n+1:02d}")
         head = (f'<div class="sh"><div class="sn">{esc(num)}</div><div><div class="st">{esc(s["title"])}</div>'
@@ -1300,11 +1376,7 @@ def body_html(r):
             pre = exec_band(r)
             if r.get("executive", {}).get("tiles"):
                 pre += f'<div class="blk">{b_tiles({"tiles": r["executive"]["tiles"]}, dark=True)}</div>'
-        is_appendix = bool(re.match(r"^(?:Appendix\b|[A-Z]$)", str(s.get("title", "")))) or bool(re.fullmatch(r"[A-Z]", str(num)))
         starts_page = n > 0 and bool(s.get("new_page", False))
-        if n > 0 and is_appendix and first_appendix:
-            starts_page = True
-            first_appendix = False
         cls = "sec first" if n == 0 else ("sec new-page" if starts_page else "sec")
         blocks = s.get("blocks", [])
         if pre:
@@ -1324,14 +1396,20 @@ def body_html(r):
         elif blocks and blocks[0]["type"] == "markdown":
             pieces = md_to_html(blocks[0]["text"])
             first = pieces[0] if pieces else ""
-            body = (f'<div class="keep">{head}<div class="md">{first}</div></div>'
-                    f'<div class="md">{"".join(pieces[1:])}</div>' + render_body_blocks(blocks[1:]))
+            if first.startswith('<div class="paginated-table">'):
+                body = (
+                    head
+                    + f'<div class="md">{"".join(pieces)}</div>'
+                    + render_body_blocks(blocks[1:])
+                )
+            else:
+                body = (f'<div class="keep">{head}<div class="md">{first}</div></div>'
+                        f'<div class="md">{"".join(pieces[1:])}</div>' + render_body_blocks(blocks[1:]))
         elif blocks and (
             blocks[0].get("type") in {"table", "heat"}
             or (
                 blocks[0].get("type") == "chart"
                 and effective_chart_mode(blocks[0].get("chart") or {}) == "table"
-                and (blocks[0].get("chart") or {}).get("_chart_data_appendix")
             )
         ):
             first = copy.deepcopy(blocks[0])
@@ -1341,40 +1419,18 @@ def body_html(r):
                 else first
             )
             rows = list(row_container.get("rows", []))
-            opening = copy.deepcopy(first)
-            opening_container = (
-                opening.get("chart")
-                if opening.get("type") == "chart"
-                else opening
-            )
-            opening_container["rows"] = rows[:3]
-            opening_container.pop("note", None)
-            opening_container.pop("truncated", None)
-            opening_container.pop("_source_truncated", None)
-            opening_container.pop("_chart_data_appendix", None)
-            remainder = []
-            if len(rows) > 3:
-                chunk_size = 18 if first.get("type") == "chart" else len(rows)
-                for start in range(3, len(rows), chunk_size):
-                    continuation = copy.deepcopy(first)
-                    continuation_container = (
-                        continuation.get("chart")
-                        if continuation.get("type") == "chart"
-                        else continuation
-                    )
-                    continuation_container["rows"] = rows[
-                        start : start + chunk_size
-                    ]
-                    continuation_container.pop("title", None)
-                    if start + chunk_size < len(rows):
-                        continuation_container.pop("truncated", None)
-                        continuation_container.pop("_source_truncated", None)
-                        continuation_container.pop("_chart_data_appendix", None)
-                    remainder.append(continuation)
-            body = (
-                f'<div class="keep opening-table">{head}{render_blocks([opening])}</div>'
-                + render_body_blocks(remainder + blocks[1:])
-            )
+            if len(rows) <= CHART_TABLE_ROW_CAP:
+                body = (
+                    f'<div class="keep section-atomic-table">'
+                    f'{head}{render_blocks([first])}</div>'
+                    + render_body_blocks(blocks[1:])
+                )
+            else:
+                body = (
+                    head
+                    + render_blocks([first])
+                    + render_body_blocks(blocks[1:])
+                )
         elif blocks:
             if len(blocks) == 2 and _is_short_tail(blocks[-1]):
                 body = f'<div class="keep">{head}{render_blocks(blocks)}</div>'

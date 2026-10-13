@@ -9,13 +9,15 @@ import sys
 from pathlib import Path
 
 
+SOURCES_APPENDIX_TITLE = "Appendix — Sources and methods"
+
 SECTIONS = (
     "Summary",
     "Skills you can use",
     "Access and data",
     "Contract checks",
     "Try next",
-    "Appendix A — Sources",
+    SOURCES_APPENDIX_TITLE,
 )
 TILES = ("Skills ready", "Partial", "Not licensed", "Checks passed")
 
@@ -54,11 +56,16 @@ def validate(report: object) -> list[str]:
         "Access and data": {"kv", "coverage"},
         "Contract checks": {"table"},
         "Try next": {"questions"},
-        "Appendix A — Sources": {"table"},
+        SOURCES_APPENDIX_TITLE: {"table"},
     }
     for section in sections:
         if not isinstance(section, dict):
             continue
+        if (
+            section.get("title") == SOURCES_APPENDIX_TITLE
+            and section.get("num") != "A"
+        ):
+            errors.append("sources appendix num must be exactly 'A'")
         expected = required_types.get(str(section.get("title")))
         if expected is None:
             continue

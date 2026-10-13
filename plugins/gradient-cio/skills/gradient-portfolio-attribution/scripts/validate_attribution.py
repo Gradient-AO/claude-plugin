@@ -64,11 +64,11 @@ SPEC = ReportSpec(
             "Historical-versus-Ex-Ante Scope and Comparison",
             "Diagnostics and Limitations",
             "Coverage",
-            "Appendix A — Sources",
+            "Appendix — Sources and methods",
             "Appendix B — Server Metric Methods and Disclosures",
         )
     ),
-    appendix_pattern=r"Appendix A — Sources",
+    appendix_pattern=r"Appendix — Sources and methods",
     signal_levels=ATTRIBUTION_VOCAB.signal_levels,
     completeness_states=ATTRIBUTION_VOCAB.completeness_states,
     slot_rules=(
@@ -114,7 +114,11 @@ SPEC = ReportSpec(
             "diagnostics supporting evidence",
         ),
         SlotRule(r"Coverage", frozenset({"coverage"}), "coverage block"),
-        SlotRule(r"Appendix A — Sources", frozenset({"table"}), "sources table"),
+        SlotRule(
+            r"Appendix — Sources and methods",
+            frozenset({"table"}),
+            "sources table",
+        ),
     ),
     forbidden_body_patterns=PROHIBITED_REPORT_PATTERNS,
     illustrative_label=ILLUSTRATIVE_LABEL,

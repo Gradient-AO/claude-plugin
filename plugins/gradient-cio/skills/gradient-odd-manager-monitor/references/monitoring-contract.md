@@ -104,7 +104,7 @@ server reason is fund-only and is invalid for a firm.
 Meta title is the organization; subtitle identifies the window. Sections:
 `executive` / This week; `changes-alerts` / Changes and alerts;
 `review-calendar` / Review calendar; `coverage-freshness` / Coverage and
-freshness; `sources-method` / Appendix A — Sources and method. Keep that exact
+freshness; `sources-method` / Appendix — Sources and methods (`num: "A"`). Keep that exact
 ID and title order for an active week.
 
 This week leads with alerts-by-severity `bars`, then a `findings` block with

@@ -28,7 +28,7 @@ OBSERVATION_SPECIFIC = re.compile(
 UNCERTAINTY_PREDICATE = re.compile(
     r"\b(?:is|are|was|were|has|have|had|uses?|covers?|includes?|excludes?|"
     r"omits?|lacks?|returned?|failed|ends?|starts?|cannot|could|may|might|"
-    r"does|did|remains?|depends?)\b",
+    r"does|did|remains?|depends?|rates?|advisory|caller-selected|synthetic)\b",
     re.IGNORECASE,
 )
 UNCERTAINTY_BOILERPLATE = re.compile(

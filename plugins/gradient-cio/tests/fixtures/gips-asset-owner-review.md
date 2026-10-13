@@ -24,7 +24,7 @@ needed to understand the reporting control framework [S3].
 1. Provide the benchmark-change effective date, approval record and rationale (22.C.9) [S1][S2].
 2. Provide the current valuation and error-correction policies (21.A.6; 22.C.20) [S3].
 
-## Appendix A — Findings Checklist
+## Appendix B — Findings Checklist
 
 | Area | Requirement | Provision | Status | Evidence | Finding / follow-up |
 |---|---|---|---|---|---|
@@ -34,7 +34,7 @@ needed to understand the reporting control framework [S3].
 | Valuation | Valuation policy availability | Asset Owner 21.A.6 | Not met | Custodian package [S3] | Policy not supplied |
 | Oversight | Error-correction policy | Asset Owner 22.C.20 | Not found | — | Request |
 
-## Appendix B — Sources
+## Appendix A — Sources and methods
 
 | Tag | Source | Detail | As of | Validation |
 |---|---|---|---|---|

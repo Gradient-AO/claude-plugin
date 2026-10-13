@@ -67,6 +67,8 @@ eight positive slices) ·
 formatted table fallback. Pass the returned chart object unchanged; do not remap chart IDs in a skill.
 
 Sections: `{"id"?, "title", "kicker"?, "num"?, "page_break"?: "auto"|"prefer"|"force", "blocks": [...]}`.
+In source JSON, the sources appendix always uses `num: "A"` and the exact title
+`Appendix — Sources and methods`; keep any additional appendices separately numbered B, C, and so on.
 Legacy `new_page: true` means `force`. Use `prefer` only where QA may remove the break after a sparse page;
 hard `force` breaks are never removed automatically. Use `force` only for stable section IDs listed in the
 effective layout budget's `forced_breaks`; generated appendices manage their own forced starts.
@@ -146,9 +148,13 @@ write a branding file in the working directory (logo path relative to it) and pa
   do not repeat the full label in `Evidence`, and put the full label exactly
   once in a sources-appendix `note`. No title, subtitle or confidentiality
   placement is required.
-- Every report ends with an appendix: sources (tag, evidence, tool, as-of, validation, digest), server metric
-  methods (formula identity/version, basis, units and coverage where returned), and a disclaimer (not
-  investment, legal or compliance advice; Form ADV is adviser-reported).
+- Every report includes its sources appendix with exact rendered title
+  `Appendix A — Sources and methods`. In normalized report JSON use
+  `title: "Appendix — Sources and methods"` with `num: "A"`; Markdown uses
+  `## Appendix A — Sources and methods`. It contains sources (tag, evidence,
+  tool, as-of, validation, digest), server metric methods (formula
+  identity/version, basis, units and coverage where returned), and a disclaimer
+  (not investment, legal or compliance advice; Form ADV is adviser-reported).
 
 ## Check and deliver
 

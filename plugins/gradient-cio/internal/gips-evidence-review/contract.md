@@ -21,7 +21,7 @@ exactly one mode and set `meta.mode`:
 
 ## Firm mode
 
-Classify the input as a TWR composite report, MWR composite report, pooled-fund report or advertisement. Apply the corresponding firm checklist. The fixed body is Summary; Findings; Preparer Fix List; Follow-up Requests; Appendix A — Checklist; Appendix B — Sources; Appendix C — Scope and limitations.
+Classify the input as a TWR composite report, MWR composite report, pooled-fund report or advertisement. Apply the corresponding firm checklist. The fixed body is Summary; Findings; Preparer Fix List; Follow-up Requests; Appendix B — Checklist; Appendix A — Sources and methods; Appendix C — Scope and limitations.
 
 ## Asset-owner mode
 
