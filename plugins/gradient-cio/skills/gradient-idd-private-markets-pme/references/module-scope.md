@@ -9,6 +9,10 @@ Use `product_entitlements` only for commercial licensing. Require and interpret
 `effective_capabilities` must agree with whether that mode is usable, while each tool row's `available` and
 `access_mode` remain the final invocation decision. A false entitlement with an illustrative mode is bounded
 evaluation access, never live client access.
+Pass `get_gradient_capabilities.scope` as a coverage request object, for example
+`{"view":"manager_diligence"}`, only when checking a supported coverage view, and preserve the returned
+`scoped_coverage`. Omit `scope` for the all-surface capability summary used by setup and for Portfolio
+Analytics, which has no coverage-scope view.
 
 In validation, `not_applicable` means a check does not apply to the requested mode or returned evidence.
 `not_run` means the check was applicable but lacked the requested evidence or could not execute. Neither is
@@ -27,14 +31,16 @@ move and not, by themselves, evidence that the publication is unavailable.
 
 Portfolio Analytics answers questions about a saved portfolio or Gradient's canonical illustrative portfolio.
 It discovers a portfolio with `list_portfolios`, then uses its `portfolio_id` with
-`get_portfolio_exposure`, `get_portfolio_structure`, `get_portfolio_historical_returns`, `get_chart_data`,
+`get_portfolio_exposure`, `get_portfolio_structure`, `get_portfolio_historical_returns`,
 `get_portfolio_attribution`, `get_portfolio_ex_ante_attribution`, and `check_portfolio_policy`.
 
 Use Portfolio Analytics for holdings, allocation versus policy, realized portfolio performance, portfolio
-factor and currency exposure, allocation and commitment chart packs, governed forward assumptions,
-commitments, pacing, liquidity, and other portfolio-level questions. `get_chart_data` supports only the
-`allocations` and `commitments` analysis types; do not request `expected-statistics`. A Portfolio Analytics ID
-is not a Strategy Lab return-series ID.
+factor and currency exposure, risk contribution, commitment pacing, liquidity, 13F look-through, governed
+forward assumptions, and other portfolio-level questions. Request optional sections through
+`get_portfolio_exposure.include`: `factor_currency_exposure`, `risk_contribution`, `commitment_pacing`,
+`liquidity_scorecard`, and `lookthrough_13f`. Included chart-style sections preserve their chart item
+payload, `render_hint`, and chart IDs where applicable. A Portfolio Analytics ID is not a Strategy Lab
+return-series ID.
 Historical attribution uses governed realized monthly evidence. Governed ex ante attribution uses current
 saved-portfolio cohort weights and persisted expected returns. Strategy Lab outputs do not substitute for
 either contract.

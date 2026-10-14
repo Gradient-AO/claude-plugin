@@ -14,12 +14,13 @@ Call `get_gradient_capabilities`, then:
    `manager_monitor_evidence`, `firm_13f`, `open_findings`, `ddq_history`,
    `service_providers`, `enforcement_candidates`.
 3. `get_firm_13f_portfolio_review`, `mode: snapshot`, on the parent `firm_id`.
-   Retry one `backend_timeout`; then retry snapshot without `quarters`.
+   Retry one `backend_timeout`; then retry snapshot without `quarters`. Request
+   `view: issuer_risk` only when the report needs issuer-level risk evidence.
 4. `get_manager_diligence_findings`, `view: open`, for firm and fund.
 5. `get_firm_fund_events`, `include_event_type_counts: true`.
 6. If a DDQ exists, follow `gradient-odd-ddq-reconcile` extraction and
    reconciliation.
-7. `get_cross_domain_research`, `view: adv_13f_consistency`, with parent
+7. `get_firm_13f_portfolio_review`, `view: adv_13f_consistency`, with parent
    `firm_id`.
 
 If a required roster, monitoring, review, or brief call returns not entitled

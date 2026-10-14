@@ -860,7 +860,7 @@
               "S8",
               "ADV–13F consistency — Ridgeview",
               "gradient_tool",
-              "get_cross_domain_research",
+              "get_firm_13f_portfolio_review",
               "illustrative sample",
               "2026-10-01",
               "Gradient-governed review evidence",
@@ -893,7 +893,7 @@
               "S11",
               "ADV–13F consistency — Harbor",
               "gradient_tool",
-              "get_cross_domain_research",
+              "get_firm_13f_portfolio_review",
               "illustrative sample",
               "2026-10-01",
               "Gradient-governed review evidence",
@@ -915,7 +915,7 @@
                 ],
                 [
                   "13F / ADV RAUM",
-                  "Use thirteen_f_total_to_adv_raum_ratio exactly as returned by get_cross_domain_research [S8][S11]"
+                  "Use thirteen_f_total_to_adv_raum_ratio exactly as returned by get_firm_13f_portfolio_review [S8][S11]"
                 ]
               ]
             }

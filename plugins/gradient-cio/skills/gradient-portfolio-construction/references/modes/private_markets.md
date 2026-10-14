@@ -64,9 +64,9 @@ Required evidence:
   inventory rows to completion, but use only its server-returned aggregates for company, sector, geography,
   status, holding-age and projected-range roll-ups;
 - historical returns and governed attribution, preserving typed unavailable states;
-- `get_chart_data` availability, then `allocations` and `commitments` one pack at a time, or up to four
-  targeted `chart_ids` (never both selectors); `max_rows` defaults to 40 and is capped at 100; disclose
-  `truncated: true`;
+- `get_portfolio_exposure` with `include: [factor_currency_exposure, risk_contribution,
+  commitment_pacing, liquidity_scorecard]`; preserve returned chart items, `render_hint`, and chart IDs
+  unchanged and disclose `truncated: true`;
 - active assumption set and baseline capital-market assumptions.
 
 Manager diligence, CMA consensus and selected-series Strategy Lab results are optional. An entitlement block
@@ -98,7 +98,7 @@ is `Not licensed`, not an outage. Retry only once and only when the error says i
 
 Use JSON block mode and follow `references/construction-template.md` exactly. Put the recommendation and
 requested committee action first. Every number in text or tables carries an `[S#]` tag. Embed usable
-`get_chart_data` items unchanged as `{"type":"chart","chart":<item>}`.
+chart items from exposure includes unchanged as `{"type":"chart","chart":<item>}`.
 
 Match ODD-quality report polish. Use exactly the four template tiles; source the bottom line, tiles and
 analysis. Add the template-required charts/graphics and 1–3 structured `role: analysis` callouts in each

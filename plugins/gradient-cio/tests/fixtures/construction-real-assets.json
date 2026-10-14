@@ -1404,7 +1404,7 @@
             [
               "Next review",
               "Refresh pacing",
-              "Returned commitments pack",
+              "Returned commitment-pacing include",
               "Private markets team",
               "Open [S6]"
             ]
@@ -1540,7 +1540,7 @@
               "S6",
               "Forward assumptions and pacing",
               "gradient_tool",
-              "get_chart_data; get_capital_market_assumptions",
+              "get_portfolio_exposure; get_capital_market_assumptions",
               "commitments; baseline",
               "2026-06-15",
               "Illustrative sample data",

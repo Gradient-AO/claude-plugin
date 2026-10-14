@@ -30,8 +30,9 @@ Per manager:
 
 1. `get_manager_odd_profile`, `mode: profile`, with `crd_number` or `firm_id`.
 2. Optionally the same tool with `view: service_provider_controls`.
-3. `get_firm_13f_portfolio_review`, `mode: snapshot`, with `firm_id`.
-4. `get_cross_domain_research`, `view: adv_13f_consistency`, with `firm_id`.
+3. `get_firm_13f_portfolio_review`, `mode: snapshot`, with `firm_id`; request
+   `view: issuer_risk` only when issuer-level risk is in scope.
+4. `get_firm_13f_portfolio_review`, `view: adv_13f_consistency`, with `firm_id`.
 5. `get_firm_fund_events`, `include_event_type_counts: true`, `per_page: 12`.
 6. `get_manager_diligence_findings`, `view: open`, for roster managers.
 

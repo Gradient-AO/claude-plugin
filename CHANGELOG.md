@@ -1,5 +1,13 @@
 # Changelog
 
+## 6.0.0
+- Updated the plugin for the breaking GradientCIO connector 0.10.0 contract (compatibility epoch 4) and its 65-tool public catalog.
+- Removed the retired public `get_gradient_coverage`, `get_cross_domain_research`, `get_chart_data` and `get_market_positioning` tools.
+- Moved chart-style portfolio evidence and 13F look-through into opt-in portfolio-exposure includes, preserving chart payloads, render hints and stable chart IDs.
+- Routed scoped capability coverage, macro joins and positioning, 13F consistency and issuer risk, and monitor draft candidates through their canonical owner tools.
+- Removed portfolio and allocation return-series usage in favor of governed portfolio historical returns.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 5.8.1
 - Made report validators and Inter fonts self-contained inside every packaged report skill, with isolated validation and rendering regressions.
 - Updated portfolio attribution collection for allocation-scoped manager resolution, root-versus-drill-down benchmark bases, and requested-window drawdown labeling.

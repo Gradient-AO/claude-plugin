@@ -16,8 +16,8 @@ metadata:
 # Gradient setup and readiness check
 
 Use when the user is new to the Gradient skills, says "set up Gradient", "get started", "is Gradient connected",
-"what is ready for my organization", "check my access", "health check", "self-test", or when another Gradient
-skill fails because the connector is missing, unauthorized or returning errors. For only "what can I do?" or
+"what is ready for my organization", "check my access", "health check", "self-test", or another Gradient skill
+fails because the connector is missing, unauthorized or returning errors. For only "what can I do?" or
 "show commands", use `gradient-menu`. Also use this readiness check after a plugin update.
 
 The deliverable is a short branded **"Gradient Readiness Report"**, plus a three-line chat summary and two or
@@ -37,7 +37,7 @@ report them as separate modules; never use the canonical illustrative portfolio 
 
 ## 2. Access and data readiness
 
-1. Call `get_gradient_capabilities` with the `organization_id` and `detail: "summary"`:
+1. Call `get_gradient_capabilities` with the `organization_id` and `detail: "summary"`, omitting `scope`; for a bounded follow-up use `scope: {"view":"manager_diligence"}` and preserve `scoped_coverage`:
    - `product_entitlements` = commercial licenses; `capability_access_modes` = each capability's `live`,
      `illustrative`, or `unavailable` access basis; `effective_capabilities` = whether that mode is usable,
      including bounded illustrative access; each tool's `access_mode` and `available` are the final invocation
@@ -48,7 +48,7 @@ report them as separate modules; never use the canonical illustrative portfolio 
    - per tool: `entitled`, `available`, `scoped`, `healthy`, `data_ready`, `availability_reason`,
      `missing_oauth_scopes`;
    - `coverage[]`: domain, status (`available`, `conditional`, `unavailable`), `as_of`.
-   Summary intentionally omits chart packs and per-backend readiness. Request `detail: "full"` only when
+   Summary intentionally omits per-backend readiness. Request `detail: "full"` only when
    diagnosing those details.
 2. Save the summary response, then validate the machine-readable `minimum_connector_contract` in
    `references/contracts.json`:
@@ -58,7 +58,7 @@ report them as separate modules; never use the canonical illustrative portfolio 
      <this skill's directory>/references/contracts.json <capabilities-response.json>
    ```
 
-   This requires service version 0.9.0 or newer, compatibility epoch 3, every required public tool, and a
+   This requires service version 0.10.0 or newer, compatibility epoch 4, every required public tool, and a
    coherent `capability_access_modes` map whose modes agree with `effective_capabilities`.
    On failure, stop before skill or probe execution, mark the connector `not_ready`, quote the validator
    failure, and tell the user to update or reconnect GradientCIO. Do not replace missing connector
@@ -77,13 +77,13 @@ report them as separate modules; never use the canonical illustrative portfolio 
 ## 3. Contract self-test
 
 Run the probes in `references/contract-checks.md`. The **standard** set is 8 quick reads (default). The
-**full read** set is 61 reads (the 8 standard plus 53 full probes); run it when the user asks for a health
+**full read** set is 64 reads (the 8 standard plus 56 full probes); run it when the user asks for a health
 check or self-test, or after a plugin update. The separate **writes** set is 8 dry-run previews, including
 monitoring, review and Strategy Lab scenario previews plus one batch-preview contract and one DDQ upload
 preview, and must never commit. Private-markets construction adds one fictional `private_markets_holdings`
 read probe. The **DDQ save-preview** set is 3 calls: it intentionally persists one fictional test
 document and one immutable reconciliation test run so that document identity and the chained save can be
-tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 75 calls.
+tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 76 calls.
 
 For each probe, record pass, fail (with error code and HTTP status) or not run (not entitled), and the
 response `as_of`. Resolve `depends_on` arguments with `check_contract.py --resolve-args`; do not manually
@@ -140,9 +140,8 @@ Sections (soft target 4–5 pages; hard ceiling 7):
    / Not licensed (optional) / Unavailable (optional)>` separately. A missing
    Strategy Lab supplement makes the combined IC memo status Partial, not Not
    licensed.
-3. **Access and data** — `coverage` block for the data domains (status and as-of); kv block for organization,
-   role, licensed modules, roster capacity, and the available chart packs for the first portfolio from
-   `chart_availability`.
+3. **Access and data** — `coverage` block for data domains; kv block for organization, role, licensed modules,
+   roster capacity, and availability of the first portfolio's five opt-in exposure sections.
 4. **Contract checks** — table: Probe, Tool, Result (chip), As of, Note. Then a `findings` block listing new
    failures only (severity high when a core skill is blocked, medium otherwise).
 5. **Try next** — `questions` block with 3 prompts tailored to what is ready, e.g. "Run an ODD report on

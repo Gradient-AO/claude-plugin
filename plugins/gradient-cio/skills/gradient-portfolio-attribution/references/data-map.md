@@ -7,7 +7,7 @@ every call and record one source row per response.
 
 | Evidence | Call | Fields used |
 |---|---|---|
-| Capabilities | `get_gradient_capabilities` | Portfolio capability; both attribution tools' availability, access mode and readiness reasons |
+| Capabilities | `get_gradient_capabilities` summary | Both attribution tools' availability, access mode and readiness reasons; there is no portfolio coverage scope |
 | Portfolio | `list_portfolios` | `portfolio_id`, name, base currency, record kind, canonical default, data scope |
 | Cohort | `get_portfolio_structure`, `view: allocation_tree`, `max_depth: 3`, `node_limit: 100` | Allocation IDs, names, parent IDs, depth, target and actual weights, policy benchmark context, coverage |
 | Return context | `get_portfolio_historical_returns`, requested period end and `limit: 100`; request `standard_periods`, `calendar_years` and `benchmark_relative` with `fields: [portfolio, policy_benchmark, filters, coverage, display, standard_periods, calendar_years, benchmark_relative]` first, then separate projected calls for `points` plus `cumulative_growth`, and `rolling` plus `drawdown_series`; every projection retains `portfolio`, `policy_benchmark`, `filters`, `coverage` and `display`; disclose the returned count if the 100-row response is unexpectedly truncated | Returned values, units, period labels, coverage and benchmark identity |
@@ -117,7 +117,7 @@ weights.
 ## Unsupported substitutes
 
 The following do not fill either attribution section:
-- `get_chart_data` allocation or commitments packs;
+- chart-style sections from `get_portfolio_exposure.include`;
 - Strategy Lab expected statistics, relative return or simulation;
 - locally calculated Brinson effects;
 - historical factor exposure described as selection;

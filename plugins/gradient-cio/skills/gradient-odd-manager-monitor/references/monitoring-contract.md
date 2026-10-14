@@ -17,6 +17,8 @@ Collect in parallel where possible:
 - `get_manager_monitor_evidence`, `mode: alerts`, with `since_cursor` when
   saved;
 - the same tool with `mode: coverage`;
+- the same tool with `view: draft_candidates` when the digest needs proposed
+  monitor additions; treat candidates as read-only evidence, never as writes;
 - `get_manager_diligence_findings`, `view: open`, for parent firm and fund;
 - `get_firm_fund_events` per parent firm;
 - `get_research_watchlist_changes`.

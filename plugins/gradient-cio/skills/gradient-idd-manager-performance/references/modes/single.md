@@ -37,7 +37,7 @@ Keep every required section even when evidence is unavailable. Omit `Benchmark s
 
 The executive section contains four tiles in this order: `Annualized return`, `Excess vs benchmark`, `Information ratio`, and `Max drawdown`. Every tile states its exact observation window and cites `[S#]`. Follow the tiles with a verdict strip that states the evidence-based conclusion, the dominant uncertainty, and what would change the view without making a hire or allocation recommendation.
 
-When returned, the analytical body includes:
+When returned, the analytical body include:
 
 - native `line` blocks for returned cumulative growth, drawdown, rolling 12-month / 36-month return, rolling 36-month excess return, and rolling 12-month / 36-month Sharpe views;
 - calendar-year manager and benchmark grouped bars plus the same values in a table;

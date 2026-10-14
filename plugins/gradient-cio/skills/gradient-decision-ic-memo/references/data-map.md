@@ -5,7 +5,7 @@ first and use the parameter names from the loaded schema. Record a source row fo
 Step 2). Read `module-scope.md` first.
 
 Portfolio questions go to Portfolio Analytics: `list_portfolios`, `get_portfolio_exposure`,
-`get_portfolio_structure`, `get_portfolio_historical_returns`, `get_chart_data`,
+`get_portfolio_structure`, `get_portfolio_historical_returns`,
 `get_portfolio_attribution`, and `check_portfolio_policy`. Strategy Lab rows are optional and run on selected
 return series: pass `return_series_ids` plus the benchmark field required by the loaded compute-tool schema.
 Do not also pass a `strategy_lab_session` stub. They never receive `portfolio_id`. Label the series and date
@@ -19,7 +19,7 @@ coverage and do not present lab results as the portfolio.
 | Assumption set | `list_assumption_sets` | Use the one the user names, else the default; state it in the header. |
 | Portfolio id and name | `list_portfolios` | Match the user's portfolio by name. Record `data_scope`. |
 | Strategy Lab series | User-supplied `return_series_ids` | Optional. Do not infer from the portfolio ID. |
-| Capabilities | `get_gradient_capabilities` | Only if a later call fails — confirms entitlement versus outage for the Not available reason. |
+| Capabilities | `get_gradient_capabilities` summary; use a supported scope object only when a matching coverage view applies | Only if a later call fails — preserve tool availability and any matching `scoped_coverage`, and distinguish entitlement from outage in the Not available reason. |
 
 ## Section → tools
 
@@ -31,14 +31,14 @@ coverage and do not present lab results as the portfolio.
 | 5 (visuals) | Growth of 100, calendar years | Second `get_portfolio_historical_returns` call: `limit: 100`; `sections: [cumulative_growth, calendar_years]`; `fields: [portfolio, filters, coverage, display, cumulative_growth, calendar_years]` | Not available callout |
 | 5.2 | Attribution | `get_portfolio_attribution` for the governed saved portfolio and policy benchmark; display the returned benchmark name and comparison basis with the effects | User attribution report quoted as a document; else Not available |
 | 5.3 | Contributors / detractors | Governed holding or asset-class contribution data from a user report | Not available |
-| 6.1 | Factor exposures | Portfolio Analytics: `get_chart_data` `analysis_type: allocations`, using the returned factor/currency exposure item and preserving its basis | Not available |
-| 6.2 | Concentration, diversification | Portfolio Analytics: `get_chart_data` allocations pack + `get_portfolio_structure` + `get_portfolio_exposure`; issuer look-through from `get_cross_domain_research` `view: portfolio_13f_lookthrough` (lagged, long-only 13F estimate — label it so) | Concentration rows from exposure only; model-derived diversification rows Not available |
+| 6.1 | Factor exposures | Portfolio Analytics: `get_portfolio_exposure` with `include: [factor_currency_exposure]`; use the unchanged returned chart item and preserve its basis, `render_hint`, and chart ID | Not available |
+| 6.2 | Concentration, diversification | Portfolio Analytics: `get_portfolio_exposure` with `include: [risk_contribution, lookthrough_13f]` plus `get_portfolio_structure`; label 13F issuer evidence as a lagged, long-only estimate | Concentration rows from exposure only; model-derived diversification rows Not available |
 | 7.1 | Expected return, vol, Sharpe, beta | Portfolio Analytics: use `check_portfolio_policy.return_objective` and equivalent governed results returned on the saved-portfolio basis; use `list_assumption_sets` and `get_capital_market_assumptions` for assumption context | Unsupported portfolio statistics are Not available; never weight CMA rows locally or substitute Strategy Lab series results |
 | 7.1 | Drawdown, CVaR, probability of meeting objective | Portfolio Analytics source or user report when returned on the same portfolio basis | Not available; do not substitute a Strategy Lab series result |
 | 7.2 | Consensus check | `get_cma_consensus_check` (mode `allocation`, with an inline canonical allocation derived from `get_portfolio_exposure`, `target_return` = IPS objective); use `portfolio_id` only for a stored licensed portfolio | mode `asset_class` for held classes |
 | 7.3 | Regime overlay | `get_macro_signals` (view `gradient_signal` → `sources.grip.current`); `get_capital_market_assumptions` (regime view) | Regime row Not available |
 | 8 | Stress tests, scenarios | Portfolio Analytics or user-supplied scenario report on the saved portfolio. Optional Strategy Lab: `run_strategy_lab_simulation` / `run_strategy_lab_date_window_robustness` only for explicitly selected return series, in rows labeled `Strategy Lab — <series>` | Not available |
-| 9 | Liquidity tiers, unfunded, pacing | `check_portfolio_policy.liquidity` plus Portfolio Analytics commitments evidence for pacing | User liquidity schedule quoted as a document; else Not available |
+| 9 | Liquidity tiers, unfunded, pacing | `check_portfolio_policy.liquidity` plus `get_portfolio_exposure` with `include: [commitment_pacing, liquidity_scorecard]`; preserve included chart items unchanged | User liquidity schedule quoted as a document; else Not available |
 | 10 | Managers: exposure, ODD, findings, alerts | `get_manager_diligence_findings` (view `exposure_weighted`); `get_manager_diligence_attention_queue`; per manager ≥ 1% NAV: `get_manager_odd_profile` (view `red_flags`), `get_manager_monitor_evidence` (mode `alerts`) | Per manager: `get_manager_diligence_brief` (one call covers server-derived ADV, monitor, 13F, events, differentiated analytics and deterministic synthesis evidence signals) |
 | 11 | GIPS | Internal `../../internal/gips-evidence-review/contract.md` asset-owner mode for total-fund reporting; the GIPS section of `gradient-odd-report` for manager claims, verification and performance integrity | Not assessed — reason |
 | 12 | Market context | `get_macro_signals` (`gradient_signal`; GRIP from `sources.grip.current`), `get_macro_conditions` (indicators, themes relevant to holdings), `get_the_read`, `get_macro_calendar` (scheduled_events, 30 days) | Omit unavailable bullets' content but keep the bullet with Not available |

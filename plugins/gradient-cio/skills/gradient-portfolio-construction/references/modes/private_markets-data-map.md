@@ -8,7 +8,7 @@ and payload digest for every source row.
 
 | Need | Tool and arguments | Use |
 |---|---|---|
-| Access | `get_gradient_capabilities`; selected organization | Portfolio capability, tool availability and live / illustrative mode |
+| Access | `get_gradient_capabilities`; selected organization; unscoped summary for core Portfolio Analytics | Tool availability and live / illustrative mode; there is no portfolio coverage scope |
 | Portfolio selection | `list_portfolios` | Existing `portfolio_id`, name, currency, `record_kind`, canonical default |
 | Allocation | `get_portfolio_structure`; `view: allocation_tree`, selected `portfolio_id`, depth 3 | Returned total-portfolio target, actual, limits, policy status and coverage |
 | Exposure | `get_portfolio_exposure`; selected `portfolio_id`; use returned display names or snake_case aliases `private_equity` and `private_credit`, plus `real_estate` or `infrastructure` only when the requested mandate includes them; page each filter to completion | NAV, commitment, unfunded, value basis, valuation date, manager / fund and server aggregates; do not quote `fixed_income_metrics` from these non-fixed-income sleeves |
@@ -16,13 +16,12 @@ and payload digest for every source row.
 | Policy | `check_portfolio_policy`; selected `portfolio_id` | Allocation, return objective, risk, liquidity, unfunded and concentration assessments |
 | Returns | `get_portfolio_historical_returns`; selected period end; `limit: 100`; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`, then separate projected calls for `points` and `cumulative_growth` when needed; disclose the returned count if the 100-row response is unexpectedly truncated | Returned periods, risk, benchmark-relative values, points and coverage |
 | Attribution | `get_portfolio_attribution`; policy benchmark, root allocation, month-end period, all sections | Realized effects, linking, residual, diagnostics and typed unavailability |
-| Chart availability | `get_chart_data`; selected `portfolio_id`, no pack selector | Available chart IDs, unavailable reasons and context |
-| Allocation charts | `get_chart_data`; `analysis_type: allocations` | Returned allocation, risk-contribution, factor and currency items |
-| Program charts | `get_chart_data`; `analysis_type: commitments` | Returned cash-flow, pacing, pacing-metric and liquidity-scorecard items |
+| Allocation charts | `get_portfolio_exposure`; selected `portfolio_id`, `include: [factor_currency_exposure, risk_contribution]` | Unchanged risk-contribution and factor/currency chart items, including chart IDs and render hints |
+| Program charts | `get_portfolio_exposure`; selected `portfolio_id`, `include: [commitment_pacing, liquidity_scorecard]` | Unchanged cash-flow, pacing and liquidity chart items |
 | Forward assumptions | `list_assumption_sets`; `get_capital_market_assumptions` with `view: baseline`; `check_portfolio_policy.return_objective` when available | Active assumption identity, release, horizon, currency, private-market classes and governed portfolio objective evidence |
 
-Call each chart pack separately and embed each usable `charts[]` item unchanged. Never hand-map chart IDs or
-derive chart rows. Preserve `basis`, `context.fingerprint`, status, truncation and unavailable reason.
+Request only the needed exposure includes and embed each usable chart item unchanged. Never hand-map chart
+IDs or derive chart rows. Preserve `basis`, `context.fingerprint`, status, truncation and unavailable reason.
 State partial historical-return coverage as a report gap, including `not_yet_funded` commitments and the
 partial 2016 and 2026 calendar years from their `month_count`, `partial`, `coverage_status`, and
 `missing_reason`; never present them as full-year returns. For `no_subject_returns`, state that the selected
@@ -69,7 +68,7 @@ fields, and never compare or conflate the two excess values.
 
 1. Required call unavailable: keep the section and show `Not available — <reason>`.
 2. No portfolio entitlement: offer the canonical illustrative portfolio; mark the report Partial.
-3. No commitments pack: retain policy liquidity and exposure tables, but do not project calls or
+3. No commitment-pacing include: retain policy liquidity and exposure tables, but do not project calls or
    distributions locally.
 4. No mapped ILPA artifact: retain commitment exposure and show
    `Not available — no mapped ILPA portfolio-company artifact`; do not infer company diversification.

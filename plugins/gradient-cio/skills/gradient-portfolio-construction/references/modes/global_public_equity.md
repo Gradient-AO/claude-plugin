@@ -61,8 +61,8 @@ Required evidence:
 - portfolio record, allocation tree, public-equity-filtered exposure pages and policy result;
 - historical returns and governed attribution, preserving typed unavailable states;
 - benchmark identity and return series when returned;
-- `get_chart_data` availability, then the `allocations` pack, or up to four targeted `chart_ids` (never both
-  selectors); `max_rows` defaults to 40 and is capped at 100; disclose `truncated: true`;
+- `get_portfolio_exposure` with `include: [factor_currency_exposure, risk_contribution]`; preserve returned
+  chart items, `render_hint`, and chart IDs unchanged and disclose `truncated: true`;
 - active assumption set and capital-market assumptions.
 
 Portfolio 13F look-through, manager diligence, CMA consensus, issuer research and selected-series Strategy

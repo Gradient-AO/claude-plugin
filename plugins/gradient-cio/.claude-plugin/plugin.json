@@ -1,6 +1,6 @@
 {
   "name": "gradient-cio",
-  "version": "5.8.1",
+  "version": "6.0.0",
   "description": "Gradient CIO client skills for investment and operational due diligence, portfolio analytics, portfolio construction and attribution, and investment-committee memos. Includes centralized branded PDF and PowerPoint styling, the GradientCIO connector, and a setup check.",
   "author": {
     "name": "GradientCIO"

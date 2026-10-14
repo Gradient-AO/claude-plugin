@@ -7,7 +7,7 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 
 | Need | Tool and arguments | Use |
 |---|---|---|
-| Access | `get_gradient_capabilities`; selected organization | Portfolio, research and macro capability state |
+| Access | `get_gradient_capabilities`; selected organization; unscoped summary for core Portfolio Analytics and supported scope objects only for matching optional coverage checks | Capability state and any matching `scoped_coverage` |
 | Portfolio selection | `list_portfolios` | Existing `portfolio_id`, name, currency and record kind |
 | Allocation | `get_portfolio_structure`; `view: allocation_tree`, selected `portfolio_id`, depth 3 | Fixed-income policy nodes, total-portfolio targets, actuals, limits and coverage |
 | Exposure | `get_portfolio_exposure`; selected `portfolio_id`, display name `Fixed Income` or snake_case alias `fixed_income`, page to completion | Returned segment, manager, value basis, value, currency and as-of date; duration, spread duration and yield only from complete `portfolio_totals.fixed_income_metrics` or the Fixed Income classification aggregate |
@@ -15,7 +15,7 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 | Returns | `get_portfolio_historical_returns`; `limit: 100`; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`, then separate projected calls for `points` and `cumulative_growth` when needed; disclose the returned count if the 100-row response is unexpectedly truncated | Period returns, benchmark-relative values, risk and coverage |
 | Attribution | `get_portfolio_attribution`; policy benchmark, root allocation, month-end period, all sections | Realized effects, method, linking, residual, diagnostics and unavailable reasons |
 | Benchmark | Benchmark ID returned by portfolio evidence, then `get_benchmarks`; optional `get_return_series` | Name, class, currency and returned benchmark points |
-| Allocation charts | `get_chart_data`; availability, then `analysis_type: allocations` | Weights, risk contribution, factor and currency items where returned |
+| Allocation charts | `get_portfolio_exposure`; `include: [factor_currency_exposure, risk_contribution]` | Unchanged risk-contribution and factor/currency chart items where returned |
 | Forward assumptions | `list_assumption_sets`; `get_capital_market_assumptions` with `view: baseline`; `check_portfolio_policy.return_objective` when available | Active release, horizon, currency, fixed-income classes and governed portfolio objective evidence |
 | Credit context | `get_macro_conditions` with exactly `{"view": "credit_spreads"}` | Returned spread levels, changes, coverage and as-of dates |
 

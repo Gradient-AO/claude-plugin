@@ -11,7 +11,7 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 
 | Need | Tool and arguments | Use |
 |---|---|---|
-| Access | `get_gradient_capabilities`; selected organization | Portfolio, research and macro capability state |
+| Access | `get_gradient_capabilities`; selected organization; unscoped summary for core Portfolio Analytics and supported scope objects only for matching optional coverage checks | Capability state and any matching `scoped_coverage` |
 | Portfolio selection | `list_portfolios` | Existing `portfolio_id`, name, currency and record kind |
 | Allocation | `get_portfolio_structure`; `view: allocation_tree`, selected `portfolio_id`, depth 3 | Fixed-income policy nodes, total-portfolio targets, actuals, limits and coverage |
 | Exposure | `get_portfolio_exposure`; selected `portfolio_id`, display name `Fixed Income` or snake_case alias `fixed_income`, page to completion | Returned segment, manager, value basis, value, currency and as-of date; duration, spread duration and yield only from complete `portfolio_totals.fixed_income_metrics` or the Fixed Income classification aggregate |
@@ -19,7 +19,7 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 | Returns | `get_portfolio_historical_returns`; `limit: 100`; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`, then separate projected calls for `points` and `cumulative_growth` when needed; disclose the returned count if the 100-row response is unexpectedly truncated | Period returns, benchmark-relative values, risk and coverage |
 | Attribution | `get_portfolio_attribution`; policy benchmark, root allocation, month-end period, all sections | Realized effects, method, linking, residual, diagnostics and unavailable reasons |
 | Benchmark | Benchmark ID returned by portfolio evidence, then `get_benchmarks`; optional `get_return_series` | Name, class, currency and returned benchmark points |
-| Allocation charts | `get_chart_data`; availability, then `analysis_type: allocations` | Weights, risk contribution, factor and currency items where returned |
+| Allocation charts | `get_portfolio_exposure`; `include: [factor_currency_exposure, risk_contribution]` | Unchanged risk-contribution and factor/currency chart items where returned |
 | Forward assumptions | `list_assumption_sets`; `get_capital_market_assumptions` with `view: baseline`; `check_portfolio_policy.return_objective` when available | Active release, horizon, currency, fixed-income classes and governed portfolio objective evidence |
 | Credit context | `get_macro_conditions` with exactly `{"view": "credit_spreads"}` | Returned spread levels, changes, coverage and as-of dates |
 
@@ -90,7 +90,7 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 
 | Need | Tool and arguments | Use |
 |---|---|---|
-| Access | `get_gradient_capabilities`; selected organization | Portfolio and research capability state |
+| Access | `get_gradient_capabilities`; selected organization; unscoped summary for core Portfolio Analytics and supported scope objects only for matching optional coverage checks | Capability state and any matching `scoped_coverage` |
 | Portfolio selection | `list_portfolios` | Existing `portfolio_id`, name, currency and record kind |
 | Allocation | `get_portfolio_structure`; `view: allocation_tree`, selected `portfolio_id`, depth 3 | Public-equity nodes, returned targets, actuals, limits and coverage |
 | Exposure | `get_portfolio_exposure`; selected `portfolio_id`, returned display name or snake_case `asset_classification: public_equity`, page to completion | Managers / funds, values, currency, classifications and as-of dates; do not quote `fixed_income_metrics` from this non-fixed-income sleeve |
@@ -98,7 +98,7 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 | Returns | `get_portfolio_historical_returns`; `limit: 100`; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`, then separate projected calls for `points` and `cumulative_growth` when needed; disclose the returned count if the 100-row response is unexpectedly truncated | Period returns, benchmark-relative values, risk and coverage |
 | Attribution | `get_portfolio_attribution`; policy benchmark, root allocation, month-end period, all sections | Realized effects, method, linking, residual and diagnostics |
 | Benchmark | Benchmark ID returned by portfolio evidence, then `get_benchmarks`; optional `get_return_series` | Name, equity class, currency and returned points |
-| Allocation charts | `get_chart_data`; availability, then `analysis_type: allocations` | Allocation, factor, currency and risk-contribution items where returned |
+| Allocation charts | `get_portfolio_exposure`; `include: [factor_currency_exposure, risk_contribution]` | Unchanged factor/currency and risk-contribution chart items where returned |
 | Assumptions | `list_assumption_sets`; `get_capital_market_assumptions` with `view: baseline` | Active release, horizon, currency and public-equity classes |
 
 Embed usable chart items unchanged. Preserve basis, fingerprint, units, truncation and unavailable reasons.
@@ -125,11 +125,11 @@ fields, and never compare or conflate the two excess values.
 
 | Need | Tool | Rule |
 |---|---|---|
-| 13F look-through | `get_cross_domain_research`; `view: portfolio_13f_lookthrough`, selected portfolio, top 10 managers, limit 20 | Preserve join basis, filing dates, coverage and data-scope label |
+| 13F look-through | `get_portfolio_exposure`; `include: [lookthrough_13f]`, selected portfolio | Preserve join basis, filing dates, coverage and data-scope label |
 | CMA comparison | `get_cma_consensus_check`; held public-equity classes | Preserve positioning and coverage |
 | Macro regime | `get_macro_signals`; `view: gradient_signal`, plus `view: regime_state` when available | Preserve GRIP availability/degradation reasons and returned regime status; context only, never a forecast |
 | Manager evidence | `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve; use `gradient-odd-report` in `compare` or `full` mode for deeper work | Preserve entity scope and severity; never infer that an unmatched holding has no findings |
-| Issuer question | `get_public_equity_fundamentals`, `get_public_equity_filing_evidence`, `get_market_positioning` | Only for named concentrations inside global-public-equity construction; do not expand into a standalone research report |
+| Issuer question | `get_public_equity_fundamentals`, `get_public_equity_filing_evidence`; use `get_macro_signals` `view: hedge_fund_crowding` only when crowding context is relevant | Only for named concentrations inside global-public-equity construction; do not expand into a standalone research report |
 | Selected-series diagnostics | Pass selected `return_series_ids` directly to `run_strategy_lab_expected_statistics` or `run_strategy_lab_date_window_robustness`; add `benchmark_id` for `run_strategy_lab_relative_return`. Do not also pass a `strategy_lab_session` stub. | Selected-series sandbox; never use portfolio ID |
 | User documents | IPS, benchmark specification, manager structure or transition plan | Tag as user documents with date and scope |
 
@@ -161,7 +161,7 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 
 | Need | Tool and arguments | Use |
 |---|---|---|
-| Access | `get_gradient_capabilities`; selected organization | Portfolio, research and diligence capability state |
+| Access | `get_gradient_capabilities`; selected organization; unscoped summary for core Portfolio Analytics and supported scope objects only for matching optional coverage checks | Capability state and any matching `scoped_coverage` |
 | Portfolio selection | `list_portfolios` | Existing `portfolio_id`, name, currency and record kind |
 | Allocation | `get_portfolio_structure`; `view: allocation_tree`, selected `portfolio_id`, depth 3 | Hedge-fund policy nodes, total-portfolio targets, actuals, limits and coverage |
 | Exposure | `get_portfolio_exposure`; selected `portfolio_id`, returned display name or snake_case `asset_classification: alternatives`, page to completion | Manager, fund, value basis, value, currency and as-of date; do not quote `fixed_income_metrics` from this non-fixed-income sleeve |
@@ -169,7 +169,7 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 | Returns | `get_portfolio_historical_returns`; `limit: 100`; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`, then separate projected calls for `points` and `cumulative_growth` when needed; disclose the returned count if the 100-row response is unexpectedly truncated | Period returns, benchmark-relative values, risk and coverage |
 | Attribution | `get_portfolio_attribution`; policy benchmark, relevant policy node when supported, month-end period, all sections | Realized effects, method, linking, residual, diagnostics and unavailable reasons |
 | Benchmark | Benchmark ID returned by portfolio evidence, then `get_benchmarks`; optional `get_return_series` | Name, class, currency and returned benchmark points |
-| Allocation charts | `get_chart_data`; availability, then `analysis_type: allocations` | Weights, risk contribution, factor and currency items where returned |
+| Allocation charts | `get_portfolio_exposure`; `include: [factor_currency_exposure, risk_contribution]` | Unchanged risk-contribution and factor/currency chart items where returned |
 | Assumptions | `list_assumption_sets`; `get_capital_market_assumptions` with `view: baseline` | Active release, horizon, currency and returned `hedge_funds` / `absolute_return` classes |
 
 Embed usable chart items unchanged. Preserve basis, fingerprint, display units, truncation and unavailable
@@ -191,7 +191,8 @@ fields, and never compare or conflate the two excess values.
 - Keep policy-tree names, exposure classifications, strategy labels and manager roles separate.
 - Historical attribution comes only from `get_portfolio_attribution`.
 - Policy risk and liquidity status comes only from `check_portfolio_policy`.
-- Do not request or use the commitments pack, private-markets PME or locally constructed cash-flow pacing.
+- Do not request commitment-pacing or liquidity-scorecard includes, private-markets PME, or locally
+  constructed cash-flow pacing.
 - Report redemption frequency, notice, gates, side pockets, gross/net exposure and leverage only when
   directly returned or cited from a user document.
 
@@ -202,9 +203,9 @@ fields, and never compare or conflate the two excess values.
 | CMA comparison | `get_cma_consensus_check`; `mode: asset_class`, returned `hedge_funds` / `absolute_return` classes | Preserve positioning, coverage and method |
 | Macro regime | `get_macro_signals`; `view: gradient_signal`, plus `view: regime_state` when available | Preserve GRIP availability/degradation reasons and returned regime status; context only, never a forecast |
 | Peer policy | `get_peer_allocation_intelligence`; policy or cohort mode | Context only; preserve cohort, date, denominator and coverage |
-| Crowding context | `get_market_positioning`; `view: hedge_fund_crowding` | Market context only; never infer the selected managers' positions |
-| Portfolio macro context | `get_cross_domain_research`; `view: roster_macro_exposure`, selected `portfolio_id` | Optional and entitlement-dependent |
-| Equity look-through | `get_cross_domain_research`; `view: portfolio_13f_lookthrough`, selected `portfolio_id` | Optional; long-only US-listed subset with lag, short-book and FX caveats |
+| Crowding context | `get_macro_signals`; `view: hedge_fund_crowding` | Market context only; never infer the selected managers' positions |
+| Portfolio macro context | `get_macro_signals`; `view: roster_macro_exposure`, selected `portfolio_id` | Optional and entitlement-dependent |
+| Equity look-through | `get_portfolio_exposure`; `include: [lookthrough_13f]`, selected `portfolio_id` | Optional; long-only US-listed subset with lag, short-book and FX caveats |
 | Manager evidence | `get_manager_diligence_brief`, `get_manager_diligence_findings` `view: open`, `get_manager_monitor_evidence`, `get_manager_odd_profile` for every resolved manager or fund in the sleeve | Preserve entity scope and severity; never infer that an unmatched holding has no findings |
 | Selected-series diagnostics | `build_strategy_lab_session` with selected `return_series_ids`, then a supported `run_strategy_lab_*` tool with the returned session | Selected-series sandbox; never pass a Portfolio Analytics ID |
 | User documents | IPS, mandate, liquidity schedule, manager report or transition plan | Tag as user documents with date and scope |
@@ -235,7 +236,7 @@ and payload digest for every source row.
 
 | Need | Tool and arguments | Use |
 |---|---|---|
-| Access | `get_gradient_capabilities`; selected organization | Portfolio capability, tool availability and live / illustrative mode |
+| Access | `get_gradient_capabilities`; selected organization; unscoped summary for core Portfolio Analytics | Tool availability and live / illustrative mode; there is no portfolio coverage scope |
 | Portfolio selection | `list_portfolios` | Existing `portfolio_id`, name, currency, `record_kind`, canonical default |
 | Allocation | `get_portfolio_structure`; `view: allocation_tree`, selected `portfolio_id`, depth 3 | Returned total-portfolio target, actual, limits, policy status and coverage |
 | Exposure | `get_portfolio_exposure`; selected `portfolio_id`; use returned display names or snake_case aliases `private_equity` and `private_credit`, plus `real_estate` or `infrastructure` only when the requested mandate includes them; page each filter to completion | NAV, commitment, unfunded, value basis, valuation date, manager / fund and server aggregates; do not quote `fixed_income_metrics` from these non-fixed-income sleeves |
@@ -243,13 +244,12 @@ and payload digest for every source row.
 | Policy | `check_portfolio_policy`; selected `portfolio_id` | Allocation, return objective, risk, liquidity, unfunded and concentration assessments |
 | Returns | `get_portfolio_historical_returns`; selected period end; `limit: 100`; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`, then separate projected calls for `points` and `cumulative_growth` when needed; disclose the returned count if the 100-row response is unexpectedly truncated | Returned periods, risk, benchmark-relative values, points and coverage |
 | Attribution | `get_portfolio_attribution`; policy benchmark, root allocation, month-end period, all sections | Realized effects, linking, residual, diagnostics and typed unavailability |
-| Chart availability | `get_chart_data`; selected `portfolio_id`, no pack selector | Available chart IDs, unavailable reasons and context |
-| Allocation charts | `get_chart_data`; `analysis_type: allocations` | Returned allocation, risk-contribution, factor and currency items |
-| Program charts | `get_chart_data`; `analysis_type: commitments` | Returned cash-flow, pacing, pacing-metric and liquidity-scorecard items |
+| Allocation charts | `get_portfolio_exposure`; selected `portfolio_id`, `include: [factor_currency_exposure, risk_contribution]` | Unchanged risk-contribution and factor/currency chart items, including chart IDs and render hints |
+| Program charts | `get_portfolio_exposure`; selected `portfolio_id`, `include: [commitment_pacing, liquidity_scorecard]` | Unchanged cash-flow, pacing and liquidity chart items |
 | Forward assumptions | `list_assumption_sets`; `get_capital_market_assumptions` with `view: baseline`; `check_portfolio_policy.return_objective` when available | Active assumption identity, release, horizon, currency, private-market classes and governed portfolio objective evidence |
 
-Call each chart pack separately and embed each usable `charts[]` item unchanged. Never hand-map chart IDs or
-derive chart rows. Preserve `basis`, `context.fingerprint`, status, truncation and unavailable reason.
+Request only the needed exposure includes and embed each usable chart item unchanged. Never hand-map chart
+IDs or derive chart rows. Preserve `basis`, `context.fingerprint`, status, truncation and unavailable reason.
 State partial historical-return coverage as a report gap, including `not_yet_funded` commitments and the
 partial 2016 and 2026 calendar years from their `month_count`, `partial`, `coverage_status`, and
 `missing_reason`; never present them as full-year returns. For `no_subject_returns`, state that the selected
@@ -296,7 +296,7 @@ fields, and never compare or conflate the two excess values.
 
 1. Required call unavailable: keep the section and show `Not available — <reason>`.
 2. No portfolio entitlement: offer the canonical illustrative portfolio; mark the report Partial.
-3. No commitments pack: retain policy liquidity and exposure tables, but do not project calls or
+3. No commitment-pacing include: retain policy liquidity and exposure tables, but do not project calls or
    distributions locally.
 4. No mapped ILPA artifact: retain commitment exposure and show
    `Not available — no mapped ILPA portfolio-company artifact`; do not infer company diversification.
@@ -321,18 +321,18 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 
 | Need | Tool and arguments | Use |
 |---|---|---|
-| Access | `get_gradient_capabilities`; selected organization | Portfolio, research, macro and diligence capability state |
+| Access | `get_gradient_capabilities`; selected organization; unscoped summary for core Portfolio Analytics and supported scope objects only for matching optional coverage checks | Capability state and any matching `scoped_coverage` |
 | Portfolio selection | `list_portfolios` | Existing `portfolio_id`, name, currency and record kind |
 | Allocation | `get_portfolio_structure`; `view: allocation_tree`, selected `portfolio_id`, depth 3 | Real-assets policy nodes, total-portfolio targets, actuals, limits and coverage |
 | Exposure | `get_portfolio_exposure`; selected `portfolio_id`; page returned display names or snake_case aliases `asset_classification: real_estate` and `asset_classification: infrastructure` separately; use another classification only when the loaded schema documents it | Market value or NAV, commitment, unfunded, manager / fund, currency and valuation date; do not quote `fixed_income_metrics` from these non-fixed-income sleeves |
 | Policy | `check_portfolio_policy`; selected `portfolio_id` | Allocation, return objective, risk, liquidity, unfunded and concentration status |
 | Returns | `get_portfolio_historical_returns`; `limit: 100`; first `sections: [standard_periods, calendar_years, risk_metrics, benchmark_relative]` with matching `fields: [portfolio, filters, coverage, display, standard_periods, calendar_years, risk_metrics, benchmark_relative]`, then separate projected calls for `points` and `cumulative_growth` when needed; disclose the returned count if the 100-row response is unexpectedly truncated | Period returns, benchmark-relative values, risk and coverage |
 | Attribution | `get_portfolio_attribution`; policy benchmark, relevant policy node when supported, month-end period, all sections | Realized effects, method, linking, residual, diagnostics and unavailable reasons |
-| Allocation charts | `get_chart_data`; availability, then `analysis_type: allocations` | Weights, risk contribution, factor and currency items where returned |
+| Allocation charts | `get_portfolio_exposure`; `include: [factor_currency_exposure, risk_contribution]` | Unchanged risk-contribution and factor/currency chart items where returned |
 | Assumptions | `list_assumption_sets`; `get_capital_market_assumptions` with `view: baseline` | Active release, horizon, currency and returned real-asset classes |
-| Drawdown charts | `get_chart_data`; `analysis_type: commitments` only when closed-end/drawdown real-assets exposures exist | Cash flow, pacing, pacing metrics and liquidity scorecard |
+| Drawdown charts | `get_portfolio_exposure`; `include: [commitment_pacing, liquidity_scorecard]` only when closed-end/drawdown real-assets exposures exist | Unchanged cash-flow, pacing and liquidity chart items |
 
-Call each applicable chart pack separately and embed usable items unchanged. Preserve basis, fingerprint,
+Request only applicable exposure includes and embed usable chart items unchanged. Preserve basis, fingerprint,
 display units, truncation and unavailable reasons. Do not derive sleeve returns, inflation sensitivity,
 commodity beta or risk from total-portfolio rows.
 State partial historical-return coverage as a report gap, including `not_yet_funded` commitments and the
@@ -365,7 +365,7 @@ fields, and never compare or conflate the two excess values.
 | Macro regime | `get_macro_signals`; `view: gradient_signal`, plus `view: regime_state` when available | Preserve GRIP availability/degradation reasons and returned regime status; context only, never a forecast |
 | Peer policy | `get_peer_allocation_intelligence`; policy or cohort mode | Context only; preserve cohort, date, denominator and coverage |
 | Inflation context | `get_macro_conditions`; a schema-supported inflation view | Facts only; never infer asset sensitivity or forecast inflation |
-| Commodity positioning | `get_market_positioning`; `view: cftc` | Context only; not a portfolio exposure or expected-return source |
+| Commodity positioning | `get_macro_signals`; `view: cftc_positioning` | Context only; not a portfolio exposure or expected-return source |
 | Broader context | `get_the_read`; `visuals: none` | Facts only; at most two short paragraphs |
 | Manager evidence | `get_manager_diligence_brief`, `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve | Preserve entity scope and severity; never infer that an unmatched holding has no findings |
 | Selected-series diagnostics | `build_strategy_lab_session` with selected `return_series_ids`, then a supported `run_strategy_lab_*` tool with the returned session | Selected-series sandbox; never pass a Portfolio Analytics ID |
@@ -376,7 +376,7 @@ fields, and never compare or conflate the two excess values.
 1. Missing sleeve-specific returns: do not relabel total-portfolio returns as real-assets returns.
 2. No drawdown exposures: commitments evidence is
    `Not applicable — no closed-end or drawdown real-assets exposures`.
-3. Drawdown exposures but no commitments pack: retain exposure and policy liquidity evidence; do not project
+3. Drawdown exposures but no commitment-pacing include: retain exposure and policy liquidity evidence; do not project
    calls or distributions locally.
 4. No explicit commodity or inflation-linked mapping: mark forward assumptions
    `Not assessed — mapping not provided`.
