@@ -85,7 +85,7 @@ eight positive slices) ·
 Lines nested in `two_col` automatically use the narrow profile: approximately 360 CSS pixels, a legend
 instead of end labels, no more than five y-axis ticks, and axis/legend text of at least 7pt. Labeled
 `x_bands` use a dedicated strip below the plot so they cannot collide with series end labels.
-`chart {chart:<one chart item returned by get_chart_data>}` renders from `render_hint`: line, bars, pie, or a
+`chart {chart:<one chart item returned by a get_portfolio_exposure include>}` renders from `render_hint`: line, bars, pie, or a
 formatted table fallback. Pass the returned chart object unchanged; do not remap chart IDs in a skill.
 
 Sections: `{"id"?, "title", "kicker"?, "num"?, "page_break"?: "auto"|"prefer"|"force", "blocks": [...]}`.

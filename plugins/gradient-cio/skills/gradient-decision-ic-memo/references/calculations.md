@@ -28,7 +28,7 @@ sign, never parentheses. Missing → `n/a` inside numeric tables,
 | Realized returns and risk | `get_portfolio_historical_returns` | Period labels, benchmark and excess returns, annualization, future-period exclusion, drawdown dates, beta, volatility and coverage |
 | Allocation hierarchy | `get_portfolio_structure` | Total-portfolio target basis and coverage; never multiply hierarchy weights locally |
 | Exposure mix | `get_portfolio_exposure` | Server aggregate basis, total, share, coverage and truncation; never add unfunded to NAV |
-| Forward-looking analytics | Portfolio Analytics chart packs | Scenario, assumption set, currency, horizon and returned metric basis |
+| Forward-looking analytics | Portfolio Analytics exposure includes and governed policy/CMA evidence | Include name, scenario, assumption set, currency, horizon and returned metric basis |
 
 ## Local Brinson fallback
 

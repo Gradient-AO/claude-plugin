@@ -7,13 +7,14 @@ def contract_manifest():
     probes = contracts["probes"]
     probe_ids = [probe["id"] for probe in probes]
     known_ids = set(probe_ids)
+    by_id = {probe["id"]: probe for probe in probes}
     check(len(probe_ids) == len(known_ids), "contract probe IDs are unique")
     counts = {
         name: sum(probe.get("set") == name for probe in probes)
         for name in ("standard", "full", "writes", "ddq-save-preview")
     }
     check(
-        counts == {"standard": 8, "full": 53, "writes": 8, "ddq-save-preview": 3},
+        counts == {"standard": 8, "full": 56, "writes": 8, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
     )
     full_read_count = counts["standard"] + counts["full"]
@@ -157,9 +158,9 @@ def contract_manifest():
         public_tool_catalog.get("generated") is True
         and public_tool_catalog.get("source")
         == "@gradientcio/contracts canonical MCP tool catalog"
-        and len(public_tools) == 69
+        and len(public_tools) == 65
         and public_tools == sorted(set(public_tools)),
-        "public-tool catalog has generated 69-tool canonical parity",
+        "public-tool catalog has generated 65-tool canonical parity",
     )
     minimum = contracts.get("minimum_connector_contract", {})
     response_path_tools = set(minimum.get("required_response_field_paths", {}))
@@ -183,11 +184,14 @@ def contract_manifest():
         "get_benchmarks",
         "get_cma_consensus_check",
         "get_diligence_roster_funds",
+        "get_firm_13f_portfolio_review",
         "get_firm_entity_facts",
         "get_fund_diligence_monitoring",
         "get_fund_diligence_review",
         "get_gradient_capabilities",
+        "get_macro_signals",
         "get_manager_diligence_brief",
+        "get_manager_monitor_evidence",
         "get_manager_odd_profile",
         "get_the_read",
         "get_portfolio_attribution",
@@ -214,9 +218,9 @@ def contract_manifest():
     }
     minimum_probe_ids = set(minimum.get("required_probe_ids", []))
     check(
-        contracts.get("version") == "2026-10-12"
-        and minimum.get("minimum_service_version") == "0.9.0"
-        and minimum.get("compatibility_epoch") == 3
+        contracts.get("version") == "2026-10-14"
+        and minimum.get("minimum_service_version") == "0.10.0"
+        and minimum.get("compatibility_epoch") == 4
         and set(minimum.get("required_tools", [])) == expected_minimum_tools,
         "minimum connector contract pins document version, service, epoch, and required tools",
     )
@@ -226,9 +230,10 @@ def contract_manifest():
             "portfolio_attribution",
             "portfolio_ex_ante_attribution",
             "portfolio_returns",
-            "chart_availability",
-            "portfolio_allocations",
-            "portfolio_commitments",
+            "capabilities_coverage",
+            "portfolio_factor_currency",
+            "portfolio_risk_contribution",
+            "portfolio_commitment_analytics",
             "private_markets_holdings",
             "entity_facts",
             "fund_diligence_monitoring",
@@ -250,6 +255,10 @@ def contract_manifest():
             "ddq_numeric_gap",
             "batch_ddq_preview",
             "manager_diligence_brief",
+            "grip_cma_statistics",
+            "roster_macro_exposure",
+            "issuer_risk",
+            "monitor_draft_candidates",
             "write_create_finding",
             "write_watchlist_manager",
             "write_manager_monitoring",
@@ -312,8 +321,65 @@ def contract_manifest():
         {
             "capability_access_modes.portfolio",
             "capability_access_modes.strategyLab",
+            "scoped_coverage.view",
+            "scoped_coverage.status",
         } <= capability_paths,
-        "minimum connector contract requires capability access modes",
+        "minimum connector contract requires access modes and scoped coverage",
+    )
+    capabilities_summary = by_id["capabilities_summary"]
+    capabilities_coverage = by_id["capabilities_coverage"]
+    check(
+        "scope" not in capabilities_summary.get("args", {})
+        and capabilities_coverage.get("args", {}).get("scope")
+        == {"view": "manager_diligence"}
+        and {
+            "scoped_coverage.view",
+            "scoped_coverage.status",
+        } <= set(capabilities_coverage.get("required", []))
+        and capabilities_coverage.get("equals", {}).get(
+            "scoped_coverage.view",
+        ) == "manager_diligence",
+        "capability probes use object-valued scoped coverage",
+    )
+    cross_domain_owner_probes = {
+        "adv_13f_consistency": (
+            "get_firm_13f_portfolio_review",
+            "adv_13f_consistency",
+        ),
+        "grip_cma_statistics": ("get_macro_signals", "grip_cma_statistics"),
+        "roster_macro_exposure": ("get_macro_signals", "roster_macro_exposure"),
+        "issuer_risk": ("get_firm_13f_portfolio_review", "issuer_risk"),
+        "monitor_draft_candidates": (
+            "get_manager_monitor_evidence",
+            "draft_candidates",
+        ),
+    }
+    cross_domain_paths = {
+        "result_type",
+        "view",
+        "status",
+        "read_only",
+        "persisted_draft_findings",
+        "sources",
+        "rows",
+    }
+    check(
+        all(
+            by_id[probe_id].get("tool") == tool_name
+            and by_id[probe_id].get("args", {}).get("view") == view
+            and cross_domain_paths <= set(by_id[probe_id].get("required", []))
+            for probe_id, (tool_name, view) in cross_domain_owner_probes.items()
+        ),
+        "cross-domain probes use their public owner views and result contract",
+    )
+    check(
+        by_id["cftc_positioning"].get("tool") == "get_macro_signals"
+        and by_id["cftc_positioning"].get("args", {}).get("view")
+        == "cftc_positioning"
+        and by_id["hf_crowding"].get("tool") == "get_macro_signals"
+        and by_id["hf_crowding"].get("args", {}).get("view")
+        == "hedge_fund_crowding",
+        "positioning probes use get_macro_signals public views",
     )
     requirement_tokens = set(re.findall(
         r"\b(?:get|list|run|analyze|build|compare|create|extract|log|preview|reconcile|"
@@ -386,7 +452,6 @@ def contract_manifest():
         "no contract probe requests a write commit",
     )
 
-    by_id = {probe["id"]: probe for probe in probes}
     diligence_sections = [
         "manager_adv",
         "firm_fund_events",
@@ -887,8 +952,9 @@ def contract_manifest():
         "portfolio_returns",
         "portfolio_attribution",
         "portfolio_ex_ante_attribution",
-        "portfolio_allocations",
-        "portfolio_commitments",
+        "portfolio_factor_currency",
+        "portfolio_risk_contribution",
+        "portfolio_commitment_analytics",
         "portfolio_policy",
     }
     check(
@@ -909,6 +975,7 @@ def contract_manifest():
     }
     check(
         exposure_probe["args"].get("asset_classification") == "fixed_income"
+        and exposure_probe["args"].get("include") == ["lookthrough_13f"]
         and {
             "exposures[0].asset_classification",
             *pme_readiness_paths,
@@ -921,8 +988,9 @@ def contract_manifest():
             "aggregates_by_asset_classification.rows[0].fixed_income_metrics.spread_duration",
             "aggregates_by_asset_classification.rows[0].fixed_income_metrics.yield_to_maturity_decimal",
             "methodology",
+            "lookthrough_13f",
         } <= set(exposure_probe.get("required", [])),
-        "portfolio-exposure probe covers PME readiness, aggregate scope, and fixed-income paths",
+        "portfolio-exposure probe covers look-through, PME readiness, aggregates, and fixed-income paths",
     )
     check(
         pme_readiness_paths <= minimum_exposure_paths,
@@ -1177,13 +1245,14 @@ def contract_manifest():
         "setup reports unavailable peer access without downgrading construction",
     )
     check(
-        by_id["portfolio_allocations"]["tool"] == "get_chart_data"
-        and by_id["portfolio_allocations"]["args"].get("analysis_type")
-        == "allocations"
-        and by_id["portfolio_commitments"]["tool"] == "get_chart_data"
-        and by_id["portfolio_commitments"]["args"].get("analysis_type")
-        == "commitments",
-        "Portfolio Analytics probes cover both supported chart packs",
+        by_id["portfolio_factor_currency"]["tool"] == "get_portfolio_exposure"
+        and by_id["portfolio_factor_currency"]["args"].get("include")
+        == ["factor_currency_exposure"]
+        and by_id["portfolio_risk_contribution"]["args"].get("include")
+        == ["risk_contribution"]
+        and by_id["portfolio_commitment_analytics"]["args"].get("include")
+        == ["commitment_pacing", "liquidity_scorecard"],
+        "Portfolio Analytics probes cover all chart-style exposure includes",
     )
     strategy_probe_ids = {
         "strategy_benchmarks",
@@ -1465,13 +1534,15 @@ def contract_manifest():
     )
     shared_chart_guidance = SHARED_CHART_DATA.read_text(encoding="utf-8")
     check(
-        "two supported packs" in shared_chart_guidance
-        and "`allocations` and `commitments`" in shared_chart_guidance
-        and "`max_rows` defaults to 40" in shared_chart_guidance
-        and "cannot exceed 100" in shared_chart_guidance
-        and "at most four explicit `chart_ids`" in shared_chart_guidance
+        "`get_portfolio_exposure.include`" in shared_chart_guidance
+        and "`factor_currency_exposure`" in shared_chart_guidance
+        and "`risk_contribution`" in shared_chart_guidance
+        and "`commitment_pacing`" in shared_chart_guidance
+        and "`liquidity_scorecard`" in shared_chart_guidance
+        and "`lookthrough_13f`" in shared_chart_guidance
+        and "`render_hint`" in shared_chart_guidance
         and "`run_strategy_lab_expected_statistics`" in shared_chart_guidance,
-        "shared chart guidance documents current packs, selectors and row limits",
+        "shared chart guidance documents opt-in exposure sections and wire preservation",
     )
     chart_skill_names = (
         "gradient-portfolio-review",
@@ -1487,13 +1558,13 @@ def contract_manifest():
     ]
     check(
         all(
-            "`max_rows` defaults to 40" in text
-            and re.search(r"capped at\s+100", text)
-            and "`chart_ids`" in text
-            and "`truncated: true`" in text
+            "get_portfolio_exposure" in text
+            and "get_portfolio_exposure.include" in text
+            and "render_hint" in text
+            and "truncated: true" in text
             for text in chart_skill_guidance
         ),
-        "portfolio report skills document chart selectors, row limits and truncation",
+        "portfolio report skills document exposure includes and chart preservation",
     )
     check(
         by_id["events"]["args"].get("view") == "subject"
@@ -1848,8 +1919,8 @@ def contract_checker():
         contracts = {
             "envelope": [],
             "minimum_connector_contract": {
-                "minimum_service_version": "0.9.0",
-                "compatibility_epoch": 2,
+                "minimum_service_version": "0.10.0",
+                "compatibility_epoch": 4,
                 "required_tools": ["preview_tool", "source_tool"],
                 "required_response_field_paths": {
                     "preview_tool": ["receipt_id"],
@@ -1914,8 +1985,8 @@ def contract_checker():
         )
         capabilities_path = temp / "capabilities.json"
         capabilities_path.write_text(json.dumps({
-            "version": "0.9.0",
-            "contract_identity": {"compatibility_epoch": 2},
+            "version": "0.10.0",
+            "contract_identity": {"compatibility_epoch": 4},
             "product_entitlements": {"portfolio": False},
             "effective_capabilities": {"portfolio": True},
             "capability_access_modes": {"portfolio": "illustrative"},
@@ -1926,8 +1997,8 @@ def contract_checker():
         }), encoding="utf-8")
         old_capabilities_path = temp / "old-capabilities.json"
         old_capabilities_path.write_text(json.dumps({
-            "version": "0.8.9",
-            "contract_identity": {"compatibility_epoch": 2},
+            "version": "0.9.9",
+            "contract_identity": {"compatibility_epoch": 4},
             "product_entitlements": {"portfolio": False},
             "effective_capabilities": {"portfolio": True},
             "capability_access_modes": {"portfolio": "illustrative"},
@@ -1938,8 +2009,8 @@ def contract_checker():
         }), encoding="utf-8")
         invalid_modes_path = temp / "invalid-modes.json"
         invalid_modes_path.write_text(json.dumps({
-            "version": "0.9.0",
-            "contract_identity": {"compatibility_epoch": 2},
+            "version": "0.10.0",
+            "contract_identity": {"compatibility_epoch": 4},
             "product_entitlements": {"portfolio": False},
             "effective_capabilities": {"portfolio": True},
             "capability_access_modes": {"portfolio": "demo"},
@@ -2008,7 +2079,7 @@ def contract_checker():
         )
         check(
             connector_old.returncode == 1
-            and "below required 0.9.0" in connector_old.stdout,
+            and "below required 0.10.0" in connector_old.stdout,
             "connector checker rejects an older service",
         )
         check(

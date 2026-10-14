@@ -61,9 +61,9 @@ Required evidence:
 
 - portfolio record, allocation tree, real-assets exposure pages and policy result;
 - historical returns and governed attribution, preserving typed unavailable states;
-- `get_chart_data` availability, then `allocations`; request `commitments` only when drawdown exposures exist,
-  or use up to four targeted `chart_ids` (never both selectors); `max_rows` defaults to 40 and is capped at
-  100; disclose `truncated: true`;
+- `get_portfolio_exposure` with `include: [factor_currency_exposure, risk_contribution]`; add
+  `commitment_pacing` and `liquidity_scorecard` only when drawdown exposures exist; preserve returned chart
+  items, `render_hint`, and chart IDs unchanged and disclose `truncated: true`;
 - active assumption set and capital-market assumptions for returned `real_assets`, `real_estate`,
   `infrastructure` and `natural_resources` classes;
 - `commitments` charts only when the selected real-assets sleeve contains closed-end or drawdown exposures.

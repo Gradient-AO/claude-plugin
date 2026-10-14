@@ -1832,7 +1832,7 @@
           "text": "Observation: Daily-to-quarterly assets are 63.0% of NAV and unfunded commitments are 9.3% [S3][S6]. Why it matters: Liquid coverage remains compliant as calls exceed distributions. Uncertainty: Pacing results are assumptions, not confirmed call schedules. What would change the view: Calls above projections or liquid assets below policy [S3][S7]."
         }
       ],
-      "page_break": "prefer"
+      "page_break": "force"
     },
     {
       "title": "Coverage",
@@ -1872,9 +1872,9 @@
               "note": "31 commitments; all pages retrieved [S6]"
             },
             {
-              "name": "Portfolio chart packs",
+              "name": "Portfolio exposure analytics",
               "status": "available",
-              "note": "allocations and commitments [S7]"
+              "note": "factor/currency, risk, pacing and liquidity includes [S7]"
             },
             {
               "name": "Capital-market assumptions",
@@ -2012,10 +2012,10 @@
             ],
             [
               "S7",
-              "Portfolio chart packs",
+              "Portfolio exposure analytics",
               "gradient_tool",
-              "get_chart_data",
-              "allocations, commitments",
+              "get_portfolio_exposure",
+              "include=factor_currency_exposure, risk_contribution, commitment_pacing, liquidity_scorecard",
               "2026-06-30",
               "Illustrative sample data",
               "{'chip': 'passed', 'status': 'passed'}",
@@ -2047,8 +2047,8 @@
               "S10",
               "13F look-through",
               "gradient_tool",
-              "get_cross_domain_research",
-              "portfolio_13f_lookthrough",
+              "get_portfolio_exposure",
+              "include=lookthrough_13f",
               "2026-05-15",
               "Illustrative sample data",
               "{'chip': 'partial', 'status': 'partial'}",
@@ -2141,7 +2141,7 @@
             [
               "S7",
               "Forward statistics",
-              "Expected-statistics and allocation chart packs",
+              "Governed policy/CMA evidence and exposure includes",
               "chart-contract-v1",
               "10-year assumptions; context fingerprint retained"
             ]

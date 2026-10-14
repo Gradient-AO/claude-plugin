@@ -52,14 +52,15 @@ read `references/data-map.md#calls-arguments-and-the-fields-used`.
 Collect capabilities, portfolio, allocation tree, historical returns
 (including benchmark growth, calendar years, drawdown and rolling sections),
 policy, exposure, and applicable benchmark. Brief attribution/charts are
-optional; comprehensive mode also collects governed attribution, allocations
-and commitments chart packs, look-through, liquidity, forward assumptions,
+optional; comprehensive mode also collects governed attribution, chart-style
+exposure includes, look-through, liquidity, forward assumptions,
 and requested context. For brief Outlook, request the returned 10Y–2Y and
 10Y–3M histories when the macro-conditions series option is available.
 
-For chart calls, read `references/chart-data.md` just before use: request one
-supported pack at a time or up to four explicit `chart_ids`, never both;
-`max_rows` defaults to 40 and is capped at 100; disclose `truncated: true`.
+For chart-style evidence, read `references/chart-data.md` just before use:
+request only the needed `get_portfolio_exposure.include` values, preserve every
+returned chart item, `render_hint`, and chart ID unchanged, and disclose
+`truncated: true`.
 
 For comprehensive collection and optional selected-series Strategy Lab calls,
 read `references/data-map.md#comprehensive-mode-collection`. Only supported

@@ -62,7 +62,7 @@ eight positive slices) ·
 `two_col {left:[blocks], right:[blocks]}` · `markdown {text}` · `pagebreak {}` ·
 `line {title?, series:[{name, points:[[date, value]]}], y_suffix?, decimals?, ref?:{value,label}, height?, note?}`
 (time series only from returned series, never invented) · `statement {text, sub?, tone?}` (one large message).
-`chart {chart:<one chart item returned by get_chart_data>}` renders from `render_hint`: line, bars, pie, or a
+`chart {chart:<one chart item returned by a get_portfolio_exposure include>}` renders from `render_hint`: line, bars, pie, or a
 formatted table fallback. Pass the returned chart object unchanged; do not remap chart IDs in a skill.
 
 Sections: `{"id"?, "title", "kicker"?, "num"?, "page_break"?: "auto"|"prefer"|"force", "blocks": [...]}`.

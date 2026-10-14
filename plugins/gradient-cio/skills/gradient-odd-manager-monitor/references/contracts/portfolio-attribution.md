@@ -7,7 +7,7 @@
 - Simulated attribution comes only from `simulate_portfolio_attribution`, and only when `get_gradient_capabilities` lists that exact tool as available.
 - Cross-lane server metrics come only from `compare_portfolio_attribution`, and only when capabilities list that exact tool as available.
 
-Strategy Lab, chart packs, historical return points, locally calculated Brinson effects and projected return/risk decomposition never substitute for an attribution lane.
+Strategy Lab, chart-style exposure includes, historical return points, locally calculated Brinson effects and projected return/risk decomposition never substitute for an attribution lane.
 
 ## Compatibility gate
 

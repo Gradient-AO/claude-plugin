@@ -1,8 +1,8 @@
 {
-  "version": "2026-10-12",
+  "version": "2026-10-14",
   "minimum_connector_contract": {
-    "minimum_service_version": "0.9.0",
-    "compatibility_epoch": 3,
+    "minimum_service_version": "0.10.0",
+    "compatibility_epoch": 4,
     "required_tools": [
       "analyze_strategy_lab_compare",
       "batch_reconcile_manager_ddq_claims",
@@ -13,11 +13,14 @@
       "get_benchmarks",
       "get_cma_consensus_check",
       "get_diligence_roster_funds",
+      "get_firm_13f_portfolio_review",
       "get_firm_entity_facts",
       "get_fund_diligence_monitoring",
       "get_fund_diligence_review",
       "get_gradient_capabilities",
+      "get_macro_signals",
       "get_manager_diligence_brief",
+      "get_manager_monitor_evidence",
       "get_manager_odd_profile",
       "get_portfolio_attribution",
       "get_portfolio_ex_ante_attribution",
@@ -131,7 +134,9 @@
         "product_entitlements.strategyLab",
         "capability_access_modes.portfolio",
         "capability_access_modes.strategyLab",
-        "tools"
+        "tools",
+        "scoped_coverage.view",
+        "scoped_coverage.status"
       ],
       "get_the_read": [
         "coverage.status",
@@ -190,7 +195,12 @@
         "methodology",
         "aggregates_by_asset_classification.rows[0].fixed_income_metrics.effective_duration",
         "aggregates_by_asset_classification.rows[0].fixed_income_metrics.spread_duration",
-        "aggregates_by_asset_classification.rows[0].fixed_income_metrics.yield_to_maturity_decimal"
+        "aggregates_by_asset_classification.rows[0].fixed_income_metrics.yield_to_maturity_decimal",
+        "factor_currency_exposure",
+        "risk_contribution",
+        "commitment_pacing",
+        "liquidity_scorecard",
+        "lookthrough_13f"
       ],
       "get_portfolio_historical_returns": [
         "coverage.status",
@@ -458,6 +468,18 @@
         "committed",
         "outcome",
         "receipt_id"
+      ],
+      "get_macro_signals": [
+        "status",
+        "view"
+      ],
+      "get_firm_13f_portfolio_review": [
+        "status",
+        "view"
+      ],
+      "get_manager_monitor_evidence": [
+        "status",
+        "view"
       ]
     },
     "required_probe_ids": [
@@ -477,9 +499,9 @@
       "portfolio_returns",
       "portfolio_attribution",
       "portfolio_ex_ante_attribution",
-      "chart_availability",
-      "portfolio_allocations",
-      "portfolio_commitments",
+      "portfolio_factor_currency",
+      "portfolio_risk_contribution",
+      "portfolio_commitment_analytics",
       "private_markets_holdings",
       "cma_consensus",
       "cma_consensus_allocation",
@@ -507,7 +529,12 @@
       "write_diligence_review",
       "write_roster",
       "write_strategy_scenario",
-      "write_upload_ddq"
+      "write_upload_ddq",
+      "capabilities_coverage",
+      "grip_cma_statistics",
+      "roster_macro_exposure",
+      "issuer_risk",
+      "monitor_draft_candidates"
     ]
   },
   "mode_requirements": {
@@ -813,101 +840,97 @@
       }
     },
     {
-      "id": "chart_catalog",
+      "id": "capabilities_coverage",
       "set": "standard",
-      "tool": "get_chart_data",
+      "tool": "get_gradient_capabilities",
       "depends_on": [
         "orgs"
       ],
       "args": {
-        "organization_id": "<orgs:organizations[0].id>"
+        "organization_id": "<orgs:organizations[0].id>",
+        "detail": "summary",
+        "scope": {
+          "view": "manager_diligence"
+        }
       },
       "required": [
-        "kind",
-        "packs[0].analysis_type",
-        "packs[0].charts[0].chart_id"
+        "service",
+        "version",
+        "contract_identity.compatibility_epoch",
+        "scoped_coverage.view",
+        "scoped_coverage.status",
+        "tools"
       ],
       "equals": {
-        "kind": "catalog"
+        "detail": "summary",
+        "scoped_coverage.view": "manager_diligence"
       },
       "envelope": false
     },
     {
-      "id": "chart_availability",
+      "id": "portfolio_factor_currency",
       "set": "full",
-      "tool": "get_chart_data",
+      "tool": "get_portfolio_exposure",
       "depends_on": [
         "orgs",
         "sample_portfolio"
       ],
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
-        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>"
+        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
+        "include": [
+          "factor_currency_exposure"
+        ],
+        "limit": 1
       },
       "required": [
-        "kind",
-        "portfolio.id",
-        "context.fingerprint",
-        "packs[0].available_chart_ids"
-      ],
-      "equals": {
-        "kind": "availability"
-      },
-      "envelope": false
+        "portfolio.portfolio_id",
+        "factor_currency_exposure"
+      ]
     },
     {
-      "id": "portfolio_allocations",
+      "id": "portfolio_risk_contribution",
       "set": "full",
-      "tool": "get_chart_data",
+      "tool": "get_portfolio_exposure",
       "depends_on": [
         "orgs",
-        "sample_portfolio",
-        "chart_availability"
+        "sample_portfolio"
       ],
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
         "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
-        "analysis_type": "allocations"
+        "include": [
+          "risk_contribution"
+        ],
+        "limit": 1
       },
       "required": [
-        "kind",
-        "context.fingerprint",
-        "charts[0].chart_id",
-        "charts[0].status",
-        "charts[0].basis",
-        "charts[0].render_hint.block"
-      ],
-      "equals": {
-        "kind": "data"
-      },
-      "envelope": false
+        "portfolio.portfolio_id",
+        "risk_contribution"
+      ]
     },
     {
-      "id": "portfolio_commitments",
+      "id": "portfolio_commitment_analytics",
       "set": "full",
-      "tool": "get_chart_data",
+      "tool": "get_portfolio_exposure",
       "depends_on": [
         "orgs",
-        "sample_portfolio",
-        "chart_availability"
+        "sample_portfolio"
       ],
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
         "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
-        "analysis_type": "commitments"
+        "include": [
+          "commitment_pacing",
+          "liquidity_scorecard"
+        ],
+        "limit": 1
       },
       "required": [
-        "kind",
-        "context.fingerprint",
-        "charts[0].chart_id",
-        "charts[0].status",
-        "charts[0].basis",
-        "charts[0].render_hint.block"
-      ],
-      "equals": {
-        "kind": "data"
-      },
-      "envelope": false
+        "portfolio.portfolio_id",
+        "commitment_pacing",
+        "liquidity_scorecard"
+      ]
     },
     {
       "id": "attention",
@@ -1198,7 +1221,10 @@
         "organization_id": "<orgs:organizations[0].id>",
         "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
         "asset_classification": "fixed_income",
-        "limit": 50
+        "limit": 50,
+        "include": [
+          "lookthrough_13f"
+        ]
       },
       "required": [
         "portfolio.portfolio_id",
@@ -1224,7 +1250,8 @@
         "aggregates_by_asset_classification.rows[0].fixed_income_metrics.spread_duration",
         "aggregates_by_asset_classification.rows[0].fixed_income_metrics.yield_to_maturity_decimal",
         "has_more",
-        "methodology"
+        "methodology",
+        "lookthrough_13f"
       ],
       "equals": {
         "exposures[0].null_reasons.as_of_date": null,
@@ -1586,25 +1613,6 @@
         "basis.return_basis": "annualized_expected_return",
         "residual.within_tolerance": true
       }
-    },
-    {
-      "id": "portfolio_series",
-      "set": "full",
-      "tool": "get_return_series",
-      "depends_on": [
-        "orgs",
-        "sample_portfolio"
-      ],
-      "args": {
-        "organization_id": "<orgs:organizations[0].id>",
-        "series_kind": "portfolio",
-        "series_id": "<sample_portfolio:portfolios[0].portfolio_id>",
-        "trailing_months": 3
-      },
-      "required": [
-        "availability.status",
-        "points[0].return"
-      ]
     },
     {
       "id": "strategy_benchmarks",
@@ -2071,7 +2079,7 @@
     {
       "id": "adv_13f_consistency",
       "set": "full",
-      "tool": "get_cross_domain_research",
+      "tool": "get_firm_13f_portfolio_review",
       "depends_on": [
         "roster"
       ],
@@ -2080,7 +2088,13 @@
         "firm_id": "<roster:funds[0].parent_firm_id>"
       },
       "required": [
+        "result_type",
+        "view",
         "status",
+        "read_only",
+        "persisted_draft_findings",
+        "sources",
+        "rows",
         "rows[0].values.flags",
         "rows[0].values.latest_13f_age_days"
       ]
@@ -2143,9 +2157,9 @@
     {
       "id": "cftc_positioning",
       "set": "full",
-      "tool": "get_market_positioning",
+      "tool": "get_macro_signals",
       "args": {
-        "view": "cftc",
+        "view": "cftc_positioning",
         "marketGroup": "all",
         "historyWeeks": 4
       },
@@ -2158,7 +2172,7 @@
     {
       "id": "hf_crowding",
       "set": "full",
-      "tool": "get_market_positioning",
+      "tool": "get_macro_signals",
       "args": {
         "view": "hedge_fund_crowding",
         "limit": 5
@@ -2167,6 +2181,82 @@
         "consensus",
         "publishable_period",
         "staleness_days"
+      ]
+    },
+    {
+      "id": "grip_cma_statistics",
+      "set": "full",
+      "tool": "get_macro_signals",
+      "args": {
+        "view": "grip_cma_statistics"
+      },
+      "required": [
+        "result_type",
+        "view",
+        "status",
+        "read_only",
+        "persisted_draft_findings",
+        "sources",
+        "rows"
+      ]
+    },
+    {
+      "id": "roster_macro_exposure",
+      "set": "full",
+      "tool": "get_macro_signals",
+      "depends_on": [
+        "sample_portfolio"
+      ],
+      "args": {
+        "view": "roster_macro_exposure",
+        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>"
+      },
+      "required": [
+        "result_type",
+        "view",
+        "status",
+        "read_only",
+        "persisted_draft_findings",
+        "sources",
+        "rows"
+      ]
+    },
+    {
+      "id": "issuer_risk",
+      "set": "full",
+      "tool": "get_firm_13f_portfolio_review",
+      "depends_on": [
+        "roster"
+      ],
+      "args": {
+        "view": "issuer_risk",
+        "firm_id": "<roster:funds[0].parent_firm_id>"
+      },
+      "required": [
+        "result_type",
+        "view",
+        "status",
+        "read_only",
+        "persisted_draft_findings",
+        "sources",
+        "rows"
+      ]
+    },
+    {
+      "id": "monitor_draft_candidates",
+      "set": "full",
+      "tool": "get_manager_monitor_evidence",
+      "args": {
+        "view": "draft_candidates"
+      },
+      "required": [
+        "result_type",
+        "view",
+        "status",
+        "read_only",
+        "persisted_draft_findings",
+        "sources",
+        "rows"
       ]
     },
     {

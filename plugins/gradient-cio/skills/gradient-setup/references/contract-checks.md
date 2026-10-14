@@ -6,7 +6,7 @@ sets `"envelope": false`.
 
 The same file's top-level `minimum_connector_contract` is the machine-readable cutover gate. Validate it
 against the saved `get_gradient_capabilities` summary before running any probe. A service version below
-0.9.0, a compatibility epoch other than 3, or a missing required tool is a connector failure: stop, report
+0.10.0, a compatibility epoch other than 4, or a missing required tool is a connector failure: stop, report
 `not_ready`, and do not use local-calculation fallbacks.
 
 Resolve every chained placeholder from a saved dependency response. Placeholders have the exact form
@@ -28,22 +28,24 @@ that `publication.requested_as_of_date` is null. `asOfDate` is a historical-publ
 or report date; the default probe therefore exercises the current latest-publication contract.
 
 **Standard set (default, 8 reads):** orgs, roster, odd_profile, monitor_coverage, the_read, calendar,
-sample_portfolio, chart_catalog. The sample probe verifies that `list_portfolios`
+sample_portfolio, capabilities_coverage. The scoped capability probe uses
+`scope: {view: manager_diligence}`; the sample probe verifies that `list_portfolios`
 returns Gradient's canonical example first.
 
-**Full read set (61 reads including standard):** standard plus capabilities_summary,
+**Full read set (64 reads including standard):** standard plus capabilities_summary,
 fund_diligence_monitoring, fund_diligence_review, manager_diligence_brief,
 attention, findings, events, events_roster, entity_facts, conditions, credit_spreads, gradient_signal, regime_state,
 cma_baseline, cma_consensus, cma_consensus_allocation, watchlist,
 portfolio_tree, portfolio_exposure, portfolio_policy, portfolio_ownership, portfolio_returns,
-portfolio_attribution, portfolio_ex_ante_attribution, portfolio_series,
-chart_availability, portfolio_allocations, portfolio_commitments,
+portfolio_attribution, portfolio_ex_ante_attribution,
+portfolio_factor_currency, portfolio_risk_contribution, portfolio_commitment_analytics,
 strategy_benchmarks, strategy_return_series, two Strategy Lab session builders,
 strategy_expected_statistics, strategy_pme_builder, strategy_pme,
 strategy_pme_sensitivity_builder, strategy_pme_sensitivity, strategy_relative_return,
 strategy_manager_compare, strategy_date_windows,
-adv_13f_consistency,
-multi_manager_13f_overlap, search_managers, screen, cftc_positioning, hf_crowding, regional_facts,
+adv_13f_consistency, issuer_risk, monitor_draft_candidates,
+multi_manager_13f_overlap, search_managers, screen, cftc_positioning, hf_crowding,
+grip_cma_statistics, roster_macro_exposure, regional_facts,
 regional_capital_markets, equity_fundamentals, equity_risk_findings, ddq_extract_fund_aliases,
 ddq_numeric_gap and batch_ddq_preview.
 
@@ -80,7 +82,7 @@ The first call persists fictional inline text as a ready subject-bound document 
 save call is still a dry-run preview and must return `outcome: "preview"`, `dry_run: true` and `committed:
 false`.
 
-The complete matrix is 75 calls. Run the standard or full read set without write confirmation. Run the
+The complete matrix is 76 calls. Run the standard or full read set without write confirmation. Run the
 writes set only as previews. Before the DDQ save-preview set, tell the user that its reconciliation call
 persists a test document and immutable test workpaper.
 
@@ -100,8 +102,9 @@ channel. Fixed-income portfolio and classification aggregates are current-holdin
 reconcile for the fixed-income-only probe, and a zero spread duration is a valid observation.
 
 The Portfolio Analytics probes cover list, exposure, structure, historical and governed ex ante attribution,
-the supported allocations and commitments chart packs, and policy checking against the canonical
-illustrative `portfolio_id`. Strategy Lab separately covers the named demo benchmark catalog, one
+the five opt-in exposure includes, and policy checking against the canonical illustrative `portfolio_id`.
+Included chart-style sections retain their chart item payload, `render_hint`, and chart IDs where applicable.
+Strategy Lab separately covers the named demo benchmark catalog, one
 manager/fund return series, and the expected-statistics, relative-return, manager-compare and date-window
 IDD compute tools. Manager compare receives three demo `return_series_ids` plus `benchmark_series_id` and
 must return all three selected series. Diversification receives the same three manager series and must return
@@ -109,6 +112,13 @@ the bounded full correlation matrix and risk-contribution evidence. Relative ret
 must return one `result_rows` entry per series. Neither call also sends a `strategy_lab_session` stub. The
 discovery schema exposes `portfolio_id` as a compatibility field, but selected-series tools reject it.
 Report the two module results separately.
+
+The return-series catalog accepts only benchmark, commitment, synthetic, and macro series. Portfolio
+performance is probed through `get_portfolio_historical_returns`; never send portfolio or allocation kinds
+to `get_return_series`. Macro joins and positioning use `get_macro_signals` views
+`grip_cma_statistics`, `roster_macro_exposure`, `cftc_positioning`, and `hedge_fund_crowding`.
+ADV–13F consistency and issuer risk use `get_firm_13f_portfolio_review`; monitor drafts use
+`get_manager_monitor_evidence` `view: draft_candidates`.
 
 Live IDD workflows may replace the common benchmark shorthand with
 `benchmark_series_ids`, keyed exactly by selected manager return-series ID. Preserve returned benchmark

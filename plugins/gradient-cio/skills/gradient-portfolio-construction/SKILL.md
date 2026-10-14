@@ -49,7 +49,7 @@ Select exactly one mode and set `meta.mode` before validation:
 
 ## Collect and assess
 
-Collect the portfolio record, allocation tree, mode-filtered exposure pages, policy result, historical returns, governed attribution and applicable assumptions. Request `get_chart_data` only after checking capability availability, using one pack or up to four chart IDs per call. `max_rows` defaults to 40 and is capped at 100; pass explicit `chart_ids` when selecting charts and disclose `truncated: true`. Apply additional mode-specific evidence and restrictions from the selected workflow.
+Collect the portfolio record, allocation tree, mode-filtered exposure pages, policy result, historical returns, governed attribution and applicable assumptions. Request chart-style evidence through `get_portfolio_exposure.include` only after checking capability availability. Add only the needed include names, preserve each returned chart item, `render_hint`, and chart ID unchanged, and disclose `truncated: true`. Apply additional mode-specific evidence and restrictions from the selected workflow.
 
 Recommend a target structure only when returned evidence and stated constraints support it. Keep transaction costs, turnover and unsupported classifications unavailable.
 

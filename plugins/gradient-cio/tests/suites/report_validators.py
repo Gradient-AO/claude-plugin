@@ -234,6 +234,15 @@ def connector_cutover():
             and composed_factor_chart == source_factor_chart,
             "IC memo preserves the exact factor-currency chart payload and title",
         )
+        ic_source_text = (FIX / "ic.md").read_text(encoding="utf-8")
+        check(
+            "get_portfolio_exposure" in ic_source_text
+            and "include=factor_currency_exposure,risk_contribution"
+            in ic_source_text
+            and "include=commitment_pacing,liquidity_scorecard"
+            in ic_source_text,
+            "IC memo sources chart items from opt-in exposure includes",
+        )
 
         base_visuals = json.loads(
             (FIX / "ic_visuals.json").read_text(encoding="utf-8")

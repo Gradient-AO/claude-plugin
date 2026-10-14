@@ -360,7 +360,7 @@ def _format_axis_value(value, decimals=1, suffix="", currency=None, value_format
     return f"{prefix}{scaled:.{precision}f}{marker}{suffix}"
 
 def b_chart(b):
-    """Render the generic wire-format chart block returned by get_chart_data."""
+    """Render a generic wire-format chart block returned by an exposure include."""
     c = b["chart"]
     if c.get("status") != "ok" or not c.get("rows"):
         reason = c.get("error") or c.get("status") or "unavailable"

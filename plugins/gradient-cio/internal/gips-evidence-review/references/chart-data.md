@@ -1,28 +1,22 @@
 # Gradient chart data
 
-Use `get_chart_data` for read-only Portfolio Analytics views of a saved portfolio. It complements
-`get_portfolio_exposure`, which returns raw holdings. Strategy Lab is a separate return-series sandbox: never
-pass this portfolio ID to a Strategy Lab tool or treat a Strategy Lab result as this portfolio's analytics.
+Use optional `get_portfolio_exposure.include` for chart-style Portfolio Analytics sections on a saved
+portfolio. Strategy Lab is a separate return-series sandbox: never pass this portfolio ID to a Strategy Lab
+tool or treat a Strategy Lab result as this portfolio's analytics.
 
-1. Read capabilities and confirm `get_chart_data` is available.
-2. Call `get_chart_data` without a portfolio to browse the two supported packs and stable chart IDs:
-   `allocations` and `commitments`.
-3. Add `portfolio_id` without a chart selector to check availability.
-4. Request one `analysis_type` pack, or at most four explicit `chart_ids`, for data. Never send both
-   selectors in the same call.
-5. `max_rows` defaults to 40 and cannot exceed 100. Use the default unless a report needs more returned
-   table rows; when it does, request up to 100 rather than paging or reconstructing chart rows locally.
+1. Read capabilities and confirm `get_portfolio_exposure` is available.
+2. Request only needed include names: `factor_currency_exposure`, `risk_contribution`,
+   `commitment_pacing`, `liquidity_scorecard`, or `lookthrough_13f`.
+3. Preserve returned chart items, `render_hint`, and chart IDs unchanged.
 
-When the loaded connector schema includes `organization_id`, pass the selected organization for catalog,
-availability, and data calls.
+When the loaded connector schema includes `organization_id`, pass the selected organization.
 
-Use one pack per report section. Skip charts listed as unavailable and state their returned reason in the
-coverage notes. Preserve `basis`, portfolio currency, row truncation, and `context.fingerprint`; cite the
-fingerprint in the report source appendix. If a returned chart has `truncated: true`, disclose that the table
-shows only the returned rows and do not present it as complete.
+Keep includes bounded to one report section. State returned unavailable reasons in coverage notes. Preserve
+`basis`, portfolio currency, row truncation, and `context.fingerprint`; cite the fingerprint in the report
+source appendix. If a returned chart has `truncated: true`, disclose that the table shows only the returned
+rows and do not present it as complete.
 
-`expected-statistics` is not a supported `get_chart_data.analysis_type`. Use governed Portfolio Analytics
-policy / CMA evidence for saved-portfolio forward assumptions, or
+Use governed Portfolio Analytics policy / CMA evidence for saved-portfolio forward assumptions, or
 `run_strategy_lab_expected_statistics` for a separately selected Strategy Lab return-series session. Never
 present Strategy Lab output as saved-portfolio analytics.
 
