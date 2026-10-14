@@ -17,6 +17,7 @@
     "get_ddq_reconciliation_history",
     "get_diligence_roster_funds",
     "get_firm_13f_portfolio_review",
+    "get_firm_diligence_review",
     "get_firm_entity_facts",
     "get_firm_fund_events",
     "get_fund_diligence_monitoring",
