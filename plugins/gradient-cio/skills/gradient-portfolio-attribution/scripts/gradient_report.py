@@ -1637,8 +1637,10 @@ FONT_FILES = (
 
 def font_faces():
     here = os.path.dirname(os.path.abspath(__file__))
-    for d in (os.path.join(here, "..", "..", "..", "assets", "fonts"),   # skills/<skill>/scripts -> plugin root
-              os.path.join(here, "..", "assets", "fonts")):              # shared/ -> plugin root
+    for d in (
+        os.path.join(here, "..", "assets", "fonts"),              # scripts/ -> self-contained skill root
+        os.path.join(here, "..", "..", "..", "assets", "fonts"),  # scripts/ -> plugin root compatibility
+    ):
         faces = []
         for name, weight, rng in FONT_FILES:
             fp = os.path.join(d, name)

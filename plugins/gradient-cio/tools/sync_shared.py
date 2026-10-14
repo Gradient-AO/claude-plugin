@@ -20,17 +20,37 @@ FILES = {"shared/gradient_report.py": "scripts/gradient_report.py",
          "shared/analysis_quality.py": "scripts/analysis_quality.py",
          "shared/validate_handoff.py": "scripts/validate_handoff.py",
          "tools/layout_budget_schema.py": "scripts/layout_budget_schema.py",
+         "tools/report_constants.py": "scripts/report_constants.py",
+         "tools/report_json_validator.py": "scripts/report_json_validator.py",
+         "tools/report_vocab.py": "scripts/report_vocab.py",
+         "tools/construction_report_validator.py": "scripts/construction_report_validator.py",
+         "tools/idd_report_validator.py": "scripts/idd_report_validator.py",
+         "skills/gradient-setup/references/public-tools.json": "references/public-tools.json",
          "shared/report-style.md": "references/report-style.md",
          "shared/writing-standards.md": "references/writing-standards.md",
          "shared/chart-data.md": "references/chart-data.md",
          "shared/module-scope.md": "references/module-scope.md"}
 
 TREES = {
+    "assets/fonts": "assets/fonts",
     "shared/contracts": "references/contracts",
 }
 INTERNAL_RENDER_TARGETS = (
     ROOT / "internal" / "gips-evidence-review",
 )
+INTERNAL_SCRIPT_FILES = {
+    "scripts/gradient_report.py",
+    "scripts/gradient_pptx.py",
+    "scripts/report_theme.py",
+    "scripts/report_layout.py",
+    "scripts/render.py",
+    "scripts/compose_report.py",
+    "scripts/check_layout.py",
+    "scripts/qa_report.py",
+    "scripts/analysis_quality.py",
+    "scripts/validate_handoff.py",
+    "scripts/layout_budget_schema.py",
+}
 
 CHAT_DELIVERY = re.compile(r"^\s+delivery:\s*chat\s*$", re.MULTILINE)
 
@@ -65,6 +85,8 @@ def main():
             continue
         for src, rel in shared_files():
             s, d = ROOT / src, skill / rel
+            if s.resolve() == d.resolve():
+                continue
             if check:
                 if not d.exists() or digest(d) != digest(s):
                     print(f"OUT OF SYNC: {skill.name}/{rel}"); bad += 1
@@ -72,8 +94,11 @@ def main():
                 d.parent.mkdir(parents=True, exist_ok=True); shutil.copyfile(s, d)
                 print(f"synced {skill.name}/{rel} ({digest(s)})")
     for target in INTERNAL_RENDER_TARGETS:
-        for src, rel in FILES.items():
-            if not rel.startswith("scripts/"):
+        for src, rel in shared_files():
+            if not (
+                rel in INTERNAL_SCRIPT_FILES
+                or rel == "references/module-scope.md"
+            ):
                 continue
             s, d = ROOT / src, target / rel
             if check:

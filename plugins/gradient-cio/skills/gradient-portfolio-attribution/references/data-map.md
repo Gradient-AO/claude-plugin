@@ -14,7 +14,7 @@ every call and record one source row per response.
 | Historical attribution | `get_portfolio_attribution`, selected `portfolio_id`, `benchmark_role`, `parent_allocation_id`, month-end start/end, `sections: [summary, segments, periods, diagnostics, active_risk]` | Method, period, basis, currency, coverage, summary, residual, segment and monthly linked effects, diagnostics and active-risk attribution |
 | Largest-detractor drill-down | Rerun `get_portfolio_attribution` with the same role/window and `parent_allocation_id` set to the largest root detractor's returned allocation ID | Sub-allocation effects inside the detractor; preserve typed unavailable when it has no child cohort |
 | Ex ante attribution | `get_portfolio_ex_ante_attribution`, same `portfolio_id`, `benchmark_role`, `parent_allocation_id`, all sections | Method and formula version, horizon, basis, currency, assumptions, coverage, summary, residual, segment inputs/effects and diagnostics |
-| Manager resolution | `get_portfolio_exposure`, with `asset_classification` set to the largest detractor's returned display name or supported alias and `limit: 100` | Held commitment, fund and firm IDs in that segment; use complete filtered totals/coverage and do not infer IDs from names |
+| Manager resolution | Resolve the largest root detractor's exact allocation ID from `get_portfolio_structure`, then call `get_portfolio_exposure` with that `allocation_id` and `limit: 100` | Directly assigned held commitments plus fund and firm IDs in that allocation; use complete filtered totals/coverage and do not infer IDs from names |
 | Manager findings | `get_manager_diligence_findings`, `view: open` with exactly one resolved `firm_id` or `fund_id` per call | Entity scope, severity, status and due date; unmatched entities remain `Not assessed` |
 | Macro regime | `get_macro_signals`, `view: gradient_signal`, plus `view: regime_state` when available | Returned regime status and GRIP availability/degradation reasons for the historical period; context only, not a causal attribution |
 
@@ -27,6 +27,16 @@ returned partial 2016 and 2026 calendar years from `month_count`, `partial`,
 `coverage_status`, and `missing_reason`; never present them as full-year returns. If a
 missing reason is `no_subject_returns`, state that the selected portfolio has
 no subject return history; do not substitute benchmark or Strategy Lab returns.
+
+`allocation_id` is an exact allocation filter, not a display-name or broad
+asset-classification search. Never pass sleeve labels such as `Alternatives`
+as `asset_classification`; that taxonomy contains detailed, mutually exclusive
+classes such as `Hedge Funds`, `Private Equity`, and `Private Credit`.
+
+Drawdown projections are scoped to the selected request window. When
+`start_date`, `end_date`, or `trailing_months` is present, the returned
+drawdown path initializes its peak at the first selected observation. Label it
+as requested-window drawdown; do not describe it as since-inception drawdown.
 
 ## Historical attribution
 
@@ -70,6 +80,13 @@ When both lanes appear, preserve `diagnostics.entity_return_reconciliation`:
 basis fields, and `benchmark_composite_minus_entity_return` with its basis.
 These diagnostics explain the basis delta. Never compare, subtract or conflate
 the attribution-summary excess with historical-return policy-benchmark excess.
+
+Each attribution call builds its linked segment benchmark composite from that
+call's sibling cohort. The root call and a depth-1 drill-down therefore may
+return different benchmark and active returns even for the same dates. Preserve
+each call's `parent_allocation_id`, benchmark basis, benchmark return, and
+`diagnostics.entity_return_reconciliation`; do not present the drill-down active
+return as a decomposition that must equal the root active return.
 
 ## Governed ex ante attribution
 

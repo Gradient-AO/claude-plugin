@@ -56,10 +56,16 @@ canonical portfolio's 69 commitment comparisons return in one response. Preserve
 `benchmark_relative.commitments_total`, `commitments_returned`, `commitments_truncated`, and `has_more`; if
 the result is unexpectedly truncated, disclose the returned count and omitted detail rather than presenting
 the page as complete.
+Drawdown is calculated over the selected request window and initializes its peak
+at the first selected observation. Label filtered results as requested-window
+drawdown, not since-inception drawdown.
 
 For `get_portfolio_exposure.asset_classification` inputs, use the returned display name (for example,
 `Fixed Income`) or its snake_case alias. Supported aliases are `public_equity`, `fixed_income`,
-`private_equity`, `private_credit`, `real_estate`, `infrastructure`, `alternatives`, and `cash`.
+`private_equity`, `private_credit`, `real_estate`, `infrastructure`, `hedge_fund`, and `cash`.
+Do not use broad sleeve labels such as `Alternatives` as asset classifications.
+To resolve commitments assigned directly to a portfolio allocation, use the
+exact `allocation_id` returned by the portfolio structure tool.
 `page_totals` covers only the returned page. Use `portfolio_totals` for the filtered portfolio and only treat
 it as complete when `complete: true`; classification rows live in `aggregates_by_asset_classification`.
 Classification aggregates declare `scope: filtered_portfolio`. Interpret their `coverage.status` as
