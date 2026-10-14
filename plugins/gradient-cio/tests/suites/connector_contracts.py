@@ -157,9 +157,9 @@ def contract_manifest():
         public_tool_catalog.get("generated") is True
         and public_tool_catalog.get("source")
         == "@gradientcio/contracts canonical MCP tool catalog"
-        and len(public_tools) == 68
+        and len(public_tools) == 69
         and public_tools == sorted(set(public_tools)),
-        "public-tool catalog has generated 68-tool canonical parity",
+        "public-tool catalog has generated 69-tool canonical parity",
     )
     minimum = contracts.get("minimum_connector_contract", {})
     response_path_tools = set(minimum.get("required_response_field_paths", {}))
