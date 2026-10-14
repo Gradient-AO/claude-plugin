@@ -70,7 +70,9 @@ apply its specific repair levers and rerun until clean.
   benchmark series, with the attribution window in `x_bands`.
 - Stack full-width `line` **Rolling 12-month excess** and full-width `line`
   **Drawdown**, in that order; do not put them in `two_col`. Use only returned
-  `rolling` and `drawdown_series` values.
+  `rolling` and `drawdown_series` values. Label Drawdown as requested-window
+  drawdown when the call used a date or trailing-period filter; its peak resets
+  at the first selected observation.
 - End with one to three sourced `Analysis —` callouts; do not infer attribution
   causes from return context.
 
@@ -105,6 +107,10 @@ apply its specific repair levers and rerun until clean.
   include the returned `diagnostics.entity_return_reconciliation` window,
   portfolio and benchmark basis/delta fields. Never compare, subtract or
   conflate the two excess values.
+- State that root and depth-1 calls construct linked segment benchmark
+  composites from different sibling cohorts; preserve each call's parent
+  allocation and reconciliation instead of forcing the two active returns to
+  match.
 - End with one to three sourced `Analysis —` callouts linking the largest
   detractor segment to its managers' open findings and the returned macro
   regime over the period. Context is not causal attribution.

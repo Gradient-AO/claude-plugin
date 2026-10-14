@@ -48,16 +48,24 @@ When a commitment comparison reports `not_yet_funded`, state that the commitment
 history; do not treat it as a zero return or omit the gap. The canonical illustrative history also contains
 partial calendar years 2016 and 2026: label each from its returned `month_count`, `partial`,
 `coverage_status`, and `missing_reason`, and never present either as a full-year return.
-Do not request all six result sections in one call. Request summary and benchmark-relative sections together,
-then request `points` and `cumulative_growth` separately when needed. Set `limit: 100` on every call so the
+Do not request all historical-return result sections in one call. Request summary and benchmark-relative
+sections together, then use bounded projected calls for `points` plus `cumulative_growth` and for `rolling`
+plus `drawdown_series` when needed. Every projection retains the top-level `policy_benchmark` object. Set
+`limit: 100` on every call so the
 canonical portfolio's 69 commitment comparisons return in one response. Preserve
 `benchmark_relative.commitments_total`, `commitments_returned`, `commitments_truncated`, and `has_more`; if
 the result is unexpectedly truncated, disclose the returned count and omitted detail rather than presenting
 the page as complete.
+Drawdown is calculated over the selected request window and initializes its peak
+at the first selected observation. Label filtered results as requested-window
+drawdown, not since-inception drawdown.
 
 For `get_portfolio_exposure.asset_classification` inputs, use the returned display name (for example,
 `Fixed Income`) or its snake_case alias. Supported aliases are `public_equity`, `fixed_income`,
-`private_equity`, `private_credit`, `real_estate`, `infrastructure`, `alternatives`, and `cash`.
+`private_equity`, `private_credit`, `real_estate`, `infrastructure`, `hedge_fund`, and `cash`.
+Do not use broad sleeve labels such as `Alternatives` as asset classifications.
+To resolve commitments assigned directly to a portfolio allocation, use the
+exact `allocation_id` returned by the portfolio structure tool.
 `page_totals` covers only the returned page. Use `portfolio_totals` for the filtered portfolio and only treat
 it as complete when `complete: true`; classification rows live in `aggregates_by_asset_classification`.
 Classification aggregates declare `scope: filtered_portfolio`. Interpret their `coverage.status` as
@@ -93,6 +101,6 @@ Gradient's canonical example portfolio; Strategy Lab uses the named demo set and
 join either module's demo records to client holdings, managers, or decisions.
 
 For `record_kind: example`, `access_mode: illustrative`, or `provenance.data_scope.kind: illustrative`, use
-the compact cover-footer disclosure **Illustrative sample · not client data** and the full label
-**Illustrative, Gradient Maintained — demo data, not the client's holdings or managers** in Appendix A and
-every affected source row. Never describe illustrative data as client-authorized or live.
+the exact label **Illustrative, Gradient Maintained — demo data, not the client's holdings or managers** on
+the cover, in the first affected section, and in every affected source row. Never describe illustrative data
+as client-authorized or live.

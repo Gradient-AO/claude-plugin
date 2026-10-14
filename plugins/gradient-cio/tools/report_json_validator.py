@@ -12,8 +12,11 @@ from pathlib import Path
 from typing import TypeAlias
 
 
-PLUGIN_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(PLUGIN_ROOT / "shared"))
+MODULE_ROOT = Path(__file__).resolve().parent
+PLUGIN_ROOT = MODULE_ROOT.parent
+PLUGIN_SHARED = MODULE_ROOT.parent / "shared"
+if PLUGIN_SHARED.is_dir():
+    sys.path.insert(0, str(PLUGIN_SHARED))
 
 from analysis_quality import review_report  # noqa: E402
 from report_layout import SIGNAL_LABEL_MAX_CHARACTERS  # noqa: E402
@@ -365,13 +368,15 @@ def appendix_tags(section: dict[str, JsonValue]) -> set[str]:
 
 def _public_tools() -> frozenset[str]:
     """Load the packaged connector tool catalog used for provenance checks."""
-    path = (
+    paths = (
+        PLUGIN_ROOT / "references" / "public-tools.json",
         PLUGIN_ROOT
         / "skills"
         / "gradient-setup"
         / "references"
-        / "public-tools.json"
+        / "public-tools.json",
     )
+    path = next((candidate for candidate in paths if candidate.is_file()), paths[-1])
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):

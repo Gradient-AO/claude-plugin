@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.8.1
+- Made report validators and Inter fonts self-contained inside every packaged report skill, with isolated validation and rendering regressions.
+- Updated portfolio attribution collection for allocation-scoped manager resolution, root-versus-drill-down benchmark bases, and requested-window drawdown labeling.
+- Aligned attribution comparison example names with the consolidated skill and retained the 7–9 page target with an 11-page hard ceiling.
+
 ## 5.8.0
 - Consolidated the public report catalog from 13 to 10 commands by moving attribution comparison, operational manager comparison and manager shortlisting into modes of their canonical skills.
 - Moved roster triage from the full ODD workflow into manager monitoring while preserving focused full-report routing.

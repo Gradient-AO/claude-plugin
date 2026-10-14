@@ -1815,9 +1815,79 @@ def attribution_skill_contract_checks():
     check(
         "series_imports" in data_map
         and "copies returned x/y values verbatim" in data_map
+        and "`allocation_id` is an exact allocation filter" in data_map
+        and "requested-window drawdown" in data_map
+        and "different benchmark and active returns" in data_map
         and (ROOT / "tools" / "check_plugin_version.py").is_file(),
-        "attribution documents direct-series import and version preflight",
+        "attribution documents collection scope, series import and version preflight",
     )
+
+
+def self_contained_report_skill_checks(skills):
+    runtime_files = (
+        "analysis_quality.py",
+        "construction_report_validator.py",
+        "idd_report_validator.py",
+        "report_constants.py",
+        "report_json_validator.py",
+        "report_layout.py",
+        "report_vocab.py",
+    )
+    font_files = (
+        "inter-latin-regular.ttf",
+        "inter-latin-semibold.ttf",
+        "inter-latin-ext-regular.ttf",
+        "inter-latin-ext-semibold.ttf",
+    )
+    report_skills = [
+        skill for skill in skills if (skill / "scripts" / "gradient_report.py").is_file()
+    ]
+    check(
+        all(
+            all((skill / "scripts" / name).is_file() for name in runtime_files)
+            and all((skill / "assets" / "fonts" / name).is_file() for name in font_files)
+            for skill in report_skills
+        ),
+        "report skills ship validator dependencies and Inter fonts locally",
+    )
+
+    attribution = ROOT / "skills" / "gradient-portfolio-attribution"
+    with tempfile.TemporaryDirectory() as temporary:
+        isolated = pathlib.Path(temporary) / attribution.name
+        shutil.copytree(attribution, isolated)
+        validator = isolated / "scripts" / "validate_attribution.py"
+        validated = subprocess.run(
+            [
+                sys.executable,
+                str(validator),
+                str(FIX / "portfolio-attribution-report.json"),
+            ],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        font_probe = subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                (
+                    "import gradient_report; "
+                    "assert '@font-face' in gradient_report.FONT_LINK"
+                ),
+            ],
+            cwd=isolated / "scripts",
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        check(
+            validated.returncode == 0
+            and font_probe.returncode == 0
+            and "using system fonts" not in (font_probe.stdout + font_probe.stderr),
+            "isolated attribution skill validates and loads embedded Inter",
+        )
 
 
 def static(allow_branded):
@@ -1836,6 +1906,7 @@ def static(allow_branded):
     check(bool(theme_version), "shared report theme declares THEME_VERSION")
     skills = sorted(p for p in (ROOT / "skills").iterdir() if (p / "SKILL.md").exists())
     check(len(skills) == 12, f"exactly 12 target skills found ({len(skills)})")
+    self_contained_report_skill_checks(skills)
     descriptions_by_name = {}
     frontmatter_by_name = {}
     triggers_by_skill = {}

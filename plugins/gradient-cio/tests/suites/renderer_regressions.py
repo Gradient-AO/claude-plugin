@@ -2065,6 +2065,32 @@ def render(keep):
     out = ROOT / "tests" / "out" if keep else pathlib.Path(tempfile.mkdtemp())
     out.mkdir(parents=True, exist_ok=True)
     external_pdf_tools = shutil.which("pdfinfo") and shutil.which("pdftotext")
+    with tempfile.TemporaryDirectory() as isolated_directory:
+        source_skill = ROOT / "skills" / "gradient-portfolio-attribution"
+        isolated_skill = pathlib.Path(isolated_directory) / source_skill.name
+        shutil.copytree(source_skill, isolated_skill)
+        isolated_pdf = out / "portfolio-attribution-isolated.pdf"
+        isolated_render = subprocess.run(
+            [
+                sys.executable,
+                str(isolated_skill / "scripts" / "gradient_report.py"),
+                str(FIX / "portfolio-attribution-report.json"),
+                str(isolated_pdf),
+            ],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            cwd=isolated_skill,
+        )
+        check(
+            isolated_render.returncode == 0
+            and isolated_pdf.is_file()
+            and isolated_pdf.stat().st_size > 0
+            and "using system fonts"
+            not in (isolated_render.stdout + isolated_render.stderr),
+            "isolated attribution skill renders with packaged Inter fonts",
+        )
     for name, args, lo, hi, must in CASES:
         pdf = out / f"{name}.pdf"
         argv = [str(pdf) if a == "OUT" else (str(FIX / a) if (FIX / a).exists() else a) for a in args]

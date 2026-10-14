@@ -27,6 +27,13 @@ Historical attribution `summary.benchmark_return` is the linked segment benchmar
 
 When both appear, preserve `diagnostics.entity_return_reconciliation`, including the window, both portfolio returns, both benchmark returns, their basis fields and returned deltas. The Historical Attribution section must include a sourced callout explaining the basis boundary. Never compare, subtract or conflate attribution-summary excess with historical-return policy-benchmark excess.
 
+Each attribution request constructs its linked segment benchmark composite from
+the selected parent allocation's sibling cohort. Root and depth-1 drill-down
+calls can therefore return different benchmark and active returns for the same
+dates. Preserve each response's parent allocation, basis, benchmark return, and
+entity-return reconciliation rather than forcing the drill-down active return
+to equal the root active return.
+
 ## Unavailability
 
 A listed but unavailable planned-tool row renders as `Not available — <availability_reason> per get_gradient_capabilities [S#]`. An exact planned-tool row absent from `get_gradient_capabilities` renders as `Not available — not listed by get_gradient_capabilities [S#]`. The section callout and executive tile subtext use the same canonical text. Missing lanes and server-derived comparisons otherwise render as typed unavailable evidence. If more than half of required report slots are unavailable, `meta.signal.level` is `insufficient`.
