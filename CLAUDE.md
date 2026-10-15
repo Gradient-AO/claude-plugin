@@ -18,6 +18,7 @@ This repo is a **public** Claude plugin marketplace. Clients install from it dir
 3. Bump the version in **both** `plugins/gradient-cio/.claude-plugin/plugin.json` and the matching entry in `.claude-plugin/marketplace.json` (semver: patch = fixes/wording, minor = new skill or feature, major = breaking change). Clients only receive an update when the version changes.
 4. Add an entry at the top of `CHANGELOG.md`.
 5. Install `plugins/gradient-cio/requirements-test.txt` plus Poppler, qpdf, LibreOffice and Inter, then run and fix until both pass:
+   - `python plugins/gradient-cio/tools/sync_shared.py --check` (**mandatory immediately before every push**; never push with divergent shared copies)
    - `python plugins/gradient-cio/tools/release_quality_gate.py` (runs `tests/run_tests.py`; skips Claude validation only when the CLI is unavailable)
    - `claude plugin validate .` (required before release even when CI reports that the CLI was unavailable)
    - for deterministic visual review artifacts: `python plugins/gradient-cio/tools/generate_golden_example.py --out <temporary-directory>`

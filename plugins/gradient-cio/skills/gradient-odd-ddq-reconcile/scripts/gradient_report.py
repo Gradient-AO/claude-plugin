@@ -439,7 +439,7 @@ def b_tiles(b, dark=False):
         bar = {"good": LIME, "watch": AMBER, "bad": CORAL}.get(tone, LIME if dark else INK)
         out.append(f'<div class="tile{" dark" if dark else ""}" style="--bar:{bar}"><div class="tl">{esc(t["label"])}</div>'
                    f'<div class="tv">{esc(t["value"])}</div><div class="ts">{rich(t.get("sub",""))}</div></div>')
-    return f'<div class="tiles n{min(len(out),4)}">{"".join(out)}</div>'
+    return f'<div class="tiles n{min(len(out),6)}">{"".join(out)}</div>'
 
 DECK_MODE = False  # set by render_deck: taller chart rows for slides
 
@@ -1226,7 +1226,21 @@ def b_line(b, W=640, H=None):
         for value in y_ticks
     ]
     pl = max(46, 10 + max(_svg_text_width(label) for label in axis_labels))
-    use_legend = narrow or len(series) > 2
+    end_label_width = (
+        8 + max(
+            _svg_text_width(str(sr.get("name", "")), bold=True)
+            for sr in series
+        )
+        if series
+        else 0
+    )
+    full_width_plot = max(1, W - pl - 16)
+    long_end_labels = (
+        b.get("end_labels", True)
+        and len(series) == 2
+        and end_label_width > full_width_plot * 0.22
+    )
+    use_legend = narrow or len(series) > 2 or long_end_labels
     show_end_labels = (
         b.get("end_labels", True)
         and len(series) > 1
@@ -1252,7 +1266,7 @@ def b_line(b, W=640, H=None):
     pb = 26 + band_label_lane
     end_w = 0
     if show_end_labels:
-        end_w = 8 + 6.2 * max(len(sr.get("name", "")) for sr in series)
+        end_w = end_label_width
     iw = W - pl - pr - end_w; ih = H - pt - pb
     sx = lambda x: pl + iw * ((x - x0) / ((x1 - x0) or 1)); sy = lambda y: pt + ih * (1 - (y - y0) / ((y1 - y0) or 1))
     o = [_svg_start(
@@ -1688,12 +1702,16 @@ thead{{display:table-header-group}} tr{{break-inside:avoid}}
 .chip{{display:inline-flex;align-items:center;gap:5px;max-width:100%;font-size:7.4pt;font-weight:600;white-space:normal}}
 .chip i{{display:inline-block;flex:0 0 8px;width:8px;height:8px;border-radius:50%}}
 .chip-label{{overflow-wrap:normal;word-break:normal}}
-.tiles{{display:grid;gap:8px}} .tiles.n4{{grid-template-columns:repeat(4,1fr)}} .tiles.n3{{grid-template-columns:repeat(3,1fr)}} .tiles.n2{{grid-template-columns:repeat(2,1fr)}} .tiles.n1{{grid-template-columns:1fr}}
+.tiles{{display:grid;gap:8px}} .tiles.n6{{grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}} .tiles.n5{{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}} .tiles.n4{{grid-template-columns:repeat(4,minmax(0,1fr))}} .tiles.n3{{grid-template-columns:repeat(3,minmax(0,1fr))}} .tiles.n2{{grid-template-columns:repeat(2,minmax(0,1fr))}} .tiles.n1{{grid-template-columns:1fr}}
 .tile{{background:{WASH};border-radius:4px;padding:10px 11px 9px;border-top:3px solid var(--bar)}}
 .tile .tl{{font-size:6.8pt;letter-spacing:.08em;text-transform:uppercase;color:{INK2};font-weight:650}}
 .tile .tv{{font-size:17pt;font-weight:780;letter-spacing:-.02em;line-height:1.15;margin-top:3px}}
 .tile .ts{{font-size:7.2pt;color:{INK2};margin-top:1px;line-height:1.35;max-height:2.7em;overflow:hidden;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}}
 .tile .ts .src{{font-size:6.2pt;line-height:1.25;vertical-align:baseline;padding:0 3px}}
+.tiles.n5 .tile,.tiles.n6 .tile{{padding:8px 8px 7px}}
+.tiles.n5 .tile .tl,.tiles.n6 .tile .tl{{font-size:6.2pt;letter-spacing:.06em}}
+.tiles.n5 .tile .tv,.tiles.n6 .tile .tv{{font-size:14pt}}
+.tiles.n5 .tile .ts,.tiles.n6 .tile .ts{{font-size:6.8pt;line-height:1.3}}
 .tile.dark{{background:{PANEL};color:{TEXT_ON_DARK}}} .tile.dark .tl{{color:{TEXT_ON_DARK_MUTED}}} .tile.dark .tv{{color:{LIME}}} .tile.dark .ts{{color:{TEXT_ON_DARK_MUTED}}}
 .chart{{display:block}} .chart .cl{{font-size:10.5px;fill:{INK};font-family:GradientInter,Inter,Arial}} .chart .cv{{font-size:10.5px;font-weight:650;fill:{INK};font-family:GradientInter,Inter,Arial}}
 .chart .ax{{font-size:9px;fill:{MUTED};font-family:GradientInter,Inter,Arial}}

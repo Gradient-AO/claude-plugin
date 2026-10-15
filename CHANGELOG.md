@@ -1,5 +1,12 @@
 # Changelog
 
+## 6.1.1
+- Made packaging acceptance run every registered public report validator from an isolated skill copy against its sample fixtures, proving that shipped local dependencies are sufficient.
+- Made shared-copy parity a fail-fast release-gate check and a mandatory check immediately before every push.
+- Improved report lines so long two-series names move to a legend without compressing the plot while x-band labels remain below the axis.
+- Added compact single-row layouts for five- and six-tile report blocks while preserving readable narrow-line axes.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.1.0
 - Added connector-backed cumulative commitment cash-flow breakeven evidence with typed reached, not-reached and no-deficit states.
 - Updated portfolio review, construction and IC memo guidance to preserve the governed breakeven period/value without recomputing truncated chart rows.
