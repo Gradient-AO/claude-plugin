@@ -15,6 +15,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 REPOSITORY = ROOT.parents[1]
 TESTS = ROOT / "tests" / "run_tests.py"
 ROUTING_EVALUATOR = ROOT / "tools" / "evaluate_skill_routing.py"
+SYNC_CHECK = ROOT / "tools" / "sync_shared.py"
 
 
 def main() -> int:
@@ -35,6 +36,15 @@ def main() -> int:
         test_command.append("--allow-branded")
     environment = dict(os.environ)
     environment.setdefault("PYTHONUTF8", "1")
+    sync_check = subprocess.run(
+        [sys.executable, str(SYNC_CHECK), "--check"],
+        cwd=REPOSITORY,
+        env=environment,
+        check=False,
+    )
+    if sync_check.returncode != 0:
+        return sync_check.returncode
+
     tests = subprocess.run(
         test_command,
         cwd=REPOSITORY,

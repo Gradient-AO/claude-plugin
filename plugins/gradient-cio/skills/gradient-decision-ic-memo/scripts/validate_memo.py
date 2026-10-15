@@ -19,8 +19,9 @@ import re
 import sys
 from pathlib import Path
 
-PLUGIN_ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(PLUGIN_ROOT / "tools"))
+SCRIPT_ROOT = Path(__file__).resolve().parent
+SKILL_ROOT = SCRIPT_ROOT.parent
+sys.path.insert(0, str(SCRIPT_ROOT))
 
 from report_vocab import IC_POLICY_STATUSES, IC_RISK_RATINGS  # noqa: E402
 
@@ -67,9 +68,7 @@ SOURCE_BASES = {"gradient_tool", "user_document", "regulatory_filing"}
 PUBLIC_TOOLS = set(
     json.loads(
         (
-            PLUGIN_ROOT
-            / "skills"
-            / "gradient-setup"
+            SKILL_ROOT
             / "references"
             / "public-tools.json"
         ).read_text(encoding="utf-8")

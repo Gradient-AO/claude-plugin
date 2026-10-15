@@ -194,6 +194,15 @@ def chart_renderer():
         }],
         "decimals": 0,
     })
+    annual_plot_band = re.search(
+        r'<rect x="[\d.]+" y="([\d.]+)" width="[\d.]+" '
+        r'height="([\d.]+)"[^>]+fill-opacity="0\.10"/>',
+        annual_line,
+    )
+    annual_band_label = re.search(
+        r'y="([\d.]+)" class="ax x-band-label">2022 drawdown</text>',
+        annual_line,
+    )
     check(
         all(label in annual_line for label in ("Jan 2023", "Jan 2024", "Jan 2025"))
         and ">100</text>" in annual_line
@@ -201,6 +210,13 @@ def chart_renderer():
         and 'fill-opacity="0.10"' in annual_line
         and "2022 drawdown" in annual_line
         and 'class="ax x-band-label"' in annual_line
+        and annual_plot_band is not None
+        and annual_band_label is not None
+        and float(annual_band_label.group(1))
+        > (
+            float(annual_plot_band.group(1))
+            + float(annual_plot_band.group(2))
+        )
         and _renderer_module._nice_y_bounds(97, 103) == (96.0, 104.0, 1.0),
         "line charts use year ticks, nice bounds, references, and bottom-lane band labels",
     )
@@ -237,6 +253,33 @@ def chart_renderer():
         and end_label_ys
         and float(band_label_y.group(1)) > max(end_label_ys),
         "x-band labels occupy a dedicated lane below all series end labels",
+    )
+    long_name_line = _renderer_module.b_line({
+        "title": "Long-name comparison",
+        "series": [
+            {
+                "name": "Current portfolio cumulative net return",
+                "points": [["2024-01-01", 100], ["2026-01-01", 108]],
+            },
+            {
+                "name": "Strategic policy benchmark cumulative return",
+                "points": [["2024-01-01", 100], ["2026-01-01", 105]],
+            },
+        ],
+    })
+    check(
+        all(
+            re.search(
+                rf'class="ax">{re.escape(name)}</text>',
+                long_name_line,
+            )
+            for name in (
+                "Current portfolio cumulative net return",
+                "Strategic policy benchmark cumulative return",
+            )
+        )
+        and 'style="fill:' not in long_name_line,
+        "full-width two-series lines use a legend when long end labels would compress the plot",
     )
     dense_line = _renderer_module.b_line({
         "title": "Cumulative effects",
@@ -676,6 +719,31 @@ def chart_renderer():
         in compact_layout_document
         and '<span class="src">S5</span>' in compact_layout_document,
         "tile subtext is limited to two lines with source-chip-safe metrics",
+    )
+    five_tiles = _renderer_module.b_tiles({
+        "tiles": [
+            {"label": f"Metric {index}", "value": str(index), "sub": "Compact"}
+            for index in range(1, 6)
+        ],
+    })
+    six_tiles = _renderer_module.b_tiles({
+        "tiles": [
+            {"label": f"Metric {index}", "value": str(index), "sub": "Compact"}
+            for index in range(1, 7)
+        ],
+    })
+    check(
+        'class="tiles n5"' in five_tiles
+        and five_tiles.count('class="tile"') == 5
+        and 'class="tiles n6"' in six_tiles
+        and six_tiles.count('class="tile"') == 6
+        and ".tiles.n6{grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}"
+        in _renderer_module.CSS
+        and ".tiles.n5{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}"
+        in _renderer_module.CSS
+        and ".tiles.n5 .tile .tv,.tiles.n6 .tile .tv{font-size:14pt}"
+        in _renderer_module.CSS,
+        "five- and six-tile blocks retain single-row compact readable layouts",
     )
     check(
         (
