@@ -1,5 +1,12 @@
 # Changelog
 
+## 6.1.0
+- Added connector-backed cumulative commitment cash-flow breakeven evidence with typed reached, not-reached and no-deficit states.
+- Updated portfolio review, construction and IC memo guidance to preserve the governed breakeven period/value without recomputing truncated chart rows.
+- Clarified that commitment pacing does not provide target-band Portfolio Drift and that Strategy Lab relative return is not saved-portfolio forward analytics.
+- Raised the minimum connector version to 0.10.1 and expanded the setup contract probe for the breakeven metric.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.0.0
 - Updated the plugin for the breaking GradientCIO connector 0.10.0 contract (compatibility epoch 4) and its 65-tool public catalog.
 - Removed the retired public `get_gradient_coverage`, `get_cross_domain_research`, `get_chart_data` and `get_market_positioning` tools.

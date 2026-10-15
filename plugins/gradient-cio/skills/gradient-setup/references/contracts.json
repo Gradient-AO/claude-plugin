@@ -1,7 +1,7 @@
 {
-  "version": "2026-10-14",
+  "version": "2026-10-15",
   "minimum_connector_contract": {
-    "minimum_service_version": "0.10.0",
+    "minimum_service_version": "0.10.1",
     "compatibility_epoch": 4,
     "required_tools": [
       "analyze_strategy_lab_compare",
@@ -199,6 +199,9 @@
         "factor_currency_exposure",
         "risk_contribution",
         "commitment_pacing",
+        "commitment_pacing[0].metrics.cashflow_breakeven.status",
+        "commitment_pacing[0].metrics.cashflow_breakeven.period",
+        "commitment_pacing[0].metrics.cashflow_breakeven.value",
         "liquidity_scorecard",
         "lookthrough_13f"
       ],
@@ -929,6 +932,9 @@
       "required": [
         "portfolio.portfolio_id",
         "commitment_pacing",
+        "commitment_pacing[0].metrics.cashflow_breakeven.status",
+        "commitment_pacing[0].metrics.cashflow_breakeven.period",
+        "commitment_pacing[0].metrics.cashflow_breakeven.value",
         "liquidity_scorecard"
       ]
     },

@@ -44,6 +44,10 @@ coverage and do not present lab results as the portfolio.
 | 12 | Market context | `get_macro_signals` (`gradient_signal`; GRIP from `sources.grip.current`), `get_macro_conditions` (indicators, themes relevant to holdings), `get_the_read`, `get_macro_calendar` (scheduled_events, 30 days) | Omit unavailable bullets' content but keep the bullet with Not available |
 | 13 | Proposed change and impact | Use governed current-policy results and a server-returned proposed-case analysis only when available on the same basis | Optional Strategy Lab comparison only when the user selected a lab return-series basket representing the proposal; label it as a separate lab basis. Otherwise mark proposed policy impacts Not available |
 
+For Section 9, cite `commitments-cashflow.metrics.cashflow_breakeven` only when returned. Preserve its
+cumulative `status`, `period`, and value; never infer breakeven from a positive single-period flow or
+truncated rows, and never present `commitment_pacing` as target-band Portfolio Drift evidence.
+
 For every trailing 12M return or comparison, use exactly 12 inclusive month-end observations ending at the
 selected period end. Do not treat the two endpoints as an extra thirteenth month and do not use 11 intervals
 as a substitute for 12 returned month-end observations.

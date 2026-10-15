@@ -25,6 +25,14 @@ row truncation, and `context.fingerprint` when returned; cite the fingerprint in
 If a returned chart has `truncated: true`, disclose that the table shows only the returned rows and do not
 present it as complete. State typed unavailable reasons in Coverage.
 
+For the `commitments-cashflow` item inside `commitment_pacing`, use
+`metrics.cashflow_breakeven` only when returned. It is the first period where cumulative net cash flow
+recovers to zero or above after a deficit; a positive single-period net flow is not breakeven. Preserve its
+`status`, `period`, and cumulative value. `not_reached` means the projection remains below cumulative
+breakeven, while `not_applicable_no_deficit` means the projected path never entered a cumulative deficit.
+Do not recompute this metric from returned rows, which may be truncated. Commitment-pacing items do not
+provide target-band Portfolio Drift.
+
 Use governed Portfolio Analytics policy / CMA evidence for saved-portfolio forward assumptions, or
 `run_strategy_lab_expected_statistics` for a separately selected Strategy Lab return-series session. Never
 present Strategy Lab output as saved-portfolio analytics.

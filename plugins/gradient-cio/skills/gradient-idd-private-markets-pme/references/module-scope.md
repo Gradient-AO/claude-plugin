@@ -41,6 +41,10 @@ forward assumptions, and other portfolio-level questions. Request optional secti
 `liquidity_scorecard`, and `lookthrough_13f`. Included chart-style sections preserve their chart item
 payload, `render_hint`, and chart IDs where applicable. A Portfolio Analytics ID is not a Strategy Lab
 return-series ID.
+Within `commitment_pacing`, `commitments-cashflow.metrics.cashflow_breakeven` is a governed cumulative
+recovery fact with typed status and period. Preserve it as returned and never infer it from a positive
+single-period flow or truncated rows. The include does not expose target-band Portfolio Drift or the
+saved-portfolio forward relative-return distribution.
 Historical attribution uses governed realized monthly evidence. Governed ex ante attribution uses current
 saved-portfolio cohort weights and persisted expected returns. Strategy Lab outputs do not substitute for
 either contract.

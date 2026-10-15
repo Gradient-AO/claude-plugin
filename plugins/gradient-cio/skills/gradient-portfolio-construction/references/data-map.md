@@ -250,6 +250,9 @@ and payload digest for every source row.
 
 Request only the needed exposure includes and embed each usable chart item unchanged. Never hand-map chart
 IDs or derive chart rows. Preserve `basis`, `context.fingerprint`, status, truncation and unavailable reason.
+When `commitments-cashflow.metrics.cashflow_breakeven` is returned, use its cumulative status, period and
+value as governed evidence. Never infer breakeven from a positive single-period flow or truncated rows, and never infer
+target-band Portfolio Drift from `commitment_pacing`.
 State partial historical-return coverage as a report gap, including `not_yet_funded` commitments and the
 partial 2016 and 2026 calendar years from their `month_count`, `partial`, `coverage_status`, and
 `missing_reason`; never present them as full-year returns. For `no_subject_returns`, state that the selected
@@ -335,6 +338,8 @@ Record tool, key arguments, as-of date, data scope, validation status and payloa
 Request only applicable exposure includes and embed usable chart items unchanged. Preserve basis, fingerprint,
 display units, truncation and unavailable reasons. Do not derive sleeve returns, inflation sensitivity,
 commodity beta or risk from total-portfolio rows.
+When `commitments-cashflow.metrics.cashflow_breakeven` is returned, preserve its cumulative status, period
+and value; do not infer breakeven from a positive single-period flow, truncated rows, or Portfolio Drift.
 State partial historical-return coverage as a report gap, including `not_yet_funded` commitments and the
 partial 2016 and 2026 calendar years from their `month_count`, `partial`, `coverage_status`, and
 `missing_reason`; never present them as full-year returns. For `no_subject_returns`, state that the selected

@@ -6,7 +6,7 @@ sets `"envelope": false`.
 
 The same file's top-level `minimum_connector_contract` is the machine-readable cutover gate. Validate it
 against the saved `get_gradient_capabilities` summary before running any probe. A service version below
-0.10.0, a compatibility epoch other than 4, or a missing required tool is a connector failure: stop, report
+0.10.1, a compatibility epoch other than 4, or a missing required tool is a connector failure: stop, report
 `not_ready`, and do not use local-calculation fallbacks.
 
 Resolve every chained placeholder from a saved dependency response. Placeholders have the exact form
