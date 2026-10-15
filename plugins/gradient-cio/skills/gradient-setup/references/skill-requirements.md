@@ -9,7 +9,7 @@ Modules (from `list_organizations.licensed_modules` and `capabilities`): `firmFu
 `macroDesk`, `gradientSignals`, `portfolio`, `strategyLab`, `peerIntelligence`.
 
 Before rating any skill, validate the top-level `minimum_connector_contract` in `contracts.json`. The
-connector must advertise service version 0.10.0 or newer, compatibility epoch 4, every required tool, and a
+connector must advertise service version 0.10.1 or newer, compatibility epoch 4, every required tool, and a
 coherent `capability_access_modes` map. The contract's required probes must remain internally valid. A
 connector-contract failure is **Not ready**: stop before running skills or probes, request a connector update
 or reconnect, and do not substitute local calculations.
@@ -49,6 +49,11 @@ Beta/alpha belongs only at `simulated_metrics.beta_alpha`; do not read or expect
 Treat `provenance.source_as_of` as the end date of the returned source evidence window, while
 `provenance.as_of`/`retrieved_at` identify retrieval time. Never substitute retrieval time for source
 freshness.
+
+For Portfolio Analytics commitment pacing, the first `commitment_pacing` chart item is
+`commitments-cashflow` and must return `metrics.cashflow_breakeven.{status,period,value}`. The metric is
+cumulative and survives row truncation; do not infer it from a positive single-period flow. The include
+does not provide target-band Portfolio Drift.
 
 For private-markets PME, `get_portfolio_exposure` must return each exposure's `pme_ready` and
 `cash_flow_coverage` fields. The live `build_strategy_lab_session` PME path is strict: send

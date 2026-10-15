@@ -218,8 +218,8 @@ def contract_manifest():
     }
     minimum_probe_ids = set(minimum.get("required_probe_ids", []))
     check(
-        contracts.get("version") == "2026-10-14"
-        and minimum.get("minimum_service_version") == "0.10.0"
+        contracts.get("version") == "2026-10-15"
+        and minimum.get("minimum_service_version") == "0.10.1"
         and minimum.get("compatibility_epoch") == 4
         and set(minimum.get("required_tools", [])) == expected_minimum_tools,
         "minimum connector contract pins document version, service, epoch, and required tools",
@@ -1254,6 +1254,17 @@ def contract_manifest():
         == ["commitment_pacing", "liquidity_scorecard"],
         "Portfolio Analytics probes cover all chart-style exposure includes",
     )
+    breakeven_paths = {
+        "commitment_pacing[0].metrics.cashflow_breakeven.status",
+        "commitment_pacing[0].metrics.cashflow_breakeven.period",
+        "commitment_pacing[0].metrics.cashflow_breakeven.value",
+    }
+    check(
+        breakeven_paths
+        <= set(by_id["portfolio_commitment_analytics"].get("required", []))
+        and breakeven_paths <= minimum_exposure_paths,
+        "commitment analytics requires typed cumulative breakeven evidence",
+    )
     strategy_probe_ids = {
         "strategy_benchmarks",
         "strategy_return_series",
@@ -1543,6 +1554,40 @@ def contract_manifest():
         and "`render_hint`" in shared_chart_guidance
         and "`run_strategy_lab_expected_statistics`" in shared_chart_guidance,
         "shared chart guidance documents opt-in exposure sections and wire preservation",
+    )
+    check(
+        "`metrics.cashflow_breakeven`" in shared_chart_guidance
+        and "positive single-period net flow is not breakeven"
+        in shared_chart_guidance
+        and "do not recompute this metric from returned rows"
+        in shared_chart_guidance.lower()
+        and "target-band Portfolio Drift" in shared_chart_guidance
+        and "`commitments-cashflow.metrics.cashflow_breakeven`"
+        in scope_guidance
+        and "saved-portfolio forward relative-return distribution"
+        in scope_guidance,
+        "shared guidance preserves cumulative breakeven and module boundaries",
+    )
+    breakeven_consumer_guidance = [
+        PORTFOLIO_REVIEW_DATA_MAP.read_text(encoding="utf-8"),
+        (
+            ROOT
+            / "skills"
+            / "gradient-portfolio-construction"
+            / "references"
+            / "data-map.md"
+        ).read_text(encoding="utf-8"),
+        IC_MEMO_DATA_MAP.read_text(encoding="utf-8"),
+    ]
+    check(
+        all(
+            "cashflow_breakeven" in text
+            and "cumulative" in text
+            and "positive single-period" in text
+            and "Portfolio Drift" in text
+            for text in breakeven_consumer_guidance
+        ),
+        "portfolio report consumers use governed cumulative breakeven evidence",
     )
     chart_skill_names = (
         "gradient-portfolio-review",

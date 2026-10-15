@@ -55,6 +55,9 @@ Collect these sections even when their result is typed unavailable:
 
 Pass returned chart items unchanged to the renderer. Never hand-map chart IDs, derive chart rows or compare
 charts with different `basis` or `context.fingerprint` values as though they share assumptions.
+When `commitments-cashflow.metrics.cashflow_breakeven` is returned, cite its governed cumulative status,
+period and value without recomputing it from rows. Do not call a positive single-period flow breakeven, and
+do not describe target-band Portfolio Drift because `commitment_pacing` does not return it.
 For saved-portfolio forward assumptions, use `check_portfolio_policy.return_objective`,
 `list_assumption_sets` and `get_capital_market_assumptions`; do not derive portfolio statistics by weighting
 CMA rows. Strategy Lab expected-statistics remains available only through the separately selected-series

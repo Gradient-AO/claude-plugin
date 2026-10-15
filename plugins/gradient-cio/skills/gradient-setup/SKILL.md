@@ -58,7 +58,7 @@ report them as separate modules; never use the canonical illustrative portfolio 
      <this skill's directory>/references/contracts.json <capabilities-response.json>
    ```
 
-   This requires service version 0.10.0 or newer, compatibility epoch 4, every required public tool, and a
+   This requires service version 0.10.1 or newer, compatibility epoch 4, every required public tool, and a
    coherent `capability_access_modes` map whose modes agree with `effective_capabilities`.
    On failure, stop before skill or probe execution, mark the connector `not_ready`, quote the validator
    failure, and tell the user to update or reconnect GradientCIO. Do not replace missing connector
