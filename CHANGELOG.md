@@ -1,5 +1,12 @@
 # Changelog
 
+## 6.1.2
+- Fixed the roster triage layout budget, which listed single-manager ODD sections and blocked every triage report at pre-render QA; it now matches the documented executive, roster-detail and appendix sections.
+- Restored the comprehensive portfolio review example, whose Liquidity and Commitments section declared a forced page break outside the layout budget and was rejected before rendering.
+- Made example generation fail when any example is rejected before rendering instead of reporting it as a layout warning, and made it work when the output folder is on another filesystem.
+- Regenerated the reference example PDFs and PowerPoints for the 6.1.x tile and legend changes, renamed the shortlist and operations-comparison examples to their consolidated skill modes, and added the triage example.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.1.1
 - Made packaging acceptance run every registered public report validator from an isolated skill copy against its sample fixtures, proving that shipped local dependencies are sufficient.
 - Made shared-copy parity a fail-fast release-gate check and a mandatory check immediately before every push.
