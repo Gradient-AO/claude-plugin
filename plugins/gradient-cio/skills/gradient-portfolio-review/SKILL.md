@@ -86,7 +86,10 @@ realized-return breach.
 Signal: breach for any policy Breach; otherwise watch for policy Watch or
 underperformance over both 1Y and 3Y; otherwise satisfactory; insufficient
 when returns and allocation are unavailable. Preserve policy `not_assessed`.
-Completeness is used versus expected sources for the selected mode.
+The level sets colour only: write `signal.label` as a plain sentence naming the
+finding ("One asset class near its policy limit"), never "1 on watch".
+Completeness is used versus expected sources for the selected mode and appears
+in the sources appendix, not on the cover.
 
 If `capabilities.peerIntelligence` reports that `peerIntelligence` is unavailable, do not call
 `get_peer_allocation_intelligence`; disclose the optional skip and complete

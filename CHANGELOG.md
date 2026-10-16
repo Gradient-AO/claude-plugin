@@ -1,5 +1,22 @@
 # Changelog
 
+## 6.2.0
+- Made every report cover a clean title page: eyebrow, title, subtitle, up to four identifying facts (for example Prepared for and Reviewed), confidentiality and brand. Status lines, signal boxes, coverage meters and system facts no longer appear on the cover.
+- Replaced status jargon such as "Watch" and "Partial" with plain-language labels (for example "Near limit", "Partly available", "Passed with notes") across chips, tables, tiles and the PowerPoint output, and the executive conclusion is now a specific sentence.
+- Removed the per-page data-scope banner and rebuilt the sources appendix with plain source names, unwrapped dates, a separate digest audit table and a one-sentence evidence coverage note.
+- Fixed ordinal suffixes, currency formatting, duplicate empty states and setup table widths; the setup report now shows "Connection checks" and "Partly available".
+- Rewrote sample key judgments to name their subject and state specific findings, and banned templated phrases.
+- Added QA gates that fail a cover showing anything beyond its identifying metadata, more than four cover facts, raw chip objects, snake_case statuses outside the appendix, wrong ordinals and templated phrases, for both PDF and PowerPoint.
+- Reports now show the connector's `display_label` beside each status when present, keeping raw values for the sources appendix. The construction Policy status tile uses that label instead of the raw status code.
+- Reports now print at their designed size instead of being shrunk to fit the page, and a new QA check fails any page whose content is wider than the page. Reports are 20–35% longer as a result; the attribution report target is now 8–12 pages (hard maximum 14) and single-manager performance 6–10 pages (hard maximum 12).
+- Fixed stacked bars with negative values, wrapped long legends and removed duplicate axis ticks; range bars now handle negative lows, show a zero line and no longer repeat the range in their labels.
+- Callouts and coverage notes no longer repeat their own title or status ("Not available — …" renders as a bold "Not available." lead), and completeness lines can name their unit (for example "roster subjects").
+- Sources appendix: markdown source tables split into reader and audit tables, repeated tool names are removed, check labels stay on one line, a check detail that only restates the check is dropped, and audit columns with the same value in every row move into the table note. Long key parameters now wrap with the digest instead of producing tall narrow rows, and three-column lineage tables show full digests in the table instead of a separate note.
+- Layout QA no longer flags the short page before an intentional page break or a heading that ends its own section at the foot of a page; a heading followed only by the footer is still flagged.
+- Fixed the roster triage layout budget, which had copied the full ODD report's sections and failed every triage report.
+- Replaced "peerIntelligence is not available" with "peer allocation intelligence is not licensed for this organization" and removed remaining "governed", "canonical" and raw error-code wording from sample reports.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.1.1
 - Made packaging acceptance run every registered public report validator from an isolated skill copy against its sample fixtures, proving that shipped local dependencies are sufficient.
 - Made shared-copy parity a fail-fast release-gate check and a mandatory check immediately before every push.

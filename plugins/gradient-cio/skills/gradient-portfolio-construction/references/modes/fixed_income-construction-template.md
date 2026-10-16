@@ -11,7 +11,9 @@ apply its specific repair levers and rerun until clean.
 - Root `construction_mode`: `fixed_income`.
 - `meta.eyebrow` and `meta.header_label`: `Fixed Income Portfolio Construction`.
 - Cover facts: As of, Total NAV, Fixed-income weight, Policy benchmark.
-- `meta.signal_title`: `Overall view`; `meta.meter_title`: `Scope reviewed`.
+- `meta.signal.label`: one plain sentence naming the recommendation or constraint, e.g. `Shift 3.0pp from
+  core-plus credit to core bonds`. The cover shows no signal or coverage; they open the executive band and
+  sources appendix.
 - `executive.label`: `Recommendation`.
 - `executive.bottom_line`: recommendation, requested committee action, principal evidence and largest risk.
 - Four tiles: Fixed-income weight, Active weight, Relative return, Liquid share.

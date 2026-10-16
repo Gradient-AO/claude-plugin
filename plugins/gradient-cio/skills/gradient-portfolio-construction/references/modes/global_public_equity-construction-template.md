@@ -11,7 +11,9 @@ apply its specific repair levers and rerun until clean.
 - Root `construction_mode`: `global_public_equity`.
 - `meta.eyebrow` and `meta.header_label`: `Global Public Equity Portfolio Construction`.
 - Cover facts: As of, Total NAV, Public-equity weight, Policy benchmark.
-- `meta.signal_title`: `Overall view`; `meta.meter_title`: `Scope reviewed`.
+- `meta.signal.label`: one plain sentence naming the main constraint, e.g. `Manager and issuer
+  concentration near limits`. The cover shows no signal or coverage; they open the executive band and
+  sources appendix.
 - `executive.label`: `Recommendation`.
 - `executive.bottom_line`: recommendation, requested committee action, principal evidence and largest risk.
 - Four tiles: Public-equity weight, Active weight, Relative return, Largest concentration.

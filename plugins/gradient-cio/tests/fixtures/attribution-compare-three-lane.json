@@ -1,64 +1,62 @@
 {
   "meta": {
-  "mode": "three_lane",
-  "eyebrow": "Portfolio Attribution Comparison",
-  "header_label": "Attribution Comparison",
-  "title": "Northstar Attribution Comparison",
-  "subtitle": "Historical, forward and simulated views",
-  "running_head": "Northstar · attribution comparison",
-  "data_as_of": "2026-06-30",
-  "cover_facts": [
-    [
-      "Portfolio",
-      "Northstar Total Fund"
+    "mode": "three_lane",
+    "eyebrow": "Portfolio Attribution Comparison",
+    "header_label": "Attribution Comparison",
+    "title": "Northstar Attribution Comparison",
+    "subtitle": "Historical, forward and simulated views",
+    "running_head": "Northstar · attribution comparison",
+    "data_as_of": "2026-06-30",
+    "cover_facts": [
+      [
+        "Portfolio",
+        "Northstar Total Fund"
+      ],
+      [
+        "Views",
+        "Three"
+      ],
+      [
+        "Prepared for",
+        "Investment Committee"
+      ],
+      [
+        "Data as of",
+        "2026-10-08"
+      ]
     ],
-    [
-      "Views",
-      "Three"
-    ],
-    [
-      "Audience",
-      "Investment Committee"
-    ],
-    [
-      "Data as of",
-      "2026-10-08"
-    ]
-  ],
-  "signal": {
-    "level": "satisfactory",
-    "label": "Three compatible lanes compared"
-  },
-  "completeness": {
-    "used": 4,
-    "expected": 4,
-    "state": "complete"
-  },
-  "capability_gate": {
-    "simulate_portfolio_attribution": {
-      "contract": "planned_conditional",
-      "status": "available"
+    "signal": {
+      "level": "satisfactory",
+      "label": "Three compatible attribution views compared"
     },
-    "compare_portfolio_attribution": {
-      "contract": "planned_conditional",
-      "status": "available"
-    }
+    "completeness": {
+      "used": 4,
+      "expected": 4,
+      "state": "complete"
+    },
+    "capability_gate": {
+      "simulate_portfolio_attribution": {
+        "contract": "planned_conditional",
+        "status": "available"
+      },
+      "compare_portfolio_attribution": {
+        "contract": "planned_conditional",
+        "status": "available"
+      }
+    },
+    "evidence_flags": {
+      "entity_return_reconciliation_available": true,
+      "historical_summary_available": true,
+      "ex_ante_summary_available": true,
+      "historical_periods_available": true,
+      "historical_cumulative_growth_available": true,
+      "compatible_lane_count": 3
+    },
+    "data_basis": "gradient_governed",
+    "confidentiality": "Confidential — Investment Committee",
+    "cover_disclosure": "Illustrative sample · not client data",
+    "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
   },
-  "evidence_flags": {
-    "entity_return_reconciliation_available": true,
-    "historical_summary_available": true,
-    "ex_ante_summary_available": true,
-    "historical_periods_available": true,
-    "historical_cumulative_growth_available": true,
-    "compatible_lane_count": 3
-  },
-  "data_basis": "gradient_governed",
-  "confidentiality": "Confidential — Investment Committee",
-  "signal_title": "Overall view",
-  "meter_title": "Scope reviewed",
-  "cover_disclosure": "Illustrative sample · not client data",
-  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
-},
   "executive": {
     "bottom_line": "Historical, ex ante, and simulated effects are compatible, and governed comparison metrics are available [S2][S3][S4][S5].",
     "tiles": [
@@ -477,7 +475,8 @@
               "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
             }
           ],
-          "note": "Server-returned cumulative linked fields; no local accumulation [S2]."
+          "note": "Server-returned cumulative linked fields; no local accumulation [S2].",
+          "height": 170
         },
         {
           "type": "line",
@@ -517,7 +516,8 @@
               "response_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
             }
           ],
-          "note": "Returned rows filtered to allocation_name=Alternatives; no local accumulation [S2]."
+          "note": "Returned rows filtered to allocation_name=Alternatives; no local accumulation [S2].",
+          "height": 170
         },
         {
           "type": "line",
@@ -556,7 +556,8 @@
               "response_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
             }
           ],
-          "note": "Optional context rendered only from returned cumulative_growth rows [S6]."
+          "note": "Optional context rendered only from returned cumulative_growth rows [S6].",
+          "height": 170
         },
         {
           "type": "callout",
@@ -569,7 +570,7 @@
           "type": "callout",
           "tone": "info",
           "title": "Benchmark and excess boundary",
-          "text": "Returned diagnostics.entity_return_reconciliation keeps attribution-summary excess against the linked segment benchmark composite separate from historical-return excess against the policy benchmark entity [S2]."
+          "text": "Attribution excess is measured against the linked segment benchmark, not the policy benchmark used for historical returns, so the two excess figures are not directly comparable [S2]."
         }
       ]
     },
@@ -648,28 +649,28 @@
               "title": "Ex ante assumptions",
               "rows": [
                 [
-                  "assumption_set_name",
+                  "Assumption set",
                   "2026 Strategic CMA",
                   "S3"
                 ],
                 [
-                  "regime_name",
-                  "user-defined regime",
+                  "Regime",
+                  "User-defined regime",
                   "S3"
                 ],
                 [
-                  "horizon",
+                  "Horizon",
                   "1 year",
                   "S3"
                 ],
                 [
-                  "portfolio_return_source",
-                  "allocation_expected_return_base",
+                  "Portfolio return basis",
+                  "Base-case expected return by allocation",
                   "S3"
                 ],
                 [
-                  "benchmark_return_source",
-                  "benchmark_expected_return_base",
+                  "Benchmark return basis",
+                  "Base-case expected return by benchmark segment",
                   "S3"
                 ]
               ],
@@ -1112,7 +1113,7 @@
             [
               "Interaction",
               "Expected · Simulated",
-              "Partial"
+              "Persistent in two lanes"
             ]
           ],
           "source": "[S5]",
@@ -1144,7 +1145,7 @@
     {
       "id": "coverage",
       "title": "Coverage and Limitations",
-      "kicker": "Two live lanes and two capability gaps define coverage",
+      "kicker": "All three lanes and the cross-lane comparison returned results",
       "blocks": [
         {
           "type": "coverage",
@@ -1152,17 +1153,17 @@
             {
               "name": "Historical",
               "status": "available",
-              "note": "Governed result [S2]"
+              "note": "Realized attribution returned [S2]"
             },
             {
               "name": "Ex ante",
               "status": "available",
-              "note": "Governed result [S3]"
+              "note": "Expected attribution returned [S3]"
             },
             {
-              "name": "Planned tools",
+              "name": "Simulation and comparison",
               "status": "available",
-              "note": "Capability-gated results [S4][S5]"
+              "note": "Scenario and cross-lane results returned [S4][S5]"
             }
           ]
         }
@@ -1195,7 +1196,7 @@
               "get_gradient_capabilities",
               "illustrative sample",
               "2026-06-30",
-              "Gradient-governed review evidence",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
@@ -1206,7 +1207,7 @@
               "get_portfolio_attribution",
               "illustrative sample",
               "2026-06-30",
-              "Gradient-governed review evidence",
+              "Illustrative sample data",
               "passed",
               "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
             ],
@@ -1217,7 +1218,7 @@
               "get_portfolio_ex_ante_attribution",
               "illustrative sample",
               "2026-06-30",
-              "Gradient-governed review evidence",
+              "Illustrative sample data",
               "passed",
               "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
             ],
@@ -1228,7 +1229,7 @@
               "get_gradient_capabilities",
               "illustrative sample",
               "2026-06-30",
-              "Gradient-governed review evidence",
+              "Illustrative sample data",
               "passed",
               "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
             ],
@@ -1239,7 +1240,7 @@
               "get_gradient_capabilities",
               "illustrative sample",
               "2026-06-30",
-              "Gradient-governed review evidence",
+              "Illustrative sample data",
               "passed",
               "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
             ],
@@ -1250,7 +1251,7 @@
               "get_portfolio_historical_returns",
               "fields=cumulative_growth; limit=100; illustrative sample",
               "2026-06-30",
-              "Gradient-governed review evidence",
+              "Illustrative sample data",
               "passed",
               "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
             ]
@@ -1343,13 +1344,7 @@
           "type": "callout",
           "tone": "info",
           "title": "Method boundary",
-          "text": "Each lane remains on its returned method, period or horizon, benchmark role, parent cohort and calculation currency. Historical evidence is realized, ex ante evidence is expected, and simulated evidence is scenario-based. Values are displayed without local reconciliation, attribution arithmetic or substitutions [S1][S2][S3]."
-        },
-        {
-          "type": "callout",
-          "tone": "info",
-          "title": "Comparison boundary",
-          "text": "Cross-lane differences, concentration, overlap, reconciliation and persistence are reported only when the governed comparison capability returns them. Capability absence is an evidence limitation, not a zero value or a failed lane. Request IDs, diagnostics, residuals and coverage remain attached to their source payloads [S1]."
+          "text": "Each lane keeps its own method, period, benchmark role and currency, and values are shown as returned; cross-lane results appear only where the comparison tool returned them [S1][S2][S3]."
         }
       ],
       "page_break": "force"

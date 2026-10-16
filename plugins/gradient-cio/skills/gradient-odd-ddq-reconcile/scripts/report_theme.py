@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 import zipfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -107,7 +108,7 @@ COVER_FIELD_LIMITS = {
     "cover_disclosure": 80,
     "cover_fact_label": 36,
     "cover_fact_value": 80,
-    "cover_facts": 6,
+    "cover_facts": 4,
 }
 
 BRAND_NAME = "GradientCIO.com"
@@ -138,14 +139,14 @@ SIGNAL = {
     "consistent": ("Consistent with filings", LIME, INK),
     "compliant": ("Compliant", LIME, INK),
     "satisfactory": ("Satisfactory", LIME, INK),
-    "watch": ("Watch", AMBER, INK),
+    "watch": ("Items to monitor", AMBER, INK),
     "review": ("Needs review", AMBER, INK),
     "follow_ups": ("Satisfactory with follow-ups", AMBER, INK),
     "elevated": ("Elevated", CORAL, INK),
     "discrepancies": ("Discrepancies found", CORAL, INK),
     "breach": ("Breach", CORAL, INK),
     "material_concern": ("Material concern", CORAL, INK),
-    "insufficient": ("Insufficient evidence", SLATE, INK),
+    "insufficient": ("Not enough evidence", SLATE, INK),
     "not_applicable": ("Not applicable", SLATE, INK),
     "not_assessed": ("Not assessed", SLATE, INK),
     "ready": ("Ready", LIME, INK),
@@ -219,6 +220,114 @@ STATUS_COLOR = {
     "stale": AMBER,
     "conditional": AMBER,
 }
+# Reader-facing words for raw status values. Keys are normalized with
+# ``status_key``; the raw value still selects the chip colour.
+STATUS_LABEL = {
+    "available": "Available",
+    "used": "Used",
+    "passed": "Passed",
+    "passed_with_warnings": "Passed with notes",
+    "aligned": "Aligned",
+    "degraded": "Incomplete",
+    "advisory": "Advisory",
+    "partial": "Partly available",
+    "watch": "Near limit",
+    "warning": "Warning",
+    "corroborated": "Corroborated",
+    "consistent": "Consistent",
+    "needs_review": "Needs review",
+    "timing": "Timing difference",
+    "contradicted": "Contradicted",
+    "unverifiable": "Cannot be verified",
+    "not_checkable": "Cannot be checked",
+    "analyst": "Analyst judgment",
+    "unavailable": "Not available",
+    "failed": "Failed",
+    "missing": "Missing",
+    "elevated": "Elevated",
+    "not_applicable": "Not applicable",
+    "not_run": "Not checked",
+    "not_assessed": "Not assessed",
+    "compliant": "Compliant",
+    "met": "Met",
+    "satisfactory": "Satisfactory",
+    "complete": "Complete",
+    "yes": "Yes",
+    "pass": "Pass",
+    "approve": "Approve",
+    "breach": "Breach",
+    "bad": "Adverse",
+    "not_met": "Not met",
+    "material_concern": "Material concern",
+    "fail": "Fail",
+    "partially_met": "Partly met",
+    "satisfactory_with_follow_ups": "Satisfactory with follow-ups",
+    "open": "Open",
+    "not_found": "Not found",
+    "n/a": "Not applicable",
+    "closed": "Closed",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "new": "New",
+    "changed": "Changed",
+    "resolved": "Resolved",
+    "no_change": "No change",
+    "unchanged": "Unchanged",
+    "ready": "Ready",
+    "not_ready": "Not ready",
+    "connected": "Connected",
+    "not_connected": "Not connected",
+    "entitled": "Licensed",
+    "not_entitled": "Not licensed",
+    "not_licensed": "Not licensed",
+    "ok": "OK",
+    "error": "Error",
+    "stale": "Out of date",
+    "conditional": "Conditional",
+}
+
+
+def status_key(value: object) -> str:
+    """Return the lookup key for one raw status value."""
+    return "_".join(str(value or "").strip().casefold().replace("-", " ").split())
+
+
+def status_label(status: object, display_label: object = None) -> str:
+    """Return the reader-facing label for a raw status.
+
+    A non-empty ``display_label`` from the connector wins. Unknown statuses are
+    shown in sentence case with underscores replaced by spaces.
+    """
+    supplied = str(display_label or "").strip()
+    if supplied:
+        return supplied
+    raw = str(status or "").strip()
+    known = STATUS_LABEL.get(status_key(raw))
+    if known:
+        return known
+    words = raw.replace("_", " ").strip()
+    return words[:1].upper() + words[1:] if words else ""
+
+
+def without_lead(text: object, *leads: object) -> str:
+    """Drop an opening '<lead> —' that repeats a title or status shown beside the text.
+
+    Stored text keeps contracts such as ``Not available — <reason>`` that
+    validators read; only the rendered copy is shortened.
+    """
+    body = str(text or "")
+    for lead in leads:
+        label = str(lead or "").strip().rstrip(".")
+        if not label:
+            continue
+        match = re.match(rf"\s*{re.escape(label)}(?:\s*[—–]|\s+-)\s*", body, re.IGNORECASE)
+        if match and body[match.end():].strip():
+            reason = body[match.end():]
+            return reason[:1].upper() + reason[1:]
+    return body
+
+
 SEVERITY_COLOR = {
     "high": CORAL,
     "medium": AMBER,

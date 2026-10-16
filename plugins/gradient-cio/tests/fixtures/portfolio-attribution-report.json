@@ -5,7 +5,7 @@
     "eyebrow": "Portfolio Attribution Report",
     "header_label": "Portfolio Attribution Report",
     "title": "Northstar Total Fund",
-    "subtitle": "Historical and governed ex ante attribution · prepared for the Investment Committee",
+    "subtitle": "Historical and forward-looking attribution · prepared for the Investment Committee",
     "running_head": "Northstar Total Fund · attribution",
     "data_as_of": "2026-06-30 historical; 2026-10-08 ex ante",
     "confidentiality": "Confidential — Investment Committee",
@@ -27,17 +27,15 @@
         "Policy"
       ]
     ],
-    "signal_title": "Overall view",
     "signal": {
       "level": "satisfactory",
-      "label": "Both lanes reconcile"
+      "label": "Historical and forward views reconcile"
     },
     "completeness": {
       "used": 5,
       "expected": 5,
       "state": "complete"
     },
-    "meter_title": "Scope reviewed",
     "data_basis": "gradient_governed",
     "cover_disclosure": "Illustrative sample · not client data",
     "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
@@ -144,15 +142,15 @@
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
-          "title": "Key judgment — headline signal",
-          "text": "Observation: The sample report carries a reconciled-lanes signal versus the prior unresolved status [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+          "title": "Key judgment — Reconciliation",
+          "text": "Observation: The two attribution lanes, historical and ex ante, both reconcile [S1]. Why it matters: Both lanes give one consistent explanation of active return. Uncertainty: Ex ante effects depend on capital market assumptions. What would change the view: A refreshed assumption set that moves either lane by 0.1pp."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
-          "title": "Key judgment — primary measure",
-          "text": "Observation: Historical active return is -0.6pp in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
+          "title": "Key judgment — Active return",
+          "text": "Observation: Historical active return was -0.6pp over the period [S2]. Why it matters: It is the shortfall that the attribution effects explain. Uncertainty: Benchmark returns use the policy weights in force each month. What would change the view: A restated benchmark history that moves active return by 0.1pp or more."
         },
         {
           "type": "callout",
@@ -1636,67 +1634,65 @@
             [
               "Historical",
               "Allocation, selection, interaction",
-              "Realized Brinson-Fachler with symmetric Carino",
+              "Realized Brinson-Fachler, Carino-linked",
               "governed-portfolio-attribution-v1",
-              "Monthly total return; decimal fraction; 1e-10 [S4]"
+              "Monthly; decimal; 1e-10 [S4]"
             ],
             [
               "Ex ante",
               "Allocation, selection, interaction",
-              "Single-period expected Brinson-Fachler",
+              "Expected Brinson-Fachler, one period",
               "1.0.0",
-              "Annualized expected return; decimal fraction; 1e-10 [S5]"
+              "Annualized; decimal; 1e-10 [S5]"
             ],
             [
               "Historical returns",
               "Growth, rolling excess, drawdown",
-              "Server-returned indexed growth, rolling-window excess and peak-to-trough drawdown",
+              "Indexed growth, rolling excess, peak-to-trough drawdown",
               "governed-historical-returns-v1",
-              "Monthly observations; index / percentage / percentage [S3]"
+              "Monthly; index and percent [S3]"
             ],
             [
               "Historical active risk",
               "Tracking-error contribution",
-              "Server-returned segment contribution to total active risk",
+              "Segment share of total active risk",
               "governed-portfolio-attribution-v1",
-              "Annualized tracking error; contribution share [S4]"
+              "Annualized; share [S4]"
             ],
             [
               "Historical periods",
-              "Cumulative and segment-month linked effects",
-              "Server-returned symmetric-Carino effects from periods and period segments",
+              "Linked monthly and cumulative effects",
+              "Carino-linked period and segment effects",
               "governed-portfolio-attribution-v1",
-              "Monthly and cumulative percentage-point effects [S4]"
+              "Percentage points [S4]"
             ],
             [
               "Historical drill-down",
-              "Largest sub-allocation cumulative selection",
-              "Server-returned depth-1 period selection effects without local reconstruction",
+              "Largest sub-allocation selection",
+              "Depth-1 period selection effects, as returned",
               "governed-portfolio-attribution-v1",
-              "Cumulative percentage-point selection effect [S4]"
+              "Cumulative percentage points [S4]"
             ],
             [
               "Ex ante assumptions",
-              "Portfolio and benchmark expected return by segment",
-              "Server-returned expected returns applied to actual and policy segment weights",
+              "Expected return by segment",
+              "Expected returns on actual and policy weights",
               "1.0.0",
-              "Annualized expected return; percentage [S5]"
+              "Annualized; percent [S5]"
             ],
             [
               "Comparison",
-              "Segment effect pairing and sign agreement",
-              "Direct presentation of server-returned historical and ex ante segment effects",
+              "Segment effects and sign agreement",
+              "Historical and ex ante effects side by side",
               "report-contract-v1",
-              "Percentage-point effects; no cross-lane rebasing [S4][S5]"
+              "Percentage points; not rebased [S4][S5]"
             ]
           ]
         },
         {
           "type": "bullets",
           "items": [
-            "Ex ante expected returns and effects are assumptions, not forecasts or guarantees.",
-            "Historical attribution is realized and linked as returned.",
-            "Historical and ex ante bases are not directly interchangeable.",
+            "Ex ante returns and effects are assumptions, not forecasts or guarantees; historical attribution is realized, so the two bases are not interchangeable.",
             "Missing evidence is not zero.",
             "AI-assisted monitoring analysis; not investment, legal or compliance advice."
           ]

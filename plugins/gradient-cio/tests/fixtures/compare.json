@@ -1,46 +1,40 @@
 {
   "meta": {
-  "mode": "compare",
-  "eyebrow": "Manager Comparison",
-  "header_label": "Manager Comparison",
-  "title": "Global Macro Mandate",
-  "subtitle": "Three-manager operational diligence comparison",
-  "running_head": "Global Macro · manager comparison",
-  "data_as_of": "2026-10-01 (Form ADV); 2026-06-30 (Form 13F)",
-  "confidentiality": "Confidential — manager diligence review",
-  "signal_title": "Overall view",
-  "signal": {
-    "level": "watch",
-    "label": "2 of 3 managers with flags"
+    "mode": "compare",
+    "eyebrow": "Manager Comparison",
+    "header_label": "Manager Comparison",
+    "title": "Global Macro Mandate",
+    "subtitle": "Three-manager operational diligence comparison",
+    "running_head": "Global Macro · manager comparison",
+    "data_as_of": "2026-10-01 (Form ADV); 2026-06-30 (Form 13F)",
+    "confidentiality": "Confidential — manager diligence review",
+    "signal": {
+      "level": "watch",
+      "label": "Two of three managers carry open flags"
+    },
+    "completeness": {
+      "used": 11,
+      "expected": 13,
+      "state": "partial"
+    },
+    "cover_facts": [
+      [
+        "Managers compared",
+        "3"
+      ],
+      [
+        "Form ADV as of",
+        "2026-10-01"
+      ],
+      [
+        "Report date",
+        "2026-10-04"
+      ]
+    ],
+    "data_basis": "mixed",
+    "cover_disclosure": "Illustrative sample · not client data",
+    "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
   },
-  "meter_title": "Scope reviewed",
-  "completeness": {
-    "used": 11,
-    "expected": 13,
-    "state": "partial"
-  },
-  "cover_facts": [
-    [
-      "Managers compared",
-      "3"
-    ],
-    [
-      "In diligence catalog",
-      "2 of 3"
-    ],
-    [
-      "Form ADV as of",
-      "2026-10-01"
-    ],
-    [
-      "Report date",
-      "2026-10-04"
-    ]
-  ],
-  "data_basis": "mixed",
-  "cover_disclosure": "Illustrative sample · not client data",
-  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
-},
   "executive": {
     "bottom_line": "Three advisers were compared for the global macro mandate: Ridgeview reports $12.40B regulatory AUM, Harbor $4.85B and Northfield $1.92B [S1][S2][S3]. None reports an Item 11 disciplinary disclosure [S1][S2][S3]. Harbor has 2 of 9 private funds with no administrator named and Northfield reports custody through a related person, so both carry medium flags [S2][S3]. Weighted 13F overlap between Ridgeview and Harbor is 18.4% for the 2026-06-30 period [S6]; Northfield is not in the diligence catalog, so it has no 13F, consistency or events evidence. This is an evidence comparison, not a ranking.",
     "tiles": [
@@ -131,22 +125,22 @@
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
-          "title": "Key judgment — headline signal",
-          "text": "Observation: The sample report carries a 2 of 3 managers with flags signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+          "title": "Key judgment — Open flags",
+          "text": "Observation: Two of the three managers carry open flags; only Northfield is clean [S1]. Why it matters: Flags must be resolved or accepted before either flagged manager advances. Uncertainty: Flags reflect filings to 2026-10-01 and may lag recent changes. What would change the view: A filing or diligence response that closes the medium-severity flags."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
-          "title": "Key judgment — primary measure",
-          "text": "Observation: Managers compared is 3 in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
+          "title": "Key judgment — Field size",
+          "text": "Observation: Three managers are compared on the same mandate [S2]. Why it matters: A three-way field keeps a credible alternative if one candidate drops out. Uncertainty: Strategy fit beyond the filings is not assessed here. What would change the view: A fourth candidate or a mandate change."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
-          "title": "Key judgment — monitoring priority",
-          "text": "Observation: Item 11 disclosures is 0 in the review evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
+          "title": "Key judgment — Disclosures",
+          "text": "Observation: None of the three managers reports an Item 11 disclosure [S3]. Why it matters: There is no disciplinary history to weigh between candidates. Uncertainty: Item 11 covers reportable events only. What would change the view: A new disclosure in an amended Form ADV."
         }
       ]
     },
@@ -685,7 +679,7 @@
                 {
                   "name": "Firm events",
                   "status": "unavailable",
-                  "note": "event_publication_not_ready [S10]"
+                  "note": "Event records not yet published [S10]"
                 },
                 {
                   "name": "Open findings",
@@ -786,8 +780,11 @@
               "get_manager_odd_profile",
               "illustrative sample",
               "2026-10-01",
-              "Gradient-governed review evidence",
-              "{'chip': 'not_run', 'status': 'not_run'}",
+              "Illustrative sample data",
+              {
+                "chip": "not_run",
+                "status": "not_run"
+              },
               "sha256:9364230b9895a9186656f1afaa4fdd9ff25a070143a72a1b504df9822dbd0c2c"
             ],
             [
@@ -797,8 +794,11 @@
               "get_manager_odd_profile",
               "illustrative sample",
               "2026-10-01",
-              "Gradient-governed review evidence",
-              "{'chip': 'advisory', 'status': 'advisory'}",
+              "Illustrative sample data",
+              {
+                "chip": "advisory",
+                "status": "advisory"
+              },
               "sha256:0ba26a4bbb2e102faee753294979c1138f605a155f985ac94efe3e887fdc52f7"
             ],
             [
@@ -808,8 +808,11 @@
               "get_manager_odd_profile",
               "illustrative sample",
               "2026-10-01",
-              "Gradient-governed review evidence",
-              "{'chip': 'not_run', 'status': 'not_run'}",
+              "Illustrative sample data",
+              {
+                "chip": "not_run",
+                "status": "not_run"
+              },
               "sha256:079104f42a886920dde0e602181eea3c7622408e953d392d251e822c3d4c40fc"
             ],
             [
@@ -819,8 +822,11 @@
               "get_firm_13f_portfolio_review",
               "illustrative sample",
               "2026-08-14",
-              "Gradient-governed review evidence",
-              "{'chip': 'passed', 'status': 'passed'}",
+              "Illustrative sample data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:02bde3555a826680ac703dc2f2b89fbb093036a42c537ffa067590dde6b99d98"
             ],
             [
@@ -830,8 +836,11 @@
               "get_firm_13f_portfolio_review",
               "illustrative sample",
               "2026-08-13",
-              "Gradient-governed review evidence",
-              "{'chip': 'passed', 'status': 'passed'}",
+              "Illustrative sample data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:ac6a4099593588f1ff12b41d56187683d45a4860c1d6b076ea601db88f9a9544"
             ],
             [
@@ -841,8 +850,11 @@
               "get_multi_manager_13f_overlap",
               "illustrative sample",
               "2026-08-14",
-              "Gradient-governed review evidence",
-              "{'chip': 'passed', 'status': 'passed'}",
+              "Illustrative sample data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:92cdf7540064d7e561fae2a2b9b1cb371e49a0421b9ca8ccaf8d5ef73a6ed907"
             ],
             [
@@ -852,8 +864,11 @@
               "get_manager_odd_profile",
               "illustrative sample",
               "2026-10-01",
-              "Gradient-governed review evidence",
-              "{'chip': 'not_run', 'status': 'not_run'}",
+              "Illustrative sample data",
+              {
+                "chip": "not_run",
+                "status": "not_run"
+              },
               "sha256:3cb10846a6ea6eae69552d0fdba086d996c6b674c6e6c2c707ffd556f51bf50d"
             ],
             [
@@ -863,8 +878,11 @@
               "get_firm_13f_portfolio_review",
               "illustrative sample",
               "2026-10-01",
-              "Gradient-governed review evidence",
-              "{'chip': 'passed', 'status': 'passed'}",
+              "Illustrative sample data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:052330f5bbf0bf07ded0648cdacf9f452a9be7aef933b86130551d39c5cd9236"
             ],
             [
@@ -874,8 +892,11 @@
               "get_manager_diligence_findings",
               "illustrative sample",
               "2026-10-04",
-              "Gradient-governed review evidence",
-              "{'chip': 'advisory', 'status': 'advisory'}",
+              "Illustrative sample data",
+              {
+                "chip": "advisory",
+                "status": "advisory"
+              },
               "sha256:c5b2df526a01725ac3e9171b38b2b72687d5f5faa1864768ec4c3bc85ceeb816"
             ],
             [
@@ -885,8 +906,11 @@
               "get_firm_fund_events",
               "illustrative sample",
               "2026-10-04",
-              "Gradient-governed review evidence",
-              "{'chip': 'passed', 'status': 'passed'}",
+              "Illustrative sample data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:50e4d573d06639839dc345c94ef1e122c0380d0a1c5e1c5c7477c6e8715cb44f"
             ],
             [
@@ -896,8 +920,11 @@
               "get_firm_13f_portfolio_review",
               "illustrative sample",
               "2026-10-01",
-              "Gradient-governed review evidence",
-              "{'chip': 'passed', 'status': 'passed'}",
+              "Illustrative sample data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:ac4c506efcb81b48fdc16e42bff6a13136fcc0a2b78fcad838a590e4fccee0ab"
             ]
           ]
@@ -907,15 +934,15 @@
           "left": [
             {
               "type": "kv",
-              "title": "Server Metric Methods",
+              "title": "How the metrics are calculated",
               "rows": [
                 [
                   "Discretionary share",
-                  "Use discretionary_raum_share exactly as returned by get_manager_odd_profile [S1][S2][S3]"
+                  "Discretionary RAUM divided by total RAUM, as filed on Form ADV [S1][S2][S3]"
                 ],
                 [
                   "13F / ADV RAUM",
-                  "Use thirteen_f_total_to_adv_raum_ratio exactly as returned by get_firm_13f_portfolio_review [S8][S11]"
+                  "Form 13F reported value divided by Form ADV RAUM [S8][S11]"
                 ]
               ]
             }

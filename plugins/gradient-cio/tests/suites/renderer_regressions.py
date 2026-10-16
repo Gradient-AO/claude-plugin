@@ -595,17 +595,18 @@ def chart_renderer():
         }]}],
     })
     check(
-        "not<wbr> assessed" in coverage_html
+        ">Not assessed<" in coverage_html
         and 'data-status="not_assessed"' in coverage_html
         and 'data-status="passed_with_warnings"' in coverage_html
-        and "passed ⚠" in coverage_html
+        and ">Passed with notes<" in coverage_html
+        and "not_assessed<" not in coverage_html
         and _renderer_module.STATUS_COLOR["passed_with_warnings"]
         in coverage_html
         and "grid-template-columns:minmax(0,32%) max-content minmax(0,1fr)"
         in coverage_document
         and ".chip-label{overflow-wrap:normal;word-break:normal}"
         in coverage_document,
-        "status chips retain raw color semantics and wrap only at underscore boundaries",
+        "status chips keep raw color semantics and show plain-language labels",
     )
     signal_report = {
         "meta": {
@@ -644,8 +645,10 @@ def chart_renderer():
         and signal_limit_rejected
         and "grid-template-columns:minmax(230px,250px) minmax(0,1fr)"
         in executive_document
-        and "font-size:clamp(12pt,2.15vw,15pt)" in executive_document,
-        "executive signal labels use a reusable metadata cap and responsive wider box",
+        and ".sig .v{font-size:11.5pt" in executive_document
+        and "Overall view" not in executive_document
+        and 'class="meter"' not in executive_document,
+        "executive signal is a bounded sentence with no caption or meter",
     )
     cover_reference_document = _renderer_module.cover_html({
         "meta": {
@@ -900,35 +903,29 @@ def chart_renderer():
         f"sha256:{digest.removeprefix('sha256:')[:12]}"
         for digest in fixture_digests
     ]
+    audit_table_match = re.search(
+        r'<div class="btitle">Source audit trail</div>(<table class="grid audit">.*?</table>)',
+        appendix_html,
+        re.DOTALL,
+    )
+    audit_table = audit_table_match.group(1) if audit_table_match else ""
     check(
         source_table_match is not None
         and attribution_source_table.count("<thead>") == 1
         and attribution_source_table.count("<tbody>") == 1
         and attribution_source_table.count("<tr>") == len(source_rows) + 1
-        and attribution_source_table.count('class="digest-cell"')
-        == len(source_rows)
+        and "<th>Source</th>" in attribution_source_table
+        and "<th>Check</th>" in attribution_source_table
+        and "gradient_tool" not in attribution_source_table
+        and "sha256:" not in attribution_source_table
+        and audit_table.count("<tr>") == len(source_rows) + 1
         and all(
-            (
-                f'<td class="digest-cell" data-full-digest="{digest}">'
-                f"{display}</td>"
-            )
-            in attribution_source_table
-            for digest, display in zip(fixture_digests, displayed_digests)
+            f'<td class="digest-full">{digest}</td>' in audit_table
+            for digest in fixture_digests
         )
-        and (
-            ".grid td.digest-cell"
-            "{white-space:nowrap;font-variant-numeric:tabular-nums}"
-        )
-        in fallback_document
-        and '<div class="note digest-note">Full digests — ' in fallback_document
-        and all(digest in fallback_document for digest in fixture_digests)
-        and (
-            ".digest-note{white-space:normal;overflow-wrap:anywhere;"
-            "word-break:break-all}"
-        )
-        in fallback_document
+        and "Full digests — " not in fallback_document
         and "table-layout:fixed" not in fallback_document,
-        "attribution fallback bounds digest display and prints full digest notes",
+        "sources appendix shows a reader table and a full-digest audit table",
     )
     markdown_digest = "".join(_renderer_module.md_to_html(
         "| Evidence | Digest |\n"
@@ -1473,11 +1470,11 @@ def chart_renderer():
             )
         )
         and "Illustrative, Gradient Maintained" not in banner_cover
-        and "Illustrative, Gradient Maintained" in banner_header
+        and "Illustrative, Gradient Maintained" not in banner_header
         and "Scope banner regression (TEST)" in banner_header
         and "Confidential (TEST)" in banner_footer
         and "Evidence" in banner_body,
-        "PDF cover shortens the disclosure while the running header retains scope",
+        "PDF cover shortens the disclosure and the running header carries no banner",
     )
     overlong_banner = json.loads(json.dumps(banner_report))
     overlong_banner["meta"]["data_scope_banner"] = "x" * (
@@ -2035,7 +2032,7 @@ def chart_renderer():
             len(slide_text) == 2
             and "Illustrative sample · not client data" in slide_text[0]
             and ILLUSTRATIVE_LABEL not in slide_text[0]
-            and ILLUSTRATIVE_LABEL in slide_text[1]
+            and ILLUSTRATIVE_LABEL not in slide_text[1]
             and all(
                 value in slide_text[0]
                 for value in (
@@ -2046,7 +2043,7 @@ def chart_renderer():
             )
             and "Evidence" in slide_text[1]
             and "Confidential (TEST)" in slide_text[1],
-            "PowerPoint cover shortens the disclosure while content slides retain scope",
+            "PowerPoint cover shortens the disclosure and content slides carry no banner",
         )
         with tempfile.TemporaryDirectory() as directory:
             attribution_pptx = pathlib.Path(directory) / "attribution-fallback.pptx"
@@ -2165,6 +2162,8 @@ def render(keep):
         r = subprocess.run([sys.executable, str(RENDER)] + argv, capture_output=True, text=True, encoding="utf-8", errors="replace", cwd=FIX)
         if r.returncode != 0:
             check(False, f"{name}: render exit {r.returncode}: {(r.stderr or r.stdout).strip()[-300:]}"); continue
+        width_warning = next((line for line in r.stderr.splitlines() if "wider than the page" in line), "")
+        check(not width_warning, f"{name}: body content fits the page width" + (f" — {width_warning[-300:]}" if width_warning else ""))
         if external_pdf_tools:
             info = subprocess.run(["pdfinfo", str(pdf)], capture_output=True, text=True, encoding="utf-8", errors="replace").stdout
             pages = int(re.search(r"Pages:\s+(\d+)", info).group(1))

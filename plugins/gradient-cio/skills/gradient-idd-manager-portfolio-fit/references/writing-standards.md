@@ -26,7 +26,11 @@ availability or presentation rules.
   Preserve the family labels and source every tile with `[S#]`.
 - Page 2 carries three to five **Key judgment —** callouts when the family specification calls for a judgment
   page. Each judgment is sourced, no more than 60 words and subordinate to the report's stated decision or
-  monitoring purpose.
+  monitoring purpose. Title each judgment after its subject (`Key judgment — Liquidity`) and write it for this
+  report; never reuse template sentences across reports or judgments.
+- Use plain words for status: "Partly available", "Not checked", "Near limit", "Passed with notes", "Not
+  licensed". Do not write raw codes such as `partial`, `not_run` or `watch` in prose, tiles or captions, and
+  keep "governed", "payload", "contract", "probe" and "connector" out of reader-facing text.
 - Do not invent a fourth measure. If a required tile is unavailable, retain the tile and show the typed state
   and reason.
 
@@ -100,17 +104,23 @@ availability or presentation rules.
   `SYNTHETIC TEST`, fixture labels, test request IDs or implementation jargon
   in user-visible copy. Keep the compact disclosure in the cover footer and
   the full disclosure in Appendix A.
-- Investment and investor covers lead with the subject or decision, use the
-  subtitle for audience or scope, and prefer 3–4 decision-relevant facts.
-  Setup/readiness covers may show access, licensed capabilities and data
-  coverage, but connector versions, probe names and contract checks belong in
-  Appendix A.
+- Every cover is a title page: brand, eyebrow, title, subtitle, up to four
+  identifying facts (subject, period, audience or decision) and the footer.
+  It carries no status, signal, coverage meter or system information, including
+  on the setup readiness report. The conclusion opens the executive band;
+  evidence coverage opens Appendix A. See `report-style.md` for each skill's
+  cover facts.
+- `meta.signal.label` is a specific plain-language sentence naming what was
+  found ("Two allocations near their policy limits"), never a bare status word
+  or a count without a noun.
 - Every factual number, governed status and analytical judgment carries an `[S#]` tag.
 - Preserve returned dates, units, bases, formula identity and version, coverage, validation state and
   unavailable reason.
 - Absence is not zero, no exposure, no event or no issue. Write `Not available — <reason>`.
 - Empty or unavailable evidence collapses to one compact typed unavailable callout in the expected visual
-  position. Do not emit a table of N/A rows or a generic `Visual evidence` placeholder.
+  position. Do not emit a table of N/A rows or a generic `Visual evidence` placeholder. Report each missing
+  item once: when several items in a section are unavailable, list them in one callout rather than repeating
+  the same sentence per item or per section.
 - In a single-manager `Track record over time` section, use the exact typed fallback
   `Not available — series views not published` when the governed series views are absent. Do not substitute
   locally reconstructed return paths, tables of unavailable points or a generic availability message.

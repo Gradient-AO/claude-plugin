@@ -28,12 +28,10 @@
         "USD"
       ]
     ],
-    "signal_title": "Policy alignment",
     "signal": {
       "level": "breach",
-      "label": "2 breaches · 1 watch · 3 not assessed"
-    },
-    "meter_title": "Scope reviewed"
+      "label": "Two band breaches, one near its limit, three not assessed"
+    }
   },
   "sections": [
     {

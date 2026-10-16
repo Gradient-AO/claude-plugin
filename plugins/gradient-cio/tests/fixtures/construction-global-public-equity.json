@@ -1,46 +1,44 @@
 {
   "meta": {
-  "mode": "global_public_equity",
-  "eyebrow": "Global Public Equity Portfolio Construction",
-  "header_label": "Global Public Equity Portfolio Construction",
-  "title": "Northstar Global Public Equity Portfolio",
-  "subtitle": "Portfolio construction review · prepared for the Investment Committee",
-  "running_head": "Northstar Global Public Equity Portfolio",
-  "data_as_of": "2026-06-30",
-  "confidentiality": "Confidential — Investment Committee",
-  "cover_facts": [
-    [
-      "As of",
-      "2026-06-30"
+    "mode": "global_public_equity",
+    "eyebrow": "Global Public Equity Portfolio Construction",
+    "header_label": "Global Public Equity Portfolio Construction",
+    "title": "Northstar Global Public Equity Portfolio",
+    "subtitle": "Portfolio construction review · prepared for the Investment Committee",
+    "running_head": "Northstar Global Public Equity Portfolio",
+    "data_as_of": "2026-06-30",
+    "confidentiality": "Confidential — Investment Committee",
+    "cover_facts": [
+      [
+        "As of",
+        "2026-06-30"
+      ],
+      [
+        "Total NAV",
+        "$1,000.0M"
+      ],
+      [
+        "Public-equity weight",
+        "42.0%"
+      ],
+      [
+        "Policy benchmark",
+        "Northstar Global Equity Index"
+      ]
     ],
-    [
-      "Total NAV",
-      "$1,000.0M"
-    ],
-    [
-      "Public-equity weight",
-      "42.0%"
-    ],
-    [
-      "Policy benchmark",
-      "Northstar Global Equity Index"
-    ]
-  ],
-  "signal_title": "Overall view",
-  "signal": {
-    "level": "watch",
-    "label": "Manager and issuer concentration on watch"
+    "signal": {
+      "level": "watch",
+      "label": "Manager and issuer concentration near limits"
+    },
+    "completeness": {
+      "used": 9,
+      "expected": 10,
+      "state": "partial"
+    },
+    "data_basis": "gradient_governed",
+    "cover_disclosure": "Illustrative sample · not client data",
+    "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
   },
-  "completeness": {
-    "used": 9,
-    "expected": 10,
-    "state": "partial"
-  },
-  "meter_title": "Scope reviewed",
-  "data_basis": "gradient_governed",
-  "cover_disclosure": "Illustrative sample · not client data",
-  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
-},
   "executive": {
     "label": "Recommendation",
     "bottom_line": "We recommend retaining the 42.0% total-fund public-equity allocation while moving 4.0 percentage points of the sleeve from concentrated active mandates to a global passive completion mandate [S3][S4][S7]. Committee action requested: approve the target manager structure and phased funding, subject to manager diligence and concentration limits [S3][S8].",
@@ -131,22 +129,22 @@
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
-          "title": "Key judgment — headline signal",
-          "text": "Observation: The sample report carries a manager-and-issuer concentration signal above the clear threshold [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+          "title": "Key judgment — Concentration",
+          "text": "Observation: Manager and issuer concentration sit near their limits [S1]. Why it matters: Moving 4.0pp to a passive completion mandate reduces both. Uncertainty: Transition costs are not yet confirmed. What would change the view: Costs that outweigh the concentration benefit."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
-          "title": "Key judgment — primary measure",
-          "text": "Observation: Public-equity weight is 42.0% in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
+          "title": "Key judgment — Sleeve size",
+          "text": "Observation: Public equity is 42.0% of total NAV [S2]. Why it matters: The 4.0pp shift stays inside the sleeve and leaves the total weight unchanged. Uncertainty: The weight moves with equity markets before funding. What would change the view: A drift of more than 2pp before implementation."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
-          "title": "Key judgment — monitoring priority",
-          "text": "Observation: Largest concentration is 2.3% NAV in the review evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
+          "title": "Key judgment — Largest issuer",
+          "text": "Observation: The largest single-issuer exposure is 2.3% of NAV [S3]. Why it matters: It is the position closest to the concentration limit. Uncertainty: Look-through holdings are as of the last 13F filing. What would change the view: A newer filing that changes the top position."
         }
       ]
     },
@@ -410,7 +408,8 @@
               ]
             }
           ],
-          "source": "[S1]"
+          "source": "[S1]",
+          "suffix": "%"
         },
         {
           "type": "waterfall",
@@ -1299,7 +1298,7 @@
               "S4",
               "Public-equity exposure",
               "gradient_tool",
-              "get_portfolio_exposure; get_portfolio_exposure",
+              "get_portfolio_exposure",
               "public_equity; allocations",
               "2026-06-30",
               "Illustrative sample data",
@@ -1400,10 +1399,8 @@
         {
           "type": "bullets",
           "items": [
-            "Forward values are assumptions, not forecasts or guarantees [S6].",
-            "Form 13F evidence has the stated lag, coverage and FX limitations [S7].",
-            "Portfolio Analytics and Strategy Lab are separate analytical scopes.",
-            "This AI-assisted construction analysis is not investment, legal or compliance advice."
+            "Forward values are assumptions, not forecasts [S6]; Form 13F limits are set out in the caveat above [S7].",
+            "Strategy Lab results are calculated separately. AI-assisted; not investment, legal or compliance advice."
           ]
         }
       ]

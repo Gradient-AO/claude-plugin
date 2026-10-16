@@ -14,7 +14,7 @@ def contract_manifest():
         for name in ("standard", "full", "writes", "ddq-save-preview")
     }
     check(
-        counts == {"standard": 8, "full": 56, "writes": 8, "ddq-save-preview": 3},
+        counts == {"standard": 8, "full": 57, "writes": 8, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
     )
     full_read_count = counts["standard"] + counts["full"]
@@ -136,8 +136,8 @@ def contract_manifest():
             or (
                 case_name == "portfolio_attribution_report"
                 and (
-                    hard_ceiling != 11
-                    or "hard ceiling is 11" not in guidance
+                    hard_ceiling != 14
+                    or "hard ceiling is 14" not in guidance
                 )
             )
         ):
@@ -1165,8 +1165,8 @@ def contract_manifest():
         "portfolio review gates unlicensed peer context without failing",
     )
     peer_skip_text = (
-        "Peer allocation context was skipped because peerIntelligence "
-        "is not available for this organization"
+        "Peer allocation context was skipped because peer allocation "
+        "intelligence is not licensed for this organization"
     )
     check(
         peer_skip_text in normalized_portfolio_review_data_map

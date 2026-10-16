@@ -15,11 +15,11 @@ SECTIONS = (
     "Summary",
     "Skills you can use",
     "Access and data",
-    "Contract checks",
+    "Connection checks",
     "Try next",
     SOURCES_APPENDIX_TITLE,
 )
-TILES = ("Skills ready", "Partial", "Not licensed", "Checks passed")
+TILES = ("Skills ready", "Partly available", "Not licensed", "Checks passed")
 
 
 def validate(report: object) -> list[str]:
@@ -54,7 +54,7 @@ def validate(report: object) -> list[str]:
         errors.append("setup sections must retain exact order")
     required_types = {
         "Access and data": {"kv", "coverage"},
-        "Contract checks": {"table"},
+        "Connection checks": {"table"},
         "Try next": {"questions"},
         SOURCES_APPENDIX_TITLE: {"table"},
     }

@@ -1,49 +1,47 @@
 {
   "meta": {
-  "mode": "comprehensive",
-  "eyebrow": "Comprehensive Portfolio Review",
-  "header_label": "Comprehensive Portfolio Review",
-  "title": "Northstar Total Fund",
-  "subtitle": "Quarterly portfolio review · prepared for the Investment Committee",
-  "running_head": "Northstar Total Fund · period to 2026-06-30",
-  "data_as_of": "2026-06-30 (portfolio); 2026-05-15 (Form 13F)",
-  "confidentiality": "Confidential — Investment Committee",
-  "cover_facts": [
-    [
-      "Period end",
-      "2026-06-30"
+    "mode": "comprehensive",
+    "eyebrow": "Comprehensive Portfolio Review",
+    "header_label": "Comprehensive Portfolio Review",
+    "title": "Northstar Total Fund",
+    "subtitle": "Quarterly portfolio review · prepared for the Investment Committee",
+    "running_head": "Northstar Total Fund · period to 2026-06-30",
+    "data_as_of": "2026-06-30 (portfolio); 2026-05-15 (Form 13F)",
+    "confidentiality": "Confidential — Investment Committee",
+    "cover_facts": [
+      [
+        "Period end",
+        "2026-06-30"
+      ],
+      [
+        "Total NAV",
+        "$1,500.0M"
+      ],
+      [
+        "Policy benchmark",
+        "Northstar Policy Benchmark"
+      ],
+      [
+        "Review",
+        "Comprehensive"
+      ]
     ],
-    [
-      "Total NAV",
-      "$1,500.0M"
-    ],
-    [
-      "Policy benchmark",
-      "Northstar Policy Benchmark"
-    ],
-    [
-      "Review",
-      "Comprehensive"
-    ]
-  ],
-  "signal_title": "Overall view",
-  "signal": {
-    "level": "watch",
-    "label": "2 policy items on watch"
+    "signal": {
+      "level": "watch",
+      "label": "Two allocations near their policy limits"
+    },
+    "completeness": {
+      "used": 10,
+      "expected": 12,
+      "state": "partial"
+    },
+    "data_basis": "gradient_governed",
+    "cover_disclosure": "Illustrative sample · not client data",
+    "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
   },
-  "completeness": {
-    "used": 10,
-    "expected": 12,
-    "state": "partial"
-  },
-  "meter_title": "Scope reviewed",
-  "data_basis": "gradient_governed",
-  "cover_disclosure": "Illustrative sample · not client data",
-  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
-},
   "executive": {
     "label": "Review conclusion",
-    "bottom_line": "The portfolio returned 8.4% over the year to 2026-06-30, 0.6pp behind the policy benchmark [S4]. Historical attribution identifies public-equity selection as the largest negative effect for the review period [S5]. All allocation bands remain compliant, while private assets and manager concentration are on watch [S3]. Realized volatility was 9.1%, and the forward assumptions indicate a 6.2% expected return with 10.4% expected volatility [S4][S8].",
+    "bottom_line": "The portfolio returned 8.4% over the year to 2026-06-30, 0.6pp behind the policy benchmark [S4]. Historical attribution identifies public-equity selection as the largest negative effect for the review period [S5]. All allocation bands remain compliant, while private assets and manager concentration sit near their limits [S3]. Realized volatility was 9.1%, and the forward assumptions indicate a 6.2% expected return with 10.4% expected volatility [S4][S8].",
     "tiles": [
       {
         "label": "Trailing 1Y",
@@ -151,22 +149,22 @@
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
-          "title": "Key judgment — headline signal",
-          "text": "Observation: The sample report carries a 2 policy items on watch signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+          "title": "Key judgment — Policy headroom",
+          "text": "Observation: Two allocations sit near their policy limits [S1]. Why it matters: Ordinary market moves could push either allocation outside its policy range. Uncertainty: Weights are as of 2026-06-30 and move with markets every day. What would change the view: Allocation reports showing more than 2pp of headroom on both limits."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
-          "title": "Key judgment — primary measure",
-          "text": "Observation: Trailing 1Y is 8.4% in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
+          "title": "Key judgment — Trailing return",
+          "text": "Observation: The fund returned 8.4% over the trailing year [S2]. Why it matters: It sets the baseline for judging the allocation and manager results. Uncertainty: Private holdings are valued with a lag of one quarter or more. What would change the view: Quarter-end private valuation reports that move the return by 0.5pp."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
-          "title": "Key judgment — monitoring priority",
-          "text": "Observation: Liquid share is 63.0% in the review evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
+          "title": "Key judgment — Liquidity",
+          "text": "Observation: 63.0% of NAV is liquid within the policy window [S3]. Why it matters: It shows how much of the fund could be raised quickly if calls or payouts rise. Uncertainty: Liquidity tiers use manager-reported redemption and notice terms. What would change the view: New commitments that raise unfunded obligations above 10% of NAV."
         }
       ]
     },
@@ -1121,7 +1119,7 @@
           "type": "callout",
           "tone": "info",
           "title": "Peer allocation context",
-          "text": "Not licensed — Peer allocation context was skipped because peerIntelligence is not available for this organization. This review uses portfolio evidence only."
+          "text": "Not licensed — Peer allocation context was skipped because peer allocation intelligence is not licensed for this organization. This review uses portfolio evidence only."
         },
         {
           "type": "callout",
@@ -1232,7 +1230,7 @@
               "$28.5M",
               "1.9%",
               "2026-05-15",
-              "Partial [S10]"
+              "Partly covered [S10]"
             ]
           ]
         },
@@ -1832,7 +1830,7 @@
           "text": "Observation: Daily-to-quarterly assets are 63.0% of NAV and unfunded commitments are 9.3% [S3][S6]. Why it matters: Liquid coverage remains compliant as calls exceed distributions. Uncertainty: Pacing results are assumptions, not confirmed call schedules. What would change the view: Calls above projections or liquid assets below policy [S3][S7]."
         }
       ],
-      "page_break": "force"
+      "page_break": "prefer"
     },
     {
       "title": "Coverage",
@@ -1904,7 +1902,7 @@
             {
               "name": "Peer allocation intelligence",
               "status": "not licensed",
-              "note": "Not licensed — peerIntelligence is not available for this organization"
+              "note": "Not licensed — peer allocation intelligence is not licensed for this organization"
             },
             {
               "name": "Strategy Lab supplement",
@@ -1952,7 +1950,10 @@
               "organization_id=test",
               "2026-06-30",
               "Illustrative sample data",
-              "{'chip': 'passed', 'status': 'passed'}",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
@@ -1963,7 +1964,10 @@
               "view=allocation_tree",
               "2026-06-30",
               "Illustrative sample data",
-              "{'chip': 'passed', 'status': 'passed'}",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
@@ -1974,7 +1978,10 @@
               "portfolio_id=test",
               "2026-06-30",
               "Illustrative sample data",
-              "{'chip': 'passed', 'status': 'passed'}",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
@@ -1985,7 +1992,10 @@
               "all six sections",
               "2026-06-30",
               "Illustrative sample data",
-              "{'chip': 'passed', 'status': 'passed'}",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
@@ -1996,7 +2006,10 @@
               "summary, segments, diagnostics",
               "2026-06-30",
               "Illustrative sample data",
-              "{'chip': 'partial', 'status': 'partial'}",
+              {
+                "chip": "partial",
+                "status": "partial"
+              },
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
@@ -2007,7 +2020,10 @@
               "all pages",
               "2026-06-30",
               "Illustrative sample data",
-              "{'chip': 'passed', 'status': 'passed'}",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
@@ -2018,7 +2034,10 @@
               "include=factor_currency_exposure, risk_contribution, commitment_pacing, liquidity_scorecard",
               "2026-06-30",
               "Illustrative sample data",
-              "{'chip': 'passed', 'status': 'passed'}",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
@@ -2029,7 +2048,10 @@
               "view=baseline",
               "2026-06-15",
               "Illustrative sample data",
-              "{'chip': 'passed', 'status': 'passed'}",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
@@ -2040,7 +2062,10 @@
               "visuals=none",
               "2026-06-30",
               "Illustrative sample data",
-              "{'chip': 'passed', 'status': 'passed'}",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
@@ -2051,7 +2076,10 @@
               "include=lookthrough_13f",
               "2026-05-15",
               "Illustrative sample data",
-              "{'chip': 'partial', 'status': 'partial'}",
+              {
+                "chip": "partial",
+                "status": "partial"
+              },
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
@@ -2062,7 +2090,10 @@
               "view=open; resolved portfolio managers",
               "2026-06-30",
               "Illustrative sample data",
-              "{'chip': 'passed', 'status': 'passed'}",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
@@ -2073,7 +2104,10 @@
               "view=gradient_signal",
               "2026-06-30",
               "Illustrative sample data",
-              "{'chip': 'passed', 'status': 'passed'}",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ]
           ]

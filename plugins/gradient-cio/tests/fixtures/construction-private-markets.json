@@ -1,68 +1,66 @@
 {
   "meta": {
-  "mode": "private_markets",
-  "eyebrow": "Private Markets Portfolio Construction",
-  "header_label": "Private Markets Portfolio Construction",
-  "title": "Northstar Private Markets Program",
-  "subtitle": "Portfolio construction review · prepared for the Investment Committee",
-  "running_head": "Northstar Private Markets Program",
-  "data_as_of": "2026-06-30",
-  "confidentiality": "Confidential — Investment Committee",
-  "cover_facts": [
-    [
-      "As of",
-      "2026-06-30"
+    "mode": "private_markets",
+    "eyebrow": "Private Markets Portfolio Construction",
+    "header_label": "Private Markets Portfolio Construction",
+    "title": "Northstar Private Markets Program",
+    "subtitle": "Portfolio construction review · prepared for the Investment Committee",
+    "running_head": "Northstar Private Markets Program",
+    "data_as_of": "2026-06-30",
+    "confidentiality": "Confidential — Investment Committee",
+    "cover_facts": [
+      [
+        "As of",
+        "2026-06-30"
+      ],
+      [
+        "Private-markets NAV",
+        "$230.0M"
+      ],
+      [
+        "Unfunded commitments",
+        "$92.0M"
+      ],
+      [
+        "Review",
+        "Program construction"
+      ]
     ],
-    [
-      "Private-markets NAV",
-      "$230.0M"
-    ],
-    [
-      "Unfunded commitments",
-      "$92.0M"
-    ],
-    [
-      "Review",
-      "Program construction"
-    ]
-  ],
-  "signal_title": "Overall view",
-  "signal": {
-    "level": "watch",
-    "label": "Pacing and concentration on watch"
-  },
-  "completeness": {
-    "used": 9,
-    "expected": 10,
-    "state": "partial"
-  },
-  "meter_title": "Scope reviewed",
-  "evidence": {
-    "private_markets_holdings": {
-      "connector_status": "available",
-      "data_status": "partial",
-      "mapped_company_count": 2,
-      "aggregate_complete": false,
-      "selected_artifact_count": 1,
-      "draft_label": "Draft — July 22, 2026",
-      "source_tag": "S9",
-      "aggregate_basis": "canonical_portfolio_company_nav_base_non_additive_to_commitment_exposure",
-      "unknown_grain_count": 1,
-      "lineage": {
-        "artifact_ids": [
-          "illustrative-ilpa-artifact-test"
-        ],
-        "parser_id": "ilpa_portfolio_company_draft_2026_07_22",
-        "parser_version": "1.0.0",
-        "projection_registry_id": "private-markets-holding-exact-to-range-v1",
-        "projection_registry_checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    "signal": {
+      "level": "watch",
+      "label": "Pacing and concentration need monitoring"
+    },
+    "completeness": {
+      "used": 9,
+      "expected": 10,
+      "state": "partial"
+    },
+    "evidence": {
+      "private_markets_holdings": {
+        "connector_status": "available",
+        "data_status": "partial",
+        "mapped_company_count": 2,
+        "aggregate_complete": false,
+        "selected_artifact_count": 1,
+        "draft_label": "Draft — July 22, 2026",
+        "source_tag": "S9",
+        "aggregate_basis": "canonical_portfolio_company_nav_base_non_additive_to_commitment_exposure",
+        "unknown_grain_count": 1,
+        "lineage": {
+          "artifact_ids": [
+            "illustrative-ilpa-artifact-test"
+          ],
+          "parser_id": "ilpa_portfolio_company_draft_2026_07_22",
+          "parser_version": "1.0.0",
+          "projection_registry_id": "private-markets-holding-exact-to-range-v1",
+          "projection_registry_checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
       }
-    }
+    },
+    "data_basis": "gradient_governed",
+    "cover_disclosure": "Illustrative sample · not client data",
+    "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
   },
-  "data_basis": "gradient_governed",
-  "cover_disclosure": "Illustrative sample · not client data",
-  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
-},
   "executive": {
     "label": "Recommendation",
     "bottom_line": "We recommend a two-year $80.0M commitment program that shifts new commitments toward infrastructure and secondary private equity while keeping private-markets exposure inside the 15.0%–30.0% policy range [S3][S6]. Committee action requested: approve the program ceiling and first-year pacing, subject to manager diligence and quarterly liquidity tests [S3][S7].",
@@ -87,7 +85,7 @@
       },
       {
         "label": "Policy status",
-        "value": "Watch",
+        "value": "Near limit",
         "sub": "Manager concentration [S3]",
         "tone": "watch"
       }
@@ -154,22 +152,22 @@
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
-          "title": "Key judgment — headline signal",
-          "text": "Observation: The sample report carries a pacing-and-concentration signal above the clear threshold [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+          "title": "Key judgment — Pacing",
+          "text": "Observation: Commitment pacing and manager concentration both need monitoring [S1]. Why it matters: The $45.0M first-year ceiling keeps the program inside its liquidity limits. Uncertainty: Capital calls depend on manager deployment speed. What would change the view: Calls running ahead of the pacing plan."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
-          "title": "Key judgment — primary measure",
-          "text": "Observation: Private-markets weight is 23.0% in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
+          "title": "Key judgment — Sleeve size",
+          "text": "Observation: Private markets are 23.0% of total NAV [S2]. Why it matters: New commitments are sized against this weight and the unfunded balance. Uncertainty: Private valuations lag public markets. What would change the view: A valuation update that moves the weight by more than 2pp."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
-          "title": "Key judgment — monitoring priority",
-          "text": "Observation: Policy status is Watch rather than Clear in the review evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
+          "title": "Key judgment — Policy limit",
+          "text": "Observation: The private-markets allocation is near its policy limit [S3]. Why it matters: Each new commitment must be checked against the limit before signing. Uncertainty: The limit test uses lagged valuations. What would change the view: Distributions that bring the weight back toward target."
         }
       ]
     },
@@ -360,11 +358,11 @@
           ],
           "rows": [
             [
-              "Partial",
+              "Incomplete",
               "2",
               "2",
               "2 / 3",
-              "Partial — one unknown-grain holding excluded",
+              "Incomplete — one unknown-grain holding excluded",
               "1",
               "2026-06-30",
               "Draft — July 22, 2026 [S9]"
@@ -467,7 +465,8 @@
               ]
             }
           ],
-          "source": "[S1]"
+          "source": "[S1]",
+          "suffix": "%"
         },
         {
           "type": "stacked",
@@ -508,7 +507,8 @@
               ]
             }
           ],
-          "note": "Governed vintage evidence and proposed commitment pacing [S6][S7]."
+          "note": "Governed vintage evidence and proposed commitment pacing [S6][S7].",
+          "suffix": "%"
         },
         {
           "type": "waterfall",
@@ -1016,7 +1016,8 @@
               ]
             }
           ],
-          "source": "[S1]"
+          "source": "[S1]",
+          "suffix": "%"
         },
         {
           "type": "table",
@@ -1441,7 +1442,7 @@
             {
               "name": "ILPA portfolio-company look-through",
               "status": "degraded",
-              "note": "Partial — 2 of 3 holdings assessed; one unknown grain; Draft — July 22, 2026 [S9]"
+              "note": "Incomplete — 2 of 3 holdings assessed; one unknown grain; Draft — July 22, 2026 [S9]"
             },
             {
               "name": "Forward assumptions",

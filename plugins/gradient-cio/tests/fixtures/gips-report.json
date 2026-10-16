@@ -12,7 +12,7 @@
     "confidentiality": "SYNTHETIC EXAMPLE — layout test",
     "cover_facts": [
       [
-        "Subject",
+        "Firm",
         "Northfield Example Capital"
       ],
       [
@@ -24,19 +24,10 @@
         "2025-12-31"
       ],
       [
-        "Verifier",
-        "Example Verifier LLP"
-      ],
-      [
         "Prepared for",
         "Gradient"
-      ],
-      [
-        "Review date",
-        "2026-10-04"
       ]
     ],
-    "signal_title": "Overall assessment",
     "signal": {
       "level": "follow_ups",
       "label": "Satisfactory with follow-ups"
@@ -46,7 +37,6 @@
       "expected": 8,
       "state": "partial"
     },
-    "meter_title": "Requirements evidenced",
     "title": "Northfield Example Capital — GIPS Manager Diligence"
   },
   "executive": {

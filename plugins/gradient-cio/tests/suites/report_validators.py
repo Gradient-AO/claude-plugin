@@ -2,7 +2,7 @@
 
 from suites.harness import *  # noqa: I001
 from report_json_validator import block_objects
-from report_layout import resolve_layout_budget
+from report_layout import SIGNAL_LABEL_MAX_CHARACTERS, resolve_layout_budget
 
 
 def connector_cutover():
@@ -621,7 +621,7 @@ def connector_cutover():
             for text in (memo_text, example_memo_text)
         )
         and memo_meta.get("signal", {}).get("label")
-        == "2 breaches · 1 watch · 3 not assessed",
+        == "Two band breaches, one near its limit, three not assessed",
         "canonical IC fixture matches saved policy-risk evidence",
     )
     validated_review = subprocess.run(
@@ -3022,12 +3022,19 @@ def connector_cutover():
         incomplete_as_complete, "Current Private Markets Portfolio"
     )["blocks"]
     for block in current_blocks:
-        if isinstance(block.get("text"), str):
-            block["text"] = block["text"].replace("partial", "bounded")
+        for key in ("text", "note"):
+            if isinstance(block.get(key), str):
+                block[key] = (
+                    block[key]
+                    .replace("partial", "bounded")
+                    .replace("Incomplete", "Complete")
+                )
         for row in block.get("rows", []):
             for index, cell in enumerate(row):
                 if isinstance(cell, str):
-                    row[index] = cell.replace("Partial", "Complete")
+                    row[index] = cell.replace("Partial", "Complete").replace(
+                        "Incomplete", "Complete"
+                    )
     contract_regressions.append(
         (
             "private-markets incomplete aggregates presented complete",
@@ -3145,7 +3152,7 @@ def connector_cutover():
     )
 
     overlong_review_signal = cloned_fixture("portfolio.json")
-    overlong_review_signal["meta"]["signal"]["label"] = "x" * 49
+    overlong_review_signal["meta"]["signal"]["label"] = "x" * (SIGNAL_LABEL_MAX_CHARACTERS + 1)
     contract_regressions.append(
         (
             "brief review overlong signal label",

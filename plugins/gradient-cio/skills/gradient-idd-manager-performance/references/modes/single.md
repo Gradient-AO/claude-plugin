@@ -54,7 +54,7 @@ For `run_strategy_lab_relative_return`, use the exact returned series-view keys:
 
 The closing section contains 3–5 sourced limitations and 3–5 sourced follow-up questions. The questions must be decision-relevant, specific, and answerable by a manager or a governed refresh.
 
-Read `references/report-style.md` and `references/writing-standards.md`. Build one validated `report.json`; do not hand-build HTML, Word, PDF, or slides and do not override the shared theme. Target 6–8 PDF pages through decision-useful evidence, not filler.
+Read `references/report-style.md` and `references/writing-standards.md`. Build one validated `report.json`; do not hand-build HTML, Word, PDF, or slides and do not override the shared theme. Target 6–10 PDF pages through decision-useful evidence, not filler.
 
 Set `meta.data_basis` to `gradient_governed` or `mixed`. The sources appendix is `num: "A"` with exact title `Appendix — Sources and methods` and exactly these canonical Sources columns in order: `Tag`, `Evidence`, `Basis`, `Tool / view`, `Key parameters`, `As of`, `Data scope`, `Validation`, `Digest`. For a successful Gradient response, Digest remains exactly `sha256:` plus the outer `provenance.reproducibility.payload_digest` per M3; failed or unavailable calls use the typed no-payload convention in `references/writing-standards.md`.
 

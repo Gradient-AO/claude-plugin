@@ -2,7 +2,7 @@
 
 Use for a focused saved-portfolio historical and governed ex ante attribution
 pack. Deliver **"<Portfolio> - Portfolio Attribution Report <YYYY-MM-DD>"**,
-normally 7–9 PDF pages with a hard ceiling of 11. This is monitoring, not a
+normally 8–12 PDF pages with a hard ceiling of 14. This is monitoring, not a
 recommendation. Every required visual remains required; page pressure is
 resolved by tightening prose and layout, not deleting evidence.
 

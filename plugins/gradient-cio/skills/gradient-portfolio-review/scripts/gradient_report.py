@@ -10,8 +10,8 @@ Usage:  python gradient_report.py report.json out.pdf [--html out.html]
 Options: --brand branding.json  (default: branding.json at the plugin root)
 Needs:  playwright (Chromium) and poppler's pdfunite (or qpdf). No other dependencies.
 
-Labels are set per report in `meta` (header_label, signal_title, meter_title); brand
-colours live only in the constants below. Do not edit copies of this file inside a
+Labels are set per report in `meta` (eyebrow, header_label, cover_facts); the cover is a
+title page and never shows status. Brand colours live only in the constants below. Do not edit copies of this file inside a
 skill: change the canonical copy and re-sync every skill.
 """
 import base64, copy, datetime, html, json, math, os, re, shutil, subprocess, sys, tempfile
@@ -21,7 +21,7 @@ from report_theme import (
     AMBER,
     BRAND_NAME,
     CORAL,
-    DARK_METER,
+    COVER_FIELD_LIMITS,
     DARK_RULE,
     DEFAULT_COVER_DISCLOSURE,
     FONT_FAMILY,
@@ -44,12 +44,16 @@ from report_theme import (
     SIGNAL,
     SLATE,
     STATUS_COLOR,
+    STATUS_LABEL,
     TEXT_ON_DARK,
     TEXT_ON_DARK_MUTED,
     THEME_VERSION,
     WASH,
     default_confidentiality as theme_default_confidentiality,
     normalize_branding,
+    status_key,
+    status_label,
+    without_lead,
 )
 from report_layout import (
     ATOMIC_TABLE_ROW_LIMIT,
@@ -64,8 +68,7 @@ from report_layout import (
 BRAND = BRAND_NAME
 VERSION = "1.2.0"
 DEFAULT_HEADER_LABEL = "Gradient Report"
-DEFAULT_SIGNAL_TITLE = "Overall view"
-DEFAULT_METER_TITLE = "Scope reviewed"
+COVER_FACT_LIMIT = COVER_FIELD_LIMITS["cover_facts"]
 SEV_COLOR = SEVERITY_COLOR
 
 # ---- client branding ---------------------------------------------------------
@@ -130,8 +133,27 @@ def footer_brand():
 def esc(s):
     return html.escape("" if s is None else str(s))
 
+LEGACY_CHIP_TEXT = re.compile(
+    r"""^\s*\{\s*['"]chip['"]\s*:\s*['"]([^'"]*)['"]\s*"""
+    r"""(?:,\s*['"]status['"]\s*:\s*['"]([^'"]*)['"]\s*)?"""
+    r"""(?:,\s*['"]display_label['"]\s*:\s*['"]([^'"]*)['"]\s*)?\}\s*$"""
+)
+
+def _chip_cell(value):
+    """Return (text, status, display_label) when a cell is a chip object or its repr."""
+    if isinstance(value, dict) and "chip" in value:
+        return value.get("chip"), value.get("status", value.get("chip")), value.get("display_label")
+    if isinstance(value, str):
+        match = LEGACY_CHIP_TEXT.fullmatch(value)
+        if match:
+            return match.group(1), match.group(2) or match.group(1), match.group(3)
+    return None
+
 def rich(s):
     """Escape, then **bold**, `code`, and [S#] evidence tags."""
+    cell = _chip_cell(s)
+    if cell is not None:
+        return chip(*cell)
     t = esc(s)
     t = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", t)
     t = re.sub(r"`(.+?)`", r"<code>\1</code>", t)
@@ -139,21 +161,25 @@ def rich(s):
     t = re.sub(r"\[(S\d+(?:,\s*S\d+)*)\]", r'<span class="src">\1</span>', t)
     return t
 
-def _status_chip_label(text, status):
-    """Return compact chip HTML without discarding the raw status value."""
-    raw = str(status or text).strip()
-    normalized = raw.casefold().replace(" ", "_")
-    if normalized == "passed_with_warnings":
-        return "passed ⚠"
-    authored = str(text or raw).strip()
-    if "_" in raw and authored.casefold().replace(" ", "_") == normalized:
-        return "<wbr> ".join(esc(part) for part in raw.split("_"))
-    return esc(authored)
+def _status_chip_label(text, status, display_label=None):
+    """Return the escaped reader-facing chip label for a raw status."""
+    raw = str(status or text or "").strip()
+    authored = str(text or "").strip()
+    if display_label or not authored or status_key(authored) == status_key(raw):
+        return esc(status_label(raw, display_label))
+    known = STATUS_LABEL.get(status_key(authored))
+    if known:
+        return esc(known)
+    return esc(authored[:1].upper() + authored[1:])
 
-def chip(text, status):
+def _status_color(raw):
+    key = status_key(raw)
+    return STATUS_COLOR.get(raw.lower()) or STATUS_COLOR.get(key) or STATUS_COLOR.get(key.replace("_", " "), SLATE)
+
+def chip(text, status, display_label=None):
     raw = str(status or text).strip()
-    c = STATUS_COLOR.get(raw.lower(), SLATE)
-    label = _status_chip_label(text, raw)
+    c = _status_color(raw)
+    label = _status_chip_label(text, raw, display_label)
     return (
         f'<span class="chip" data-status="{esc(raw)}">'
         f'<i style="background:{c}"></i><span class="chip-label">{label}</span>'
@@ -173,7 +199,13 @@ def b_kv(b):
 
 SHA256_DIGEST_VALUE = re.compile(r"^sha256:([0-9a-fA-F]{64})$")
 SHA256_DISPLAY_HEX_LENGTH = 12
+LONG_TOKEN_CHARS = 28
+DENSE_TABLE_COLUMNS = 8
 
+
+def _soft_breaks(content):
+    """Allow long identifiers to wrap after separators outside HTML tags."""
+    return re.sub(r"([,_=;/])(?![^<]*>)", r"\1<wbr>", content)
 
 def _digest_display(value):
     """Return bounded display text and the full machine-readable digest."""
@@ -191,6 +223,13 @@ def b_table(b):
     cls = lambda i: {"r": "r", "c": "c", "n": "n"}.get(al[i], "")
     nowrap = set(b.get("nowrap") or [])
     widths = b.get("widths") or []
+    inline_digest = (
+        not widths
+        and len(b["columns"]) == 3
+        and str(b["columns"][-1]).strip().casefold().endswith("digest")
+    )
+    if inline_digest:
+        widths = ["14%", "30%", "56%"]
     colgroup = ""
     if widths:
         colgroup = "<colgroup>" + "".join(
@@ -228,16 +267,23 @@ def b_table(b):
             column_name = str(b["columns"][i]) if i < len(b["columns"]) else ""
             if column_name.strip().casefold() == "validation":
                 classes.append("validation-cell")
-            if isinstance(c, dict) and "chip" in c:
+            chip_cell = _chip_cell(c)
+            if chip_cell is not None:
                 attributes = f' class="{" ".join(dict.fromkeys(classes))}"' if classes else ""
-                cells.append(f"<td{attributes}>{chip(c['chip'], c.get('status', c['chip']))}</td>")
+                detail = c.get("detail") if isinstance(c, dict) else None
+                detail_html = f'<div class="chip-detail">{rich(detail)}</div>' if detail else ""
+                cells.append(f"<td{attributes}>{chip(*chip_cell)}{detail_html}</td>")
             else:
                 digest = (
                     SHA256_DIGEST_VALUE.fullmatch(str(c))
-                    if column_name.strip().casefold() == "digest"
+                    if column_name.strip().casefold().endswith("digest")
                     else None
                 )
-                if digest:
+                if digest and (b.get("audit") or inline_digest):
+                    classes.append("digest-full")
+                    content = esc(str(c))
+                    digest = None
+                elif digest:
                     full_digest = str(c)
                     classes.append("digest-cell")
                     digest_display, full_digest = _digest_display(full_digest)
@@ -248,6 +294,9 @@ def b_table(b):
                     content = rich(c)
                     if column_name.strip().casefold() == "validation":
                         content = content.replace("_", "_<wbr>").replace(",", ",<wbr>")
+                    elif any(len(token) > LONG_TOKEN_CHARS for token in str(c).split()):
+                        classes.append("long-token")
+                        content = _soft_breaks(content)
                 attributes = f' class="{" ".join(dict.fromkeys(classes))}"' if classes else ""
                 if digest:
                     attributes += f' data-full-digest="{esc(full_digest)}"'
@@ -261,7 +310,12 @@ def b_table(b):
         if digest_notes
         else ""
     )
-    return f'{title}<table class="grid">{colgroup}<thead><tr>{head}</tr></thead>{body}</table>{note}{digest_note}'
+    table_class = "grid audit" if b.get("audit") else "grid"
+    if b.get("audit") and b.get("digest_wrap"):
+        table_class += " digest-wrap"
+    if len(b["columns"]) >= DENSE_TABLE_COLUMNS:
+        table_class += " dense"
+    return f'{title}<table class="{table_class}">{colgroup}<thead><tr>{head}</tr></thead>{body}</table>{note}{digest_note}'
 
 CHART_TABLE_ROW_CAP = ATOMIC_TABLE_ROW_LIMIT
 
@@ -363,7 +417,7 @@ def b_chart(b):
     """Render a generic wire-format chart block returned by an exposure include."""
     c = b["chart"]
     if c.get("status") != "ok" or not c.get("rows"):
-        reason = c.get("error") or c.get("status") or "unavailable"
+        reason = c.get("error") or status_label(c.get("status") or "unavailable")
         return b_callout({"tone": "info", "title": c.get("title", "Chart"), "text": reason})
     columns = c.get("columns") or []
     keys = [column.get("key") for column in columns]
@@ -466,6 +520,16 @@ def _svg_text_width(value, bold=False):
             width += 6.1
     return width * (1.04 if bold else 1.0)
 
+def _default_value_display(value, block, suffix=None):
+    """Return a value label using the block's unit suffix when no display is authored."""
+    unit = block.get("suffix", block.get("y_suffix", "")) if suffix is None else suffix
+    if not unit:
+        return value
+    decimals = block.get("decimals")
+    if isinstance(decimals, int) and not isinstance(decimals, bool):
+        return f"{float(value):,.{max(0, decimals)}f}{unit}"
+    return f"{float(value):,g}{unit}"
+
 def _bars_data(b):
     """Validate and normalize legacy or named-series bars."""
     items = b.get("items")
@@ -487,7 +551,7 @@ def _bars_data(b):
             normalized_items.append({
                 **item,
                 "values": [float(value)],
-                "displays": [item.get("display", value)],
+                "displays": [item.get("display", _default_value_display(value, b))],
             })
         return [{"name": "Value"}], normalized_items, False
     if not isinstance(series, list) or not series:
@@ -521,7 +585,8 @@ def _bars_data(b):
             **item,
             "values": [float(value) for value in values],
             "displays": (
-                list(displays) if displays is not None else list(values)
+                list(displays) if displays is not None
+                else [_default_value_display(value, b) for value in values]
             ),
         })
     return normalized_series, normalized_items, True
@@ -756,31 +821,65 @@ def b_stacked(b):
         sum(max(0.0, float(segment["value"])) for segment in row["segments"])
         for row in rows
     ]
-    if not totals or any(total <= 0 for total in totals):
+    signed = any(float(segment["value"]) < 0 for row in rows for segment in row["segments"])
+    negative_totals = [
+        sum(-min(0.0, float(segment["value"])) for segment in row["segments"])
+        for row in rows
+    ]
+    positive_extent = max(totals, default=0.0)
+    negative_extent = max(negative_totals, default=0.0)
+    if not totals or (signed and positive_extent + negative_extent <= 0) or (
+        not signed and any(total <= 0 for total in totals)
+    ):
         return b_callout({"tone": "info", "title": b.get("title", "Allocation mix"),
                           "text": "Not available — stacked values contain no positive total"})
+    unit = b.get("suffix")
+    if unit is None:
+        unit = "%" if not signed and all(abs(total - 100.0) <= 1.0 for total in totals) else ""
     W, lw, rh = 640, (130 if any(row.get("label") for row in rows) else 0), 32
-    H = rh * len(rows) + 40
+    legend = []
+    legend_x, legend_row = 0.0, 0
+    for index, segment in enumerate(rows[0]["segments"]):
+        label = str(segment["label"])
+        if legend_x > 0 and legend_x + 14 + 6.2 * len(label) > W:
+            legend_x, legend_row = 0.0, legend_row + 1
+        legend.append((legend_x, legend_row, index, segment))
+        legend_x += max(92, 18 + 6.2 * len(label))
+    H = rh * len(rows) + 22 + 18 * (legend_row + 1)
     out = [_svg_start(W, H, b.get("title"), b.get("description") or b.get("note"))]
+    usable = W - lw
+    scale = usable / (positive_extent + negative_extent) if signed else 0.0
+    zero = lw + negative_extent * scale
     for row_index, (row, total) in enumerate(zip(rows, totals)):
-        x, y, usable = float(lw), 6 + row_index * rh, W - lw
+        x, y = float(lw), 6 + row_index * rh
+        left = right = zero
         if row.get("label"):
             out.append(f'<text x="{lw-10}" y="{y+17}" text-anchor="end" class="cl">{esc(row["label"])}</text>')
         for index, segment in enumerate(row["segments"]):
-            value = max(0.0, float(segment["value"]))
-            width = usable * value / total
+            raw_value = float(segment["value"])
+            if signed:
+                width = abs(raw_value) * scale
+                if raw_value < 0:
+                    left -= width
+                    x = left
+                else:
+                    x = right
+                    right += width
+            else:
+                width = usable * max(0.0, raw_value) / total
             color = segment.get("color") or SERIES[index % len(SERIES)]
             out.append(f'<rect x="{x:.1f}" y="{y}" width="{width:.1f}" height="24" fill="{color}"/>')
             if width >= 44:
-                out.append(f'<text x="{x + width / 2:.1f}" y="{y+16}" text-anchor="middle" class="cv">{esc(segment.get("display", segment["value"]))}</text>')
-            x += width
-    legend_x = 0
-    legend_y = H - 17
-    for index, segment in enumerate(rows[0]["segments"]):
+                out.append(f'<text x="{x + width / 2:.1f}" y="{y+16}" text-anchor="middle" class="cv">{esc(segment.get("display", _default_value_display(segment["value"], b, unit)))}</text>')
+            if not signed:
+                x += width
+    if signed:
+        out.append(f'<line x1="{zero:.1f}" x2="{zero:.1f}" y1="2" y2="{rh * len(rows) + 2}" stroke="{MUTED}" stroke-width="1"/>')
+    for legend_x, legend_row, index, segment in legend:
+        legend_y = rh * len(rows) + 23 + 18 * legend_row
         color = segment.get("color") or SERIES[index % len(SERIES)]
-        out.append(f'<rect x="{legend_x}" y="{legend_y-9}" width="9" height="9" fill="{color}"/>'
-                   f'<text x="{legend_x + 14}" y="{legend_y}" class="ax">{esc(segment["label"])}</text>')
-        legend_x += max(92, 18 + 6.2 * len(str(segment["label"])))
+        out.append(f'<rect x="{legend_x:g}" y="{legend_y-9}" width="9" height="9" fill="{color}"/>'
+                   f'<text x="{legend_x + 14:g}" y="{legend_y}" class="ax">{esc(segment["label"])}</text>')
     out.append("</svg>")
     title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
     note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
@@ -805,9 +904,16 @@ def _nice_ceiling(value):
 def _band_display(value, item):
     """Format a band endpoint consistently with the authored current display."""
     authored = str(item.get("display", ""))
-    suffix = "%" if authored.strip().endswith("%") else ""
+    unit = re.search(r"(%|pp|bp)\s*$", authored.strip())
     amount = float(value)
-    return f"{amount:g}{suffix}"
+    return f"{amount:g}{unit.group(1) if unit else ''}"
+
+def _band_label(current_display, range_display, item):
+    """Return the band sub-label without repeating a range the author already wrote."""
+    authored = str(item.get("display") or "")
+    if authored and re.search(r"\d.*(?:\bto\b|–).*\d", authored):
+        return authored
+    return f"{current_display} · {range_display}"
 
 def b_band(b):
     items = b["items"]
@@ -815,9 +921,16 @@ def b_band(b):
         float(item.get("max", item.get("high")))
         for item in items
     ]
-    if not highs or any(not math.isfinite(value) for value in highs):
-        raise SystemExit("band items require finite high/max values")
-    low, high = 0.0, _nice_ceiling(max(highs) * 1.1)
+    lows = [
+        float(item.get("min", item.get("low")))
+        for item in items
+    ]
+    if not highs or any(not math.isfinite(value) for value in highs + lows):
+        raise SystemExit("band items require finite low/min and high/max values")
+    high = _nice_ceiling(max(highs) * 1.1) if max(highs) > 0 else 0.0
+    low = -_nice_ceiling(-min(lows) * 1.1) if min(lows) < 0 else 0.0
+    if high <= low:
+        high = low + 1.0
     W, lw, rw, rh = (360, 138, 24, 38) if b.get("narrow") else (640, 215, 32, 38)
     x0, x1 = lw, W - rw
     sx = lambda value: x0 + (x1 - x0) * (float(value) - low) / (high - low)
@@ -849,17 +962,21 @@ def b_band(b):
         range_display = (
             f"{_band_display(item_min, item)}–{_band_display(item_max, item)}"
         )
-        out.append(
-            f'<text x="{lw-10}" y="{y+11}" text-anchor="end" class="cl">'
-            f'{esc(item["label"])}</text>'
-            f'<text x="{lw-10}" y="{y+24}" text-anchor="end" class="ax">'
-            f'{esc(current_display)} · {esc(range_display)}</text>'
-            f'<rect x="{minimum:.1f}" y="{y+8}" '
-            f'width="{max(2, maximum-minimum):.1f}" height="9" rx="4" fill="{RULE}"/>'
+        endpoints = (
             f'<text x="{minimum:.1f}" y="{y+31}" text-anchor="middle" class="ax">'
             f'{esc(_band_display(item_min, item))}</text>'
             f'<text x="{maximum:.1f}" y="{y+31}" text-anchor="middle" class="ax">'
             f'{esc(_band_display(item_max, item))}</text>'
+            if maximum - minimum >= 30 else ""
+        )
+        out.append(
+            f'<text x="{lw-10}" y="{y+11}" text-anchor="end" class="cl">'
+            f'{esc(item["label"])}</text>'
+            f'<text x="{lw-10}" y="{y+24}" text-anchor="end" class="ax">'
+            f'{esc(_band_label(current_display, range_display, item))}</text>'
+            f'<rect x="{minimum:.1f}" y="{y+8}" '
+            f'width="{max(2, maximum-minimum):.1f}" height="9" rx="4" fill="{RULE}"/>'
+            f'{endpoints}'
             f'<line x1="{target:.1f}" x2="{target:.1f}" y1="{y+3}" y2="{y+22}" '
             f'stroke="{INK}" stroke-width="2"/>'
         )
@@ -868,8 +985,14 @@ def b_band(b):
                 f'<circle cx="{sx(current):.1f}" cy="{y+12.5}" r="5" '
                 f'fill="{LIME_DK}" stroke="{PAPER}" stroke-width="1.5"/>'
             )
+    zero = ""
+    if low < 0 < high:
+        zero = (
+            f'<line x1="{sx(0):.1f}" x2="{sx(0):.1f}" y1="0" y2="{H-14}" stroke="{MUTED}" stroke-width="0.6"/>'
+            f'<text x="{sx(0):.1f}" y="{H-2}" text-anchor="middle" class="ax">0</text>'
+        )
     out.append(
-        f'<text x="{x0}" y="{H-2}" class="ax">0</text>'
+        f'{zero}<text x="{x0}" y="{H-2}" class="ax">{low:g}</text>'
         f'<text x="{x1}" y="{H-2}" text-anchor="end" class="ax">{high:g}</text></svg>'
     )
     title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
@@ -960,6 +1083,12 @@ def b_heat(b):
     note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
     return f'{title}<table class="grid heat"><thead><tr>{head}</tr></thead><tbody>{"".join(rows)}</tbody></table>{note}'
 
+def ordinal(value):
+    """Return an integer with its English ordinal suffix (1st, 2nd, 3rd, 11th, 63rd)."""
+    number = int(round(float(value)))
+    suffix = "th" if 10 <= abs(number) % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(abs(number) % 10, "th")
+    return f"{number}{suffix}"
+
 def b_percentiles(b):
     items = b["items"]; thr = b.get("threshold", 75)
     W, lw, rw, rh = 640, 200, 70, 26
@@ -967,7 +1096,7 @@ def b_percentiles(b):
     H = rh * len(items) + 30
     s = [_svg_start(W, H, b.get("title"), b.get("description") or b.get("note")),
          f'<rect x="{sx(thr):.1f}" y="0" width="{x1-sx(thr):.1f}" height="{H-22}" fill="{CORAL}" opacity="0.10"/>',
-         f'<text x="{x1-4}" y="11" text-anchor="end" class="ax" fill="{CORAL}">top quartile ≥{thr}th</text>']
+         f'<text x="{x1-4}" y="11" text-anchor="end" class="ax" fill="{CORAL}">top quartile ≥{ordinal(thr)}</text>']
     for p in (0, 25, 50, 75, 100):
         s.append(f'<line x1="{sx(p):.1f}" x2="{sx(p):.1f}" y1="14" y2="{H-22}" stroke="{RULE}"/>'
                  f'<text x="{sx(p):.1f}" y="{H-8}" text-anchor="middle" class="ax">{p}</text>')
@@ -977,7 +1106,7 @@ def b_percentiles(b):
         s.append(f'<text x="{lw-12}" y="{y+4:.1f}" text-anchor="end" class="cl">{esc(i["label"])}</text>'
                  f'<line x1="{x0}" x2="{sx(p):.1f}" y1="{y:.1f}" y2="{y:.1f}" stroke="{col}" stroke-width="1.5" opacity="0.35"/>'
                  f'<circle cx="{sx(p):.1f}" cy="{y:.1f}" r="6" fill="{col}" stroke="{PAPER}" stroke-width="2"/>'
-                 f'<text x="{x1+10}" y="{y+4:.1f}" class="cv">{p:.0f}th</text>')
+                 f'<text x="{x1+10}" y="{y+4:.1f}" class="cv">{ordinal(p)}</text>')
         if i.get("value_display"):
             s.append(f'<text x="{sx(p):.1f}" y="{y-9:.1f}" text-anchor="middle" class="ax">{esc(i["value_display"])}</text>')
     s.append("</svg>")
@@ -987,12 +1116,21 @@ def b_percentiles(b):
 
 def b_callout(b):
     c = {"good": LIME, "watch": AMBER, "bad": CORAL, "info": INK}.get(b.get("tone", "info"), INK)
+    if str(b.get("title") or "").strip().rstrip(".").casefold() == "not available":
+        body = without_lead(b["text"], b["title"])
+        if body.strip().rstrip(".").casefold() == "not available":
+            body = ""
+        return (f'<div class="callout" style="--c:{c}"><div><span class="ct-lead">Not available.</span> '
+                f'{rich(body)}</div></div>')
     t = f'<div class="ct">{esc(b["title"])}</div>' if b.get("title") else ""
-    return f'<div class="callout" style="--c:{c}">{t}<div>{rich(b["text"])}</div></div>'
+    return f'<div class="callout" style="--c:{c}">{t}<div>{rich(without_lead(b["text"], b.get("title")))}</div></div>'
+
+def _coverage_note(item):
+    return without_lead(item.get("note", ""), status_label(item.get("status"), item.get("display_label")), item.get("label"))
 
 def b_coverage(b):
-    rows = "".join(f'<div class="cov"><div class="cn">{esc(i["name"])}</div><div>{chip(i["status"].replace("_"," "), i["status"])}</div>'
-                   f'<div class="cnote">{rich(i.get("note",""))}</div></div>' for i in b["items"])
+    rows = "".join(f'<div class="cov"><div class="cn">{esc(i["name"])}</div><div>{chip(i.get("label", ""), i["status"], i.get("display_label"))}</div>'
+                   f'<div class="cnote">{rich(_coverage_note(i))}</div></div>' for i in b["items"])
     title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
     return f'{title}<div class="covwrap">{rows}</div>'
 
@@ -1323,7 +1461,6 @@ def b_line(b, W=640, H=None):
     if not tx:
         n = min(5, len(allx))
         tx = [allx[round(k * (len(allx) - 1) / max(n - 1, 1))] for k in range(n)]
-    n = len(tx)
     if x_kind == "date":
         labs = [datetime.date.fromordinal(int(xv)).strftime("%b %Y") for xv in tx]
         if len(set(labs)) < len(labs):
@@ -1344,7 +1481,7 @@ def b_line(b, W=640, H=None):
         tx = [tx[index] for index in retained]
         labs = [labs[index] for index in retained]
     for k, (xv, lab) in enumerate(zip(tx, labs)):
-        anchor = "start" if k == 0 else ("end" if k == n - 1 else "middle")
+        anchor = "start" if k == 0 else ("end" if k == len(tx) - 1 else "middle")
         o.append(f'<text x="{sx(xv):.1f}" y="{H-8}" text-anchor="{anchor}" class="ax">{lab}</text>')
     end_positions = []
     if show_end_labels:
@@ -1408,8 +1545,10 @@ def _md_table_cell(value, heading, numeric=False):
     normalized_heading = str(heading).strip().casefold()
     if normalized_heading == "validation":
         classes.append("validation-cell")
+    elif any(len(token) > LONG_TOKEN_CHARS for token in str(value).split()):
+        classes.append("long-token")
     attributes = f' class="{" ".join(classes)}"' if classes else ""
-    digest = _digest_display(value) if normalized_heading == "digest" else None
+    digest = _digest_display(value) if normalized_heading.endswith("digest") else None
     if digest:
         display, full_digest = digest
         classes.append("digest-cell")
@@ -1420,6 +1559,8 @@ def _md_table_cell(value, heading, numeric=False):
         content = esc(display)
     else:
         content = _md_cell(value, bool(_CHIP_COLS.search(str(heading))))
+        if "long-token" in classes:
+            content = _soft_breaks(content)
         if normalized_heading == "validation":
             content = content.replace("_", "_<wbr>").replace(",", ",<wbr>")
     return f"<td{attributes}>{content}</td>"
@@ -1471,7 +1612,8 @@ def md_to_html(md):
                 + "</tr>"
                 for r in rows
             )
-            table = f'<table class="grid md"><thead><tr>{th}</tr></thead><tbody>{body}</tbody></table>'
+            dense = " dense" if len(head) >= DENSE_TABLE_COLUMNS else ""
+            table = f'<table class="grid md{dense}"><thead><tr>{th}</tr></thead><tbody>{body}</tbody></table>'
             out.append(
                 f'<div class="keep atomic-table">{table}</div>'
                 if len(rows) <= CHART_TABLE_ROW_CAP
@@ -1616,6 +1758,39 @@ def render_blocks(blocks):
         index += 1
     return "".join(out)
 
+UNAVAILABLE_PREFIX = re.compile(r"^\s*not available\s*(?:[—–:-]\s*)?", re.IGNORECASE)
+
+def _collapse_unavailable(blocks):
+    """Merge a section's 'Not available' callouts into one callout at the first position."""
+    indexes = [
+        index for index, block in enumerate(blocks)
+        if isinstance(block, dict) and block.get("type") == "callout"
+        and UNAVAILABLE_PREFIX.match(str(block.get("text", "")))
+    ]
+    if len(indexes) < 2:
+        return blocks
+    reasons = []
+    for index in indexes:
+        reason = UNAVAILABLE_PREFIX.sub("", str(blocks[index].get("text", ""))).strip().rstrip(".")
+        title = str(blocks[index].get("title") or "").strip()
+        if title.rstrip(".").casefold() == "not available":
+            title = ""
+        entry = f"{title}: {reason}" if title and reason else (title or reason)
+        if entry and entry.casefold() not in {existing.casefold() for existing in reasons}:
+            reasons.append(entry)
+    merged = {
+        "type": "callout",
+        "tone": blocks[indexes[0]].get("tone", "info"),
+        "title": "Not available",
+        "text": "; ".join(reasons) + "." if reasons else "Not available.",
+    }
+    dropped = set(indexes[1:])
+    return [
+        merged if index == indexes[0] else block
+        for index, block in enumerate(blocks)
+        if index not in dropped
+    ]
+
 def _is_short_tail(block):
     """Return whether a trailing block should stay with its predecessor."""
     if block.get("type") not in {"callout", "statement", "text"}:
@@ -1693,11 +1868,15 @@ thead{{display:table-header-group}} tr{{break-inside:avoid}}
 .kv th{{text-align:left;font-weight:500;color:{INK2};width:38%;padding:5px 10px 5px 0;border-bottom:1px solid {RULE};vertical-align:top}}
 .kv td{{padding:5px 0;border-bottom:1px solid {RULE};font-weight:550}}
 .grid{{font-size:8.2pt}} .grid th{{text-align:left;font-size:6.9pt;letter-spacing:.07em;text-transform:uppercase;color:{PAPER};background:{INK};padding:6px 8px;font-weight:650}}
-.grid td{{padding:5px 8px;border-bottom:1px solid {RULE};vertical-align:top}} .grid tbody tr:nth-child(even) td{{background:{WASH}}}
-.grid .n{{white-space:nowrap}} .grid .r{{white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}} .grid .c{{text-align:center}}
+.grid td{{padding:5px 8px;border-bottom:1px solid {RULE};vertical-align:top}} .grid td.long-token{{overflow-wrap:anywhere}} .grid tbody tr:nth-child(even) td{{background:{WASH}}}
+.grid .n{{white-space:nowrap}} .grid .n .chip{{white-space:nowrap}} .grid .r{{white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}} .grid th.r{{white-space:normal}} .grid .c{{text-align:center}}
 .grid td.validation-cell{{white-space:normal;overflow-wrap:normal;word-break:normal}}
 .grid td.digest-cell{{white-space:nowrap;font-variant-numeric:tabular-nums}}
 .digest-note{{white-space:normal;overflow-wrap:anywhere;word-break:break-all}}
+.grid.dense{{font-size:7.3pt}} .grid.dense td{{padding:4px 5px}} .grid.dense th{{padding:5px 5px;font-size:6.2pt;letter-spacing:.03em}}
+.grid.audit{{font-size:7.6pt}} .grid.audit td{{padding:3px 8px}} .grid.audit th{{padding:4px 8px}}
+.grid td.digest-full{{font-family:'DejaVu Sans Mono',Menlo,monospace;font-size:5.9pt;white-space:nowrap}} .grid.digest-wrap td.digest-full{{white-space:normal;overflow-wrap:anywhere;word-break:break-all}}
+.chip-detail{{font-size:7.2pt;color:{INK2};margin-top:2px;line-height:1.35}}
 .note{{font-size:7.3pt;color:{MUTED};margin-top:5px;line-height:1.4}}
 .chip{{display:inline-flex;align-items:center;gap:5px;max-width:100%;font-size:7.4pt;font-weight:600;white-space:normal}}
 .chip i{{display:inline-block;flex:0 0 8px;width:8px;height:8px;border-radius:50%}}
@@ -1717,7 +1896,7 @@ thead{{display:table-header-group}} tr{{break-inside:avoid}}
 .chart .ax{{font-size:9px;fill:{MUTED};font-family:GradientInter,Inter,Arial}}
 .chart.narrow-line .ax{{font-size:10px}} .chart.narrow-line .cl,.chart.narrow-line .cv{{font-size:10.5px}}
 .callout{{border-left:4px solid var(--c);background:{WASH};padding:10px 13px;border-radius:0 4px 4px 0}}
-.callout .ct{{font-weight:700;margin-bottom:2px}}
+.callout .ct{{font-weight:700;margin-bottom:2px}} .callout .ct-lead{{font-weight:700}}
 .covwrap{{border-top:1px solid {RULE}}} .cov{{display:grid;grid-template-columns:minmax(0,32%) max-content minmax(0,1fr);gap:8px;padding:4px 0;border-bottom:1px solid {RULE};align-items:start}}
 .cn{{font-weight:600}} .cnote{{font-size:7.8pt;color:{INK2};min-width:0;overflow-wrap:anywhere}}
 .finding{{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid {RULE}}}
@@ -1749,10 +1928,10 @@ thead{{display:table-header-group}} tr{{break-inside:avoid}}
 /* executive band */
 .exec.one{{grid-template-columns:1fr}}
 .exec{{display:grid;grid-template-columns:minmax(230px,250px) minmax(0,1fr);gap:18px;background:{INK};color:{TEXT_ON_DARK};border-radius:6px;padding:18px 20px;margin-bottom:14px}}
-.sig{{border-radius:4px;padding:12px 12px 10px;color:{INK}}} .sig .k{{font-size:6.8pt;letter-spacing:.1em;text-transform:uppercase;font-weight:750;opacity:.75}}
-.sig .v{{font-size:clamp(12pt,2.15vw,15pt);font-weight:800;line-height:1.1;margin-top:4px;letter-spacing:-.01em;overflow-wrap:anywhere}}
-.meter{{margin-top:12px;font-size:7pt;color:{TEXT_ON_DARK_MUTED};letter-spacing:.06em;text-transform:uppercase;font-weight:650}}
-.meter .bars{{display:flex;gap:3px;margin-top:5px}} .meter .bars i{{flex:1;height:7px;border-radius:1px;background:{DARK_METER}}} .meter .bars i.on{{background:{LIME}}}
+.sig{{border-radius:4px;padding:12px 13px;color:{INK}}}
+.sig .v{{font-size:11.5pt;font-weight:750;line-height:1.3;letter-spacing:-.005em;overflow-wrap:normal}}
+.sig .v .src{{background:{INK};color:{LIME}}}
+.coverage-note{{font-size:8.4pt;color:{INK2};margin-bottom:10px;break-after:avoid}}
 .exec .rt{{font-size:7pt;letter-spacing:.1em;text-transform:uppercase;color:{LIME};font-weight:750;margin-bottom:5px}}
 .exec .rx{{font-size:9.6pt;line-height:1.5;color:#E3E8ED}} .exec .rx .src{{background:#26301A;color:{LIME}}}
 .stm{{border-left:6px solid var(--c);padding:6px 0 6px 16px}} .stm-t{{font-size:15pt;font-weight:750;line-height:1.25;letter-spacing:-.01em}} .stm-s{{color:{INK2};margin-top:4px}}
@@ -1767,11 +1946,10 @@ def page_spec(meta):
 def cover_html(r):
     m = r["meta"]
     page_name, page_width, page_height = page_spec(m)
-    sig = m.get("signal"); c = m.get("completeness")
-    slabel, scol, stxt = SIGNAL[sig["level"]] if sig else ("", SLATE, INK)
-    cover_facts = m.get("cover_facts", [])
-    fact_columns = 2 if len(cover_facts) <= 4 else 3
-    facts = "".join(f'<div><div class="fk">{esc(k)}</div><div class="fv">{rich(v)}</div></div>' for k, v in cover_facts)
+    facts = "".join(
+        f'<div><div class="fk">{esc(k)}</div><div class="fv">{rich(v)}</div></div>'
+        for k, v in m.get("cover_facts", [])[:COVER_FACT_LIMIT]
+    )
     disclosure = cover_disclosure(m)
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>{esc(m["title"])}</title>{FONT_LINK}<style>{CSS}
 @page{{size:{page_name};margin:0}}
@@ -1784,14 +1962,8 @@ body{{background:{INK}}}
 .h1{{font-size:36pt;font-weight:800;line-height:1.04;letter-spacing:-.035em;margin-top:13px;max-width:6.25in}}
 .h2{{font-size:14pt;font-weight:500;color:{TEXT_ON_DARK_MUTED};margin-top:11px;max-width:6.15in;line-height:1.35}}
 .rule{{width:.9in;height:4px;background:{LIME};margin:30px 0 24px;border-radius:1px}}
-.facts{{display:grid;grid-template-columns:repeat({fact_columns},minmax(0,1fr));gap:18px 28px;max-width:6.25in}}
+.facts{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 28px;max-width:6.25in}}
 .fk{{font-size:6.8pt;letter-spacing:.12em;text-transform:uppercase;color:{POWERED_BY_MUTED};font-weight:700}} .fv{{font-size:10.5pt;font-weight:600;margin-top:2px}}
-.sigrow{{display:flex;gap:12px;margin-top:30px;align-items:stretch}}
-.sg{{background:{scol};color:{stxt};border-radius:5px;padding:11px 15px;min-width:2.55in}}
-.sg .k{{font-size:6.8pt;letter-spacing:.12em;text-transform:uppercase;font-weight:800;opacity:.7}} .sg .v{{font-size:16pt;font-weight:800;margin-top:3px}}
-.cm{{background:{PANEL};border-radius:5px;padding:11px 15px;min-width:2.55in}}
-.cm .k{{font-size:6.8pt;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:{POWERED_BY_MUTED}}} .cm .v{{font-size:16pt;font-weight:800;margin-top:3px}}
-.cm .bars{{display:flex;gap:3px;margin-top:7px}} .cm .bars i{{flex:1;height:6px;background:{DARK_METER};border-radius:1px}} .cm .bars i.on{{background:{LIME}}}
 .foot{{position:absolute;left:.75in;right:.75in;bottom:.55in;display:flex;justify-content:space-between;align-items:flex-end;font-size:7.4pt;color:{POWERED_BY_MUTED};border-top:1px solid {DARK_RULE};padding-top:10px}}
 .foot .disc{{color:{TEXT_ON_DARK_MUTED};font-size:6.8pt;margin-top:3px;letter-spacing:.02em}}
 </style></head><body><div class="cvr">
@@ -1803,39 +1975,40 @@ body{{background:{INK}}}
 <div class="h2">{rich(m.get("subtitle",""))}</div>
 <div class="rule"></div>
 <div class="facts">{facts}</div>
-<div class="sigrow">
- {f'<div class="sg"><div class="k">{esc(m.get("signal_title", DEFAULT_SIGNAL_TITLE))}</div><div class="v">{esc(sig.get("label") or slabel)}</div></div>' if sig else ""}
- {meter_cover(m, c) if c else ""}
-</div>
 <div class="foot"><div><div>{esc(m.get("confidentiality") or default_confidentiality())}</div>{f'<div class="disc">{esc(disclosure)}</div>' if disclosure else ""}</div><div>{esc(footer_brand())}</div></div>
 </div></body></html>"""
 
-def _bars(c, cap=30):
-    used, exp = int(c["used"]), int(c["expected"])
-    if exp > cap:  # keep the meter readable for large counts
-        used, exp = round(cap * used / max(exp, 1)), cap
-    return "".join('<i class="on"></i>' if k < used else "<i></i>" for k in range(exp))
-
-def meter_cover(m, c):
-    return (f'<div class="cm"><div class="k">{esc(m.get("meter_title", DEFAULT_METER_TITLE))}</div>'
-            f'<div class="v">{c["used"]} of {c["expected"]} · {esc(c.get("state","")).capitalize()}</div>'
-            f'<div class="bars">{_bars(c)}</div></div>')
+def coverage_sentence(c):
+    """Return the one-sentence evidence coverage statement for the sources appendix."""
+    if not isinstance(c, dict):
+        return ""
+    try:
+        used, expected = int(c["used"]), int(c["expected"])
+    except (KeyError, TypeError, ValueError):
+        return ""
+    if expected <= 0:
+        return ""
+    unit = str(c.get("unit") or "evidence area").strip()
+    noun = unit if expected == 1 else f"{unit}s"
+    sentence = f"Based on {used} of {expected} {noun}"
+    note = str(c.get("note") or "").strip().rstrip(".")
+    if note:
+        sentence += f"; {note[:1].lower() + note[1:]}"
+    return sentence + "."
 
 def exec_band(r):
     m = r["meta"]; e = r["executive"]
-    sig = m.get("signal"); c = m.get("completeness")
-    slabel, scol, _ = SIGNAL[sig["level"]] if sig else ("", SLATE, INK)
-    left = ""
-    if sig:
-        left += (f'<div class="sig" style="background:{scol}"><div class="k">{esc(m.get("signal_title", DEFAULT_SIGNAL_TITLE))}</div>'
-                 f'<div class="v">{esc(sig.get("label") or slabel)}</div></div>')
-    if c:
-        left += (f'<div class="meter">{esc(m.get("meter_title", DEFAULT_METER_TITLE))} · {c["used"]}/{c["expected"]}'
-                 f'<div class="bars">{_bars(c)}</div></div>')
+    sig = m.get("signal")
     label = e.get("label", "Bottom line")
-    if not left:
+    if not sig:
         return f'<div class="exec one"><div><div class="rt">{esc(label)}</div><div class="rx">{rich(e["bottom_line"])}</div></div></div>'
+    slabel, scol, _ = SIGNAL.get(sig.get("level"), ("", SLATE, INK))
+    left = f'<div class="sig" style="background:{scol}"><div class="v">{rich(sig.get("label") or slabel)}</div></div>'
     return f"""<div class="exec"><div>{left}</div><div><div class="rt">{esc(label)}</div><div class="rx">{rich(e["bottom_line"])}</div></div></div>"""
+
+def _is_sources_appendix(section):
+    title = str(section.get("title", "")).casefold()
+    return title.startswith("appendix") and "source" in title
 
 def body_html(r):
     r = prepare_report_for_render(r)
@@ -1849,9 +2022,11 @@ def body_html(r):
             pre = exec_band(r)
             if r.get("executive", {}).get("tiles"):
                 pre += f'<div class="blk">{b_tiles({"tiles": r["executive"]["tiles"]}, dark=True)}</div>'
+        elif _is_sources_appendix(s) and coverage_sentence(r["meta"].get("completeness")):
+            pre = f'<p class="coverage-note">{esc(coverage_sentence(r["meta"]["completeness"]))}</p>'
         starts_page = n > 0 and bool(s.get("new_page", False))
         cls = "sec first" if n == 0 else ("sec new-page" if starts_page else "sec")
-        blocks = s.get("blocks", [])
+        blocks = _collapse_unavailable(s.get("blocks", []))
         if pre:
             body = f'<div class="keep">{head}{pre}</div>' + render_body_blocks(blocks)
         elif (
@@ -1937,15 +2112,9 @@ def header_footer(r):
     st = f"font-family:GradientInter,Inter,Arial,sans-serif;font-size:7px;color:{MUTED};width:100%;padding:0 0.75in;display:flex;justify-content:space-between;"
     who = (f'<b style="color:{INK}">{esc(client_name())}</b>' if client_name()
            else f'<b style="color:{INK}">Gradient</b><b style="color:{LIME_DK}">CIO</b>')
-    scope = (
-        f'<br><span style="font-size:6px;font-weight:700;color:{LIME_DK}">'
-        f'{esc(m["data_scope_banner"])}</span>'
-        if m.get("data_scope_banner")
-        else ""
-    )
     hdr = (f'<div style="{st}"><span>{who}'
            f' &nbsp;·&nbsp; {esc(m.get("header_label", DEFAULT_HEADER_LABEL))}</span>'
-           f'<span style="text-align:right">{esc(m.get("running_head", m.get("title","")))}{scope}</span></div>')
+           f'<span style="text-align:right">{esc(m.get("running_head", m.get("title","")))}</span></div>')
     pb = f' &nbsp;·&nbsp; {esc(footer_brand())}' if client_name() and footer_brand() else ""
     ftr = (f'<div style="{st}"><span>{esc(m.get("confidentiality") or default_confidentiality())} &nbsp;·&nbsp; Data as of {esc(m.get("data_as_of",""))}{pb}</span>'
            f'<span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span></div>')
@@ -2026,8 +2195,6 @@ body{{font-size:12pt;line-height:1.42}}
 .dcv .rule{{width:1.1in;height:5px;background:{LIME};margin:30px 0 24px;border-radius:1px}}
 .dcv .facts{{display:grid;gap:14px 40px;justify-content:start}}
 .dcv .fk{{font-size:7.4pt;letter-spacing:.12em;text-transform:uppercase;color:{POWERED_BY_MUTED};font-weight:700}} .dcv .fv{{font-size:12pt;font-weight:600;margin-top:2px}}
-.s-scope{{position:absolute;top:.20in;left:.7in;right:1.45in;text-align:right;color:{LIME_DK};font-size:7pt;font-weight:700;letter-spacing:.02em}}
-.slide.dark .s-scope{{color:{LIME}}}
 """
 
 def _deck_footer(m, n, total, dark=False):
@@ -2041,8 +2208,8 @@ def _deck_footer(m, n, total, dark=False):
 
 def deck_html(d):
     m = d["meta"]; slides = d["slides"]; total = len(slides) + 1
-    cover_facts = m.get("cover_facts", [])
-    fact_columns = 2 if len(cover_facts) <= 4 else 3
+    cover_facts = m.get("cover_facts", [])[:COVER_FACT_LIMIT]
+    fact_columns = 2
     facts = "".join(f'<div><div class="fk">{esc(k)}</div><div class="fv">{rich(v)}</div></div>' for k, v in cover_facts)
     lines = "".join(f'<line x1="{60+i*36}" y1="0" x2="{-340+i*36}" y2="750" stroke="{LIME}" stroke-width="1"/>' for i in range(16))
     out = [f"""<section class="slide dark dcv"><div class="glow"></div>
@@ -2055,35 +2222,53 @@ def deck_html(d):
     for k, sl in enumerate(slides, start=2):
         lay = sl.get("layout", "full")
         if lay == "section":
-            scope = (
-                f'<div class="s-scope">{esc(m["data_scope_banner"])}</div>'
-                if m.get("data_scope_banner")
-                else ""
-            )
-            out.append(f'<section class="slide dark">{scope}<div class="div-k">{esc(sl.get("kicker",""))}</div><div class="div-t">{esc(sl["title"])}</div>'
+            out.append(f'<section class="slide dark"><div class="div-k">{esc(sl.get("kicker",""))}</div><div class="div-t">{esc(sl["title"])}</div>'
                        f'<div class="div-s">{rich(sl.get("subtitle",""))}</div>{_deck_footer(m, k, total, True)}</section>')
             continue
         num += 1
         head = (f'<div class="s-h"><div><div class="s-k">{esc(sl.get("kicker",""))}</div><div class="s-t">{esc(sl["title"])}</div></div>'
                 f'<div class="s-n">{num:02d}</div></div>')
-        scope = (
-            f'<div class="s-scope">{esc(m["data_scope_banner"])}</div>'
-            if m.get("data_scope_banner")
-            else ""
-        )
         if lay in ("two", "wide"):
             body = (f'<div class="s-{lay}"><div>{render_blocks(sl.get("left", []))}</div><div>{render_blocks(sl.get("right", []))}</div></div>')
         else:
             body = render_blocks(sl.get("blocks", []))
         take = f'<div class="s-take"><b>Takeaway</b><span>{rich(sl["takeaway"])}</span></div>' if sl.get("takeaway") else ""
         style = ' style="padding-bottom:1.45in"' if take else ""
-        out.append(f'<section class="slide"{style}>{scope}{head}<div class="s-body">{body}</div>{take}{_deck_footer(m, k, total)}</section>')
+        out.append(f'<section class="slide"{style}>{head}<div class="s-body">{body}</div>{take}{_deck_footer(m, k, total)}</section>')
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>{esc(m["title"])}</title>{FONT_LINK}<style>{CSS}{DECK_CSS}</style></head><body>{"".join(out)}</body></html>"""
 
 OVERFLOW_JS = """() => Array.from(document.querySelectorAll('.slide')).map((s, i) => {
   const b = s.querySelector('.s-body'); if (!b) return null;
   const limit = s.getBoundingClientRect().bottom - parseFloat(getComputedStyle(s).paddingBottom);
   return b.getBoundingClientRect().bottom > limit + 1 ? i + 1 : null; }).filter(x => x)"""
+
+WIDTH_OVERFLOW_JS = """() => {
+  const limit = window.innerWidth + 1, found = [];
+  for (const el of document.body.querySelectorAll('table, svg, pre, img, div')) {
+    const right = el.getBoundingClientRect().right;
+    if (right > limit && !found.some(item => item.el.contains(el))) {
+      found.push({el, right});
+    }
+  }
+  return found.slice(0, 3).map(item => [
+    Math.round(item.right - window.innerWidth),
+    (item.el.closest('.keep, .atomic-table, section, .sec') || item.el).textContent.trim().slice(0, 80),
+  ]);
+}"""
+
+def _width_overflow_warning(pg, meta):
+    """Warn when body content is wider than the printable page width."""
+    page_width_in = float(page_spec(meta)[1].removesuffix("in"))
+    width = round((page_width_in - PDF_PAGE_MARGINS_IN["left"] - PDF_PAGE_MARGINS_IN["right"]) * 96)
+    pg.set_viewport_size({"width": width, "height": 1000})
+    overflow = pg.evaluate(WIDTH_OVERFLOW_JS)
+    if overflow:
+        details = "; ".join(f"{px}px over in '{text}'" for px, text in overflow)
+        print(
+            "WARNING: content is wider than the page, so Chromium would shrink every page — "
+            f"narrow the table or chart ({details})",
+            file=sys.stderr,
+        )
 
 def _launch(p):
     kw = {}
@@ -2223,6 +2408,8 @@ def main():
         }
         for src, dst, opts in ((cov, p1, {}), (body, p2, body_options)):
             _set(pg, src)
+            if src is body:
+                _width_overflow_warning(pg, r["meta"])
             pg.pdf(path=dst, format="Letter", print_background=True, prefer_css_page_size=True, **opts)
         br.close()
     if html_out:

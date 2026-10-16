@@ -15,7 +15,11 @@ from pathlib import Path
 from report_layout import (
     LayoutPolicyError,
     build_post_render_layout_contract,
+    cover_allowed_text,
+    cover_fact_count_errors,
+    cover_page_failures,
     lint_report_design,
+    reader_text_failures,
     load_layout_budget,
     prepare_report_for_render,
     repair_preferred_breaks,
@@ -143,20 +147,102 @@ def fix_for(issue: str) -> str:
         return "shorten that section, reduce body table rows, or move detail to an appendix"
     if "hard ceiling" in normalized:
         return "reduce narrative or body table rows in the longest reported sections"
+    if "cover shows text" in normalized or "cover lists" in normalized:
+        return "keep meta.cover_facts to identifying facts and move status or coverage into the body"
+    if "raw status values" in normalized or "raw chip object" in normalized:
+        return "pass statuses as chip objects so the renderer shows the plain-language label"
+    if "has ordinal" in normalized:
+        return "correct the ordinal suffix in the source text"
+    if "wider than the page" in normalized:
+        return "drop or merge table columns, split the table, or shorten long unbroken values"
+    if "templated phrase" in normalized:
+        return "rewrite the sentence around the specific figure, subject and consequence"
     return "repair the named source section, then re-compose and rerun QA"
+
+
+def slide_lines(slide: object) -> list[str]:
+    """Return the non-empty text lines of one slide in shape order."""
+    lines: list[str] = []
+    for shape in slide.shapes:
+        if getattr(shape, "has_text_frame", False):
+            lines.extend(
+                paragraph.text.strip()
+                for paragraph in shape.text_frame.paragraphs
+                if paragraph.text.strip()
+            )
+        if getattr(shape, "has_table", False):
+            lines.extend(
+                cell.text.strip()
+                for row in shape.table.rows
+                for cell in row.cells
+                if cell.text.strip()
+            )
+    return lines
+
+
+def deck_reader_diagnostics(
+    slides: list[list[str]],
+    report: dict[str, object],
+    branding: dict[str, object],
+) -> list[dict[str, object]]:
+    """Apply the title-page and reader-text gates to rendered slide text."""
+    metadata = report.get("meta") if isinstance(report.get("meta"), dict) else {}
+    failures = cover_fact_count_errors(metadata)
+    if metadata and slides:
+        failures.extend(
+            cover_page_failures(
+                slides[0],
+                cover_allowed_text(metadata, branding),
+                location="slide 1",
+            )
+        )
+    appendix_titles = {
+        str(section.get("title", "")).strip().casefold()
+        for section in report.get("sections", [])
+        if isinstance(section, dict)
+        and str(section.get("title", "")).strip().casefold().startswith("appendix")
+    }
+    first_appendix = next(
+        (
+            number
+            for number, lines in enumerate(slides, start=1)
+            if number > 1 and any(line.casefold() in appendix_titles for line in lines)
+        ),
+        None,
+    )
+    exempt = (
+        set(range(first_appendix, len(slides) + 1)) if first_appendix else set()
+    )
+    failures.extend(
+        reader_text_failures(slides, raw_status_exempt_pages=exempt, location="slide")
+    )
+    return [
+        {"severity": "error", "code": "pptx-reader-text", "message": failure}
+        for failure in failures
+    ]
 
 
 def inspect_pptx(
     path: Path,
     budget: dict[str, object],
+    report: dict[str, object] | None = None,
+    branding: dict[str, object] | None = None,
 ) -> dict[str, object]:
-    """Check editable PowerPoint theme/font surfaces and slide budgets."""
+    """Check editable PowerPoint theme/font surfaces, slide budgets and reader text."""
     try:
         from pptx import Presentation
     except ImportError as error:
         raise RuntimeError("python-pptx is required to inspect PowerPoint output") from error
     presentation = Presentation(path)
     diagnostics: list[dict[str, object]] = []
+    if report is not None:
+        diagnostics.extend(
+            deck_reader_diagnostics(
+                [slide_lines(slide) for slide in presentation.slides],
+                report,
+                branding or {},
+            )
+        )
     slide_count = len(presentation.slides)
     pptx_budget = budget.get("pptx")
     pptx_budget = pptx_budget if isinstance(pptx_budget, dict) else {}
@@ -392,6 +478,7 @@ def main() -> int:
         "outputs": {},
     }
     failures: list[str] = []
+    final_render_stderr = render_result.stderr or ""
     try:
         if args.format in {"pdf", "both"}:
             pdf_path = base.with_suffix(".pdf")
@@ -407,6 +494,8 @@ def main() -> int:
             ]
             if args.budget:
                 command.extend(("--budget", str(args.budget)))
+            if args.brand:
+                command.extend(("--brand", str(args.brand.resolve())))
             checked = run(command)
             print("PDF layout pass 1:")
             print((checked.stdout or checked.stderr).rstrip())
@@ -436,6 +525,7 @@ def main() -> int:
                     print(rerendered.stderr, end="", file=sys.stderr)
                 if rerendered.returncode != 0:
                     return rerendered.returncode
+                final_render_stderr = rerendered.stderr or ""
                 command[4] = str(repaired_path)
                 checked = run(command)
                 print(
@@ -465,6 +555,11 @@ def main() -> int:
                 for item in pdf_result.get("diagnostics", [])
                 if item.get("severity") == "error"
             )
+            failures.extend(
+                line.removeprefix("WARNING: ").strip()
+                for line in final_render_stderr.splitlines()
+                if "wider than the page" in line
+            )
             pdf_contact_path = (
                 base.parent / f"{base.name}-pdf-contact-sheet.png"
             )
@@ -472,7 +567,12 @@ def main() -> int:
             print(f"PDF contact sheet: {pdf_contact_path}")
         if args.format in {"pptx", "both"}:
             pptx_path = base.with_suffix(".pptx")
-            pptx_result = inspect_pptx(pptx_path, effective_budget)
+            pptx_result = inspect_pptx(
+                pptx_path,
+                effective_budget,
+                prepared,
+                branding,
+            )
             qa_results["outputs"]["pptx"] = pptx_result
             failures.extend(
                 str(item["message"])
