@@ -5,6 +5,7 @@
 - Restored the comprehensive portfolio review example, whose Liquidity and Commitments section declared a forced page break outside the layout budget and was rejected before rendering.
 - Made example generation fail when any example is rejected before rendering instead of reporting it as a layout warning, and made it work when the output folder is on another filesystem.
 - Regenerated the reference example PDFs and PowerPoints for the 6.1.x tile and legend changes, renamed the shortlist and operations-comparison examples to their consolidated skill modes, and added the triage example.
+- Simplified maintainer checks: a pre-push hook and CI share `tools/quick_checks.py` (version, shared-file sync, catalog, Claude validation); CI no longer pixel-compares examples against committed references and instead requires every example to render. The sync check ignores Windows line-ending differences.
 - Client update: `/plugin marketplace update gradientcio`
 
 ## 6.1.1
