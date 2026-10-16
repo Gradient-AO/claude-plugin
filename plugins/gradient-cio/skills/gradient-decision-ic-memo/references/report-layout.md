@@ -38,7 +38,7 @@ The composer validates these semantic slots by block type and title.
 | 1 | `statement` **Recommendation** before the memo text | One-line recommendation, no more than 25 words; `sub` states the decision requested. |
 | 3 | `two_col` containing `bars` **Current weight by asset class** and **Active weight vs policy (bps)** | Both bars are `narrow`; active weights use the signed-bar convention. |
 | 4 | `coverage` **Policy constraint status** before the text | Allocation, Return, Risk, Liquidity, Concentration; status values map to renderer chips. |
-| 4 | `bars` **Concentration vs limit** | Include manager and issuer rows that breach, are on Watch, or sit within 5 percentage points of a cap. |
+| 4 | `bars` **Concentration vs limit** | Include manager and issuer rows that breach, are near their limit, or sit within 5 percentage points of a cap. |
 | 5 | `line` **Growth of 100** | Use the separate `cumulative_growth` result; multiply returned index values by 100 only for display; `ref` is 100. |
 | 5 | `bars` **Calendar-year returns** | Signed bars; preserve partial-year month labels. |
 | 5 | `bars` **1Y attribution — total effect by asset class (bps)** | Signed bars ordered by absolute returned total effect descending. |

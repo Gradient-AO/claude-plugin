@@ -39,7 +39,7 @@
 ## 2. Executive Summary
 
 - **Positioning:** Public equity is 700 bps overweight and fixed income 600 bps underweight versus policy [S1].
-- **IPS:** 6 constraints Compliant, 1 Watch, 2 Breach, 3 Not assessed. Breaches: fixed income band and cash band.
+- **IPS:** 6 constraints Compliant, 1 Near limit, 2 Breach, 3 Not assessed. Breaches: fixed income band and cash band.
 - **Performance:** 1Y return 6.9% versus 6.4% for the policy benchmark (+49 bps). Governed attribution is unavailable for the selected period [S2].
 - **Outlook:** Expected return 6.7% versus a 7.0% objective, volatility 13.1%, 44.0% probability of meeting the objective [S3].
 - **Liquidity & diligence:** Stress coverage 2.61 on the liquidity model; zero High diligence findings [S1] [S5] [S9].
@@ -72,7 +72,7 @@
 | 3 | Allocation — private_equity | 10.0%–20.0% | 17.0% | Compliant | IPS §4.1 |
 | 4 | Allocation — real_estate | 5.0%–12.0% | 11.0% | Compliant | IPS §4.1 |
 | 5 | Allocation — cash | 2.0%–8.0% | 1.0% | Breach | IPS §4.1 |
-| 6 | Return objective | CPI + 4.5% | 6.7% | Watch | IPS §3.1 |
+| 6 | Return objective | CPI + 4.5% | 6.7% | Near limit | IPS §3.1 |
 | 7 | Expected volatility | ≤ 14.0% | Not available — observation basis unaligned | Not assessed | IPS §3.2 |
 | 8 | Expected max drawdown | ≤ 35.0% | Not available — observation basis unaligned | Not assessed | IPS §3.2 |
 | 9 | T1 liquidity (% NAV) | ≥ 15.0% | 21.0% | Compliant | IPS §5.1 |
@@ -80,7 +80,7 @@
 | 11 | Largest single manager (% NAV) | ≤ 10.0% | 8.5% | Compliant | IPS §6.1 |
 | 12 | No direct tobacco holdings | prohibited | n/a | Not assessed | IPS §7.1 |
 
-**Summary:** 6 Compliant, 1 Watch, 2 Breach, 3 Not assessed.
+**Summary:** 6 Compliant, 1 Near limit, 2 Breach, 3 Not assessed.
 **Breaches and required actions:** Fixed income and cash bands — cured by the Section 13 rebalance.
 
 ## 5. Performance & Attribution
@@ -136,9 +136,9 @@ Not available — `get_portfolio_attribution` returned `coverage.status: unavail
 
 | Metric | Current | Proposed | Policy portfolio | IPS objective / limit | Status |
 |---|---|---|---|---|---|
-| Expected return (nominal, ann.) | 6.7% | 6.6% | 6.5% | 7.0% | Watch |
+| Expected return (nominal, ann.) | 6.7% | 6.6% | 6.5% | 7.0% | Near limit |
 | Expected excess return over cash | 2.9% | 2.8% | 2.7% | n/a | n/a |
-| Expected volatility (ann.) | 13.1% | 12.5% | 12.0% | 14.0% | Watch |
+| Expected volatility (ann.) | 13.1% | 12.5% | 12.0% | 14.0% | Near limit |
 | Sharpe ratio | 0.22 | 0.22 | 0.23 | n/a | n/a |
 | Expected max drawdown | 38.0% | 36.5% | 35.0% | 35.0% | Breach |
 | 95% CVaR (1-year) | 21.0% | 20.0% | 19.5% | n/a | Not assessed |
@@ -188,7 +188,7 @@ Not available — `get_portfolio_attribution` returned `coverage.status: unavail
 | Unfunded commitments (USD m) | 420.0 | 420.0 | n/a | n/a | [S1] |
 | 12-month spending / distributions (USD m) | 150.0 | 150.0 | n/a | n/a | [S1] |
 | Liquidity coverage ratio | 5.77 | 2.61 | 1.50 | Compliant | [S1] [S11] |
-| Private markets % NAV (incl. unfunded) | 36.1% | 36.1% | 40.0% | Watch | [S1] |
+| Private markets % NAV (incl. unfunded) | 36.1% | 36.1% | 40.0% | Near limit | [S1] |
 
 - HF B placed in T4 (gated).
 

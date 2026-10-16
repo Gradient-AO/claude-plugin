@@ -104,6 +104,6 @@ GIPS_COMPLETENESS_STATES = frozenset({"complete", "partial"})
 GIPS_CALLOUT_TONES = frozenset({"good", "watch", "bad", "info"})
 
 IC_POLICY_STATUSES = frozenset(
-    {"Compliant", "Watch", "Breach", "Not assessed", "n/a", ""}
+    {"Compliant", "Near limit", "Breach", "Not assessed", "n/a", ""}
 )
 IC_RISK_RATINGS = frozenset({"High", "Medium", "Low"})
