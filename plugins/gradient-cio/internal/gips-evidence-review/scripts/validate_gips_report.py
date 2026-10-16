@@ -23,6 +23,7 @@ PLUGIN_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(PLUGIN_ROOT / "tools"))
 
 from report_json_validator import print_quality_notes  # noqa: E402
+from report_layout import cover_policy_errors  # noqa: E402
 from report_vocab import (  # noqa: E402
     GIPS_ASSESSMENT_TONES,
     GIPS_CALLOUT_TONES,
@@ -794,14 +795,13 @@ def validate_meta(
         "data_as_of",
         "confidentiality",
         "cover_facts",
-        "signal_title",
         "signal",
         "completeness",
-        "meter_title",
         "executive",
     ):
         if not meta.get(field):
             errors.append(f"meta.{field} is required")
+    errors.extend(cover_policy_errors(meta))
     review_modes = {
         "GIPS Report Review": "firm",
         "GIPS Asset Owner Review": "asset-owner",

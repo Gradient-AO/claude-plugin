@@ -1,18 +1,64 @@
-{"eyebrow":"Investment Committee Memo","header_label":"Investment Committee Memo",
- "title":"Rebalance: Northstar Global Growth Fund",
- "subtitle":"Northstar Foundation · Investment Committee meeting 2026-10-15",
- "running_head":"IC Memo · Global Growth Fund rebalance","data_as_of":"2026-09-30",
- "data_basis":"mixed",
- "confidentiality":"Confidential — Investment Committee",
- "cover_disclosure":"Illustrative sample · not client data",
- "data_scope_banner":"Illustrative, Gradient Maintained — demo data, not the client's holdings or managers",
- "cover_facts":[["Decision","Rebalance"],["Meeting date","2026-10-15"],["Data as of","2026-09-30"],["Base currency","USD"]],
- "signal_title":"Policy alignment","signal":{"level":"breach","label":"2 breaches · 1 watch · 3 not assessed"},
- "meter_title":"Scope reviewed",
- "executive":{"label":"Recommendation","bottom_line":"Reduce public equity by 400 bps to 48.0% and add 400 bps to cash (200 bps) and fixed income (200 bps) to cure two IPS band breaches [S1]. The Committee is asked to approve the rebalance in Section 13.1, executed over 30 days.",
-  "tiles":[
-   {"label":"Trailing 1Y vs benchmark","value":"+49 bps","sub":"6.9% net return [S2]","tone":"good"},
-   {"label":"IPS breaches","value":"2","sub":"1 additional Watch [S1]","tone":"bad"},
-   {"label":"Expected return vs objective","value":"−28 bps","sub":"6.7% vs 7.0% [S3]","tone":"watch"},
-   {"label":"T1 liquidity","value":"44.6%","sub":"15.0% minimum [S1]","tone":"good"}
-  ]}}
+{
+  "eyebrow": "Investment Committee Memo",
+  "header_label": "Investment Committee Memo",
+  "title": "Rebalance: Northstar Global Growth Fund",
+  "subtitle": "Northstar Foundation · Investment Committee meeting 2026-10-15",
+  "running_head": "IC Memo · Global Growth Fund rebalance",
+  "data_as_of": "2026-09-30",
+  "data_basis": "mixed",
+  "confidentiality": "Confidential — Investment Committee",
+  "cover_disclosure": "Illustrative sample · not client data",
+  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers",
+  "cover_facts": [
+    [
+      "Decision",
+      "Rebalance"
+    ],
+    [
+      "Meeting date",
+      "2026-10-15"
+    ],
+    [
+      "Data as of",
+      "2026-09-30"
+    ],
+    [
+      "Base currency",
+      "USD"
+    ]
+  ],
+  "signal": {
+    "level": "breach",
+    "label": "Two band breaches, one near its limit, three not assessed"
+  },
+  "executive": {
+    "label": "Recommendation",
+    "bottom_line": "Reduce public equity by 400 bps to 48.0% and add 400 bps to cash (200 bps) and fixed income (200 bps) to cure two IPS band breaches [S1]. The Committee is asked to approve the rebalance in Section 13.1, executed over 30 days.",
+    "tiles": [
+      {
+        "label": "Trailing 1Y vs benchmark",
+        "value": "+49 bps",
+        "sub": "6.9% net return [S2]",
+        "tone": "good"
+      },
+      {
+        "label": "IPS breaches",
+        "value": "2",
+        "sub": "1 more near its limit [S1]",
+        "tone": "bad"
+      },
+      {
+        "label": "Expected return vs objective",
+        "value": "−28 bps",
+        "sub": "6.7% vs 7.0% [S3]",
+        "tone": "watch"
+      },
+      {
+        "label": "T1 liquidity",
+        "value": "44.6%",
+        "sub": "15.0% minimum [S1]",
+        "tone": "good"
+      }
+    ]
+  }
+}

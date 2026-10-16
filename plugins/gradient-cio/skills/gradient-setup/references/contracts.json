@@ -1602,6 +1602,42 @@
       }
     },
     {
+      "id": "portfolio_attribution_periods",
+      "set": "full",
+      "tool": "get_portfolio_attribution",
+      "depends_on": [
+        "sample_portfolio"
+      ],
+      "args": {
+        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
+        "benchmark_role": "policy",
+        "parent_allocation_id": "root",
+        "start_date": "2025-09-30",
+        "end_date": "2026-09-30",
+        "sections": [
+          "periods"
+        ],
+        "fields": [
+          "periods",
+          "period",
+          "coverage"
+        ]
+      },
+      "required": [
+        "coverage.status",
+        "period.observed_period_count",
+        "periods[0].period_date",
+        "periods[0].linked_total_effect",
+        "periods[0].cumulative_linked_allocation_effect",
+        "periods[0].cumulative_linked_selection_effect",
+        "periods[0].cumulative_linked_interaction_effect",
+        "periods[0].cumulative_linked_total_effect"
+      ],
+      "equals": {
+        "coverage.status": "available"
+      }
+    },
+    {
       "id": "portfolio_ex_ante_attribution",
       "set": "full",
       "tool": "get_portfolio_ex_ante_attribution",

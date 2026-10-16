@@ -73,7 +73,7 @@ report them as separate modules; never use the canonical illustrative portfolio 
 ## 3. Contract self-test
 
 Run the probes in `references/contract-checks.md`. The **standard** set is 8 quick reads (default). The
-**full read** set is 64 reads (the 8 standard plus 56 full probes); run it when the user asks for a health
+**full read** set is 65 reads (the 8 standard plus 57 full probes); run it when the user asks for a health
 check or self-test, or after a plugin update. The separate **writes** set is 8 dry-run previews, including
 monitoring, review and Strategy Lab scenario previews plus one batch-preview contract and one DDQ upload
 preview, and must never commit. Private-markets construction adds one fictional `private_markets_holdings`
@@ -121,9 +121,10 @@ judgments, visual-before-table rule and `Analysis —` callout requirement. Keep
 its established readiness tiles and diagnostic flow.
 
 Meta: `eyebrow` "Platform Readiness", `header_label` "Readiness Review", `title` the organization name,
-`subtitle` "Access, licensed capabilities and data coverage", `signal_title` "Readiness",
-`meter_title` "Capabilities reviewed", `completeness` = capabilities available / capabilities reviewed.
-`cover_facts`: Organization, Access, Licensed capabilities, Reviewed (date). Keep role, roster capacity, connector version, probes and contract-check detail in the report body or sources appendix, never on the cover.
+`subtitle` "Access, licensed capabilities and data coverage", `completeness` = capabilities available /
+capabilities reviewed. `cover_facts`: Organization, Reviewed (date) only; the cover is a title page, so
+readiness, access, licensing and check detail stay in the body. `signal.label` is a plain sentence, e.g.
+"Ready to use, with some skills limited".
 
 Signal: `ready` (connected, all core skills ready, no new failures) · `partial` (connected, but some skills
 partial or not licensed, or degradable failures are present) · `not_ready` (not connected, auth failed, or any
@@ -131,20 +132,20 @@ core skill not available).
 
 Sections (soft target 4–5 pages; hard ceiling 7):
 
-1. **Summary** (`id: executive`) — bottom line in 3 sentences; tiles: Skills ready, Partial, Not licensed,
-   Checks passed.
+1. **Summary** (`id: executive`) — bottom line in 3 sentences; tiles: Skills ready, Partly available,
+   Not licensed, Checks passed.
 2. **Skills you can use** — two full-width tables, stacked: a **Ready** table and a
-   **Partial or unavailable** table. Do not pair them in `two_col`; three columns
+   **Partly available** table. Do not pair them in `two_col`; three columns
    are too narrow side by side. Each uses Skill, What it produces, and Note;
    status is explicit in the table title or a chip when needed. For the IC memo,
    show Portfolio Analytics core readiness and `Strategy Lab supplement: <Ready
    / Not licensed (optional) / Unavailable (optional)>` separately. A missing
-   Strategy Lab supplement makes the combined IC memo status Partial, not Not
-   licensed.
+   Strategy Lab supplement makes the IC memo Partly available, not Not licensed.
 3. **Access and data** — `coverage` block for data domains; kv block for organization, role, licensed modules,
    roster capacity, and availability of the first portfolio's five opt-in exposure sections.
-4. **Contract checks** — table: Probe, Tool, Result (chip), As of, Note. Then a `findings` block listing new
-   failures only (severity high when a core skill is blocked, medium otherwise).
+4. **Connection checks** — kicker gives the pass count as a sentence; table: Check, Tool, Result (chip), As of,
+   Note with `widths` `["16%","28%","12%","12%","32%"]` and `nowrap: [3]`. Then a `findings` block listing
+   new failures only (severity high when a core skill is blocked, medium otherwise).
 5. **Try next** — `questions` block with 3 prompts tailored to what is ready, e.g. "Run an ODD report on
    <first roster fund>", "Give me this week's manager monitoring digest", "Build the macro briefing deck for
    Thursday's committee".
@@ -154,7 +155,6 @@ Then follow "Check and deliver" in `references/report-style.md`. Apply the
 canonical QA command's specific repair levers and rerun it until clean.
 
 ## 6. Offer next steps
-
 - If the user has roster funds and the monitoring skill is ready, offer to set up the weekly monitoring digest
   as a scheduled task (see gradient-odd-manager-monitor).
 - If something is not licensed, say which module unlocks it; do not upsell beyond that.

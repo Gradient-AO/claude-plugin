@@ -1,19 +1,44 @@
 # Changelog
 
 ## 6.3.0
-- Extended `gradient-portfolio-import` with provider-neutral `commitment_master`, `valuation_snapshot`, and `cash_flow_event_ledger` workflows using the generic schema-driven staging tool.
-- Added explicit commitment-create allocation approval, existing-commitment requirements for valuations and cash flows, verbatim source value/sign preservation, evidence-only reported metrics, and versioned supersede language.
-- Made provider recipes optional reviewed evidence with schema-drift invalidation; a provider-neutral Gradient mapping-profile approval artifact now joins runtime treatment and publication readiness in governing preview-only versus commit-enabled behavior.
-- Expanded setup readiness to all twelve import tools and added generic Phase 2 staging contract coverage.
-- Client update: `/plugin marketplace update gradientcio`
-
-## 6.2.0
 - Added the provider-neutral `gradient-portfolio-import` skill for governed private equity, real estate, infrastructure and private debt holdings workflows against existing Gradient portfolios and commitments.
 - Added strict verbatim-value, declared-unit, exhaustive-pagination, bounded-batch, user-confirmed mapping, schema-drift and complete-rejection rules with no source writes or deletion by omission.
 - Added preview-then-explicit-current-conversation commit using the exact displayed diff, issues, control and record reconciliations, payload digest and confirmation receipt, followed by run-history and portfolio-read verification.
 - Added optional import history and fail-closed rollback guidance requiring a separate explicit request and the exact destination-after digest.
 - Added a single-entry provider-recipe catalog, an explicit unreviewed Chronograph recipe, and fail-closed preview-only handling until a successful live connector dry run makes the exact mapping and schema eligible for review.
-- Expanded setup readiness and the public connector catalog for all eleven governed portfolio-import tools.
+- Extended `gradient-portfolio-import` with provider-neutral `commitment_master`, `valuation_snapshot`, and `cash_flow_event_ledger` workflows using the generic schema-driven staging tool.
+- Added explicit commitment-create allocation approval, existing-commitment requirements for valuations and cash flows, verbatim source value/sign preservation, evidence-only reported metrics, and versioned supersede language.
+- Made provider recipes optional reviewed evidence with schema-drift invalidation; a provider-neutral Gradient mapping-profile approval artifact now joins runtime treatment and publication readiness in governing preview-only versus commit-enabled behavior.
+- Expanded setup readiness and the public connector catalog to all twelve governed import tools and added generic Phase 2 staging contract coverage.
+- Client update: `/plugin marketplace update gradientcio`
+
+## 6.2.0
+- Made every report cover a clean title page: eyebrow, title, subtitle, up to four identifying facts (for example Prepared for and Reviewed), confidentiality and brand. Status lines, signal boxes, coverage meters and system facts no longer appear on the cover.
+- Replaced status jargon such as "Watch" and "Partial" with plain-language labels (for example "Near limit", "Partly available", "Passed with notes") across chips, tables, tiles and the PowerPoint output, and the executive conclusion is now a specific sentence.
+- Removed the per-page data-scope banner and rebuilt the sources appendix with plain source names, unwrapped dates, a separate digest audit table and a one-sentence evidence coverage note.
+- Fixed ordinal suffixes, currency formatting, duplicate empty states and setup table widths; the setup report now shows "Connection checks" and "Partly available".
+- Rewrote sample key judgments to name their subject and state specific findings, and banned templated phrases.
+- Added QA gates that fail a cover showing anything beyond its identifying metadata, more than four cover facts, raw chip objects, snake_case statuses outside the appendix, wrong ordinals and templated phrases, for both PDF and PowerPoint.
+- Reports now show the connector's `display_label` beside each status when present, keeping raw values for the sources appendix. The construction Policy status tile uses that label instead of the raw status code, and the IC memo IPS status vocabulary is now Compliant, Near limit, Breach and Not assessed (replacing "Watch").
+- Reports now print at their designed size instead of being shrunk to fit the page, and a new QA check fails any page whose content is wider than the page. Reports are 20–35% longer as a result; the attribution report target is now 8–12 pages (hard maximum 14), single-manager performance 6–10 pages (hard maximum 12) and the IC memo 13–20 pages (hard maximum unchanged at 22).
+- Fixed stacked bars with negative values, wrapped long legends and removed duplicate axis ticks; range bars now handle negative lows, show a zero line and no longer repeat the range in their labels.
+- Callouts and coverage notes no longer repeat their own title or status ("Not available — …" renders as a bold "Not available." lead), and completeness lines can name their unit (for example "roster subjects").
+- Sources appendix: markdown source tables split into reader and audit tables, repeated tool names are removed, check labels stay on one line, a check detail that only restates the check is dropped, and audit columns with the same value in every row move into the table note. Long key parameters now wrap with the digest instead of producing tall narrow rows, and three-column lineage tables show full digests in the table instead of a separate note.
+- Layout QA no longer flags the short page before an intentional page break or a heading that ends its own section at the foot of a page; a heading followed only by the footer is still flagged.
+- Fixed the roster triage layout budget, which had copied the full ODD report's sections and failed every triage report.
+- Replaced "peerIntelligence is not available" with "peer allocation intelligence is not licensed for this organization" and removed remaining "governed", "canonical" and raw error-code wording from sample reports.
+- Client update: `/plugin marketplace update gradientcio`
+
+## 6.1.2
+- Fixed the roster triage layout budget, which listed single-manager ODD sections and blocked every triage report at pre-render QA; it now matches the documented executive, roster-detail and appendix sections.
+- Restored the comprehensive portfolio review example, whose Liquidity and Commitments section declared a forced page break outside the layout budget and was rejected before rendering.
+- Made example generation fail when any example is rejected before rendering instead of reporting it as a layout warning, and made it work when the output folder is on another filesystem.
+- Regenerated the reference example PDFs and PowerPoints for the 6.1.x tile and legend changes, renamed the shortlist and operations-comparison examples to their consolidated skill modes, and added the triage example.
+- Simplified maintainer checks: a pre-push hook and CI share `tools/quick_checks.py` (version, shared-file sync, catalog, Claude validation); CI no longer pixel-compares examples against committed references and instead requires every example to render. The sync check ignores Windows line-ending differences.
+- PowerPoint decks are denser and shorter: a chart now shares its slide with its short lead-in and commentary, two consecutive simple charts in a section sit side by side, and text is sized to the slide width. The IC memo example drops from 49 to 34 slides, its hard ceiling.
+- PDF reports no longer fail QA on a short closing page: the last page and the page before a required chapter break need only the orphan-tail fill, and a short final section under its heading is accepted.
+- Layout repair now runs up to three passes and may lift an appendix's preferred page break; short tables whose wrapped text would exceed a page now paginate by row instead of being kept whole.
+- Setup reports stack the Ready and Partial skill tables at full width instead of squeezing them side by side; the IC memo soft page target is 12–18; sample fixtures carry shorter data-scope cells and callouts. All 24 examples now pass layout QA.
 - Client update: `/plugin marketplace update gradientcio`
 
 ## 6.1.1

@@ -84,6 +84,13 @@ MODE_VISUAL_CONTRACTS = {
         ),
     },
 }
+EX_ANTE_ASSUMPTION_LABELS = {
+    "assumption_set_name": ("Assumption set",),
+    "regime_name": ("Regime",),
+    "horizon": ("Horizon",),
+    "portfolio_return_source": ("Portfolio return basis",),
+    "benchmark_return_source": ("Benchmark return basis",),
+}
 RETURNED_SIGN_COLUMNS = (
     "Lane",
     "Segment",
@@ -583,21 +590,23 @@ def _validate_ex_ante_assumptions(
                 "'Ex ante assumptions' KV"
             )
         ]
+    labels = {
+        label.casefold(): field
+        for field, aliases in EX_ANTE_ASSUMPTION_LABELS.items()
+        for label in (field, *aliases)
+    }
     values: dict[str, str] = {}
     for value in as_array(tables[0].get("rows")) or []:
         row = as_array(value)
         if row is not None and len(row) >= 2:
-            values[str(row[0]).strip()] = str(row[1]).strip()
+            key = str(row[0]).strip()
+            values[labels.get(key.casefold(), key)] = str(row[1]).strip()
     errors: list[str] = []
-    for field in (
-        "assumption_set_name",
-        "regime_name",
-        "horizon",
-        "portfolio_return_source",
-        "benchmark_return_source",
-    ):
+    for field, aliases in EX_ANTE_ASSUMPTION_LABELS.items():
         if not values.get(field):
-            errors.append(f"Ex ante assumptions KV requires {field}")
+            errors.append(
+                f"Ex ante assumptions KV requires {field} (label it '{aliases[0]}')"
+            )
     if values.get("regime_name", "").casefold() == "user":
         errors.append("Ex ante assumptions must display USER as 'user-defined regime'")
     return errors

@@ -882,9 +882,11 @@ def _validate_private_markets_evidence(
                 "mapped private-markets evidence requires artifact, parser and "
                 "projection lineage"
             )
-        if state.get("aggregate_complete") is False and "Partial" not in current_text:
+        if state.get("aggregate_complete") is False and not re.search(
+            r"\b(?:Incomplete|Partly|Partial)\b", current_text
+        ):
             errors.append(
-                "incomplete private-markets aggregates must be presented as Partial"
+                "incomplete private-markets aggregates must be presented as Incomplete"
             )
         if state.get("unknown_grain_count", 0) > 0 and re.search(
             r"\bunknown grain\b", report_text, re.IGNORECASE

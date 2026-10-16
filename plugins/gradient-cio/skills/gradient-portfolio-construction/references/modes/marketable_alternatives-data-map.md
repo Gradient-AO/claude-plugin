@@ -47,7 +47,7 @@ fields, and never compare or conflate the two excess values.
 Call `get_peer_allocation_intelligence` only when
 `capabilities.peerIntelligence` and the tool row both report available access.
 Otherwise do not call or retry it. Disclose: `Not licensed — Peer allocation
-context was skipped because peerIntelligence is not available for this
+context was skipped because peer allocation intelligence is not licensed for this
 organization. This construction report uses portfolio evidence only.` Missing
 peer context never lowers construction readiness by itself.
 

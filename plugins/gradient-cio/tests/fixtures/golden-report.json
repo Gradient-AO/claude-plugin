@@ -8,13 +8,18 @@
     "data_as_of": "2026-09-30",
     "confidentiality": "FICTIONAL TEST DATA — not for distribution",
     "cover_facts": [
-      ["Purpose", "Release testing"],
-      ["Data", "Fictional (TEST)"],
-      ["Currency", "USD"]
+      [
+        "Purpose",
+        "Release testing"
+      ],
+      [
+        "Data",
+        "Fictional (TEST)"
+      ]
     ],
     "signal": {
       "level": "watch",
-      "label": "TEST"
+      "label": "Release test report"
     },
     "completeness": {
       "used": 2,
@@ -139,9 +144,18 @@
               }
             ],
             "rows": [
-              ["Public (TEST)", 0.6],
-              ["Private (TEST)", 0.3],
-              ["Liquidity (TEST)", 0.1]
+              [
+                "Public (TEST)",
+                0.6
+              ],
+              [
+                "Private (TEST)",
+                0.3
+              ],
+              [
+                "Liquidity (TEST)",
+                0.1
+              ]
             ],
             "totals": null,
             "metrics": null,
@@ -151,7 +165,9 @@
             "render_hint": {
               "block": "pie",
               "x": "allocation",
-              "y": ["weight"]
+              "y": [
+                "weight"
+              ]
             },
             "methodology_uri": "gradient://charts/bar-portfolio-hierarchy",
             "methodology": null,
@@ -189,10 +205,26 @@
               }
             ],
             "rows": [
-              ["Gap", 0.1, "%"],
-              ["Targets", 3, "count"],
-              ["Runway", 2.5, "years"],
-              ["Dollar gap", 12, "$M"]
+              [
+                "Gap",
+                0.1,
+                "%"
+              ],
+              [
+                "Targets",
+                3,
+                "count"
+              ],
+              [
+                "Runway",
+                2.5,
+                "years"
+              ],
+              [
+                "Dollar gap",
+                12,
+                "$M"
+              ]
             ],
             "totals": null,
             "metrics": null,
@@ -331,31 +363,131 @@
             "Status"
           ],
           "rows": [
-            ["Fictional Holding 01 (TEST)", "1.0%", "Available"],
-            ["Fictional Holding 02 (TEST)", "1.1%", "Available"],
-            ["Fictional Holding 03 (TEST)", "1.2%", "Available"],
-            ["Fictional Holding 04 (TEST)", "1.3%", "Available"],
-            ["Fictional Holding 05 (TEST)", "1.4%", "Available"],
-            ["Fictional Holding 06 (TEST)", "1.5%", "Available"],
-            ["Fictional Holding 07 (TEST)", "1.6%", "Available"],
-            ["Fictional Holding 08 (TEST)", "1.7%", "Available"],
-            ["Fictional Holding 09 (TEST)", "1.8%", "Available"],
-            ["Fictional Holding 10 (TEST)", "1.9%", "Available"],
-            ["Fictional Holding 11 (TEST)", "2.0%", "Available"],
-            ["Fictional Holding 12 (TEST)", "2.1%", "Available"],
-            ["Fictional Holding 13 (TEST)", "2.2%", "Available"],
-            ["Fictional Holding 14 (TEST)", "2.3%", "Available"],
-            ["Fictional Holding 15 (TEST)", "2.4%", "Available"],
-            ["Fictional Holding 16 (TEST)", "2.5%", "Available"],
-            ["Fictional Holding 17 (TEST)", "2.6%", "Available"],
-            ["Fictional Holding 18 (TEST)", "2.7%", "Available"],
-            ["Fictional Holding 19 (TEST)", "2.8%", "Available"],
-            ["Fictional Holding 20 (TEST)", "2.9%", "Available"],
-            ["Fictional Holding 21 (TEST)", "3.0%", "Available"],
-            ["Fictional Holding 22 (TEST)", "3.1%", "Available"],
-            ["Fictional Holding 23 (TEST)", "3.2%", "Available"],
-            ["Fictional Holding 24 (TEST)", "3.3%", "Available"],
-            ["Fictional Holding 25 (TEST)", "3.4%", "Available"]
+            [
+              "Fictional Holding 01 (TEST)",
+              "1.0%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 02 (TEST)",
+              "1.1%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 03 (TEST)",
+              "1.2%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 04 (TEST)",
+              "1.3%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 05 (TEST)",
+              "1.4%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 06 (TEST)",
+              "1.5%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 07 (TEST)",
+              "1.6%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 08 (TEST)",
+              "1.7%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 09 (TEST)",
+              "1.8%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 10 (TEST)",
+              "1.9%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 11 (TEST)",
+              "2.0%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 12 (TEST)",
+              "2.1%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 13 (TEST)",
+              "2.2%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 14 (TEST)",
+              "2.3%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 15 (TEST)",
+              "2.4%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 16 (TEST)",
+              "2.5%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 17 (TEST)",
+              "2.6%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 18 (TEST)",
+              "2.7%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 19 (TEST)",
+              "2.8%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 20 (TEST)",
+              "2.9%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 21 (TEST)",
+              "3.0%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 22 (TEST)",
+              "3.1%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 23 (TEST)",
+              "3.2%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 24 (TEST)",
+              "3.3%",
+              "Available"
+            ],
+            [
+              "Fictional Holding 25 (TEST)",
+              "3.4%",
+              "Available"
+            ]
           ],
           "note": "All holdings are fictional [S1]"
         }
@@ -394,10 +526,26 @@
               }
             ],
             "rows": [
-              ["2026-06-30", 0.012, 0.009],
-              ["2026-07-31", -0.008, -0.004],
-              ["2026-08-31", 0.016, 0.011],
-              ["2026-09-30", 0.006, 0.007]
+              [
+                "2026-06-30",
+                0.012,
+                0.009
+              ],
+              [
+                "2026-07-31",
+                -0.008,
+                -0.004
+              ],
+              [
+                "2026-08-31",
+                0.016,
+                0.011
+              ],
+              [
+                "2026-09-30",
+                0.006,
+                0.007
+              ]
             ],
             "truncated": false,
             "render_hint": {

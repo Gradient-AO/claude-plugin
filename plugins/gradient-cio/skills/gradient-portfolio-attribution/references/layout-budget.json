@@ -4,10 +4,10 @@
   "forced_breaks": [],
   "pdf": {
     "target_pages": {
-      "min": 7,
-      "max": 9
+      "min": 8,
+      "max": 12
     },
-    "hard_max_pages": 11,
+    "hard_max_pages": 14,
     "minimum_body_fill": 0.4,
     "orphan_tail_max_fill": 0.2
   },

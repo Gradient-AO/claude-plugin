@@ -1,45 +1,44 @@
 {
   "meta": {
-  "mode": "full",
-  "eyebrow": "Operational Due Diligence Report",
-  "header_label": "Operational Due Diligence",
-  "signal_title": "Overall view",
-  "meter_title": "Scope reviewed",
-  "title": "Ridgeview Advisors, LP",
-  "subtitle": "Operational due diligence review · SEC-registered adviser",
-  "running_head": "Ridgeview · ODD",
-  "data_as_of": "2026-10-01 (Form ADV); 2026-08-14 (Form 13F)",
-  "confidentiality": "Confidential — operational due diligence review",
-  "cover_facts": [
-    [
-      "Adviser CRD",
-      "999901"
+    "mode": "full",
+    "eyebrow": "Operational Due Diligence Report",
+    "header_label": "Operational Due Diligence",
+    "title": "Ridgeview Advisors, LP",
+    "subtitle": "Operational due diligence review · SEC-registered adviser",
+    "running_head": "Ridgeview · ODD",
+    "data_as_of": "2026-10-01 (Form ADV); 2026-08-14 (Form 13F)",
+    "confidentiality": "Confidential — operational due diligence review",
+    "cover_facts": [
+      [
+        "Adviser CRD",
+        "999901"
+      ],
+      [
+        "Regulatory AUM",
+        "$12.40B"
+      ],
+      [
+        "Form ADV report",
+        "2026-10-01"
+      ],
+      [
+        "Report date",
+        "2026-10-04"
+      ]
     ],
-    [
-      "Regulatory AUM",
-      "$12.40B"
-    ],
-    [
-      "Form ADV report",
-      "2026-10-01"
-    ],
-    [
-      "Report date",
-      "2026-10-04"
-    ]
-  ],
-  "signal": {
-    "level": "clear"
+    "signal": {
+      "level": "clear",
+      "label": "No operational flags in the filings reviewed"
+    },
+    "completeness": {
+      "used": 5,
+      "expected": 7,
+      "state": "partial"
+    },
+    "data_basis": "mixed",
+    "cover_disclosure": "Illustrative sample · not client data",
+    "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
   },
-  "completeness": {
-    "used": 5,
-    "expected": 7,
-    "state": "partial"
-  },
-  "data_basis": "mixed",
-  "cover_disclosure": "Illustrative sample · not client data",
-  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
-},
   "executive": {
     "bottom_line": "Ridgeview reports $12.40B regulatory AUM, 38 private funds and no Item 11 disclosures [S1]. No cohort metric is in the top quartile; the highest is AUM per adviser representative at the 62.6th percentile [S1]. Firm events are not yet published, so completeness is degraded and this is not a clean bill of health.",
     "tiles": [
@@ -105,22 +104,22 @@
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
-          "title": "Key judgment — headline signal",
-          "text": "Observation: The sample report carries one clear headline signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+          "title": "Key judgment — Operational flags",
+          "text": "Observation: The filings reviewed show no operational flags [S1]. Why it matters: Nothing in the regulatory record blocks the diligence from proceeding. Uncertainty: Areas the filings do not cover are listed under evidence coverage. What would change the view: Firm events or audit findings in those areas."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
-          "title": "Key judgment — primary measure",
-          "text": "Observation: Regulatory AUM is $12.4B in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
+          "title": "Key judgment — Firm scale",
+          "text": "Observation: The adviser reports $12.4B of regulatory assets under management [S2]. Why it matters: Scale supports the custody, audit and compliance infrastructure expected for the mandate. Uncertainty: The figure is as of the latest Form ADV. What would change the view: A material change in the next annual amendment."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
-          "title": "Key judgment — monitoring priority",
-          "text": "Observation: Composite is 32.4 in the review evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
+          "title": "Key judgment — Operational score",
+          "text": "Observation: The composite operational score is 32.4 [S3]. Why it matters: It sets the baseline for the next review of this manager. Uncertainty: The score covers only the evidence areas returned. What would change the view: New firm events or filings that move the score."
         }
       ]
     },
@@ -466,8 +465,11 @@
               "get_manager_odd_profile",
               "illustrative sample",
               "2026-10-01",
-              "Gradient-governed review evidence",
-              "{'chip': 'not_run', 'status': 'not_run'}",
+              "Illustrative sample data",
+              {
+                "chip": "not_run",
+                "status": "not_run"
+              },
               "sha256:273814b06d98b1737c111b83024663b8e8600d4b69330958b9c6b9c61b827814"
             ],
             [
@@ -477,8 +479,11 @@
               "get_manager_monitor_evidence",
               "illustrative sample",
               "2026-10-01",
-              "Gradient-governed review evidence",
-              "{'chip': 'passed', 'status': 'passed'}",
+              "Illustrative sample data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:2bdcc27a6e4cd1e329899b4d04e170b5c8d8495ae3ac85508662595e0ddba249"
             ],
             [
@@ -488,8 +493,11 @@
               "get_firm_13f_portfolio_review",
               "illustrative sample",
               "2026-08-14",
-              "Gradient-governed review evidence",
-              "{'chip': 'passed', 'status': 'passed'}",
+              "Illustrative sample data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:b978ab9ea42f3266f45899cd2105866e57f56016496c2bd775d7260eab4fd245"
             ]
           ]

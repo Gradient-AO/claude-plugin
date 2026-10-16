@@ -7,10 +7,20 @@ import copy
 import math
 import re
 import sys
+import unicodedata
+from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
-from report_theme import COVER_FIELD_LIMITS, FULL_SAMPLE_DISCLOSURE, THEME_VERSION
+from report_theme import (
+    BRAND_NAME,
+    COVER_FIELD_LIMITS,
+    DEFAULT_COVER_DISCLOSURE,
+    FULL_SAMPLE_DISCLOSURE,
+    STATUS_LABEL,
+    THEME_VERSION,
+    default_confidentiality,
+)
 
 TOOLS_ROOT = Path(__file__).resolve().parent.parent / "tools"
 if str(TOOLS_ROOT) not in sys.path:
@@ -66,12 +76,202 @@ BOUNDED_METADATA_FIELDS = {
     "running_head": COVER_FIELD_LIMITS["running_head"],
     "data_scope_banner": COVER_FIELD_LIMITS["data_scope_banner"],
     "cover_disclosure": COVER_FIELD_LIMITS["cover_disclosure"],
-    "signal_title": 48,
-    "meter_title": 48,
     "confidentiality": 180,
     "page_size": 24,
 }
-SIGNAL_LABEL_MAX_CHARACTERS = 48
+SIGNAL_LABEL_MAX_CHARACTERS = 90
+SIGNAL_LABEL_MIN_WORDS = 2
+COVER_FACT_SYSTEM_LABEL = re.compile(
+    r"\b(?:status|scope|coverage|readiness|evidence|access|licen[cs]ed?|licen[cs]es|"
+    r"signal|completeness|connector|probes?|contracts?|modules?|tools?|validation|"
+    r"digests?|quality|capabilit(?:y|ies))\b",
+    re.IGNORECASE,
+)
+COVER_FACT_SYSTEM_VALUE = re.compile(
+    r"(?:\b[a-z0-9]+_[a-z0-9_]+\b|\b[a-z]{3,}[A-Z][a-z]+[A-Za-z]*\b|\b\d+\s+of\s+\d+\b|"
+    r"\b(?:mcp|api|connector|sha256)\b)"
+)
+COVER_FACT_STATUS_VALUES = frozenset(
+    {
+        "partial", "partly available", "partly ready", "degraded", "incomplete",
+        "watch", "near limit", "passed", "failed", "ready", "not ready",
+        "connected", "not connected", "licensed", "not licensed", "available",
+        "unavailable", "not available", "complete", "insufficient",
+        "insufficient evidence", "not enough evidence", "not assessed",
+        "not run", "not checked", "advisory", "passed with notes",
+    }
+)
+
+
+def cover_policy_errors(metadata: dict[str, Any]) -> list[str]:
+    """Return title-page cover violations: system or status facts and one-word signals."""
+    errors: list[str] = []
+    facts = metadata.get("cover_facts")
+    if isinstance(facts, list):
+        for index, fact in enumerate(facts):
+            if not isinstance(fact, (list, tuple)) or len(fact) < 2:
+                continue
+            label, value = str(fact[0]).strip(), str(fact[1]).strip()
+            if COVER_FACT_SYSTEM_LABEL.search(label):
+                errors.append(
+                    f"meta.cover_facts[{index}] label '{label}' is a status or system "
+                    "term; cover facts identify the report (who, what, when, for whom)"
+                )
+            elif (
+                value.casefold() in COVER_FACT_STATUS_VALUES
+                or COVER_FACT_SYSTEM_VALUE.search(value)
+            ):
+                errors.append(
+                    f"meta.cover_facts[{index}] value '{value}' is a status, count or "
+                    "system identifier; move it into the report body"
+                )
+    signal = metadata.get("signal")
+    if isinstance(signal, dict):
+        label = str(signal.get("label") or "").strip()
+        if len(label.split()) < SIGNAL_LABEL_MIN_WORDS:
+            errors.append(
+                "meta.signal.label must be a specific conclusion of at least "
+                f"{SIGNAL_LABEL_MIN_WORDS} words, not a single status word"
+            )
+    return errors
+
+
+TEMPLATED_PHRASES = (
+    "This signal focuses oversight",
+    "The sample report carries a",
+    "A governed refresh showing",
+    "receives priority in the next monitoring cycle",
+    "establishes the baseline for comparing later",
+)
+LEGACY_CHIP_REPR = re.compile(r"""\{\s*['"]chip['"]""")
+RAW_STATUS_TOKEN = re.compile(
+    r"(?<![\w.])(?:"
+    + "|".join(sorted((key for key in STATUS_LABEL if "_" in key), key=len, reverse=True))
+    + r")(?![\w.])"
+)
+ORDINAL_TOKEN = re.compile(r"\b(\d+)(st|nd|rd|th)\b", re.IGNORECASE)
+COVER_BRAND_WORDS = ("Gradient", "CIO", "GradientCIO", "Powered by", BRAND_NAME)
+
+
+def ordinal_suffix(number: int) -> str:
+    """Return the English ordinal suffix for a non-negative integer."""
+    if 11 <= number % 100 <= 13:
+        return "th"
+    return {1: "st", 2: "nd", 3: "rd"}.get(number % 10, "th")
+
+
+def _reader_words(value: str) -> list[str]:
+    normalized = unicodedata.normalize("NFKC", value).casefold()
+    return re.findall(r"[^\W_]+", normalized)
+
+
+def cover_fact_count_errors(metadata: dict[str, Any]) -> list[str]:
+    """Return an error when the cover lists more identifying facts than it renders."""
+    facts = metadata.get("cover_facts")
+    limit = COVER_FIELD_LIMITS["cover_facts"]
+    if isinstance(facts, list) and len(facts) > limit:
+        return [
+            f"cover lists {len(facts)} facts; the title page shows at most {limit}"
+        ]
+    return []
+
+
+def cover_allowed_text(
+    metadata: dict[str, Any],
+    branding: dict[str, Any] | None = None,
+) -> list[str]:
+    """Return every string the title page may render for this report."""
+    brand = branding or {}
+    allowed = [
+        str(metadata.get("eyebrow") or ""),
+        str(metadata.get("header_label") or ""),
+        str(metadata.get("title") or ""),
+        str(metadata.get("subtitle") or ""),
+        str(metadata.get("confidentiality") or default_confidentiality(brand)),
+        str(metadata.get("cover_disclosure") or DEFAULT_COVER_DISCLOSURE),
+        str(brand.get("client_name") or ""),
+        "Data as of",
+        str(metadata.get("data_as_of") or ""),
+        *COVER_BRAND_WORDS,
+    ]
+    facts = metadata.get("cover_facts")
+    for fact in (facts if isinstance(facts, list) else [])[: COVER_FIELD_LIMITS["cover_facts"]]:
+        if isinstance(fact, (list, tuple)):
+            allowed.extend(str(part) for part in fact[:2])
+    return allowed
+
+
+def _segments_into(compact: str, words: set[str], longest: int) -> bool:
+    """Return whether letter-spacing-free text is a concatenation of allowed words."""
+    reachable = [True] + [False] * len(compact)
+    for end in range(1, len(compact) + 1):
+        for start in range(max(0, end - longest), end):
+            if reachable[start] and compact[start:end] in words:
+                reachable[end] = True
+                break
+    return reachable[-1]
+
+
+def cover_page_failures(
+    cover_text: Iterable[str],
+    allowed_text: Iterable[str],
+    *,
+    location: str = "page 1",
+) -> list[str]:
+    """Fail a title page that renders words outside its identifying metadata."""
+    allowed = {word for value in allowed_text for word in _reader_words(value)}
+    longest = max((len(word) for word in allowed), default=0)
+    unexpected: list[str] = []
+    for line in cover_text:
+        compact = "".join(_reader_words(line))
+        if compact and not _segments_into(compact, allowed, longest):
+            unexpected.append(" ".join(line.split())[:60])
+    if not unexpected:
+        return []
+    shown = ", ".join(f"'{line}'" for line in unexpected[:4])
+    return [
+        f"{location} cover shows text outside the title page ({shown}); "
+        "keep status, signal, coverage and system details in the report body"
+    ]
+
+
+def reader_text_failures(
+    pages: list[list[str]],
+    *,
+    raw_status_exempt_pages: set[int] | None = None,
+    location: str = "page",
+) -> list[str]:
+    """Return reader-text defects: chip reprs, raw statuses, bad ordinals and templated phrases."""
+    exempt = raw_status_exempt_pages or set()
+    failures: list[str] = []
+    for number, lines in enumerate(pages, start=1):
+        text = " ".join(" ".join(lines).split())
+        if LEGACY_CHIP_REPR.search(text):
+            failures.append(f"{location} {number} shows a raw chip object; render it as a status label")
+        if number not in exempt:
+            statuses = sorted(set(RAW_STATUS_TOKEN.findall(text)))
+            if statuses:
+                failures.append(
+                    f"{location} {number} shows raw status values "
+                    f"({', '.join(statuses)}); use the plain-language label"
+                )
+        for match in ORDINAL_TOKEN.finditer(text):
+            expected = ordinal_suffix(int(match.group(1)))
+            if match.group(2).casefold() != expected:
+                failures.append(
+                    f"{location} {number} has ordinal '{match.group(0)}'; "
+                    f"write '{match.group(1)}{expected}'"
+                )
+        folded = text.casefold()
+        for phrase in TEMPLATED_PHRASES:
+            if phrase.casefold() in folded:
+                failures.append(
+                    f"{location} {number} uses the templated phrase '{phrase}'; "
+                    "state the specific finding instead"
+                )
+    return failures
+
+
 VISUAL_BLOCK_TYPES = frozenset(
     {
         "bars",
@@ -699,7 +899,8 @@ def _prepare_sample_disclosure(
     metadata: dict[str, Any],
 ) -> None:
     """Add the full public-sample disclosure to the sources appendix once."""
-    if not str(metadata.get("cover_disclosure") or "").strip():
+    explicit = bool(str(metadata.get("cover_disclosure") or "").strip())
+    if not explicit and not str(metadata.get("data_scope_banner") or "").strip():
         return
     for section in sections:
         title = str(section.get("title", ""))
@@ -722,6 +923,9 @@ def _prepare_sample_disclosure(
             None,
         )
         if source_table is None:
+            if not explicit:
+                blocks.append({"type": "text", "text": FULL_SAMPLE_DISCLOSURE})
+                return
             raise LayoutPolicyError(
                 ["sample sources appendix requires a table for disclosure"]
             )
@@ -732,9 +936,270 @@ def _prepare_sample_disclosure(
             if value
         )
         return
-    raise LayoutPolicyError(
-        ["meta.cover_disclosure requires Appendix A — Sources and methods"]
+    if explicit:
+        raise LayoutPolicyError(
+            ["meta.cover_disclosure requires Appendix A — Sources and methods"]
+        )
+
+
+CANONICAL_SOURCE_COLUMNS = (
+    "tag",
+    "evidence",
+    "basis",
+    "tool / view",
+    "key parameters",
+    "as of",
+    "data scope",
+    "validation",
+    "digest",
+)
+SOURCE_CHECK_STATES = (
+    "passed_with_warnings",
+    "not_applicable",
+    "unavailable",
+    "advisory",
+    "degraded",
+    "not_run",
+    "partial",
+    "passed",
+    "failed",
+)
+SOURCE_BASIS_PREFIX = {
+    "user_document": "Client document",
+    "regulatory_filing": "Regulatory filing",
+}
+SOURCE_DIGEST_DISPLAY = {
+    "not_available:no_payload": "None — no data received",
+    "not_applicable_metadata_response": "Not applicable — tool metadata",
+}
+LEGACY_SOURCE_CHIP = re.compile(r"""['"]chip['"]\s*:\s*['"]([^'"]+)['"]""")
+
+
+def _parse_source_state(text: str) -> tuple[str, str]:
+    """Return (state, detail) from 'state' or 'state: detail' Validation text."""
+    folded = text.casefold()
+    for state in SOURCE_CHECK_STATES:
+        for label in (state, state.replace("_", " "), state.replace("_", "-")):
+            if folded == label:
+                return state, ""
+            for separator in (":", ";", " — ", " - "):
+                if folded.startswith(label + separator):
+                    return state, text[len(label) + len(separator):].strip()
+    return "", ""
+
+
+def _source_check_cell(value: Any) -> dict[str, Any]:
+    """Split one Validation cell into a status chip and a plain detail."""
+    if isinstance(value, dict) and value.get("chip") is not None:
+        text = str(value.get("chip") or "")
+        status = str(value.get("status") or text)
+        display_label = value.get("display_label")
+    else:
+        text = str(value or "").strip()
+        legacy = LEGACY_SOURCE_CHIP.search(text)
+        if legacy is not None:
+            text = legacy.group(1)
+        status = ""
+        display_label = None
+    normalized = re.sub(r"\s+", " ", text).strip()
+    parsed_state, detail = _parse_source_state(normalized)
+    status = status or parsed_state
+    cell: dict[str, Any] = {"chip": status or normalized, "status": status or normalized}
+    if display_label:
+        cell["display_label"] = display_label
+    restates_state = bool(status) and detail.rstrip(". ").casefold().endswith(
+        status.replace("_", " ").casefold()
     )
+    if detail and not restates_state:
+        cell["detail"] = detail[:1].upper() + detail[1:]
+    return cell
+
+
+def _source_text(value: Any) -> str:
+    return str(value if value is not None else "").strip()
+
+
+def _source_name(basis: str, tool_view: str) -> str:
+    name = re.sub(r"^\s*gradient_tool(?:_metadata)?\s*[:·\-]?\s*", "", tool_view).strip()
+    name = "; ".join(dict.fromkeys(part.strip() for part in name.split(";") if part.strip()))
+    prefix = SOURCE_BASIS_PREFIX.get(basis.strip())
+    if prefix:
+        return f"{prefix} · {name}" if name else prefix
+    if basis.strip() == "gradient_tool_metadata":
+        return f"{name} (tool metadata)" if name else "Tool metadata"
+    return name
+
+
+def split_source_table(block: dict[str, Any]) -> list[dict[str, Any]] | None:
+    """Return the reader source table and its audit table for a canonical sources block."""
+    columns = tuple(str(column).strip().casefold() for column in block.get("columns", []))
+    if block.get("type") != "table" or columns != CANONICAL_SOURCE_COLUMNS:
+        return None
+    reader_rows: list[list[Any]] = []
+    audit_rows: list[list[Any]] = []
+    for row in block.get("rows", []):
+        if not isinstance(row, list) or len(row) != len(CANONICAL_SOURCE_COLUMNS):
+            return None
+        tag, evidence, basis, tool_view, parameters, as_of, scope, validation, digest = row
+        text = _source_text
+        reader_rows.append([
+            text(tag),
+            evidence,
+            _source_name(text(basis), text(tool_view)),
+            text(as_of),
+            _source_check_cell(validation),
+        ])
+        digest_text = text(digest)
+        audit_rows.append([
+            text(tag),
+            text(parameters),
+            text(scope),
+            SOURCE_DIGEST_DISPLAY.get(digest_text, digest_text),
+        ])
+    reader = {
+        key: value
+        for key, value in block.items()
+        if key not in {"columns", "rows", "align", "widths", "nowrap"}
+    }
+    check_details = any(row[4].get("detail") for row in reader_rows)
+    reader.update({
+        "columns": ["Tag", "Evidence", "Source", "As of", "Check"],
+        "rows": reader_rows,
+        "widths": (
+            ["7%", "35%", "27%", "11%", "20%"]
+            if check_details
+            else ["6%", "30%", "40%", "11%", "13%"]
+        ),
+        "nowrap": [0, 3] if check_details else [0, 3, 4],
+    })
+    notes = ["Each digest is the SHA-256 fingerprint of the exact data the report used."]
+    kept = [0]
+    shared_scope = ""
+    for index, label in ((2, "Data scope"), (1, "Key parameters")):
+        values = {str(row[index]) for row in audit_rows}
+        if len(audit_rows) > 1 and len(values) == 1 and next(iter(values)):
+            value = next(iter(values))
+            if index == 2:
+                shared_scope = value
+            if not (index == 1 and value.casefold() in shared_scope.casefold()):
+                notes.insert(0, f"{label} for every source: {value}.")
+        else:
+            kept.append(index)
+    kept = sorted(kept) + [3]
+    names = {0: "Tag", 1: "Key parameters", 2: "Data scope", 3: "Digest"}
+    one_line_digest = {
+        (0, 1, 2, 3): ["5%", "18%", "23%", "54%"],
+        (0, 1, 3): ["5%", "36%", "59%"],
+        (0, 2, 3): ["5%", "36%", "59%"],
+        (0, 3): ["8%", "92%"],
+    }
+    wrapped_digest = {
+        (0, 1, 2, 3): ["5%", "36%", "31%", "28%"],
+        (0, 1, 3): ["5%", "62%", "33%"],
+        (0, 2, 3): ["5%", "62%", "33%"],
+    }
+    audit_rows = [[row[index] for index in kept] for row in audit_rows]
+    columns = [names[index] for index in kept]
+    widths = one_line_digest[tuple(kept)]
+    digest_wrap = False
+    wrapped = wrapped_digest.get(tuple(kept))
+    if wrapped and _audit_lines(audit_rows, wrapped, 2) < _audit_lines(audit_rows, widths, 1):
+        widths = wrapped
+        digest_wrap = True
+    note = " ".join(notes)
+    audit = {
+        "type": "table",
+        "title": "Source audit trail",
+        "columns": columns,
+        "rows": audit_rows,
+        "widths": widths,
+        "nowrap": [0],
+        "audit": True,
+        "note": note,
+    }
+    if digest_wrap:
+        audit["digest_wrap"] = True
+    return [reader, audit]
+
+
+def _audit_lines(rows: list[list[Any]], widths: list[str], digest_lines: int) -> int:
+    """Estimate total audit-table text lines; about 1.34 characters fit per 1% of width."""
+    total = 0
+    for row in rows:
+        lines = digest_lines
+        for cell, width in zip(row[1:-1], widths[1:-1]):
+            capacity = max(8, int(float(width.rstrip("%")) * 1.34) - 4)
+            lines = max(lines, math.ceil(len(str(cell)) / capacity))
+        total += lines
+    return total
+
+
+MARKDOWN_TABLE_SEPARATOR = re.compile(r"^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$")
+
+
+def _markdown_cells(line: str) -> list[str]:
+    text = line.strip()
+    if text.startswith("|"):
+        text = text[1:]
+    if text.endswith("|"):
+        text = text[:-1]
+    return [cell.strip().replace("`", "") for cell in text.split("|")]
+
+
+def _split_markdown_source_tables(block: dict[str, Any]) -> list[dict[str, Any]] | None:
+    """Replace canonical markdown source tables with the reader and audit tables."""
+    text = block.get("text")
+    if block.get("type") != "markdown" or not isinstance(text, str) or "|" not in text:
+        return None
+    lines = text.replace("\r\n", "\n").split("\n")
+    blocks: list[dict[str, Any]] = []
+    pending: list[str] = []
+    found = False
+    index = 0
+    while index < len(lines):
+        line = lines[index]
+        if "|" in line and index + 1 < len(lines) and MARKDOWN_TABLE_SEPARATOR.match(lines[index + 1]):
+            header = _markdown_cells(line)
+            columns = ["Tag" if cell.casefold() == "ref" else cell for cell in header]
+            end = index + 2
+            while end < len(lines) and "|" in lines[end] and lines[end].strip():
+                end += 1
+            if tuple(column.casefold() for column in columns) == CANONICAL_SOURCE_COLUMNS:
+                split = split_source_table({
+                    "type": "table",
+                    "columns": columns,
+                    "rows": [_markdown_cells(row) for row in lines[index + 2:end]],
+                })
+                if split:
+                    if "\n".join(pending).strip():
+                        blocks.append({**block, "text": "\n".join(pending).strip()})
+                    blocks.extend(split)
+                    pending, found, index = [], True, end
+                    continue
+            pending.extend(lines[index:end])
+            index = end
+            continue
+        pending.append(line)
+        index += 1
+    if not found:
+        return None
+    if "\n".join(pending).strip():
+        blocks.append({**block, "text": "\n".join(pending).strip()})
+    return blocks
+
+
+def _prepare_source_tables(sections: list[dict[str, Any]]) -> None:
+    for section in sections:
+        blocks = section.get("blocks")
+        if not isinstance(blocks, list):
+            continue
+        prepared: list[Any] = []
+        for block in blocks:
+            split = None
+            if isinstance(block, dict):
+                split = split_source_table(block) or _split_markdown_source_tables(block)
+            prepared.extend(split if split else [block])
+        section["blocks"] = prepared
 
 
 def prepare_report_for_render(report: dict[str, Any]) -> dict[str, Any]:
@@ -759,6 +1224,7 @@ def prepare_report_for_render(report: dict[str, Any]) -> dict[str, Any]:
     prepared["sections"] = section_objects
     _normalize_appendices(section_objects)
     _prepare_sample_disclosure(section_objects, prepared["meta"])
+    _prepare_source_tables(section_objects)
     _prepare_page_breaks(section_objects)
     _prepare_chart_appendix(section_objects)
     _prepare_layout_groups(section_objects)
@@ -1372,6 +1838,8 @@ def _lint_table_runs(
                         _lint_table_runs(children, section, index)
                     )
             continue
+        if block.get("audit") is True:
+            continue
         if _is_table_block(block):
             run += 1
             if run > 2 and not reported:
@@ -1546,7 +2014,7 @@ def measure_content(blocks: list[dict[str, Any]]) -> dict[str, int]:
             )
         elif block_type == "questions":
             metrics["words"] += len(" ".join(_strings(block.get("items", []))).split())
-        if block_type in {"table", "kv"}:
+        if block_type in {"table", "kv"} and block.get("audit") is not True:
             rows = block.get("rows", [])
             metrics["body_table_rows"] += len(rows) if isinstance(rows, list) else 0
         elif block_type == "chart":

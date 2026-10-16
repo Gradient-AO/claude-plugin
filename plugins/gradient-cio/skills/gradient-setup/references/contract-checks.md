@@ -32,12 +32,12 @@ sample_portfolio, capabilities_coverage. The scoped capability probe uses
 `scope: {view: manager_diligence}`; the sample probe verifies that `list_portfolios`
 returns Gradient's canonical example first.
 
-**Full read set (64 reads including standard):** standard plus capabilities_summary,
+**Full read set (65 reads including standard):** standard plus capabilities_summary,
 fund_diligence_monitoring, fund_diligence_review, manager_diligence_brief,
 attention, findings, events, events_roster, entity_facts, conditions, credit_spreads, gradient_signal, regime_state,
 cma_baseline, cma_consensus, cma_consensus_allocation, watchlist,
 portfolio_tree, portfolio_exposure, portfolio_policy, portfolio_ownership, portfolio_returns,
-portfolio_attribution, portfolio_ex_ante_attribution,
+portfolio_attribution, portfolio_attribution_periods, portfolio_ex_ante_attribution,
 portfolio_factor_currency, portfolio_risk_contribution, portfolio_commitment_analytics,
 strategy_benchmarks, strategy_return_series, two Strategy Lab session builders,
 strategy_expected_statistics, strategy_pme_builder, strategy_pme,

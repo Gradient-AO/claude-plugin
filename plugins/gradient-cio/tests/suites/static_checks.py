@@ -1134,8 +1134,6 @@ def public_example_cover_checks():
                 "eyebrow",
                 "running_head",
                 "confidentiality",
-                "signal_title",
-                "meter_title",
             )
         ]
         cover_values.extend(
@@ -2050,12 +2048,12 @@ def attribution_skill_contract_checks():
     )
     organization_context = "Organization-wide context — not verified as held"
     check(
-        "7–9 PDF pages with a hard ceiling of 11" in skill
-        and "hard ceiling is 11" in template
-        and budget["pdf"]["target_pages"] == {"min": 7, "max": 9}
-        and budget["pdf"]["hard_max_pages"] == 11
+        "8–12 PDF pages with a hard ceiling of 14" in skill
+        and "hard ceiling is 14" in template
+        and budget["pdf"]["target_pages"] == {"min": 8, "max": 12}
+        and budget["pdf"]["hard_max_pages"] == 14
         and "every required visual retained" in requirements,
-        "attribution page budget retains soft target and 11-page ceiling",
+        "attribution page budget retains soft target and 14-page ceiling",
     )
     check(
         manager_fallback in normalized_skill

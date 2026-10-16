@@ -1,92 +1,86 @@
 {
   "meta": {
-  "eyebrow": "Investment Due Diligence",
-  "header_label": "Manager Performance",
-  "title": "Northstar Manager Shortlist",
-  "subtitle": "Candidate screening for Investment Committee review",
-  "running_head": "Northstar manager shortlist",
-  "data_as_of": "2025-12-31",
-  "cover_facts": [
-    [
-      "Review",
-      "Manager shortlist"
+    "eyebrow": "Investment Due Diligence",
+    "header_label": "Manager Performance",
+    "title": "Northstar Manager Shortlist",
+    "subtitle": "Candidate screening for Investment Committee review",
+    "running_head": "Northstar manager shortlist",
+    "data_as_of": "2025-12-31",
+    "cover_facts": [
+      [
+        "Review",
+        "Manager shortlist"
+      ],
+      [
+        "Prepared for",
+        "Investment Committee"
+      ],
+      [
+        "Data as of",
+        "2025-12-31"
+      ]
     ],
-    [
-      "Evidence",
-      "Governed manager data"
-    ],
-    [
-      "Audience",
-      "Investment Committee"
-    ],
-    [
-      "Data as of",
-      "2026-10-01"
-    ]
-  ],
-  "signal": {
-    "level": "insufficient",
-    "label": "Insufficient governed evidence"
-  },
-  "completeness": {
-    "used": 1,
-    "expected": 4,
-    "state": "partial"
-  },
-  "handoff": {
-    "schema_version": "gradient-idd-odd-ic-handoff/v1",
-    "stage": "idd",
-    "subject": {
-      "name": "Northstar managers",
-      "identity_status": "advisory"
+    "signal": {
+      "level": "insufficient",
+      "label": "Not enough manager evidence for a shortlist"
     },
-    "return_series": [],
-    "evidence": [
-      {
-        "source_tag": "S1",
-        "tool": "get_gradient_capabilities",
-        "as_of": "2025-12-31",
-        "methodology_version": "connector/v1"
+    "completeness": {
+      "used": 1,
+      "expected": 4,
+      "state": "partial"
+    },
+    "handoff": {
+      "schema_version": "gradient-idd-odd-ic-handoff/v1",
+      "stage": "idd",
+      "subject": {
+        "name": "Northstar managers",
+        "identity_status": "advisory"
+      },
+      "return_series": [],
+      "evidence": [
+        {
+          "source_tag": "S1",
+          "tool": "get_gradient_capabilities",
+          "as_of": "2025-12-31",
+          "methodology_version": "connector/v1"
+        }
+      ],
+      "limitations": [
+        "Governed analytical evidence is unavailable in this public sample."
+      ],
+      "selection": {
+        "status": "not_assessed",
+        "rationale": "Insufficient governed evidence."
       }
-    ],
-    "limitations": [
-      "Governed analytical evidence is unavailable in this public sample."
-    ],
-    "selection": {
-      "status": "not_assessed",
-      "rationale": "Insufficient governed evidence."
-    }
+    },
+    "mode": "shortlist",
+    "data_basis": "gradient_governed",
+    "confidentiality": "Confidential — manager selection review",
+    "cover_disclosure": "Illustrative sample · not client data",
+    "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
   },
-  "mode": "shortlist",
-  "data_basis": "gradient_governed",
-  "confidentiality": "Confidential — manager selection review",
-  "signal_title": "Overall view",
-  "meter_title": "Scope reviewed",
-  "cover_disclosure": "Illustrative sample · not client data",
-  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
-},
   "executive": {
-    "bottom_line": "The comparison remains insufficient because required governed results are unavailable [S1].",
+    "bottom_line": "No conclusion is possible yet: the comparison, benchmark-relative and robustness results were not returned for the candidates [S1].",
     "tiles": [
       {
         "label": "Result",
-        "value": "Insufficient",
-        "sub": "Governed evidence gap [S1]"
+        "value": "Not enough data",
+        "sub": "Key results not returned [S1]"
       },
       {
         "label": "Benchmark",
-        "value": "Advisory",
+        "value": "Suggested",
         "sub": "Match not confirmed [S1]"
       },
       {
         "label": "Coverage",
         "value": "1 / 4",
-        "sub": "Required reads [S1]"
+        "sub": "Inputs returned [S1]"
       },
       {
         "label": "Reliability",
         "value": "Not assessed",
-        "sub": "Window result unavailable [S1]"
+        "sub": "Window tests not returned [S1]"
       }
     ]
   },
@@ -100,27 +94,27 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — Coverage",
-          "text": "Observation: Coverage is incomplete [S1]. Why it matters: Comparison is constrained. Uncertainty: Missing reads may change results. What would change the view: Governed comparison evidence."
+          "text": "Observation: Only one of four screening inputs is available [S1]. Why it matters: A shortlist would rest on incomplete data. Uncertainty: Missing reads may change which managers qualify. What would change the view: Complete screening data for every candidate."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — Benchmarks",
-          "text": "Observation: Benchmark matching is advisory [S1]. Why it matters: Relative evidence is bounded. Uncertainty: Mandate fit is unconfirmed. What would change the view: Canonical matches."
+          "text": "Observation: Benchmark matches are suggested, not confirmed [S1]. Why it matters: Candidates must be compared on the same benchmark. Uncertainty: Mandate fit is unconfirmed. What would change the view: Confirmed benchmark mappings."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — Reliability",
-          "text": "Observation: Robustness is unavailable [S1]. Why it matters: Persistence is unknown. Uncertainty: Window sensitivity is untested. What would change the view: Governed robustness results."
+          "text": "Observation: Return persistence was not tested [S1]. Why it matters: A shortlist should favor repeatable results. Uncertainty: Persistence is unknown. What would change the view: A robustness run for each candidate."
         }
       ]
     },
     {
       "title": "Mandate and screening coverage",
-      "kicker": "Benchmark identity remains advisory for the reviewed candidates",
+      "kicker": "Benchmark matches are suggested, not yet confirmed",
       "blocks": [
         {
           "type": "coverage",
@@ -128,7 +122,7 @@
             {
               "name": "Benchmark mapping",
               "status": "unavailable",
-              "note": "Canonical match unavailable [S1]"
+              "note": "Match not confirmed [S1]"
             }
           ]
         }
@@ -143,14 +137,14 @@
           "tone": "watch",
           "role": "availability",
           "title": "Not available",
-          "text": "Not available — governed comparison result missing [S1]."
+          "text": "Not available — the comparison tool returned no results for these candidates [S1]."
         },
         {
           "type": "callout",
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Comparison unavailable",
-          "text": "Observation: Comparative metrics are unavailable [S1]. Why it matters: No ranking is supportable. Uncertainty: Missing evidence may differ by manager. What would change the view: A governed comparison result."
+          "text": "Observation: No comparison metrics were returned for the four candidates [S1]. Why it matters: Without them, no ranking of the candidates is supportable. Uncertainty: The missing evidence may differ by manager. What would change the view: Comparison results for each candidate."
         }
       ]
     },
@@ -163,14 +157,14 @@
           "tone": "watch",
           "role": "availability",
           "title": "Not available",
-          "text": "Not available — relative-return result missing [S1]."
+          "text": "Not available — benchmark-relative returns were not returned [S1]."
         },
         {
           "type": "callout",
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Relative evidence missing",
-          "text": "Observation: Relative evidence is unavailable [S1]. Why it matters: Benchmark-relative behavior is unknown. Uncertainty: Capture may vary by window. What would change the view: A governed relative-return result."
+          "text": "Observation: Benchmark-relative returns were not returned for any candidate [S1]. Why it matters: Behavior against the mandate benchmark is unknown. Uncertainty: Up and down capture may vary by window. What would change the view: Benchmark-relative results for each candidate."
         }
       ]
     },
@@ -183,26 +177,26 @@
           "tone": "watch",
           "role": "availability",
           "title": "Not available",
-          "text": "Not available — governed robustness and correlation results missing [S1]."
+          "text": "Not available — persistence and correlation tests were not returned [S1]."
         },
         {
           "type": "callout",
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Robustness unavailable",
-          "text": "Observation: Robustness evidence is unavailable [S1]. Why it matters: Persistence cannot be assessed. Uncertainty: Results may depend on dates. What would change the view: Governed window tests."
+          "text": "Observation: Persistence and correlation tests were not returned [S1]. Why it matters: Whether results repeat across periods cannot be assessed. Uncertainty: Results may depend on the dates chosen. What would change the view: Tests across several date windows."
         }
       ]
     },
     {
       "title": "ODD handoff",
-      "kicker": "One governed evidence request remains",
+      "kicker": "One data request remains",
       "blocks": [
         {
           "type": "questions",
           "items": [
             {
-              "q": "Return canonical benchmark and comparison evidence.",
+              "q": "Confirm the benchmark and return the comparison results.",
               "why": "Required to assess manager-relative performance [S1]."
             }
           ]
@@ -230,28 +224,16 @@
           "rows": [
             [
               "S1",
-              "Typed unavailable test response",
+              "Connector capabilities check",
               "gradient_tool",
               "get_gradient_capabilities",
               "illustrative sample",
               "2025-12-31",
-              "Gradient-governed review evidence",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ]
           ]
-        },
-        {
-          "type": "callout",
-          "tone": "info",
-          "title": "Governed evidence boundary",
-          "text": "The report preserves the returned subject identity, benchmark mapping, observation window, units, methods, coverage status and request provenance [S1]. Missing performance, correlation, capture, simulation or regime fields remain unavailable. No local statistics, substitutions, rankings or neutral defaults are introduced."
-        },
-        {
-          "type": "callout",
-          "tone": "info",
-          "title": "Decision-use boundary",
-          "text": "Typed unavailability limits the conclusion and drives the insufficient signal where most required slots are absent [S1]. The evidence supports follow-up collection only; operational diligence and committee decisions remain separate handoffs with their own governed evidence and validation contracts. Every unresolved field remains reader-visible in the delivered report."
         }
       ]
     }

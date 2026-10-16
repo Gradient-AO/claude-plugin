@@ -5,9 +5,9 @@
   "pdf": {
     "target_pages": {
       "min": 6,
-      "max": 8
+      "max": 10
     },
-    "hard_max_pages": 10,
+    "hard_max_pages": 12,
     "minimum_body_fill": 0.4,
     "orphan_tail_max_fill": 0.2
   },
@@ -24,9 +24,9 @@
       "pdf": {
         "target_pages": {
           "min": 6,
-          "max": 8
+          "max": 10
         },
-        "hard_max_pages": 10,
+        "hard_max_pages": 12,
         "minimum_body_fill": 0.4,
         "orphan_tail_max_fill": 0.2
       },

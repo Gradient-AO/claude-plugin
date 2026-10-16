@@ -28,11 +28,9 @@ from the plugin's `assets/fonts/` and make no network requests. If Playwright is
 | `running_head` | Short subject in the running header (right side). |
 | `data_as_of` | Data dates shown in the footer, e.g. "2026-10-01 (Form ADV); 2026-08-14 (Form 13F)". |
 | `confidentiality` | Footer text. Default form: "Confidential — prepared for <organization> internal use". |
-| `cover_facts` | Up to 6 `[label, value]` pairs on the cover. |
-| `signal` | `{"level": <level>, "label": "<optional override>"}` — the headline assessment. |
-| `signal_title` | Caption over the signal, e.g. "ODD evidence signal", "IPS status", "Overall assessment". |
-| `completeness` | Optional `{"used": n, "expected": m, "state": "complete"|"partial"|"degraded"}`. |
-| `meter_title` | Caption over the completeness meter, e.g. "Evidence completeness", "Fields assessed". |
+| `cover_facts` | Up to 4 identifying `[label, value]` pairs (Firm, asset owner or composite; Document reviewed; Data through; Review date). No status, scope, coverage or evidence facts. |
+| `signal` | `{"level": <level>, "label": "<plain sentence>"}` — the headline conclusion, shown in the executive band (never on the cover). |
+| `completeness` | Optional `{"used": n, "expected": m, "state": "complete"|"partial"|"degraded"}`; rendered as one sentence at the top of Appendix A. |
 | `page_size` | PDF page size: `Letter` (default) or `A4`; PowerPoint remains 16:9. |
 
 Signal levels (colour): `clear`, `consistent`, `compliant`, `satisfactory`, `ready` (lime) · `watch`, `review`,

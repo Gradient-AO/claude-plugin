@@ -19,7 +19,7 @@ if PLUGIN_SHARED.is_dir():
     sys.path.insert(0, str(PLUGIN_SHARED))
 
 from analysis_quality import review_report  # noqa: E402
-from report_layout import SIGNAL_LABEL_MAX_CHARACTERS  # noqa: E402
+from report_layout import SIGNAL_LABEL_MAX_CHARACTERS, cover_policy_errors  # noqa: E402
 from report_constants import (  # noqa: E402
     ILLUSTRATIVE_LABEL,
     METADATA_RESPONSE_DIGEST,
@@ -1425,6 +1425,7 @@ def validate_report(document: JsonValue, spec: ReportSpec) -> list[str]:
             f"meta.signal.label must be at most "
             f"{SIGNAL_LABEL_MAX_CHARACTERS} characters"
         )
+    errors.extend(cover_policy_errors(meta))
 
     completeness = as_object(meta.get("completeness"))
     completeness_state = (

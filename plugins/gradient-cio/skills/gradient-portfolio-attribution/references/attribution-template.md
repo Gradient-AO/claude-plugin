@@ -1,7 +1,7 @@
 # Portfolio Attribution Report Template
 
-Keep the titles and order exactly as shown. The soft target is 7–9 pages when evidence supports the full
-report and the hard ceiling is 11. Every visual remains required. Missing
+Keep the titles and order exactly as shown. The soft target is 8–12 pages when evidence supports the full
+report and the hard ceiling is 14. Every visual remains required. Missing
 evidence keeps its section and becomes `Not available — <reason>` with
 `unavailable_for` set to the exact missing visual title. Use
 `unavailable_for: "section"` or `"all"` only when the entire section is
@@ -12,7 +12,7 @@ apply its specific repair levers and rerun until clean.
 
 ## Page budget
 
-1. Cover and evidence status — 1 page.
+1. Cover (title page only) — 1 page.
 2. Executive Attribution Summary — 1 page.
 3. Benchmark and Data Basis — flow with adjacent context where it fits.
 4. Historical Returns Context — 1 page.
@@ -28,9 +28,12 @@ apply its specific repair levers and rerun until clean.
 - `meta.eyebrow` and `meta.header_label`: `Portfolio Attribution Report`.
 - `meta.title`: portfolio name only. Put the exact illustrative label in
   `meta.data_scope_banner` when required; never append it to the title.
-- `meta.subtitle`: `Historical and governed ex ante attribution · period to
+- `meta.subtitle`: `Historical and forward-looking attribution · period to
   <date> · prepared for <audience>`.
-- `meta.signal_title`: `Overall view`; `meta.meter_title`: `Scope reviewed`.
+- `meta.cover_facts` (up to 4, identifying only): Portfolio, Benchmark, Period, Prepared for. Never put
+  status, coverage or tool detail on the cover.
+- `meta.signal.label`: one plain sentence naming the result, e.g. `Historical and forward views reconcile`
+  or `Ex ante view not available for this period`.
 - Signal is `satisfactory` when both results are available and reconcile;
   `watch` when either is partial or has a warning; `insufficient` when either
   core result is unavailable.
@@ -86,7 +89,9 @@ apply its specific repair levers and rerun until clean.
 - `waterfall` **Allocation → selection → interaction** without recalculation.
   Do not add **Top segment effects** bars.
 - `line` **Cumulative linked effects** from `periods[]`, with allocation,
-  selection, interaction and total as separate returned series.
+  selection, interaction and total as separate returned series. Take the
+  `cumulative_linked_*` values from the `fields: [periods, period, coverage]`
+  projection call in `data-map.md`; the default response omits them.
 - `heat` **Segment × month linked total effect** from
   `periods[].segments[].linked_total_effect`; place it before the segment
   tables.
@@ -95,7 +100,8 @@ apply its specific repair levers and rerun until clean.
   share** in `two_col`; disclose the deterministic presentation-only share
   denominator and never recalculate an effect.
 - `line` **Cumulative selection inside <largest sub-detractor>** from the
-  depth-1 attribution rerun. Use each returned period's cumulative selection
+  depth-1 attribution rerun, also requested with `fields: [periods, period,
+  coverage]`. Use each returned period's cumulative selection
   value verbatim; the title contract is generic even when the example
   sub-detractor is Venture Capital.
 - Put the waterfall and `kv` **Historical reconciliation and method** beside

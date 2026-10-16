@@ -30,26 +30,46 @@ from the plugin's `assets/fonts/` and make no network requests. If Playwright is
 | `data_scope_banner` | Required for structured illustrative scope. Use exactly "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers". |
 | `cover_disclosure` | Optional short cover-footer disclosure. Public samples use exactly "Illustrative sample · not client data". |
 | `confidentiality` | Footer text. Default form: "Confidential — prepared for <organization> internal use". |
-| `cover_facts` | Up to 6 `[label, value]` pairs on the cover. |
-| `signal` | `{"level": <level>, "label": "<optional override>"}` — the headline assessment. |
-| `signal_title` | Caption over the signal, e.g. "ODD evidence signal", "IPS status", "Overall assessment". |
-| `completeness` | Optional `{"used": n, "expected": m, "state": "complete"|"partial"|"degraded"}`. |
-| `meter_title` | Caption over the completeness meter, e.g. "Evidence completeness", "Fields assessed". |
+| `cover_facts` | Up to 4 `[label, value]` pairs that identify the report (see the cover rule below). |
+| `signal` | `{"level": <level>, "label": "<sentence>"}` — the headline conclusion shown in the executive band. |
+| `completeness` | Optional `{"used": n, "expected": m, "state": "complete"|"partial"|"degraded", "unit"?: "<singular noun>", "note"?: "<sentence>"}`. Rendered as one plain sentence at the top of the sources appendix, never on the cover. `unit` names what was counted (default "evidence area"; for example "roster subject"). |
 | `page_size` | PDF page size: `Letter` (default) or `A4`; PowerPoint remains 16:9. |
 
 Signal levels (colour): `clear`, `consistent`, `compliant`, `satisfactory`, `ready` (lime) · `watch`, `review`,
 `follow_ups`, `partial` (amber) · `elevated`, `discrepancies`, `breach`, `material_concern`, `not_ready` (coral) ·
 `insufficient`, `not_applicable`, `not_assessed` (slate). Use only the levels the skill names for its report type.
+The level sets the colour only; the reader sees `signal.label`.
 
-### Cover profiles
+`signal.label` is a specific sentence of 2–12 words that states the conclusion in plain language, for example
+"One asset class near its policy limit", "Four DDQ answers conflict with the filings" or "No operational flags
+in the filings reviewed". Do not use bare status words ("Watch", "Partial", "Clear"), counts without a noun
+("2 on watch") or internal words ("governed", "lane", "payload", "contract").
 
-- **Investment / investor:** lead with the portfolio, mandate, manager or decision. Use the subtitle for the
-  audience, review period or decision scope. Prefer 3–4 decision-relevant cover facts and plain-language
-  captions such as `Overall view` and `Scope reviewed`. Do not put tool names, request IDs, connector or
-  package versions, probes, contract checks, fixture labels or test terminology on the cover.
-- **Operational readiness:** keep readiness as the headline status. Cover facts may show the organization,
-  access, licensed capabilities, data coverage and review date. Put connector versions, probe names and
-  contract-check detail in the sources and methods appendix, not on the cover.
+### Cover rule (every report)
+
+The cover is a title page. A committee member receives the report only when it is ready, so the cover carries
+no status, signal, coverage meter or system information. It shows the brand, eyebrow, title, subtitle, at most
+four identifying cover facts and the footer (confidentiality and any `cover_disclosure`). The signal and its
+sentence open the executive band on page 2; evidence coverage opens the sources appendix.
+
+Cover facts identify the subject, period, audience or decision. Never use status, scope, coverage, readiness,
+evidence, access, licensing, connector, probe, contract, module, tool, validation, digest or quality labels or
+values, and never put tool names, request IDs, package versions, fixture labels or test terminology on the
+cover. The validators reject these.
+
+| Skill | Cover facts (up to 4) |
+|---|---|
+| Portfolio review | Portfolio or Period end, Policy benchmark, Base currency or Total NAV, Prepared for |
+| Portfolio attribution | Portfolio, Benchmark, Period or Views, Prepared for or Data as of |
+| Portfolio construction | As of, Total NAV, Asset-class weight, Policy benchmark |
+| IC memo | Decision, Meeting date, Data as of, Base currency |
+| ODD report / DDQ reconcile | Adviser CRD, Regulatory AUM or DDQ as of, Form ADV report, Report date |
+| Manager compare | Managers compared, Mandate, Form ADV as of, Report date |
+| Manager monitor | Managers, Week of, Report date |
+| IDD skills | Review, Fund or Period, Prepared for, Report date |
+| GIPS reviews | Firm, asset owner or composite, Document reviewed, Data through, Review date |
+| Setup | Organization, Reviewed |
+
 - Public examples read like live committee or investor deliverables. They use realistic illustrative subjects,
   `cover_disclosure: "Illustrative sample · not client data"` in the footer and the full illustrative statement
   in Appendix A. Do not add `(TEST)`, `RENDER TEST`, `SYNTHETIC TEST` or similar labels to user-visible copy.
@@ -61,7 +81,8 @@ Executive band: `executive.bottom_line` (3–5 sentences with source tags), opti
 
 `text {text}` · `bullets {items}` · `kv {title?, rows:[[k, v, srcTag?]]}` ·
 `table {title?, columns, rows, align? (l|r|c|n=nowrap), widths?, nowrap?, note?}` (a cell may be
-`{"chip": label, "status": s}`) ·
+`{"chip": label, "status": s, "display_label"?: text, "detail"?: text}`; pass the MCP `display_label` through
+unchanged when returned, and use `detail` for a short reason shown under the chip) ·
 `tiles {tiles}` · `bars {title?, items:[{label, value, display?}], max?, narrow?, all_accent?, note?}` or
 `bars {title?, series:[{name, color?}], items:[{label, values:[number,...], displays?:[string,...],
 gap_display?}], mark?:"bars"|"dots", gap_label?, decimals?, suffix?, min?, max?, note?}`. Legacy `value`
@@ -74,7 +95,8 @@ eight positive slices) ·
 `percentiles {title?, items:[{label, percentile, value_display}], threshold, note?}` ·
 `waterfall {title?, items:[{label, value, display?, total?}], note?}` ·
 `band {title?, items:[{label, value, low, high, target?, display?}], note?}` ·
-`stacked {title?, items:[{label, segments:[{label, value, display?, color?}]}], note?}` ·
+`stacked {title?, items:[{label, segments:[{label, value, display?, color?}]}], suffix?, note?}` (set
+`suffix: "%"` for weights; the renderer adds it automatically when every bar totals about 100) ·
 `heat {title?, columns, rows:[{label, values:[number,...]}], format?, decimals?, note?}` ·
 `timeline {title?, items:[{date, title, detail?, tone?:good|watch|bad|info}], note?}` ·
 `callout {tone: good|watch|bad|info, title?, text}` · `coverage {title?, items:[{name, status, note}]}` ·
@@ -110,8 +132,12 @@ unavailable, failed, missing, breach, not met, contradicted, material concern, h
 not_applicable, not_run, not_assessed, not found, n/a, unverifiable, low (slate) · monitoring and setup words:
 new, changed, stale, conditional (amber) · resolved, ready, connected, ok (lime) · not ready, error (coral) ·
 no change, not licensed (slate).
-Renderers retain the raw status for color and semantics. `passed_with_warnings` displays compactly as
-`passed ⚠`; other underscore-delimited statuses may wrap only at underscore boundaries, never mid-word.
+Renderers retain the raw status for color and semantics and show readers a plain-language label from
+`STATUS_LABEL` in `report_theme.py` (for example `partial` → "Partly available", `not_run` → "Not checked",
+`passed_with_warnings` → "Passed with notes", `watch` → "Near limit", `not_licensed` → "Not licensed").
+A chip's `display_label` overrides the map. Never write raw snake_case statuses in prose, tiles or captions.
+Several unavailable items in one section render as one "Not available" callout listing each item and reason;
+do not repeat the same empty-state sentence per item.
 
 ## Slide decks
 
@@ -163,7 +189,15 @@ write a branding file in the working directory (logo path relative to it) and pa
   page-2 `Key judgment —` callouts, and one to three `Analysis —` callouts per analytical section. Keep each
   judgment or analysis callout to 60 words or fewer. Structured analysis uses `Observation:`,
   `Why it matters:`, `Uncertainty:`, and `What would change the view:` in that order.
-- ISO dates; currency in $B/$M (or the report's currency) with 1–2 decimals; percentages to 1 dp; spreads in bps.
+- Write each key judgment for this report: name the asset class, manager, figure or filing it is about. Never
+  reuse template sentences such as "This signal focuses oversight", "The sample report carries a",
+  "A governed refresh showing", "receives priority in the next monitoring cycle" or "establishes the baseline
+  for comparing later"; QA rejects them. Title the callout after its subject (`Key judgment — Liquidity`), not
+  its slot (`Key judgment — headline signal`).
+- Avoid internal words in reader-facing text: "governed", "payload", "contract", "probe", "connector" and
+  raw status codes. They may appear in the sources appendix audit table only.
+- ISO dates; one currency format per report ($1.2B, $450.0M or the report's currency with 1–2 decimals, never
+  mixed with "USD 1,200,000"); percentages to 1 dp; spreads in bps; ordinals as 1st, 2nd, 3rd, 11th, 22nd.
 - Absence is not evidence: an empty or unavailable result is reported as such, never as "none occurred".
 - Source-table `Validation` cells may be strings or `{chip, status}` objects.
   Normalize chip text to `passed`, `passed_with_warnings`, `advisory`,
@@ -201,7 +235,10 @@ write a branding file in the working directory (logo path relative to it) and pa
    through LibreOffice for inspection, and writes output-specific `-pdf-contact-sheet.png` and
    `-pptx-contact-sheet.png` files plus `-qa.json` structured diagnostics. Inspect each requested contact
    sheet. Apply the command's prioritized repair levers, re-compose, and rerun until clean.
-   Charts in PowerPoint must remain editable.
+   Charts in PowerPoint must remain editable. QA also fails a title page (PDF page 1 or slide 1) that shows
+   anything beyond the eyebrow, title, subtitle, up to 4 cover facts, confidentiality, disclosure and brand,
+   and any page that shows a raw chip object, a snake_case status outside the appendix, a wrong ordinal such
+   as "63th" or one of the templated phrases listed above.
 2. Spot-check every number against the saved tool or document evidence. Preserve returned formula identity,
    version, basis, units, coverage and unavailable reasons; do not recompute report values locally.
 3. File name base: `<Subject> - <Report type> <YYYY-MM-DD>` with `.pdf`, `.pptx`, or both.

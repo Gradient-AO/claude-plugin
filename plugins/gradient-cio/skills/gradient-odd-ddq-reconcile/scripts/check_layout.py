@@ -26,13 +26,18 @@ from typing import Any
 from report_layout import (
     LayoutPolicyError,
     build_post_render_layout_contract,
+    cover_allowed_text,
+    cover_fact_count_errors,
+    cover_page_failures,
     load_layout_budget,
+    reader_text_failures,
     resolve_layout_budget,
     validate_layout_budget,
 )
 from report_theme import (
     PDF_PAGE_MARGINS_IN,
     THEME_VERSION,
+    load_branding,
 )
 
 
@@ -215,6 +220,23 @@ def is_heading_line(line: str, heading: str) -> bool:
     )
 
 
+def _section_ends_on_page(
+    lines: list[list[str]], number: int, headings: list[str], trailing: int
+) -> bool:
+    """Return whether a heading near the page foot belongs to a section that ends there.
+    ``trailing`` counts the heading and every line after it, including the footer."""
+    if trailing < 3:
+        return False
+    if number >= len(lines):
+        return True
+    opening = lines[number][:3]
+    return any(
+        is_heading_line(line, heading)
+        for line in opening
+        for heading in headings
+    )
+
+
 def check_layout(
     pdf_path: Path,
     *,
@@ -233,7 +255,9 @@ def check_layout(
     pages = bbox_pages(pdf_path)
     body_metrics = raster_body_metrics(pdf_path)
     lines = page_lines(pdf_path)
-    underfill_excluded = underfill_excluded or set()
+    underfill_excluded = (underfill_excluded or set()) | pages_before_forced_breaks(
+        lines, forced_breaks or []
+    )
     failures: list[str] = []
     if minimum_pages is not None and len(pages) < minimum_pages:
         failures.append(f"page count {len(pages)} is below {minimum_pages}")
@@ -273,7 +297,13 @@ def check_layout(
                 for index, line in enumerate(page_text)
                 if is_heading_line(line, heading)
             ]
-            if positions and len(page_text) - positions[-1] <= trailing_limit:
+            if (
+                positions
+                and len(page_text) - positions[-1] <= trailing_limit
+                and not _section_ends_on_page(
+                    lines, number, headings, len(page_text) - positions[-1]
+                )
+            ):
                 failures.append(f"page {number} ends with heading '{heading}'")
     failures.extend(
         forced_break_failures(
@@ -282,6 +312,35 @@ def check_layout(
             metadata or {},
         )
     )
+    return failures
+
+
+def reader_quality_failures(
+    lines: list[list[str]],
+    document: dict[str, Any],
+    branding: dict[str, Any] | None = None,
+) -> list[str]:
+    """Return title-page and reader-text failures for a rendered report."""
+    metadata = document.get("meta") if isinstance(document.get("meta"), dict) else {}
+    failures = cover_fact_count_errors(metadata)
+    if metadata and lines:
+        failures.extend(
+            cover_page_failures(lines[0], cover_allowed_text(metadata, branding))
+        )
+    sections = [
+        {"num": str(section.get("num", index + 1)).lstrip("0") or "0", "title": str(section["title"]).strip()}
+        for index, section in enumerate(document.get("sections", []))
+        if isinstance(section, dict) and section.get("title")
+    ]
+    appendix_starts = [
+        details["start_page"]
+        for details in section_page_ranges(lines, sections).values()
+        if str(details["title"]).casefold().startswith("appendix")
+    ]
+    exempt = (
+        set(range(min(appendix_starts), len(lines) + 1)) if appendix_starts else set()
+    )
+    failures.extend(reader_text_failures(lines, raw_status_exempt_pages=exempt))
     return failures
 
 
@@ -440,6 +499,39 @@ def explicit_divider_pages(
     return pages
 
 
+def _forced_heading_location(
+    page_text: list[list[str]], title: str
+) -> tuple[int, int] | None:
+    """Return the one-based page and line index of a forced section heading."""
+    return next(
+        (
+            (page_number, line_index)
+            for page_number, lines in enumerate(page_text[1:], start=2)
+            for line_index, line in enumerate(lines)
+            if is_heading_line(line, title)
+        ),
+        None,
+    )
+
+
+def pages_before_forced_breaks(
+    page_text: list[list[str]], contracts: list[dict[str, Any]]
+) -> set[int]:
+    """Return pages that end because the budget mandates the next section start fresh.
+
+    A short page there cannot be fixed by removing the break, so it is exempt
+    from the body-fill floor but still checked for orphan tails.
+    """
+    pages: set[int] = set()
+    for contract in contracts:
+        location = _forced_heading_location(
+            page_text, str(contract.get("section_title", "")).strip()
+        )
+        if location is not None and location[0] > 2:
+            pages.add(location[0] - 1)
+    return pages
+
+
 def chapter_end_pages(
     page_text: list[list[str]],
     contracts: list[dict[str, Any]],
@@ -477,15 +569,7 @@ def forced_break_failures(
     for contract in contracts:
         title = str(contract.get("section_title", "")).strip()
         identifier = str(contract.get("configured_identifier", "")).strip()
-        location = next(
-            (
-                (page_number, line_index)
-                for page_number, lines in enumerate(page_text[1:], start=2)
-                for line_index, line in enumerate(lines)
-                if is_heading_line(line, title)
-            ),
-            None,
-        )
+        location = _forced_heading_location(page_text, title)
         if location is None:
             failures.append(
                 f"forced break not applied for section {identifier!r} "
@@ -604,6 +688,14 @@ def _diagnostic(message: str, severity: str) -> dict[str, Any]:
         code = "page-soft-target"
     elif "page count" in normalized:
         code = "page-count"
+    elif "cover shows text" in normalized or "cover lists" in normalized:
+        code = "cover-title-page"
+    elif "raw chip object" in normalized or "raw status values" in normalized:
+        code = "reader-raw-status"
+    elif "has ordinal" in normalized:
+        code = "reader-ordinal"
+    elif "templated phrase" in normalized:
+        code = "reader-templated-phrase"
     record: dict[str, Any] = {
         "severity": severity,
         "code": code,
@@ -658,6 +750,7 @@ def main() -> int:
     parser.add_argument("--max-pages", type=int)
     parser.add_argument("--budget", type=Path)
     parser.add_argument("--json", dest="json_output", type=Path)
+    parser.add_argument("--brand", type=Path)
     args = parser.parse_args()
     try:
         document = report_document(args.report)
@@ -715,6 +808,13 @@ def main() -> int:
         ) if budget else ([], [], {})
         failures.extend(
             failure for failure in budget_failures if failure not in failures
+        )
+        failures.extend(
+            reader_quality_failures(
+                rendered_lines,
+                document,
+                load_branding(args.brand.resolve() if args.brand else None),
+            )
         )
         result = structured_result(
             args.pdf,

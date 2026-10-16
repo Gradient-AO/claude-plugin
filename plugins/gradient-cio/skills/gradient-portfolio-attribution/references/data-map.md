@@ -12,6 +12,7 @@ every call and record one source row per response.
 | Cohort | `get_portfolio_structure`, `view: allocation_tree`, `max_depth: 3`, `node_limit: 100` | Allocation IDs, names, parent IDs, depth, target and actual weights, policy benchmark context, coverage |
 | Return context | `get_portfolio_historical_returns`, requested period end and `limit: 100`; request `standard_periods`, `calendar_years` and `benchmark_relative` with `fields: [portfolio, policy_benchmark, filters, coverage, display, standard_periods, calendar_years, benchmark_relative]` first, then separate projected calls for `points` plus `cumulative_growth`, and `rolling` plus `drawdown_series`; every projection retains `portfolio`, `policy_benchmark`, `filters`, `coverage` and `display`; disclose the returned count if the 100-row response is unexpectedly truncated | Returned values, units, period labels, coverage and benchmark identity |
 | Historical attribution | `get_portfolio_attribution`, selected `portfolio_id`, `benchmark_role`, `parent_allocation_id`, month-end start/end, `sections: [summary, segments, periods, diagnostics, active_risk]` | Method, period, basis, currency, coverage, summary, residual, segment and monthly linked effects, diagnostics and active-risk attribution |
+| Cumulative linked effects | Rerun `get_portfolio_attribution` with the same arguments, `sections: [periods]` and `fields: [periods, period, coverage]`. The default response omits the `cumulative_linked_*` fields from `periods[]`; an explicit `fields` projection returns the full period rows | `periods[].cumulative_linked_{allocation,selection,interaction,total}_effect` and `periods[].segments[].cumulative_linked_*_effect` |
 | Largest-detractor drill-down | Rerun `get_portfolio_attribution` with the same role/window and `parent_allocation_id` set to the largest root detractor's returned allocation ID | Sub-allocation effects inside the detractor; preserve typed unavailable when it has no child cohort |
 | Ex ante attribution | `get_portfolio_ex_ante_attribution`, same `portfolio_id`, `benchmark_role`, `parent_allocation_id`, all sections | Method and formula version, horizon, basis, currency, assumptions, coverage, summary, residual, segment inputs/effects and diagnostics |
 | Manager resolution | Resolve the largest root detractor's exact allocation ID from `get_portfolio_structure`, then call `get_portfolio_exposure` with that `allocation_id` and `limit: 100` | Directly assigned held commitments plus fund and firm IDs in that allocation; use complete filtered totals/coverage and do not infer IDs from names |
@@ -53,7 +54,10 @@ as requested-window drawdown; do not describe it as since-inception drawdown.
 Never use historical return points to recalculate effects.
 
 Use `periods[]` exactly as returned for the cumulative linked-effects line and
-segment-by-month heat. Use `active_risk.segments[].contribution_share` for
+segment-by-month heat. The cumulative values come only from the `fields`
+projection call above; never build a running sum of the monthly effects. If
+that call fails or omits the cumulative fields, keep the line in place as
+`Not available — cumulative linked effects were not returned`. Use `active_risk.segments[].contribution_share` for
 tracking-error contribution; do not substitute standalone volatility.
 
 For large returned line series saved as JSON, the canonical composer accepts a

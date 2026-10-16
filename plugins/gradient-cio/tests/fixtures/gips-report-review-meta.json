@@ -8,10 +8,35 @@
   "confidentiality": "Confidential — performance standards review",
   "cover_disclosure": "Illustrative sample · not client data",
   "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers",
-  "cover_facts": [["Subject", "Alder Ridge Composite"], ["Review", "Composite report"], ["Data through", "2025-12-31"], ["Review date", "2026-10-09"]],
-  "signal_title": "Overall view",
-  "signal": {"level": "follow_ups", "label": "Satisfactory with follow-ups"},
-  "completeness": {"used": 5, "expected": 5, "state": "complete"},
-  "meter_title": "Scope reviewed",
-  "executive": {"label": "Bottom line", "bottom_line": "Performance history and benchmark evidence are present; the Preparer Fix List addresses fee wording and the missing significant-event date [S1][S2]."}
+  "cover_facts": [
+    [
+      "Composite",
+      "Alder Ridge Composite"
+    ],
+    [
+      "Review",
+      "Composite report"
+    ],
+    [
+      "Data through",
+      "2025-12-31"
+    ],
+    [
+      "Review date",
+      "2026-10-09"
+    ]
+  ],
+  "signal": {
+    "level": "follow_ups",
+    "label": "Satisfactory with follow-ups"
+  },
+  "completeness": {
+    "used": 5,
+    "expected": 5,
+    "state": "complete"
+  },
+  "executive": {
+    "label": "Bottom line",
+    "bottom_line": "Performance history and benchmark evidence are present; the Preparer Fix List addresses fee wording and the missing significant-event date [S1][S2]."
+  }
 }

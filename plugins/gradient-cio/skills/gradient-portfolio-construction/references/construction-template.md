@@ -11,13 +11,14 @@ apply its specific repair levers and rerun until clean.
 - `meta.mode`: `private_markets`.
 - `meta.eyebrow` and `meta.header_label`: `Private Markets Portfolio Construction`.
 - Cover facts: As of, Private-markets NAV, Unfunded commitments, Review.
-- `meta.signal_title`: `Overall view`; `meta.meter_title`: `Scope reviewed`.
+- `meta.signal.label`: one plain sentence naming the main constraint, e.g. `Pacing and concentration need
+  monitoring`. The cover shows no signal or coverage; they open the executive band and sources appendix.
 - `meta.evidence.private_markets_holdings`: connector status, data status, mapped-company count,
   aggregate completeness, selected-artifact count, unknown-grain count, exact draft label, source tag,
   aggregate basis and artifact/parser/projection lineage.
 - `executive.label`: `Recommendation`.
 - `executive.bottom_line`: recommendation, requested committee action, principal evidence and largest risk.
-- Four tiles: Private-markets weight, Unfunded commitments, Liquid coverage, Policy status.
+- Four tiles: Private-markets weight, Unfunded commitments, Liquid coverage, Policy status. The Policy status tile shows the returned `display_label` (for example "Near limit"), never the raw status code.
 
 ## Committee-memo visual and analysis contract
 
