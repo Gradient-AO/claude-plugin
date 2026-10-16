@@ -241,13 +241,20 @@ def check_layout(
         failures.append(f"page count {len(pages)} exceeds {maximum_pages}")
     if hard_ceiling is not None and len(pages) > hard_ceiling:
         failures.append(f"page count {len(pages)} exceeds hard ceiling {hard_ceiling}")
+    # The report's last page and pages ending before a budget-required break close a
+    # chapter; they only need to avoid orphan-sized tails.
+    closing_pages = chapter_end_pages(lines, forced_breaks or [])
+    if len(body_metrics) > 1:
+        closing_pages.add(len(body_metrics))
+    closing_minimum = min(minimum_fill, orphan_tail_max_fill)
     for number, metric in enumerate(body_metrics, start=1):
         if number in excluded:
             continue
         fill = float(metric["fill"])
-        if fill < minimum_fill and number not in underfill_excluded:
+        page_minimum = closing_minimum if number in closing_pages else minimum_fill
+        if fill < page_minimum and number not in underfill_excluded:
             failures.append(
-                f"page {number} is {fill:.0%} full; minimum is {minimum_fill:.0%}"
+                f"page {number} is {fill:.0%} full; minimum is {page_minimum:.0%}"
             )
         if (
             fill < orphan_tail_max_fill
@@ -258,13 +265,15 @@ def check_layout(
                 f"page {number} contains an orphan tail ({fill:.0%} full)"
             )
         page_text = lines[number - 1] if number - 1 < len(lines) else []
+        # A short closing section on the last page is complete; only a heading over the footer alone is stranded.
+        trailing_limit = 3 if number < len(body_metrics) else 2
         for heading in headings:
             positions = [
                 index
                 for index, line in enumerate(page_text)
                 if is_heading_line(line, heading)
             ]
-            if positions and len(page_text) - positions[-1] <= 3:
+            if positions and len(page_text) - positions[-1] <= trailing_limit:
                 failures.append(f"page {number} ends with heading '{heading}'")
     failures.extend(
         forced_break_failures(
@@ -428,6 +437,23 @@ def explicit_divider_pages(
         )
         if page_number is not None:
             pages.add(page_number)
+    return pages
+
+
+def chapter_end_pages(
+    page_text: list[list[str]],
+    contracts: list[dict[str, Any]],
+) -> set[int]:
+    """Return pages that end immediately before a budget-required page break."""
+    pages: set[int] = set()
+    for contract in contracts:
+        title = str(contract.get("section_title", "")).strip()
+        if not title:
+            continue
+        for page_number, lines in enumerate(page_text[1:], start=2):
+            if any(is_heading_line(line, title) for line in lines):
+                pages.add(page_number - 1)
+                break
     return pages
 
 

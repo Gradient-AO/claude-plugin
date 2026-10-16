@@ -257,7 +257,7 @@
           "type": "callout",
           "tone": "info",
           "title": "Metric and digest interpretation",
-          "text": "Historical claims must use returned realized metrics with their exact periods, while path-distribution statistics must remain explicitly simulated [S1]. Successful tool evidence records the SHA-256 digest of the saved response; a failed call instead uses the typed no-payload sentinel and preserves its error code and request ID in the validation field. These controls prevent simulated statistics or request identifiers from being presented as observed evidence. The source row also retains the tool name, key parameters, as-of date and data scope so a reviewer can reproduce the evidence boundary without treating an unavailable payload as a successful observation. Advisory benchmark selections remain visibly advisory throughout the report and handoff. This distinction tells reviewers which comparisons are server-matched and which still require independent benchmark confirmation."
+          "text": "Historical claims use returned realized metrics with their exact periods; path-distribution statistics stay labelled simulated [S1]. Each source row records the response digest, or for a failed call the typed no-payload sentinel with its error code and request ID, so a reviewer can reproduce the evidence boundary. Advisory benchmark selections stay labelled advisory."
         }
       ]
     }

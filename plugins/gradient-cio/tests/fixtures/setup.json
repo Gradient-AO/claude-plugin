@@ -1,44 +1,44 @@
 {
  "meta": {
- "eyebrow": "Platform Readiness",
- "header_label": "Readiness Review",
- "title": "Northstar Investment Office",
- "subtitle": "Access, licensed capabilities and data coverage",
- "running_head": "Northstar · readiness 2026-10-04",
- "data_as_of": "2026-10-04",
- "signal": {
-  "level": "partial",
-  "label": "Ready, with limits"
+  "eyebrow": "Platform Readiness",
+  "header_label": "Readiness Review",
+  "title": "Northstar Investment Office",
+  "subtitle": "Access, licensed capabilities and data coverage",
+  "running_head": "Northstar · readiness 2026-10-04",
+  "data_as_of": "2026-10-04",
+  "signal": {
+   "level": "partial",
+   "label": "Ready, with limits"
+  },
+  "signal_title": "Readiness",
+  "completeness": {
+   "used": 13,
+   "expected": 14,
+   "state": "partial"
+  },
+  "meter_title": "Capabilities reviewed",
+  "cover_facts": [
+   [
+    "Organization",
+    "Northstar Investment Office"
+   ],
+   [
+    "Access",
+    "Connected"
+   ],
+   [
+    "Licensed capabilities",
+    "4 of 7"
+   ],
+   [
+    "Reviewed",
+    "2026-10-04"
+   ]
+  ],
+  "confidentiality": "Confidential — operational readiness review",
+  "cover_disclosure": "Illustrative sample · not client data",
+  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
  },
- "signal_title": "Readiness",
- "completeness": {
-  "used": 13,
-  "expected": 14,
-  "state": "partial"
- },
- "meter_title": "Capabilities reviewed",
- "cover_facts": [
-  [
-   "Organization",
-   "Northstar Investment Office"
-  ],
-  [
-   "Access",
-   "Connected"
-  ],
-  [
-   "Licensed capabilities",
-   "4 of 7"
-  ],
-  [
-   "Reviewed",
-   "2026-10-04"
-  ]
- ],
- "confidentiality": "Confidential — operational readiness review",
- "cover_disclosure": "Illustrative sample · not client data",
- "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
-},
  "executive": {
   "bottom_line": "GradientCIO is connected and healthy for organization Gradient [S1][S2]. Nineteen of twenty-one skills are ready; the macro briefing has one unavailable view, and the IC memo needs the Portfolio and Strategy Lab modules for live portfolio data [S2]. 13 of 14 contract checks passed; macro regime state returned Not available (HTTP 500) [S3].",
   "tiles": [
@@ -88,72 +88,65 @@
    "new_page": false,
    "blocks": [
     {
-     "type": "two_col",
-     "left": [
-      {
-       "type": "table",
-       "title": "Ready",
-       "columns": [
-        "Skill",
-        "Produces",
-        "Note"
-       ],
-       "align": [
-        "n",
-        "l",
-        "l"
-       ],
-       "rows": [
-        [
-         "gradient-odd-report",
-         "ODD report",
-         "Event feed not published; reports disclose the gap"
-        ],
-        [
-         "gradient-odd-ddq-reconcile",
-         "DDQ reconciliation",
-         "One subject per call"
-        ],
-        [
-         "gradient-odd-manager-monitor",
-         "Weekly digest",
-         "1 roster fund monitored"
-        ],
-        [
-         "gradient-gips-* (5)",
-         "GIPS reviews",
-         "Works from supplied documents"
-        ],
-        [
-         "gradient-setup",
-         "Readiness report",
-         "Current check"
-        ]
-       ]
-      }
+     "type": "table",
+     "title": "Ready",
+     "columns": [
+      "Skill",
+      "Produces",
+      "Note"
      ],
-     "right": [
-      {
-       "type": "table",
-       "title": "Partial",
-       "columns": [
-        "Skill",
-        "Produces",
-        "Note"
-       ],
-       "align": [
-        "n",
-        "l",
-        "l"
-       ],
-       "rows": [
-        [
-         "gradient-decision-ic-memo",
-         "IC memo",
-         "Portfolio core: Not licensed; Strategy Lab supplement: Not licensed (optional). Use supplied holdings"
-        ]
-       ]
-      }
+     "align": [
+      "n",
+      "l",
+      "l"
+     ],
+     "rows": [
+      [
+       "gradient-odd-report",
+       "ODD report",
+       "Event feed not published; reports disclose the gap"
+      ],
+      [
+       "gradient-odd-ddq-reconcile",
+       "DDQ reconciliation",
+       "One subject per call"
+      ],
+      [
+       "gradient-odd-manager-monitor",
+       "Weekly digest",
+       "1 roster fund monitored"
+      ],
+      [
+       "gradient-gips-* (5)",
+       "GIPS reviews",
+       "Works from supplied documents"
+      ],
+      [
+       "gradient-setup",
+       "Readiness report",
+       "Current check"
+      ]
+     ]
+    },
+    {
+     "type": "table",
+     "title": "Partial or unavailable",
+     "columns": [
+      "Skill",
+      "Produces",
+      "Note"
+     ],
+     "align": [
+      "n",
+      "l",
+      "l"
+     ],
+     "rows": [
+      [
+       "gradient-decision-ic-memo",
+       "IC memo",
+       "Portfolio core: Not licensed; Strategy Lab supplement: Not licensed (optional). Use supplied holdings"
+      ]
      ]
     }
    ]
@@ -448,6 +441,10 @@
    "num": "A",
    "blocks": [
     {
+     "type": "text",
+     "text": "Readiness reflects entitlement, OAuth scope, backend health and data readiness reported by GradientCIO at the time of the check. Tool availability does not guarantee that data is published for every subject."
+    },
+    {
      "type": "table",
      "columns": [
       "Tag",
@@ -545,10 +542,6 @@
        }
       ]
      ]
-    },
-    {
-     "type": "text",
-     "text": "Readiness reflects entitlement, OAuth scope, backend health and data readiness reported by GradientCIO at the time of the check. Tool availability does not guarantee that data is published for every subject."
     }
    ]
   }

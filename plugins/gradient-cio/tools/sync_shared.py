@@ -68,8 +68,15 @@ def chat_shared_files(skill):
     return (("shared/module-scope.md", "references/module-scope.md"),)
 
 
+TEXT_SUFFIXES = {".py", ".md", ".json", ".txt"}
+
+
 def digest(p):
-    return hashlib.sha256(p.read_bytes()).hexdigest()[:12]
+    data = p.read_bytes()
+    if p.suffix in TEXT_SUFFIXES:
+        # Windows checkouts with core.autocrlf rewrite line endings per file.
+        data = data.replace(b"\r\n", b"\n")
+    return hashlib.sha256(data).hexdigest()[:12]
 
 def shared_files():
     """Yield canonical source/destination pairs, including contract trees."""

@@ -74,6 +74,12 @@ PIE = tuple(pptx_hex(color) for color in THEME_PIE)
 SLIDE_WIDTH_IN = PPTX_SLIDE_WIDTH_IN
 SLIDE_HEIGHT_IN = PPTX_SLIDE_HEIGHT_IN
 TABLE_ROWS_PER_SLIDE = 12
+SLIDE_BODY_CAPACITY = 5.15
+SLIDE_BODY_WIDTH = 11.93
+SLIDE_BODY_HEIGHT = 5.35
+SLIDE_COLUMN_WIDTH = 5.73
+STACK_GAP = 0.12
+VISUAL_MIN_HEIGHT = 3.0
 ALL_SOURCE_TAGS = re.compile(r"(?<![A-Z0-9])S(\d+)")
 PLACEHOLDERS = (
     re.compile(r"<[^<>\n]{2,100}>"),
@@ -88,6 +94,9 @@ VISUAL_BLOCKS = frozenset(
     {"bars", "pie", "percentiles", "line", "stacked", "waterfall", "band", "heat", "timeline", "chart"}
 )
 TABLE_BLOCKS = frozenset({"table", "kv", "coverage"})
+EXHIBIT_COMPANIONS = frozenset({"text", "markdown", "callout", "statement"})
+# Heat maps, timelines and table-mode charts need the full slide width.
+PAIRABLE_VISUALS = frozenset({"bars", "pie", "percentiles", "line", "stacked", "waterfall", "band"})
 SUPPORTED_BLOCKS = frozenset(
     {
         "text",
@@ -520,14 +529,49 @@ def _split_table_block(block: JsonObject) -> list[JsonObject]:
     return chunks
 
 
-def _estimate_block(block: JsonObject) -> float:
+def _markdown_parts(raw: str) -> tuple[list[str], list[str]]:
+    """Split slide markdown into bullet items and plain paragraphs."""
+    items: list[str] = []
+    paragraphs: list[str] = []
+    for line in (line.strip() for line in raw.splitlines()):
+        if not line:
+            continue
+        normalized = re.sub(r"^#{1,6}\s+", "", line)
+        normalized = re.sub(r"^\d+[.)]\s+", "", normalized)
+        if line.startswith(("-", "*", "•")) or re.match(r"^\d+[.)]\s+", line):
+            items.append(normalized.lstrip("-*• "))
+        elif not re.match(r"^\|[-:| ]+\|?$", line):
+            paragraphs.append(normalized.replace("|", " · "))
+    return items, paragraphs
+
+
+def _wrapped_height(
+    paragraphs: list[str], size: float, width: float, paragraph_gap_pt: float = 0.0
+) -> float:
+    """Estimate text height with the same wrap model as the overflow guard plus a safety margin."""
+    characters_per_line = max(1, int(width * 72 / (size * 0.52)))
+    lines = sum(
+        max(1, math.ceil(len(_plain(paragraph)) / characters_per_line))
+        for paragraph in paragraphs
+    )
+    gaps = paragraph_gap_pt * max(0, len(paragraphs) - 1)
+    return 1.25 * (lines * size * 1.2 + gaps) / 72
+
+
+def _estimate_block(block: JsonObject, width: float = SLIDE_BODY_WIDTH) -> float:
     block_type = _text(block.get("type"))
+    title_height = 0.3 if block.get("title") else 0.0
     if block_type == "text":
-        return max(0.7, len(_plain(block.get("text"))) / 360.0)
+        return max(0.5, title_height + _wrapped_height([_text(block.get("text"))], 11, width))
     if block_type == "markdown":
-        return max(1.0, len(_plain(block.get("text"))) / 300.0)
+        items, paragraphs = _markdown_parts(_text(block.get("text")))
+        if items:
+            return max(0.6, _wrapped_height(items, 10.5, width, 5))
+        # Paragraphs render joined by a blank line.
+        return max(0.6, _wrapped_height(paragraphs, 11, width, 13.2))
     if block_type == "bullets":
-        return 0.35 + 0.44 * len(_array(block.get("items")))
+        items = [_plain(value) for value in _array(block.get("items"))]
+        return max(0.5, title_height + _wrapped_height(items, 10.5, width, 5))
     if block_type in {"table", "kv"}:
         return 0.55 + 0.34 * len(_array(block.get("rows")))
     if block_type == "tiles":
@@ -536,12 +580,19 @@ def _estimate_block(block: JsonObject) -> float:
         return 3.9
     if block_type in {"coverage", "findings", "questions"}:
         return 0.55 + 0.55 * len(_array(block.get("items")))
-    if block_type in {"callout", "statement"}:
+    if block_type == "callout":
+        text = _plain(block.get("text"))
+        if block.get("role") == "analysis":
+            text = _compact(text)
+        offset = 0.43 if block.get("title") else 0.15
+        return max(0.75, offset + 0.1 + _wrapped_height([text], 9.5, width - 0.32))
+    if block_type == "statement":
         return max(0.8, len(_plain(block.get("text"))) / 260.0)
     if block_type == "two_col":
+        column = (width - 0.47) / 2
         return max(
-            sum(_estimate_block(_object(value)) for value in _array(block.get("left"))),
-            sum(_estimate_block(_object(value)) for value in _array(block.get("right"))),
+            sum(_estimate_block(_object(value), column) for value in _array(block.get("left"))),
+            sum(_estimate_block(_object(value), column) for value in _array(block.get("right"))),
         )
     return 1.0
 
@@ -568,34 +619,110 @@ def _plan_section(section: JsonObject) -> list[tuple[str, list[JsonObject]]]:
         return plans or [("text", [])]
     current: list[JsonObject] = []
     current_height = 0.0
-    for block in blocks:
-        block_type = _text(block.get("type"))
-        if block_type == "pagebreak":
-            if current:
-                plans.append((requested or _infer_layout(section, current), current))
-                current = []
-                current_height = 0.0
-            continue
-        layout = requested or _infer_layout(section, [block])
-        weight = _estimate_block(block)
-        isolate = (
-            block_type in VISUAL_BLOCKS
-            or block_type == "two_col"
-            or (block_type == "table" and len(_array(block.get("rows"))) > 6)
-        )
-        if current and (isolate or current_height + weight > 5.15):
+
+    def flush() -> None:
+        nonlocal current, current_height
+        if current:
             plans.append((requested or _infer_layout(section, current), current))
-            current = []
-            current_height = 0.0
+        current = []
+        current_height = 0.0
+
+    index = 0
+    while index < len(blocks):
+        block = blocks[index]
+        block_type = _text(block.get("type"))
+        weight = _estimate_block(block)
+        index += 1
+        if block_type == "pagebreak":
+            flush()
+            continue
+        if block_type in VISUAL_BLOCKS:
+            # An exhibit shares its slide only with a short lead-in and the commentary that reads it.
+            exhibit = [block]
+            if (
+                current
+                and _text(current[-1].get("type")) in EXHIBIT_COMPANIONS
+                and _exhibit_fits(exhibit + current[-1:])
+            ):
+                lead = current.pop()
+                current_height -= _estimate_block(lead)
+                exhibit.insert(0, lead)
+            flush()
+            while index < len(blocks):
+                follow = blocks[index]
+                follow_type = _text(follow.get("type"))
+                leads_next_visual = (
+                    follow_type in {"text", "markdown"}
+                    and index + 1 < len(blocks)
+                    and _text(blocks[index + 1].get("type")) in VISUAL_BLOCKS
+                )
+                if (
+                    follow_type not in EXHIBIT_COMPANIONS
+                    or leads_next_visual
+                    or not _exhibit_fits(exhibit + [follow])
+                ):
+                    break
+                exhibit.append(follow)
+                index += 1
+            plans.append((requested or _infer_layout(section, [block]), exhibit))
+            continue
+        isolate = block_type == "two_col" or (
+            block_type == "table" and len(_array(block.get("rows"))) > 6
+        )
+        if isolate or current_height + weight > SLIDE_BODY_CAPACITY:
+            flush()
         current.append(block)
         current_height += weight
         if isolate:
-            plans.append((layout, current))
+            plans.append((requested or _infer_layout(section, [block]), current))
             current = []
             current_height = 0.0
-    if current:
-        plans.append((requested or _infer_layout(section, current), current))
-    return plans
+    flush()
+    return plans if requested else _pair_exhibits(plans)
+
+
+def _exhibit_fits(blocks: list[JsonObject], width: float = SLIDE_BODY_WIDTH) -> bool:
+    """Return whether the companions leave each visual its minimum height."""
+    visuals = sum(1 for block in blocks if _text(block.get("type")) in VISUAL_BLOCKS)
+    companions = sum(
+        _estimate_block(block, width)
+        for block in blocks
+        if _text(block.get("type")) not in VISUAL_BLOCKS
+    )
+    gaps = STACK_GAP * (len(blocks) - 1)
+    return companions + gaps + VISUAL_MIN_HEIGHT * visuals <= SLIDE_BODY_HEIGHT
+
+
+def _pairable_exhibit(plan: tuple[str, list[JsonObject]]) -> bool:
+    layout, blocks = plan
+    visuals = [block for block in blocks if _text(block.get("type")) in VISUAL_BLOCKS]
+    return (
+        layout == "exhibit"
+        and len(visuals) == 1
+        and _text(visuals[0].get("type")) in PAIRABLE_VISUALS
+        and _exhibit_fits(blocks, SLIDE_COLUMN_WIDTH)
+    )
+
+
+def _pair_exhibits(
+    plans: list[tuple[str, list[JsonObject]]]
+) -> list[tuple[str, list[JsonObject]]]:
+    """Set consecutive simple exhibits from one section side by side."""
+    paired: list[tuple[str, list[JsonObject]]] = []
+    index = 0
+    while index < len(plans):
+        if (
+            index + 1 < len(plans)
+            and _pairable_exhibit(plans[index])
+            and _pairable_exhibit(plans[index + 1])
+        ):
+            left, right = plans[index][1], plans[index + 1][1]
+            paired.append(("two-up", [{"type": "two_col", "left": left, "right": right}]))
+            index += 2
+            continue
+        paired.append(plans[index])
+        index += 1
+    return paired
 
 
 def _infer_layout(section: JsonObject, blocks: list[JsonObject]) -> str:
@@ -1083,15 +1210,24 @@ class PptxRenderer:
         if not blocks:
             self._text_box(slide, x, y, width, 0.4, "No additional content.", 11, MUTED)
             return
-        weights = [max(0.45, _estimate_block(block)) for block in blocks]
-        gap = 0.12
-        usable = height - gap * (len(blocks) - 1)
-        total = sum(weights)
+        weights = [max(0.45, _estimate_block(block, width)) for block in blocks]
+        usable = height - STACK_GAP * (len(blocks) - 1)
+        visual = [_text(block.get("type")) in VISUAL_BLOCKS for block in blocks]
+        fixed = sum(weight for weight, is_visual in zip(weights, visual) if not is_visual)
+        remainder = usable - fixed
+        if any(visual) and remainder >= VISUAL_MIN_HEIGHT * sum(visual):
+            # Text keeps its estimated height; visuals share whatever remains.
+            heights = [
+                remainder / sum(visual) if is_visual else weight
+                for weight, is_visual in zip(weights, visual)
+            ]
+        else:
+            total = sum(weights)
+            heights = [usable * weight / total for weight in weights]
         cursor = y
-        for block, weight in zip(blocks, weights):
-            block_height = usable * weight / total
+        for block, block_height in zip(blocks, heights):
             self._render_block(slide, block, x, cursor, width, block_height, notes)
-            cursor += block_height + gap
+            cursor += block_height + STACK_GAP
 
     def _render_block(
         self,
@@ -1161,17 +1297,7 @@ class PptxRenderer:
     def _markdown(
         self, slide: Any, block: JsonObject, x: float, y: float, width: float, height: float
     ) -> None:
-        raw = _text(block.get("text"))
-        lines = [line.strip() for line in raw.splitlines() if line.strip()]
-        items: list[str] = []
-        paragraphs: list[str] = []
-        for line in lines:
-            normalized = re.sub(r"^#{1,6}\s+", "", line)
-            normalized = re.sub(r"^\d+[.)]\s+", "", normalized)
-            if line.startswith(("-", "*", "•")) or re.match(r"^\d+[.)]\s+", line):
-                items.append(normalized.lstrip("-*• "))
-            elif not re.match(r"^\|[-:| ]+\|?$", line):
-                paragraphs.append(normalized.replace("|", " · "))
+        items, paragraphs = _markdown_parts(_text(block.get("text")))
         if items:
             self._bullets(slide, {"type": "bullets", "items": items}, x, y, width, height)
         else:
