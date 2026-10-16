@@ -47,7 +47,8 @@
   "notes": [
     "Template only; contains no reviewed provider field or tool mappings.",
     "Do not mark reviewed without a live client-authorized connector dry run.",
-    "Supported runtime types are private_market_holding_snapshot, commitment_master, valuation_snapshot, cash_flow_event_ledger, monthly_return_observation, benchmark_definition, and benchmark_assignment.",
-    "This recipe is for Claude MCP read-only connector ingest, not Gradient UI file upload."
+    "Supported runtime types are private_market_holding_snapshot, commitment_master, valuation_snapshot, cash_flow_event_ledger, monthly_return_observation, benchmark_definition, benchmark_assignment, portfolio_master, allocation_node, policy_configuration, public_security_position_snapshot, fixed_income_analytics_snapshot, liquidity_terms, classification_exposure_assignment, pacing_plan_entry, and source_document_evidence.",
+    "Runtime treatment variants and intents govern commit-enabled versus preview-only lanes; recipes never promote a preview-only lane.",
+    "This recipe is for Claude MCP read-only connector ingest, not Gradient UI file upload or scheduled auto-commit."
   ]
 }

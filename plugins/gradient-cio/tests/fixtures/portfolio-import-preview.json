@@ -1,7 +1,7 @@
 {
   "workflow": "gradient-portfolio-import",
   "delivery": "chat_only",
-  "phase": "phase_2_and_3_governed_preview",
+  "phase": "phase_2_through_5_governed_preview",
   "source": {
     "provider": "Chronograph (TEST)",
     "provider_count": 1,
@@ -26,7 +26,16 @@
       "cash_flow_event_ledger",
       "monthly_return_observation",
       "benchmark_definition",
-      "benchmark_assignment"
+      "benchmark_assignment",
+      "portfolio_master",
+      "allocation_node",
+      "policy_configuration",
+      "public_security_position_snapshot",
+      "fixed_income_analytics_snapshot",
+      "liquidity_terms",
+      "classification_exposure_assignment",
+      "pacing_plan_entry",
+      "source_document_evidence"
     ],
     "separate_session_per_data_type": true,
     "exact_runtime_schema_fetched_per_type": true,
@@ -81,6 +90,44 @@
     "benchmark_weight_allocation_only": true,
     "effective_date_ties_blocking": true,
     "ui_file_upload_substituted": false
+  },
+  "phase_4_semantics": {
+    "portfolio_master_map_existing_commit_only": true,
+    "allocation_map_and_create_commit_enabled": true,
+    "allocation_create_new_confirmation_required": true,
+    "effective_tree_validation_required": true,
+    "policy_latest_effective_date_wins": true,
+    "policy_latest_effective_date_ties_blocking": true,
+    "portfolio_creation_allowed": false,
+    "deletion_by_omission_allowed": false
+  },
+  "phase_5_semantics": {
+    "public_security_map_existing_commit_enabled": true,
+    "public_security_create_preview_only": true,
+    "fixed_income_existing_holding_only": true,
+    "fixed_income_overlay_allowed": false,
+    "liquidity_existing_commitment_only": true,
+    "liquidity_scalar_malts_fields_only": true,
+    "classification_allocation_commitment_commit_enabled": true,
+    "classification_holding_factor_preview_only": true,
+    "pacing_map_existing_commit_enabled": true,
+    "pacing_create_preview_only": true,
+    "source_document_reference_only": true,
+    "source_document_preview_only": true,
+    "document_writes": 0
+  },
+  "ui_handoff": {
+    "approval_surface": "gradient_ui",
+    "stages_only": true,
+    "returns_start_session_review_url": true,
+    "mapping_preview_approval_publish_rollback_in_gradient": true
+  },
+  "scheduled_task": {
+    "client_owned": true,
+    "approval_surface": "gradient_ui",
+    "stages_only": true,
+    "auto_commit_in_claude": false,
+    "gradient_ui_review_required_every_v1_run": true
   },
   "commit": {
     "auto_commit": false,

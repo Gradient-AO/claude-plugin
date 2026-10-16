@@ -3032,7 +3032,7 @@
       "schema_driven": true,
       "external_prerequisites": [
         "portfolio_import_capabilities response",
-        "one selected data type from private_market_holding_snapshot, commitment_master, valuation_snapshot, cash_flow_event_ledger, monthly_return_observation, benchmark_definition, or benchmark_assignment"
+        "one selected data type from private_market_holding_snapshot, commitment_master, valuation_snapshot, cash_flow_event_ledger, monthly_return_observation, benchmark_definition, benchmark_assignment, portfolio_master, allocation_node, policy_configuration, public_security_position_snapshot, fixed_income_analytics_snapshot, liquidity_terms, classification_exposure_assignment, pacing_plan_entry, or source_document_evidence"
       ],
       "envelope": false
     },
@@ -3047,7 +3047,8 @@
         "client-authorized source connector",
         "selected provider/account",
         "selected existing Gradient portfolio",
-        "current runtime schema identity"
+        "current runtime schema identity",
+        "approval_surface gradient_ui for UI handoff or every v1 scheduled run; retain the returned review_url"
       ],
       "envelope": false
     },
@@ -3073,7 +3074,7 @@
       "required": [],
       "schema_driven": true,
       "external_prerequisites": [
-        "active commitment_master, valuation_snapshot, cash_flow_event_ledger, monthly_return_observation, benchmark_definition, or benchmark_assignment session",
+        "active generic-staging session for commitment_master, valuation_snapshot, cash_flow_event_ledger, monthly_return_observation, benchmark_definition, benchmark_assignment, portfolio_master, allocation_node, policy_configuration, public_security_position_snapshot, fixed_income_analytics_snapshot, liquidity_terms, classification_exposure_assignment, pacing_plan_entry, or source_document_evidence",
         "exact runtime schema fetched for the selected data type",
         "verbatim source records with declared values and units",
         "batch at or below runtime limit and 100 records"
