@@ -5,33 +5,44 @@
     "not": "gradient-portfolio-review",
     "description_terms": [
       "governed",
-      "private-markets",
-      "holdings"
+      "provider-neutral"
     ]
   },
   {
-    "prompt": "Use gradient-portfolio-import for fictional routing case 2 (TEST).",
+    "prompt": "Stage a portfolio structure and policy import for Gradient UI review",
     "expected": "gradient-portfolio-import",
     "not": "gradient-menu",
-    "description_terms": []
+    "description_terms": [
+      "provider-neutral",
+      "Gradient UI handoff"
+    ]
   },
   {
-    "prompt": "Use gradient-portfolio-import for fictional routing case 3 (TEST).",
+    "prompt": "Import public security positions and fixed-income analytics from our authorized connector",
     "expected": "gradient-portfolio-import",
     "not": "gradient-menu",
-    "description_terms": []
+    "description_terms": [
+      "governed",
+      "positions"
+    ]
   },
   {
-    "prompt": "Use gradient-portfolio-import for fictional routing case 4 (TEST).",
+    "prompt": "Preview commitment liquidity terms, classifications, and pacing plans",
     "expected": "gradient-portfolio-import",
     "not": "gradient-menu",
-    "description_terms": []
+    "description_terms": [
+      "liquidity terms",
+      "pacing plans"
+    ]
   },
   {
-    "prompt": "Use gradient-portfolio-import for fictional routing case 5 (TEST).",
+    "prompt": "Schedule a client-owned connector import that stages records for mandatory Gradient UI review",
     "expected": "gradient-portfolio-import",
     "not": "gradient-menu",
-    "description_terms": []
+    "description_terms": [
+      "Gradient UI handoff",
+      "provider-neutral"
+    ]
   },
   {
     "prompt": "Compare these managers' track records against suitable benchmarks",

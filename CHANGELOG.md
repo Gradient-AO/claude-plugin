@@ -1,5 +1,13 @@
 # Changelog
 
+## 6.6.0
+- Expanded the provider-neutral `gradient-portfolio-import` workflow to the implemented Phase 4 portfolio master, allocation tree, and policy configuration treatments and the Phase 5 public-security, fixed-income analytics, liquidity, classification, pacing, and source-document-reference treatments.
+- Documented exact Phase 5 publication lanes: public-security and pacing map-existing commits with create intents preview-only; fixed-income is existing-holding only with no overlay; liquidity is existing-commitment scalar MALTS only; allocation and commitment classifications commit while holding-factor stays preview-only; source documents are reference-only previews with no document writes.
+- Preserved the explicit Gradient UI handoff: `approval_surface: "gradient_ui"` stages only and returns `start_portfolio_import_session.review_url`; mapping, preview, approval, publication, and rollback remain in Gradient.
+- Added governed scheduled-task guidance: client-owned Claude schedules may stage and hand off but never auto-commit, and every v1 run requires Gradient UI review.
+- Extended setup contracts, provider-recipe guidance, catalog copy, routing and import fixtures, and static release checks for all sixteen import types and their per-variant or per-intent gates.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.5.0
 - Added an explicit Gradient UI handoff mode: Claude stages connector data in an MCP session, returns the server-provided Portfolio Maintenance review link, and leaves mapping, preview, approval, publication, and rollback in Gradient.
 - Client update: `/plugin marketplace update gradientcio`

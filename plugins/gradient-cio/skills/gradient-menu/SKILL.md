@@ -51,7 +51,7 @@ Example: “Prepare ODD on the finalist.”
 - `/gradient-cio:gradient-portfolio-review` — Review portfolio performance, policy, exposures, risk and liquidity. Next: gradient-portfolio-attribution, gradient-decision-ic-memo.
 - `/gradient-cio:gradient-portfolio-attribution` — Explain portfolio attribution or compare compatible historical and ex ante lanes. Next: gradient-portfolio-review, gradient-decision-ic-memo, gradient-portfolio-construction.
 - `/gradient-cio:gradient-portfolio-construction` — Design portfolio sleeves across five asset-class construction modes. Next: gradient-decision-ic-memo.
-- `/gradient-cio:gradient-portfolio-import` — Preview portfolio records, confirm explicitly, then commit and verify. Next: gradient-portfolio-review.
+- `/gradient-cio:gradient-portfolio-import` — Stage governed portfolio records for Gradient UI review or exact-preview confirmation. Next: gradient-portfolio-review.
 
 Example: “Review our total portfolio for the quarter.”
 

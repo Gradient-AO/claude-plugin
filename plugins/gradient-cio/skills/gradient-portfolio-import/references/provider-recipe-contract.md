@@ -53,7 +53,11 @@ The recipe must contain:
 - `supported_data_types`: a subset of `private_market_holding_snapshot`,
   `commitment_master`, `valuation_snapshot`, `cash_flow_event_ledger`,
   `monthly_return_observation`, `benchmark_definition`, and
-  `benchmark_assignment`
+  `benchmark_assignment`; `portfolio_master`, `allocation_node`,
+  `policy_configuration`; and `public_security_position_snapshot`,
+  `fixed_income_analytics_snapshot`, `liquidity_terms`,
+  `classification_exposure_assignment`, `pacing_plan_entry`, and
+  `source_document_evidence`
 - `supported_asset_classes`: a subset of `private_equity`, `real_estate`,
   `infrastructure`, and `private_debt` when holdings are covered
 - `limits.max_source_page_size` and `limits.max_stage_batch_size`
@@ -111,6 +115,15 @@ claim that a reported return is Gradient-calculated. The exact source value and
 unit remain recipe evidence even when the backend preview displays a
 schema-declared canonical destination value.
 
+For Phase 4 and Phase 5 records, a recipe may document only the exact runtime
+fields, typed source values, units, identifiers, and dates covered by review.
+It cannot make a preview-only lane commit eligible. Public-security and pacing
+create intents and classification `holding_factor` remain preview-only;
+fixed-income targets are existing holdings only with no overlay; liquidity
+targets are existing commitments and scalar MALTS fields only; source-document
+evidence is an existing-reference preview only and never authorizes a document,
+blob, or subject-asset write.
+
 No provider is implicitly reviewed. In particular, this public skill contains
 no reviewed Chronograph field or tool mapping. Chronograph remains
 `unreviewed` until the evidence above is produced by a live connector dry run;
@@ -127,4 +140,6 @@ labels identify Gradient commitments without explicit user confirmation.
 A recipe covers Claude MCP ingestion through a client-authorized read-only
 source connector. It never describes or authorizes Gradient UI file upload,
 first-party parser lineage, browser automation, downloaded exports, or
-Gradient UI approval.
+Gradient UI approval. It may support scheduled staging, but it never authorizes
+a scheduled commit: every v1 scheduled run must use
+`approval_surface: "gradient_ui"` and return the session `review_url`.

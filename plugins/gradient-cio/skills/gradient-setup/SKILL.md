@@ -77,16 +77,15 @@ preview, and must never commit. Private-markets construction adds one fictional 
 read probe. The **DDQ save-preview** set is 3 calls: it intentionally persists one fictional test
 document and one immutable reconciliation test run so that document identity and the chained save can be
 tested with `dry_run: true`; disclose that persistence before running it. The dedicated
-**portfolio-import-governed** defines 12 schema-driven calls and requires an authorized source connector,
-one provider/account, and one existing Gradient portfolio. It covers holdings plus the generic
-`commitment_master`, `valuation_snapshot`, `cash_flow_event_ledger`, `monthly_return_observation`,
-`benchmark_definition`, and `benchmark_assignment` staging path. Its safe readiness path stops after preview
-plus session/history reads. Commit requires runtime "commit_enabled" treatment and current-conversation
+**portfolio-import-governed** defines 12 schema-driven calls and requires an authorized source connector, one provider/account, and one existing Gradient portfolio. It covers all sixteen runtime types, including Phase 4 portfolio/allocation/policy records and Phase 5 public-security, fixed-income, liquidity, classification, pacing, and source-document-reference records through the generic staging path. Its safe
+readiness path stops after preview plus session/history reads. Commit requires runtime "commit_enabled" treatment and current-conversation
 confirmation of the exact displayed diff, issues, controls, digest and receipt; rollback requires a separate
 explicit request with the exact destination-after digest. Monthly returns are month-end, source-reported
 `EntityReturn` records only and never legacy JSONB; benchmark definitions precede dependent assignment
 sessions; assignments target only portfolios, allocations, commitments, or overlays, with weights only on
-allocations. This is connector ingest, not Gradient UI file upload. The complete matrix is 88 authorized calls.
+allocations. A client-owned scheduled task may stage only with `approval_surface: "gradient_ui"` and return
+`review_url`; every v1 run requires Gradient UI review and never auto-commits in Claude. This is connector
+ingest, not Gradient UI file upload. The complete matrix is 88 authorized calls.
 For each probe, record pass, fail (with error code and HTTP status) or not run (not entitled), and the
 response `as_of`. Resolve `depends_on` arguments with `check_contract.py --resolve-args`; do not manually
 copy or invent chained IDs.

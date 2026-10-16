@@ -1492,6 +1492,14 @@ def portfolio_import_governed_contract_checks():
         skill_root / "references" / "phase-3-governance.md"
     ).read_text(encoding="utf-8")
     normalized_phase_3_governance = " ".join(phase_3_governance.split())
+    phase_4_governance = (
+        skill_root / "references" / "phase-4-governance.md"
+    ).read_text(encoding="utf-8")
+    normalized_phase_4_governance = " ".join(phase_4_governance.split())
+    phase_5_governance = (
+        skill_root / "references" / "phase-5-governance.md"
+    ).read_text(encoding="utf-8")
+    normalized_phase_5_governance = " ".join(phase_5_governance.split())
     recipe_template = json.loads(
         (
             skill_root / "references" / "provider-recipe-template.json"
@@ -1535,6 +1543,15 @@ def portfolio_import_governed_contract_checks():
                 "monthly_return_observation",
                 "benchmark_definition",
                 "benchmark_assignment",
+                "portfolio_master",
+                "allocation_node",
+                "policy_configuration",
+                "public_security_position_snapshot",
+                "fixed_income_analytics_snapshot",
+                "liquidity_terms",
+                "classification_exposure_assignment",
+                "pacing_plan_entry",
+                "source_document_evidence",
             )
         )
         and "private equity, real estate, infrastructure, and private debt"
@@ -1557,11 +1574,18 @@ def portfolio_import_governed_contract_checks():
         and "exact `destination_after_digest`" in skill
         and "`references/phase-2-governance.md`" in skill
         and "`references/phase-3-governance.md`" in skill
+        and "`references/phase-4-governance.md`" in skill
+        and "`references/phase-5-governance.md`" in skill
         and "`references/providers/chronograph.recipe.json`" in skill
         and "Recipe absence alone is not a blocker" in skill
         and "provider recipe is optional" in skill.lower()
         and 'treatment says "commit_enabled"' in skill
-        and "Preview only — backend publication is not enabled" in skill,
+        and "Preview only — backend publication is not enabled" in skill
+        and '`approval_surface` to `gradient_ui`' in skill
+        and "return the exact `review_url`" in skill
+        and "scheduled task may use only this `gradient_ui` path" in skill
+        and "never auto-commit in Claude" in skill
+        and "every scheduled run requires Gradient UI review" in skill,
         "portfolio import is bounded, schema-driven, and explicitly governed",
     )
     check(
@@ -1624,6 +1648,56 @@ def portfolio_import_governed_contract_checks():
         "Phase 3 import guidance preserves return and benchmark semantics",
     )
     check(
+        all(
+            data_type in normalized_phase_4_governance
+            for data_type in (
+                "portfolio_master",
+                "allocation_node",
+                "policy_configuration",
+            )
+        )
+        and "`stage_portfolio_import_records`" in normalized_phase_4_governance
+        and '"map_existing" only' in normalized_phase_4_governance
+        and '"map_existing" and "create_preview"'
+        in normalized_phase_4_governance
+        and 'explicit "create_new" mapping decision'
+        in normalized_phase_4_governance
+        and "latest `source_effective_date` wins"
+        in normalized_phase_4_governance
+        and "tie at the latest date is blocking"
+        in normalized_phase_4_governance
+        and "virtual-root creation are blocking"
+        in normalized_phase_4_governance,
+        "Phase 4 import guidance preserves structure and policy governance",
+    )
+    check(
+        all(
+            data_type in normalized_phase_5_governance
+            for data_type in (
+                "public_security_position_snapshot",
+                "fixed_income_analytics_snapshot",
+                "liquidity_terms",
+                "classification_exposure_assignment",
+                "pacing_plan_entry",
+                "source_document_evidence",
+            )
+        )
+        and '"map_existing" is commit-enabled' in normalized_phase_5_governance
+        and normalized_phase_5_governance.count(
+            '"create_preview" is preview-only'
+        )
+        == 2
+        and "Overlay targets are not supported" in normalized_phase_5_governance
+        and "scalar MALTS fields" in normalized_phase_5_governance
+        and '"holding_factor" is preview-only' in normalized_phase_5_governance
+        and "existing subject-asset reference metadata only"
+        in normalized_phase_5_governance
+        and "No document write tool is authorized" in normalized_phase_5_governance
+        and "does not override a preview-only variant or intent"
+        in normalized_phase_5_governance,
+        "Phase 5 import guidance preserves exact treatment lanes",
+    )
+    check(
         catalog.get("contract")
         == "gradient-portfolio-import-provider-catalog/v1"
         and catalog.get("providers")
@@ -1678,7 +1752,19 @@ def portfolio_import_governed_contract_checks():
         and "monthly_return_observation" in normalized_recipe_contract
         and "benchmark_definition" in normalized_recipe_contract
         and "benchmark_assignment" in normalized_recipe_contract
-        and "Gradient UI file upload" in normalized_recipe_contract,
+        and "public_security_position_snapshot" in normalized_recipe_contract
+        and "fixed_income_analytics_snapshot" in normalized_recipe_contract
+        and "liquidity_terms" in normalized_recipe_contract
+        and "classification_exposure_assignment" in normalized_recipe_contract
+        and "pacing_plan_entry" in normalized_recipe_contract
+        and "source_document_evidence" in normalized_recipe_contract
+        and "cannot make a preview-only lane commit eligible"
+        in normalized_recipe_contract
+        and "Gradient UI file upload" in normalized_recipe_contract
+        and "never authorizes a scheduled commit" in normalized_recipe_contract
+        and '`approval_surface: "gradient_ui"`' in normalized_recipe_contract
+        and "sixteen public import data types" in " ".join(catalog["notes"])
+        and "scheduled auto-commit" in " ".join(recipe_template["notes"]),
         "provider recipes remain optional, reviewed, and drift-sensitive",
     )
     check(
@@ -1724,6 +1810,15 @@ def portfolio_import_governed_contract_checks():
             "monthly_return_observation",
             "benchmark_definition",
             "benchmark_assignment",
+            "portfolio_master",
+            "allocation_node",
+            "policy_configuration",
+            "public_security_position_snapshot",
+            "fixed_income_analytics_snapshot",
+            "liquidity_terms",
+            "classification_exposure_assignment",
+            "pacing_plan_entry",
+            "source_document_evidence",
         ]
         and fixture.get("schema", {}).get("separate_session_per_data_type")
         is True
@@ -1764,6 +1859,66 @@ def portfolio_import_governed_contract_checks():
                 "ui_file_upload_substituted",
             )
         )
+        and all(
+            fixture.get("phase_4_semantics", {}).get(key) is True
+            for key in (
+                "portfolio_master_map_existing_commit_only",
+                "allocation_map_and_create_commit_enabled",
+                "allocation_create_new_confirmation_required",
+                "effective_tree_validation_required",
+                "policy_latest_effective_date_wins",
+                "policy_latest_effective_date_ties_blocking",
+            )
+        )
+        and fixture.get("phase_4_semantics", {}).get(
+            "portfolio_creation_allowed"
+        )
+        is False
+        and fixture.get("phase_4_semantics", {}).get(
+            "deletion_by_omission_allowed"
+        )
+        is False
+        and all(
+            fixture.get("phase_5_semantics", {}).get(key) is True
+            for key in (
+                "public_security_map_existing_commit_enabled",
+                "public_security_create_preview_only",
+                "fixed_income_existing_holding_only",
+                "liquidity_existing_commitment_only",
+                "liquidity_scalar_malts_fields_only",
+                "classification_allocation_commitment_commit_enabled",
+                "classification_holding_factor_preview_only",
+                "pacing_map_existing_commit_enabled",
+                "pacing_create_preview_only",
+                "source_document_reference_only",
+                "source_document_preview_only",
+            )
+        )
+        and fixture.get("phase_5_semantics", {}).get(
+            "fixed_income_overlay_allowed"
+        )
+        is False
+        and fixture.get("phase_5_semantics", {}).get("document_writes") == 0
+        and fixture.get("ui_handoff", {}).get("approval_surface")
+        == "gradient_ui"
+        and fixture.get("ui_handoff", {}).get("stages_only") is True
+        and fixture.get("ui_handoff", {}).get(
+            "returns_start_session_review_url"
+        )
+        is True
+        and fixture.get("ui_handoff", {}).get(
+            "mapping_preview_approval_publish_rollback_in_gradient"
+        )
+        is True
+        and fixture.get("scheduled_task", {}).get("approval_surface")
+        == "gradient_ui"
+        and fixture.get("scheduled_task", {}).get("stages_only") is True
+        and fixture.get("scheduled_task", {}).get("auto_commit_in_claude")
+        is False
+        and fixture.get("scheduled_task", {}).get(
+            "gradient_ui_review_required_every_v1_run"
+        )
+        is True
         and fixture.get("provider_recipe", {}).get("catalog_contract")
         == "gradient-portfolio-import-provider-catalog/v1"
         and fixture.get("provider_recipe", {}).get("selected_provider_id")

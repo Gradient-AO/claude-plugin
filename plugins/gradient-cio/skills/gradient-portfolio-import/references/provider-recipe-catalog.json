@@ -12,7 +12,8 @@
     "Catalog listing does not authorize a connector or make a provider commit eligible.",
     "Chronograph is the only named provider in this release.",
     "Runtime connector tools and Gradient schemas override catalog metadata.",
-    "Recipes may cover the seven public import data types, including monthly_return_observation, benchmark_definition, and benchmark_assignment, only after exact per-type review.",
-    "This catalog covers Claude MCP read-only connector ingest, not Gradient UI file upload."
+    "Recipes may cover the sixteen public import data types only after exact per-type and per-lane review.",
+    "Phase 5 commit lanes are map-existing public security, holding-only fixed income, commitment-only scalar MALTS liquidity, allocation/commitment classification, and map-existing pacing; create intents, holding_factor, and source-document references remain preview-only.",
+    "This catalog covers Claude MCP read-only connector ingest, not Gradient UI file upload or scheduled auto-commit."
   ]
 }

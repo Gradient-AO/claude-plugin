@@ -352,6 +352,7 @@ def contract_manifest():
     rollback_probe = by_id["portfolio_import_rollback"]
     history_probe = by_id["portfolio_import_run_history"]
     generic_stage_probe = by_id["portfolio_import_stage_generic_records"]
+    start_probe = by_id["portfolio_import_start_session"]
     execution_paths = {
         "status",
         "session_id",
@@ -387,16 +388,35 @@ def contract_manifest():
             for prerequisite in rollback_probe["external_prerequisites"]
         )
         and generic_stage_probe["tool"] == "stage_portfolio_import_records"
-        and any(
-            "commitment_master, valuation_snapshot, cash_flow_event_ledger, "
-            "monthly_return_observation, benchmark_definition, or "
-            "benchmark_assignment"
-            in prerequisite
-            for prerequisite in generic_stage_probe["external_prerequisites"]
+        and all(
+            data_type
+            in " ".join(generic_stage_probe["external_prerequisites"])
+            for data_type in (
+                "commitment_master",
+                "valuation_snapshot",
+                "cash_flow_event_ledger",
+                "monthly_return_observation",
+                "benchmark_definition",
+                "benchmark_assignment",
+                "portfolio_master",
+                "allocation_node",
+                "policy_configuration",
+                "public_security_position_snapshot",
+                "fixed_income_analytics_snapshot",
+                "liquidity_terms",
+                "classification_exposure_assignment",
+                "pacing_plan_entry",
+                "source_document_evidence",
+            )
         )
         and any(
             "exact runtime schema" in prerequisite
             for prerequisite in generic_stage_probe["external_prerequisites"]
+        )
+        and any(
+            "approval_surface gradient_ui" in prerequisite
+            and "review_url" in prerequisite
+            for prerequisite in start_probe["external_prerequisites"]
         ),
         "portfolio-import commit, history, and rollback probes are fail-closed",
     )
