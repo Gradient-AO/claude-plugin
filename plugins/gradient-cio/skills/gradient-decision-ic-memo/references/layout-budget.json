@@ -7,7 +7,7 @@
   "pdf": {
     "target_pages": {
       "min": 13,
-      "max": 18
+      "max": 20
     },
     "hard_max_pages": 22,
     "minimum_body_fill": 0.4,
