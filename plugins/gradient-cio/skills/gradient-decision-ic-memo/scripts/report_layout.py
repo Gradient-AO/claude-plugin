@@ -1245,7 +1245,6 @@ def repair_preferred_breaks(
         if (
             title in removable_section_titles
             and section.get("page_break") == "prefer"
-            and not _appendix(section)
         ):
             section["page_break"] = "auto"
             section["new_page"] = False

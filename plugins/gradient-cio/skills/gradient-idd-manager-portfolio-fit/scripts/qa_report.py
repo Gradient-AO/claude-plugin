@@ -28,6 +28,8 @@ from report_layout import (
 )
 from report_theme import FONT_FAMILY, THEME_VERSION, load_branding
 
+MAX_REPAIR_PASSES = 3
+
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 if hasattr(sys.stderr, "reconfigure"):
@@ -505,15 +507,21 @@ def main() -> int:
                 return checked.returncode
             else:
                 pdf_result = {}
-            removable = preferred_break_candidates(prepared, pdf_result)
-            if removable and checked.returncode != 0:
-                repaired, removed = repair_preferred_breaks(
-                    prepared,
-                    removable,
-                )
+            current = prepared
+            all_removed: list[str] = []
+            for attempt in range(1, MAX_REPAIR_PASSES + 1):
+                if checked.returncode == 0:
+                    break
+                removable = preferred_break_candidates(current, pdf_result)
+                if not removable:
+                    break
+                current, removed = repair_preferred_breaks(current, removable)
+                if not removed:
+                    break
+                all_removed.extend(removed)
                 repaired_path = workdir_path / "repaired-report.json"
                 repaired_path.write_text(
-                    json.dumps(repaired, ensure_ascii=False, indent=2) + "\n",
+                    json.dumps(current, ensure_ascii=False, indent=2) + "\n",
                     encoding="utf-8",
                 )
                 rerender_command = list(render_command)
@@ -528,27 +536,18 @@ def main() -> int:
                 final_render_stderr = rerendered.stderr or ""
                 command[4] = str(repaired_path)
                 checked = run(command)
-                print(
-                    "Preferred-break repair: "
-                    + ", ".join(removed)
-                    + " (one rerender)"
-                )
-                print("PDF layout final:")
+                print(f"Preferred-break repair {attempt}: " + ", ".join(removed))
+                print("PDF layout after repair:")
                 print((checked.stdout or checked.stderr).rstrip())
                 if not result_path.is_file():
                     return checked.returncode or 2
                 pdf_result = json.loads(
                     result_path.read_text(encoding="utf-8")
                 )
-                qa_results["repair"] = {
-                    "rerendered": True,
-                    "removed_preferred_breaks": removed,
-                }
-            else:
-                qa_results["repair"] = {
-                    "rerendered": False,
-                    "removed_preferred_breaks": [],
-                }
+            qa_results["repair"] = {
+                "rerendered": bool(all_removed),
+                "removed_preferred_breaks": all_removed,
+            }
             qa_results["outputs"]["pdf"] = pdf_result
             failures.extend(
                 str(item["message"])

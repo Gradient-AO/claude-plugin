@@ -17,6 +17,18 @@
 - Replaced "peerIntelligence is not available" with "peer allocation intelligence is not licensed for this organization" and removed remaining "governed", "canonical" and raw error-code wording from sample reports.
 - Client update: `/plugin marketplace update gradientcio`
 
+## 6.1.2
+- Fixed the roster triage layout budget, which listed single-manager ODD sections and blocked every triage report at pre-render QA; it now matches the documented executive, roster-detail and appendix sections.
+- Restored the comprehensive portfolio review example, whose Liquidity and Commitments section declared a forced page break outside the layout budget and was rejected before rendering.
+- Made example generation fail when any example is rejected before rendering instead of reporting it as a layout warning, and made it work when the output folder is on another filesystem.
+- Regenerated the reference example PDFs and PowerPoints for the 6.1.x tile and legend changes, renamed the shortlist and operations-comparison examples to their consolidated skill modes, and added the triage example.
+- Simplified maintainer checks: a pre-push hook and CI share `tools/quick_checks.py` (version, shared-file sync, catalog, Claude validation); CI no longer pixel-compares examples against committed references and instead requires every example to render. The sync check ignores Windows line-ending differences.
+- PowerPoint decks are denser and shorter: a chart now shares its slide with its short lead-in and commentary, two consecutive simple charts in a section sit side by side, and text is sized to the slide width. The IC memo example drops from 49 to 34 slides, its hard ceiling.
+- PDF reports no longer fail QA on a short closing page: the last page and the page before a required chapter break need only the orphan-tail fill, and a short final section under its heading is accepted.
+- Layout repair now runs up to three passes and may lift an appendix's preferred page break; short tables whose wrapped text would exceed a page now paginate by row instead of being kept whole.
+- Setup reports stack the Ready and Partial skill tables at full width instead of squeezing them side by side; the IC memo soft page target is 12–18; sample fixtures carry shorter data-scope cells and callouts. All 24 examples now pass layout QA.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.1.1
 - Made packaging acceptance run every registered public report validator from an isolated skill copy against its sample fixtures, proving that shipped local dependencies are sufficient.
 - Made shared-copy parity a fail-fast release-gate check and a mandatory check immediately before every push.

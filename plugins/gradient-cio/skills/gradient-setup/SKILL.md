@@ -105,7 +105,6 @@ client branding: an administrator sets the client name and logo before distribut
 and the skill renders with `--brand`.
 
 ## 5. Build the report
-
 Write and validate `report.json` (JSON block mode, see `references/report-style.md`). Select PDF by default;
 select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select both when it says `both`
 or `board pack`. Both formats must come from the same validated `report.json`.
@@ -134,8 +133,9 @@ Sections (soft target 4–5 pages; hard ceiling 7):
 
 1. **Summary** (`id: executive`) — bottom line in 3 sentences; tiles: Skills ready, Partly available,
    Not licensed, Checks passed.
-2. **Skills you can use** — one compact `two_col` block: a **Ready** table and a
-   **Partly available** table. Each uses Skill, What it produces, and Note;
+2. **Skills you can use** — two full-width tables, stacked: a **Ready** table and a
+   **Partly available** table. Do not pair them in `two_col`; three columns
+   are too narrow side by side. Each uses Skill, What it produces, and Note;
    status is explicit in the table title or a chip when needed. For the IC memo,
    show Portfolio Analytics core readiness and `Strategy Lab supplement: <Ready
    / Not licensed (optional) / Unavailable (optional)>` separately. A missing

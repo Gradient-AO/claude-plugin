@@ -60,8 +60,15 @@ def is_chat_only(skill):
     return bool(CHAT_DELIVERY.search((skill / "SKILL.md").read_text(encoding="utf-8")))
 
 
+TEXT_SUFFIXES = {".py", ".md", ".json", ".txt"}
+
+
 def digest(p):
-    return hashlib.sha256(p.read_bytes()).hexdigest()[:12]
+    data = p.read_bytes()
+    if p.suffix in TEXT_SUFFIXES:
+        # Windows checkouts with core.autocrlf rewrite line endings per file.
+        data = data.replace(b"\r\n", b"\n")
+    return hashlib.sha256(data).hexdigest()[:12]
 
 def shared_files():
     """Yield canonical source/destination pairs, including contract trees."""
