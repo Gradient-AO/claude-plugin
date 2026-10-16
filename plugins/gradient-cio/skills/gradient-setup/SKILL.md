@@ -106,7 +106,6 @@ client branding: an administrator sets the client name and logo before distribut
 and the skill renders with `--brand`.
 
 ## 5. Build the report
-
 Write and validate `report.json` (JSON block mode, see `references/report-style.md`). Select PDF by default;
 select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select both when it says `both`
 or `board pack`. Both formats must come from the same validated `report.json`.
