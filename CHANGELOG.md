@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.5.0
+- Added an explicit Gradient UI handoff mode: Claude stages connector data in an MCP session, returns the server-provided Portfolio Maintenance review link, and leaves mapping, preview, approval, publication, and rollback in Gradient.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.4.0
 - Expanded `gradient-portfolio-import` to the commit-enabled `monthly_return_observation`, `benchmark_definition`, and `benchmark_assignment` treatments exposed by the existing twelve-tool public workflow.
 - Added exact source-value and unit controls for source-reported month-end returns, with backend-declared percentage-point canonicalization, `EntityReturn`-only publication, no legacy historical-returns JSONB writes, and no overwrite or relabeling of Gradient-calculated metrics.
