@@ -4,8 +4,8 @@
 Some install channels ship each skill folder without the plugin root, so a
 skill must carry its own validators and fonts. This copies every skill into an
 empty temporary directory, imports each of its validator scripts there, checks
-the bundled Inter fonts, and confirms the manifest versions and the shipped
-skill list agree.
+the bundled Inter fonts and release descriptor, and confirms the manifest
+versions and the shipped skill list agree.
 
     python tools/check_skill_packaging.py
 """
@@ -51,8 +51,14 @@ def tracked_skill_names() -> set[str] | None:
     return {pathlib.PurePosixPath(line).parent.name for line in result.stdout.splitlines() if line}
 
 
-def check_versions() -> list[str]:
-    plugin = json.loads((ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
+def plugin_manifest() -> dict[str, str]:
+    """Read the canonical plugin identity used by packaging checks."""
+    return json.loads(
+        (ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8")
+    )
+
+
+def check_versions(plugin: dict[str, str]) -> list[str]:
     marketplace = json.loads(
         (REPOSITORY / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8")
     )
@@ -67,12 +73,33 @@ def check_versions() -> list[str]:
     return []
 
 
-def check_skill(skill: pathlib.Path, scratch: pathlib.Path) -> list[str]:
+def check_skill(
+    skill: pathlib.Path,
+    scratch: pathlib.Path,
+    plugin: dict[str, str],
+) -> list[str]:
     failures: list[str] = []
     text = (skill / "SKILL.md").read_text(encoding="utf-8")
     match = NAME_LINE.search(text)
     if match is None or match.group(1) != skill.name:
         failures.append(f"{skill.name}: SKILL.md name does not match the folder name")
+    release_path = skill / "references" / "plugin-release.json"
+    try:
+        release = json.loads(release_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        failures.append(f"{skill.name}: plugin-release.json is unavailable ({error})")
+    else:
+        expected_release = {
+            "schema": "gradient-cio-plugin-release/v1",
+            "marketplace": "gradientcio",
+            "plugin": plugin["name"],
+            "release_version": plugin["version"],
+            "update_command": "/plugin marketplace update gradientcio",
+        }
+        if any(release.get(key) != value for key, value in expected_release.items()):
+            failures.append(
+                f"{skill.name}: plugin-release.json does not match the plugin manifest"
+            )
     if CHAT_DELIVERY.search(text):
         return failures
 
@@ -106,7 +133,8 @@ def check_skill(skill: pathlib.Path, scratch: pathlib.Path) -> list[str]:
 
 
 def main() -> int:
-    failures = check_versions()
+    plugin = plugin_manifest()
+    failures = check_versions(plugin)
     skills = shipped_skills()
     tracked = tracked_skill_names()
     if tracked is not None:
@@ -118,7 +146,7 @@ def main() -> int:
     with tempfile.TemporaryDirectory(prefix="gradient-skill-packaging-") as directory:
         scratch = pathlib.Path(directory)
         for skill in skills:
-            failures.extend(check_skill(skill, scratch))
+            failures.extend(check_skill(skill, scratch, plugin))
     if failures:
         for failure in failures:
             print(f"FAIL — {failure}", file=sys.stderr)

@@ -1,8 +1,8 @@
 ---
 name: gradient-portfolio-import
-description: "Create a governed private-markets portfolio import. Triggers: 'import private holdings', 'import commitments', 'import valuations', 'import cash flows', 'preview portfolio import', 'review import history'. Commits only after exact preview and current-conversation confirmation."
+description: "Create a governed import for private-markets records, monthly returns, and benchmark definitions or assignments. Triggers: 'import private holdings', 'import monthly returns', 'import benchmarks', 'assign benchmarks', 'preview portfolio import'. Commits only after exact-preview confirmation."
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
   group: "Portfolio Analytics"
   subject: "private-markets portfolio import"
   output: "governed import"
@@ -11,26 +11,27 @@ metadata:
   contracts: "portfolio-import-governed"
   handoffs: "gradient-portfolio-review"
   delivery: chat
-  summary: "Preview private records, confirm explicitly, then commit and verify."
+  summary: "Preview portfolio records, confirm explicitly, then commit and verify."
 ---
 
 # Governed Portfolio Import
 
-Prepare a provider-neutral import into one existing Gradient portfolio. Supported data types are `private_market_holding_snapshot`, `commitment_master`, `valuation_snapshot`, and `cash_flow_event_ledger`. Reply in chat only. The default path stops at preview. Commit only after the user sees the exact governed preview and explicitly confirms that exact commit in the current conversation. Never write back to the source.
+Prepare a provider-neutral import into one existing Gradient portfolio. Supported data types are `private_market_holding_snapshot`, `commitment_master`, `valuation_snapshot`, `cash_flow_event_ledger`, `monthly_return_observation`, `benchmark_definition`, and `benchmark_assignment`. Reply in chat only. The default path stops at preview. Commit only after the user sees the exact governed preview and explicitly confirms that exact commit in the current conversation. Never write back to the source.
 
-Before starting, read `references/module-scope.md`, `references/phase-2-governance.md`, `references/provider-recipe-catalog.json`, and `references/provider-recipe-contract.md`. Provider recipes are optional reviewed evidence, never authorization or a substitute for runtime schema discovery. Load a recipe only when the selected provider is cataloged.
+Before starting, read `references/module-scope.md`, `references/phase-2-governance.md`, `references/phase-3-governance.md`, `references/provider-recipe-catalog.json`, and `references/provider-recipe-contract.md`. Provider recipes are optional reviewed evidence, never authorization or a substitute for runtime schema discovery. Load a recipe only when the selected provider is cataloged.
 
 ## Hard boundaries
 
 - Use only a source connector the client authorized in this conversation. Never scrape, automate a browser, use downloaded exports or copied credentials, or substitute an unapproved connector.
 - Use exactly one source provider/account and one data type per import session. A second provider, account, tenant, source system, or data type requires a new session, preview, and confirmation.
 - Target one existing Gradient portfolio. Never create a portfolio, manager, fund, or allocation. A commitment may be created only through the governed `commitment_master` create path after the user approves the "create_new" decision and selects an existing destination allocation.
-- Accept only private equity, real estate, infrastructure, and private debt holdings. Reject and report every other asset class.
+- For private-market holding, commitment, valuation, and cash-flow records, accept only private equity, real estate, infrastructure, and private debt. Phase 3 monthly-return and benchmark records follow their runtime entity and field schemas instead of this holding-family restriction.
 - Copy source values verbatim with source-declared unit and currency. Do no arithmetic, conversion, aggregation, normalization, netting, inference, classification guess, defaulting, or missing-value fill. Control counts may reconcile returned identities and counts; they never alter values.
 - Never mutate the source. Never delete, clear, replace, or truncate source records. Never delete a Gradient record by omission: omitted source rows are no-ops.
 - Never auto-commit. Mapping confirmation approves mappings only. Import, stage, preview, or mapping-confirmation requests are not commit authorization.
 - A provider recipe is optional. Never use an unreviewed, retired, or schema-drifted recipe as mapping evidence; fall back to field-by-field runtime discovery without inventing a mapping. That fallback supports preview, not commit, until Gradient returns a reviewed mapping-profile artifact.
-- Use source-connector read tools plus the twelve Gradient import tools named here. Use governed portfolio read tools only for destination selection and post-commit or post-rollback verification. No source write tool is permitted.
+- Use source-connector read tools plus the twelve Gradient import tools named here. Use governed destination read tools only for destination selection and post-commit or post-rollback verification. No source write tool is permitted.
+- This workflow is Claude MCP connector ingest, not Gradient UI file upload. Never download and re-upload a source file, claim a first-party parser, automate the UI, or substitute Gradient UI approval for current-conversation confirmation.
 
 ## 1. Establish the runtime contract
 
@@ -46,7 +47,7 @@ Stop on absent capability, unsupported data type or asset class, missing unit or
 1. Ask the user to select the authorized source provider/account and one existing Gradient portfolio when ambiguous.
 2. Call `start_portfolio_import_session` once per selected data type with that provider, portfolio, `upsert` mode, exact schema identity, and only type-permitted options. Supply `mapping_profile` only by copying every field from a current reviewed `gradient_approval` artifact; omit it for Chronograph while its recipe remains unreviewed.
 3. Read the authorized source without writes through explicit pagination completion. Preserve source record IDs, page lineage, raw values, declared units, currencies, and timestamps.
-4. Stage holdings with `stage_private_market_holding_records`; stage `commitment_master`, `valuation_snapshot`, and `cash_flow_event_ledger` with `stage_portfolio_import_records`. Use the lower of the runtime batch limit and 100 records. Preserve page order, split oversized pages, and never combine providers, types, or sessions.
+4. Stage holdings with `stage_private_market_holding_records`; stage `commitment_master`, `valuation_snapshot`, `cash_flow_event_ledger`, `monthly_return_observation`, `benchmark_definition`, and `benchmark_assignment` with `stage_portfolio_import_records`. Use the lower of the runtime batch limit and 100 records. Preserve page order, split oversized pages, and never combine providers, types, or sessions.
 5. Retain every accepted and rejected record. Never silently retry a rejection with changed data.
 6. Call `get_portfolio_import_session`; reconcile source IDs to accepted plus rejected staged IDs. Duplicate, missing, or extra IDs are blocking control failures.
 
@@ -57,7 +58,7 @@ under the new schema in the same session.
 
 1. Call `resolve_portfolio_import_entities`; retain every candidate and unresolved row.
 2. Present the complete proposed mapping before confirmation: source record/label, proposed existing entity, returned basis or reason, ambiguity, and unmapped status.
-3. Never auto-select or infer an ID. Holdings, valuations, and cash flows require mapped existing commitments. A commitment create requires the user's explicit "create_new" choice plus an existing destination allocation selected from governed portfolio structure; never invent commitment, fund, manager, or allocation IDs.
+3. Never auto-select or infer an ID. Holdings, valuations, and cash flows require mapped existing commitments. A commitment create requires the user's explicit "create_new" choice plus an existing destination allocation selected from governed portfolio structure. Monthly returns require one mapped existing portfolio, allocation, commitment, holding, overlay, or benchmark. Benchmark definitions either map an existing organization-scoped benchmark or require an explicit "create_new" decision; the server owns any planned ID and slug. Benchmark assignments require both an existing subject and existing benchmark. Never invent an entity ID.
 4. Only after explicit approval, call `confirm_portfolio_import_mappings` with exact "map_to_existing", "create_new", or "skip" choices. This approves mappings for preview, not `commit_portfolio_import`.
 5. Retain resolution and confirmation responses, call `get_portfolio_import_session`, and report every mapping rejection.
 
@@ -95,6 +96,8 @@ preview result is truncated, unavailable, inconsistent, or blocking, say the
 preview is incomplete and stop. Never summarize away a record or issue.
 
 Apply the Phase 2 record-specific preview rules in `references/phase-2-governance.md`, including evidence-only metrics and exact supersede language. If treatment `availability` or publication readiness is "preview_only", label the result **Preview only — backend publication is not enabled for this data type** and stop.
+
+Apply the Phase 3 record-specific rules in `references/phase-3-governance.md`. In particular, keep monthly returns source-reported, month-end, and `EntityReturn`-only; never write legacy historical-returns JSONB or present a reported value as a Gradient calculation. Preserve benchmark definition dependencies and the exact supported assignment subjects, roles, effective-date selection, and allocation-only weight rules.
 
 Only when the effective mapping-profile artifact says `approval_status:
 "reviewed"` and `commit_eligible: true`, the treatment says "commit_enabled", preview state is

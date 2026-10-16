@@ -1,7 +1,7 @@
 {
   "workflow": "gradient-portfolio-import",
   "delivery": "chat_only",
-  "phase": "phase_2_governed_preview",
+  "phase": "phase_2_and_3_governed_preview",
   "source": {
     "provider": "Chronograph (TEST)",
     "provider_count": 1,
@@ -23,7 +23,10 @@
     "selected_data_types": [
       "commitment_master",
       "valuation_snapshot",
-      "cash_flow_event_ledger"
+      "cash_flow_event_ledger",
+      "monthly_return_observation",
+      "benchmark_definition",
+      "benchmark_assignment"
     ],
     "separate_session_per_data_type": true,
     "exact_runtime_schema_fetched_per_type": true,
@@ -66,6 +69,18 @@
     "reported_metrics_evidence_only": true,
     "every_skipped_item_reported": true,
     "every_rejected_item_reported": true
+  },
+  "phase_3_semantics": {
+    "monthly_return_source_value_and_unit_preserved": true,
+    "monthly_return_month_end_required": true,
+    "monthly_return_entity_return_only": true,
+    "legacy_historical_returns_jsonb_written": false,
+    "reported_return_presented_as_gradient_calculated": false,
+    "benchmark_definition_dependency_verified_before_assignment": true,
+    "benchmark_assignment_subjects_bounded": true,
+    "benchmark_weight_allocation_only": true,
+    "effective_date_ties_blocking": true,
+    "ui_file_upload_substituted": false
   },
   "commit": {
     "auto_commit": false,

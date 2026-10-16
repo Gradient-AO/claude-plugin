@@ -36,6 +36,32 @@ def version_check() -> int:
     if plugin != listed:
         print(f"FAIL — plugin.json {plugin} != marketplace.json {listed}")
         return 1
+    release_references = sorted(
+        (ROOT / "skills").glob("*/references/plugin-release.json")
+    )
+    skill_count = sum(
+        1 for path in (ROOT / "skills").iterdir() if (path / "SKILL.md").is_file()
+    )
+    if len(release_references) != skill_count:
+        print(
+            "FAIL — plugin-release.json must be packaged with every skill "
+            f"({len(release_references)}/{skill_count})"
+        )
+        return 1
+    mismatched = []
+    for reference in release_references:
+        release = json.loads(reference.read_text(encoding="utf-8"))
+        if (
+            release.get("plugin") != "gradient-cio"
+            or release.get("release_version") != plugin
+        ):
+            mismatched.append(reference.parent.parent.name)
+    if mismatched:
+        print(
+            f"FAIL — plugin release metadata does not match {plugin}: "
+            + ", ".join(mismatched)
+        )
+        return 1
     print(f"version {plugin}")
     return 0
 

@@ -51,7 +51,9 @@ The recipe must contain:
 - `source.write_operations`: an empty array
 - `mapping`: one row per source-to-runtime-schema field
 - `supported_data_types`: a subset of `private_market_holding_snapshot`,
-  `commitment_master`, `valuation_snapshot`, and `cash_flow_event_ledger`
+  `commitment_master`, `valuation_snapshot`, `cash_flow_event_ledger`,
+  `monthly_return_observation`, `benchmark_definition`, and
+  `benchmark_assignment`
 - `supported_asset_classes`: a subset of `private_equity`, `real_estate`,
   `infrastructure`, and `private_debt` when holdings are covered
 - `limits.max_source_page_size` and `limits.max_stage_batch_size`
@@ -87,7 +89,10 @@ requires at least one supported asset class.
 6. `review.live_dry_run.result` is `passed`.
 
 If any item is absent, stale, or unverifiable, downgrade the recipe to
-`unreviewed`. Schema drift invalidates reviewed status immediately.
+`unreviewed`. Provider, read-operation, data-type, Gradient schema identity or
+version, source-schema evidence, unit, pagination, mapping-profile, or dry-run
+drift invalidates reviewed status immediately. Stop a session when its runtime
+schema identity changes; never restage under the new schema in that session.
 
 Only `listed_reviewed` plus `review.status: "reviewed"` with current evidence
 and an exact `gradient_approval` artifact whose status is `reviewed` may supply
@@ -97,6 +102,14 @@ Commit eligibility comes only from the runtime's
 effective mapping-profile artifact, treatment and publication readiness, the
 complete reconciled preview, and the user's explicit current-conversation
 confirmation of its exact receipt and digest.
+
+For Phase 3 records, a recipe may document only source-to-runtime-schema
+copying. It may not pre-scale `percentage_points`, calculate benchmark
+assumptions or weights, choose an entity candidate, invent a benchmark ID or
+slug, collapse definition and assignment dependencies into one session, or
+claim that a reported return is Gradient-calculated. The exact source value and
+unit remain recipe evidence even when the backend preview displays a
+schema-declared canonical destination value.
 
 No provider is implicitly reviewed. In particular, this public skill contains
 no reviewed Chronograph field or tool mapping. Chronograph remains
@@ -110,3 +123,8 @@ conversion formulas, inferred defaults, fill rules, entity-creation behavior,
 source writes, delete/clear operations, commit or rollback instructions,
 confirmation receipts, or destination digests. It must not claim that provider
 labels identify Gradient commitments without explicit user confirmation.
+
+A recipe covers Claude MCP ingestion through a client-authorized read-only
+source connector. It never describes or authorizes Gradient UI file upload,
+first-party parser lineage, browser automation, downloaded exports, or
+Gradient UI approval.

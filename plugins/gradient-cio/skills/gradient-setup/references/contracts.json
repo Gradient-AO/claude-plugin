@@ -3031,7 +3031,8 @@
       "required": [],
       "schema_driven": true,
       "external_prerequisites": [
-        "portfolio_import_capabilities response"
+        "portfolio_import_capabilities response",
+        "one selected data type from private_market_holding_snapshot, commitment_master, valuation_snapshot, cash_flow_event_ledger, monthly_return_observation, benchmark_definition, or benchmark_assignment"
       ],
       "envelope": false
     },
@@ -3072,7 +3073,7 @@
       "required": [],
       "schema_driven": true,
       "external_prerequisites": [
-        "active commitment_master, valuation_snapshot, or cash_flow_event_ledger session",
+        "active commitment_master, valuation_snapshot, cash_flow_event_ledger, monthly_return_observation, benchmark_definition, or benchmark_assignment session",
         "exact runtime schema fetched for the selected data type",
         "verbatim source records with declared values and units",
         "batch at or below runtime limit and 100 records"
@@ -3101,7 +3102,7 @@
       "schema_driven": true,
       "external_prerequisites": [
         "complete proposed mapping presented to user",
-        "explicit user approval of exact existing-commitment mappings"
+        "explicit user approval of exact entity mappings or benchmark create-new decision"
       ],
       "envelope": false
     },
@@ -3116,7 +3117,8 @@
         "all source and session pages exhausted",
         "all mappings confirmed or rejected",
         "unchanged runtime schema identity",
-        "exact diff, issues, controls, payload digest, and receipt retained"
+        "exact diff, issues, controls, payload digest, and receipt retained",
+        "source values and units reconciled to any backend-declared canonical destination values"
       ],
       "envelope": false
     },

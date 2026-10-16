@@ -388,7 +388,9 @@ def contract_manifest():
         )
         and generic_stage_probe["tool"] == "stage_portfolio_import_records"
         and any(
-            "commitment_master, valuation_snapshot, or cash_flow_event_ledger"
+            "commitment_master, valuation_snapshot, cash_flow_event_ledger, "
+            "monthly_return_observation, benchmark_definition, or "
+            "benchmark_assignment"
             in prerequisite
             for prerequisite in generic_stage_probe["external_prerequisites"]
         )
