@@ -1,0 +1,105 @@
+{
+  "workflow": "gradient-portfolio-import",
+  "delivery": "chat_only",
+  "phase": "phase_2_governed_preview",
+  "source": {
+    "provider": "Chronograph (TEST)",
+    "provider_count": 1,
+    "client_authorized": true,
+    "pages_exhausted": true,
+    "writes": 0
+  },
+  "target": {
+    "existing_portfolio": true,
+    "existing_commitments_required_for_valuation_and_cash_flow": true,
+    "commitment_create_requires_approved_create_new": true,
+    "commitment_create_requires_existing_allocation": true,
+    "invented_destination_ids": false,
+    "portfolio_writes": 0,
+    "deletes_or_clears": 0,
+    "omission_deletes_records": false
+  },
+  "schema": {
+    "selected_data_types": [
+      "commitment_master",
+      "valuation_snapshot",
+      "cash_flow_event_ledger"
+    ],
+    "separate_session_per_data_type": true,
+    "exact_runtime_schema_fetched_per_type": true,
+    "identity_preserved": true,
+    "drift_detected": false
+  },
+  "staging": {
+    "tool": "stage_portfolio_import_records",
+    "bounded_batches": true,
+    "maximum_batch_size": 100,
+    "values_copied_verbatim": true,
+    "declared_units_preserved": true,
+    "arithmetic_or_inference": false
+  },
+  "mapping": {
+    "presented_to_user": true,
+    "explicitly_confirmed": true,
+    "valuation_and_cash_flow_existing_commitments_only": true,
+    "commitment_create_new_explicitly_approved": true,
+    "destination_allocation_explicitly_selected": true
+  },
+  "preview": {
+    "completed": true,
+    "committed": false,
+    "all_rejections_reported": true,
+    "exact_diff_presented": true,
+    "all_issues_presented": true,
+    "record_reconciliation_passed": true,
+    "control_reconciliation_passed": true,
+    "payload_digest_presented": true,
+    "confirmation_receipt_presented": false,
+    "mapping_profile_approval_presented": true
+  },
+  "phase_2_semantics": {
+    "source_sign_preserved": true,
+    "source_values_preserved": true,
+    "claude_calculations_or_conversions": false,
+    "supersede_presented_as_versioned_successor": true,
+    "omissions_are_no_change": true,
+    "reported_metrics_evidence_only": true,
+    "every_skipped_item_reported": true,
+    "every_rejected_item_reported": true
+  },
+  "commit": {
+    "auto_commit": false,
+    "commit_eligible": false,
+    "runtime_treatment_commit_enabled_required": true,
+    "preview_only_stops_before_commit": true,
+    "confirmation_requested": false,
+    "current_conversation_confirmation_required": true,
+    "exact_receipt_and_digest_required": true,
+    "run_history_verification_required": true,
+    "portfolio_read_verification_required": true
+  },
+  "rollback": {
+    "optional": true,
+    "explicit_current_conversation_request_required": true,
+    "exact_destination_after_digest_required": true,
+    "read_verification_required": true
+  },
+  "provider_recipe": {
+    "catalog_contract": "gradient-portfolio-import-provider-catalog/v1",
+    "selected_provider_id": "chronograph",
+    "catalog_status": "listed_unreviewed",
+    "effective_review_status": "unreviewed",
+    "recipe_optional": true,
+    "used_as_mapping_evidence": false,
+    "commit_eligible_from_recipe": false,
+    "reviewed_mapping_claimed": false,
+    "gradient_approval": {
+      "mapping_profile_id": null,
+      "mapping_profile_version": null,
+      "mapping_profile_digest": null,
+      "gradient_schema_identity": null,
+      "approval_scope": null,
+      "approval_status": "unreviewed"
+    }
+  }
+}

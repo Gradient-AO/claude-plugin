@@ -82,8 +82,39 @@ The first call persists fictional inline text as a ready subject-bound document 
 save call is still a dry-run preview and must return `outcome: "preview"`, `dry_run: true` and `committed:
 false`.
 
-The complete matrix is 76 calls. Run the standard or full read set without write confirmation. Run the
-writes set only as previews. Before the DDQ save-preview set, tell the user that its reconciliation call
+**Portfolio-import-governed set (12 schema-driven definitions):**
+portfolio_import_capabilities, portfolio_import_schema,
+portfolio_import_start_session, portfolio_import_stage_records,
+portfolio_import_stage_generic_records,
+portfolio_import_resolve_entities, portfolio_import_confirm_mappings,
+portfolio_import_preview, portfolio_import_commit, portfolio_import_session,
+portfolio_import_run_history and portfolio_import_rollback. Do not run this set
+without a client-authorized source connector, one selected provider/account,
+and one existing Gradient portfolio. Fetch capabilities and schema first,
+supply arguments from that runtime contract, use one session per selected data
+type, page source and run history exhaustively, stage bounded batches, preserve
+values, signs and declared units verbatim, and report every rejection and
+skipped item. Use `stage_portfolio_import_records` only for the exact
+`commitment_master`, `valuation_snapshot`, or `cash_flow_event_ledger` schema
+fetched for that session.
+
+The safe readiness path runs at most the ten non-destructive and staged-state
+calls through preview, session, and read-only history. Before commit, display
+the exact record diff, every issue, record/control reconciliations,
+`payload_digest`, `confirmation_receipt_id`, and destination version. Run
+`portfolio_import_commit` only when runtime treatment and publication readiness
+say "commit_enabled" and after explicit user confirmation of that exact preview
+in the current conversation; pass the exact receipt and digest. A
+"preview_only" treatment stops after preview.
+Never run `portfolio_import_rollback` as a setup or readiness test. It may run
+only on an explicit current-conversation rollback request after displaying the
+exact run and requiring its exact `destination_after_digest`. Source writes and
+deletion by omission are forbidden throughout.
+
+The complete matrix is 76 calls, or 88 when all twelve governed portfolio-import
+definitions are explicitly authorized and executed. Run the standard or full
+read set without write confirmation. Run the writes set only as previews.
+Before the DDQ save-preview set, tell the user that its reconciliation call
 persists a test document and immutable test workpaper.
 
 Skip a probe and mark it **not run** when its tool is not entitled. An empty roster is not a failure: mark

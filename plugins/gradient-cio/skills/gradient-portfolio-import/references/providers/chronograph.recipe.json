@@ -1,0 +1,42 @@
+{
+  "contract": "gradient-portfolio-import-provider-recipe/v1",
+  "provider": {
+    "id": "chronograph",
+    "display_name": "Chronograph",
+    "connector": "Chronograph MCP"
+  },
+  "review": {
+    "status": "unreviewed",
+    "schema_identity": null,
+    "live_dry_run": null
+  },
+  "gradient_approval": {
+    "mapping_profile_id": null,
+    "mapping_profile_version": null,
+    "mapping_profile_digest": null,
+    "gradient_schema_identity": null,
+    "approval_scope": null,
+    "approval_status": "unreviewed"
+  },
+  "source": {
+    "read_operation": null,
+    "write_operations": [],
+    "pagination": {
+      "request_cursor_field": null,
+      "response_cursor_field": null,
+      "completion_condition": null
+    }
+  },
+  "mapping": [],
+  "supported_data_types": [],
+  "supported_asset_classes": [],
+  "limits": {
+    "max_source_page_size": null,
+    "max_stage_batch_size": null
+  },
+  "notes": [
+    "Listed for discovery only; this recipe supplies no reviewed mapping evidence.",
+    "Do not invent source operations, fields, units, pagination, supported data types, or supported asset classes.",
+    "Populate this recipe only after a client-authorized, read-only live connector dry run passes."
+  ]
+}

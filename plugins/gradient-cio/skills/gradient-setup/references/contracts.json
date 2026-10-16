@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-15",
+  "version": "2026-10-16",
   "minimum_connector_contract": {
     "minimum_service_version": "0.10.1",
     "compatibility_epoch": 4,
@@ -565,6 +565,38 @@
       "real_assets": {
         "required_tools": [],
         "required_probe_ids": []
+      }
+    },
+    "gradient-portfolio-import": {
+      "governed": {
+        "required_tools": [
+          "get_portfolio_import_capabilities",
+          "get_portfolio_import_schema",
+          "start_portfolio_import_session",
+          "stage_private_market_holding_records",
+          "stage_portfolio_import_records",
+          "resolve_portfolio_import_entities",
+          "confirm_portfolio_import_mappings",
+          "preview_portfolio_import",
+          "commit_portfolio_import",
+          "get_portfolio_import_session",
+          "list_portfolio_import_runs",
+          "rollback_portfolio_import_run"
+        ],
+        "required_probe_ids": [
+          "portfolio_import_capabilities",
+          "portfolio_import_schema",
+          "portfolio_import_start_session",
+          "portfolio_import_stage_records",
+          "portfolio_import_stage_generic_records",
+          "portfolio_import_resolve_entities",
+          "portfolio_import_confirm_mappings",
+          "portfolio_import_preview",
+          "portfolio_import_commit",
+          "portfolio_import_session",
+          "portfolio_import_run_history",
+          "portfolio_import_rollback"
+        ]
       }
     }
   },
@@ -2975,6 +3007,198 @@
         "dry_run": true,
         "committed": false
       },
+      "envelope": false
+    },
+    {
+      "id": "portfolio_import_capabilities",
+      "set": "portfolio-import-governed",
+      "tool": "get_portfolio_import_capabilities",
+      "args": {},
+      "required": [],
+      "schema_driven": true,
+      "external_prerequisites": [
+        "client-authorized source connector",
+        "one selected source provider/account",
+        "one existing Gradient portfolio"
+      ],
+      "envelope": false
+    },
+    {
+      "id": "portfolio_import_schema",
+      "set": "portfolio-import-governed",
+      "tool": "get_portfolio_import_schema",
+      "args": {},
+      "required": [],
+      "schema_driven": true,
+      "external_prerequisites": [
+        "portfolio_import_capabilities response"
+      ],
+      "envelope": false
+    },
+    {
+      "id": "portfolio_import_start_session",
+      "set": "portfolio-import-governed",
+      "tool": "start_portfolio_import_session",
+      "args": {},
+      "required": [],
+      "schema_driven": true,
+      "external_prerequisites": [
+        "client-authorized source connector",
+        "selected provider/account",
+        "selected existing Gradient portfolio",
+        "current runtime schema identity"
+      ],
+      "envelope": false
+    },
+    {
+      "id": "portfolio_import_stage_records",
+      "set": "portfolio-import-governed",
+      "tool": "stage_private_market_holding_records",
+      "args": {},
+      "required": [],
+      "schema_driven": true,
+      "external_prerequisites": [
+        "active governed import session",
+        "verbatim source records with declared units",
+        "batch at or below runtime limit and 100 records"
+      ],
+      "envelope": false
+    },
+    {
+      "id": "portfolio_import_stage_generic_records",
+      "set": "portfolio-import-governed",
+      "tool": "stage_portfolio_import_records",
+      "args": {},
+      "required": [],
+      "schema_driven": true,
+      "external_prerequisites": [
+        "active commitment_master, valuation_snapshot, or cash_flow_event_ledger session",
+        "exact runtime schema fetched for the selected data type",
+        "verbatim source records with declared values and units",
+        "batch at or below runtime limit and 100 records"
+      ],
+      "envelope": false
+    },
+    {
+      "id": "portfolio_import_resolve_entities",
+      "set": "portfolio-import-governed",
+      "tool": "resolve_portfolio_import_entities",
+      "args": {},
+      "required": [],
+      "schema_driven": true,
+      "external_prerequisites": [
+        "active governed import session",
+        "all source pages and staging batches complete"
+      ],
+      "envelope": false
+    },
+    {
+      "id": "portfolio_import_confirm_mappings",
+      "set": "portfolio-import-governed",
+      "tool": "confirm_portfolio_import_mappings",
+      "args": {},
+      "required": [],
+      "schema_driven": true,
+      "external_prerequisites": [
+        "complete proposed mapping presented to user",
+        "explicit user approval of exact existing-commitment mappings"
+      ],
+      "envelope": false
+    },
+    {
+      "id": "portfolio_import_preview",
+      "set": "portfolio-import-governed",
+      "tool": "preview_portfolio_import",
+      "args": {},
+      "required": [],
+      "schema_driven": true,
+      "external_prerequisites": [
+        "all source and session pages exhausted",
+        "all mappings confirmed or rejected",
+        "unchanged runtime schema identity",
+        "exact diff, issues, controls, payload digest, and receipt retained"
+      ],
+      "envelope": false
+    },
+    {
+      "id": "portfolio_import_commit",
+      "set": "portfolio-import-governed",
+      "tool": "commit_portfolio_import",
+      "args": {},
+      "required": [
+        "status",
+        "session_id",
+        "run_id",
+        "preview_payload_digest",
+        "destination_before_digest",
+        "destination_after_digest",
+        "counts",
+        "change_count",
+        "replayed"
+      ],
+      "schema_driven": true,
+      "external_prerequisites": [
+        "complete exact preview displayed to user",
+        "no blocking issues and all controls reconciled",
+        "explicit current-conversation confirmation of exact preview",
+        "exact confirmation_receipt_id and payload_digest from that preview"
+      ],
+      "envelope": false
+    },
+    {
+      "id": "portfolio_import_session",
+      "set": "portfolio-import-governed",
+      "tool": "get_portfolio_import_session",
+      "args": {},
+      "required": [],
+      "schema_driven": true,
+      "external_prerequisites": [
+        "exact governed import session_id",
+        "verify returned state and accepted/rejected counts",
+        "report every staged rejection from retained batch responses"
+      ],
+      "envelope": false
+    },
+    {
+      "id": "portfolio_import_run_history",
+      "set": "portfolio-import-governed",
+      "tool": "list_portfolio_import_runs",
+      "args": {},
+      "required": [
+        "runs",
+        "next_cursor"
+      ],
+      "schema_driven": true,
+      "external_prerequisites": [
+        "verified organization",
+        "selected portfolio when filtering history",
+        "follow next_cursor until null"
+      ],
+      "envelope": false
+    },
+    {
+      "id": "portfolio_import_rollback",
+      "set": "portfolio-import-governed",
+      "tool": "rollback_portfolio_import_run",
+      "args": {},
+      "required": [
+        "status",
+        "session_id",
+        "run_id",
+        "preview_payload_digest",
+        "destination_before_digest",
+        "destination_after_digest",
+        "counts",
+        "change_count",
+        "replayed"
+      ],
+      "schema_driven": true,
+      "external_prerequisites": [
+        "explicit current-conversation request to rollback one exact run",
+        "exact run details and effects displayed to user",
+        "explicit confirmation of exact destination_after_digest",
+        "no superseding or destination-conflict result"
+      ],
       "envelope": false
     }
   ]

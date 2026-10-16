@@ -1,5 +1,17 @@
 # Changelog
 
+## 6.3.0
+- Added the provider-neutral `gradient-portfolio-import` skill for governed private equity, real estate, infrastructure and private debt holdings workflows against existing Gradient portfolios and commitments.
+- Added strict verbatim-value, declared-unit, exhaustive-pagination, bounded-batch, user-confirmed mapping, schema-drift and complete-rejection rules with no source writes or deletion by omission.
+- Added preview-then-explicit-current-conversation commit using the exact displayed diff, issues, control and record reconciliations, payload digest and confirmation receipt, followed by run-history and portfolio-read verification.
+- Added optional import history and fail-closed rollback guidance requiring a separate explicit request and the exact destination-after digest.
+- Added a single-entry provider-recipe catalog, an explicit unreviewed Chronograph recipe, and fail-closed preview-only handling until a successful live connector dry run makes the exact mapping and schema eligible for review.
+- Extended `gradient-portfolio-import` with provider-neutral `commitment_master`, `valuation_snapshot`, and `cash_flow_event_ledger` workflows using the generic schema-driven staging tool.
+- Added explicit commitment-create allocation approval, existing-commitment requirements for valuations and cash flows, verbatim source value/sign preservation, evidence-only reported metrics, and versioned supersede language.
+- Made provider recipes optional reviewed evidence with schema-drift invalidation; a provider-neutral Gradient mapping-profile approval artifact now joins runtime treatment and publication readiness in governing preview-only versus commit-enabled behavior.
+- Expanded setup readiness and the public connector catalog to all twelve governed import tools and added generic Phase 2 staging contract coverage.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.2.0
 - Made every report cover a clean title page: eyebrow, title, subtitle, up to four identifying facts (for example Prepared for and Reviewed), confidentiality and brand. Status lines, signal boxes, coverage meters and system facts no longer appear on the cover.
 - Replaced status jargon such as "Watch" and "Partial" with plain-language labels (for example "Near limit", "Partly available", "Passed with notes") across chips, tables, tiles and the PowerPoint output, and the executive conclusion is now a specific sentence.

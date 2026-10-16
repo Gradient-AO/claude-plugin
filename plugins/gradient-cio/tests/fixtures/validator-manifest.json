@@ -42,6 +42,9 @@
       }
     }
   },
+  "gradient-portfolio-import": {
+    "chat_fixtures": ["portfolio-import-preview.json"]
+  },
   "gradient-portfolio-construction": {
     "validator": "skills/gradient-portfolio-construction/scripts/validate_construction.py",
     "modes": {

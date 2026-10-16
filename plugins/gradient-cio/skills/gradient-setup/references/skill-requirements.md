@@ -30,6 +30,7 @@ and `effective_capabilities` must equal whether that mode is not `unavailable`. 
 | gradient-portfolio-review | Brief (6–8 page) or comprehensive (15–20 page) portfolio review PDF | list_portfolios, get_portfolio_structure, get_portfolio_exposure, check_portfolio_policy, get_portfolio_historical_returns | **Comprehensive Portfolio Analytics:** get_portfolio_attribution, get_portfolio_exposure includes (`factor_currency_exposure`, `risk_contribution`, `commitment_pacing`, `liquidity_scorecard`, `lookthrough_13f`), list_assumption_sets; **context:** get_benchmarks, get_macro_signals (`roster_macro_exposure`), get_firm_13f_portfolio_review for resolved public managers only, get_macro_conditions indicators series, get_peer_allocation_intelligence, get_the_read, get_capital_market_assumptions; **Strategy Lab supplement (module optional):** selected `return_series_ids` passed directly to run_strategy_lab_simulation, run_strategy_lab_expected_statistics, run_strategy_lab_relative_return or run_strategy_lab_date_window_robustness | portfolio (research, peerIntelligence and strategyLab optional) |
 | gradient-portfolio-attribution | Single-mode 8–12 page attribution PDF (hard ceiling 14; every required visual retained) or compare-lanes 6–10 page PDF | list_portfolios, get_portfolio_structure, get_portfolio_historical_returns, get_portfolio_attribution, get_portfolio_ex_ante_attribution | single mode: get_benchmarks for missing labels only; compare-lanes mode: capability-gated planned simulation and comparison tools, whose absence selects the fallback variant | portfolio |
 | gradient-portfolio-construction | Five-mode 10–14 page construction decision pack | list_portfolios, get_portfolio_structure, get_portfolio_exposure (with mode-specific includes), check_portfolio_policy, get_portfolio_historical_returns, get_portfolio_attribution, list_assumption_sets, get_capital_market_assumptions | mode-specific macro, research, peer, diligence and selected-series Strategy Lab tools | portfolio, research (macroDesk, peerIntelligence, gradientSignals, firmFundDiligence and strategyLab optional by mode) |
+| gradient-portfolio-import | Chat-only, governed private-markets holdings, commitment, valuation and cash-flow import | get_portfolio_import_capabilities, get_portfolio_import_schema, start_portfolio_import_session, stage_private_market_holding_records, stage_portfolio_import_records, resolve_portfolio_import_entities, confirm_portfolio_import_mappings, preview_portfolio_import, commit_portfolio_import, get_portfolio_import_session, list_portfolio_import_runs, rollback_portfolio_import_run | client-authorized source connector; no source writes; commit requires runtime commit-enabled treatment plus current-conversation confirmation of the exact preview; rollback is optional and separately confirmed | portfolio |
 | gradient-idd-manager-performance | Single, comparison, robustness or shortlist performance PDF | get_benchmarks, get_return_series, analyze_strategy_lab_compare, run_strategy_lab_expected_statistics, run_strategy_lab_relative_return; shortlist mode also requires search_managers; request `series_views: true` when historical manager-versus-benchmark views are required; catalog benchmark mappings require returned status/rationale and realized/simulated scopes | shortlist mode: optional screen_managers followed by governed performance and canonical manager/fund-to-return-series links; run_strategy_lab_date_window_robustness with dated windows; missing correlation and risk contribution stay unavailable | strategyLab (shortlist screening may use firmFundDiligence) |
 | gradient-idd-manager-portfolio-fit | Portfolio-fit and scenario PDF | get_return_series, run_strategy_lab_expected_statistics, run_strategy_lab_simulation | compare_strategy_lab_saved_scenarios; missing correlation and risk contribution stay unavailable | strategyLab |
 | gradient-idd-private-markets-pme | Private-markets PME PDF | get_benchmarks, get_private_markets_holdings, build_strategy_lab_session, run_strategy_lab_private_markets_pme | — | strategyLab |
@@ -63,11 +64,52 @@ For private-markets PME, `get_portfolio_exposure` must return each exposure's `p
 `date_basis`, `currency`, `method`, `payload_digest`, and `points`. Benchmark comparisons must preserve
 `benchmark_window_return`.
 
+For `gradient-portfolio-import`, all twelve required tools must be advertised
+and available, and the selected source connector must be client-authorized.
+Run the dedicated `portfolio-import-governed` probe set only after the user
+selects one source provider/account and one existing Gradient portfolio.
+Use one session per selected data type. Holdings stage through
+`stage_private_market_holding_records`; `commitment_master`,
+`valuation_snapshot`, and `cash_flow_event_ledger` stage through
+`stage_portfolio_import_records`. The probes are schema-driven: fetch the exact
+schema for each selected type, preserve its identity and treatment, exhaust
+source and run-history pagination, keep staging batches at or below the
+returned limit and 100 records, present mappings before confirmation, report
+every rejection and skipped item, and display the exact diff, all issues,
+record/control reconciliations, `payload_digest`, and
+`confirmation_receipt_id`.
+
+Commitment create requires an explicit user-approved create-new decision and
+an existing destination allocation selected from governed portfolio structure.
+Never invent a commitment, fund, manager or allocation ID. Valuation and
+cash-flow records require mapped existing commitments and preserve the exact
+source value, unit, currency and sign convention without Claude calculations
+or conversions. Preserve supersede predecessors and language, treat omissions
+as no change, and keep reported metrics evidence-only.
+
+The default safe probe path stops after preview plus read-only session/history
+verification. Never call `commit_portfolio_import` during setup unless the user
+explicitly confirms the exact displayed preview in the current conversation;
+the selected treatment and publication readiness must both say commit-enabled,
+the state must be `ready_to_commit`, and the exact receipt and digest must be
+non-null. A preview-only treatment always stops after
+preview. Provider recipes are optional; use only reviewed, current recipes and
+fall back to field-by-field runtime-schema review when absent, unreviewed,
+retired or drifted. Recipe status never grants commit eligibility.
+pass that exact receipt and digest, then verify through
+`list_portfolio_import_runs`, `get_portfolio_import_session`, and governed
+portfolio reads. Never call `rollback_portfolio_import_run` as a readiness
+test. Rollback is optional and requires a separate explicit current-conversation
+request for one exact run and its exact `destination_after_digest`. Missing
+source authorization is **Not ready**, not a reason to use an export or another
+provider. Source writes and deletion by omission remain forbidden.
+
 Core skills (any one **Not licensed** or blocked makes the overall signal `not_ready` only if the client
 licensed the module it needs): gradient-odd-report, gradient-odd-ddq-reconcile, gradient-odd-manager-monitor,
 gradient-decision-ic-memo, gradient-portfolio-review,
 gradient-portfolio-attribution,
-gradient-portfolio-construction, gradient-idd-manager-performance,
+gradient-portfolio-construction, gradient-portfolio-import,
+gradient-idd-manager-performance,
 gradient-idd-manager-portfolio-fit,
 gradient-idd-private-markets-pme.
 

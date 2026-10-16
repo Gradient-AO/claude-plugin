@@ -1464,6 +1464,257 @@ def private_markets_pme_contract_checks():
     )
 
 
+def portfolio_import_governed_contract_checks():
+    skill_root = ROOT / "skills" / "gradient-portfolio-import"
+    skill = (skill_root / "SKILL.md").read_text(encoding="utf-8")
+    catalog = json.loads(
+        (
+            skill_root / "references" / "provider-recipe-catalog.json"
+        ).read_text(encoding="utf-8")
+    )
+    chronograph_recipe = json.loads(
+        (
+            skill_root
+            / "references"
+            / "providers"
+            / "chronograph.recipe.json"
+        ).read_text(encoding="utf-8")
+    )
+    recipe_contract = (
+        skill_root / "references" / "provider-recipe-contract.md"
+    ).read_text(encoding="utf-8")
+    normalized_recipe_contract = " ".join(recipe_contract.split())
+    phase_2_governance = (
+        skill_root / "references" / "phase-2-governance.md"
+    ).read_text(encoding="utf-8")
+    normalized_phase_2_governance = " ".join(phase_2_governance.split())
+    recipe_template = json.loads(
+        (
+            skill_root / "references" / "provider-recipe-template.json"
+        ).read_text(encoding="utf-8")
+    )
+    fixture = json.loads(
+        (FIX / "portfolio-import-preview.json").read_text(encoding="utf-8")
+    )
+    unreviewed_approval = {
+        "mapping_profile_id": None,
+        "mapping_profile_version": None,
+        "mapping_profile_digest": None,
+        "gradient_schema_identity": None,
+        "approval_scope": None,
+        "approval_status": "unreviewed",
+    }
+    required_tools = {
+        "get_portfolio_import_capabilities",
+        "get_portfolio_import_schema",
+        "start_portfolio_import_session",
+        "stage_private_market_holding_records",
+        "stage_portfolio_import_records",
+        "resolve_portfolio_import_entities",
+        "confirm_portfolio_import_mappings",
+        "preview_portfolio_import",
+        "commit_portfolio_import",
+        "get_portfolio_import_session",
+        "list_portfolio_import_runs",
+        "rollback_portfolio_import_run",
+    }
+    check(
+        all(f"`{tool}`" in skill for tool in required_tools)
+        and "one data type per import session" in skill
+        and "existing Gradient portfolio" in skill
+        and all(
+            data_type in skill
+            for data_type in (
+                "commitment_master",
+                "valuation_snapshot",
+                "cash_flow_event_ledger",
+            )
+        )
+        and "private equity, real estate, infrastructure, and private debt"
+        in skill
+        and "Copy source values verbatim" in skill
+        and "do no arithmetic" in skill.lower()
+        and "schema identity changes" in skill
+        and "lower of the runtime batch limit and 100 records" in skill
+        and "Present the complete proposed mapping" in skill
+        and "report every mapping rejection" in skill
+        and "Never delete, clear, replace, or truncate" in skill
+        and "Never auto-commit" in skill
+        and "exact record diff" in skill
+        and "record reconciliation" in skill
+        and "control reconciliation" in skill
+        and "explicit answer in the current conversation" in skill
+        and "exact displayed" in skill
+        and "`confirmation_receipt_id` and `payload_digest`" in skill
+        and "no record was deleted by omission" in skill
+        and "exact `destination_after_digest`" in skill
+        and "`references/phase-2-governance.md`" in skill
+        and "`references/providers/chronograph.recipe.json`" in skill
+        and "Recipe absence alone is not a blocker" in skill
+        and "provider recipe is optional" in skill.lower()
+        and 'treatment says "commit_enabled"' in skill
+        and "Preview only — backend publication is not enabled" in skill,
+        "portfolio import is bounded, schema-driven, and explicitly governed",
+    )
+    check(
+        all(
+            data_type in normalized_phase_2_governance
+            for data_type in (
+                "commitment_master",
+                "valuation_snapshot",
+                "cash_flow_event_ledger",
+            )
+        )
+        and "`stage_portfolio_import_records`" in normalized_phase_2_governance
+        and '"create_new" mapping decision' in normalized_phase_2_governance
+        and "existing destination allocation" in normalized_phase_2_governance
+        and normalized_phase_2_governance.count(
+            "Require a user-approved mapping to an existing commitment"
+        ) == 2
+        and "Never calculate, convert, scale, net, re-sign"
+        in normalized_phase_2_governance
+        and "`reported_metrics` are immutable source-reported evidence only"
+        in normalized_phase_2_governance
+        and "`supersede`" in normalized_phase_2_governance
+        and "omitted record is `no_change`" in normalized_phase_2_governance
+        and "every staging issue, mapping rejection"
+        in normalized_phase_2_governance
+        and "exact run through paginated run history"
+        in normalized_phase_2_governance
+        and "`destination_after_digest`" in normalized_phase_2_governance,
+        "Phase 2 import guidance preserves values, mappings, previews, and digests",
+    )
+    check(
+        catalog.get("contract")
+        == "gradient-portfolio-import-provider-catalog/v1"
+        and catalog.get("providers")
+        == [
+            {
+                "id": "chronograph",
+                "display_name": "Chronograph",
+                "recipe_file": "providers/chronograph.recipe.json",
+                "catalog_status": "listed_unreviewed",
+            }
+        ]
+        and chronograph_recipe.get("contract")
+        == "gradient-portfolio-import-provider-recipe/v1"
+        and chronograph_recipe.get("provider", {}).get("id") == "chronograph"
+        and chronograph_recipe.get("provider", {}).get("display_name")
+        == "Chronograph"
+        and chronograph_recipe.get("review", {}).get("status") == "unreviewed"
+        and chronograph_recipe.get("review", {}).get("schema_identity") is None
+        and chronograph_recipe.get("review", {}).get("live_dry_run") is None
+        and chronograph_recipe.get("gradient_approval")
+        == unreviewed_approval
+        and chronograph_recipe.get("source", {}).get("read_operation") is None
+        and chronograph_recipe.get("source", {}).get("write_operations") == []
+        and set(
+            chronograph_recipe.get("source", {}).get("pagination", {}).values()
+        )
+        == {None}
+        and chronograph_recipe.get("mapping") == []
+        and chronograph_recipe.get("supported_data_types") == []
+        and chronograph_recipe.get("supported_asset_classes") == []
+        and set(chronograph_recipe.get("limits", {}).values()) == {None}
+        and recipe_template.get("contract")
+        == "gradient-portfolio-import-provider-recipe/v1"
+        and recipe_template.get("review", {}).get("status") == "unreviewed"
+        and recipe_template.get("review", {}).get("live_dry_run") is None
+        and recipe_template.get("gradient_approval") == unreviewed_approval
+        and recipe_template.get("source", {}).get("write_operations") == []
+        and recipe_template.get("mapping", [{}])[0].get("data_type")
+        == "Replace with the runtime portfolio-import data type"
+        and recipe_template.get("mapping", [{}])[0].get("copy_mode")
+        == "verbatim"
+        and recipe_template.get("supported_data_types") == []
+        and "no reviewed Chronograph field or tool mapping"
+        in normalized_recipe_contract
+        and "live connector dry run" in normalized_recipe_contract
+        and "Recipe absence is not a workflow failure"
+        in normalized_recipe_contract
+        and "Never fabricate or derive approval identifiers or digests"
+        in normalized_recipe_contract
+        and "Commit eligibility comes only from the runtime"
+        in normalized_recipe_contract,
+        "provider recipes remain optional, reviewed, and drift-sensitive",
+    )
+    check(
+        fixture.get("delivery") == "chat_only"
+        and fixture.get("preview", {}).get("committed") is False
+        and fixture.get("preview", {}).get("all_rejections_reported") is True
+        and fixture.get("preview", {}).get("exact_diff_presented") is True
+        and fixture.get("preview", {}).get("all_issues_presented") is True
+        and fixture.get("preview", {}).get("record_reconciliation_passed") is True
+        and fixture.get("preview", {}).get("control_reconciliation_passed") is True
+        and fixture.get("preview", {}).get("confirmation_receipt_presented")
+        is False
+        and fixture.get("preview", {}).get("mapping_profile_approval_presented")
+        is True
+        and fixture.get("commit", {}).get("auto_commit") is False
+        and fixture.get("commit", {}).get("commit_eligible") is False
+        and fixture.get("commit", {}).get(
+            "runtime_treatment_commit_enabled_required"
+        ) is True
+        and fixture.get("commit", {}).get("preview_only_stops_before_commit")
+        is True
+        and fixture.get("commit", {}).get("confirmation_requested") is False
+        and fixture.get("commit", {}).get(
+            "current_conversation_confirmation_required"
+        ) is True
+        and fixture.get("commit", {}).get("exact_receipt_and_digest_required")
+        is True
+        and fixture.get("rollback", {}).get(
+            "explicit_current_conversation_request_required"
+        ) is True
+        and fixture.get("rollback", {}).get(
+            "exact_destination_after_digest_required"
+        ) is True
+        and fixture.get("source", {}).get("writes") == 0
+        and fixture.get("target", {}).get("deletes_or_clears") == 0
+        and fixture.get("target", {}).get("omission_deletes_records") is False
+        and fixture.get("target", {}).get("invented_destination_ids") is False
+        and fixture.get("schema", {}).get("selected_data_types")
+        == [
+            "commitment_master",
+            "valuation_snapshot",
+            "cash_flow_event_ledger",
+        ]
+        and fixture.get("schema", {}).get("separate_session_per_data_type")
+        is True
+        and fixture.get("staging", {}).get("tool")
+        == "stage_portfolio_import_records"
+        and all(
+            fixture.get("phase_2_semantics", {}).get(key) is True
+            for key in (
+                "source_sign_preserved",
+                "source_values_preserved",
+                "supersede_presented_as_versioned_successor",
+                "omissions_are_no_change",
+                "reported_metrics_evidence_only",
+                "every_skipped_item_reported",
+                "every_rejected_item_reported",
+            )
+        )
+        and fixture.get("phase_2_semantics", {}).get(
+            "claude_calculations_or_conversions"
+        ) is False
+        and fixture.get("provider_recipe", {}).get("catalog_contract")
+        == "gradient-portfolio-import-provider-catalog/v1"
+        and fixture.get("provider_recipe", {}).get("selected_provider_id")
+        == "chronograph"
+        and fixture.get("provider_recipe", {}).get("catalog_status")
+        == "listed_unreviewed"
+        and fixture.get("provider_recipe", {}).get("effective_review_status")
+        == "unreviewed"
+        and fixture.get("provider_recipe", {}).get("recipe_optional") is True
+        and fixture.get("provider_recipe", {}).get("used_as_mapping_evidence")
+        is False
+        and fixture.get("provider_recipe", {}).get("gradient_approval")
+        == unreviewed_approval,
+        "portfolio import fixture records Phase 2 commit and rollback gates",
+    )
+
+
 def registered_json_validator_checks(validator_manifest):
     positive_errors = []
     negative_errors = []
@@ -1974,7 +2225,7 @@ def static(allow_branded):
     theme_version = theme_match.group(1) if theme_match else ""
     check(bool(theme_version), "shared report theme declares THEME_VERSION")
     skills = sorted(p for p in (ROOT / "skills").iterdir() if (p / "SKILL.md").exists())
-    check(len(skills) == 12, f"exactly 12 target skills found ({len(skills)})")
+    check(len(skills) == 13, f"exactly 13 target skills found ({len(skills)})")
     validator_manifest = json.loads(
         (FIX / "validator-manifest.json").read_text(encoding="utf-8")
     )
@@ -2242,6 +2493,7 @@ def static(allow_branded):
     public_example_cover_checks()
     analysis_example_checks()
     private_markets_pme_contract_checks()
+    portfolio_import_governed_contract_checks()
     manager_performance_modes = (
         ROOT
         / "skills"
@@ -2356,8 +2608,8 @@ def static(allow_branded):
         + (f": {stale_simulation_hits}" if stale_simulation_hits else ""),
     )
     tool_pattern = re.compile(
-        r"`((?:get|list|run|analyze|build|check|search|screen|compare|"
-        r"save|update|create|extract|reconcile|batch|upload|preview|log|"
+        r"`((?:get|list|run|analyze|build|check|search|screen|commit|compare|"
+        r"save|update|create|extract|reconcile|rollback|batch|upload|preview|log|"
         r"simulate)_[a-z0-9_]+)`"
     )
     unknown_tools = []
