@@ -122,7 +122,9 @@ substitution fallback, and keeps native chart data editable.
 Each slide: `{"title", "kicker"?, "layout": "full"|"two"|"wide"|"section", "blocks": [...]}` (`two` and `wide`
 take `left` and `right` block lists; `wide` is 60/40), optional `"takeaway"` (one sentence shown in a dark bar).
 Title = the slide's message, not a topic ("Rates are doing the tightening", not "Rates"). Keep to ~6 bullets or one
-chart plus one table per slide. Tables continue after 12 rows. Analysis summaries sit beside evidence and full
+chart plus one table per slide. Tables continue after 12 rows. A chart shares its slide with a short lead-in and
+the commentary that follows it; two consecutive bar, line, stacked, pie, waterfall, band or percentile charts in
+one section sit side by side. Analysis summaries sit beside evidence and full
 callouts remain in speaker notes. Each slide lists its `[S#]` tags. The renderer exits with code 3 naming any
 slide with overflow, an empty placeholder or an empty chart.
 
