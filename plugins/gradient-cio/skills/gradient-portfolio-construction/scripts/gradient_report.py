@@ -264,6 +264,18 @@ def b_table(b):
     return f'{title}<table class="grid">{colgroup}<thead><tr>{head}</tr></thead>{body}</table>{note}{digest_note}'
 
 CHART_TABLE_ROW_CAP = ATOMIC_TABLE_ROW_LIMIT
+# Few rows can still be taller than a page when cells wrap; such tables must paginate by row.
+ATOMIC_TABLE_TEXT_LIMIT = 1600
+
+def _atomic_table(rows):
+    """Return whether a table is short enough in rows and text to keep on one page."""
+    if not isinstance(rows, list) or len(rows) > CHART_TABLE_ROW_CAP:
+        return False
+    characters = 0
+    for row in rows:
+        cells = row.values() if isinstance(row, dict) else row if isinstance(row, (list, tuple)) else [row]
+        characters += sum(len(str(cell)) for cell in cells)
+    return characters <= ATOMIC_TABLE_TEXT_LIMIT
 
 def _display_rows(rows, cap=CHART_TABLE_ROW_CAP):
     """Return a deterministic display sample with endpoints and interior coverage."""
@@ -1474,7 +1486,7 @@ def md_to_html(md):
             table = f'<table class="grid md"><thead><tr>{th}</tr></thead><tbody>{body}</tbody></table>'
             out.append(
                 f'<div class="keep atomic-table">{table}</div>'
-                if len(rows) <= CHART_TABLE_ROW_CAP
+                if _atomic_table(rows)
                 else f'<div class="paginated-table">{table}</div>'
             ); continue
         if line.lstrip().startswith(">"):
@@ -1571,7 +1583,7 @@ def render_blocks(blocks):
         classes = ["blk"]
         if is_table:
             classes.append("table-block")
-            if isinstance(rows, list) and len(rows) <= CHART_TABLE_ROW_CAP:
+            if _atomic_table(rows):
                 classes.extend(("keep", "atomic-table"))
             else:
                 classes.append("paginated-table")
@@ -1904,7 +1916,7 @@ def body_html(r):
                 else first
             )
             rows = list(row_container.get("rows", []))
-            if len(rows) <= CHART_TABLE_ROW_CAP:
+            if _atomic_table(rows):
                 body = (
                     f'<div class="keep section-atomic-table">'
                     f'{head}{render_blocks([first])}</div>'

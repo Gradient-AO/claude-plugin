@@ -1832,7 +1832,7 @@
           "text": "Observation: Daily-to-quarterly assets are 63.0% of NAV and unfunded commitments are 9.3% [S3][S6]. Why it matters: Liquid coverage remains compliant as calls exceed distributions. Uncertainty: Pacing results are assumptions, not confirmed call schedules. What would change the view: Calls above projections or liquid assets below policy [S3][S7]."
         }
       ],
-      "page_break": "force"
+      "page_break": "prefer"
     },
     {
       "title": "Coverage",

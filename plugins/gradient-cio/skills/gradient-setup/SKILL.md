@@ -133,8 +133,9 @@ Sections (soft target 4–5 pages; hard ceiling 7):
 
 1. **Summary** (`id: executive`) — bottom line in 3 sentences; tiles: Skills ready, Partial, Not licensed,
    Checks passed.
-2. **Skills you can use** — one compact `two_col` block: a **Ready** table and a
-   **Partial or unavailable** table. Each uses Skill, What it produces, and Note;
+2. **Skills you can use** — two full-width tables, stacked: a **Ready** table and a
+   **Partial or unavailable** table. Do not pair them in `two_col`; three columns
+   are too narrow side by side. Each uses Skill, What it produces, and Note;
    status is explicit in the table title or a chip when needed. For the IC memo,
    show Portfolio Analytics core readiness and `Strategy Lab supplement: <Ready
    / Not licensed (optional) / Unavailable (optional)>` separately. A missing

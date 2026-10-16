@@ -1,0 +1,4 @@
+#!/bin/sh
+# Enable once per clone: git config core.hooksPath .githooks
+PYTHON=$(command -v python || command -v python3)
+exec "$PYTHON" plugins/gradient-cio/tools/quick_checks.py

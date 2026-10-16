@@ -17,13 +17,12 @@ This repo is a **public** Claude plugin marketplace. Clients install from it dir
 2. Make the change. If shared files changed, run `sync_shared.py`.
 3. Bump the version in **both** `plugins/gradient-cio/.claude-plugin/plugin.json` and the matching entry in `.claude-plugin/marketplace.json` (semver: patch = fixes/wording, minor = new skill or feature, major = breaking change). Clients only receive an update when the version changes.
 4. Add an entry at the top of `CHANGELOG.md`.
-5. Install `plugins/gradient-cio/requirements-test.txt` plus Poppler, qpdf, LibreOffice and Inter, then run and fix until both pass:
-   - `python plugins/gradient-cio/tools/sync_shared.py --check` (**mandatory immediately before every push**; never push with divergent shared copies)
-   - `python plugins/gradient-cio/tools/release_quality_gate.py` (runs `tests/run_tests.py`; skips Claude validation only when the CLI is unavailable)
-   - `claude plugin validate .` (required before release even when CI reports that the CLI was unavailable)
-   - for deterministic visual review artifacts: `python plugins/gradient-cio/tools/generate_golden_example.py --out <temporary-directory>`
+5. Checks:
+   - **Pre-push (automatic):** enable once per clone with `git config core.hooksPath .githooks`. The hook runs `python plugins/gradient-cio/tools/quick_checks.py` (version match, shared-file sync, skill catalog, `claude plugin validate .`) and blocks the push if any fail. Never bypass it with `--no-verify`.
+   - **GitHub `validate` (blocks merge):** the same quick checks, the full test suite, and every example in `tools/generate_examples.py` must render. Do not merge while it is red. To run the full suite locally, install `plugins/gradient-cio/requirements-test.txt` plus Poppler, qpdf, LibreOffice and Inter and run `python plugins/gradient-cio/tools/release_quality_gate.py`.
+   - if the change alters report layout, regenerate the reference examples on Linux (CI or an Ubuntu 24.04 container) with `python plugins/gradient-cio/tools/generate_examples.py` and review them; `tools/check_visual_regression.py` compares two thumbnail sets on demand.
    - if the change adds or changes which GradientCIO tools a skill calls: update `skills/gradient-setup/references/contracts.json` and `skill-requirements.md`, then run the gradient-setup full self-test against the live connector and record any reproducible failure as a plain finding with its error code, HTTP status and request ID.
    - a secrets scan: `git diff main --stat` plus `grep -rInE "(api[_-]?key|secret|token|password|bearer)" plugins/ | grep -v -i "no credentials"` and review any hits.
-6. Commit with a clear message, push the branch, open a PR, wait for the `validate` check to pass, then merge to `main` (squash). If the owner asks to publish directly, push to `main` only after step 5 passes.
+6. Commit with a clear message, push the branch, open a PR, wait for the `validate` check to pass, then merge to `main` (squash). Merging to `main` publishes: the `mirror` workflow copies `main` to the private org marketplace and the Claude app picks it up automatically.
 7. Tag the release: `git tag v<version> && git push origin v<version>`, and create a GitHub release with the changelog entry (`gh release create v<version> --notes-from-tag` or paste the notes).
 8. Report back: the new version, what changed, and the client update line: `/plugin marketplace update gradientcio`.

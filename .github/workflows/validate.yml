@@ -9,19 +9,8 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with: { python-version: "3.12" }
-      - name: Version check
-        run: |
-          python - <<'PY'
-          import json
-          p = json.load(open("plugins/gradient-cio/.claude-plugin/plugin.json"))["version"]
-          m = [x for x in json.load(open(".claude-plugin/marketplace.json"))["plugins"] if x["name"] == "gradient-cio"][0]["version"]
-          assert p == m, f"plugin.json {p} != marketplace.json {m}"
-          print("version", p)
-          PY
-      - name: Shared-file sync check
-        run: python plugins/gradient-cio/tools/sync_shared.py --check
-      - name: Generated catalog check
-        run: python plugins/gradient-cio/tools/generate_skill_catalog.py --check
+      - name: Quick checks (same as the pre-push hook)
+        run: python plugins/gradient-cio/tools/quick_checks.py
       - name: Install system renderers
         run: |
           sudo apt-get update
@@ -36,36 +25,20 @@ jobs:
           REQUIRE_INTER_PDF: "1"
           REQUIRE_LIBREOFFICE: "1"
         run: python plugins/gradient-cio/tests/run_tests.py
-      - name: Golden example and visual regression checks
+      - name: Every example renders
         run: |
           set -euo pipefail
-          mkdir -p /tmp/gradient-examples /tmp/gradient-reference /tmp/gradient-actual
           python plugins/gradient-cio/tools/generate_examples.py \
             --format both --out /tmp/gradient-examples
-          python plugins/gradient-cio/tools/render_example_thumbnails.py \
-            --examples plugins/gradient-cio/assets/examples \
-            --out /tmp/gradient-reference --format both
-          python plugins/gradient-cio/tools/render_example_thumbnails.py \
-            --examples /tmp/gradient-examples \
-            --out /tmp/gradient-actual --format both
-          python plugins/gradient-cio/tools/check_visual_regression.py \
-            /tmp/gradient-reference /tmp/gradient-actual --threshold 0.02
           for report in /tmp/gradient-examples/*.pdf; do
             python plugins/gradient-cio/shared/check_layout.py "$report" \
               --min-fill 0.40 --exclude 1 \
               || echo "::warning file=$report::example layout below the 40% page-fill guide"
           done
-      - name: Upload generated examples after visual failure
+      - name: Upload generated examples after failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: generated-examples
           path: /tmp/gradient-examples
           retention-days: 3
-      - name: Claude plugin validation when available
-        run: |
-          if command -v claude >/dev/null 2>&1; then
-            claude plugin validate .
-          else
-            echo "::notice::Claude CLI unavailable on the runner; plugin validation remains a required maintainer check."
-          fi

@@ -7,6 +7,7 @@ import argparse
 import datetime
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -188,7 +189,13 @@ def main() -> int:
         sources.update(
             {skill: gips_source(skill, temporary) for skill in GIPS_SOURCES}
         )
+        suffixes = (
+            (".pdf", ".pptx")
+            if args.output_format == "both"
+            else (f".{args.output_format}",)
+        )
         failed: list[str] = []
+        unrendered: list[str] = []
         for skill in sorted(sources):
             work = temporary / "qa" / skill
             work.mkdir(parents=True)
@@ -207,13 +214,18 @@ def main() -> int:
                 env=environment,
                 check=False,
             )
-            if completed.returncode != 0:
+            if not all(
+                (work / skill).with_suffix(suffix).is_file()
+                for suffix in suffixes
+            ):
+                unrendered.append(skill)
+            elif completed.returncode != 0:
                 failed.append(skill)
             base = args.out / skill
             for suffix in (".pdf", ".pptx"):
                 rendered = (work / skill).with_suffix(suffix)
                 if rendered.is_file():
-                    os.replace(rendered, base.with_suffix(suffix))
+                    shutil.move(rendered, base.with_suffix(suffix))
             pptx_path = base.with_suffix(".pptx")
             if pptx_path.is_file():
                 normalize_pptx(pptx_path)
@@ -222,6 +234,12 @@ def main() -> int:
             "Layout QA warnings for: " + ", ".join(failed),
             file=sys.stderr,
         )
+    if unrendered:
+        print(
+            "FAIL — examples rejected before rendering: " + ", ".join(unrendered),
+            file=sys.stderr,
+        )
+        return 1
     print(f"Generated {len(sources)} illustrative examples in {args.out}")
     return 0
 
