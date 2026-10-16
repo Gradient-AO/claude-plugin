@@ -25,9 +25,7 @@ three prompts the user can try next. Keep the language plain: the reader may not
 
 Read `references/module-scope.md` before checking Portfolio Analytics or Strategy Lab. Test and
 report them as separate modules; never use the canonical illustrative portfolio ID as Strategy Lab input.
-
 ## 1. Connection
-
 1. Check that GradientCIO tools are available (search for `GradientCIO`). If none appear, the connector is not
    connected. The plugin bundles it (`https://mcp.gradientcio.com/mcp`), so tell the user to open their connector
    settings, find **GradientCIO** and sign in. Still produce the PDF with signal `not_ready` and the steps to fix.
@@ -36,7 +34,6 @@ report them as separate modules; never use the canonical illustrative portfolio 
    Record `licensed_modules` and `role`.
 
 ## 2. Access and data readiness
-
 1. Call `get_gradient_capabilities` with the `organization_id` and `detail: "summary"`, omitting `scope`; for a bounded follow-up use `scope: {"view":"manager_diligence"}` and preserve `scoped_coverage`:
    - `product_entitlements` = commercial licenses; `capability_access_modes` = each capability's `live`,
      `illustrative`, or `unavailable` access basis; `effective_capabilities` = whether that mode is usable,
@@ -70,9 +67,8 @@ report them as separate modules; never use the canonical illustrative portfolio 
    `access_mode: "illustrative"`, report
    **Evaluation — Illustrative, Gradient Maintained — demo data, not the client's holdings or managers**,
    not Ready or Not licensed.
-   Then apply `mode_requirements` for the selected construction mode. Run `check_contract.py
-   --validate-mode <contracts.json> gradient-portfolio-construction <mode> <capabilities-response.json>`;
-   a missing `get_private_markets_holdings` makes only `private_markets` construction **Not ready**.
+   Then apply `mode_requirements` for the selected construction mode. Run `check_contract.py --validate-mode <contracts.json> gradient-portfolio-construction <mode> <capabilities-response.json>`;
+   a missing `get_private_markets_holdings` makes only `private_markets` construction **Not ready**. For portfolio import, validate `gradient-portfolio-import governed`; all twelve governed import tools are required.
 4. Call `get_diligence_roster_funds`: roster size, capacity used and available, and reviews due within 30 days.
 ## 3. Contract self-test
 
@@ -83,8 +79,14 @@ monitoring, review and Strategy Lab scenario previews plus one batch-preview con
 preview, and must never commit. Private-markets construction adds one fictional `private_markets_holdings`
 read probe. The **DDQ save-preview** set is 3 calls: it intentionally persists one fictional test
 document and one immutable reconciliation test run so that document identity and the chained save can be
-tested with `dry_run: true`; disclose that persistence before running it. The complete matrix is 76 calls.
-
+tested with `dry_run: true`; disclose that persistence before running it. The dedicated
+**portfolio-import-governed** defines 12 schema-driven calls and requires an authorized source connector,
+one provider/account, and one existing Gradient portfolio. It covers holdings plus the generic
+`commitment_master`, `valuation_snapshot`, and `cash_flow_event_ledger` staging path. Its safe readiness path
+stops after preview plus session/history reads. Commit requires runtime "commit_enabled" treatment and
+current-conversation confirmation of the exact displayed diff, issues, controls, digest and receipt;
+rollback is never a readiness test and requires a separate explicit request with the exact destination-after
+digest. The complete matrix is 88 calls only when all actions are authorized.
 For each probe, record pass, fail (with error code and HTTP status) or not run (not entitled), and the
 response `as_of`. Resolve `depends_on` arguments with `check_contract.py --resolve-args`; do not manually
 copy or invent chained IDs.
@@ -96,7 +98,6 @@ Treat every failed probe as a finding: quote the error code, HTTP status and req
 it to Gradient support. Do not replace a failed result with a local calculation or infer an empty result.
 
 ## 4. Branding
-
 Check the plugin's `branding.json` (plugin root). `brand: "gradient"` is the explicit default and renders
 the GradientCIO mark. An empty `client_name` is intentional in the public marketplace package; it prevents a
 client identity from shipping to every installer and is not an unbranded-report failure. Say how to apply

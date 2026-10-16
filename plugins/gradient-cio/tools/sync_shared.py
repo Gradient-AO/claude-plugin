@@ -59,6 +59,14 @@ def is_chat_only(skill):
     """Return whether a skill deliberately produces only an in-chat response."""
     return bool(CHAT_DELIVERY.search((skill / "SKILL.md").read_text(encoding="utf-8")))
 
+def chat_shared_files(skill):
+    """Yield shared references needed by chat skills with module boundaries."""
+    text = (skill / "SKILL.md").read_text(encoding="utf-8")
+    match = re.search(r'^\s+modules:\s*["\']?([^"\'\n]+)', text, re.MULTILINE)
+    if match is None or match.group(1).strip() == "none":
+        return ()
+    return (("shared/module-scope.md", "references/module-scope.md"),)
+
 
 def digest(p):
     return hashlib.sha256(p.read_bytes()).hexdigest()[:12]
@@ -81,9 +89,8 @@ def main():
     for skill in sorted((ROOT / "skills").iterdir()):
         if not (skill / "SKILL.md").exists():
             continue
-        if is_chat_only(skill):
-            continue
-        for src, rel in shared_files():
+        pairs = chat_shared_files(skill) if is_chat_only(skill) else shared_files()
+        for src, rel in pairs:
             s, d = ROOT / src, skill / rel
             if s.resolve() == d.resolve():
                 continue

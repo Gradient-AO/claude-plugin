@@ -1,5 +1,21 @@
 # Changelog
 
+## 6.3.0
+- Extended `gradient-portfolio-import` with provider-neutral `commitment_master`, `valuation_snapshot`, and `cash_flow_event_ledger` workflows using the generic schema-driven staging tool.
+- Added explicit commitment-create allocation approval, existing-commitment requirements for valuations and cash flows, verbatim source value/sign preservation, evidence-only reported metrics, and versioned supersede language.
+- Made provider recipes optional reviewed evidence with schema-drift invalidation; a provider-neutral Gradient mapping-profile approval artifact now joins runtime treatment and publication readiness in governing preview-only versus commit-enabled behavior.
+- Expanded setup readiness to all twelve import tools and added generic Phase 2 staging contract coverage.
+- Client update: `/plugin marketplace update gradientcio`
+
+## 6.2.0
+- Added the provider-neutral `gradient-portfolio-import` skill for governed private equity, real estate, infrastructure and private debt holdings workflows against existing Gradient portfolios and commitments.
+- Added strict verbatim-value, declared-unit, exhaustive-pagination, bounded-batch, user-confirmed mapping, schema-drift and complete-rejection rules with no source writes or deletion by omission.
+- Added preview-then-explicit-current-conversation commit using the exact displayed diff, issues, control and record reconciliations, payload digest and confirmation receipt, followed by run-history and portfolio-read verification.
+- Added optional import history and fail-closed rollback guidance requiring a separate explicit request and the exact destination-after digest.
+- Added a single-entry provider-recipe catalog, an explicit unreviewed Chronograph recipe, and fail-closed preview-only handling until a successful live connector dry run makes the exact mapping and schema eligible for review.
+- Expanded setup readiness and the public connector catalog for all eleven governed portfolio-import tools.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.1.1
 - Made packaging acceptance run every registered public report validator from an isolated skill copy against its sample fixtures, proving that shipped local dependencies are sufficient.
 - Made shared-copy parity a fail-fast release-gate check and a mandatory check immediately before every push.

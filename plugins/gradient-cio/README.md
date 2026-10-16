@@ -39,6 +39,7 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 | `gradient-portfolio-review` | Create a portfolio monitoring review for a board or committee. Triggers: 'review our total portfolio', 'prepare a quarterly portfolio review', 'monitor portfolio risks'. For a decision memo use gradient-decision-ic-memo. | portfolio,research,peerIntelligence,strategyLab |
 | `gradient-portfolio-attribution` | Create single-lane or multi-lane portfolio attribution reports for one saved portfolio. Triggers: 'prepare an attribution report', 'run Brinson analysis', 'show sources of active return', 'compare historical and ex ante attribution', 'show persistent attribution sources'. | portfolio |
 | `gradient-portfolio-construction` | Create a portfolio-construction report for private markets, fixed income, global public equity, marketable alternatives, or real assets. Triggers: 'design a sleeve strategy mix', 'build an allocation', 'review portfolio construction'. For one-manager fit use gradient-idd-manager-portfolio-fit. | portfolio,research,macroDesk,peerIntelligence,gradientSignals,firmFundDiligence,strategyLab |
+| `gradient-portfolio-import` | Create a governed private-markets portfolio import. Triggers: 'import private holdings', 'import commitments', 'import valuations', 'import cash flows', 'preview portfolio import', 'review import history'. Commits only after exact preview and current-conversation confirmation. | portfolio |
 
 ### Investment memos
 

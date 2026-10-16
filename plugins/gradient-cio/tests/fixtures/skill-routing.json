@@ -1,5 +1,39 @@
 [
   {
+    "prompt": "Import private-market holdings from our authorized provider after I confirm the exact preview",
+    "expected": "gradient-portfolio-import",
+    "not": "gradient-portfolio-review",
+    "description_terms": [
+      "governed",
+      "private-markets",
+      "holdings"
+    ]
+  },
+  {
+    "prompt": "Use gradient-portfolio-import for fictional routing case 2 (TEST).",
+    "expected": "gradient-portfolio-import",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-portfolio-import for fictional routing case 3 (TEST).",
+    "expected": "gradient-portfolio-import",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-portfolio-import for fictional routing case 4 (TEST).",
+    "expected": "gradient-portfolio-import",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-portfolio-import for fictional routing case 5 (TEST).",
+    "expected": "gradient-portfolio-import",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
     "prompt": "Compare these managers' track records against suitable benchmarks",
     "expected": "gradient-idd-manager-performance",
     "not": "gradient-odd-report",

@@ -13,9 +13,16 @@ def contract_manifest():
         name: sum(probe.get("set") == name for probe in probes)
         for name in ("standard", "full", "writes", "ddq-save-preview")
     }
+    portfolio_import_probe_count = sum(
+        probe.get("set") == "portfolio-import-governed" for probe in probes
+    )
     check(
         counts == {"standard": 8, "full": 56, "writes": 8, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
+    )
+    check(
+        portfolio_import_probe_count == 12,
+        "portfolio-import workflow has twelve schema-driven probes",
     )
     full_read_count = counts["standard"] + counts["full"]
     setup_guidance = SETUP_SKILL.read_text(encoding="utf-8")
@@ -158,9 +165,9 @@ def contract_manifest():
         public_tool_catalog.get("generated") is True
         and public_tool_catalog.get("source")
         == "@gradientcio/contracts canonical MCP tool catalog"
-        and len(public_tools) == 65
+        and len(public_tools) == 77
         and public_tools == sorted(set(public_tools)),
-        "public-tool catalog has generated 65-tool canonical parity",
+        "public-tool catalog has generated 77-tool canonical parity",
     )
     minimum = contracts.get("minimum_connector_contract", {})
     response_path_tools = set(minimum.get("required_response_field_paths", {}))
@@ -218,7 +225,7 @@ def contract_manifest():
     }
     minimum_probe_ids = set(minimum.get("required_probe_ids", []))
     check(
-        contracts.get("version") == "2026-10-15"
+        contracts.get("version") == "2026-10-16"
         and minimum.get("minimum_service_version") == "0.10.1"
         and minimum.get("compatibility_epoch") == 4
         and set(minimum.get("required_tools", [])) == expected_minimum_tools,
@@ -275,6 +282,38 @@ def contract_manifest():
         "gradient-portfolio-construction",
         {},
     )
+    portfolio_import_mode = contracts.get("mode_requirements", {}).get(
+        "gradient-portfolio-import",
+        {},
+    ).get("governed", {})
+    portfolio_import_tools = {
+        "get_portfolio_import_capabilities",
+        "get_portfolio_import_schema",
+        "start_portfolio_import_session",
+        "stage_private_market_holding_records",
+        "stage_portfolio_import_records",
+        "resolve_portfolio_import_entities",
+        "confirm_portfolio_import_mappings",
+        "preview_portfolio_import",
+        "commit_portfolio_import",
+        "get_portfolio_import_session",
+        "list_portfolio_import_runs",
+        "rollback_portfolio_import_run",
+    }
+    portfolio_import_probe_ids = {
+        "portfolio_import_capabilities",
+        "portfolio_import_schema",
+        "portfolio_import_start_session",
+        "portfolio_import_stage_records",
+        "portfolio_import_stage_generic_records",
+        "portfolio_import_resolve_entities",
+        "portfolio_import_confirm_mappings",
+        "portfolio_import_preview",
+        "portfolio_import_commit",
+        "portfolio_import_session",
+        "portfolio_import_run_history",
+        "portfolio_import_rollback",
+    }
     check(
         construction_modes.get("private_markets") == {
             "required_tools": ["get_private_markets_holdings"],
@@ -295,6 +334,69 @@ def contract_manifest():
         and "get_private_markets_holdings"
         in minimum.get("required_tools", []),
         "private-markets holdings remains construction-mode scoped and is required by PME",
+    )
+    check(
+        set(portfolio_import_mode.get("required_tools", []))
+        == portfolio_import_tools
+        and set(portfolio_import_mode.get("required_probe_ids", []))
+        == portfolio_import_probe_ids
+        and all(
+            by_id[probe_id].get("set") == "portfolio-import-governed"
+            and by_id[probe_id].get("schema_driven") is True
+            and by_id[probe_id].get("external_prerequisites")
+            for probe_id in portfolio_import_probe_ids
+        ),
+        "portfolio-import workflow is capability-gated and schema-driven",
+    )
+    commit_probe = by_id["portfolio_import_commit"]
+    rollback_probe = by_id["portfolio_import_rollback"]
+    history_probe = by_id["portfolio_import_run_history"]
+    generic_stage_probe = by_id["portfolio_import_stage_generic_records"]
+    execution_paths = {
+        "status",
+        "session_id",
+        "run_id",
+        "preview_payload_digest",
+        "destination_before_digest",
+        "destination_after_digest",
+        "counts",
+        "change_count",
+        "replayed",
+    }
+    check(
+        commit_probe["tool"] == "commit_portfolio_import"
+        and execution_paths <= set(commit_probe.get("required", []))
+        and any(
+            "current-conversation confirmation" in prerequisite
+            for prerequisite in commit_probe["external_prerequisites"]
+        )
+        and any(
+            "confirmation_receipt_id and payload_digest" in prerequisite
+            for prerequisite in commit_probe["external_prerequisites"]
+        )
+        and history_probe["tool"] == "list_portfolio_import_runs"
+        and {"runs", "next_cursor"} <= set(history_probe.get("required", []))
+        and rollback_probe["tool"] == "rollback_portfolio_import_run"
+        and execution_paths <= set(rollback_probe.get("required", []))
+        and any(
+            "current-conversation request" in prerequisite
+            for prerequisite in rollback_probe["external_prerequisites"]
+        )
+        and any(
+            "destination_after_digest" in prerequisite
+            for prerequisite in rollback_probe["external_prerequisites"]
+        )
+        and generic_stage_probe["tool"] == "stage_portfolio_import_records"
+        and any(
+            "commitment_master, valuation_snapshot, or cash_flow_event_ledger"
+            in prerequisite
+            for prerequisite in generic_stage_probe["external_prerequisites"]
+        )
+        and any(
+            "exact runtime schema" in prerequisite
+            for prerequisite in generic_stage_probe["external_prerequisites"]
+        ),
+        "portfolio-import commit, history, and rollback probes are fail-closed",
     )
     private_markets_probe = next(
         (
@@ -382,8 +484,8 @@ def contract_manifest():
         "positioning probes use get_macro_signals public views",
     )
     requirement_tokens = set(re.findall(
-        r"\b(?:get|list|run|analyze|build|compare|create|extract|log|preview|reconcile|"
-        r"save|screen|search|update|upload|batch)_[a-z0-9_]+\b",
+        r"\b(?:get|list|run|analyze|build|commit|compare|create|extract|log|preview|"
+        r"reconcile|rollback|save|screen|search|update|upload|batch)_[a-z0-9_]+\b",
         SKILL_REQUIREMENTS.read_text(encoding="utf-8"),
     ))
     unknown_requirement_tools = requirement_tokens - set(public_tools)

@@ -1,0 +1,16 @@
+{
+  "contract": "gradient-portfolio-import-provider-catalog/v1",
+  "providers": [
+    {
+      "id": "chronograph",
+      "display_name": "Chronograph",
+      "recipe_file": "providers/chronograph.recipe.json",
+      "catalog_status": "listed_unreviewed"
+    }
+  ],
+  "notes": [
+    "Catalog listing does not authorize a connector or make a provider commit eligible.",
+    "Chronograph is the only named provider in this release.",
+    "Runtime connector tools and Gradient schemas override catalog metadata."
+  ]
+}
