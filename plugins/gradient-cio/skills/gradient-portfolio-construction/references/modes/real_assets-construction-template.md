@@ -11,10 +11,11 @@ apply its specific repair levers and rerun until clean.
 - Root `construction_mode`: `real_assets`.
 - `meta.eyebrow` and `meta.header_label`: `Real Assets Portfolio Construction`.
 - Cover facts: As of, Total NAV, Real-assets weight, Unfunded commitments.
-- `meta.signal_title`: `Overall view`; `meta.meter_title`: `Scope reviewed`.
+- `meta.signal.label`: one plain sentence naming the main constraint, e.g. `Valuation lag and structure mix
+  need monitoring`. The cover shows no signal or coverage; they open the executive band and sources appendix.
 - `executive.label`: `Recommendation`.
 - `executive.bottom_line`: recommendation, requested committee action, principal evidence and largest risk.
-- Four tiles: Real-assets weight, Marketable share, Unfunded commitments, Policy status.
+- Four tiles: Real-assets weight, Marketable share, Unfunded commitments, Policy status. The Policy status tile shows the returned `display_label` (for example "Near limit"), never the raw status code.
 
 ## Committee-memo visual and analysis contract
 
@@ -137,7 +138,7 @@ apply its specific repair levers and rerun until clean.
 - `coverage` block with every expected source and its typed status.
 - Include **Peer allocation intelligence**. When unlicensed, use status
   `not licensed` and note `Not licensed — Peer allocation context was skipped
-  because peerIntelligence is not available for this organization. This
+  because peer allocation intelligence is not licensed for this organization. This
   construction report uses portfolio evidence only.`
 
 ### Appendix — Sources and methods (`num: "A"`)

@@ -11,8 +11,10 @@
     "cover_disclosure": "Illustrative sample · not client data",
     "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers",
     "cover_facts": [
-      ["Roster subjects", "2"],
-      ["Flagged for follow-up", "1"]
+      [
+        "Roster subjects",
+        "2"
+      ]
     ],
     "signal": {
       "level": "watch",
@@ -36,9 +38,21 @@
         {
           "type": "table",
           "title": "Flagged funds",
-          "columns": ["Subject", "Triage level", "Reason", "Action", "Source"],
+          "columns": [
+            "Subject",
+            "Triage level",
+            "Reason",
+            "Action",
+            "Source"
+          ],
           "rows": [
-            ["Example Fund A", "watch", "Overdue review", "Schedule review", "[S1]"]
+            [
+              "Example Fund A",
+              "watch",
+              "Overdue review",
+              "Schedule review",
+              "[S1]"
+            ]
           ]
         }
       ]
@@ -51,10 +65,31 @@
         {
           "type": "table",
           "title": "Ranked roster",
-          "columns": ["Rank", "Subject", "Triage level", "Reason", "Action", "Source"],
+          "columns": [
+            "Rank",
+            "Subject",
+            "Triage level",
+            "Reason",
+            "Action",
+            "Source"
+          ],
           "rows": [
-            ["1", "Example Fund A", "watch", "Overdue review", "Schedule review", "[S1]"],
-            ["2", "Example Fund B", "clear", "Complete queue row; no governed flag", "No action", "[S1]"]
+            [
+              "1",
+              "Example Fund A",
+              "watch",
+              "Overdue review",
+              "Schedule review",
+              "[S1]"
+            ],
+            [
+              "2",
+              "Example Fund B",
+              "clear",
+              "Complete queue row; no governed flag",
+              "No action",
+              "[S1]"
+            ]
           ]
         }
       ]

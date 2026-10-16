@@ -131,13 +131,16 @@ Write `meta.json` in the existing shape:
  "running_head": "<short subject> · GIPS", "data_as_of": "<report period end>",
  "confidentiality": "Confidential — prepared for <organization> internal diligence use",
  "cover_disclosure": "<omit for live work; public samples use Illustrative sample · not client data>",
- "cover_facts": [["Subject","…"],["Document reviewed","…"],["Data through","…"],["Review date","…"]],
- "signal_title": "Overall view",
- "signal": {"level": "satisfactory|follow_ups|material_concern|not_applicable", "label": "<optional>"},
+ "cover_facts": [["Firm","…"],["Document reviewed","…"],["Data through","…"],["Review date","…"]],
+ "signal": {"level": "satisfactory|follow_ups|material_concern|not_applicable", "label": "<plain sentence>"},
  "completeness": {"used": 0, "expected": 0, "state": "complete|partial"},
- "meter_title": "Scope reviewed",
  "executive": {"label": "Bottom line", "bottom_line": "<2–4 sourced sentences>"}}
 ```
+
+The cover is a title page: at most four identifying facts (use `Firm`, `Asset owner` or `Composite` for the
+subject) and no status, signal or coverage. The signal label is a plain sentence such as "Satisfactory with
+follow-ups" or "Material gaps in the policies manual"; it opens the executive band. Completeness is shown
+once, as a sentence, at the top of Appendix A.
 
 The composer takes executive tiles from `visuals.json`, so the existing metadata fixture shape remains valid.
 

@@ -1,120 +1,118 @@
 {
   "meta": {
-  "mode": "single",
-  "eyebrow": "Investment Due Diligence",
-  "header_label": "Manager Performance",
-  "title": "Northstar Select Equity Composite",
-  "subtitle": "Single-manager performance assessment · Investment Committee review",
-  "running_head": "Northstar Select Equity Composite",
-  "data_as_of": "2025-12-31",
-  "confidentiality": "Confidential — manager performance review",
-  "cover_facts": [
-    [
-      "Review",
-      "Single manager"
+    "mode": "single",
+    "eyebrow": "Investment Due Diligence",
+    "header_label": "Manager Performance",
+    "title": "Northstar Select Equity Composite",
+    "subtitle": "Single-manager performance assessment · Investment Committee review",
+    "running_head": "Northstar Select Equity Composite",
+    "data_as_of": "2025-12-31",
+    "confidentiality": "Confidential — manager performance review",
+    "cover_facts": [
+      [
+        "Review",
+        "Single manager"
+      ],
+      [
+        "Observation window",
+        "2020-01-31 to 2025-12-31"
+      ],
+      [
+        "Observations",
+        "72 monthly"
+      ],
+      [
+        "Primary benchmark",
+        "Northstar Core Equity Benchmark"
+      ]
     ],
-    [
-      "Observation window",
-      "2020-01-31 to 2025-12-31"
-    ],
-    [
-      "Observations",
-      "72 monthly"
-    ],
-    [
-      "Primary benchmark",
-      "Northstar Core Equity Benchmark"
-    ]
-  ],
-  "signal_title": "Overall view",
-  "signal": {
-    "level": "watch",
-    "label": "Positive edge; moderate reliability"
-  },
-  "completeness": {
-    "used": 5,
-    "expected": 5,
-    "state": "complete"
-  },
-  "meter_title": "Scope reviewed",
-  "handoff": {
-    "schema_version": "gradient-idd-odd-ic-handoff/v1",
-    "stage": "idd",
-    "subject": {
-      "manager_id": "manager-test-northstar-select",
-      "firm_id": "firm-test-northstar",
-      "fund_id": null,
-      "name": "Northstar Select Equity Composite",
-      "identity_status": "canonical"
+    "signal": {
+      "level": "watch",
+      "label": "Positive edge; moderate reliability"
     },
-    "return_series": [
-      {
-        "return_series_id": "returns-test-northstar-select",
-        "benchmark_series_id": "benchmark-test-northstar-core-equity",
-        "benchmark_status": "server_matched",
-        "benchmark_rationale": "Server-matched illustrative mandate benchmark.",
-        "start_date": "2020-01-31",
-        "end_date": "2025-12-31",
-        "observation_count": 72
+    "completeness": {
+      "used": 5,
+      "expected": 5,
+      "state": "complete"
+    },
+    "handoff": {
+      "schema_version": "gradient-idd-odd-ic-handoff/v1",
+      "stage": "idd",
+      "subject": {
+        "manager_id": "manager-test-northstar-select",
+        "firm_id": "firm-test-northstar",
+        "fund_id": null,
+        "name": "Northstar Select Equity Composite",
+        "identity_status": "canonical"
+      },
+      "return_series": [
+        {
+          "return_series_id": "returns-test-northstar-select",
+          "benchmark_series_id": "benchmark-test-northstar-core-equity",
+          "benchmark_status": "server_matched",
+          "benchmark_rationale": "Server-matched illustrative mandate benchmark.",
+          "start_date": "2020-01-31",
+          "end_date": "2025-12-31",
+          "observation_count": 72
+        }
+      ],
+      "evidence": [
+        {
+          "source_tag": "S1",
+          "tool": "analyze_strategy_lab_compare",
+          "as_of": "2025-12-31",
+          "methodology_version": "strategy-lab-compare/v2",
+          "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "status": "ok"
+        },
+        {
+          "source_tag": "S2",
+          "tool": "run_strategy_lab_relative_return",
+          "as_of": "2025-12-31",
+          "methodology_version": "strategy-lab-relative/v2",
+          "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "status": "ok"
+        },
+        {
+          "source_tag": "S3",
+          "tool": "run_strategy_lab_date_window_robustness",
+          "as_of": "2025-12-31",
+          "methodology_version": "strategy-lab-window/v2",
+          "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "status": "ok"
+        },
+        {
+          "source_tag": "S4",
+          "tool": "run_strategy_lab_expected_statistics",
+          "as_of": "2025-12-31",
+          "methodology_version": "strategy-lab-expected-statistics/v2",
+          "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "status": "ok"
+        },
+        {
+          "source_tag": "S5",
+          "tool": "analyze_strategy_lab_compare",
+          "as_of": "2025-12-31",
+          "methodology_version": "strategy-lab-compare/v2",
+          "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "status": "ok"
+        }
+      ],
+      "limitations": [
+        "The observed history contains 72 monthly observations [S1].",
+        "The primary benchmark is server matched, while the alternative benchmark is advisory [S1][S5].",
+        "Capture statistics are conditional on the returned up- and down-month classifications [S2].",
+        "The 10-year expected-statistics outputs are simulated model evidence, not realized performance [S4]."
+      ],
+      "selection": {
+        "status": "not_assessed",
+        "rationale": "Performance evidence supports continued diligence but does not determine a hire or allocation decision."
       }
-    ],
-    "evidence": [
-      {
-        "source_tag": "S1",
-        "tool": "analyze_strategy_lab_compare",
-        "as_of": "2025-12-31",
-        "methodology_version": "strategy-lab-compare/v2",
-        "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "status": "ok"
-      },
-      {
-        "source_tag": "S2",
-        "tool": "run_strategy_lab_relative_return",
-        "as_of": "2025-12-31",
-        "methodology_version": "strategy-lab-relative/v2",
-        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "status": "ok"
-      },
-      {
-        "source_tag": "S3",
-        "tool": "run_strategy_lab_date_window_robustness",
-        "as_of": "2025-12-31",
-        "methodology_version": "strategy-lab-window/v2",
-        "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
-        "status": "ok"
-      },
-      {
-        "source_tag": "S4",
-        "tool": "run_strategy_lab_expected_statistics",
-        "as_of": "2025-12-31",
-        "methodology_version": "strategy-lab-expected-statistics/v2",
-        "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
-        "status": "ok"
-      },
-      {
-        "source_tag": "S5",
-        "tool": "analyze_strategy_lab_compare",
-        "as_of": "2025-12-31",
-        "methodology_version": "strategy-lab-compare/v2",
-        "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-        "status": "ok"
-      }
-    ],
-    "limitations": [
-      "The observed history contains 72 monthly observations [S1].",
-      "The primary benchmark is server matched, while the alternative benchmark is advisory [S1][S5].",
-      "Capture statistics are conditional on the returned up- and down-month classifications [S2].",
-      "The 10-year expected-statistics outputs are simulated model evidence, not realized performance [S4]."
-    ],
-    "selection": {
-      "status": "not_assessed",
-      "rationale": "Performance evidence supports continued diligence but does not determine a hire or allocation decision."
-    }
+    },
+    "data_basis": "gradient_governed",
+    "cover_disclosure": "Illustrative sample · not client data",
+    "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
   },
-  "data_basis": "gradient_governed",
-  "cover_disclosure": "Illustrative sample · not client data",
-  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
-},
   "executive": {
     "bottom_line": "The manager produced a positive full-window edge, but a 0.32 information ratio and 72 monthly observations support only a moderate-reliability conclusion [S1][S2][S3].",
     "tiles": [

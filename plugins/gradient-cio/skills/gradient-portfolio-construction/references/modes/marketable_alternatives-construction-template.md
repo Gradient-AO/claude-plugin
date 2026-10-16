@@ -11,7 +11,9 @@ apply its specific repair levers and rerun until clean.
 - Root `construction_mode`: `marketable_alternatives`.
 - `meta.eyebrow` and `meta.header_label`: `Marketable Alternatives Portfolio Construction`.
 - Cover facts: As of, Total NAV, Portfolio weight, Policy benchmark.
-- `meta.signal_title`: `Overall view`; `meta.meter_title`: `Scope reviewed`.
+- `meta.signal.label`: one plain sentence naming the main constraint, e.g. `Redemption terms need
+  confirmation before funding`. The cover shows no signal or coverage; they open the executive band and
+  sources appendix.
 - `executive.label`: `Recommendation`.
 - `executive.bottom_line`: recommendation, requested committee action, principal evidence and largest risk.
 - Four tiles: Marketable-alternatives weight, Active weight, Relative return, Liquid share.
@@ -134,7 +136,7 @@ apply its specific repair levers and rerun until clean.
 - `coverage` block with every expected source and its typed status.
 - Include **Peer allocation intelligence**. When unlicensed, use status
   `not licensed` and note `Not licensed — Peer allocation context was skipped
-  because peerIntelligence is not available for this organization. This
+  because peer allocation intelligence is not licensed for this organization. This
   construction report uses portfolio evidence only.`
 
 ### Appendix — Sources and methods (`num: "A"`)

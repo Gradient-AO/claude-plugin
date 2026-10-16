@@ -736,9 +736,8 @@ def run_artifact_checks(check: Check, output_directory: pathlib.Path) -> None:
         branded_result.returncode == 0
         and "Northwind Pension Plan (TEST)" in branded_cover
         and "Powered by GradientCIO" in branded_cover
-        and "TEST" in branded_cover
-        and "2 of 2" in branded_cover,
-        "PowerPoint cover honors normalized branding, signal and completeness",
+        and "2 of 2" not in branded_cover,
+        "PowerPoint cover honors normalized branding as a title page without coverage counts",
     )
     odd_pptx = output_directory / "odd-visual-baseline-test.pptx"
     odd_result = subprocess.run(
@@ -767,16 +766,20 @@ def run_artifact_checks(check: Check, output_directory: pathlib.Path) -> None:
         if odd_presentation is not None and len(odd_presentation.slides) > 1
         else ""
     )
+    odd_signal = str(
+        json.loads((FIXTURES / "odd.json").read_text(encoding="utf-8"))["meta"]["signal"]["label"]
+    )
     check(
         odd_result.returncode == 0
         and "Ridgeview Advisors, LP" in odd_cover
-        and "No flags identified" in odd_cover
-        and "5 of 7" in odd_cover
+        and odd_signal not in odd_cover
+        and " of 7" not in odd_cover
         and "Illustrative sample · not client data" in odd_cover
         and "TEST" not in odd_cover
         and "Executive summary" in odd_first_body
+        and odd_signal in odd_first_body
         and "Data as of 2026-10-01" in odd_first_body,
-        "ODD fixture anchors the shared PowerPoint cover and body visual contract",
+        "ODD fixture anchors the shared PowerPoint title-page cover and body visual contract",
     )
 
     with tempfile.TemporaryDirectory() as directory:

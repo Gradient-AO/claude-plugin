@@ -16,6 +16,7 @@ REPOSITORY = ROOT.parents[1]
 TESTS = ROOT / "tests" / "run_tests.py"
 ROUTING_EVALUATOR = ROOT / "tools" / "evaluate_skill_routing.py"
 SYNC_CHECK = ROOT / "tools" / "sync_shared.py"
+PACKAGING_CHECK = ROOT / "tools" / "check_skill_packaging.py"
 
 
 def main() -> int:
@@ -44,6 +45,15 @@ def main() -> int:
     )
     if sync_check.returncode != 0:
         return sync_check.returncode
+
+    packaging = subprocess.run(
+        [sys.executable, str(PACKAGING_CHECK)],
+        cwd=REPOSITORY,
+        env=environment,
+        check=False,
+    )
+    if packaging.returncode != 0:
+        return packaging.returncode
 
     tests = subprocess.run(
         test_command,

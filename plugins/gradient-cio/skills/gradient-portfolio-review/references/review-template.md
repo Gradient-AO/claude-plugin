@@ -85,7 +85,7 @@ apply its specific repair levers and rerun until clean.
 
 ## Page budget
 
-1. Cover and evidence status — 1 page.
+1. Cover (title page only) — 1 page.
 2. Executive Review — 1 page.
 3. Mandate, Policy and Data Basis — 1 page.
 4. Period and Market Context — 1 page.
@@ -107,10 +107,10 @@ Use JSON block mode. Set:
 - `meta.title`: portfolio name only. Never append an illustrative label.
 - `meta.subtitle`: `<Quarterly|Annual|On-demand> comprehensive review · period to <date> · prepared for <audience>`.
 - `meta.running_head`: `<short portfolio name> · period to <date>`.
-- `meta.cover_facts`: Period end, Total NAV, Policy benchmark, and Review
-  (`Comprehensive`).
-- `meta.signal_title`: `Overall view`; `meta.meter_title`: `Scope reviewed`.
-- `meta.completeness`: sources used versus expected for the selected mode.
+- `meta.cover_facts` (up to 4, identifying only): Period end, Total NAV, Policy benchmark, Prepared for.
+- `meta.signal.label`: one plain sentence naming the main finding, e.g. `Two allocations near their policy
+  limits`. Never a bare status word.
+- `meta.completeness`: sources used versus expected for the selected mode; shown in the sources appendix.
 - `executive.label`: `Review conclusion`.
 - `executive.bottom_line`: three to five sourced sentences covering performance, attribution, policy,
   realized risk, forward assumptions and liquidity.
@@ -175,7 +175,7 @@ Use JSON block mode. Set:
 - One unchanged returned allocation chart when available.
 - Optional peer-allocation context may follow only when `peerIntelligence` is licensed and the tool returns
   usable evidence. When it is not licensed, include one `callout` in this section:
-  `Not licensed — Peer allocation context was skipped because peerIntelligence is not available for this
+  `Not licensed — Peer allocation context was skipped because peer allocation intelligence is not licensed for this
   organization. This review uses portfolio evidence only.`
 - End with one to three sourced `Analysis —` callouts identifying breaches, watch rows and the smallest
   returned headroom without proposing a rebalance.
@@ -238,7 +238,7 @@ decision or vote.
 - Status values: `available`, `degraded`, `unavailable`, `not licensed`.
 - Notes include as-of date, returned rows, basis/fingerprint and error code/request ID where applicable.
 - Include **Peer allocation intelligence**. When unlicensed, use status `not licensed` and note
-  `Not licensed — peerIntelligence is not available for this organization`.
+  `Not licensed — peer allocation intelligence is not licensed for this organization`.
 
 ### Appendix — Sources and methods (`num: "A"`)
 

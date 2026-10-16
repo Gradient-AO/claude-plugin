@@ -24,31 +24,21 @@
       [
         "Benchmark",
         "Policy benchmark (TEST)"
-      ],
-      [
-        "Inception",
-        "2021-08-01"
-      ],
-      [
-        "Data scope",
-        "Fictional TEST data"
       ]
     ],
-    "signal_title": "Portfolio status",
     "signal": {
       "level": "watch",
-      "label": "1 asset class on watch"
+      "label": "One asset class near its policy limit"
     },
     "completeness": {
       "used": 7,
       "expected": 8,
       "state": "partial"
     },
-    "meter_title": "Evidence completeness",
     "data_basis": "gradient_governed"
   },
   "executive": {
-    "bottom_line": "The portfolio returned 11.5% over the year to 2026-07-31, 0.2pp behind its policy benchmark [S3][S4], and 3.1% a year since inception, 0.6pp ahead [S3][S4]. Alternatives are 23.6% of NAV against a 20.0% target, 1.4pp below the 25% upper limit, so they are on watch [S2]. Annualized volatility was 8.7% against 10.3% for the benchmark, and the deepest drawdown (-13.1%, 2022-01 to 2023-10) was recovered by 2025-04 [S3][S4]. Form 13F look-through puts the five largest public-equity issuers at 6.7% of NAV, from lagged long-only filings [S6].",
+    "bottom_line": "The portfolio returned 11.5% over the year to 2026-07-31, 0.2pp behind policy, and 3.1% a year since inception, 0.6pp ahead [S3][S4]. Alternatives sit 1.4pp below their 25% upper limit [S2]. Volatility was 8.7% against 10.3% for the benchmark [S3][S4].",
     "tiles": [
       {
         "label": "Trailing 1Y",
@@ -85,7 +75,7 @@
       "blocks": [
         {
           "type": "statement",
-          "text": "Behind policy 1Y (−0.2pp), ahead since inception; the return-objective breach is structural and forward-looking [S3][S4][S8].",
+          "text": "Behind policy over one year, ahead since inception; on forward assumptions the return objective is not met [S3][S4][S8].",
           "tone": "watch"
         },
         {
@@ -140,22 +130,22 @@
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
-          "title": "Key judgment — headline signal",
-          "text": "Observation: The fictional TEST report carries a 1 asset class on watch signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+          "title": "Key judgment — Policy headroom",
+          "text": "Observation: Alternatives sit 1.4pp below their 25% upper limit [S2]. Why it matters: A modest market move could breach the limit. Uncertainty: Weights are as of 2026-07-31 and move with markets. What would change the view: Headroom above 3pp in the next allocation report."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
-          "title": "Key judgment — primary measure",
-          "text": "Observation: Trailing 1Y is 11.5% in the TEST evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside this fixture. What would change the view: A refreshed source report showing a change above 1%."
+          "title": "Key judgment — Trailing return",
+          "text": "Observation: The portfolio returned 11.5% over the trailing year [S3]. Why it matters: It sets the baseline for judging allocation and manager results. Uncertainty: One year is a short window for judging results. What would change the view: Two more quarters of excess return above 0%."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
-          "title": "Key judgment — monitoring priority",
-          "text": "Observation: The governed objective comparison is a target-weighted expected-return forward assumption, not realized return [S8]. Why it matters: It identifies a structural policy gap. Uncertainty: Capital-market assumptions may change. What would change the view: A refreshed governed assumption set that meets the objective."
+          "title": "Key judgment — Return objective",
+          "text": "Observation: The expected return, a forward assumption, is below the objective [S8]. Why it matters: The policy mix may fall short over time. Uncertainty: Assumptions may change at the next update. What would change the view: An updated assumption set at or above the objective."
         }
       ]
     },
@@ -742,7 +732,8 @@
           },
           "y_suffix": "pp",
           "decimals": 1,
-          "note": "Returned rolling 36-month portfolio arithmetic excess versus the policy benchmark [S3][S4]."
+          "note": "Returned rolling 36-month portfolio arithmetic excess versus the policy benchmark [S3][S4].",
+          "height": 170
         },
         {
           "type": "callout",
@@ -1014,16 +1005,10 @@
         },
         {
           "type": "callout",
-          "tone": "watch",
-          "title": "Read with care",
-          "text": "Form 13F is filed up to 45 days after quarter end and covers long US-listed equity positions only: no shorts, cash, non-US listings or private holdings. Reported USD values are not FX-converted [S6]."
-        },
-        {
-          "type": "callout",
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Issuer concentration remains bounded",
-          "text": "Observation: The five largest disclosed issuers represent 6.7% of NAV [S6]. Why it matters: Look-through concentration is distributed across several names. Uncertainty: Form 13F is lagged and partial. What would change the view: A refreshed filing showing materially higher issuer concentration."
+          "text": "Observation: The five largest disclosed issuers represent 6.7% of NAV [S6]. Why it matters: Look-through concentration is spread across several names. Uncertainty: Form 13F lags up to 45 days and covers long US-listed equities only. What would change the view: A refreshed filing showing materially higher issuer concentration."
         }
       ]
     },
@@ -1074,7 +1059,8 @@
           ],
           "y_suffix": "%",
           "decimals": 1,
-          "note": "Monthly drawdown from peak since inception, returned for portfolio and policy benchmark [S3][S4]."
+          "note": "Monthly drawdown from peak since inception, returned for portfolio and policy benchmark [S3][S4].",
+          "height": 170
         },
         {
           "type": "line",
@@ -1121,58 +1107,8 @@
           },
           "y_suffix": "%",
           "decimals": 1,
-          "note": "Returned rolling 36-month annualized volatility; governed policy limit 11.0% [S2][S3][S4]."
-        },
-        {
-          "type": "chart",
-          "chart": {
-            "chart_id": "test-realized-risk",
-            "title": "Governed realized-risk comparison (TEST)",
-            "status": "ok",
-            "currency": "USD",
-            "columns": [
-              {
-                "key": "metric",
-                "title": "Metric",
-                "format": "text",
-                "decimals": null
-              },
-              {
-                "key": "portfolio",
-                "title": "Portfolio",
-                "format": "percentage",
-                "decimals": 1
-              },
-              {
-                "key": "benchmark",
-                "title": "Benchmark",
-                "format": "percentage",
-                "decimals": 1
-              }
-            ],
-            "rows": [
-              [
-                "Annualized volatility",
-                0.087,
-                0.103
-              ],
-              [
-                "Maximum drawdown",
-                -0.131,
-                -0.146
-              ]
-            ],
-            "truncated": false,
-            "render_hint": {
-              "block": "bars",
-              "x": "metric",
-              "y": [
-                "portfolio",
-                "benchmark"
-              ]
-            }
-          },
-          "source": "[S1]"
+          "note": "Returned rolling 36-month annualized volatility; governed policy limit 11.0% [S2][S3][S4].",
+          "height": 170
         },
         {
           "type": "kv",
@@ -1220,13 +1156,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Realized volatility stayed lower",
-          "text": "Observation: Annualized volatility is 8.7% versus 10.3% for the benchmark [S3][S4]. Why it matters: Realized variability was lower on the returned basis. Uncertainty: Historical-risk coverage does not establish policy status. What would change the view: A governed report showing a breach or higher relative volatility."
-        },
-        {
-          "type": "callout",
-          "tone": "info",
-          "title": "Window basis",
-          "text": "The −13.1% executive tile is since inception; the governed policy-risk row is measured over the trailing three-year observation window. The two drawdown figures are not directly comparable [S2][S3]."
+          "text": "Observation: Annualized volatility is 8.7% versus 10.3% for the benchmark [S3][S4]. Why it matters: The portfolio took less realized risk than its policy mix. Uncertainty: Five years of monthly returns cover only one drawdown cycle. What would change the view: Trailing volatility above the benchmark level of 10.3%."
         }
       ]
     },
@@ -1259,7 +1189,7 @@
             },
             {
               "label": "Evidence basis",
-              "value": "Partial",
+              "value": "Partly available",
               "sub": "Assumptions, not forecasts [S7][S8]",
               "tone": "watch"
             }
@@ -1340,15 +1270,11 @@
           "note": "Returned dated macro-indicator histories; no locally derived spreads [S7]."
         },
         {
-          "type": "text",
-          "text": "House macro view (TEST): policy rates are expected to hold [S7]. The governed policy check returns a 6.4% expected return over 10 years for the TEST assumption set [S8]. These are assumptions, not forecasts of this portfolio's return."
-        },
-        {
           "type": "callout",
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Assumptions support monitoring",
-          "text": "Observation: The governed policy expected return is 6.4% over 10 years [S8]. Why it matters: It supplies forward context without forecasting. Uncertainty: CMA values are long-horizon assumptions rather than forecasts. What would change the view: A governed release moving expected return above 7.0% or below 6.0%."
+          "text": "Observation: Policy rates are expected to hold [S7], and the policy mix has an expected return of 6.4% a year over 10 years [S8]. Why it matters: It sets the forward context for the return objective. Uncertainty: These are long-horizon assumptions, not forecasts of this portfolio. What would change the view: An updated assumption set above 7.0% or below 6.0%."
         }
       ]
     },
@@ -1364,7 +1290,7 @@
             {
               "name": "Portfolio list",
               "status": "available",
-              "note": "User portfolio; record_kind user [S1]"
+              "note": "User portfolio [S1]"
             },
             {
               "name": "Allocation tree",
@@ -1374,7 +1300,7 @@
             {
               "name": "Historical returns",
               "status": "degraded",
-              "note": "Summary section unavailable; raw points are charted without local metric computation [S3]"
+              "note": "Return summary not returned; charts use the monthly points as received [S3]"
             },
             {
               "name": "Benchmark",
@@ -1407,7 +1333,7 @@
           "type": "callout",
           "tone": "info",
           "title": "Closing perspective",
-          "text": "The principal limitation is unavailable attribution; the review therefore closes on observed performance, governed policy ranges, realized risk and partial look-through evidence [S2][S3][S4][S6]."
+          "text": "Attribution is not licensed, so the review rests on returns, policy ranges, realized risk and 13F look-through [S2][S3][S4][S6]."
         }
       ]
     },
@@ -1449,7 +1375,10 @@
               "fixture=true",
               "2026-07-31",
               "Gradient-governed TEST evidence",
-              "{'chip': 'passed', 'status': 'passed'}",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ],
             [
@@ -1460,7 +1389,10 @@
               "fixture=true",
               "2026-07-31",
               "Gradient-governed TEST evidence",
-              "{'chip': 'passed', 'status': 'passed'}",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
             ],
             [
@@ -1471,7 +1403,10 @@
               "fixture=true",
               "2026-07-31",
               "Gradient-governed TEST evidence",
-              "{'chip': 'passed', 'status': 'passed'}",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
             ],
             [
@@ -1482,7 +1417,10 @@
               "fixture=true",
               "2026-07-31",
               "Gradient-governed TEST evidence",
-              "{'chip': 'passed', 'status': 'passed'}",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
             ],
             [
@@ -1493,7 +1431,10 @@
               "fixture=true",
               "2026-07-31",
               "Gradient-governed TEST evidence",
-              "{'chip': 'passed', 'status': 'passed'}",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
             ],
             [
@@ -1504,7 +1445,10 @@
               "fixture=true",
               "2026-06-30",
               "Gradient-governed TEST evidence",
-              "{'chip': 'partial', 'status': 'partial'}",
+              {
+                "chip": "partial",
+                "status": "partial"
+              },
               "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
             ],
             [
@@ -1515,7 +1459,10 @@
               "fixture=true",
               "2026-10-03",
               "Gradient-governed TEST evidence",
-              "{'chip': 'passed', 'status': 'passed'}",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:1111111111111111111111111111111111111111111111111111111111111111"
             ],
             [
@@ -1526,7 +1473,10 @@
               "fixture=true",
               "2026-09-30",
               "Gradient-governed TEST evidence",
-              "{'chip': 'passed', 'status': 'passed'}",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:2222222222222222222222222222222222222222222222222222222222222222"
             ]
           ]

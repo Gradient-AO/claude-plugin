@@ -8,10 +8,35 @@
   "confidentiality": "Confidential — performance standards review",
   "cover_disclosure": "Illustrative sample · not client data",
   "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers",
-  "cover_facts": [["Subject", "Northstar Public Trust"], ["Review", "Asset owner"], ["Data through", "2026-06-30"], ["Review date", "2026-10-09"]],
-  "signal_title": "Overall view",
-  "signal": {"level": "follow_ups", "label": "Satisfactory with follow-ups"},
-  "completeness": {"used": 4, "expected": 5, "state": "partial"},
-  "meter_title": "Scope reviewed",
-  "executive": {"label": "Bottom line", "bottom_line": "Total-fund return and benchmark evidence is present, while benchmark-change and policy documentation remain incomplete [S1][S2][S3]."}
+  "cover_facts": [
+    [
+      "Asset owner",
+      "Northstar Public Trust"
+    ],
+    [
+      "Review",
+      "Asset owner"
+    ],
+    [
+      "Data through",
+      "2026-06-30"
+    ],
+    [
+      "Review date",
+      "2026-10-09"
+    ]
+  ],
+  "signal": {
+    "level": "follow_ups",
+    "label": "Satisfactory with follow-ups"
+  },
+  "completeness": {
+    "used": 4,
+    "expected": 5,
+    "state": "partial"
+  },
+  "executive": {
+    "label": "Bottom line",
+    "bottom_line": "Total-fund return and benchmark evidence is present, while benchmark-change and policy documentation remain incomplete [S1][S2][S3]."
+  }
 }

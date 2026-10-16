@@ -43,8 +43,9 @@ This public mode preserves two internal report variants. Set `meta.mode` to:
   from rendered prose.
 - In the governed ex ante section, include an **Ex ante assumptions** KV with
   `assumption_set_name`, `regime_name`, horizon, `portfolio_return_source` and
-  `benchmark_return_source`; display a returned `USER` regime as
-  `user-defined regime`.
+  `benchmark_return_source`, labelled Assumption set, Regime, Horizon,
+  Portfolio return basis and Benchmark return basis; display a returned `USER`
+  regime as `user-defined regime`.
 - Preserve methods, units, dates, basis, residuals, diagnostics, coverage and
   request IDs.
 - Do not recommend a trade, rebalance, manager action, allocation or vote.

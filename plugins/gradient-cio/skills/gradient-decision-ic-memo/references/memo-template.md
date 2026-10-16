@@ -63,7 +63,7 @@ Exactly five bullets, in this order, one to two sentences each:
 
 ```
 - **Positioning:** <current allocation vs policy in one sentence> [S#]
-- **IPS:** <n> constraints Compliant, <n> Watch, <n> Breach, <n> Not assessed. <Name any Breach.>
+- **IPS:** <n> constraints Compliant, <n> Near limit, <n> Breach, <n> Not assessed. <Name any Breach.>
 - **Performance:** <primary period return vs policy benchmark, excess in bps, main attribution driver> [S#]
 - **Outlook:** <expected return vs IPS objective, expected volatility, probability of meeting objective> [S#]
 - **Liquidity & diligence:** <liquidity coverage ratio and status; number of High diligence findings> [S#]
@@ -101,10 +101,10 @@ liquidity, concentration, leverage, prohibited/restricted, ESG/other. Governed r
 |---|---|---|---|---|---|
 ```
 
-**Status values (only these):** `Compliant` · `Watch` · `Breach` · `Not assessed`
+**Status values (only these):** `Compliant` · `Near limit` · `Breach` · `Not assessed`
 
 ```
-**Summary:** <n> Compliant, <n> Watch, <n> Breach, <n> Not assessed.
+**Summary:** <n> Compliant, <n> Near limit, <n> Breach, <n> Not assessed.
 **Breaches and required actions:** <one line per Breach with the cure proposed in Section 13, or "None">.
 ```
 
@@ -335,7 +335,7 @@ handoff in a second long table.}
 
 ## 15. Open Items & Conditions
 
-{Every "Not available" item, every GIPS follow-up, every Watch/Breach action. Timing values only:
+{Every "Not available" item, every GIPS follow-up, every Near limit or Breach action. Timing values only:
 "Before approval" · "Within 30 days" · "Next review".}
 
 ```

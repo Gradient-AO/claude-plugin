@@ -1,1356 +1,1356 @@
 {
- "meta": {
- "mode": "fixed_income",
- "eyebrow": "Fixed Income Portfolio Construction",
- "header_label": "Fixed Income Portfolio Construction",
- "title": "Northstar Fixed Income Portfolio",
- "subtitle": "Portfolio construction review · prepared for the Investment Committee",
- "running_head": "Northstar Fixed Income Portfolio",
- "data_as_of": "2026-06-30",
- "confidentiality": "Confidential — Investment Committee",
- "cover_facts": [
-  [
-   "As of",
-   "2026-06-30"
-  ],
-  [
-   "Total NAV",
-   "$1,000.0M"
-  ],
-  [
-   "Fixed-income weight",
-   "28.0%"
-  ],
-  [
-   "Policy benchmark",
-   "Northstar Aggregate Bond Index"
+  "meta": {
+    "mode": "fixed_income",
+    "eyebrow": "Fixed Income Portfolio Construction",
+    "header_label": "Fixed Income Portfolio Construction",
+    "title": "Northstar Fixed Income Portfolio",
+    "subtitle": "Portfolio construction review · prepared for the Investment Committee",
+    "running_head": "Northstar Fixed Income Portfolio",
+    "data_as_of": "2026-06-30",
+    "confidentiality": "Confidential — Investment Committee",
+    "cover_facts": [
+      [
+        "As of",
+        "2026-06-30"
+      ],
+      [
+        "Total NAV",
+        "$1,000.0M"
+      ],
+      [
+        "Fixed-income weight",
+        "28.0%"
+      ],
+      [
+        "Policy benchmark",
+        "Northstar Aggregate Bond Index"
+      ]
+    ],
+    "signal": {
+      "level": "watch",
+      "label": "Shift 3.0pp from core-plus credit to core bonds"
+    },
+    "completeness": {
+      "used": 8,
+      "expected": 9,
+      "state": "partial"
+    },
+    "data_basis": "gradient_governed",
+    "cover_disclosure": "Illustrative sample · not client data",
+    "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
+  },
+  "executive": {
+    "label": "Recommendation",
+    "bottom_line": "We recommend shifting 3.0 percentage points of the fixed-income sleeve from core-plus credit to core government and investment-grade bonds while retaining the 28.0% total-fund allocation [S3][S4]. Committee action requested: approve the target structure and a two-stage implementation subject to benchmark and liquidity checks [S3][S8].",
+    "tiles": [
+      {
+        "label": "Fixed-income weight",
+        "value": "28.0%",
+        "sub": "Policy target 28.0% [S3]",
+        "tone": "good"
+      },
+      {
+        "label": "Active weight",
+        "value": "0.0pp",
+        "sub": "Total-fund target [S3]",
+        "tone": "good"
+      },
+      {
+        "label": "Relative return",
+        "value": "+0.4pp",
+        "sub": "Trailing 1Y versus benchmark [S5]",
+        "tone": "good"
+      },
+      {
+        "label": "Liquid share",
+        "value": "96.0%",
+        "sub": "Daily to weekly [S3]",
+        "tone": "good"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "executive",
+      "title": "Executive Decision",
+      "blocks": [
+        {
+          "type": "callout",
+          "tone": "accent",
+          "title": "Recommendation and action requested",
+          "text": "We recommend a 3.0 percentage-point shift from core-plus credit to core government and investment-grade bonds. Committee action requested: approve the target and staged implementation [S3][S4][S8]."
+        },
+        {
+          "type": "table",
+          "title": "Decision summary",
+          "columns": [
+            "Decision element",
+            "Proposed action",
+            "Evidence",
+            "Status"
+          ],
+          "rows": [
+            [
+              "Total allocation",
+              "Hold at 28.0%",
+              "[S3]",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              }
+            ],
+            [
+              "Core-plus credit",
+              "Reduce from 10.0% to 7.0% of total fund",
+              "[S3][S4]",
+              {
+                "chip": "Proposed",
+                "status": "watch"
+              }
+            ],
+            [
+              "Core government / IG",
+              "Increase from 14.0% to 17.0%",
+              "[S3][S4]",
+              {
+                "chip": "Proposed",
+                "status": "watch"
+              }
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "watch",
+          "title": "Conditions and limits",
+          "text": "Implementation requires confirmation of security-level duration and transaction costs, which are not available in the connector evidence [S8]."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "watch",
+          "title": "Key judgment — Credit shift",
+          "text": "Observation: The proposal moves 3.0pp from core-plus credit to core government and investment-grade bonds [S1]. Why it matters: It lowers credit spread risk while keeping the fixed-income weight unchanged. Uncertainty: Security-level duration and transaction costs are not yet confirmed. What would change the view: Confirmed costs above the expected yield give-up."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "info",
+          "title": "Key judgment — Sleeve size",
+          "text": "Observation: Fixed income is 28.0% of total NAV [S2]. Why it matters: The shift is sized against this sleeve, not the total fund. Uncertainty: The weight will move with market values before implementation. What would change the view: A drift of more than 1pp before funding."
+        },
+        {
+          "type": "callout",
+          "role": "key_judgment",
+          "tone": "info",
+          "title": "Key judgment — Liquidity",
+          "text": "Observation: 96.0% of the sleeve is liquid within the policy window [S3]. Why it matters: The shift can be implemented without breaching liquidity limits. Uncertainty: Liquidity tiers use manager-reported terms. What would change the view: A manager imposing new redemption terms."
+        }
+      ]
+    },
+    {
+      "title": "Mandate, Benchmark and Data Basis",
+      "blocks": [
+        {
+          "type": "kv",
+          "rows": [
+            [
+              "Portfolio",
+              "Northstar Total Fund",
+              "S2"
+            ],
+            [
+              "Mandate",
+              "Capital preservation, income and diversification",
+              "S8"
+            ],
+            [
+              "Benchmark",
+              "Northstar Aggregate Bond Index",
+              "S5"
+            ],
+            [
+              "Horizon",
+              "5 years",
+              "S7"
+            ],
+            [
+              "Return basis",
+              "Net",
+              "S5"
+            ],
+            [
+              "Data scope",
+              "Illustrative sample data [S1]",
+              "S1"
+            ]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Governed framework",
+          "columns": [
+            "Area",
+            "Objective or limit",
+            "Observed",
+            "Status",
+            "Source"
+          ],
+          "rows": [
+            [
+              "Fixed income",
+              "23.0%–33.0%",
+              "28.0%",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              },
+              "[S3]"
+            ],
+            [
+              "Volatility",
+              "At or below 7.0%",
+              "5.4%",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              },
+              "[S3][S5]"
+            ],
+            [
+              "Below-investment-grade",
+              "At or below 8.0% of total fund",
+              "6.0%",
+              {
+                "chip": "Watch",
+                "status": "watch"
+              },
+              "[S3][S4]"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Current Fixed Income Portfolio",
+      "blocks": [
+        {
+          "type": "chart",
+          "chart": {
+            "chart_id": "test-fi-allocation",
+            "title": "Fixed-income allocation",
+            "status": "ok",
+            "currency": "USD",
+            "columns": [
+              {
+                "key": "segment",
+                "title": "Segment",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "weight",
+                "title": "Weight",
+                "format": "percentage",
+                "decimals": 1
+              }
+            ],
+            "rows": [
+              [
+                "Core government / IG",
+                0.5
+              ],
+              [
+                "Core-plus credit",
+                0.357
+              ],
+              [
+                "Global / emerging debt",
+                0.143
+              ]
+            ],
+            "truncated": false,
+            "render_hint": {
+              "block": "bars",
+              "x": "segment",
+              "y": [
+                "weight"
+              ]
+            }
+          },
+          "source": "[S1]"
+        },
+        {
+          "type": "table",
+          "title": "Current sleeve",
+          "columns": [
+            "Segment / exposure",
+            "Value",
+            "% portfolio",
+            "% fixed income",
+            "Currency",
+            "As of"
+          ],
+          "rows": [
+            [
+              "Core government / IG",
+              "$140.0M",
+              "14.0%",
+              "50.0%",
+              "USD",
+              "2026-06-30 [S4]"
+            ],
+            [
+              "Core-plus credit",
+              "$100.0M",
+              "10.0%",
+              "35.7%",
+              "USD",
+              "2026-06-30 [S4]"
+            ],
+            [
+              "Global / emerging debt",
+              "$40.0M",
+              "4.0%",
+              "14.3%",
+              "Mixed",
+              "2026-06-30 [S4]"
+            ]
+          ]
+        },
+        {
+          "type": "text",
+          "text": "Exposure classifications are shown as returned and are not remapped to policy-tree labels [S2][S4]."
+        }
+      ]
+    },
+    {
+      "title": "Target Portfolio Structure",
+      "blocks": [
+        {
+          "type": "band",
+          "title": "Current weight versus policy range",
+          "items": [
+            {
+              "label": "Core government / IG",
+              "value": 14.0,
+              "low": 12.0,
+              "high": 20.0,
+              "target": 17.0,
+              "display": "14.0% → 17.0%"
+            },
+            {
+              "label": "Core-plus credit",
+              "value": 10.0,
+              "low": 5.0,
+              "high": 12.0,
+              "target": 7.0,
+              "display": "10.0% → 7.0%"
+            },
+            {
+              "label": "Global / emerging debt",
+              "value": 4.0,
+              "low": 0.0,
+              "high": 6.0,
+              "target": 4.0,
+              "display": "4.0% → 4.0%"
+            }
+          ],
+          "source": "[S1]"
+        },
+        {
+          "type": "stacked",
+          "title": "Current and target mix",
+          "items": [
+            {
+              "label": "Current",
+              "segments": [
+                {
+                  "label": "Core government / IG",
+                  "value": 14.0
+                },
+                {
+                  "label": "Core-plus credit",
+                  "value": 10.0
+                },
+                {
+                  "label": "Global / emerging debt",
+                  "value": 4.0
+                }
+              ]
+            },
+            {
+              "label": "Target",
+              "segments": [
+                {
+                  "label": "Core government / IG",
+                  "value": 17.0
+                },
+                {
+                  "label": "Core-plus credit",
+                  "value": 7.0
+                },
+                {
+                  "label": "Global / emerging debt",
+                  "value": 4.0
+                }
+              ]
+            }
+          ],
+          "source": "[S1]",
+          "suffix": "%"
+        },
+        {
+          "type": "waterfall",
+          "title": "Target allocation changes (percentage points)",
+          "items": [
+            {
+              "label": "Core government / IG",
+              "value": 3.0,
+              "display": "+3.0pp"
+            },
+            {
+              "label": "Core-plus credit",
+              "value": -3.0,
+              "display": "-3.0pp"
+            },
+            {
+              "label": "Global / emerging debt",
+              "value": 0.0,
+              "display": "+0.0pp"
+            }
+          ],
+          "source": "[S1]"
+        },
+        {
+          "type": "table",
+          "title": "Current versus target",
+          "columns": [
+            "Segment",
+            "Current",
+            "Target",
+            "Change",
+            "Range / constraint",
+            "Rationale"
+          ],
+          "rows": [
+            [
+              "Core government / IG",
+              "14.0%",
+              "17.0%",
+              "+3.0pp",
+              "12.0%–20.0%",
+              "Increase benchmark-aligned ballast [S3][S8]"
+            ],
+            [
+              "Core-plus credit",
+              "10.0%",
+              "7.0%",
+              "-3.0pp",
+              "5.0%–12.0%",
+              "Reduce credit concentration [S3][S4][S6]"
+            ],
+            [
+              "Global / emerging debt",
+              "4.0%",
+              "4.0%",
+              "0.0pp",
+              "0.0%–6.0%",
+              "Maintain diversified role [S3][S7]"
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Why this target",
+          "text": "Observation: The target shifts 3.0 percentage points from core-plus credit to government and investment-grade bonds [S3][S4]. Why it matters: The change directly reduces concentrated credit exposure. Uncertainty: Duration, cost, CMA, regime and manager coverage remain incomplete [S8]. What would change the view: Completed records showing higher duration or transition costs."
+        },
+        {
+          "type": "text",
+          "text": "The target is a committee proposal and is not a saved portfolio change [S3][S8]."
+        }
+      ],
+      "kicker": "The proposed mix reduces concentrated risk while preserving mandate exposure"
+    },
+    {
+      "title": "Historical Performance and Attribution",
+      "blocks": [
+        {
+          "type": "waterfall",
+          "title": "Governed attribution effects",
+          "items": [
+            {
+              "label": "Allocation",
+              "value": 0.08,
+              "display": "+0.08pp"
+            },
+            {
+              "label": "Selection",
+              "value": 0.22,
+              "display": "+0.22pp"
+            },
+            {
+              "label": "Interaction",
+              "value": 0.02,
+              "display": "+0.02pp"
+            },
+            {
+              "label": "Residual",
+              "value": 0.0,
+              "display": "0.00pp"
+            }
+          ],
+          "note": "Returned attribution effects; residual is shown explicitly [S5]."
+        },
+        {
+          "type": "table",
+          "title": "Standard periods",
+          "columns": [
+            "Period",
+            "Portfolio / sleeve",
+            "Benchmark",
+            "Excess",
+            "Coverage"
+          ],
+          "rows": [
+            [
+              "1Y fixed-income sleeve",
+              "5.1%",
+              "4.7%",
+              "+0.4pp",
+              "Complete [S5]"
+            ],
+            [
+              "3Y fixed-income sleeve (ann.)",
+              "3.4%",
+              "3.1%",
+              "+0.3pp",
+              "Complete [S5]"
+            ],
+            [
+              "5Y fixed-income sleeve (ann.)",
+              "1.8%",
+              "1.9%",
+              "-0.1pp",
+              "Complete [S5]"
+            ]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Attribution effects",
+          "columns": [
+            "Effect",
+            "Contribution",
+            "Source"
+          ],
+          "rows": [
+            [
+              "Allocation",
+              "+0.08pp",
+              "[S5]"
+            ],
+            [
+              "Selection",
+              "+0.22pp",
+              "[S5]"
+            ],
+            [
+              "Interaction",
+              "+0.02pp",
+              "[S5]"
+            ],
+            [
+              "Residual",
+              "0.00pp",
+              "[S5]"
+            ]
+          ]
+        },
+        {
+          "type": "text",
+          "text": "Governed attribution method and reconciliation metadata follow [S5]."
+        },
+        {
+          "type": "kv",
+          "rows": [
+            [
+              "Method",
+              "Brinson-Fachler",
+              "S5"
+            ],
+            [
+              "Linking",
+              "Symmetric Carino",
+              "S5"
+            ],
+            [
+              "Basis",
+              "Net, monthly linked",
+              "S5"
+            ],
+            [
+              "Tolerance",
+              "1 bp; reconciled",
+              "S5"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Rates and Credit Context",
+      "blocks": [
+        {
+          "type": "tiles",
+          "tiles": [
+            {
+              "label": "Effective duration",
+              "value": "Not available",
+              "sub": "Security analytics unavailable [S8]",
+              "tone": "watch"
+            },
+            {
+              "label": "Spread duration",
+              "value": "Not available",
+              "sub": "Security analytics unavailable [S8]",
+              "tone": "watch"
+            },
+            {
+              "label": "US IG spread",
+              "value": "112 bps",
+              "sub": "Latest returned context [S6]",
+              "tone": "info"
+            },
+            {
+              "label": "US HY spread",
+              "value": "365 bps",
+              "sub": "Latest returned context [S6]",
+              "tone": "watch"
+            }
+          ]
+        },
+        {
+          "type": "chart",
+          "chart": {
+            "chart_id": "test-fi-spreads",
+            "title": "Credit spreads",
+            "status": "ok",
+            "columns": [
+              {
+                "key": "market",
+                "title": "Market",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "spread",
+                "title": "Spread",
+                "format": "basis_points",
+                "decimals": 0
+              }
+            ],
+            "rows": [
+              [
+                "US investment grade",
+                112
+              ],
+              [
+                "US high yield",
+                365
+              ],
+              [
+                "Emerging hard currency",
+                318
+              ]
+            ],
+            "truncated": false,
+            "render_hint": {
+              "block": "bars",
+              "x": "market",
+              "y": [
+                "spread"
+              ]
+            }
+          },
+          "source": "[S1]"
+        },
+        {
+          "type": "table",
+          "title": "Credit spreads",
+          "columns": [
+            "Market",
+            "Latest",
+            "3-month change",
+            "Coverage",
+            "Source"
+          ],
+          "rows": [
+            [
+              "US investment grade",
+              "112 bps",
+              "+9 bps",
+              "Complete",
+              "[S6]"
+            ],
+            [
+              "US high yield",
+              "365 bps",
+              "+28 bps",
+              "Complete",
+              "[S6]"
+            ],
+            [
+              "Emerging hard currency",
+              "318 bps",
+              "+17 bps",
+              "Complete",
+              "[S6]"
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Spread context is cautionary",
+          "text": "Observation: All three returned credit spreads widened over three months [S6]. Why it matters: The context supports caution around concentrated credit exposure. Uncertainty: Spread coverage neither attributes portfolio results nor predicts direction. What would change the view: Refreshed spreads and governed attribution results reversing the concentration tradeoff [S5][S6]."
+        },
+        {
+          "type": "text",
+          "text": "Credit spreads are market context only; governed attribution identifies the portfolio's historical effects [S5][S6]."
+        }
+      ],
+      "kicker": "Wider spreads favor a more balanced quality profile"
+    },
+    {
+      "title": "Forward Return and Risk",
+      "blocks": [
+        {
+          "type": "bars",
+          "title": "Forward expected-return comparison",
+          "items": [
+            {
+              "label": "Current ? Core government / IG",
+              "value": 4.1000000000000005,
+              "display": "4.1%"
+            },
+            {
+              "label": "Proposed ? Core government / IG",
+              "value": 5.2,
+              "display": "5.2%"
+            }
+          ],
+          "note": "Governed forward assumptions; assumptions, not forecasts [S6]."
+        },
+        {
+          "type": "kv",
+          "rows": [
+            [
+              "Assumption set",
+              "2026 Strategic CMA",
+              "S7"
+            ],
+            [
+              "Regime",
+              "Baseline",
+              "S7"
+            ],
+            [
+              "Horizon",
+              "5 years",
+              "S7"
+            ],
+            [
+              "Currency",
+              "USD",
+              "S7"
+            ],
+            [
+              "Context fingerprint",
+              "test-fi-forward-2026",
+              "S7"
+            ]
+          ]
+        },
+        {
+          "type": "chart",
+          "chart": {
+            "chart_id": "test-fi-forward",
+            "title": "Fixed-income forward assumptions",
+            "status": "ok",
+            "currency": "USD",
+            "columns": [
+              {
+                "key": "segment",
+                "title": "Segment",
+                "format": "text",
+                "decimals": null
+              },
+              {
+                "key": "return",
+                "title": "Expected return",
+                "format": "percentage",
+                "decimals": 1
+              },
+              {
+                "key": "volatility",
+                "title": "Expected volatility",
+                "format": "percentage",
+                "decimals": 1
+              }
+            ],
+            "rows": [
+              [
+                "Core government / IG",
+                0.041,
+                0.052
+              ],
+              [
+                "Core-plus credit",
+                0.058,
+                0.081
+              ],
+              [
+                "Global / emerging debt",
+                0.064,
+                0.105
+              ]
+            ],
+            "truncated": false,
+            "render_hint": {
+              "block": "table",
+              "x": "segment",
+              "y": []
+            }
+          },
+          "source": "[S1]"
+        },
+        {
+          "type": "callout",
+          "role": "analysis",
+          "tone": "info",
+          "title": "Analysis — Risk rises with return",
+          "text": "Observation: Higher-returning fixed-income segments also carry higher expected volatility [S7]. Why it matters: Reducing core-plus credit gives up some assumed return for lower modeled risk. Uncertainty: The values are assumptions rather than forecasts. What would change the view: A governed assumption refresh that reverses the segment risk-return ordering [S7]."
+        },
+        {
+          "type": "text",
+          "text": "These figures are assumptions under the selected context, not forecasts or guarantees [S7]."
+        }
+      ],
+      "kicker": "Governed assumptions frame tradeoffs rather than forecasts"
+    },
+    {
+      "title": "Policy Risk, Liquidity and Tradability",
+      "blocks": [
+        {
+          "type": "stacked",
+          "title": "Liquidity composition",
+          "items": [
+            {
+              "label": "Portfolio",
+              "segments": [
+                {
+                  "label": "Liquid / marketable",
+                  "value": 68.3,
+                  "display": "68.3%"
+                },
+                {
+                  "label": "Illiquid / restricted",
+                  "value": 31.7,
+                  "display": "31.7%"
+                }
+              ]
+            }
+          ],
+          "source": "[S1]",
+          "suffix": "%"
+        },
+        {
+          "type": "table",
+          "title": "Policy risk",
+          "columns": [
+            "Metric",
+            "Observed",
+            "Limit",
+            "Status",
+            "Coverage"
+          ],
+          "rows": [
+            [
+              "Volatility",
+              "5.4%",
+              "7.0%",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              },
+              "60 months [S3][S5]"
+            ],
+            [
+              "Maximum drawdown",
+              "-8.1%",
+              "-12.0%",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              },
+              "60 months [S3][S5]"
+            ],
+            [
+              "Duration",
+              "Not available — security analytics not returned",
+              "Not assessed",
+              {
+                "chip": "Not assessed",
+                "status": "not_assessed"
+              },
+              "Unavailable [S8]"
+            ]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Liquidity profile",
+          "columns": [
+            "Bucket",
+            "% NAV",
+            "Amount",
+            "Requirement",
+            "Status"
+          ],
+          "rows": [
+            [
+              "Daily to weekly",
+              "26.9%",
+              "$269.0M",
+              "At least 20.0%",
+              {
+                "chip": "Compliant",
+                "status": "compliant"
+              }
+            ],
+            [
+              "Monthly",
+              "1.1%",
+              "$11.0M",
+              "Monitor",
+              {
+                "chip": "Available",
+                "status": "available"
+              }
+            ]
+          ],
+          "source": "[S1]"
+        },
+        {
+          "type": "text",
+          "text": "The connector does not return security-level duration, spread duration, yield, convexity or key-rate exposure for this public sample [S8]."
+        }
+      ]
+    },
+    {
+      "title": "Scenarios and Robustness",
+      "blocks": [
+        {
+          "type": "bars",
+          "title": "Governed scenario results",
+          "items": [
+            {
+              "label": "Baseline expected return",
+              "value": 4.7,
+              "display": "+4.7%"
+            }
+          ],
+          "note": "Rate and spread shocks are unavailable in the governed review evidence [S8]."
+        },
+        {
+          "type": "table",
+          "title": "Supported scenarios",
+          "columns": [
+            "Scenario",
+            "Return / loss",
+            "Risk measure",
+            "Basis",
+            "Source"
+          ],
+          "rows": [
+            [
+              "Baseline assumptions",
+              "4.7% expected return",
+              "6.2% volatility",
+              "Proposed sleeve",
+              "[S7]"
+            ],
+            [
+              "Rate shock",
+              "Not available — no governed shock result",
+              "Not available",
+              "Unavailable",
+              "[S8]"
+            ],
+            [
+              "Spread shock",
+              "Not available — no governed shock result",
+              "Not available",
+              "Unavailable",
+              "[S8]"
+            ]
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Selected-series sandbox — not saved-portfolio analytics",
+          "text": "Not available — no Strategy Lab return series selected [S8]."
+        }
+      ]
+    },
+    {
+      "title": "Implementation Plan",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Implementation steps",
+          "columns": [
+            "Phase",
+            "Action",
+            "Size",
+            "Funding source",
+            "Condition",
+            "Owner"
+          ],
+          "rows": [
+            [
+              "1",
+              "Reduce core-plus credit",
+              "1.5pp",
+              "Internal rebalance",
+              "Benchmark and liquidity confirmed",
+              "Investment staff"
+            ],
+            [
+              "2",
+              "Complete remaining shift",
+              "1.5pp",
+              "Internal rebalance",
+              "Transaction-cost review",
+              "CIO"
+            ]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Alternatives considered",
+          "columns": [
+            "Alternative",
+            "Benefit",
+            "Cost / risk",
+            "Reason not selected"
+          ],
+          "rows": [
+            [
+              "No change",
+              "No turnover",
+              "Credit concentration remains",
+              "Does not address watch item [S3][S4]"
+            ],
+            [
+              "Full shift immediately",
+              "Fast target alignment",
+              "Unknown transaction costs",
+              "Costs not available [S8]"
+            ]
+          ]
+        },
+        {
+          "type": "bullets",
+          "items": [
+            "Confirm duration and transition costs before trade instructions [S8].",
+            "Recheck policy status after each phase [S3].",
+            "Report attribution and credit-spread context at the next review [S5][S6]."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Risks, Open Items and Approvals",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Decision risks",
+          "columns": [
+            "Priority",
+            "Risk",
+            "Evidence",
+            "Mitigation / condition",
+            "Owner"
+          ],
+          "rows": [
+            [
+              "High",
+              "Security analytics unavailable",
+              "Duration not returned [S8]",
+              "Obtain custodian analytics",
+              "Investment staff"
+            ],
+            [
+              "Medium",
+              "Credit-spread sensitivity",
+              "Wider spreads [S6]",
+              "Stage implementation",
+              "CIO"
+            ],
+            [
+              "Low",
+              "Benchmark mismatch",
+              "Benchmark confirmed [S5]",
+              "Document benchmark role",
+              "Operations"
+            ]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Open items and approvals",
+          "columns": [
+            "Timing",
+            "Item",
+            "Required evidence",
+            "Owner",
+            "Status"
+          ],
+          "rows": [
+            [
+              "Before approval",
+              "Confirm duration",
+              "Security analytics",
+              "Investment staff",
+              "Open [S8]"
+            ],
+            [
+              "Within 30 days",
+              "Transition-cost estimate",
+              "Dealer / manager estimate",
+              "CIO",
+              "Open [S8]"
+            ],
+            [
+              "Next review",
+              "Attribution update",
+              "Governed return period",
+              "Performance team",
+              "Open [S5]"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Coverage",
+      "new_page": false,
+      "blocks": [
+        {
+          "type": "coverage",
+          "items": [
+            {
+              "name": "Portfolio and allocation",
+              "status": "available",
+              "note": "Illustrative sample data [S2]"
+            },
+            {
+              "name": "Policy",
+              "status": "available",
+              "note": "Allocation, risk and liquidity [S3]"
+            },
+            {
+              "name": "Exposure",
+              "status": "available",
+              "note": "Fixed-income classifications [S4]"
+            },
+            {
+              "name": "Returns and attribution",
+              "status": "available",
+              "note": "Governed evidence [S5]"
+            },
+            {
+              "name": "Credit context",
+              "status": "available",
+              "note": "Credit spreads [S6]"
+            },
+            {
+              "name": "Forward assumptions",
+              "status": "available",
+              "note": "2026 CMA [S7]"
+            },
+            {
+              "name": "Security analytics",
+              "status": "unavailable",
+              "note": "Duration and transaction costs not returned [S8]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Appendix — Sources and methods",
+      "num": "A",
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            "Tag",
+            "Evidence",
+            "Basis",
+            "Tool / view",
+            "Key parameters",
+            "As of",
+            "Data scope",
+            "Validation",
+            "Digest"
+          ],
+          "rows": [
+            [
+              "S1",
+              "Organization and capabilities",
+              "gradient_tool",
+              "list_organizations; get_gradient_capabilities",
+              "organization=test",
+              "2026-06-30",
+              "Illustrative sample data",
+              "passed",
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            [
+              "S2",
+              "Portfolio and allocation",
+              "gradient_tool",
+              "list_portfolios; get_portfolio_structure",
+              "allocation_tree",
+              "2026-06-30",
+              "Illustrative sample data",
+              "passed",
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            [
+              "S3",
+              "Policy assessment",
+              "gradient_tool",
+              "check_portfolio_policy",
+              "portfolio=test",
+              "2026-06-30",
+              "Illustrative sample data",
+              "passed",
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            [
+              "S4",
+              "Fixed-income exposure",
+              "gradient_tool",
+              "get_portfolio_exposure",
+              "fixed_income",
+              "2026-06-30",
+              "Illustrative sample data",
+              "passed",
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            [
+              "S5",
+              "Returns and attribution",
+              "gradient_tool",
+              "get_portfolio_historical_returns; get_portfolio_attribution",
+              "all sections",
+              "2026-06-30",
+              "Illustrative sample data",
+              "passed",
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            [
+              "S6",
+              "Credit context",
+              "gradient_tool",
+              "get_macro_conditions",
+              "credit_spreads",
+              "2026-06-30",
+              "Illustrative sample data",
+              "passed",
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            [
+              "S7",
+              "Forward assumptions",
+              "gradient_tool",
+              "get_capital_market_assumptions",
+              "baseline",
+              "2026-06-15",
+              "Illustrative sample data",
+              "passed",
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            [
+              "S8",
+              "Mandate and evidence gaps",
+              "gradient_tool",
+              "get_gradient_capabilities",
+              "illustrative",
+              "2026-06-30",
+              "Illustrative sample data",
+              "advisory",
+              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Appendix B — Server Metric Methods and Disclosures",
+      "num": "B",
+      "new_page": false,
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Server Metric Methods",
+          "columns": [
+            "Source",
+            "Quantity",
+            "Method / formula",
+            "Version",
+            "Basis / units / tolerance"
+          ],
+          "rows": [
+            [
+              "S3",
+              "Policy status",
+              "Governed assessment",
+              "portfolio-policy-v1",
+              "Returned status"
+            ],
+            [
+              "S5",
+              "Returns and attribution",
+              "Linked returns; Brinson-Fachler",
+              "portfolio-attribution-v1",
+              "Net; 1 bp tolerance"
+            ],
+            [
+              "S6",
+              "Credit spreads",
+              "Returned macro conditions",
+              "macro-conditions-v1",
+              "Basis points"
+            ],
+            [
+              "S7",
+              "Forward statistics",
+              "Expected-statistics chart",
+              "chart-contract-v1",
+              "5-year assumptions"
+            ]
+          ]
+        }
+      ]
+    }
   ]
- ],
- "signal_title": "Overall view",
- "signal": {
-  "level": "watch",
-  "label": "Credit allocation proposed"
- },
- "completeness": {
-  "used": 8,
-  "expected": 9,
-  "state": "partial"
- },
- "meter_title": "Scope reviewed",
- "data_basis": "gradient_governed",
- "cover_disclosure": "Illustrative sample · not client data",
- "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
-},
- "executive": {
-  "label": "Recommendation",
-  "bottom_line": "We recommend shifting 3.0 percentage points of the fixed-income sleeve from core-plus credit to core government and investment-grade bonds while retaining the 28.0% total-fund allocation [S3][S4]. Committee action requested: approve the target structure and a two-stage implementation subject to benchmark and liquidity checks [S3][S8].",
-  "tiles": [
-   {
-    "label": "Fixed-income weight",
-    "value": "28.0%",
-    "sub": "Policy target 28.0% [S3]",
-    "tone": "good"
-   },
-   {
-    "label": "Active weight",
-    "value": "0.0pp",
-    "sub": "Total-fund target [S3]",
-    "tone": "good"
-   },
-   {
-    "label": "Relative return",
-    "value": "+0.4pp",
-    "sub": "Trailing 1Y versus benchmark [S5]",
-    "tone": "good"
-   },
-   {
-    "label": "Liquid share",
-    "value": "96.0%",
-    "sub": "Daily to weekly [S3]",
-    "tone": "good"
-   }
-  ]
- },
- "sections": [
-  {
-   "id": "executive",
-   "title": "Executive Decision",
-   "blocks": [
-    {
-     "type": "callout",
-     "tone": "accent",
-     "title": "Recommendation and action requested",
-     "text": "We recommend a 3.0 percentage-point shift from core-plus credit to core government and investment-grade bonds. Committee action requested: approve the target and staged implementation [S3][S4][S8]."
-    },
-    {
-     "type": "table",
-     "title": "Decision summary",
-     "columns": [
-      "Decision element",
-      "Proposed action",
-      "Evidence",
-      "Status"
-     ],
-     "rows": [
-      [
-       "Total allocation",
-       "Hold at 28.0%",
-       "[S3]",
-       {
-        "chip": "Compliant",
-        "status": "compliant"
-       }
-      ],
-      [
-       "Core-plus credit",
-       "Reduce from 10.0% to 7.0% of total fund",
-       "[S3][S4]",
-       {
-        "chip": "Proposed",
-        "status": "watch"
-       }
-      ],
-      [
-       "Core government / IG",
-       "Increase from 14.0% to 17.0%",
-       "[S3][S4]",
-       {
-        "chip": "Proposed",
-        "status": "watch"
-       }
-      ]
-     ]
-    },
-    {
-     "type": "callout",
-     "tone": "watch",
-     "title": "Conditions and limits",
-     "text": "Implementation requires confirmation of security-level duration and transaction costs, which are not available in the connector evidence [S8]."
-    },
-    {
-     "type": "callout",
-     "role": "key_judgment",
-     "tone": "watch",
-     "title": "Key judgment — headline signal",
-     "text": "Observation: The sample report carries a credit-allocation signal above the prior neutral baseline [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
-    },
-    {
-     "type": "callout",
-     "role": "key_judgment",
-     "tone": "info",
-     "title": "Key judgment — primary measure",
-     "text": "Observation: Fixed-income weight is 28.0% in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
-    },
-    {
-     "type": "callout",
-     "role": "key_judgment",
-     "tone": "info",
-     "title": "Key judgment — monitoring priority",
-     "text": "Observation: Liquid share is 96.0% in the review evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
-    }
-   ]
-  },
-  {
-   "title": "Mandate, Benchmark and Data Basis",
-   "blocks": [
-    {
-     "type": "kv",
-     "rows": [
-      [
-       "Portfolio",
-       "Northstar Total Fund",
-       "S2"
-      ],
-      [
-       "Mandate",
-       "Capital preservation, income and diversification",
-       "S8"
-      ],
-      [
-       "Benchmark",
-       "Northstar Aggregate Bond Index",
-       "S5"
-      ],
-      [
-       "Horizon",
-       "5 years",
-       "S7"
-      ],
-      [
-       "Return basis",
-       "Net",
-       "S5"
-      ],
-      [
-       "Data scope",
-       "Illustrative sample data [S1]",
-       "S1"
-      ]
-     ]
-    },
-    {
-     "type": "table",
-     "title": "Governed framework",
-     "columns": [
-      "Area",
-      "Objective or limit",
-      "Observed",
-      "Status",
-      "Source"
-     ],
-     "rows": [
-      [
-       "Fixed income",
-       "23.0%–33.0%",
-       "28.0%",
-       {
-        "chip": "Compliant",
-        "status": "compliant"
-       },
-       "[S3]"
-      ],
-      [
-       "Volatility",
-       "At or below 7.0%",
-       "5.4%",
-       {
-        "chip": "Compliant",
-        "status": "compliant"
-       },
-       "[S3][S5]"
-      ],
-      [
-       "Below-investment-grade",
-       "At or below 8.0% of total fund",
-       "6.0%",
-       {
-        "chip": "Watch",
-        "status": "watch"
-       },
-       "[S3][S4]"
-      ]
-     ]
-    }
-   ]
-  },
-  {
-   "title": "Current Fixed Income Portfolio",
-   "blocks": [
-    {
-     "type": "chart",
-     "chart": {
-      "chart_id": "test-fi-allocation",
-      "title": "Fixed-income allocation",
-      "status": "ok",
-      "currency": "USD",
-      "columns": [
-       {
-        "key": "segment",
-        "title": "Segment",
-        "format": "text",
-        "decimals": null
-       },
-       {
-        "key": "weight",
-        "title": "Weight",
-        "format": "percentage",
-        "decimals": 1
-       }
-      ],
-      "rows": [
-       [
-        "Core government / IG",
-        0.5
-       ],
-       [
-        "Core-plus credit",
-        0.357
-       ],
-       [
-        "Global / emerging debt",
-        0.143
-       ]
-      ],
-      "truncated": false,
-      "render_hint": {
-       "block": "bars",
-       "x": "segment",
-       "y": [
-        "weight"
-       ]
-      }
-     },
-     "source": "[S1]"
-    },
-    {
-     "type": "table",
-     "title": "Current sleeve",
-     "columns": [
-      "Segment / exposure",
-      "Value",
-      "% portfolio",
-      "% fixed income",
-      "Currency",
-      "As of"
-     ],
-     "rows": [
-      [
-       "Core government / IG",
-       "$140.0M",
-       "14.0%",
-       "50.0%",
-       "USD",
-       "2026-06-30 [S4]"
-      ],
-      [
-       "Core-plus credit",
-       "$100.0M",
-       "10.0%",
-       "35.7%",
-       "USD",
-       "2026-06-30 [S4]"
-      ],
-      [
-       "Global / emerging debt",
-       "$40.0M",
-       "4.0%",
-       "14.3%",
-       "Mixed",
-       "2026-06-30 [S4]"
-      ]
-     ]
-    },
-    {
-     "type": "text",
-     "text": "Exposure classifications are shown as returned and are not remapped to policy-tree labels [S2][S4]."
-    }
-   ]
-  },
-  {
-   "title": "Target Portfolio Structure",
-   "blocks": [
-    {
-     "type": "band",
-     "title": "Current weight versus policy range",
-     "items": [
-      {
-       "label": "Core government / IG",
-       "value": 14.0,
-       "low": 12.0,
-       "high": 20.0,
-       "target": 17.0,
-       "display": "14.0% → 17.0%"
-      },
-      {
-       "label": "Core-plus credit",
-       "value": 10.0,
-       "low": 5.0,
-       "high": 12.0,
-       "target": 7.0,
-       "display": "10.0% → 7.0%"
-      },
-      {
-       "label": "Global / emerging debt",
-       "value": 4.0,
-       "low": 0.0,
-       "high": 6.0,
-       "target": 4.0,
-       "display": "4.0% → 4.0%"
-      }
-     ],
-     "source": "[S1]"
-    },
-    {
-     "type": "stacked",
-     "title": "Current and target mix",
-     "items": [
-      {
-       "label": "Current",
-       "segments": [
-        {
-         "label": "Core government / IG",
-         "value": 14.0
-        },
-        {
-         "label": "Core-plus credit",
-         "value": 10.0
-        },
-        {
-         "label": "Global / emerging debt",
-         "value": 4.0
-        }
-       ]
-      },
-      {
-       "label": "Target",
-       "segments": [
-        {
-         "label": "Core government / IG",
-         "value": 17.0
-        },
-        {
-         "label": "Core-plus credit",
-         "value": 7.0
-        },
-        {
-         "label": "Global / emerging debt",
-         "value": 4.0
-        }
-       ]
-      }
-     ],
-     "source": "[S1]"
-    },
-    {
-     "type": "waterfall",
-     "title": "Target allocation changes (percentage points)",
-     "items": [
-      {
-       "label": "Core government / IG",
-       "value": 3.0,
-       "display": "+3.0pp"
-      },
-      {
-       "label": "Core-plus credit",
-       "value": -3.0,
-       "display": "-3.0pp"
-      },
-      {
-       "label": "Global / emerging debt",
-       "value": 0.0,
-       "display": "+0.0pp"
-      }
-     ],
-     "source": "[S1]"
-    },
-    {
-     "type": "table",
-     "title": "Current versus target",
-     "columns": [
-      "Segment",
-      "Current",
-      "Target",
-      "Change",
-      "Range / constraint",
-      "Rationale"
-     ],
-     "rows": [
-      [
-       "Core government / IG",
-       "14.0%",
-       "17.0%",
-       "+3.0pp",
-       "12.0%–20.0%",
-       "Increase benchmark-aligned ballast [S3][S8]"
-      ],
-      [
-       "Core-plus credit",
-       "10.0%",
-       "7.0%",
-       "-3.0pp",
-       "5.0%–12.0%",
-       "Reduce credit concentration [S3][S4][S6]"
-      ],
-      [
-       "Global / emerging debt",
-       "4.0%",
-       "4.0%",
-       "0.0pp",
-       "0.0%–6.0%",
-       "Maintain diversified role [S3][S7]"
-      ]
-     ]
-    },
-    {
-     "type": "callout",
-     "role": "analysis",
-     "tone": "info",
-     "title": "Analysis — Why this target",
-     "text": "Observation: The target shifts 3.0 percentage points from core-plus credit to government and investment-grade bonds [S3][S4]. Why it matters: The change directly reduces concentrated credit exposure. Uncertainty: Duration, cost, CMA, regime and manager coverage remain incomplete [S8]. What would change the view: Completed records showing higher duration or transition costs."
-    },
-    {
-     "type": "text",
-     "text": "The target is a committee proposal and is not a saved portfolio change [S3][S8]."
-    }
-   ],
-   "kicker": "The proposed mix reduces concentrated risk while preserving mandate exposure"
-  },
-  {
-   "title": "Historical Performance and Attribution",
-   "blocks": [
-    {
-     "type": "waterfall",
-     "title": "Governed attribution effects",
-     "items": [
-      {
-       "label": "Allocation",
-       "value": 0.08,
-       "display": "+0.08pp"
-      },
-      {
-       "label": "Selection",
-       "value": 0.22,
-       "display": "+0.22pp"
-      },
-      {
-       "label": "Interaction",
-       "value": 0.02,
-       "display": "+0.02pp"
-      },
-      {
-       "label": "Residual",
-       "value": 0.0,
-       "display": "0.00pp"
-      }
-     ],
-     "note": "Returned attribution effects; residual is shown explicitly [S5]."
-    },
-    {
-     "type": "table",
-     "title": "Standard periods",
-     "columns": [
-      "Period",
-      "Portfolio / sleeve",
-      "Benchmark",
-      "Excess",
-      "Coverage"
-     ],
-     "rows": [
-      [
-       "1Y fixed-income sleeve",
-       "5.1%",
-       "4.7%",
-       "+0.4pp",
-       "Complete [S5]"
-      ],
-      [
-       "3Y fixed-income sleeve (ann.)",
-       "3.4%",
-       "3.1%",
-       "+0.3pp",
-       "Complete [S5]"
-      ],
-      [
-       "5Y fixed-income sleeve (ann.)",
-       "1.8%",
-       "1.9%",
-       "-0.1pp",
-       "Complete [S5]"
-      ]
-     ]
-    },
-    {
-     "type": "table",
-     "title": "Attribution effects",
-     "columns": [
-      "Effect",
-      "Contribution",
-      "Source"
-     ],
-     "rows": [
-      [
-       "Allocation",
-       "+0.08pp",
-       "[S5]"
-      ],
-      [
-       "Selection",
-       "+0.22pp",
-       "[S5]"
-      ],
-      [
-       "Interaction",
-       "+0.02pp",
-       "[S5]"
-      ],
-      [
-       "Residual",
-       "0.00pp",
-       "[S5]"
-      ]
-     ]
-    },
-    {
-     "type": "text",
-     "text": "Governed attribution method and reconciliation metadata follow [S5]."
-    },
-    {
-     "type": "kv",
-     "rows": [
-      [
-       "Method",
-       "Brinson-Fachler",
-       "S5"
-      ],
-      [
-       "Linking",
-       "Symmetric Carino",
-       "S5"
-      ],
-      [
-       "Basis",
-       "Net, monthly linked",
-       "S5"
-      ],
-      [
-       "Tolerance",
-       "1 bp; reconciled",
-       "S5"
-      ]
-     ]
-    }
-   ]
-  },
-  {
-   "title": "Rates and Credit Context",
-   "blocks": [
-    {
-     "type": "tiles",
-     "tiles": [
-      {
-       "label": "Effective duration",
-       "value": "Not available",
-       "sub": "Security analytics unavailable [S8]",
-       "tone": "watch"
-      },
-      {
-       "label": "Spread duration",
-       "value": "Not available",
-       "sub": "Security analytics unavailable [S8]",
-       "tone": "watch"
-      },
-      {
-       "label": "US IG spread",
-       "value": "112 bps",
-       "sub": "Latest returned context [S6]",
-       "tone": "info"
-      },
-      {
-       "label": "US HY spread",
-       "value": "365 bps",
-       "sub": "Latest returned context [S6]",
-       "tone": "watch"
-      }
-     ]
-    },
-    {
-     "type": "chart",
-     "chart": {
-      "chart_id": "test-fi-spreads",
-      "title": "Credit spreads",
-      "status": "ok",
-      "columns": [
-       {
-        "key": "market",
-        "title": "Market",
-        "format": "text",
-        "decimals": null
-       },
-       {
-        "key": "spread",
-        "title": "Spread",
-        "format": "basis_points",
-        "decimals": 0
-       }
-      ],
-      "rows": [
-       [
-        "US investment grade",
-        112
-       ],
-       [
-        "US high yield",
-        365
-       ],
-       [
-        "Emerging hard currency",
-        318
-       ]
-      ],
-      "truncated": false,
-      "render_hint": {
-       "block": "bars",
-       "x": "market",
-       "y": [
-        "spread"
-       ]
-      }
-     },
-     "source": "[S1]"
-    },
-    {
-     "type": "table",
-     "title": "Credit spreads",
-     "columns": [
-      "Market",
-      "Latest",
-      "3-month change",
-      "Coverage",
-      "Source"
-     ],
-     "rows": [
-      [
-       "US investment grade",
-       "112 bps",
-       "+9 bps",
-       "Complete",
-       "[S6]"
-      ],
-      [
-       "US high yield",
-       "365 bps",
-       "+28 bps",
-       "Complete",
-       "[S6]"
-      ],
-      [
-       "Emerging hard currency",
-       "318 bps",
-       "+17 bps",
-       "Complete",
-       "[S6]"
-      ]
-     ]
-    },
-    {
-     "type": "callout",
-     "role": "analysis",
-     "tone": "info",
-     "title": "Analysis — Spread context is cautionary",
-     "text": "Observation: All three returned credit spreads widened over three months [S6]. Why it matters: The context supports caution around concentrated credit exposure. Uncertainty: Spread coverage neither attributes portfolio results nor predicts direction. What would change the view: Refreshed spreads and governed attribution results reversing the concentration tradeoff [S5][S6]."
-    },
-    {
-     "type": "text",
-     "text": "Credit spreads are market context only; governed attribution identifies the portfolio's historical effects [S5][S6]."
-    }
-   ],
-   "kicker": "Wider spreads favor a more balanced quality profile"
-  },
-  {
-   "title": "Forward Return and Risk",
-   "blocks": [
-    {
-     "type": "bars",
-     "title": "Forward expected-return comparison",
-     "items": [
-      {
-       "label": "Current ? Core government / IG",
-       "value": 4.1000000000000005,
-       "display": "4.1%"
-      },
-      {
-       "label": "Proposed ? Core government / IG",
-       "value": 5.2,
-       "display": "5.2%"
-      }
-     ],
-     "note": "Governed forward assumptions; assumptions, not forecasts [S6]."
-    },
-    {
-     "type": "kv",
-     "rows": [
-      [
-       "Assumption set",
-       "2026 Strategic CMA",
-       "S7"
-      ],
-      [
-       "Regime",
-       "Baseline",
-       "S7"
-      ],
-      [
-       "Horizon",
-       "5 years",
-       "S7"
-      ],
-      [
-       "Currency",
-       "USD",
-       "S7"
-      ],
-      [
-       "Context fingerprint",
-       "test-fi-forward-2026",
-       "S7"
-      ]
-     ]
-    },
-    {
-     "type": "chart",
-     "chart": {
-      "chart_id": "test-fi-forward",
-      "title": "Fixed-income forward assumptions",
-      "status": "ok",
-      "currency": "USD",
-      "columns": [
-       {
-        "key": "segment",
-        "title": "Segment",
-        "format": "text",
-        "decimals": null
-       },
-       {
-        "key": "return",
-        "title": "Expected return",
-        "format": "percentage",
-        "decimals": 1
-       },
-       {
-        "key": "volatility",
-        "title": "Expected volatility",
-        "format": "percentage",
-        "decimals": 1
-       }
-      ],
-      "rows": [
-       [
-        "Core government / IG",
-        0.041,
-        0.052
-       ],
-       [
-        "Core-plus credit",
-        0.058,
-        0.081
-       ],
-       [
-        "Global / emerging debt",
-        0.064,
-        0.105
-       ]
-      ],
-      "truncated": false,
-      "render_hint": {
-       "block": "table",
-       "x": "segment",
-       "y": []
-      }
-     },
-     "source": "[S1]"
-    },
-    {
-     "type": "callout",
-     "role": "analysis",
-     "tone": "info",
-     "title": "Analysis — Risk rises with return",
-     "text": "Observation: Higher-returning fixed-income segments also carry higher expected volatility [S7]. Why it matters: Reducing core-plus credit gives up some assumed return for lower modeled risk. Uncertainty: The values are assumptions rather than forecasts. What would change the view: A governed assumption refresh that reverses the segment risk-return ordering [S7]."
-    },
-    {
-     "type": "text",
-     "text": "These figures are assumptions under the selected context, not forecasts or guarantees [S7]."
-    }
-   ],
-   "kicker": "Governed assumptions frame tradeoffs rather than forecasts"
-  },
-  {
-   "title": "Policy Risk, Liquidity and Tradability",
-   "blocks": [
-    {
-     "type": "stacked",
-     "title": "Liquidity composition",
-     "items": [
-      {
-       "label": "Portfolio",
-       "segments": [
-        {
-         "label": "Liquid / marketable",
-         "value": 68.3,
-         "display": "68.3%"
-        },
-        {
-         "label": "Illiquid / restricted",
-         "value": 31.7,
-         "display": "31.7%"
-        }
-       ]
-      }
-     ],
-     "source": "[S1]"
-    },
-    {
-     "type": "table",
-     "title": "Policy risk",
-     "columns": [
-      "Metric",
-      "Observed",
-      "Limit",
-      "Status",
-      "Coverage"
-     ],
-     "rows": [
-      [
-       "Volatility",
-       "5.4%",
-       "7.0%",
-       {
-        "chip": "Compliant",
-        "status": "compliant"
-       },
-       "60 months [S3][S5]"
-      ],
-      [
-       "Maximum drawdown",
-       "-8.1%",
-       "-12.0%",
-       {
-        "chip": "Compliant",
-        "status": "compliant"
-       },
-       "60 months [S3][S5]"
-      ],
-      [
-       "Duration",
-       "Not available — security analytics not returned",
-       "Not assessed",
-       {
-        "chip": "Not assessed",
-        "status": "not_assessed"
-       },
-       "Unavailable [S8]"
-      ]
-     ]
-    },
-    {
-     "type": "table",
-     "title": "Liquidity profile",
-     "columns": [
-      "Bucket",
-      "% NAV",
-      "Amount",
-      "Requirement",
-      "Status"
-     ],
-     "rows": [
-      [
-       "Daily to weekly",
-       "26.9%",
-       "$269.0M",
-       "At least 20.0%",
-       {
-        "chip": "Compliant",
-        "status": "compliant"
-       }
-      ],
-      [
-       "Monthly",
-       "1.1%",
-       "$11.0M",
-       "Monitor",
-       {
-        "chip": "Available",
-        "status": "available"
-       }
-      ]
-     ],
-     "source": "[S1]"
-    },
-    {
-     "type": "text",
-     "text": "The connector does not return security-level duration, spread duration, yield, convexity or key-rate exposure for this public sample [S8]."
-    }
-   ]
-  },
-  {
-   "title": "Scenarios and Robustness",
-   "blocks": [
-    {
-     "type": "bars",
-     "title": "Governed scenario results",
-     "items": [
-      {
-       "label": "Baseline expected return",
-       "value": 4.7,
-       "display": "+4.7%"
-      }
-     ],
-     "note": "Rate and spread shocks are unavailable in the governed review evidence [S8]."
-    },
-    {
-     "type": "table",
-     "title": "Supported scenarios",
-     "columns": [
-      "Scenario",
-      "Return / loss",
-      "Risk measure",
-      "Basis",
-      "Source"
-     ],
-     "rows": [
-      [
-       "Baseline assumptions",
-       "4.7% expected return",
-       "6.2% volatility",
-       "Proposed sleeve",
-       "[S7]"
-      ],
-      [
-       "Rate shock",
-       "Not available — no governed shock result",
-       "Not available",
-       "Unavailable",
-       "[S8]"
-      ],
-      [
-       "Spread shock",
-       "Not available — no governed shock result",
-       "Not available",
-       "Unavailable",
-       "[S8]"
-      ]
-     ]
-    },
-    {
-     "type": "callout",
-     "tone": "info",
-     "title": "Selected-series sandbox — not saved-portfolio analytics",
-     "text": "Not available — no Strategy Lab return series selected [S8]."
-    }
-   ]
-  },
-  {
-   "title": "Implementation Plan",
-   "blocks": [
-    {
-     "type": "table",
-     "title": "Implementation steps",
-     "columns": [
-      "Phase",
-      "Action",
-      "Size",
-      "Funding source",
-      "Condition",
-      "Owner"
-     ],
-     "rows": [
-      [
-       "1",
-       "Reduce core-plus credit",
-       "1.5pp",
-       "Internal rebalance",
-       "Benchmark and liquidity confirmed",
-       "Investment staff"
-      ],
-      [
-       "2",
-       "Complete remaining shift",
-       "1.5pp",
-       "Internal rebalance",
-       "Transaction-cost review",
-       "CIO"
-      ]
-     ]
-    },
-    {
-     "type": "table",
-     "title": "Alternatives considered",
-     "columns": [
-      "Alternative",
-      "Benefit",
-      "Cost / risk",
-      "Reason not selected"
-     ],
-     "rows": [
-      [
-       "No change",
-       "No turnover",
-       "Credit concentration remains",
-       "Does not address watch item [S3][S4]"
-      ],
-      [
-       "Full shift immediately",
-       "Fast target alignment",
-       "Unknown transaction costs",
-       "Costs not available [S8]"
-      ]
-     ]
-    },
-    {
-     "type": "bullets",
-     "items": [
-      "Confirm duration and transition costs before trade instructions [S8].",
-      "Recheck policy status after each phase [S3].",
-      "Report attribution and credit-spread context at the next review [S5][S6]."
-     ]
-    }
-   ]
-  },
-  {
-   "title": "Risks, Open Items and Approvals",
-   "blocks": [
-    {
-     "type": "table",
-     "title": "Decision risks",
-     "columns": [
-      "Priority",
-      "Risk",
-      "Evidence",
-      "Mitigation / condition",
-      "Owner"
-     ],
-     "rows": [
-      [
-       "High",
-       "Security analytics unavailable",
-       "Duration not returned [S8]",
-       "Obtain custodian analytics",
-       "Investment staff"
-      ],
-      [
-       "Medium",
-       "Credit-spread sensitivity",
-       "Wider spreads [S6]",
-       "Stage implementation",
-       "CIO"
-      ],
-      [
-       "Low",
-       "Benchmark mismatch",
-       "Benchmark confirmed [S5]",
-       "Document benchmark role",
-       "Operations"
-      ]
-     ]
-    },
-    {
-     "type": "table",
-     "title": "Open items and approvals",
-     "columns": [
-      "Timing",
-      "Item",
-      "Required evidence",
-      "Owner",
-      "Status"
-     ],
-     "rows": [
-      [
-       "Before approval",
-       "Confirm duration",
-       "Security analytics",
-       "Investment staff",
-       "Open [S8]"
-      ],
-      [
-       "Within 30 days",
-       "Transition-cost estimate",
-       "Dealer / manager estimate",
-       "CIO",
-       "Open [S8]"
-      ],
-      [
-       "Next review",
-       "Attribution update",
-       "Governed return period",
-       "Performance team",
-       "Open [S5]"
-      ]
-     ]
-    }
-   ]
-  },
-  {
-   "title": "Coverage",
-   "new_page": false,
-   "blocks": [
-    {
-     "type": "coverage",
-     "items": [
-      {
-       "name": "Portfolio and allocation",
-       "status": "available",
-       "note": "Illustrative sample data [S2]"
-      },
-      {
-       "name": "Policy",
-       "status": "available",
-       "note": "Allocation, risk and liquidity [S3]"
-      },
-      {
-       "name": "Exposure",
-       "status": "available",
-       "note": "Fixed-income classifications [S4]"
-      },
-      {
-       "name": "Returns and attribution",
-       "status": "available",
-       "note": "Governed evidence [S5]"
-      },
-      {
-       "name": "Credit context",
-       "status": "available",
-       "note": "Credit spreads [S6]"
-      },
-      {
-       "name": "Forward assumptions",
-       "status": "available",
-       "note": "2026 CMA [S7]"
-      },
-      {
-       "name": "Security analytics",
-       "status": "unavailable",
-       "note": "Duration and transaction costs not returned [S8]"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "title": "Appendix — Sources and methods",
-   "num": "A",
-   "blocks": [
-    {
-     "type": "table",
-     "columns": [
-      "Tag",
-      "Evidence",
-      "Basis",
-      "Tool / view",
-      "Key parameters",
-      "As of",
-      "Data scope",
-      "Validation",
-      "Digest"
-     ],
-     "rows": [
-      [
-       "S1",
-       "Organization and capabilities",
-       "gradient_tool",
-       "list_organizations; get_gradient_capabilities",
-       "organization=test",
-       "2026-06-30",
-       "Illustrative sample data",
-       "passed",
-       "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      ],
-      [
-       "S2",
-       "Portfolio and allocation",
-       "gradient_tool",
-       "list_portfolios; get_portfolio_structure",
-       "allocation_tree",
-       "2026-06-30",
-       "Illustrative sample data",
-       "passed",
-       "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      ],
-      [
-       "S3",
-       "Policy assessment",
-       "gradient_tool",
-       "check_portfolio_policy",
-       "portfolio=test",
-       "2026-06-30",
-       "Illustrative sample data",
-       "passed",
-       "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      ],
-      [
-       "S4",
-       "Fixed-income exposure",
-       "gradient_tool",
-       "get_portfolio_exposure",
-       "fixed_income",
-       "2026-06-30",
-       "Illustrative sample data",
-       "passed",
-       "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      ],
-      [
-       "S5",
-       "Returns and attribution",
-       "gradient_tool",
-       "get_portfolio_historical_returns; get_portfolio_attribution",
-       "all sections",
-       "2026-06-30",
-       "Illustrative sample data",
-       "passed",
-       "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      ],
-      [
-       "S6",
-       "Credit context",
-       "gradient_tool",
-       "get_macro_conditions",
-       "credit_spreads",
-       "2026-06-30",
-       "Illustrative sample data",
-       "passed",
-       "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      ],
-      [
-       "S7",
-       "Forward assumptions",
-       "gradient_tool",
-       "get_capital_market_assumptions",
-       "baseline",
-       "2026-06-15",
-       "Illustrative sample data",
-       "passed",
-       "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      ],
-      [
-       "S8",
-       "Mandate and evidence gaps",
-       "gradient_tool",
-       "get_gradient_capabilities",
-       "illustrative",
-       "2026-06-30",
-       "Illustrative sample data",
-       "advisory",
-       "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      ]
-     ]
-    }
-   ]
-  },
-  {
-   "title": "Appendix B — Server Metric Methods and Disclosures",
-   "num": "B",
-   "new_page": false,
-   "blocks": [
-    {
-     "type": "table",
-     "title": "Server Metric Methods",
-     "columns": [
-      "Source",
-      "Quantity",
-      "Method / formula",
-      "Version",
-      "Basis / units / tolerance"
-     ],
-     "rows": [
-      [
-       "S3",
-       "Policy status",
-       "Governed assessment",
-       "portfolio-policy-v1",
-       "Returned status"
-      ],
-      [
-       "S5",
-       "Returns and attribution",
-       "Linked returns; Brinson-Fachler",
-       "portfolio-attribution-v1",
-       "Net; 1 bp tolerance"
-      ],
-      [
-       "S6",
-       "Credit spreads",
-       "Returned macro conditions",
-       "macro-conditions-v1",
-       "Basis points"
-      ],
-      [
-       "S7",
-       "Forward statistics",
-       "Expected-statistics chart",
-       "chart-contract-v1",
-       "5-year assumptions"
-      ]
-     ]
-    }
-   ]
-  }
- ]
 }

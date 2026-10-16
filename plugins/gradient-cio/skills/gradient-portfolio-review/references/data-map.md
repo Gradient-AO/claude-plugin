@@ -104,9 +104,9 @@ If a user explicitly requests saved-portfolio simulated attribution, report
 
 Peer allocation is optional. When capabilities report `peerIntelligence` unavailable, do not call or retry
 the peer tool. Omit the peer comparison, record
-`Not licensed — peerIntelligence is not available for this organization` in coverage, and complete the
+`Not licensed — peer allocation intelligence is not licensed for this organization` in coverage, and complete the
 review from portfolio evidence. Add a report-body callout:
-`Not licensed — Peer allocation context was skipped because peerIntelligence is not available for this
+`Not licensed — Peer allocation context was skipped because peer allocation intelligence is not licensed for this
 organization. This review uses portfolio evidence only.`
 
 Benchmark: use the one identified by `benchmark_relative`. If that section is unavailable, ask the user which

@@ -41,7 +41,7 @@ collection.
   digests. Missing evidence is typed unavailable, never zero.
 - Historical, expected, and simulated lanes remain distinct. Expected values
   are assumptions, not forecasts.
-- In `single` mode, deliver 7–9 PDF pages with a hard ceiling of 11. If
+- In `single` mode, deliver 8–12 PDF pages with a hard ceiling of 14. If
   held-manager resolution fails, use exactly `Manager findings: Not assessed —
   <error_code>; request ID <request_id>.` Label broader diligence exactly
   `Organization-wide context — not verified as held`.

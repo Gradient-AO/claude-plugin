@@ -14,6 +14,13 @@ from layout_budget_schema import (  # noqa: E402
     resolve_layout_budget,
     validate_layout_budget,
 )
+from report_layout import (  # noqa: E402
+    cover_allowed_text,
+    cover_fact_count_errors,
+    cover_page_failures,
+    ordinal_suffix,
+    reader_text_failures,
+)
 from report_vocab import (  # noqa: E402
     ATTRIBUTION_VOCAB,
     DDQ_VOCAB,
@@ -285,4 +292,64 @@ def layout_vocab_contracts():
         bootstrapped.returncode == 2
         and "usage:" in (bootstrapped.stdout + bootstrapped.stderr),
         "skill-local validator bootstraps tool profiles without synced copies",
+    )
+
+    cover_meta = {
+        "eyebrow": "Portfolio review",
+        "title": "Total Fund Review",
+        "subtitle": "Third quarter 2026",
+        "header_label": "Portfolio Review",
+        "cover_facts": [["Prepared for", "Investment Committee"], ["Reviewed", "15 October 2026"]],
+    }
+    allowed = cover_allowed_text(cover_meta)
+    clean_cover = [
+        "GradientCIO",
+        "P O R T F O L I O   R E V I E W",
+        "Total Fund Review",
+        "Third quarter 2026",
+        "PREPARED FOR      REVIEWED",
+        "Investment Committee      15 October 2026",
+        "Confidential — prepared for internal investment use      GradientCIO.com",
+    ]
+    cluttered = cover_page_failures(
+        [*clean_cover, "One asset class near its policy limit", "3 of 7 evidence areas"],
+        allowed,
+    )
+    check(
+        cover_page_failures(clean_cover, allowed) == []
+        and len(cluttered) == 1
+        and "near its policy limit" in cluttered[0]
+        and "3 of 7 evidence areas" in cluttered[0],
+        "title-page gate accepts letter-spaced metadata and rejects signals and coverage counts",
+    )
+    check(
+        cover_fact_count_errors({"cover_facts": [["a", "b"]] * 5})
+        == ["cover lists 5 facts; the title page shows at most 4"]
+        and cover_fact_count_errors(cover_meta) == [],
+        "cover gate rejects more than four cover facts",
+    )
+    check(
+        [ordinal_suffix(number) for number in (1, 2, 3, 4, 11, 12, 13, 21, 22, 63, 111, 112)]
+        == ["st", "nd", "rd", "th", "th", "th", "th", "st", "nd", "rd", "th", "th"],
+        "ordinal suffixes follow English rules including the teens",
+    )
+    reader_failures = reader_text_failures(
+        [
+            ["The fund ranks 63th of 120 peers; 11th, 22nd and 101st are fine."],
+            ["Check: passed_with_warnings", "{'chip': 'Watch', 'status': 'watch'}"],
+            ["This signal focuses oversight on the sleeve."],
+            ["Appendix — Sources", "S1 passed_with_warnings mcp:get_portfolio"],
+        ],
+        raw_status_exempt_pages={4},
+    )
+    check(
+        reader_failures
+        == [
+            "page 1 has ordinal '63th'; write '63rd'",
+            "page 2 shows a raw chip object; render it as a status label",
+            "page 2 shows raw status values (passed_with_warnings); use the plain-language label",
+            "page 3 uses the templated phrase 'This signal focuses oversight'; "
+            "state the specific finding instead",
+        ],
+        "reader-text gate rejects bad ordinals, raw statuses, chip reprs and templated phrases outside the appendix",
     )

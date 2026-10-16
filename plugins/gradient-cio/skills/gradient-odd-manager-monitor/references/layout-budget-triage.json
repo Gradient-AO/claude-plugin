@@ -5,9 +5,9 @@
   "pdf": {
     "target_pages": {
       "min": 2,
-      "max": 5
+      "max": 4
     },
-    "hard_max_pages": 8,
+    "hard_max_pages": 6,
     "minimum_body_fill": 0.4,
     "orphan_tail_max_fill": 0.2
   },
@@ -22,22 +22,22 @@
       "executive": {
         "role": "summary",
         "requires_analysis": false,
-        "max_body_table_rows": 12,
+        "max_body_table_rows": 30,
         "max_visuals": 1
       },
       "roster-detail": {
         "role": "reference",
         "requires_analysis": false,
         "max_pages": 3,
-        "max_body_table_rows": 40,
-        "max_visuals": 1
+        "max_body_table_rows": 50,
+        "max_visuals": 0
       },
       "sources-method": {
         "role": "appendix",
         "requires_analysis": false,
         "max_pages": 2,
         "max_words": 350,
-        "max_body_table_rows": 16,
+        "max_body_table_rows": 18,
         "max_visuals": 0
       }
     }

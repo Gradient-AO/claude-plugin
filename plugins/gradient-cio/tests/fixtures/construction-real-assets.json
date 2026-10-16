@@ -1,46 +1,44 @@
 {
   "meta": {
-  "mode": "real_assets",
-  "eyebrow": "Real Assets Portfolio Construction",
-  "header_label": "Real Assets Portfolio Construction",
-  "title": "Northstar Real Assets Portfolio",
-  "subtitle": "Portfolio construction review · prepared for the Investment Committee",
-  "running_head": "Northstar Real Assets Portfolio",
-  "data_as_of": "2026-06-30",
-  "confidentiality": "Confidential — Investment Committee",
-  "cover_facts": [
-    [
-      "As of",
-      "2026-06-30"
+    "mode": "real_assets",
+    "eyebrow": "Real Assets Portfolio Construction",
+    "header_label": "Real Assets Portfolio Construction",
+    "title": "Northstar Real Assets Portfolio",
+    "subtitle": "Portfolio construction review · prepared for the Investment Committee",
+    "running_head": "Northstar Real Assets Portfolio",
+    "data_as_of": "2026-06-30",
+    "confidentiality": "Confidential — Investment Committee",
+    "cover_facts": [
+      [
+        "As of",
+        "2026-06-30"
+      ],
+      [
+        "Total NAV",
+        "$1,000.0M"
+      ],
+      [
+        "Real-assets weight",
+        "15.0%"
+      ],
+      [
+        "Unfunded commitments",
+        "$28.0M"
+      ]
     ],
-    [
-      "Total NAV",
-      "$1,000.0M"
-    ],
-    [
-      "Real-assets weight",
-      "15.0%"
-    ],
-    [
-      "Unfunded commitments",
-      "$28.0M"
-    ]
-  ],
-  "signal_title": "Overall view",
-  "signal": {
-    "level": "watch",
-    "label": "Valuation lag and structure mix on watch"
+    "signal": {
+      "level": "watch",
+      "label": "Valuation lag and structure mix need monitoring"
+    },
+    "completeness": {
+      "used": 8,
+      "expected": 9,
+      "state": "partial"
+    },
+    "data_basis": "gradient_governed",
+    "cover_disclosure": "Illustrative sample · not client data",
+    "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
   },
-  "completeness": {
-    "used": 8,
-    "expected": 9,
-    "state": "partial"
-  },
-  "meter_title": "Scope reviewed",
-  "data_basis": "gradient_governed",
-  "cover_disclosure": "Illustrative sample · not client data",
-  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
-},
   "executive": {
     "label": "Recommendation",
     "bottom_line": "We recommend retaining the 15.0% real-assets allocation while shifting 2.0 percentage points from listed real estate to infrastructure and natural resources across marketable and drawdown sleeves [S3][S4]. Committee action requested: approve the target structure and phased implementation, subject to valuation refresh, manager diligence and liquidity tests [S3][S7][S8].",
@@ -65,7 +63,7 @@
       },
       {
         "label": "Policy status",
-        "value": "Watch",
+        "value": "Near limit",
         "sub": "Private valuation lag [S3][S4]",
         "tone": "watch"
       }
@@ -131,22 +129,22 @@
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
-          "title": "Key judgment — headline signal",
-          "text": "Observation: The sample report carries a valuation-lag signal above the clear threshold [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+          "title": "Key judgment — Valuation lag",
+          "text": "Observation: Valuation lag and the listed-versus-private mix both need monitoring [S1]. Why it matters: The 2.0pp shift to infrastructure and natural resources depends on current private marks. Uncertainty: Private valuations are reported with a lag. What would change the view: Refreshed marks that change the relative weights."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
-          "title": "Key judgment — primary measure",
-          "text": "Observation: Real-assets weight is 15.0% in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
+          "title": "Key judgment — Sleeve size",
+          "text": "Observation: Real assets are 15.0% of total NAV [S2]. Why it matters: The proposal reshapes the sleeve without changing its total. Uncertainty: The weight moves with listed real estate prices. What would change the view: A drift of more than 1pp before funding."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
-          "title": "Key judgment — monitoring priority",
-          "text": "Observation: Policy status is Watch rather than Clear in the review evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
+          "title": "Key judgment — Policy limit",
+          "text": "Observation: The real-assets allocation is near its policy limit [S3]. Why it matters: Funding must be staged so the sleeve stays inside its range. Uncertainty: The limit test uses lagged private valuations. What would change the view: A valuation refresh that moves the sleeve away from the limit."
         }
       ]
     },
@@ -475,7 +473,8 @@
               ]
             }
           ],
-          "source": "[S1]"
+          "source": "[S1]",
+          "suffix": "%"
         },
         {
           "type": "waterfall",
@@ -1442,7 +1441,7 @@
             {
               "name": "Forward assumptions and pacing",
               "status": "available",
-              "note": "Governed classes and drawdown charts [S6]"
+              "note": "Asset classes and drawdown charts [S6]"
             },
             {
               "name": "Context and diligence",
@@ -1457,7 +1456,7 @@
             {
               "name": "Peer allocation intelligence",
               "status": "not licensed",
-              "note": "Not licensed ? Peer allocation context was skipped because peerIntelligence is not available for this organization. This construction report uses portfolio evidence only. [S1]"
+              "note": "Not licensed — Peer allocation context was skipped because peer allocation intelligence is not licensed for this organization. This construction report uses portfolio evidence only. [S1]"
             }
           ]
         }
@@ -1608,12 +1607,9 @@
         {
           "type": "bullets",
           "items": [
-            "Private real-assets valuations may lag the report date [S4].",
-            "Forward values are assumptions, not forecasts or guarantees [S6].",
-            "Commodity and inflation-linked CMA mappings are not provided [S8].",
-            "Drawdown charts apply only to closed-end sleeves [S6].",
-            "Portfolio Analytics and Strategy Lab are separate analytical scopes.",
-            "This AI-assisted construction analysis is not investment, legal or compliance advice."
+            "Private valuations may lag the report date [S4]; forward values are assumptions, not forecasts [S6].",
+            "Drawdown charts cover closed-end sleeves only [S6]; commodity and linker mappings were not provided [S8].",
+            "Strategy Lab results are calculated separately. AI-assisted; not investment, legal or compliance advice."
           ]
         }
       ]

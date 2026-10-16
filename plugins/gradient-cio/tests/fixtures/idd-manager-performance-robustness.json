@@ -1,70 +1,64 @@
 {
   "meta": {
-  "mode": "robustness",
-  "eyebrow": "Investment Due Diligence",
-  "header_label": "Manager Performance",
-  "title": "Northstar Manager Robustness Review",
-  "subtitle": "Performance consistency across market environments",
-  "running_head": "Northstar robustness review",
-  "data_as_of": "2025-12-31",
-  "cover_facts": [
-    [
-      "Review",
-      "Robustness"
+    "mode": "robustness",
+    "eyebrow": "Investment Due Diligence",
+    "header_label": "Manager Performance",
+    "title": "Northstar Manager Robustness Review",
+    "subtitle": "Performance consistency across market environments",
+    "running_head": "Northstar robustness review",
+    "data_as_of": "2025-12-31",
+    "cover_facts": [
+      [
+        "Review",
+        "Robustness"
+      ],
+      [
+        "Prepared for",
+        "Investment Committee"
+      ],
+      [
+        "Data as of",
+        "2025-12-31"
+      ]
     ],
-    [
-      "Evidence",
-      "Governed return series"
-    ],
-    [
-      "Audience",
-      "Investment Committee"
-    ],
-    [
-      "Data as of",
-      "2025-12-31"
-    ]
-  ],
-  "signal": {
-    "level": "insufficient",
-    "label": "Insufficient governed evidence"
-  },
-  "completeness": {
-    "used": 1,
-    "expected": 4,
-    "state": "partial"
-  },
-  "handoff": {
-    "schema_version": "gradient-idd-odd-ic-handoff/v1",
-    "stage": "idd",
-    "subject": {
-      "name": "Northstar managers",
-      "identity_status": "advisory"
+    "signal": {
+      "level": "insufficient",
+      "label": "Not enough return history to test robustness"
     },
-    "return_series": [],
-    "evidence": [
-      {
-        "source_tag": "S1",
-        "tool": "get_gradient_capabilities",
-        "as_of": "2025-12-31",
-        "methodology_version": "connector/v1"
+    "completeness": {
+      "used": 1,
+      "expected": 4,
+      "state": "partial"
+    },
+    "handoff": {
+      "schema_version": "gradient-idd-odd-ic-handoff/v1",
+      "stage": "idd",
+      "subject": {
+        "name": "Northstar managers",
+        "identity_status": "advisory"
+      },
+      "return_series": [],
+      "evidence": [
+        {
+          "source_tag": "S1",
+          "tool": "get_gradient_capabilities",
+          "as_of": "2025-12-31",
+          "methodology_version": "connector/v1"
+        }
+      ],
+      "limitations": [
+        "Governed analytical evidence is unavailable in this public sample."
+      ],
+      "selection": {
+        "status": "not_assessed",
+        "rationale": "Insufficient governed evidence."
       }
-    ],
-    "limitations": [
-      "Governed analytical evidence is unavailable in this public sample."
-    ],
-    "selection": {
-      "status": "not_assessed",
-      "rationale": "Insufficient governed evidence."
-    }
+    },
+    "data_basis": "gradient_governed",
+    "confidentiality": "Confidential — manager selection review",
+    "cover_disclosure": "Illustrative sample · not client data",
+    "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
   },
-  "data_basis": "gradient_governed",
-  "confidentiality": "Confidential — manager selection review",
-  "signal_title": "Overall view",
-  "meter_title": "Scope reviewed",
-  "cover_disclosure": "Illustrative sample · not client data",
-  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
-},
   "executive": {
     "bottom_line": "The comparison remains insufficient because required governed results are unavailable [S1].",
     "tiles": [
@@ -100,21 +94,21 @@
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — Coverage",
-          "text": "Observation: Coverage is incomplete [S1]. Why it matters: Comparison is constrained. Uncertainty: Missing reads may change results. What would change the view: Governed comparison evidence."
+          "text": "Observation: Only one of four robustness inputs is available [S1]. Why it matters: Persistence cannot be judged from one input. Uncertainty: Missing windows may change the result. What would change the view: A complete monthly return history."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — Benchmarks",
-          "text": "Observation: Benchmark matching is advisory [S1]. Why it matters: Relative evidence is bounded. Uncertainty: Mandate fit is unconfirmed. What would change the view: Canonical matches."
+          "text": "Observation: The benchmark match is suggested, not confirmed [S1]. Why it matters: Excess return depends on the right benchmark. Uncertainty: Mandate fit is unconfirmed. What would change the view: A confirmed benchmark mapping."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
           "title": "Key judgment — Reliability",
-          "text": "Observation: Robustness is unavailable [S1]. Why it matters: Persistence is unknown. Uncertainty: Window sensitivity is untested. What would change the view: Governed robustness results."
+          "text": "Observation: Rolling-window results are not available [S1]. Why it matters: Without them, skill and luck cannot be separated. Uncertainty: The result may depend on the start date. What would change the view: A date-window robustness run."
         }
       ]
     },
@@ -235,7 +229,7 @@
               "get_gradient_capabilities",
               "illustrative sample",
               "2025-12-31",
-              "Gradient-governed review evidence",
+              "Illustrative sample data",
               "passed",
               "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             ]

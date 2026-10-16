@@ -27,6 +27,7 @@ from report_theme import (
     AMBER as THEME_AMBER,
     BRAND_NAME,
     CORAL as THEME_CORAL,
+    COVER_FIELD_LIMITS,
     DEFAULT_COVER_DISCLOSURE,
     FONT_FAMILY,
     INK as THEME_INK,
@@ -44,11 +45,15 @@ from report_theme import (
     SIGNAL as THEME_SIGNAL,
     SLATE as THEME_SLATE,
     STATUS_COLOR as THEME_STATUS_COLOR,
+    STATUS_LABEL as THEME_STATUS_LABEL,
     THEME_VERSION,
     WASH as THEME_WASH,
     default_confidentiality,
     pptx_hex,
+    status_key,
+    status_label,
     validate_potx_theme,
+    without_lead,
 )
 
 
@@ -193,6 +198,14 @@ def _plain(value: JsonValue | object) -> str:
     return text.strip()
 
 
+def _ordinal(value: float) -> str:
+    number = int(round(value))
+    suffix = "th"
+    if not 10 <= abs(number) % 100 <= 20:
+        suffix = {1: "st", 2: "nd", 3: "rd"}.get(abs(number) % 10, "th")
+    return f"{number}{suffix}"
+
+
 def _compact(value: JsonValue | object, words: int = 28) -> str:
     tokens = _plain(value).split()
     if len(tokens) <= words:
@@ -229,16 +242,40 @@ def _status_color(status: str) -> str:
     )
     return pptx_hex(color) if color else SLATE
 
-def _status_display(status: str, label: str = "") -> str:
-    """Return compact display text while retaining status for color semantics."""
+def _status_display(status: str, label: str = "", display_label: str = "") -> str:
+    """Return the reader-facing label while retaining status for color semantics."""
     raw = status.strip() or label.strip()
-    normalized = raw.casefold().replace(" ", "_")
-    if normalized == "passed_with_warnings":
-        return "passed ⚠"
-    authored = label.strip() or raw
-    if "_" in raw and authored.casefold().replace(" ", "_") == normalized:
-        return raw.replace("_", " ")
-    return authored
+    authored = label.strip()
+    if display_label.strip() or not authored or status_key(authored) == status_key(raw):
+        return status_label(raw, display_label)
+    known = THEME_STATUS_LABEL.get(status_key(authored))
+    if known:
+        return known
+    return authored[:1].upper() + authored[1:]
+
+
+LEGACY_CHIP_TEXT = re.compile(
+    r"""^\s*\{\s*['"]chip['"]\s*:\s*['"]([^'"]*)['"]\s*"""
+    r"""(?:,\s*['"]status['"]\s*:\s*['"]([^'"]*)['"]\s*)?"""
+    r"""(?:,\s*['"]display_label['"]\s*:\s*['"]([^'"]*)['"]\s*)?\}\s*$"""
+)
+
+
+def _chip_parts(value: JsonValue | object) -> tuple[str, str, str] | None:
+    """Return (label, status, display_label) for a chip object or its repr text."""
+    object_value = _object(value)
+    if object_value.get("chip") is not None:
+        label = _text(object_value.get("chip"))
+        return (
+            label,
+            _text(object_value.get("status") or label),
+            _text(object_value.get("display_label")),
+        )
+    if isinstance(value, str):
+        match = LEGACY_CHIP_TEXT.fullmatch(value)
+        if match:
+            return match.group(1), match.group(2) or match.group(1), match.group(3) or ""
+    return None
 
 def _bars_mark(block: JsonObject) -> str:
     mark = _text(block.get("mark") or block.get("style") or "bars").strip().casefold()
@@ -911,10 +948,10 @@ class PptxRenderer:
             self._text_box(slide, 0.75, 3.58, 10.6, 0.65, subtitle, 14, SLATE)
         self._shape(slide, 0.75, 4.38, 0.9, 0.05, LIME, LIME)
         facts = [_array(value) for value in _array(self._meta.get("cover_facts"))]
-        fact_columns = 2 if len(facts) <= 4 else 3
-        fact_step = 5.65 if fact_columns == 2 else 3.8
-        fact_width = 5.15 if fact_columns == 2 else 3.35
-        for index, fact in enumerate(facts[:6]):
+        fact_columns = 2
+        fact_step = 5.65
+        fact_width = 5.15
+        for index, fact in enumerate(facts[:COVER_FIELD_LIMITS["cover_facts"]]):
             if len(fact) < 2:
                 continue
             column = index % fact_columns
@@ -923,76 +960,6 @@ class PptxRenderer:
             y = 4.72 + row * 0.68
             self._text_box(slide, x, y, fact_width, 0.2, _text(fact[0]).upper(), 7, MUTED, bold=True)
             self._text_box(slide, x, y + 0.21, fact_width, 0.34, _text(fact[1]), 10, PAPER, bold=True)
-        signal = _object(self._meta.get("signal"))
-        if signal:
-            signal_level = _text(signal.get("level"), "info")
-            signal_label = _text(
-                signal.get("label")
-                or (
-                    THEME_SIGNAL[signal_level][0]
-                    if signal_level in THEME_SIGNAL
-                    else signal_level
-                ),
-                "Not assessed",
-            )
-            signal_color = (
-                pptx_hex(THEME_SIGNAL[signal_level][1])
-                if signal_level in THEME_SIGNAL
-                else _tone_color(signal_level)
-            )
-            self._shape(slide, 0.75, 6.22, 3.65, 0.58, signal_color, signal_color)
-            self._text_box(
-                slide,
-                0.9,
-                6.3,
-                3.35,
-                0.14,
-                _text(self._meta.get("signal_title"), "Overall view").upper(),
-                6.2,
-                INK,
-                bold=True,
-            )
-            self._text_box(
-                slide,
-                0.9,
-                6.47,
-                3.35,
-                0.2,
-                signal_label,
-                9,
-                INK,
-                bold=True,
-            )
-        completeness = _object(self._meta.get("completeness"))
-        if completeness:
-            used = int(_number(completeness.get("used")))
-            expected = int(_number(completeness.get("expected")))
-            meter_label = _text(
-                self._meta.get("meter_title"),
-                "Scope reviewed",
-            )
-            self._text_box(
-                slide,
-                4.7,
-                6.27,
-                3.4,
-                0.18,
-                meter_label.upper(),
-                6.5,
-                MUTED,
-                bold=True,
-            )
-            self._text_box(
-                slide,
-                4.7,
-                6.49,
-                3.4,
-                0.22,
-                f"{used} of {expected} · {_text(completeness.get('state')).title()}",
-                8,
-                PAPER,
-                bold=True,
-            )
         confidentiality = _text(
             self._meta.get("confidentiality"),
             default_confidentiality(self._branding),
@@ -1036,6 +1003,20 @@ class PptxRenderer:
 
     def _executive_blocks(self, executive: JsonObject) -> list[JsonObject]:
         blocks: list[JsonObject] = []
+        signal = _object(self._meta.get("signal"))
+        signal_level = _text(signal.get("level"))
+        if signal and signal_level in THEME_SIGNAL:
+            signal_color = THEME_SIGNAL[signal_level][1]
+            blocks.append(
+                {
+                    "type": "statement",
+                    "text": _text(signal.get("label")) or THEME_SIGNAL[signal_level][0],
+                    "tone": "good" if signal_color == THEME_LIME
+                    else "watch" if signal_color == THEME_AMBER
+                    else "bad" if signal_color == THEME_CORAL
+                    else "info",
+                }
+            )
         bottom_line = _text(executive.get("bottom_line"))
         if bottom_line:
             blocks.append(
@@ -1087,20 +1068,6 @@ class PptxRenderer:
     def _render_divider(self, section: JsonObject, number: int) -> None:
         slide = self._new_slide()
         self._shape(slide, 0, 0, SLIDE_WIDTH_IN, SLIDE_HEIGHT_IN, INK, INK)
-        data_scope_banner = _text(self._meta.get("data_scope_banner"))
-        if data_scope_banner:
-            self._text_box(
-                slide,
-                0.8,
-                0.55,
-                11.7,
-                0.3,
-                data_scope_banner,
-                7.2,
-                LIME,
-                bold=True,
-                align="right",
-            )
         self._text_box(slide, 0.8, 2.0, 10.8, 0.3, _text(section.get("kicker")).upper(), 9, LIME, bold=True)
         self._text_box(slide, 0.8, 2.46, 10.8, 1.6, _text(section.get("title")), 36, PAPER, bold=True)
         subtitle = _text(section.get("subtitle"))
@@ -1112,31 +1079,17 @@ class PptxRenderer:
         self, slide: Any, title: str, kicker: str, number: str, layout: str
     ) -> None:
         accent = LIME if layout != "appendix" else SLATE
-        data_scope_banner = _text(self._meta.get("data_scope_banner"))
         if kicker:
             self._text_box(
                 slide,
                 0.7,
                 0.36,
-                5.8 if data_scope_banner else 10.8,
+                10.8,
                 0.2,
                 kicker.upper(),
                 7.5,
                 LIME_DARK,
                 bold=True,
-            )
-        if data_scope_banner:
-            self._text_box(
-                slide,
-                6.45,
-                0.34,
-                5.25,
-                0.28,
-                data_scope_banner,
-                6.8,
-                LIME_DARK,
-                bold=True,
-                align="right",
             )
         self._text_box(slide, 0.7, 0.62, 11.0, 0.58, title, 23, INK, bold=True)
         self._shape(slide, 0.7, 1.22, 11.93, 0.02, INK, INK)
@@ -1363,14 +1316,15 @@ class PptxRenderer:
         for source_index, row in enumerate(rows):
             for column_index in range(len(columns)):
                 value = row[column_index] if column_index < len(row) else ""
-                object_value = _object(value)
-                if object_value.get("chip") is not None:
-                    label = _text(object_value.get("chip"))
-                    raw_status = _text(object_value.get("status") or label)
+                chip_parts = _chip_parts(value)
+                if chip_parts is not None:
+                    label, raw_status, display_label = chip_parts
                     fill = _status_color(raw_status)
+                    detail = _plain(_object(value).get("detail"))
                     self._cell(
                         table.cell(row_index + source_index, column_index),
-                        f"● {_status_display(raw_status, label)}",
+                        f"● {_status_display(raw_status, label, display_label)}"
+                        + (f" — {detail}" if detail else ""),
                         WASH,
                         fill,
                         True,
@@ -1701,7 +1655,7 @@ class PptxRenderer:
                 {
                     "label": item.get("label", ""),
                     "value": percentile,
-                    "display": item.get("value_display") or f"{percentile:.0f}th",
+                    "display": item.get("value_display") or _ordinal(percentile),
                 }
             )
         self._bars(
@@ -2094,7 +2048,7 @@ class PptxRenderer:
         if title:
             self._text_box(slide, x + 0.18, y + 0.12, width - 0.32, 0.25, title, 10, INK, bold=True)
         text_y = y + (0.43 if title else 0.15)
-        self._text_box(slide, x + 0.18, text_y, width - 0.32, max(0.25, height - (text_y - y) - 0.1), _plain(block.get("text")), 9.5, INK_2)
+        self._text_box(slide, x + 0.18, text_y, width - 0.32, max(0.25, height - (text_y - y) - 0.1), _plain(without_lead(block.get("text"), title)), 9.5, INK_2)
 
     def _coverage(
         self, slide: Any, block: JsonObject, x: float, y: float, width: float, height: float
@@ -2106,8 +2060,16 @@ class PptxRenderer:
             rows.append(
                 [
                     item.get("name", ""),
-                    {"chip": raw_status, "status": raw_status},
-                    item.get("note", ""),
+                    {
+                        "chip": _text(item.get("label")) or raw_status,
+                        "status": raw_status,
+                        "display_label": _text(item.get("display_label")),
+                    },
+                    without_lead(
+                        item.get("note", ""),
+                        status_label(raw_status, item.get("display_label")),
+                        item.get("label"),
+                    ),
                 ]
             )
         self._table(

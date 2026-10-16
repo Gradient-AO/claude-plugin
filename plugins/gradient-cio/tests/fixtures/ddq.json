@@ -1,45 +1,43 @@
 {
   "meta": {
-  "eyebrow": "DDQ Reconciliation Report",
-  "title": "Ridgeview Advisors, LP",
-  "subtitle": "DDQ reconciliation · Global Macro Fund III · Form ADV cross-check",
-  "running_head": "Ridgeview · DDQ reconciliation",
-  "data_as_of": "2026-10-01 (Form ADV); DDQ responses as of 2026-09-30",
-  "confidentiality": "Confidential — manager diligence review",
-  "cover_facts": [
-    [
-      "Adviser CRD",
-      "999901"
+    "eyebrow": "DDQ Reconciliation Report",
+    "title": "Ridgeview Advisors, LP",
+    "subtitle": "DDQ reconciliation · Global Macro Fund III · Form ADV cross-check",
+    "running_head": "Ridgeview · DDQ reconciliation",
+    "data_as_of": "2026-10-01 (Form ADV); DDQ responses as of 2026-09-30",
+    "confidentiality": "Confidential — manager diligence review",
+    "cover_facts": [
+      [
+        "Adviser CRD",
+        "999901"
+      ],
+      [
+        "DDQ as of",
+        "2026-09-30"
+      ],
+      [
+        "Form ADV report",
+        "2026-10-01"
+      ],
+      [
+        "Report date",
+        "2026-10-04"
+      ]
     ],
-    [
-      "DDQ as of",
-      "2026-09-30"
-    ],
-    [
-      "Form ADV report",
-      "2026-10-01"
-    ],
-    [
-      "Report date",
-      "2026-10-04"
-    ]
-  ],
-  "signal": {
-    "level": "discrepancies",
-    "label": "4 discrepancies found"
+    "signal": {
+      "level": "discrepancies",
+      "label": "Four DDQ answers conflict with the filings"
+    },
+    "completeness": {
+      "used": 20,
+      "expected": 21,
+      "state": "partial"
+    },
+    "header_label": "DDQ Reconciliation",
+    "data_basis": "mixed",
+    "cover_disclosure": "Illustrative sample · not client data",
+    "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
   },
-  "completeness": {
-    "used": 20,
-    "expected": 21,
-    "state": "partial"
-  },
-  "header_label": "DDQ Reconciliation",
-  "signal_title": "Overall view",
-  "meter_title": "Scope reviewed",
-  "data_basis": "mixed",
-  "cover_disclosure": "Illustrative sample · not client data",
-  "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
-},
   "executive": {
     "bottom_line": "Of 20 checkable DDQ answers, **13 are consistent** with Form ADV and Schedule D, **4 are contradicted** and **3 need review** [S1][S2]. The most serious gap is the **fund administrator**: the DDQ names Example Fund Administration, while Schedule D lists Example Trust Company [S1][S2]. The DDQ also overstates headcount by 105 people and private funds by 3, and understates the fund minimum by $1.67M; these gaps are returned by the governed reconciliation [S1]. The source DDQ is preserved by digest [S3].",
     "tiles": [
@@ -102,22 +100,22 @@
           "type": "callout",
           "role": "key_judgment",
           "tone": "watch",
-          "title": "Key judgment — headline signal",
-          "text": "Observation: The sample report carries a 4 discrepancies found signal [S1]. Why it matters: This signal focuses oversight on the report's most decision-relevant condition. Uncertainty: Evidence coverage may exclude newer or more detailed observations. What would change the view: A governed refresh showing a different signal or breached threshold."
+          "title": "Key judgment — Discrepancies",
+          "text": "Observation: Four DDQ answers conflict with the Form ADV and Schedule D filings [S1]. Why it matters: Each conflict needs a written explanation before the review can close. Uncertainty: Some differences may reflect timing between the DDQ and filing dates. What would change the view: Amended filings or DDQ answers that reconcile the figures."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
-          "title": "Key judgment — primary measure",
-          "text": "Observation: Contradicted is 4 in the review evidence [S2]. Why it matters: This measure establishes the baseline for comparing later governed results. Uncertainty: The source basis may omit newer observations outside the reviewed evidence. What would change the view: A refreshed source report showing a change above 1%."
+          "title": "Key judgment — Contradicted claims",
+          "text": "Observation: Four claims are contradicted by the filings [S2]. Why it matters: These are the follow-up questions for the manager. Uncertainty: The filings are as of 2026-10-01. What would change the view: A newer filing that matches the DDQ."
         },
         {
           "type": "callout",
           "role": "key_judgment",
           "tone": "info",
-          "title": "Key judgment — monitoring priority",
-          "text": "Observation: Not checkable is 0 in the review evidence [S3]. Why it matters: This result determines which item receives priority in the next monitoring cycle. Uncertainty: Supporting coverage may omit later filings or corroborating detail. What would change the view: A new filing or report that resolves the item or changes it by 1%."
+          "title": "Key judgment — Coverage",
+          "text": "Observation: Every claim could be checked against a filing; none was left uncheckable [S3]. Why it matters: The reconciliation covers the full DDQ. Uncertainty: Checks rely on the filed values. What would change the view: A filing correction."
         }
       ]
     },
@@ -173,7 +171,7 @@
               ]
             }
           ],
-          "note": "Governed and analyst-classified verdict counts for the sample claims [S1][S2]."
+          "note": "Verdict counts for the sample claims, from the Gradient reconciliation and the hand comparison [S1][S2]."
         },
         {
           "type": "findings",
@@ -227,7 +225,7 @@
             },
             {
               "q": "Please reconcile the 1,240 headcount in DDQ 1.3 with the 1,135 employees in Item 5.A of your 2026-08-18 filing.",
-              "why": "Governed gap of 105 [S1]"
+              "why": "Gap of 105 [S1]"
             },
             {
               "q": "Confirm the minimum initial investment for Global Macro Fund III; Schedule D reports $6,668,500.",
@@ -431,7 +429,7 @@
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Canonical fund ID unavailable",
-          "text": "Observation: The fund resolves only to `pfid:805-5927286713`, so its rows are analyst comparisons [S2]. Why it matters: Those comparisons are not governed reconciliation verdicts. Uncertainty: A canonical catalog fund ID remains unavailable. What would change the view: Catalog resolution followed by governed reconciliation results."
+          "text": "Observation: The fund resolves only to `pfid:805-5927286713`, so its rows are analyst comparisons [S2]. Why it matters: Those comparisons are not Gradient reconciliation verdicts. Uncertainty: The fund is not yet matched in the catalog. What would change the view: A catalog match followed by Gradient reconciliation results."
         },
         {
           "type": "table",
@@ -578,7 +576,7 @@
     {
       "id": "coverage-scope",
       "title": "Coverage and scope",
-      "kicker": "Governed firm evidence is complete; fund governance remains partial",
+      "kicker": "Firm claims are fully checked; fund claims are partly checked",
       "blocks": [
         {
           "type": "two_col",
@@ -590,12 +588,12 @@
                 {
                   "name": "Firm claims (8)",
                   "status": "available",
-                  "note": "Governed reconciliation, verdicts from Gradient [S1]"
+                  "note": "Verdicts from the Gradient reconciliation [S1]"
                 },
                 {
                   "name": "Fund claims (12)",
                   "status": "partial",
-                  "note": "Analyst comparison against Schedule D; canonical fund ID unavailable [S2]"
+                  "note": "Compared by hand against Schedule D; the fund is not yet matched in the catalog [S2]"
                 },
                 {
                   "name": "Fund status",
@@ -615,7 +613,7 @@
               "type": "callout",
               "tone": "watch",
               "title": "Out of scope",
-              "text": "Not available — No out-of-scope evidence was identified in the sample DDQ [S3]."
+              "text": "Not available — every claim in the sample DDQ maps to a Form ADV or Schedule D field, so none fell outside the check [S3]."
             }
           ]
         }
@@ -654,13 +652,16 @@
           "rows": [
             [
               "S1",
-              "DDQ reconciliation, 20 claims with governed numeric gaps",
+              "DDQ reconciliation, 20 claims with numeric gaps",
               "gradient_tool",
               "reconcile_manager_ddq_claims",
               "illustrative sample",
               "2026-10-01",
-              "Gradient-governed review evidence",
-              "{'chip': 'passed', 'status': 'passed'}",
+              "Illustrative sample data",
+              {
+                "chip": "passed",
+                "status": "passed"
+              },
               "sha256:f7d651b2f80f66bfed38fc7041a906cab927de85ad580cf8dc38713fbc66bafa"
             ],
             [
@@ -670,8 +671,11 @@
               "get_manager_odd_profile",
               "illustrative sample",
               "2026-10-01",
-              "Gradient-governed review evidence",
-              "{'chip': 'not run', 'status': 'not_run'}",
+              "Illustrative sample data",
+              {
+                "chip": "not run",
+                "status": "not_run"
+              },
               "sha256:a04715c67d5ce3adfd18b7b78a12cf0cbf791f70803e2feffcd7826418a2b647"
             ],
             [
@@ -681,69 +685,71 @@
               "User-supplied document",
               "illustrative sample",
               "2026-09-30",
-              "Gradient-governed review evidence",
+              "Illustrative sample data",
               "not_applicable: user document validation is not applicable",
               "1b448613"
             ]
           ]
         },
         {
-          "type": "table",
-          "title": "Server metric methods",
-          "columns": [
-            "Metric",
-            "Server formula identity",
-            "Result"
+          "type": "two_col",
+          "left": [
+            {
+              "type": "table",
+              "title": "How the metrics are calculated",
+              "columns": [
+                "Metric",
+                "Gradient formula (version)",
+                "Result"
+              ],
+              "align": [
+                "n",
+                "l",
+                "r"
+              ],
+              "rows": [
+                [
+                  "Headcount gap",
+                  "ddq-claim-filed-numeric-gap/v1 [S1]",
+                  "+9.3%"
+                ],
+                [
+                  "Gross asset value gap",
+                  "ddq-claim-filed-numeric-gap/v1 [S1]",
+                  "+0.4%"
+                ],
+                [
+                  "Minimum investment gap",
+                  "ddq-claim-filed-numeric-gap/v1 [S1]",
+                  "−25.0%"
+                ]
+              ],
+              "note": "Gaps and verdicts are taken from the saved reconciliation, not recalculated [S1][S2]."
+            }
           ],
-          "align": [
-            "n",
-            "l",
-            "r"
-          ],
-          "rows": [
-            [
-              "Headcount gap",
-              "ddq-claim-filed-numeric-gap/v1 [S1]",
-              "+9.3%"
-            ],
-            [
-              "Gross asset value gap",
-              "ddq-claim-filed-numeric-gap/v1 [S1]",
-              "+0.4%"
-            ],
-            [
-              "Minimum investment gap",
-              "ddq-claim-filed-numeric-gap/v1 [S1]",
-              "−25.0%"
-            ]
-          ]
-        },
-        {
-          "type": "callout",
-          "tone": "info",
-          "title": "Method boundary",
-          "text": "Numeric gaps and verdicts are reproduced from the saved reconciliation; no local verdict or filed value was synthesized [S1][S2]."
-        },
-        {
-          "type": "kv",
-          "title": "Verdicts",
-          "rows": [
-            [
-              "Consistent / corroborated",
-              "Exact match, legal-suffix match or within tolerance"
-            ],
-            [
-              "Contradicted",
-              "Numeric or name mismatch beyond tolerance"
-            ],
-            [
-              "Needs review",
-              "Partial overlap, e.g. DDQ lists a subset of filed providers"
-            ],
-            [
-              "Unverifiable",
-              "No filed value to compare"
-            ]
+          "right": [
+            {
+              "type": "kv",
+              "title": "Verdicts",
+              "rows": [
+                [
+                  "Consistent / corroborated",
+                  "Exact match, legal-suffix match or within tolerance"
+                ],
+                [
+                  "Contradicted",
+                  "Numeric or name mismatch beyond tolerance"
+                ],
+                [
+                  "Needs review",
+                  "Partial overlap, e.g. DDQ lists a subset of filed providers"
+                ],
+                [
+                  "Unverifiable",
+                  "No filed value to compare"
+                ]
+              ]
+            }
           ]
         },
         {

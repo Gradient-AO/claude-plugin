@@ -33,7 +33,7 @@ When both appear, preserve `diagnostics.entity_return_reconciliation`: `window_b
 
 ### Ex ante assumption identity
 
-Preserve `assumption_set_name`, `regime_name`, `horizon.horizon_years`, `portfolio_return_source` and `benchmark_return_source` from `get_portfolio_ex_ante_attribution` in an **Ex ante assumptions** KV. All five values are required. When the returned regime code is `USER`, display it as `user-defined regime`; do not expose the raw code as the reader-facing value.
+Preserve `assumption_set_name`, `regime_name`, `horizon.horizon_years`, `portfolio_return_source` and `benchmark_return_source` from `get_portfolio_ex_ante_attribution` in an **Ex ante assumptions** KV labelled Assumption set, Regime, Horizon, Portfolio return basis and Benchmark return basis. All five values are required. When the returned regime code is `USER`, display it as `user-defined regime`; do not expose the raw code as the reader-facing value.
 
 ## Fallback
 
@@ -53,7 +53,7 @@ No local subtraction, sign-count aggregation such as “2 of 5”, ratio, overla
 
 - Executive: one-line **Comparison verdict** plus **Realized summary effects** and **Expected summary effects** waterfalls from the returned summary fields when their summary flags are true.
 - Historical: **Historical effects by segment** maps `segments[].allocation_effect`, `selection_effect` and `interaction_effect`; **Historical portfolio and benchmark average weights** maps the two returned average-weight fields.
-- Historical lines: **Cumulative linked effects** maps `periods[].cumulative_linked_{allocation,selection,interaction,total}_effect`; **Cumulative Alternatives selection** filters returned segment rows by returned `allocation_name` and maps `cumulative_linked_selection_effect`. These are never locally accumulated.
+- Historical lines: **Cumulative linked effects** maps `periods[].cumulative_linked_{allocation,selection,interaction,total}_effect`; **Cumulative Alternatives selection** filters returned segment rows by returned `allocation_name` and maps `cumulative_linked_selection_effect`. These are never locally accumulated. The default `get_portfolio_attribution` response omits the cumulative fields, so request them with a second call using the same arguments plus `sections: [periods]` and `fields: [periods, period, coverage]`.
 - Optional historical context: **Returned cumulative growth context** maps only returned `cumulative_growth` rows and is present only when its evidence flag is true.
 - Ex ante: **Expected effects by segment** maps the matching three returned effect fields; **Expected portfolio and benchmark returns** maps the two returned expected-return fields; **Ex ante assumptions** maps the two returned assumption identity fields.
 - Comparison: **Returned cross-lane effect matrix** is required for two or more compatible lanes, including fallback; **Returned effects side by side** juxtaposes realized and expected summary fields without subtraction.
