@@ -48,9 +48,9 @@ collection.
 - This skill reads only and never recommends a trade, rebalance, manager
   action, allocation, or vote.
 
-Run `python ../../tools/check_plugin_version.py` from this skill directory
-before collection. Continue when duplicate installations are equal or older;
-stop only when the preflight reports a newer `gradient-cio` copy.
+Read `references/plugin-release.json` for the installed overall release. If
+asked about versions, report its `release_version`; do not infer the release
+from this skill's `metadata.version`.
 
 ## Handoffs
 

@@ -37,6 +37,7 @@
   "notes": [
     "Listed for discovery only; this recipe supplies no reviewed mapping evidence.",
     "Do not invent source operations, fields, units, pagination, supported data types, or supported asset classes.",
-    "Populate this recipe only after a client-authorized, read-only live connector dry run passes."
+    "Populate this recipe only after a client-authorized, read-only live connector dry run passes for each exact data type and Gradient schema identity.",
+    "This placeholder does not claim support for monthly_return_observation, benchmark_definition, benchmark_assignment, or Gradient UI file upload."
   ]
 }

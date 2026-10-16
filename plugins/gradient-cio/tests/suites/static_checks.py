@@ -1488,6 +1488,10 @@ def portfolio_import_governed_contract_checks():
         skill_root / "references" / "phase-2-governance.md"
     ).read_text(encoding="utf-8")
     normalized_phase_2_governance = " ".join(phase_2_governance.split())
+    phase_3_governance = (
+        skill_root / "references" / "phase-3-governance.md"
+    ).read_text(encoding="utf-8")
+    normalized_phase_3_governance = " ".join(phase_3_governance.split())
     recipe_template = json.loads(
         (
             skill_root / "references" / "provider-recipe-template.json"
@@ -1528,6 +1532,9 @@ def portfolio_import_governed_contract_checks():
                 "commitment_master",
                 "valuation_snapshot",
                 "cash_flow_event_ledger",
+                "monthly_return_observation",
+                "benchmark_definition",
+                "benchmark_assignment",
             )
         )
         and "private equity, real estate, infrastructure, and private debt"
@@ -1549,6 +1556,7 @@ def portfolio_import_governed_contract_checks():
         and "no record was deleted by omission" in skill
         and "exact `destination_after_digest`" in skill
         and "`references/phase-2-governance.md`" in skill
+        and "`references/phase-3-governance.md`" in skill
         and "`references/providers/chronograph.recipe.json`" in skill
         and "Recipe absence alone is not a blocker" in skill
         and "provider recipe is optional" in skill.lower()
@@ -1583,6 +1591,37 @@ def portfolio_import_governed_contract_checks():
         in normalized_phase_2_governance
         and "`destination_after_digest`" in normalized_phase_2_governance,
         "Phase 2 import guidance preserves values, mappings, previews, and digests",
+    )
+    check(
+        all(
+            data_type in normalized_phase_3_governance
+            for data_type in (
+                "monthly_return_observation",
+                "benchmark_definition",
+                "benchmark_assignment",
+            )
+        )
+        and "`stage_portfolio_import_records`" in normalized_phase_3_governance
+        and "`EntityReturn` / `entity_returns.return_value` only"
+        in normalized_phase_3_governance
+        and "Never read or write legacy historical-returns JSONB"
+        in normalized_phase_3_governance
+        and "Reported evidence does not overwrite a Gradient-calculated metric"
+        in normalized_phase_3_governance
+        and "portfolio, allocation, commitment, and overlay"
+        in normalized_phase_3_governance
+        and "permitted only for allocation subjects"
+        in normalized_phase_3_governance
+        and "older records are skipped"
+        in normalized_phase_3_governance
+        and "tie at the latest date is blocking"
+        in normalized_phase_3_governance
+        and "commit and verify a new benchmark definition"
+        in normalized_phase_3_governance.lower()
+        and "not the Gradient UI file-upload workflow"
+        in normalized_phase_3_governance
+        and "runtime schema drift" in normalized_phase_3_governance,
+        "Phase 3 import guidance preserves return and benchmark semantics",
     )
     check(
         catalog.get("contract")
@@ -1635,7 +1674,11 @@ def portfolio_import_governed_contract_checks():
         and "Never fabricate or derive approval identifiers or digests"
         in normalized_recipe_contract
         and "Commit eligibility comes only from the runtime"
-        in normalized_recipe_contract,
+        in normalized_recipe_contract
+        and "monthly_return_observation" in normalized_recipe_contract
+        and "benchmark_definition" in normalized_recipe_contract
+        and "benchmark_assignment" in normalized_recipe_contract
+        and "Gradient UI file upload" in normalized_recipe_contract,
         "provider recipes remain optional, reviewed, and drift-sensitive",
     )
     check(
@@ -1678,6 +1721,9 @@ def portfolio_import_governed_contract_checks():
             "commitment_master",
             "valuation_snapshot",
             "cash_flow_event_ledger",
+            "monthly_return_observation",
+            "benchmark_definition",
+            "benchmark_assignment",
         ]
         and fixture.get("schema", {}).get("separate_session_per_data_type")
         is True
@@ -1698,6 +1744,26 @@ def portfolio_import_governed_contract_checks():
         and fixture.get("phase_2_semantics", {}).get(
             "claude_calculations_or_conversions"
         ) is False
+        and all(
+            fixture.get("phase_3_semantics", {}).get(key) is True
+            for key in (
+                "monthly_return_source_value_and_unit_preserved",
+                "monthly_return_month_end_required",
+                "monthly_return_entity_return_only",
+                "benchmark_definition_dependency_verified_before_assignment",
+                "benchmark_assignment_subjects_bounded",
+                "benchmark_weight_allocation_only",
+                "effective_date_ties_blocking",
+            )
+        )
+        and all(
+            fixture.get("phase_3_semantics", {}).get(key) is False
+            for key in (
+                "legacy_historical_returns_jsonb_written",
+                "reported_return_presented_as_gradient_calculated",
+                "ui_file_upload_substituted",
+            )
+        )
         and fixture.get("provider_recipe", {}).get("catalog_contract")
         == "gradient-portfolio-import-provider-catalog/v1"
         and fixture.get("provider_recipe", {}).get("selected_provider_id")
@@ -1979,52 +2045,6 @@ def sources_appendix_contract_checks():
     )
 
 
-def plugin_version_preflight_checks():
-    script = ROOT / "tools" / "check_plugin_version.py"
-    spec = importlib.util.spec_from_file_location(
-        "gradient_plugin_version_preflight",
-        script,
-    )
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-
-    def write_plugin(path, version):
-        manifest = path / ".claude-plugin" / "plugin.json"
-        manifest.parent.mkdir(parents=True)
-        manifest.write_text(
-            json.dumps({"name": "gradient-cio", "version": version}),
-            encoding="utf-8",
-        )
-
-    with tempfile.TemporaryDirectory() as temporary:
-        root = pathlib.Path(temporary)
-        active = root / "workspace" / "plugins" / "gradient-cio"
-        installs = root / "cache"
-        write_plugin(active, "5.7.0")
-        write_plugin(installs / "older" / "gradient-cio", "5.6.9")
-        write_plugin(installs / "equal" / "gradient-cio", "5.7.0")
-        active_version, duplicates, newer = module.evaluate_versions(
-            active,
-            [installs],
-        )
-        no_newer_ok = (
-            active_version == "5.7.0"
-            and sorted(version for _path, version in duplicates)
-            == ["5.6.9", "5.7.0"]
-            and newer == []
-        )
-        write_plugin(installs / "newer" / "gradient-cio", "5.8.0")
-        _active_version, _duplicates, newer = module.evaluate_versions(
-            active,
-            [installs],
-        )
-        newer_ok = [version for _path, version in newer] == ["5.8.0"]
-    check(
-        no_newer_ok and newer_ok,
-        "plugin version preflight stops only for newer duplicate installs",
-    )
-
-
 def attribution_skill_contract_checks():
     skill_root = ROOT / "skills" / "gradient-portfolio-attribution"
     skill = (skill_root / "SKILL.md").read_text(encoding="utf-8")
@@ -2068,8 +2088,8 @@ def attribution_skill_contract_checks():
         and "`allocation_id` is an exact allocation filter" in data_map
         and "requested-window drawdown" in data_map
         and "different benchmark and active returns" in data_map
-        and (ROOT / "tools" / "check_plugin_version.py").is_file(),
-        "attribution documents collection scope, series import and version preflight",
+        and "references/plugin-release.json" in skill,
+        "attribution documents collection scope, series import and release identity",
     )
 
 
@@ -2215,7 +2235,6 @@ def static(allow_branded):
     pj = json.loads((ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
     check(re.fullmatch(r"[a-z0-9-]+", pj.get("name", "")) is not None, f"plugin name kebab-case ({pj.get('name')})")
     check(re.fullmatch(r"\d+\.\d+\.\d+", pj.get("version", "")) is not None, f"plugin version semver ({pj.get('version')})")
-    plugin_version_preflight_checks()
     attribution_skill_contract_checks()
     mcp = json.loads((ROOT / ".mcp.json").read_text(encoding="utf-8"))
     url = mcp.get("mcpServers", {}).get("GradientCIO", {}).get("url", "")
@@ -2226,6 +2245,35 @@ def static(allow_branded):
     check(bool(theme_version), "shared report theme declares THEME_VERSION")
     skills = sorted(p for p in (ROOT / "skills").iterdir() if (p / "SKILL.md").exists())
     check(len(skills) == 13, f"exactly 13 target skills found ({len(skills)})")
+    release_references = [
+        json.loads(
+            (skill / "references" / "plugin-release.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        for skill in skills
+        if (skill / "references" / "plugin-release.json").is_file()
+    ]
+    check(
+        len(release_references) == len(skills)
+        and all(
+            release.get("plugin") == pj["name"]
+            and release.get("release_version") == pj["version"]
+            and release.get("marketplace") == "gradientcio"
+            for release in release_references
+        ),
+        "every skill exposes the overall marketplace release version",
+    )
+    menu_text = (
+        ROOT / "skills" / "gradient-menu" / "SKILL.md"
+    ).read_text(encoding="utf-8")
+    normalized_menu = " ".join(menu_text.split())
+    check(
+        "references/plugin-release.json" in menu_text
+        and "metadata.version" in menu_text
+        and "individual skill contracts" in normalized_menu,
+        "menu reports the overall release without confusing skill contract versions",
+    )
     validator_manifest = json.loads(
         (FIX / "validator-manifest.json").read_text(encoding="utf-8")
     )

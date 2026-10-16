@@ -1,5 +1,14 @@
 # Changelog
 
+## 6.4.0
+- Expanded `gradient-portfolio-import` to the commit-enabled `monthly_return_observation`, `benchmark_definition`, and `benchmark_assignment` treatments exposed by the existing twelve-tool public workflow.
+- Added exact source-value and unit controls for source-reported month-end returns, with backend-declared percentage-point canonicalization, `EntityReturn`-only publication, no legacy historical-returns JSONB writes, and no overwrite or relabeling of Gradient-calculated metrics.
+- Added benchmark definition create/map dependencies and benchmark assignment controls for portfolio, allocation, commitment, and overlay targets; role-specific allocation weights, latest-effective-date selection, skipped older records, and blocking latest-date ties are preserved exactly.
+- Extended public setup contracts, provider recipe guidance, catalog copy, completeness controls, commit verification, rollback, and schema/recipe drift behavior without adding or claiming any new connector tool.
+- Separated Claude MCP read-only connector ingest from Gradient UI file upload and its first-party parser/UI approval path.
+- Added a self-contained release descriptor to every skill so Claude reports the installed overall plugin release consistently, without mistaking individual skill contract versions for the marketplace release or relying on an unavailable plugin-root preflight script.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.3.0
 - Added the provider-neutral `gradient-portfolio-import` skill for governed private equity, real estate, infrastructure and private debt holdings workflows against existing Gradient portfolios and commitments.
 - Added strict verbatim-value, declared-unit, exhaustive-pagination, bounded-batch, user-confirmed mapping, schema-drift and complete-rejection rules with no source writes or deletion by omission.

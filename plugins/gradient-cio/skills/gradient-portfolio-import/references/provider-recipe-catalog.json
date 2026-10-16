@@ -11,6 +11,8 @@
   "notes": [
     "Catalog listing does not authorize a connector or make a provider commit eligible.",
     "Chronograph is the only named provider in this release.",
-    "Runtime connector tools and Gradient schemas override catalog metadata."
+    "Runtime connector tools and Gradient schemas override catalog metadata.",
+    "Recipes may cover the seven public import data types, including monthly_return_observation, benchmark_definition, and benchmark_assignment, only after exact per-type review.",
+    "This catalog covers Claude MCP read-only connector ingest, not Gradient UI file upload."
   ]
 }

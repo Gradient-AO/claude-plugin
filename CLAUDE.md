@@ -15,7 +15,7 @@ This repo is a **public** Claude plugin marketplace. Clients install from it dir
 ## Making a change (every time)
 1. Work on a branch: `git checkout -b <short-change-name>`.
 2. Make the change. If shared files changed, run `sync_shared.py`.
-3. Bump the version in **both** `plugins/gradient-cio/.claude-plugin/plugin.json` and the matching entry in `.claude-plugin/marketplace.json` (semver: patch = fixes/wording, minor = new skill or feature, major = breaking change). Clients only receive an update when the version changes.
+3. Bump the version in **both** `plugins/gradient-cio/.claude-plugin/plugin.json` and the matching entry in `.claude-plugin/marketplace.json` (semver: patch = fixes/wording, minor = new skill or feature, major = breaking change). Then run `python plugins/gradient-cio/tools/sync_shared.py`; it regenerates the release metadata packaged with every skill. Clients only receive an update when the version changes.
 4. Add an entry at the top of `CHANGELOG.md`.
 5. Checks:
    - **Pre-push (automatic):** enable once per clone with `git config core.hooksPath .githooks`. The hook runs `python plugins/gradient-cio/tools/quick_checks.py` (version match, shared-file sync, skill catalog, `claude plugin validate .`) and blocks the push if any fail. Never bypass it with `--no-verify`.

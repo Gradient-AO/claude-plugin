@@ -14,15 +14,12 @@ metadata:
 ---
 
 # Gradient setup and readiness check
-
 Use when the user is new to the Gradient skills, says "set up Gradient", "get started", "is Gradient connected",
 "what is ready for my organization", "check my access", "health check", "self-test", or another Gradient skill
 fails because the connector is missing, unauthorized or returning errors. For only "what can I do?" or
 "show commands", use `gradient-menu`. Also use this readiness check after a plugin update.
-
 The deliverable is a short branded **"Gradient Readiness Report"**, plus a three-line chat summary and two or
 three prompts the user can try next. Keep the language plain: the reader may not be technical.
-
 Read `references/module-scope.md` before checking Portfolio Analytics or Strategy Lab. Test and
 report them as separate modules; never use the canonical illustrative portfolio ID as Strategy Lab input.
 ## 1. Connection
@@ -82,11 +79,14 @@ document and one immutable reconciliation test run so that document identity and
 tested with `dry_run: true`; disclose that persistence before running it. The dedicated
 **portfolio-import-governed** defines 12 schema-driven calls and requires an authorized source connector,
 one provider/account, and one existing Gradient portfolio. It covers holdings plus the generic
-`commitment_master`, `valuation_snapshot`, and `cash_flow_event_ledger` staging path. Its safe readiness path
-stops after preview plus session/history reads. Commit requires runtime "commit_enabled" treatment and
-current-conversation confirmation of the exact displayed diff, issues, controls, digest and receipt;
-rollback is never a readiness test and requires a separate explicit request with the exact destination-after
-digest. The complete matrix is 88 calls only when all actions are authorized.
+`commitment_master`, `valuation_snapshot`, `cash_flow_event_ledger`, `monthly_return_observation`,
+`benchmark_definition`, and `benchmark_assignment` staging path. Its safe readiness path stops after preview
+plus session/history reads. Commit requires runtime "commit_enabled" treatment and current-conversation
+confirmation of the exact displayed diff, issues, controls, digest and receipt; rollback requires a separate
+explicit request with the exact destination-after digest. Monthly returns are month-end, source-reported
+`EntityReturn` records only and never legacy JSONB; benchmark definitions precede dependent assignment
+sessions; assignments target only portfolios, allocations, commitments, or overlays, with weights only on
+allocations. This is connector ingest, not Gradient UI file upload. The complete matrix is 88 authorized calls.
 For each probe, record pass, fail (with error code and HTTP status) or not run (not entitled), and the
 response `as_of`. Resolve `depends_on` arguments with `check_contract.py --resolve-args`; do not manually
 copy or invent chained IDs.

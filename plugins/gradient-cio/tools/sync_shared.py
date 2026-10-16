@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
-"""Copy the canonical shared files into every skill so each skill is self-contained.
+"""Package canonical shared files and release metadata with every skill.
 
-Run after any change to a file listed in FILES:
+Run after a plugin version bump or any change to a file listed in FILES:
     python tools/sync_shared.py          # sync
     python tools/sync_shared.py --check  # exit 1 if any copy differs (use before packaging)
 """
-import hashlib, pathlib, shutil, sys
+import hashlib, json, pathlib, shutil, sys
 import re
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+PLUGIN_RELEASE_REFERENCE = pathlib.Path("references/plugin-release.json")
 FILES = {"shared/gradient_report.py": "scripts/gradient_report.py",
          "shared/gradient_pptx.py": "scripts/gradient_pptx.py",
          "shared/report_theme.py": "scripts/report_theme.py",
@@ -78,6 +79,46 @@ def digest(p):
         data = data.replace(b"\r\n", b"\n")
     return hashlib.sha256(data).hexdigest()[:12]
 
+
+def plugin_release_text():
+    """Return skill-visible metadata for the installed marketplace release."""
+    manifest = json.loads(
+        (ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8")
+    )
+    payload = {
+        "schema": "gradient-cio-plugin-release/v1",
+        "marketplace": "gradientcio",
+        "plugin": manifest["name"],
+        "release_version": manifest["version"],
+        "update_command": "/plugin marketplace update gradientcio",
+        "version_semantics": (
+            "SKILL.md metadata.version values are component contract versions, "
+            "not the plugin release version."
+        ),
+    }
+    return json.dumps(payload, indent=2) + "\n"
+
+
+def sync_plugin_release(skill, check, expected):
+    """Write or validate the release reference included with every skill."""
+    destination = skill / PLUGIN_RELEASE_REFERENCE
+    if check:
+        actual = (
+            destination.read_text(encoding="utf-8").replace("\r\n", "\n")
+            if destination.exists()
+            else ""
+        )
+        if actual != expected:
+            print(f"OUT OF SYNC: {skill.name}/{PLUGIN_RELEASE_REFERENCE}")
+            return 1
+        return 0
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(expected, encoding="utf-8")
+    checksum = hashlib.sha256(expected.encode("utf-8")).hexdigest()[:12]
+    print(f"synced {skill.name}/{PLUGIN_RELEASE_REFERENCE} ({checksum})")
+    return 0
+
+
 def shared_files():
     """Yield canonical source/destination pairs, including contract trees."""
     yield from FILES.items()
@@ -93,9 +134,11 @@ def shared_files():
 def main():
     check = "--check" in sys.argv
     bad = 0
+    release_text = plugin_release_text()
     for skill in sorted((ROOT / "skills").iterdir()):
         if not (skill / "SKILL.md").exists():
             continue
+        bad += sync_plugin_release(skill, check, release_text)
         pairs = chat_shared_files(skill) if is_chat_only(skill) else shared_files()
         for src, rel in pairs:
             s, d = ROOT / src, skill / rel
