@@ -52,6 +52,10 @@ INTERNAL_SCRIPT_FILES = {
     "scripts/validate_handoff.py",
     "scripts/layout_budget_schema.py",
 }
+INTERNAL_REFERENCE_FILES = {
+    "references/module-scope.md",
+    "references/report-style.md",
+}
 
 CHAT_DELIVERY = re.compile(r"^\s+delivery:\s*chat\s*$", re.MULTILINE)
 
@@ -154,7 +158,7 @@ def main():
         for src, rel in shared_files():
             if not (
                 rel in INTERNAL_SCRIPT_FILES
-                or rel == "references/module-scope.md"
+                or rel in INTERNAL_REFERENCE_FILES
             ):
                 continue
             s, d = ROOT / src, target / rel

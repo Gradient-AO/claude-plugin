@@ -26,6 +26,10 @@ REPOSITORY = ROOT.parents[1]
 REQUIRED_FONTS = ("inter-latin-regular.ttf", "inter-latin-semibold.ttf")
 NAME_LINE = re.compile(r"^name:\s*(\S+)\s*$", re.MULTILINE)
 CHAT_DELIVERY = re.compile(r"^\s+delivery:\s*chat\s*$", re.MULTILINE)
+PLUGIN_ROOT_ASSIGNMENT = re.compile(
+    r"^\s*(\w+)\s*=\s*Path\(__file__\)\.resolve\(\)\.parents\[\d+\]",
+    re.MULTILINE,
+)
 
 
 def shipped_skills() -> list[pathlib.Path]:
@@ -100,6 +104,16 @@ def check_skill(
             failures.append(
                 f"{skill.name}: plugin-release.json does not match the plugin manifest"
             )
+    scripts = skill / "scripts"
+    for script in sorted(scripts.glob("*.py")):
+        source = script.read_text(encoding="utf-8")
+        for assignment in PLUGIN_ROOT_ASSIGNMENT.finditer(source):
+            root_name = re.escape(assignment.group(1))
+            if re.search(rf"{root_name}\s*/\s*[\"']tools[\"']", source):
+                failures.append(
+                    f"{skill.name}: {script.name} imports plugin-root tools instead "
+                    "of its bundled scripts"
+                )
     if CHAT_DELIVERY.search(text):
         return failures
 

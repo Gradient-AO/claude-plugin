@@ -7,8 +7,9 @@ import sys
 from pathlib import Path
 
 
-PLUGIN_ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(PLUGIN_ROOT / "tools"))
+SCRIPT_ROOT = Path(__file__).resolve().parent
+if str(SCRIPT_ROOT) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_ROOT))
 
 from report_json_validator import (  # noqa: E402
     ReportSpec,

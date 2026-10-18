@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.6.1
+- Made skill validator and memo-composer entrypoints load their bundled script dependencies in both repository and standalone-install execution, with a packaging guard that rejects plugin-root tool imports.
+- Synchronized the internal GIPS report style with the shared renderer contract, replaced the stale generic writing guide with an explicit GIPS-only contract, and removed the unused GIPS chart-data copy.
+- Added standalone skill packaging to CI and split the static release suite into focused contract modules with explicit imports while preserving every existing check.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.6.0
 - Expanded the provider-neutral `gradient-portfolio-import` workflow to the implemented Phase 4 portfolio master, allocation tree, and policy configuration treatments and the Phase 5 public-security, fixed-income analytics, liquidity, classification, pacing, and source-document-reference treatments.
 - Documented exact Phase 5 publication lanes: public-security and pacing map-existing commits with create intents preview-only; fixed-income is existing-holding only with no overlay; liquidity is existing-commitment scalar MALTS only; allocation and commitment classifications commit while holding-factor stays preview-only; source documents are reference-only previews with no document writes.
