@@ -1,95 +1,73 @@
-# Gradient analytical writing standards
+# GIPS evidence-review writing standards
 
-These standards apply to client-facing analytical reports and decision packs. They do not apply to the
-`gradient-setup` readiness report or to GIPS report-review deliverables. A family-specific skill
-may narrow the voice, required sections or permitted decision language, but it may not weaken evidence,
-availability or presentation rules.
+This GIPS-only contract is owned by the internal GIPS evidence-review module. It applies to firm report
+reviews, asset-owner reviews, policy gap checks and related GIPS evidence deliverables. It is intentionally
+separate from the shared analytical writing standards because GIPS reviews are checklist-led compliance
+assessments, not allocation recommendations.
 
-## Message first
+`output-format.md` controls section order, status vocabulary and required deliverables. `report-layout.md`
+controls the visual layer. The selected mode file controls the applicable checklist and audience. This file
+controls voice, analysis depth and evidence presentation; it may not weaken those contracts.
 
-- Default analytical-report order is verdict and executive band, key judgments, evidence sections ordered by
-  the decision question, risks and gaps, actions or follow-ups, coverage, then appendices. A family contract
-  may narrow or reorder this spine. The setup readiness report, GIPS report-review profile and deck profile are
-  exempt.
-- Write section kickers as the conclusion a reader should retain, not as a topic label. Prefer
-  `Private-assets headroom is narrow` to `Allocation and policy`.
-- Lead each analytical section with a decision-useful visual. When the governed evidence cannot support that
-  visual, put a typed `Not available — <reason>` callout in the visual position.
-- Put the visual or typed unavailable state before the first table. Never open an analytical section with a
-  stack of tables.
-- Do not place more than two table blocks consecutively. Break a longer sequence with a visual, sourced
-  interpretation, typed unavailable state or a new section.
+## Findings first
 
-## Executive pages
-
-- Use the four-tile executive band when the family specification defines four decision-useful measures.
-  Preserve the family labels and source every tile with `[S#]`.
-- Page 2 carries three to five **Key judgment —** callouts when the family specification calls for a judgment
-  page. Each judgment is sourced, no more than 60 words and subordinate to the report's stated decision or
-  monitoring purpose.
-- Do not invent a fourth measure. If a required tile is unavailable, retain the tile and show the typed state
-  and reason.
-
-## Analysis callouts
-
-- Use one to three `Analysis — <message>` callouts in each analytical section named by the family
-  specification. Keep each callout to 60 words or fewer and cite at least one `[S#]`.
-- Where the family specification requires structured analysis, use these four parts in order:
-  `Observation:`, `Why it matters:`, `Uncertainty:`, and `What would change the view:`.
-- Observation states returned evidence. Why it matters states the decision or monitoring implication.
-  Uncertainty names coverage, staleness, basis or model limitations. What would change the view names a
-  measurable trigger, evidence item or event.
-- Analysis may compare and rank sourced values. It may not introduce an unsourced metric, causal claim,
-  forecast, rating or action beyond the report's authorized scope.
-
-### Depth
-
-- Write every part as a full sentence and aim for 40 to 60 words in total.
-- Make the Observation specific, tie Why it matters to this report's decision or monitoring purpose, name the
-  actual limitation, and identify a measurable trigger or named evidence item that would change the view.
-- Use `references/analysis-examples.md` for a worked pattern for each required analysis section. Never reuse
-  the fictional example values in a client report.
-- The validator prints non-blocking quality notes after its contract result. Revise a callout whenever a
-  quality note appears; the notes do not change validation PASS/FAIL or exit codes.
+- Open with the overall assessment and the material reviewed, then state the most decision-relevant findings.
+- Write section kickers as conclusions, not topic labels. Prefer `Three required disclosures are incomplete`
+  to `Disclosure review`.
+- Keep status language exact: `Met`, `Partially met`, `Not met`, `Not found`,
+  `Not assessed — governed calculation unavailable`, or `N/A` with a reason.
+- Distinguish a missing disclosure from a failed requirement. Use `Not found` when the reviewed material is
+  silent; use `Not met` only when evidence shows noncompliance.
+- Order preparer fixes and follow-up requests by severity and then by checklist provision.
 
 ## Evidence and availability
 
-- Every factual number, governed status and analytical judgment carries an `[S#]` tag.
-- Preserve returned dates, units, bases, formula identity and version, coverage, validation state and
-  unavailable reason.
-- Absence is not zero, no exposure, no event or no issue. Write `Not available — <reason>`.
-- Empty or unavailable evidence collapses to one compact typed unavailable callout in the expected visual
-  position. Do not emit a table of N/A rows or a generic `Visual evidence` placeholder.
-- A visual may use only returned values, user-supplied evidence or allowed display-only scaling and rounding.
-  Never calculate a replacement series locally.
+- Every factual statement, checklist status and analytical judgment cites an `[S#]` source.
+- Identify the document and page or record supporting each finding. Preserve source date, scope, validation
+  status and the exact GIPS provision.
+- Quote required compliance language when wording matters; do not paraphrase away a substantive difference.
+- Do not calculate implied returns, fees, asset values, dispersion, multiples or other report values locally.
+  If a required relationship is unavailable, use
+  `Not assessed — governed calculation unavailable`.
+- Absence is not zero, no issue or no exposure. Use one compact typed unavailable state with the specific
+  reason instead of tables filled with N/A values.
+- Separate observed evidence from interpretation. Never present a document omission as proof that an
+  underlying practice did not occur.
 
-## Visual grammar
+## Analysis and judgments
 
-- Prefer the smallest visual that answers the section's question. Supported analytical blocks include
-  `chart`, `line`, `bars`, `pie`, `percentiles`, `waterfall`, `band`, `stacked`, `heat`, `timeline`, `tiles`, `coverage` and
-  `findings`.
-- Match the visual to the question: `line` for a time series or trend; `stacked` for composition or mix
-  (`pie` only for at most eight static slices); `waterfall` for contribution or bridge; `band` for a position
-  against a range or limit; `bars` for ranking or entity comparison; `heat` for two-dimensional status;
-  `percentiles` for peer standing; `timeline` for dated events; `findings` for issues by severity; and
-  `coverage` for evidence availability.
-- Bars and other quantitative marks accept signed finite values. Preserve the sign in `value` and in the
-  display label; do not convert negative values to absolute magnitudes.
-- Nested blocks are valid. Apply source, availability, table-sequencing and numeric rules inside every
-  `two_col` branch and other nested block list.
-- Titles and labels state the measure, unit, period and comparison basis where those are not already obvious.
+- Use three to five sourced `Key judgment — <subject>` callouts on the executive page. Each is no more than
+  60 words and specific to the reviewed material.
+- Use one to three `Analysis — <message>` callouts where `report-layout.md` requires them. Write these four
+  parts in order: `Observation:`, `Why it matters:`, `Uncertainty:`, and
+  `What would change the view:`.
+- Keep each analysis callout to 40–60 words, use full sentences and cite at least one `[S#]`.
+- `What would change the view` may point only to an existing numbered request in
+  `## 4. Follow-up Requests`; it may not create a new recommendation or action.
+- State uncertainty precisely: identify missing pages, stale periods, conditional applicability, unavailable
+  calculations or standards text that needs confirmation.
+- Use `analysis-examples.md` for structure only. Never copy its illustrative facts into a client review.
 
-## Family authority
+## Voice and boundaries
 
-The skill's template, writing standards and validator remain authoritative for section order, tile labels,
-required visual slots, analysis locations, decision language and hand-offs. Tool names in source appendices
-must match calls actually made; never add a tool call to satisfy a layout requirement.
+- Write for the report's audience: preparer-facing for report review, fiduciary-facing for asset-owner review
+  and diligence-facing for manager evidence.
+- Be direct and neutral. State the provision, evidence, gap and consequence without advocacy or alarmist
+  language.
+- GIPS compliance is voluntary. A firm that does not claim compliance is `Not applicable — no GIPS claim`,
+  not deficient for declining to claim compliance.
+- This work is a diligence review, not verification or legal advice. Preserve the required disclaimer.
+- Do not recommend hiring, firing, allocating or approving. Follow-ups request evidence or remediation of
+  existing findings only.
 
-## Whitespace
+## Visual and layout discipline
 
-- A hard break is a content contract, not a styling preference. Use `page_break: "force"` only for section
-  IDs allowed by the effective layout budget. Use `prefer` when QA may safely remove a sparse break.
-- Let short closing sections such as coverage, next steps, open items and approvals flow together or pair
-  them in `two_col`.
-- Move long checklists, rosters and returned-row detail to an appendix; keep a decision-useful summary visual
-  in the body.
+- Lead analytical sections with the required status, severity, findings or coverage visual, or a typed
+  unavailable state when evidence cannot support it.
+- Put the visual before the first table and do not place more than two tables consecutively in the analytical
+  body. Keep the full checklist in Appendix B.
+- Use the smallest visual that answers the question: stacked bars for status mix, bars for severity,
+  `findings` for issue summaries, `coverage` for material reviewed and heat maps for policy-area status.
+- Titles and labels state the measure, period and comparison basis where they are not obvious.
+- Use only forced or preferred page breaks allowed by the effective layout budget. Move long checklist detail
+  to Appendix B rather than shrinking body text or adding filler.

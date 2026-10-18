@@ -1,6 +1,37 @@
 """Connector manifest and contract-checker CLI regressions."""
 
-from suites.harness import *
+import json
+import pathlib
+import re
+import subprocess
+import sys
+import tempfile
+
+from suites.harness import (
+    CASES,
+    CONTRACTS,
+    CONTRACT_CHECKER,
+    CONTRACT_CHECKS,
+    FIX,
+    IC_MEMO_CALCULATIONS,
+    IC_MEMO_DATA_MAP,
+    IC_MEMO_EXAMPLE,
+    IC_MEMO_SKILL,
+    ODD_REPORT_SKILL,
+    PORTFOLIO_REVIEW_DATA_MAP,
+    PORTFOLIO_REVIEW_SKILL,
+    PORTFOLIO_REVIEW_TEMPLATE,
+    PUBLIC_TOOLS,
+    ROOT,
+    SETUP_SKILL,
+    SHARED_CHART_DATA,
+    SHARED_MODULE_SCOPE,
+    SHARED_REPORT_STYLE,
+    SKILL_REQUIREMENTS,
+    approximately_equal,
+    check,
+    validate_contract_manifest,
+)
 
 def contract_manifest():
     contracts = json.loads(CONTRACTS.read_text(encoding="utf-8"))

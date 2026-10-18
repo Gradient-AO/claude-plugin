@@ -11,6 +11,8 @@ jobs:
         with: { python-version: "3.12" }
       - name: Quick checks (same as the pre-push hook)
         run: python plugins/gradient-cio/tools/quick_checks.py
+      - name: Check standalone skill packaging
+        run: python plugins/gradient-cio/tools/check_skill_packaging.py
       - name: Install system renderers
         run: |
           sudo apt-get update

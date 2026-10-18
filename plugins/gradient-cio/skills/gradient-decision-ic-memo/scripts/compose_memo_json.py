@@ -22,9 +22,9 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-PLUGIN_ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-sys.path.insert(0, str(PLUGIN_ROOT / "tools"))
+SCRIPT_ROOT = Path(__file__).resolve().parent
+if str(SCRIPT_ROOT) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_ROOT))
 from gradient_report import md_document_to_report  # noqa: E402
 from compose_report import validate_report_budget  # noqa: E402
 from report_json_validator import print_quality_notes  # noqa: E402

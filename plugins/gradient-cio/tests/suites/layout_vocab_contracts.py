@@ -1,6 +1,10 @@
 """High-signal table-driven checks for layout schema and report vocabulary."""
 
-from suites.harness import *
+import json
+import subprocess
+import sys
+
+from suites.harness import FIX, ROOT, check
 
 
 TOOLS = ROOT / "tools"
