@@ -149,7 +149,7 @@
   "provider_recipe": {
     "catalog_contract": "gradient-portfolio-import-provider-catalog/v1",
     "selected_provider_id": "chronograph",
-    "catalog_status": "listed_unreviewed",
+    "catalog_status": "not_cataloged",
     "effective_review_status": "unreviewed",
     "recipe_optional": true,
     "used_as_mapping_evidence": false,

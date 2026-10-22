@@ -1,16 +1,9 @@
 {
   "contract": "gradient-portfolio-import-provider-catalog/v1",
-  "providers": [
-    {
-      "id": "chronograph",
-      "display_name": "Chronograph",
-      "recipe_file": "providers/chronograph.recipe.json",
-      "catalog_status": "listed_unreviewed"
-    }
-  ],
+  "providers": [],
   "notes": [
+    "No provider recipe is cataloged until its real connector identity is observed.",
     "Catalog listing does not authorize a connector or make a provider commit eligible.",
-    "Chronograph is the only named provider in this release.",
     "Runtime connector tools and Gradient schemas override catalog metadata.",
     "Recipes may cover the sixteen public import data types only after exact per-type and per-lane review.",
     "Phase 5 commit lanes are map-existing public security, holding-only fixed income, commitment-only scalar MALTS liquidity, allocation/commitment classification, and map-existing pacing; create intents, holding_factor, and source-document references remain preview-only.",

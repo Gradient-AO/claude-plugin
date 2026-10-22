@@ -1,0 +1,33 @@
+{
+  "contains_client_data": false,
+  "data_type": "valuation_snapshot",
+  "fixture_kind": "synthetic",
+  "provider": "Example Provider (TEST)",
+  "records": [
+    {
+      "as_of_date": "2026-06-30",
+      "commitment_ref": {
+        "source_commitment_id": "example-fund-test",
+        "source_commitment_name": "Example Growth Fund (TEST)"
+      },
+      "currency": "USD",
+      "gradient_calculation_treatment": "evidence_only_no_overwrite",
+      "nav_value": {
+        "kind": "numeric",
+        "unit": "currency_units",
+        "value": "8500000"
+      },
+      "reported_basis": "Example Provider (TEST) quarterly statement",
+      "reported_provenance": "source_reported",
+      "schema_id": "gradient.import.valuation_snapshot.v1",
+      "source_record_id": "valuation-example-fund-test-2026-06-30",
+      "source_ref": {
+        "connector_tool_name": "example_provider_test.list_valuations",
+        "provider_declared": "Example Provider (TEST)",
+        "retrieved_at": "2026-10-21T12:00:00Z",
+        "source_schema_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "valuation_basis": "drawdown_nav"
+    }
+  ]
+}

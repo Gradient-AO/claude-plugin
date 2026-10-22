@@ -15,6 +15,22 @@ mapping or approval identity to compensate for a missing recipe.
 
 ## Catalog contract
 
+`provider-readiness-catalog.json` is the discovery index for candidate provider
+lanes. It may name a provider before connector access exists, but every such row
+must keep each lane `discovery_required` with null connector identity, empty
+observed tools, and one atomic `coverage` row for every candidate data type.
+Each coverage row owns its source-schema digest, terms status, dry-run
+reference, golden case IDs, and release status. Workflow-only lanes use one
+coverage row with `data_type: null`. Changing one row never promotes or
+downgrades a sibling. Candidate lanes are planning metadata, not verified
+capabilities, recipes, field mappings, authorization, or persistence rights.
+
+`provider-readiness-catalog.schema.json`,
+`provider-recipe-catalog.schema.json`, and `provider-recipe.schema.json` are
+the machine-readable structural contracts. Semantic checks additionally
+enforce unique provider/lane/data-type identities, path confinement, catalog
+and recipe identity agreement, and fail-closed lifecycle transitions.
+
 `provider-recipe-catalog.json` is the public index of named provider recipes.
 Its `contract` must be
 `gradient-portfolio-import-provider-catalog/v1`. Every provider row must contain
@@ -23,10 +39,10 @@ The recipe path must remain under `references/providers/`, resolve to a JSON
 file, and match the row's provider identity.
 
 The allowed catalog states are `listed_unreviewed`, `listed_reviewed`, and
-`retired`. A catalog listing is not connector authorization, runtime tool
+`retired`. A provider may be listed only after its real connector identity is
+observed. A catalog listing is not connector authorization, runtime tool
 discovery, schema compatibility, mapping approval, commit authorization, or a
-requirement to use that provider. This release names Chronograph only and keeps
-it `listed_unreviewed`.
+requirement to use that provider. This release catalogs no provider recipes.
 
 ## Required fields
 
@@ -34,13 +50,25 @@ The recipe must contain:
 
 - `contract`: exactly `gradient-portfolio-import-provider-recipe/v1`
 - `provider.id` and `provider.display_name`
-- `provider.connector`: the connector name the client must authorize
+- `provider.connector`: the observed connector name, or `null` in an unreviewed
+  unlisted placeholder
+- `provider_terms_reviewed`: whether persistence and retention terms have been
+  reviewed for the recorded lanes
+- `persistence_mode`: `persistent_import`, `live_read`, `both`, or `null`
+  while the provider remains unreviewed
 - `review.status`: `unreviewed` or `reviewed`
 - `review.schema_identity`: the exact identity returned by
   `get_portfolio_import_schema`, or `null` when unreviewed
 - `review.live_dry_run`: `null` when unreviewed; otherwise an object containing
   `completed_at`, `connector`, `schema_identity`, `result`, and
   `evidence_reference`
+- `review.coverage`: one row per independently reviewed provider lane and data
+  type. Every row contains `lane_id`, `data_type`, `status`,
+  `persistence_mode`, `gradient_schema_identity`, `source_schema_digest`,
+  `provider_terms_reviewed`, `read_operation`, `live_dry_run`,
+  `gradient_approval`, and `goldens`. This row is the authoritative release
+  gate. One row's drift invalidates only that lane; the provider remains
+  reviewed while another current reviewed row exists.
 - `gradient_approval`: the provider-neutral Gradient approval artifact containing
   `mapping_profile_id`, `mapping_profile_version`, `mapping_profile_digest`,
   `gradient_schema_identity`, `approval_scope`, and `approval_status`
@@ -48,6 +76,8 @@ The recipe must contain:
   condition
 - `source.read_operation`: the connector read operation covered by this recipe,
   or `null` in an unreviewed placeholder
+- `source.source_schema_digest`: the exact reviewed source schema digest, or
+  `null` while unreviewed
 - `source.write_operations`: an empty array
 - `mapping`: one row per source-to-runtime-schema field
 - `supported_data_types`: a subset of `private_market_holding_snapshot`,
@@ -61,18 +91,34 @@ The recipe must contain:
 - `supported_asset_classes`: a subset of `private_equity`, `real_estate`,
   `infrastructure`, and `private_debt` when holdings are covered
 - `limits.max_source_page_size` and `limits.max_stage_batch_size`
+- `goldens.recorded_fixture_reference`: private sanitized evidence reference,
+  or `null`
+- `goldens.synthetic_fixture_paths`: public shape-equivalent `(TEST)` fixtures
 - `notes`: limitations and unresolved questions
 
 Each `mapping` row must contain `data_type`, `source_field`, `target_field`,
-`copy_mode: "verbatim"`, `unit_source`, `required`, and `review_note`.
+`copy_mode: "verbatim"`, `availability`, `unit_source`, `required`, and
+`review_note`. `availability` is one of `available`, `ambiguous`,
+`unsupported`, or `unavailable`; only `available` rows may stage a value.
 `unit_source` names the source field or literal source declaration that supplies
 the unit; it may not instruct the skill to derive or assume a unit.
 
-An unreviewed placeholder must use null mapping-profile identity, schema
-identity, and scope values with `approval_status: "unreviewed"`. It may use a
-null read operation, null pagination
-fields, an empty mapping, empty supported data types, empty supported asset
-classes, and null limits. Those
+Provider-level terms, persistence, review, source, approval, and golden fields
+are conservative compatibility rollups. They never promote a coverage row or
+invalidate an unaffected reviewed row.
+
+The onboarding skeleton generator may populate only an observed connector
+identity and requested lane/data-type rows. It emits no mappings and keeps
+every row unreviewed until the full evidence checklist is complete.
+
+An unreviewed placeholder must use a null connector,
+`provider_terms_reviewed: false`, null
+`persistence_mode`, empty review coverage, null source-schema digest, null
+recorded-golden reference, empty synthetic-golden paths, and null
+mapping-profile identity, schema identity, and scope values with
+`approval_status: "unreviewed"`. It may use a null read operation, null
+pagination fields, an empty mapping, empty supported data types, empty
+supported asset classes, and null limits. Those
 empty values communicate that no connector behavior has been verified; they
 must never be filled by inference. A reviewed recipe requires a concrete read
 operation, explicit pagination completion, at least one mapped field, at least
@@ -98,8 +144,10 @@ version, source-schema evidence, unit, pagination, mapping-profile, or dry-run
 drift invalidates reviewed status immediately. Stop a session when its runtime
 schema identity changes; never restage under the new schema in that session.
 
-Only `listed_reviewed` plus `review.status: "reviewed"` with current evidence
-and an exact `gradient_approval` artifact whose status is `reviewed` may supply
+Only `listed_reviewed` plus an exact coverage row with `status: "reviewed"`,
+`provider_terms_reviewed: true`, a non-null persistence mode, current schema,
+dry-run, and golden evidence, and a row-local `gradient_approval` artifact
+whose status is `reviewed` may supply
 the `mapping_profile` input at session start. An unreviewed, retired, or
 drifted recipe must omit that input. Never fabricate or derive approval identifiers or digests.
 Commit eligibility comes only from the runtime's

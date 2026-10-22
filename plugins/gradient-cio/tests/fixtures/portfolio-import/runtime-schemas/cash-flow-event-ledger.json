@@ -1,0 +1,187 @@
+{
+  "artifact_version": 1,
+  "data_type": "cash_flow_event_ledger",
+  "json_schema": {
+    "$defs": {
+      "__schema0": {
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$",
+        "type": "string"
+      },
+      "__schema1": {
+        "maxLength": 512,
+        "minLength": 1,
+        "type": "string"
+      },
+      "__schema2": {
+        "maxLength": 500,
+        "minLength": 1,
+        "type": "string"
+      },
+      "__schema3": {
+        "const": "numeric",
+        "type": "string"
+      },
+      "__schema4": {
+        "minLength": 1,
+        "pattern": "^[+-]?(?:\\d+(?:\\.\\d+)?|\\.\\d+)$",
+        "type": "string"
+      },
+      "__schema5": {
+        "enum": [
+          "currency_units",
+          "decimal",
+          "basis_points",
+          "integer",
+          "months",
+          "days",
+          "years",
+          "bytes"
+        ],
+        "type": "string"
+      }
+    },
+    "$id": "https://gradientcio.com/schemas/portfolio-import/cash_flow_event_ledger.v1.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "amount": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "$ref": "#/$defs/__schema3"
+          },
+          "unit": {
+            "$ref": "#/$defs/__schema5"
+          },
+          "value": {
+            "$ref": "#/$defs/__schema4"
+          }
+        },
+        "required": [
+          "kind",
+          "value",
+          "unit"
+        ],
+        "type": "object"
+      },
+      "commitment_ref": {
+        "additionalProperties": false,
+        "properties": {
+          "gradient_commitment_id": {
+            "$ref": "#/$defs/__schema0"
+          },
+          "source_commitment_id": {
+            "$ref": "#/$defs/__schema1"
+          },
+          "source_commitment_name": {
+            "$ref": "#/$defs/__schema2"
+          }
+        },
+        "type": "object"
+      },
+      "currency": {
+        "pattern": "^[A-Z]{3}$",
+        "type": "string"
+      },
+      "event_date": {
+        "format": "date",
+        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+        "type": "string"
+      },
+      "event_type": {
+        "enum": [
+          "capital_call",
+          "distribution_return_of_capital",
+          "distribution_gain",
+          "distribution_income",
+          "recallable_distribution",
+          "fee_outside_commitment",
+          "subscription",
+          "redemption",
+          "other"
+        ],
+        "type": "string"
+      },
+      "recallable": {
+        "type": "boolean"
+      },
+      "reporting_date": {
+        "format": "date",
+        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+        "type": "string"
+      },
+      "schema_id": {
+        "const": "gradient.import.cash_flow_event_ledger.v1",
+        "type": "string"
+      },
+      "source_record_id": {
+        "maxLength": 512,
+        "minLength": 1,
+        "type": "string"
+      },
+      "source_ref": {
+        "additionalProperties": false,
+        "properties": {
+          "citation": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "type": "string"
+          },
+          "connector_tool_name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "provider_declared": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "retrieved_at": {
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "type": "string"
+          },
+          "source_schema_digest": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider_declared",
+          "connector_tool_name",
+          "retrieved_at"
+        ],
+        "type": "object"
+      },
+      "source_sign_convention": {
+        "enum": [
+          "positive_is_cash_inflow_to_portfolio",
+          "positive_is_cash_outflow_from_portfolio",
+          "unsigned_magnitude_with_event_type"
+        ],
+        "type": "string"
+      },
+      "valuation_date": {
+        "format": "date",
+        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+        "type": "string"
+      }
+    },
+    "required": [
+      "schema_id",
+      "source_record_id",
+      "source_ref",
+      "commitment_ref",
+      "event_date",
+      "event_type",
+      "amount",
+      "currency",
+      "source_sign_convention"
+    ],
+    "title": "Portfolio import cash_flow_event_ledger record",
+    "type": "object"
+  },
+  "schema_id": "gradient.import.cash_flow_event_ledger.v1"
+}

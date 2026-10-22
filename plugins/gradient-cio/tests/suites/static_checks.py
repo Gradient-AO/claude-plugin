@@ -15,6 +15,7 @@ from suites.static.catalog_routing import catalog_routing_checks
 from suites.static.examples import analysis_example_checks, public_example_cover_checks
 from suites.static.handoffs import handoff_contract_checks
 from suites.static.packaging import self_contained_report_skill_checks
+from suites.static.provider_recipes import provider_recipe_golden_checks
 from suites.static.report_validators import (
     portfolio_import_governed_contract_checks,
     private_markets_pme_contract_checks,
@@ -37,6 +38,7 @@ def static(allow_branded):
     analysis_example_checks()
     private_markets_pme_contract_checks()
     portfolio_import_governed_contract_checks()
+    provider_recipe_golden_checks()
     source_hygiene_checks(allow_branded)
     connector_cutover()
     chart_renderer()

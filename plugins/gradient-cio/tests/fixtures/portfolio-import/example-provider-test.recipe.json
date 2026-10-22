@@ -1,0 +1,426 @@
+{
+  "contains_client_data": false,
+  "contract": "gradient-portfolio-import-provider-recipe/v1",
+  "fixture_kind": "synthetic",
+  "gradient_approval": {
+    "approval_scope": null,
+    "approval_status": "unreviewed",
+    "gradient_schema_identity": null,
+    "mapping_profile_digest": null,
+    "mapping_profile_id": null,
+    "mapping_profile_version": null
+  },
+  "goldens": {
+    "recorded_fixture_reference": null,
+    "synthetic_fixture_paths": [
+      "source/commitment-master.json",
+      "source/cash-flow-event-ledger.json",
+      "source/valuation-snapshot.json"
+    ]
+  },
+  "limits": {
+    "max_source_page_size": 25,
+    "max_stage_batch_size": 20
+  },
+  "mapping": [
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "commitment_master",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "provider_schema",
+      "target_field": "schema_id",
+      "unit_source": "none (identifier)"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "commitment_master",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "external_record_id",
+      "target_field": "source_record_id",
+      "unit_source": "none (identifier)"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "commitment_master",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "provenance",
+      "target_field": "source_ref",
+      "unit_source": "provenance.retrieved_at"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "commitment_master",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "destination",
+      "target_field": "identity",
+      "unit_source": "none (identity)"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "commitment_master",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "fields",
+      "target_field": "updates",
+      "unit_source": "fields.*.unit"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "commitment_master",
+      "required": false,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "reported",
+      "target_field": "reported_metrics",
+      "unit_source": "reported.*.value.unit"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "cash_flow_event_ledger",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "provider_schema",
+      "target_field": "schema_id",
+      "unit_source": "none (identifier)"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "cash_flow_event_ledger",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "external_record_id",
+      "target_field": "source_record_id",
+      "unit_source": "none (identifier)"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "cash_flow_event_ledger",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "provenance",
+      "target_field": "source_ref",
+      "unit_source": "provenance.retrieved_at"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "cash_flow_event_ledger",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "investment",
+      "target_field": "commitment_ref",
+      "unit_source": "none (identity)"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "cash_flow_event_ledger",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "effective_date",
+      "target_field": "event_date",
+      "unit_source": "ISO 8601 date"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "cash_flow_event_ledger",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "transaction_type",
+      "target_field": "event_type",
+      "unit_source": "none (event type)"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "cash_flow_event_ledger",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "transaction_amount",
+      "target_field": "amount",
+      "unit_source": "transaction_amount.unit"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "cash_flow_event_ledger",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "currency_code",
+      "target_field": "currency",
+      "unit_source": "currency_code"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "cash_flow_event_ledger",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "sign_basis",
+      "target_field": "source_sign_convention",
+      "unit_source": "sign_basis"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "valuation_snapshot",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "provider_schema",
+      "target_field": "schema_id",
+      "unit_source": "none (identifier)"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "valuation_snapshot",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "external_record_id",
+      "target_field": "source_record_id",
+      "unit_source": "none (identifier)"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "valuation_snapshot",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "provenance",
+      "target_field": "source_ref",
+      "unit_source": "provenance.retrieved_at"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "valuation_snapshot",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "investment",
+      "target_field": "commitment_ref",
+      "unit_source": "none (identity)"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "valuation_snapshot",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "statement_date",
+      "target_field": "as_of_date",
+      "unit_source": "ISO 8601 date"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "valuation_snapshot",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "currency_code",
+      "target_field": "currency",
+      "unit_source": "currency_code"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "valuation_snapshot",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "basis",
+      "target_field": "valuation_basis",
+      "unit_source": "none (valuation basis)"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "valuation_snapshot",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "reported_value",
+      "target_field": "nav_value",
+      "unit_source": "reported_value.unit"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "valuation_snapshot",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "provenance_kind",
+      "target_field": "reported_provenance",
+      "unit_source": "none (provenance)"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "valuation_snapshot",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "statement_basis",
+      "target_field": "reported_basis",
+      "unit_source": "none (description)"
+    },
+    {
+      "availability": "available",
+      "copy_mode": "verbatim",
+      "data_type": "valuation_snapshot",
+      "required": true,
+      "review_note": "Synthetic contract test only.",
+      "source_field": "calculation_treatment",
+      "target_field": "gradient_calculation_treatment",
+      "unit_source": "none (policy)"
+    }
+  ],
+  "notes": [
+    "Example Provider (TEST) is fictional and never runtime eligible.",
+    "This synthetic recipe is not cataloged and cannot supply mapping evidence."
+  ],
+  "provider": {
+    "connector": "Example Provider Connector (TEST)",
+    "display_name": "Example Provider (TEST)",
+    "id": "example_provider_test"
+  },
+  "provider_terms_reviewed": true,
+  "persistence_mode": "persistent_import",
+  "review": {
+    "coverage": [
+      {
+        "data_type": "commitment_master",
+        "goldens": {
+          "recorded_fixture_reference": "private://example-provider-test/commitment-master",
+          "synthetic_fixture_paths": [
+            "source/commitment-master.json",
+            "staged/commitment-master.json"
+          ]
+        },
+        "gradient_approval": {
+          "approval_scope": "example-provider-test:commitment-master",
+          "approval_status": "reviewed",
+          "gradient_schema_identity": "gradient.import.commitment_master.v1",
+          "mapping_profile_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "mapping_profile_id": "example-provider-test-commitments",
+          "mapping_profile_version": 1
+        },
+        "gradient_schema_identity": "gradient.import.commitment_master.v1",
+        "lane_id": "private_markets_portfolio:commitment_master",
+        "live_dry_run": {
+          "completed_at": "2026-10-21T00:00:00Z",
+          "connector": "Example Provider Connector (TEST)",
+          "evidence_reference": "private://example-provider-test/commitment-master",
+          "result": "passed",
+          "schema_identity": "gradient.import.commitment_master.v1"
+        },
+        "persistence_mode": "persistent_import",
+        "provider_terms_reviewed": true,
+        "read_operation": "example_provider_test.list_records",
+        "source_schema_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "status": "reviewed"
+      },
+      {
+        "data_type": "cash_flow_event_ledger",
+        "goldens": {
+          "recorded_fixture_reference": "private://example-provider-test/cash-flow-event-ledger",
+          "synthetic_fixture_paths": [
+            "source/cash-flow-event-ledger.json",
+            "staged/cash-flow-event-ledger.json"
+          ]
+        },
+        "gradient_approval": {
+          "approval_scope": "example-provider-test:cash-flow-event-ledger",
+          "approval_status": "reviewed",
+          "gradient_schema_identity": "gradient.import.cash_flow_event_ledger.v1",
+          "mapping_profile_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "mapping_profile_id": "example-provider-test-cash-flows",
+          "mapping_profile_version": 1
+        },
+        "gradient_schema_identity": "gradient.import.cash_flow_event_ledger.v1",
+        "lane_id": "private_markets_portfolio:cash_flow_event_ledger",
+        "live_dry_run": {
+          "completed_at": "2026-10-21T00:00:00Z",
+          "connector": "Example Provider Connector (TEST)",
+          "evidence_reference": "private://example-provider-test/cash-flow-event-ledger",
+          "result": "passed",
+          "schema_identity": "gradient.import.cash_flow_event_ledger.v1"
+        },
+        "persistence_mode": "persistent_import",
+        "provider_terms_reviewed": true,
+        "read_operation": "example_provider_test.list_records",
+        "source_schema_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "status": "reviewed"
+      },
+      {
+        "data_type": "valuation_snapshot",
+        "goldens": {
+          "recorded_fixture_reference": "private://example-provider-test/valuation-snapshot",
+          "synthetic_fixture_paths": [
+            "source/valuation-snapshot.json",
+            "staged/valuation-snapshot.json"
+          ]
+        },
+        "gradient_approval": {
+          "approval_scope": "example-provider-test:valuation-snapshot",
+          "approval_status": "reviewed",
+          "gradient_schema_identity": "gradient.import.valuation_snapshot.v1",
+          "mapping_profile_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "mapping_profile_id": "example-provider-test-valuations",
+          "mapping_profile_version": 1
+        },
+        "gradient_schema_identity": "gradient.import.valuation_snapshot.v1",
+        "lane_id": "private_markets_portfolio:valuation_snapshot",
+        "live_dry_run": {
+          "completed_at": "2026-10-21T00:00:00Z",
+          "connector": "Example Provider Connector (TEST)",
+          "evidence_reference": "private://example-provider-test/valuation-snapshot",
+          "result": "passed",
+          "schema_identity": "gradient.import.valuation_snapshot.v1"
+        },
+        "persistence_mode": "persistent_import",
+        "provider_terms_reviewed": true,
+        "read_operation": "example_provider_test.list_records",
+        "source_schema_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "status": "reviewed"
+      }
+    ],
+    "live_dry_run": {
+      "completed_at": "2026-10-21T00:00:00Z",
+      "connector": "Example Provider Connector (TEST)",
+      "evidence_reference": "private://example-provider-test",
+      "result": "passed",
+      "schema_identity": "multiple"
+    },
+    "schema_identity": "multiple",
+    "status": "reviewed"
+  },
+  "runtime_eligible": false,
+  "source": {
+    "pagination": {
+      "completion_condition": "Synthetic final_page is true.",
+      "request_cursor_field": "cursor",
+      "response_cursor_field": "next_cursor"
+    },
+    "read_operation": "example_provider_test.list_records",
+    "source_schema_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "write_operations": []
+  },
+  "supported_asset_classes": [
+    "private_equity"
+  ],
+  "supported_data_types": [
+    "commitment_master",
+    "cash_flow_event_ledger",
+    "valuation_snapshot"
+  ]
+}
