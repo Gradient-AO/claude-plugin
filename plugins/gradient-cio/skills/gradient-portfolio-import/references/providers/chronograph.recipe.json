@@ -3,12 +3,15 @@
   "provider": {
     "id": "chronograph",
     "display_name": "Chronograph",
-    "connector": "Chronograph MCP"
+    "connector": null
   },
+  "provider_terms_reviewed": false,
+  "persistence_mode": null,
   "review": {
     "status": "unreviewed",
     "schema_identity": null,
-    "live_dry_run": null
+    "live_dry_run": null,
+    "coverage": []
   },
   "gradient_approval": {
     "mapping_profile_id": null,
@@ -20,6 +23,7 @@
   },
   "source": {
     "read_operation": null,
+    "source_schema_digest": null,
     "write_operations": [],
     "pagination": {
       "request_cursor_field": null,
@@ -33,6 +37,10 @@
   "limits": {
     "max_source_page_size": null,
     "max_stage_batch_size": null
+  },
+  "goldens": {
+    "recorded_fixture_reference": null,
+    "synthetic_fixture_paths": []
   },
   "notes": [
     "Listed for discovery only; this recipe supplies no reviewed mapping evidence.",

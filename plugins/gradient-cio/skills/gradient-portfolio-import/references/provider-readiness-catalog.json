@@ -1,0 +1,481 @@
+{
+  "contract": "gradient-provider-readiness-catalog/v1",
+  "providers": [
+    {
+      "id": "chronograph",
+      "display_name": "Chronograph",
+      "lanes": [
+        {
+          "lane_id": "private_markets_portfolio",
+          "mode": "existing_persistence",
+          "destination": "portfolio_import",
+          "status": "discovery_required",
+          "evidence": {
+            "connector_identity": null,
+            "observed_tools": []
+          },
+          "candidate_data_types": [
+            "commitment_master",
+            "cash_flow_event_ledger",
+            "valuation_snapshot",
+            "private_market_holding_snapshot"
+          ],
+          "coverage": [
+            {
+              "data_type": "commitment_master",
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            },
+            {
+              "data_type": "cash_flow_event_ledger",
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            },
+            {
+              "data_type": "valuation_snapshot",
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            },
+            {
+              "data_type": "private_market_holding_snapshot",
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pitchbook",
+      "display_name": "PitchBook",
+      "lanes": [
+        {
+          "lane_id": "manager_fund_research",
+          "mode": "live_read",
+          "destination": "cited_live_result",
+          "status": "discovery_required",
+          "evidence": {
+            "connector_identity": null,
+            "observed_tools": []
+          },
+          "candidate_data_types": [],
+          "coverage": [
+            {
+              "data_type": null,
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            }
+          ]
+        },
+        {
+          "lane_id": "manager_fund_events",
+          "mode": "existing_persistence",
+          "destination": "firm_fund_event",
+          "status": "discovery_required",
+          "evidence": {
+            "connector_identity": null,
+            "observed_tools": []
+          },
+          "candidate_data_types": [],
+          "coverage": [
+            {
+              "data_type": null,
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            }
+          ]
+        },
+        {
+          "lane_id": "manager_fund_master_and_peer_statistics",
+          "mode": "model_gap",
+          "destination": "undecided",
+          "status": "discovery_required",
+          "evidence": {
+            "connector_identity": null,
+            "observed_tools": []
+          },
+          "candidate_data_types": [],
+          "coverage": [
+            {
+              "data_type": null,
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "green_street",
+      "display_name": "Green Street",
+      "lanes": [
+        {
+          "lane_id": "real_estate_research",
+          "mode": "live_read",
+          "destination": "cited_live_result",
+          "status": "discovery_required",
+          "evidence": {
+            "connector_identity": null,
+            "observed_tools": []
+          },
+          "candidate_data_types": [],
+          "coverage": [
+            {
+              "data_type": null,
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            }
+          ]
+        },
+        {
+          "lane_id": "real_estate_benchmarks",
+          "mode": "existing_persistence",
+          "destination": "portfolio_import",
+          "status": "discovery_required",
+          "evidence": {
+            "connector_identity": null,
+            "observed_tools": []
+          },
+          "candidate_data_types": [
+            "benchmark_definition",
+            "monthly_return_observation"
+          ],
+          "coverage": [
+            {
+              "data_type": "benchmark_definition",
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            },
+            {
+              "data_type": "monthly_return_observation",
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            }
+          ]
+        },
+        {
+          "lane_id": "real_estate_market_metrics",
+          "mode": "model_gap",
+          "destination": "market_metric_series_contract",
+          "status": "discovery_required",
+          "evidence": {
+            "connector_identity": null,
+            "observed_tools": []
+          },
+          "candidate_data_types": [],
+          "coverage": [
+            {
+              "data_type": null,
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "octus",
+      "display_name": "Octus",
+      "lanes": [
+        {
+          "lane_id": "credit_research",
+          "mode": "live_read",
+          "destination": "cited_live_result",
+          "status": "discovery_required",
+          "evidence": {
+            "connector_identity": null,
+            "observed_tools": []
+          },
+          "candidate_data_types": [],
+          "coverage": [
+            {
+              "data_type": null,
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            }
+          ]
+        },
+        {
+          "lane_id": "credit_intelligence",
+          "mode": "model_gap",
+          "destination": "credit_intelligence_contract",
+          "status": "discovery_required",
+          "evidence": {
+            "connector_identity": null,
+            "observed_tools": []
+          },
+          "candidate_data_types": [],
+          "coverage": [
+            {
+              "data_type": null,
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "9fin",
+      "display_name": "9fin",
+      "lanes": [
+        {
+          "lane_id": "credit_research",
+          "mode": "live_read",
+          "destination": "cited_live_result",
+          "status": "discovery_required",
+          "evidence": {
+            "connector_identity": null,
+            "observed_tools": []
+          },
+          "candidate_data_types": [],
+          "coverage": [
+            {
+              "data_type": null,
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            }
+          ]
+        },
+        {
+          "lane_id": "credit_intelligence",
+          "mode": "model_gap",
+          "destination": "credit_intelligence_contract",
+          "status": "discovery_required",
+          "evidence": {
+            "connector_identity": null,
+            "observed_tools": []
+          },
+          "candidate_data_types": [],
+          "coverage": [
+            {
+              "data_type": null,
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "msci",
+      "display_name": "MSCI",
+      "lanes": [
+        {
+          "lane_id": "benchmark_metadata_and_returns",
+          "mode": "existing_persistence",
+          "destination": "portfolio_import",
+          "status": "discovery_required",
+          "evidence": {
+            "connector_identity": null,
+            "observed_tools": []
+          },
+          "candidate_data_types": [
+            "benchmark_definition",
+            "monthly_return_observation",
+            "benchmark_assignment"
+          ],
+          "coverage": [
+            {
+              "data_type": "benchmark_definition",
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            },
+            {
+              "data_type": "monthly_return_observation",
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            },
+            {
+              "data_type": "benchmark_assignment",
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            }
+          ]
+        },
+        {
+          "lane_id": "benchmark_research",
+          "mode": "live_read",
+          "destination": "cited_live_result",
+          "status": "discovery_required",
+          "evidence": {
+            "connector_identity": null,
+            "observed_tools": []
+          },
+          "candidate_data_types": [],
+          "coverage": [
+            {
+              "data_type": null,
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "preqin",
+      "display_name": "Preqin",
+      "lanes": [
+        {
+          "lane_id": "manager_fund_research",
+          "mode": "live_read",
+          "destination": "cited_live_result",
+          "status": "discovery_required",
+          "evidence": {
+            "connector_identity": null,
+            "observed_tools": []
+          },
+          "candidate_data_types": [],
+          "coverage": [
+            {
+              "data_type": null,
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            }
+          ]
+        },
+        {
+          "lane_id": "manager_fund_events",
+          "mode": "existing_persistence",
+          "destination": "firm_fund_event",
+          "status": "discovery_required",
+          "evidence": {
+            "connector_identity": null,
+            "observed_tools": []
+          },
+          "candidate_data_types": [],
+          "coverage": [
+            {
+              "data_type": null,
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            }
+          ]
+        },
+        {
+          "lane_id": "private_markets_benchmarks",
+          "mode": "existing_persistence",
+          "destination": "portfolio_import",
+          "status": "discovery_required",
+          "evidence": {
+            "connector_identity": null,
+            "observed_tools": []
+          },
+          "candidate_data_types": [
+            "benchmark_definition",
+            "monthly_return_observation"
+          ],
+          "coverage": [
+            {
+              "data_type": "benchmark_definition",
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            },
+            {
+              "data_type": "monthly_return_observation",
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            }
+          ]
+        },
+        {
+          "lane_id": "manager_fund_master_and_peer_statistics",
+          "mode": "model_gap",
+          "destination": "undecided",
+          "status": "discovery_required",
+          "evidence": {
+            "connector_identity": null,
+            "observed_tools": []
+          },
+          "candidate_data_types": [],
+          "coverage": [
+            {
+              "data_type": null,
+              "status": "discovery_required",
+              "source_schema_digest": null,
+              "terms_status": "unreviewed",
+              "dry_run_reference": null,
+              "golden_case_ids": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "rules": [
+    "Candidate lanes are discovery targets, not verified provider capabilities or field mappings.",
+    "Every lane owns its connector, tool, schema, terms, dry-run, and golden evidence; provider-level evidence must not promote sibling lanes.",
+    "Each provider lane advances independently after its own connector access, schema evidence, and terms review.",
+    "A lane is blocked only by its own access, terms, schema, or destination-model gap."
+  ]
+}

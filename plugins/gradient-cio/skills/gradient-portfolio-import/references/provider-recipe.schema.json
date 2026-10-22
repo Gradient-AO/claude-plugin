@@ -1,0 +1,340 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gradientcio.com/contracts/portfolio-import-provider-recipe/v1",
+  "title": "GradientCIO portfolio-import provider recipe",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "provider",
+    "provider_terms_reviewed",
+    "persistence_mode",
+    "review",
+    "gradient_approval",
+    "source",
+    "mapping",
+    "supported_data_types",
+    "supported_asset_classes",
+    "limits",
+    "goldens",
+    "notes"
+  ],
+  "properties": {
+    "contract": {
+      "const": "gradient-portfolio-import-provider-recipe/v1"
+    },
+    "fixture_kind": {
+      "const": "synthetic"
+    },
+    "contains_client_data": {
+      "const": false
+    },
+    "runtime_eligible": {
+      "const": false
+    },
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "display_name", "connector"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]*$"
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "connector": {
+          "type": ["string", "null"],
+          "minLength": 1
+        }
+      }
+    },
+    "provider_terms_reviewed": {
+      "type": "boolean"
+    },
+    "persistence_mode": {
+      "enum": ["persistent_import", "live_read", "both", null]
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "schema_identity", "live_dry_run", "coverage"],
+      "properties": {
+        "status": {
+          "enum": ["unreviewed", "reviewed"]
+        },
+        "schema_identity": {
+          "type": ["string", "null"]
+        },
+        "live_dry_run": {
+          "type": ["object", "null"]
+        },
+        "coverage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/coverage"
+          }
+        }
+      }
+    },
+    "gradient_approval": {
+      "$ref": "#/$defs/approval"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "read_operation",
+        "source_schema_digest",
+        "write_operations",
+        "pagination"
+      ],
+      "properties": {
+        "read_operation": {
+          "type": ["string", "null"]
+        },
+        "source_schema_digest": {
+          "type": ["string", "null"],
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "write_operations": {
+          "type": "array",
+          "maxItems": 0
+        },
+        "pagination": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "request_cursor_field",
+            "response_cursor_field",
+            "completion_condition"
+          ],
+          "properties": {
+            "request_cursor_field": {
+              "type": ["string", "null"]
+            },
+            "response_cursor_field": {
+              "type": ["string", "null"]
+            },
+            "completion_condition": {
+              "type": ["string", "null"]
+            }
+          }
+        }
+      }
+    },
+    "mapping": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/mapping"
+      }
+    },
+    "supported_data_types": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "supported_asset_classes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "private_equity",
+          "real_estate",
+          "infrastructure",
+          "private_debt"
+        ]
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_source_page_size", "max_stage_batch_size"],
+      "properties": {
+        "max_source_page_size": {
+          "type": ["integer", "null"],
+          "minimum": 1
+        },
+        "max_stage_batch_size": {
+          "type": ["integer", "null"],
+          "minimum": 1
+        }
+      }
+    },
+    "goldens": {
+      "$ref": "#/$defs/goldens"
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "$defs": {
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mapping_profile_id",
+        "mapping_profile_version",
+        "mapping_profile_digest",
+        "gradient_schema_identity",
+        "approval_scope",
+        "approval_status"
+      ],
+      "properties": {
+        "mapping_profile_id": {
+          "type": ["string", "null"]
+        },
+        "mapping_profile_version": {
+          "type": ["integer", "null"],
+          "minimum": 1
+        },
+        "mapping_profile_digest": {
+          "type": ["string", "null"],
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "gradient_schema_identity": {
+          "type": ["string", "null"]
+        },
+        "approval_scope": {
+          "type": ["string", "null"]
+        },
+        "approval_status": {
+          "enum": ["unreviewed", "reviewed"]
+        }
+      }
+    },
+    "goldens": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recorded_fixture_reference",
+        "synthetic_fixture_paths"
+      ],
+      "properties": {
+        "recorded_fixture_reference": {
+          "type": ["string", "null"]
+        },
+        "synthetic_fixture_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lane_id",
+        "data_type",
+        "status",
+        "persistence_mode",
+        "gradient_schema_identity",
+        "source_schema_digest",
+        "provider_terms_reviewed",
+        "read_operation",
+        "live_dry_run",
+        "gradient_approval",
+        "goldens"
+      ],
+      "properties": {
+        "lane_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "data_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": ["unreviewed", "reviewed"]
+        },
+        "persistence_mode": {
+          "enum": ["persistent_import", "live_read", "both", null]
+        },
+        "gradient_schema_identity": {
+          "type": ["string", "null"]
+        },
+        "source_schema_digest": {
+          "type": ["string", "null"],
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "provider_terms_reviewed": {
+          "type": "boolean"
+        },
+        "read_operation": {
+          "type": ["string", "null"]
+        },
+        "live_dry_run": {
+          "type": ["object", "null"]
+        },
+        "gradient_approval": {
+          "$ref": "#/$defs/approval"
+        },
+        "goldens": {
+          "$ref": "#/$defs/goldens"
+        },
+        "drifted_source_schema_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    },
+    "mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data_type",
+        "source_field",
+        "target_field",
+        "copy_mode",
+        "availability",
+        "unit_source",
+        "required",
+        "review_note"
+      ],
+      "properties": {
+        "data_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_field": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_field": {
+          "type": "string",
+          "minLength": 1
+        },
+        "copy_mode": {
+          "const": "verbatim"
+        },
+        "availability": {
+          "enum": ["available", "ambiguous", "unsupported", "unavailable"]
+        },
+        "unit_source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "review_note": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

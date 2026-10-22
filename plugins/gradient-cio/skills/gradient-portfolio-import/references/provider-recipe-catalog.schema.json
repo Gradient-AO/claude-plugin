@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gradientcio.com/contracts/provider-recipe-catalog/v1",
+  "title": "GradientCIO provider recipe catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "providers", "notes"],
+  "properties": {
+    "contract": {
+      "const": "gradient-portfolio-import-provider-catalog/v1"
+    },
+    "providers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "display_name",
+          "recipe_file",
+          "catalog_status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]*$"
+          },
+          "display_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "recipe_file": {
+            "type": "string",
+            "pattern": "^providers/[a-z0-9][a-z0-9_-]*\\.recipe\\.json$"
+          },
+          "catalog_status": {
+            "enum": ["listed_unreviewed", "listed_reviewed", "retired"]
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

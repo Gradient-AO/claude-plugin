@@ -1,0 +1,73 @@
+{
+  "contains_client_data": false,
+  "data_type": "commitment_master",
+  "fixture_kind": "synthetic",
+  "pagination": {
+    "complete": true,
+    "next_cursor": null,
+    "page_count": 1
+  },
+  "provider": "Example Provider (TEST)",
+  "records": [
+    {
+      "destination": {
+        "commitment_ref": {
+          "source_commitment_id": "example-fund-test",
+          "source_commitment_name": "Example Growth Fund (TEST)"
+        },
+        "import_intent": "map_existing"
+      },
+      "external_record_id": "commitment-example-fund-test",
+      "fields": {
+        "commitment_amount": {
+          "kind": "numeric",
+          "unit": "currency_units",
+          "value": "10000000"
+        },
+        "commitment_currency": {
+          "kind": "text",
+          "value": "USD"
+        },
+        "commitment_date": {
+          "kind": "date",
+          "value": "2024-01-15"
+        },
+        "commitment_name": {
+          "kind": "text",
+          "value": "Example Growth Fund (TEST)"
+        }
+      },
+      "provenance": {
+        "connector_tool_name": "example_provider_test.list_commitments",
+        "provider_declared": "Example Provider (TEST)",
+        "retrieved_at": "2026-10-21T12:00:00Z",
+        "source_schema_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "provider_schema": "gradient.import.commitment_master.v1",
+      "reported": [
+        {
+          "gradient_calculation_treatment": "evidence_only_no_overwrite",
+          "metric_name": "net_irr",
+          "reported_basis": "Example Provider (TEST) inception net IRR",
+          "reported_provenance": "source_reported",
+          "value": {
+            "kind": "numeric",
+            "unit": "decimal",
+            "value": "0.184"
+          }
+        },
+        {
+          "gradient_calculation_treatment": "evidence_only_no_overwrite",
+          "metric_name": "tvpi",
+          "reported_basis": "Example Provider (TEST) inception TVPI",
+          "reported_provenance": "source_reported",
+          "value": {
+            "kind": "numeric",
+            "unit": "decimal",
+            "value": "1.42"
+          }
+        }
+      ]
+    }
+  ]
+}

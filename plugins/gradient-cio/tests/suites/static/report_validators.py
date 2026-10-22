@@ -213,6 +213,11 @@ def portfolio_import_governed_contract_checks():
             skill_root / "references" / "provider-recipe-catalog.json"
         ).read_text(encoding="utf-8")
     )
+    readiness_catalog = json.loads(
+        (
+            skill_root / "references" / "provider-readiness-catalog.json"
+        ).read_text(encoding="utf-8")
+    )
     chronograph_recipe = json.loads(
         (
             skill_root
@@ -317,9 +322,11 @@ def portfolio_import_governed_contract_checks():
         and "`references/phase-3-governance.md`" in skill
         and "`references/phase-4-governance.md`" in skill
         and "`references/phase-5-governance.md`" in skill
-        and "`references/providers/chronograph.recipe.json`" in skill
+        and "`references/provider-readiness-catalog.json`" in skill
+        and "No provider recipe is currently cataloged" in skill
         and "Recipe absence alone is not a blocker" in skill
         and "provider recipe is optional" in skill.lower()
+        and "Stage only mappings marked `available`" in skill
         and 'treatment says "commit_enabled"' in skill
         and "Preview only — backend publication is not enabled" in skill
         and '`approval_surface` to `gradient_ui`' in skill
@@ -441,26 +448,24 @@ def portfolio_import_governed_contract_checks():
     check(
         catalog.get("contract")
         == "gradient-portfolio-import-provider-catalog/v1"
-        and catalog.get("providers")
-        == [
-            {
-                "id": "chronograph",
-                "display_name": "Chronograph",
-                "recipe_file": "providers/chronograph.recipe.json",
-                "catalog_status": "listed_unreviewed",
-            }
-        ]
+        and catalog.get("providers") == []
         and chronograph_recipe.get("contract")
         == "gradient-portfolio-import-provider-recipe/v1"
         and chronograph_recipe.get("provider", {}).get("id") == "chronograph"
         and chronograph_recipe.get("provider", {}).get("display_name")
         == "Chronograph"
+        and chronograph_recipe.get("provider", {}).get("connector") is None
+        and chronograph_recipe.get("provider_terms_reviewed") is False
+        and chronograph_recipe.get("persistence_mode") is None
         and chronograph_recipe.get("review", {}).get("status") == "unreviewed"
         and chronograph_recipe.get("review", {}).get("schema_identity") is None
         and chronograph_recipe.get("review", {}).get("live_dry_run") is None
+        and chronograph_recipe.get("review", {}).get("coverage") == []
         and chronograph_recipe.get("gradient_approval")
         == unreviewed_approval
         and chronograph_recipe.get("source", {}).get("read_operation") is None
+        and chronograph_recipe.get("source", {}).get("source_schema_digest")
+        is None
         and chronograph_recipe.get("source", {}).get("write_operations") == []
         and set(
             chronograph_recipe.get("source", {}).get("pagination", {}).values()
@@ -470,17 +475,32 @@ def portfolio_import_governed_contract_checks():
         and chronograph_recipe.get("supported_data_types") == []
         and chronograph_recipe.get("supported_asset_classes") == []
         and set(chronograph_recipe.get("limits", {}).values()) == {None}
+        and chronograph_recipe.get("goldens")
+        == {
+            "recorded_fixture_reference": None,
+            "synthetic_fixture_paths": [],
+        }
         and recipe_template.get("contract")
         == "gradient-portfolio-import-provider-recipe/v1"
+        and recipe_template.get("provider_terms_reviewed") is False
+        and recipe_template.get("persistence_mode") is None
         and recipe_template.get("review", {}).get("status") == "unreviewed"
         and recipe_template.get("review", {}).get("live_dry_run") is None
+        and recipe_template.get("review", {}).get("coverage") == []
+        and recipe_template.get("provider", {}).get("connector") is None
         and recipe_template.get("gradient_approval") == unreviewed_approval
+        and recipe_template.get("source", {}).get("read_operation") is None
+        and set(
+            recipe_template.get("source", {}).get("pagination", {}).values()
+        )
+        == {None}
         and recipe_template.get("source", {}).get("write_operations") == []
-        and recipe_template.get("mapping", [{}])[0].get("data_type")
-        == "Replace with the runtime portfolio-import data type"
-        and recipe_template.get("mapping", [{}])[0].get("copy_mode")
-        == "verbatim"
+        and recipe_template.get("mapping") == []
         and recipe_template.get("supported_data_types") == []
+        and recipe_template.get("goldens", {}).get("recorded_fixture_reference")
+        is None
+        and recipe_template.get("goldens", {}).get("synthetic_fixture_paths")
+        == []
         and "no reviewed Chronograph field or tool mapping"
         in normalized_recipe_contract
         and "live connector dry run" in normalized_recipe_contract
@@ -488,6 +508,11 @@ def portfolio_import_governed_contract_checks():
         in normalized_recipe_contract
         and "Never fabricate or derive approval identifiers or digests"
         in normalized_recipe_contract
+        and "`provider_terms_reviewed: false`" in normalized_recipe_contract
+        and "`persistence_mode`" in normalized_recipe_contract
+        and "`review.coverage`" in normalized_recipe_contract
+        and "`source.source_schema_digest`" in normalized_recipe_contract
+        and "`goldens.synthetic_fixture_paths`" in normalized_recipe_contract
         and "Commit eligibility comes only from the runtime"
         in normalized_recipe_contract
         and "monthly_return_observation" in normalized_recipe_contract
@@ -507,6 +532,86 @@ def portfolio_import_governed_contract_checks():
         and "sixteen public import data types" in " ".join(catalog["notes"])
         and "scheduled auto-commit" in " ".join(recipe_template["notes"]),
         "provider recipes remain optional, reviewed, and drift-sensitive",
+    )
+    readiness_providers = readiness_catalog.get("providers", [])
+    portfolio_import_candidate_types = {
+        "private_market_holding_snapshot",
+        "commitment_master",
+        "valuation_snapshot",
+        "cash_flow_event_ledger",
+        "monthly_return_observation",
+        "benchmark_definition",
+        "benchmark_assignment",
+        "portfolio_master",
+        "allocation_node",
+        "policy_configuration",
+        "public_security_position_snapshot",
+        "fixed_income_analytics_snapshot",
+        "liquidity_terms",
+        "classification_exposure_assignment",
+        "pacing_plan_entry",
+        "source_document_evidence",
+    }
+    check(
+        readiness_catalog.get("contract")
+        == "gradient-provider-readiness-catalog/v1"
+        and {
+            provider.get("id")
+            for provider in readiness_providers
+        }
+        == {
+            "chronograph",
+            "pitchbook",
+            "green_street",
+            "octus",
+            "9fin",
+            "msci",
+            "preqin",
+        }
+        and len(readiness_providers) == 7
+        and all(
+            provider.get("lanes")
+            and all(
+                lane.get("status") == "discovery_required"
+                and lane.get("mode")
+                in {"live_read", "existing_persistence", "model_gap"}
+                and isinstance(lane.get("candidate_data_types"), list)
+                and lane.get("evidence")
+                == {
+                    "connector_identity": None,
+                    "observed_tools": [],
+                }
+                and isinstance(lane.get("coverage"), list)
+                and len(lane["coverage"]) >= 1
+                and {
+                    row.get("data_type")
+                    for row in lane["coverage"]
+                    if row.get("data_type") is not None
+                }
+                == set(lane["candidate_data_types"])
+                and all(
+                    row.get("status") == "discovery_required"
+                    and row.get("source_schema_digest") is None
+                    and row.get("terms_status") == "unreviewed"
+                    and row.get("dry_run_reference") is None
+                    and row.get("golden_case_ids") == []
+                    for row in lane["coverage"]
+                )
+                and (
+                    lane.get("destination") != "portfolio_import"
+                    or set(lane["candidate_data_types"])
+                    <= portfolio_import_candidate_types
+                )
+                for lane in provider["lanes"]
+            )
+            for provider in readiness_providers
+        )
+        and all(
+            "mapping" not in provider
+            and all("mapping" not in lane for lane in provider["lanes"])
+            for provider in readiness_providers
+        ),
+        "provider readiness names all discovery targets without fabricating evidence",
     )
     check(
         fixture.get("delivery") == "chat_only"
@@ -665,7 +770,7 @@ def portfolio_import_governed_contract_checks():
         and fixture.get("provider_recipe", {}).get("selected_provider_id")
         == "chronograph"
         and fixture.get("provider_recipe", {}).get("catalog_status")
-        == "listed_unreviewed"
+        == "not_cataloged"
         and fixture.get("provider_recipe", {}).get("effective_review_status")
         == "unreviewed"
         and fixture.get("provider_recipe", {}).get("recipe_optional") is True

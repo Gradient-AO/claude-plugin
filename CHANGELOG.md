@@ -1,5 +1,14 @@
 # Changelog
 
+## 6.7.0
+- Added an explicit readiness catalog for Chronograph, PitchBook, Green Street, Octus, 9fin, MSCI, and Preqin, keeping every unobserved connector and lane access-unverified.
+- Added independent per-provider-lane lifecycle evidence, persistence-mode and terms gates, synthetic golden references, and fail-closed schema-drift handling.
+- Added deterministic synthetic provider-recipe goldens for commitments, cash flows, and valuations with runtime-schema, pagination, and fixture-safety checks.
+- Added machine-readable readiness/recipe schemas, atomic provider-lane-data-type evidence, and lifecycle/path/identity validation.
+- Added a fictional connector emulator plus a mapping-free onboarding skeleton generator for pre-connector acceptance testing.
+- Preserved provider-neutral fallback discovery and Gradient review; candidate lanes never act as mappings or connector authorization.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.6.1
 - Made skill validator and memo-composer entrypoints load their bundled script dependencies in both repository and standalone-install execution, with a packaging guard that rejects plugin-root tool imports.
 - Synchronized the internal GIPS report style with the shared renderer contract, replaced the stale generic writing guide with an explicit GIPS-only contract, and removed the unused GIPS chart-data copy.

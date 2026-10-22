@@ -3,12 +3,15 @@
   "provider": {
     "id": "replace-with-provider-id",
     "display_name": "Replace with provider name",
-    "connector": "Replace with client-authorized connector name"
+    "connector": null
   },
+  "provider_terms_reviewed": false,
+  "persistence_mode": null,
   "review": {
     "status": "unreviewed",
     "schema_identity": null,
-    "live_dry_run": null
+    "live_dry_run": null,
+    "coverage": []
   },
   "gradient_approval": {
     "mapping_profile_id": null,
@@ -19,30 +22,25 @@
     "approval_status": "unreviewed"
   },
   "source": {
-    "read_operation": "Replace after connector discovery",
+    "read_operation": null,
+    "source_schema_digest": null,
     "write_operations": [],
     "pagination": {
-      "request_cursor_field": "Replace after connector discovery",
-      "response_cursor_field": "Replace after connector discovery",
-      "completion_condition": "Replace with the connector's explicit completion signal"
+      "request_cursor_field": null,
+      "response_cursor_field": null,
+      "completion_condition": null
     }
   },
-  "mapping": [
-    {
-      "data_type": "Replace with the runtime portfolio-import data type",
-      "source_field": "Replace after live connector discovery",
-      "target_field": "Replace from get_portfolio_import_schema",
-      "copy_mode": "verbatim",
-      "unit_source": "Replace with source unit field or declaration",
-      "required": true,
-      "review_note": "Unreviewed until a live connector dry run passes"
-    }
-  ],
+  "mapping": [],
   "supported_data_types": [],
   "supported_asset_classes": [],
   "limits": {
     "max_source_page_size": null,
     "max_stage_batch_size": null
+  },
+  "goldens": {
+    "recorded_fixture_reference": null,
+    "synthetic_fixture_paths": []
   },
   "notes": [
     "Template only; contains no reviewed provider field or tool mappings.",

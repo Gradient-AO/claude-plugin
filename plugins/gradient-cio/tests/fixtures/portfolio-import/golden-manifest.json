@@ -1,0 +1,47 @@
+{
+  "cases": [
+    {
+      "data_type": "commitment_master",
+      "digests": {
+        "recipe_sha256": "4aca010d3a7ac103b5ee26033c3b5deb7fee4d8d48d643f18138796c869a33b2",
+        "schema_sha256": "69d6beea942e94f509f9936a7c7044c7049aae838e8f003c9c00152395038f4a",
+        "source_sha256": "bfe902544d70a8319d7b68ca4ed5f7c394c29b02e14b9fdca6f2804754d2db1e",
+        "staged_sha256": "372520bcb8002ebd66b7247c670474312724b3e06c389ebf32eb63196b4f994b"
+      },
+      "recipe_file": "example-provider-test.recipe.json",
+      "schema_file": "runtime-schemas/commitment-master.json",
+      "source_file": "source/commitment-master.json",
+      "staged_file": "staged/commitment-master.json"
+    },
+    {
+      "data_type": "cash_flow_event_ledger",
+      "digests": {
+        "recipe_sha256": "4aca010d3a7ac103b5ee26033c3b5deb7fee4d8d48d643f18138796c869a33b2",
+        "schema_sha256": "99ce66b8303fc49232a932bde8ae96f974f25d60f36c6569d026027f9c159c2f",
+        "source_sha256": "dffb97c856ab876a018df5be703644fc79c5dbd27d2632842d87987147169eea",
+        "staged_sha256": "ef5f2d14156e4351d4b39429cc1dd22ace6ee354a584c6ba47e45cb365327ac4"
+      },
+      "recipe_file": "example-provider-test.recipe.json",
+      "schema_file": "runtime-schemas/cash-flow-event-ledger.json",
+      "source_file": "source/cash-flow-event-ledger.json",
+      "staged_file": "staged/cash-flow-event-ledger.json"
+    },
+    {
+      "data_type": "valuation_snapshot",
+      "digests": {
+        "recipe_sha256": "4aca010d3a7ac103b5ee26033c3b5deb7fee4d8d48d643f18138796c869a33b2",
+        "schema_sha256": "15f5810c3e9c5a3f5b62cf91a7a1dd01c2789f93b456ffae1947b02129450af1",
+        "source_sha256": "4b167835b964b012b0502b8b8321150f098d9a419d39b00c134aa9bafccdad9c",
+        "staged_sha256": "e43a39fbc53771f34a5455915c645d12b6f96146e874288d2273065f2d780057"
+      },
+      "recipe_file": "example-provider-test.recipe.json",
+      "schema_file": "runtime-schemas/valuation-snapshot.json",
+      "source_file": "source/valuation-snapshot.json",
+      "staged_file": "staged/valuation-snapshot.json"
+    }
+  ],
+  "contains_client_data": false,
+  "contract": "gradient-portfolio-import-golden-manifest/v1",
+  "fixture_kind": "synthetic",
+  "provider": "Example Provider (TEST)"
+}

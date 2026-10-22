@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gradientcio.com/contracts/provider-readiness-catalog/v1",
+  "title": "GradientCIO provider readiness catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "providers", "rules"],
+  "properties": {
+    "contract": {
+      "const": "gradient-provider-readiness-catalog/v1"
+    },
+    "providers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "display_name", "lanes"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]*$"
+          },
+          "display_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lanes": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/lane"
+            }
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "$defs": {
+    "lane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lane_id",
+        "mode",
+        "destination",
+        "status",
+        "evidence",
+        "candidate_data_types",
+        "coverage"
+      ],
+      "properties": {
+        "lane_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_:-]*$"
+        },
+        "mode": {
+          "enum": ["live_read", "existing_persistence", "model_gap"]
+        },
+        "destination": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": ["discovery_required", "reviewed", "blocked"]
+        },
+        "evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["connector_identity", "observed_tools"],
+          "properties": {
+            "connector_identity": {
+              "type": ["string", "null"],
+              "minLength": 1
+            },
+            "observed_tools": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "candidate_data_types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "coverage": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/coverage"
+          }
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data_type",
+        "status",
+        "source_schema_digest",
+        "terms_status",
+        "dry_run_reference",
+        "golden_case_ids"
+      ],
+      "properties": {
+        "data_type": {
+          "type": ["string", "null"],
+          "minLength": 1
+        },
+        "status": {
+          "enum": ["discovery_required", "reviewed", "blocked"]
+        },
+        "source_schema_digest": {
+          "type": ["string", "null"],
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "terms_status": {
+          "enum": ["unreviewed", "reviewed", "blocked"]
+        },
+        "dry_run_reference": {
+          "type": ["string", "null"],
+          "minLength": 1
+        },
+        "golden_case_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

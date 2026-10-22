@@ -1,0 +1,383 @@
+{
+  "artifact_version": 1,
+  "data_type": "commitment_master",
+  "json_schema": {
+    "$defs": {
+      "__schema0": {
+        "const": "gradient.import.commitment_master.v1",
+        "type": "string"
+      },
+      "__schema1": {
+        "maxLength": 512,
+        "minLength": 1,
+        "type": "string"
+      },
+      "__schema10": {
+        "$ref": "#/$defs/__schema7"
+      },
+      "__schema11": {
+        "$ref": "#/$defs/__schema7"
+      },
+      "__schema12": {
+        "$ref": "#/$defs/__schema7"
+      },
+      "__schema13": {
+        "$ref": "#/$defs/__schema7"
+      },
+      "__schema14": {
+        "$ref": "#/$defs/__schema7"
+      },
+      "__schema15": {
+        "$ref": "#/$defs/__schema7"
+      },
+      "__schema16": {
+        "$ref": "#/$defs/__schema7"
+      },
+      "__schema17": {
+        "additionalProperties": {
+          "oneOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "kind": {
+                  "const": "text",
+                  "type": "string"
+                },
+                "value": {
+                  "maxLength": 10000,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "kind",
+                "value"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/$defs/__schema18"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "kind": {
+                  "const": "boolean",
+                  "type": "string"
+                },
+                "value": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "kind",
+                "value"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "kind": {
+                  "const": "date",
+                  "type": "string"
+                },
+                "value": {
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "kind",
+                "value"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "kind": {
+                  "const": "json_object",
+                  "type": "string"
+                },
+                "schema_version": {
+                  "const": 1,
+                  "type": "number"
+                },
+                "value": {
+                  "additionalProperties": {},
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "kind",
+                "value",
+                "schema_version"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "propertyNames": {
+          "maxLength": 100,
+          "minLength": 1,
+          "type": "string"
+        },
+        "type": "object"
+      },
+      "__schema18": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "numeric",
+            "type": "string"
+          },
+          "unit": {
+            "enum": [
+              "currency_units",
+              "decimal",
+              "basis_points",
+              "integer",
+              "months",
+              "days",
+              "years",
+              "bytes"
+            ],
+            "type": "string"
+          },
+          "value": {
+            "minLength": 1,
+            "pattern": "^[+-]?(?:\\d+(?:\\.\\d+)?|\\.\\d+)$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "value",
+          "unit"
+        ],
+        "type": "object"
+      },
+      "__schema19": {
+        "items": {
+          "$ref": "#/$defs/__schema20"
+        },
+        "maxItems": 100,
+        "type": "array"
+      },
+      "__schema2": {
+        "additionalProperties": false,
+        "properties": {
+          "citation": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "type": "string"
+          },
+          "connector_tool_name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "provider_declared": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "retrieved_at": {
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "type": "string"
+          },
+          "source_schema_digest": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider_declared",
+          "connector_tool_name",
+          "retrieved_at"
+        ],
+        "type": "object"
+      },
+      "__schema20": {
+        "additionalProperties": false,
+        "properties": {
+          "gradient_calculation_treatment": {
+            "$ref": "#/$defs/__schema24"
+          },
+          "metric_name": {
+            "$ref": "#/$defs/__schema21"
+          },
+          "reported_basis": {
+            "$ref": "#/$defs/__schema23"
+          },
+          "reported_provenance": {
+            "$ref": "#/$defs/__schema22"
+          },
+          "value": {
+            "$ref": "#/$defs/__schema18"
+          }
+        },
+        "required": [
+          "metric_name",
+          "value",
+          "reported_provenance",
+          "reported_basis",
+          "gradient_calculation_treatment"
+        ],
+        "type": "object"
+      },
+      "__schema21": {
+        "enum": [
+          "irr",
+          "gross_irr",
+          "net_irr",
+          "tvpi",
+          "dpi",
+          "rvpi",
+          "moic",
+          "pme",
+          "direct_alpha",
+          "inception_irr",
+          "inception_multiple",
+          "distributed",
+          "paid_in",
+          "total_contributed_local",
+          "nav",
+          "unfunded",
+          "unfunded_commitment_local",
+          "vintage_year",
+          "investment_period_remaining"
+        ],
+        "type": "string"
+      },
+      "__schema22": {
+        "const": "source_reported",
+        "type": "string"
+      },
+      "__schema23": {
+        "maxLength": 1000,
+        "minLength": 1,
+        "type": "string"
+      },
+      "__schema24": {
+        "const": "evidence_only_no_overwrite",
+        "type": "string"
+      },
+      "__schema3": {
+        "additionalProperties": false,
+        "properties": {
+          "commitment_ref": {
+            "$ref": "#/$defs/__schema5"
+          },
+          "gradient_allocation_id": {
+            "$ref": "#/$defs/__schema11"
+          },
+          "gradient_firm_id": {
+            "$ref": "#/$defs/__schema12"
+          },
+          "gradient_fund_id": {
+            "$ref": "#/$defs/__schema13"
+          },
+          "gradient_portfolio_id": {
+            "$ref": "#/$defs/__schema10"
+          },
+          "implementation_benchmark_id": {
+            "$ref": "#/$defs/__schema15"
+          },
+          "import_intent": {
+            "$ref": "#/$defs/__schema4"
+          },
+          "passive_benchmark_id": {
+            "$ref": "#/$defs/__schema16"
+          },
+          "policy_benchmark_id": {
+            "$ref": "#/$defs/__schema14"
+          }
+        },
+        "required": [
+          "import_intent",
+          "commitment_ref"
+        ],
+        "type": "object"
+      },
+      "__schema4": {
+        "enum": [
+          "map_existing",
+          "create_preview"
+        ],
+        "type": "string"
+      },
+      "__schema5": {
+        "additionalProperties": false,
+        "properties": {
+          "gradient_commitment_id": {
+            "$ref": "#/$defs/__schema6"
+          },
+          "source_commitment_id": {
+            "$ref": "#/$defs/__schema8"
+          },
+          "source_commitment_name": {
+            "$ref": "#/$defs/__schema9"
+          }
+        },
+        "type": "object"
+      },
+      "__schema6": {
+        "$ref": "#/$defs/__schema7"
+      },
+      "__schema7": {
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$",
+        "type": "string"
+      },
+      "__schema8": {
+        "maxLength": 512,
+        "minLength": 1,
+        "type": "string"
+      },
+      "__schema9": {
+        "maxLength": 500,
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "$id": "https://gradientcio.com/schemas/portfolio-import/commitment_master.v1.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "identity": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "reported_metrics": {
+        "$ref": "#/$defs/__schema19"
+      },
+      "schema_id": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "source_record_id": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "source_ref": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "updates": {
+        "$ref": "#/$defs/__schema17"
+      }
+    },
+    "required": [
+      "schema_id",
+      "source_record_id",
+      "source_ref",
+      "identity",
+      "updates"
+    ],
+    "title": "Portfolio import commitment_master record",
+    "type": "object"
+  },
+  "schema_id": "gradient.import.commitment_master.v1"
+}

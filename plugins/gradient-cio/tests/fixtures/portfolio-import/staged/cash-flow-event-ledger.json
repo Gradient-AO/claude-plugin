@@ -1,0 +1,77 @@
+{
+  "contains_client_data": false,
+  "data_type": "cash_flow_event_ledger",
+  "fixture_kind": "synthetic",
+  "provider": "Example Provider (TEST)",
+  "records": [
+    {
+      "amount": {
+        "kind": "numeric",
+        "unit": "currency_units",
+        "value": "-6000000"
+      },
+      "commitment_ref": {
+        "source_commitment_id": "example-fund-test",
+        "source_commitment_name": "Example Growth Fund (TEST)"
+      },
+      "currency": "USD",
+      "event_date": "2024-02-01",
+      "event_type": "capital_call",
+      "schema_id": "gradient.import.cash_flow_event_ledger.v1",
+      "source_record_id": "cash-flow-example-fund-test-call-1",
+      "source_ref": {
+        "connector_tool_name": "example_provider_test.list_cash_flows",
+        "provider_declared": "Example Provider (TEST)",
+        "retrieved_at": "2026-10-21T12:00:00Z",
+        "source_schema_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "source_sign_convention": "positive_is_cash_inflow_to_portfolio"
+    },
+    {
+      "amount": {
+        "kind": "numeric",
+        "unit": "currency_units",
+        "value": "1500000"
+      },
+      "commitment_ref": {
+        "source_commitment_id": "example-fund-test",
+        "source_commitment_name": "Example Growth Fund (TEST)"
+      },
+      "currency": "USD",
+      "event_date": "2025-03-31",
+      "event_type": "distribution_return_of_capital",
+      "schema_id": "gradient.import.cash_flow_event_ledger.v1",
+      "source_record_id": "cash-flow-example-fund-test-distribution-1",
+      "source_ref": {
+        "connector_tool_name": "example_provider_test.list_cash_flows",
+        "provider_declared": "Example Provider (TEST)",
+        "retrieved_at": "2026-10-21T12:00:00Z",
+        "source_schema_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "source_sign_convention": "positive_is_cash_inflow_to_portfolio"
+    },
+    {
+      "amount": {
+        "kind": "numeric",
+        "unit": "currency_units",
+        "value": "2400000"
+      },
+      "commitment_ref": {
+        "source_commitment_id": "example-fund-test",
+        "source_commitment_name": "Example Growth Fund (TEST)"
+      },
+      "currency": "USD",
+      "event_date": "2026-01-31",
+      "event_type": "distribution_gain",
+      "schema_id": "gradient.import.cash_flow_event_ledger.v1",
+      "source_record_id": "cash-flow-example-fund-test-distribution-2",
+      "source_ref": {
+        "connector_tool_name": "example_provider_test.list_cash_flows",
+        "provider_declared": "Example Provider (TEST)",
+        "retrieved_at": "2026-10-21T12:00:00Z",
+        "source_schema_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "source_sign_convention": "positive_is_cash_inflow_to_portfolio"
+    }
+  ]
+}

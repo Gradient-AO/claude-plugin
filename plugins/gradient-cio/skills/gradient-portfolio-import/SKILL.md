@@ -16,9 +16,9 @@ metadata:
 
 # Governed Portfolio Import
 
-Import supported runtime records into one existing Gradient portfolio. Reply in chat. A return-to-Gradient request stages in Claude and returns the server-provided review URL; mapping, preview, approval, and commit remain in Gradient. Otherwise commit only after explicit confirmation of that exact preview. Never write to the source.
+Import supported records into one existing Gradient portfolio. Reply in chat. For Gradient UI review, stage records and return the server review URL; mapping through commit stays in Gradient. Otherwise require explicit confirmation of the exact Claude preview. Never write to the source.
 
-Before starting, read `references/module-scope.md`, `references/phase-2-governance.md`, `references/phase-3-governance.md`, `references/phase-4-governance.md`, `references/phase-5-governance.md`, `references/provider-recipe-catalog.json`, and `references/provider-recipe-contract.md`. Provider recipes are optional reviewed evidence, never authorization or a substitute for runtime schema discovery. Load a recipe only when the selected provider is cataloged.
+Read `references/module-scope.md`, `references/phase-2-governance.md`, `references/phase-3-governance.md`, `references/phase-4-governance.md`, `references/phase-5-governance.md`, `references/provider-readiness-catalog.json`, `references/provider-recipe-catalog.json`, and `references/provider-recipe-contract.md`. The readiness catalog is discovery-only, not capability or mapping evidence. Recipes are optional reviewed evidence; they never replace runtime schema discovery. Load one only for a cataloged provider.
 
 ## Hard boundaries
 
@@ -37,15 +37,15 @@ Before starting, read `references/module-scope.md`, `references/phase-2-governan
 
 1. Call `get_portfolio_import_capabilities`. Continue only when every selected data type is returned, `confirmation_required` is true, and `omission_deletes_records` is false. Retain each selected treatment, especially `availability`, schema identity/version, omission semantics, supported variants, renderer, and destination.
 2. Call `get_portfolio_import_schema` separately for each selected data type and holding family where required. Save the exact schema identity, JSON schema or field definitions, units, create requirements, and limits. Runtime schemas override every recipe.
-3. If a cataloged recipe exists, validate it against `references/provider-recipe-contract.md`. Use it only when `listed_reviewed`, `reviewed`, its read tools are present, dry-run evidence matches the exact current data type and schema identity, and `gradient_approval` contains the exact reviewed Gradient mapping-profile artifact. Otherwise ignore it and perform field-by-field review against the runtime schema.
-4. The catalog currently names only Chronograph at `references/providers/chronograph.recipe.json`; it remains unreviewed. Do not invent fields, tools, pagination, units, limits, or supported types.
+3. If a cataloged recipe exists, validate it against `references/provider-recipe-contract.md`. Use a provider lane only when it is `listed_reviewed` and the exact lane/data-type coverage row is reviewed, its terms and persistence mode permit the requested use, its read tools are present, both schema identities match, and that row contains the exact reviewed Gradient mapping-profile artifact. Stage only mappings marked `available`; retain ambiguous, unsupported, and unavailable fields as coverage findings. Otherwise ignore the recipe and perform field-by-field review against the runtime schema.
+4. No provider recipe is currently cataloged because no connector identity has been observed. Do not invent fields, tools, pagination, units, limits, or supported types.
 
 Stop on absent capability, unsupported data type or asset class, missing unit or required source value, or schema mismatch. Recipe absence alone is not a blocker to preview.
 
 ## 2. Start one session and collect exhaustively
 
 1. Ask the user to select the authorized source provider/account and one existing Gradient portfolio when ambiguous.
-2. Call `start_portfolio_import_session` once per data type with the provider, portfolio, `upsert`, schema identity, and permitted options. For an explicit handoff, set `approval_surface` to `gradient_ui`; otherwise omit it. Copy `mapping_profile` only from a current reviewed `gradient_approval`; omit it for unreviewed Chronograph.
+2. Call `start_portfolio_import_session` once per data type with the provider, portfolio, `upsert`, schema identity, and permitted options. For an explicit handoff, set `approval_surface` to `gradient_ui`; otherwise omit it. Copy `mapping_profile` only from the exact current reviewed coverage row.
 3. Read the authorized source without writes through explicit pagination completion. Preserve source record IDs, page lineage, raw values, declared units, currencies, and timestamps.
 4. Stage holdings with `stage_private_market_holding_records`; stage `commitment_master`, `valuation_snapshot`, `cash_flow_event_ledger`, `monthly_return_observation`, `benchmark_definition`, `benchmark_assignment`, `portfolio_master`, `allocation_node`, `policy_configuration`, `public_security_position_snapshot`, `fixed_income_analytics_snapshot`, `liquidity_terms`, `classification_exposure_assignment`, `pacing_plan_entry`, and `source_document_evidence` with `stage_portfolio_import_records`. Use the lower of the runtime batch limit and 100 records. Never combine providers, types, or sessions.
 5. Retain every accepted and rejected record. Never silently retry a rejection with changed data.
@@ -139,10 +139,9 @@ the source was not modified and no record was deleted by omission.
 
 ## 6. Optional history and rollback
 
-For history, call `list_portfolio_import_runs` with a bounded limit and follow
-`next_cursor` until complete. Preserve run lineage, status, counts, change
-count, all three digests, committed time, and rollback time. History is
-read-only and never authorizes rollback.
+For history, call `list_portfolio_import_runs` and follow
+`next_cursor` until complete. Preserve lineage, status, counts, three digests,
+and commit/rollback times. History never authorizes rollback.
 
 Call `rollback_portfolio_import_run` only when the user explicitly requests
 rollback of one exact run in the current conversation. First display that

@@ -1,0 +1,287 @@
+{
+  "artifact_version": 1,
+  "data_type": "valuation_snapshot",
+  "json_schema": {
+    "$defs": {
+      "__schema0": {
+        "const": "gradient.import.valuation_snapshot.v1",
+        "type": "string"
+      },
+      "__schema1": {
+        "maxLength": 512,
+        "minLength": 1,
+        "type": "string"
+      },
+      "__schema10": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "$ref": "#/$defs/__schema11"
+          },
+          "unit": {
+            "$ref": "#/$defs/__schema13"
+          },
+          "value": {
+            "$ref": "#/$defs/__schema12"
+          }
+        },
+        "required": [
+          "kind",
+          "value",
+          "unit"
+        ],
+        "type": "object"
+      },
+      "__schema11": {
+        "const": "numeric",
+        "type": "string"
+      },
+      "__schema12": {
+        "minLength": 1,
+        "pattern": "^[+-]?(?:\\d+(?:\\.\\d+)?|\\.\\d+)$",
+        "type": "string"
+      },
+      "__schema13": {
+        "enum": [
+          "currency_units",
+          "decimal",
+          "basis_points",
+          "integer",
+          "months",
+          "days",
+          "years",
+          "bytes"
+        ],
+        "type": "string"
+      },
+      "__schema14": {
+        "const": "source_reported",
+        "type": "string"
+      },
+      "__schema15": {
+        "maxLength": 1000,
+        "minLength": 1,
+        "type": "string"
+      },
+      "__schema16": {
+        "const": "evidence_only_no_overwrite",
+        "type": "string"
+      },
+      "__schema17": {
+        "$ref": "#/$defs/__schema10"
+      },
+      "__schema2": {
+        "additionalProperties": false,
+        "properties": {
+          "citation": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "type": "string"
+          },
+          "connector_tool_name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "provider_declared": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "retrieved_at": {
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "type": "string"
+          },
+          "source_schema_digest": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider_declared",
+          "connector_tool_name",
+          "retrieved_at"
+        ],
+        "type": "object"
+      },
+      "__schema3": {
+        "additionalProperties": false,
+        "properties": {
+          "gradient_commitment_id": {
+            "$ref": "#/$defs/__schema4"
+          },
+          "source_commitment_id": {
+            "$ref": "#/$defs/__schema5"
+          },
+          "source_commitment_name": {
+            "$ref": "#/$defs/__schema6"
+          }
+        },
+        "type": "object"
+      },
+      "__schema4": {
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$",
+        "type": "string"
+      },
+      "__schema5": {
+        "maxLength": 512,
+        "minLength": 1,
+        "type": "string"
+      },
+      "__schema6": {
+        "maxLength": 500,
+        "minLength": 1,
+        "type": "string"
+      },
+      "__schema7": {
+        "format": "date",
+        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+        "type": "string"
+      },
+      "__schema8": {
+        "pattern": "^[A-Z]{3}$",
+        "type": "string"
+      },
+      "__schema9": {
+        "additionalProperties": false,
+        "properties": {
+          "from_currency": {
+            "$ref": "#/$defs/__schema8"
+          },
+          "rate": {
+            "$ref": "#/$defs/__schema10"
+          },
+          "to_currency": {
+            "$ref": "#/$defs/__schema8"
+          }
+        },
+        "required": [
+          "rate",
+          "from_currency",
+          "to_currency"
+        ],
+        "type": "object"
+      }
+    },
+    "$id": "https://gradientcio.com/schemas/portfolio-import/valuation_snapshot.v1.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "additionalProperties": false,
+        "properties": {
+          "as_of_date": {
+            "$ref": "#/$defs/__schema7"
+          },
+          "commitment_ref": {
+            "$ref": "#/$defs/__schema3"
+          },
+          "currency": {
+            "$ref": "#/$defs/__schema8"
+          },
+          "gradient_calculation_treatment": {
+            "$ref": "#/$defs/__schema16"
+          },
+          "nav_value": {
+            "$ref": "#/$defs/__schema17"
+          },
+          "reported_basis": {
+            "$ref": "#/$defs/__schema15"
+          },
+          "reported_provenance": {
+            "$ref": "#/$defs/__schema14"
+          },
+          "schema_id": {
+            "$ref": "#/$defs/__schema0"
+          },
+          "source_fx": {
+            "$ref": "#/$defs/__schema9"
+          },
+          "source_record_id": {
+            "$ref": "#/$defs/__schema1"
+          },
+          "source_ref": {
+            "$ref": "#/$defs/__schema2"
+          },
+          "valuation_basis": {
+            "const": "drawdown_nav",
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema_id",
+          "source_record_id",
+          "source_ref",
+          "commitment_ref",
+          "as_of_date",
+          "currency",
+          "reported_provenance",
+          "reported_basis",
+          "gradient_calculation_treatment",
+          "valuation_basis",
+          "nav_value"
+        ],
+        "type": "object"
+      },
+      {
+        "additionalProperties": false,
+        "properties": {
+          "as_of_date": {
+            "$ref": "#/$defs/__schema7"
+          },
+          "commitment_ref": {
+            "$ref": "#/$defs/__schema3"
+          },
+          "currency": {
+            "$ref": "#/$defs/__schema8"
+          },
+          "gradient_calculation_treatment": {
+            "$ref": "#/$defs/__schema16"
+          },
+          "market_value": {
+            "$ref": "#/$defs/__schema17"
+          },
+          "reported_basis": {
+            "$ref": "#/$defs/__schema15"
+          },
+          "reported_provenance": {
+            "$ref": "#/$defs/__schema14"
+          },
+          "schema_id": {
+            "$ref": "#/$defs/__schema0"
+          },
+          "source_fx": {
+            "$ref": "#/$defs/__schema9"
+          },
+          "source_record_id": {
+            "$ref": "#/$defs/__schema1"
+          },
+          "source_ref": {
+            "$ref": "#/$defs/__schema2"
+          },
+          "valuation_basis": {
+            "const": "marketable_market_value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema_id",
+          "source_record_id",
+          "source_ref",
+          "commitment_ref",
+          "as_of_date",
+          "currency",
+          "reported_provenance",
+          "reported_basis",
+          "gradient_calculation_treatment",
+          "valuation_basis",
+          "market_value"
+        ],
+        "type": "object"
+      }
+    ],
+    "title": "Portfolio import valuation_snapshot record"
+  },
+  "schema_id": "gradient.import.valuation_snapshot.v1"
+}
