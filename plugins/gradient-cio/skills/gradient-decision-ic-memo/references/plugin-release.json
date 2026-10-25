@@ -2,7 +2,7 @@
   "schema": "gradient-cio-plugin-release/v1",
   "marketplace": "gradientcio",
   "plugin": "gradient-cio",
-  "release_version": "6.8.0",
+  "release_version": "6.8.1",
   "update_command": "/plugin marketplace update gradientcio",
   "version_semantics": "SKILL.md metadata.version values are component contract versions, not the plugin release version."
 }

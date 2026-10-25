@@ -257,7 +257,7 @@ def contract_manifest():
     }
     minimum_probe_ids = set(minimum.get("required_probe_ids", []))
     check(
-        contracts.get("version") == "2026-10-24"
+        contracts.get("version") == "2026-10-25"
         and minimum.get("minimum_service_version") == "0.11.0"
         and minimum.get("compatibility_epoch") == 4
         and set(minimum.get("required_tools", [])) == expected_minimum_tools,
