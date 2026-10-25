@@ -1,5 +1,13 @@
 # Changelog
 
+## 6.8.0
+- Added response-semantics v2 handling for field-level basis, uncertainty, lineage, validation, publication rights, attribution and required disclosures across Portfolio Analytics skills.
+- Added explicit CMA currency composition and USD share, cash and return basis, private-market desmoothing comparisons, correlation estimation/confidence/anomaly evidence, regime-correlation application, regional regime reads and endorsed stresses.
+- Added one-call bounded dense correlation matrices and Gradient-computed supplied-weight portfolio return, risk and Euler risk contribution; skills no longer recreate these analytics locally.
+- Added policy-model identity and version dates, canonical sleeve-to-factor mappings and proxy flags, benchmark origin/derivation/validation metadata, and consistent screen total counts.
+- Raised the minimum connector service contract to 0.11.0 and expanded setup probes for the new evidence and analytics paths.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.7.0
 - Added an explicit readiness catalog for Chronograph, PitchBook, Green Street, Octus, 9fin, MSCI, and Preqin, keeping every unobserved connector and lane access-unverified.
 - Added independent per-provider-lane lifecycle evidence, persistence-mode and terms gates, synthetic golden references, and fail-closed schema-drift handling.

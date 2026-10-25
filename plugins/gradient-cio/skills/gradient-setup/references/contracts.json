@@ -1,7 +1,7 @@
 {
-  "version": "2026-10-16",
+  "version": "2026-10-24",
   "minimum_connector_contract": {
-    "minimum_service_version": "0.10.1",
+    "minimum_service_version": "0.11.0",
     "compatibility_epoch": 4,
     "required_tools": [
       "analyze_strategy_lab_compare",
@@ -11,6 +11,7 @@
       "create_diligence_finding",
       "extract_ddq_claims",
       "get_benchmarks",
+      "get_capital_market_assumptions",
       "get_cma_consensus_check",
       "get_diligence_roster_funds",
       "get_firm_13f_portfolio_review",
@@ -88,8 +89,21 @@
       ],
       "get_benchmarks": [
         "benchmarks",
+        "benchmarks[0].evidence.market_data_classification",
+        "benchmarks[0].evidence.stated_assumptions_validation.status",
         "demo_set.demo_set_id",
-        "demo_set.manager_fund_series[0].series_id"
+        "demo_set.manager_fund_series[0].series_id",
+        "total_count"
+      ],
+      "get_capital_market_assumptions": [
+        "view",
+        "release.version",
+        "comparability.horizon_years",
+        "risk_free_rate.freshness_status",
+        "quality_receipt.status",
+        "response_semantics.schema_version",
+        "response_semantics.field_metadata",
+        "response_semantics.disclosures"
       ],
       "get_cma_consensus_check": [
         "mode",
@@ -240,7 +254,13 @@
         "benchmark_relative.next_cursor"
       ],
       "get_portfolio_structure": [
+        "portfolio.model_identity.purpose",
+        "portfolio.model_identity.designed_policy_weights",
+        "portfolio.model_identity.demo_holdings",
         "nodes[0].target_weight",
+        "nodes[0].factor_mapping.status",
+        "nodes[0].factor_mapping.is_proxy",
+        "nodes[0].factor_mapping.gradient_owned_proxy",
         "coverage.status"
       ],
       "get_private_markets_holdings": [
@@ -268,7 +288,8 @@
       ],
       "list_portfolios": [
         "portfolios[0].portfolio_id",
-        "portfolios[0].canonical_default"
+        "portfolios[0].canonical_default",
+        "total_count"
       ],
       "log_diligence_review": [
         "action",
@@ -506,6 +527,10 @@
       "portfolio_risk_contribution",
       "portfolio_commitment_analytics",
       "private_markets_holdings",
+      "regime_state",
+      "cma_baseline",
+      "cma_correlations_full_matrix",
+      "cma_portfolio_analytics",
       "cma_consensus",
       "cma_consensus_allocation",
       "strategy_benchmarks",
@@ -867,7 +892,8 @@
         "portfolios[0].portfolio_id",
         "portfolios[0].record_kind",
         "portfolios[0].base_currency",
-        "portfolios[0].canonical_default"
+        "portfolios[0].canonical_default",
+        "total_count"
       ],
       "equals": {
         "portfolios[0].record_kind": "example",
@@ -1135,7 +1161,14 @@
         "history_limit": 6
       },
       "required": [
-        "status"
+        "status",
+        "state_kind",
+        "current_read_policy",
+        "regions[0].current.probabilities",
+        "regions[0].current.as_of",
+        "regions[0].current.freshness_status",
+        "coverage.requested_region_count",
+        "coverage.available_region_count"
       ]
     },
     {
@@ -1148,10 +1181,86 @@
       },
       "required": [
         "items",
+        "items[0].return_basis_detail",
+        "items[0].currency_composition",
+        "items[0].uncertainty",
+        "release.version",
         "risk_free_rate.freshness_status",
         "quality_receipt.status",
-        "comparability.horizon_years"
+        "comparability.horizon_years",
+        "count",
+        "total_count",
+        "response_semantics.schema_version",
+        "response_semantics.field_metadata",
+        "response_semantics.disclosures"
       ]
+    },
+    {
+      "id": "cma_correlations_full_matrix",
+      "set": "full",
+      "tool": "get_capital_market_assumptions",
+      "args": {
+        "view": "correlations",
+        "factor_ids": [
+          1,
+          2
+        ],
+        "delivery": "full_matrix",
+        "matrix_format": "dense"
+      },
+      "required": [
+        "delivery",
+        "matrix_format",
+        "estimation_metadata",
+        "anomaly_flags",
+        "dense_matrix.factor_ids",
+        "dense_matrix.values",
+        "matrix_validation",
+        "count",
+        "total_count",
+        "coverage.complete",
+        "response_semantics.schema_version"
+      ],
+      "equals": {
+        "delivery": "full_matrix",
+        "matrix_format": "dense",
+        "coverage.complete": true
+      }
+    },
+    {
+      "id": "cma_portfolio_analytics",
+      "set": "full",
+      "tool": "get_capital_market_assumptions",
+      "args": {
+        "view": "portfolio_analytics",
+        "weights": [
+          {
+            "factor_id": 1,
+            "weight": 0.6
+          },
+          {
+            "factor_id": 2,
+            "weight": 0.4
+          }
+        ]
+      },
+      "required": [
+        "weights",
+        "analytics.expected_excess_return",
+        "analytics.expected_total_return",
+        "analytics.volatility",
+        "analytics.risk_contributions",
+        "analytics.reconciliation_error",
+        "calculation.engine",
+        "calculation.formula_version",
+        "calculation.correlation_channel",
+        "response_semantics.schema_version"
+      ],
+      "equals": {
+        "view": "portfolio_analytics",
+        "calculation.engine": "gradient_cma_expected_statistics",
+        "calculation.formula_version": "1.0.0"
+      }
     },
     {
       "id": "cma_consensus",
@@ -1242,8 +1351,15 @@
         "max_depth": 2
       },
       "required": [
+        "portfolio.model_identity.purpose",
+        "portfolio.model_identity.purpose_source",
+        "portfolio.model_identity.designed_policy_weights",
+        "portfolio.model_identity.demo_holdings",
         "nodes[0].target_weight",
         "nodes[0].actual_weight",
+        "nodes[0].factor_mapping.status",
+        "nodes[0].factor_mapping.is_proxy",
+        "nodes[0].factor_mapping.gradient_owned_proxy",
         "coverage.status"
       ]
     },
@@ -1698,9 +1814,12 @@
       },
       "required": [
         "benchmarks",
+        "benchmarks[0].evidence.market_data_classification",
+        "benchmarks[0].evidence.stated_assumptions_validation.status",
         "demo_set.demo_set_id",
         "demo_set.manager_fund_series[0].series_id",
-        "demo_set.benchmark_series[0].series_id"
+        "demo_set.benchmark_series[0].series_id",
+        "total_count"
       ],
       "equals": {
         "demo_set.demo_set_id": "strategy_lab_core"

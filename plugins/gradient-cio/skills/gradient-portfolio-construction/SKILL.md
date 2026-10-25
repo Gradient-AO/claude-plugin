@@ -32,8 +32,9 @@ Select exactly one mode and set `meta.mode` before validation:
 ## Shared rules
 
 - Read `references/module-scope.md`,
-  `references/contracts/portfolio-construction.md`, and every reference named
-  by the selected mode.
+  `references/contracts/portfolio-construction.md`,
+  `references/contracts/mcp-evidence-and-analytics.md`, and every reference
+  named by the selected mode.
 - Resolve the organization, call `get_gradient_capabilities` once and select an existing portfolio.
 - Capture mandate, policy benchmark, horizon, risk budget and user-supplied constraints.
 - Use only server-returned values. Preserve basis, method, units, dates, coverage, truncation and request IDs.
@@ -49,7 +50,7 @@ Select exactly one mode and set `meta.mode` before validation:
 
 ## Collect and assess
 
-Collect the portfolio record, allocation tree, mode-filtered exposure pages, policy result, historical returns, governed attribution and applicable assumptions. Request chart-style evidence through `get_portfolio_exposure.include` only after checking capability availability. Add only the needed include names, preserve each returned chart item, `render_hint`, and chart ID unchanged, and disclose `truncated: true`. Apply additional mode-specific evidence and restrictions from the selected workflow.
+Collect the portfolio record, allocation tree, mode-filtered exposure pages, policy result, historical returns, governed attribution and applicable assumptions. Request chart-style evidence through `get_portfolio_exposure.include` only after checking capability availability. Add only the needed include names, preserve each returned chart item, `render_hint`, and chart ID unchanged, and disclose `truncated: true`. For a proposed mapped factor mix, call `get_capital_market_assumptions` with `view: "portfolio_analytics"` and the supplied weights; use its return, risk, and Euler risk contributions without local recomputation. Request one-call full-matrix correlations when the complete selected-factor relationship is needed. Apply additional mode-specific evidence and restrictions from the selected workflow.
 
 Recommend a target structure only when returned evidence and stated constraints support it. Keep transaction costs, turnover and unsupported classifications unavailable.
 

@@ -32,6 +32,7 @@ Read `references/module-scope.md`, `references/phase-2-governance.md`, `referenc
 - A provider recipe is optional. Never use an unreviewed, retired, or schema-drifted recipe as mapping evidence; fall back to field-by-field runtime discovery without inventing a mapping. That fallback supports preview, not commit, until Gradient returns a reviewed mapping-profile artifact.
 - Use source reads plus the twelve named Gradient import tools. Use destination reads only for selection and verification. No source write tool is permitted.
 - This is Claude MCP connector ingest, not file upload. Never claim a first-party parser or automate the UI. UI approval requires an explicit handoff request and `approval_surface: "gradient_ui"`; otherwise Claude confirmation is mandatory.
+- Destination verification preserves response-semantics v2 evidence and publishing restrictions.
 
 ## 1. Establish the runtime contract
 
@@ -40,7 +41,7 @@ Read `references/module-scope.md`, `references/phase-2-governance.md`, `referenc
 3. If a cataloged recipe exists, validate it against `references/provider-recipe-contract.md`. Use a provider lane only when it is `listed_reviewed` and the exact lane/data-type coverage row is reviewed, its terms and persistence mode permit the requested use, its read tools are present, both schema identities match, and that row contains the exact reviewed Gradient mapping-profile artifact. Stage only mappings marked `available`; retain ambiguous, unsupported, and unavailable fields as coverage findings. Otherwise ignore the recipe and perform field-by-field review against the runtime schema.
 4. No provider recipe is currently cataloged because no connector identity has been observed. Do not invent fields, tools, pagination, units, limits, or supported types.
 
-Stop on absent capability, unsupported data type or asset class, missing unit or required source value, or schema mismatch. Recipe absence alone is not a blocker to preview.
+Stop on unsupported capability, data type/class, missing required input, or schema mismatch. Recipe absence alone is not a blocker to preview.
 
 ## 2. Start one session and collect exhaustively
 

@@ -1,5 +1,19 @@
 # Portfolio construction data maps
 
+## Shared MCP evidence and analytics expansion
+
+For every mode, apply `references/contracts/mcp-evidence-and-analytics.md`.
+Retain response-semantics v2 field metadata and disclosures, list
+`total_count`, portfolio model identity/factor mappings/proxy flags, and
+benchmark origin/validation/licensing. Baseline CMA evidence includes basis,
+currency composition/USD share, uncertainty and private-market desmoothing.
+Request `view: correlations` with `delivery: full_matrix` and `matrix_format:
+dense` when the complete selected-factor matrix is needed; request `view:
+regime` for current regional probabilities, special-correlation application
+and endorsed stresses; and request `view: portfolio_analytics` for every
+proposed mapped factor mix. Never calculate portfolio return, covariance risk,
+risk contribution, or unsupported stress shocks locally.
+
 ## Mode: fixed_income
 
 # Data Map — Fixed Income Portfolio Construction

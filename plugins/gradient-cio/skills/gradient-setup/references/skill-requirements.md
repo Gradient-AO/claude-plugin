@@ -9,7 +9,7 @@ Modules (from `list_organizations.licensed_modules` and `capabilities`): `firmFu
 `macroDesk`, `gradientSignals`, `portfolio`, `strategyLab`, `peerIntelligence`.
 
 Before rating any skill, validate the top-level `minimum_connector_contract` in `contracts.json`. The
-connector must advertise service version 0.10.1 or newer, compatibility epoch 4, every required tool, and a
+connector must advertise service version 0.11.0 or newer, compatibility epoch 4, every required tool, and a
 coherent `capability_access_modes` map. The contract's required probes must remain internally valid. A
 connector-contract failure is **Not ready**: stop before running skills or probes, request a connector update
 or reconnect, and do not substitute local calculations.
@@ -36,6 +36,34 @@ and `effective_capabilities` must equal whether that mode is not `unavailable`. 
 | gradient-idd-private-markets-pme | Private-markets PME PDF | get_benchmarks, get_private_markets_holdings, build_strategy_lab_session, run_strategy_lab_private_markets_pme | — | strategyLab |
 | gradient-menu | In-chat grouped command catalog | none | — | — |
 | gradient-setup | Readiness PDF | list_organizations, get_gradient_capabilities | all probes in contract-checks.md, including sample-portfolio exposure, structure, historical returns, historical and ex ante attribution, policy and opt-in analytical sections; session-bound IDD Strategy Lab tools; dry-run watchlist, monitoring, review, finding, roster, scenario and upload writes; persisted extract_ddq_claims document identity and DDQ save preview | — |
+
+## MCP evidence and analytics expansion
+
+Service version 0.11.0 adds response-semantics v2 field metadata to governed
+responses. Portfolio Analytics skills must preserve each field's basis,
+uncertainty, release/source lineage, validation, public-marketing rights and
+disclosure IDs. Setup verifies the disclosure catalog and field metadata;
+`restricted` values must not be published, `review_required` values require
+review, and `attribution_required` values retain the returned attribution.
+
+`get_capital_market_assumptions` is a required connector tool. The full probe
+set verifies:
+
+- baseline return/currency/cash basis, currency composition and USD share,
+  uncertainty, desmoothing comparisons, refresh and total counts;
+- one-call bounded dense correlations with estimation metadata, confidence,
+  anomaly flags, matrix validation and complete coverage;
+- server-computed supplied-weight return, risk and Euler risk contribution
+  with formula version and reconciliation;
+- model-detected regional regime probabilities, coverage, freshness and as-of
+  dates.
+
+Skills also retain CMA regime blending, persistence, special-correlation
+application and endorsed stresses; portfolio purpose/model version/change
+dates and canonical factor mappings/proxy flags; benchmark origin, derivation,
+validation, currency exposure and license tier; and total counts on screens.
+These fields must remain unavailable when the connector does not return them.
+Never recreate them or substitute local portfolio calculations.
 
 Use `get_gradient_capabilities.scope` for bounded readiness checks and preserve the returned scoped
 `scoped_coverage`. `get_return_series` accepts benchmark, commitment, synthetic, and macro series only. Use
