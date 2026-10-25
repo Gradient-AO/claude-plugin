@@ -48,7 +48,7 @@ def contract_manifest():
         probe.get("set") == "portfolio-import-governed" for probe in probes
     )
     check(
-        counts == {"standard": 8, "full": 59, "writes": 8, "ddq-save-preview": 3},
+        counts == {"standard": 8, "full": 60, "writes": 8, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
     )
     check(

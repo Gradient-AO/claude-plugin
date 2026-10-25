@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.8.2
+- Aligned Gradient CMA guidance with the governed weekly effective correlation matrix and exact matrix date.
+- Added one documented desmoothed portfolio-statistics risk-input set, default dense correlation delivery, and all-regime PSD checks.
+- Expanded setup checks for regime-adjusted matrices, supplied-weight channel reconciliation, consistent six-model identity, field rights, and composition-weighted policy currency exposure.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.8.1
 - Governed weekly equity-credit correlations with daily and monthly sensitivity and auditable proxy construction.
 - Added composition-aware currency translation, dated factor currency weights, dual private-market risk bases, and desmoothed economic risk as the portfolio-statistics default.

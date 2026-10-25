@@ -531,6 +531,7 @@
       "cma_baseline",
       "cma_correlations_full_matrix",
       "cma_portfolio_analytics",
+      "cma_regime_adjusted_matrix",
       "cma_consensus",
       "cma_consensus_allocation",
       "strategy_benchmarks",
@@ -1224,6 +1225,7 @@
         "matrix_format",
         "estimation_metadata",
         "estimation_metadata.governed_frequency",
+        "estimation_metadata.matrix_as_of",
         "equity_credit_sensitivity",
         "currency_translation.factor_currency_exposures",
         "currency_translation.asset_fx_correlations",
@@ -1231,6 +1233,8 @@
         "dense_matrix.factor_ids",
         "dense_matrix.values",
         "matrix_validation",
+        "portfolio_statistics_risk_inputs.basis",
+        "portfolio_statistics_risk_inputs.correlation_matrix",
         "count",
         "total_count",
         "coverage.complete",
@@ -1273,6 +1277,7 @@
         "calculation.engine",
         "calculation.formula_version",
         "calculation.correlation_channel",
+        "calculation.assumption_channel",
         "response_semantics.schema_version"
       ],
       "equals": {
@@ -1280,6 +1285,38 @@
         "calculation.engine": "gradient_cma_expected_statistics",
         "calculation.formula_version": "2.0.0",
         "calculation.risk_basis": "desmoothed_economic"
+      }
+    },
+    {
+      "id": "cma_regime_adjusted_matrix",
+      "set": "full",
+      "tool": "get_capital_market_assumptions",
+      "args": {
+        "view": "regime",
+        "regime_id": "LATE_CYCLE",
+        "slices": [
+          "factor_adjustments",
+          "correlations",
+          "special_correlations"
+        ]
+      },
+      "required": [
+        "calibration_mapping.compatible",
+        "regime_adjusted_contexts[0].regime_id",
+        "regime_adjusted_contexts[0].factor_statistics",
+        "regime_adjusted_contexts[0].correlation_matrix.values",
+        "regime_adjusted_contexts[0].correlation_matrix.validation.positive_semidefinite",
+        "regime_adjusted_contexts[0].correlation_matrix.validation.covariance_positive_semidefinite",
+        "correlation_methodology.matrix_validation_required",
+        "response_semantics.schema_version"
+      ],
+      "equals": {
+        "view": "regime",
+        "calibration_mapping.compatible": true,
+        "regime_adjusted_contexts[0].regime_id": "LATE_CYCLE",
+        "regime_adjusted_contexts[0].correlation_matrix.validation.positive_semidefinite": true,
+        "regime_adjusted_contexts[0].correlation_matrix.validation.covariance_positive_semidefinite": true,
+        "correlation_methodology.matrix_validation_required": true
       }
     },
     {
