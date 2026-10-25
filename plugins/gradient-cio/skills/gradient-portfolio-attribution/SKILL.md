@@ -27,8 +27,12 @@ public mode:
 
 Do not combine public modes in one report. Read
 `references/contracts/portfolio-attribution.md`,
+`references/contracts/mcp-evidence-and-analytics.md`,
 `references/module-scope.md`, and the selected mode contract before
-collection.
+collection. Apply the evidence contract to every Portfolio Analytics response,
+including field-level basis, uncertainty, lineage, validation, publishing
+rights, disclosures, portfolio identity, factor mappings, and benchmark
+origin.
 
 ## Shared rules
 

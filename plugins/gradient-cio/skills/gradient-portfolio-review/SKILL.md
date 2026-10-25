@@ -45,7 +45,10 @@ Portfolio-unlicensed access may use only the illustrative record and makes the
 report Partial. Peer Intelligence is optional and never blocks delivery.
 
 Before tool selection read `references/module-scope.md`; before exact calls
-read `references/data-map.md#calls-arguments-and-the-fields-used`.
+read `references/data-map.md#calls-arguments-and-the-fields-used`. Read
+`references/contracts/mcp-evidence-and-analytics.md` before collecting any
+Portfolio Analytics response and apply its field-level evidence, publication,
+bulk-matrix, server-analytics, identity, and compatibility rules.
 
 ## 2. Collect
 
@@ -56,6 +59,9 @@ optional; comprehensive mode also collects governed attribution, chart-style
 exposure includes, look-through, liquidity, forward assumptions,
 and requested context. For brief Outlook, request the returned 10Y–2Y and
 10Y–3M histories when the macro-conditions series option is available.
+Use `get_capital_market_assumptions` `view: "portfolio_analytics"` for any
+mapped supplied-weight forward portfolio statistics; never weight CMA rows or
+calculate covariance risk or risk contribution locally.
 
 For chart-style evidence, read `references/chart-data.md` just before use:
 request only the needed `get_portfolio_exposure.include` values, preserve every

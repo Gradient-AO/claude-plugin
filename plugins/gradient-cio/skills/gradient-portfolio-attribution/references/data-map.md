@@ -8,8 +8,8 @@ every call and record one source row per response.
 | Evidence | Call | Fields used |
 |---|---|---|
 | Capabilities | `get_gradient_capabilities` summary | Both attribution tools' availability, access mode and readiness reasons; there is no portfolio coverage scope |
-| Portfolio | `list_portfolios` | `portfolio_id`, name, base currency, record kind, canonical default, data scope |
-| Cohort | `get_portfolio_structure`, `view: allocation_tree`, `max_depth: 3`, `node_limit: 100` | Allocation IDs, names, parent IDs, depth, target and actual weights, policy benchmark context, coverage |
+| Portfolio | `list_portfolios` | `portfolio_id`, name, base currency, record kind, canonical default, data scope, and `total_count` |
+| Cohort | `get_portfolio_structure`, `view: allocation_tree`, `max_depth: 3`, `node_limit: 100` | Allocation IDs, names, parent IDs, depth, target and actual weights, policy benchmark context, portfolio purpose/model version/change dates, canonical factor mappings/proxy flags, and coverage |
 | Return context | `get_portfolio_historical_returns`, requested period end and `limit: 100`; request `standard_periods`, `calendar_years` and `benchmark_relative` with `fields: [portfolio, policy_benchmark, filters, coverage, display, standard_periods, calendar_years, benchmark_relative]` first, then separate projected calls for `points` plus `cumulative_growth`, and `rolling` plus `drawdown_series`; every projection retains `portfolio`, `policy_benchmark`, `filters`, `coverage` and `display`; disclose the returned count if the 100-row response is unexpectedly truncated | Returned values, units, period labels, coverage and benchmark identity |
 | Historical attribution | `get_portfolio_attribution`, selected `portfolio_id`, `benchmark_role`, `parent_allocation_id`, month-end start/end, `sections: [summary, segments, periods, diagnostics, active_risk]` | Method, period, basis, currency, coverage, summary, residual, segment and monthly linked effects, diagnostics and active-risk attribution |
 | Cumulative linked effects | Rerun `get_portfolio_attribution` with the same arguments, `sections: [periods]` and `fields: [periods, period, coverage]`. The default response omits the `cumulative_linked_*` fields from `periods[]`; an explicit `fields` projection returns the full period rows | `periods[].cumulative_linked_{allocation,selection,interaction,total}_effect` and `periods[].segments[].cumulative_linked_*_effect` |
@@ -20,7 +20,9 @@ every call and record one source row per response.
 | Macro regime | `get_macro_signals`, `view: gradient_signal`, plus `view: regime_state` when available | Returned regime status and GRIP availability/degradation reasons for the historical period; context only, not a causal attribution |
 
 Use `get_benchmarks` by returned benchmark ID only when a governed response
-does not already provide the display name.
+does not already provide the display name. When called, retain benchmark
+market-data versus simulated/derived origin, derivation, validation, currency
+exposures, license tier, response-semantics v2 field metadata and disclosures.
 
 If return coverage is `partial`, state the coverage gap in the report. Name
 `not_yet_funded` commitments as having no funded return history and identify

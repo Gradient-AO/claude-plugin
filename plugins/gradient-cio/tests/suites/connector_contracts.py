@@ -48,7 +48,7 @@ def contract_manifest():
         probe.get("set") == "portfolio-import-governed" for probe in probes
     )
     check(
-        counts == {"standard": 8, "full": 57, "writes": 8, "ddq-save-preview": 3},
+        counts == {"standard": 8, "full": 59, "writes": 8, "ddq-save-preview": 3},
         f"contract probe sets have expected counts ({counts})",
     )
     check(
@@ -220,6 +220,7 @@ def contract_manifest():
         "create_diligence_finding",
         "extract_ddq_claims",
         "get_benchmarks",
+        "get_capital_market_assumptions",
         "get_cma_consensus_check",
         "get_diligence_roster_funds",
         "get_firm_13f_portfolio_review",
@@ -256,8 +257,8 @@ def contract_manifest():
     }
     minimum_probe_ids = set(minimum.get("required_probe_ids", []))
     check(
-        contracts.get("version") == "2026-10-16"
-        and minimum.get("minimum_service_version") == "0.10.1"
+        contracts.get("version") == "2026-10-24"
+        and minimum.get("minimum_service_version") == "0.11.0"
         and minimum.get("compatibility_epoch") == 4
         and set(minimum.get("required_tools", [])) == expected_minimum_tools,
         "minimum connector contract pins document version, service, epoch, and required tools",
@@ -273,6 +274,10 @@ def contract_manifest():
             "portfolio_risk_contribution",
             "portfolio_commitment_analytics",
             "private_markets_holdings",
+            "regime_state",
+            "cma_baseline",
+            "cma_correlations_full_matrix",
+            "cma_portfolio_analytics",
             "entity_facts",
             "fund_diligence_monitoring",
             "fund_diligence_review",
