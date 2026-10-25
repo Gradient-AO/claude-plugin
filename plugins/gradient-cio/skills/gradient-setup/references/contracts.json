@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-24",
+  "version": "2026-10-25",
   "minimum_connector_contract": {
     "minimum_service_version": "0.11.0",
     "compatibility_epoch": 4,
@@ -942,12 +942,22 @@
         "include": [
           "factor_currency_exposure"
         ],
+        "include_context": {
+          "basis": "policy_targets"
+        },
         "limit": 1
       },
       "required": [
         "portfolio.portfolio_id",
-        "factor_currency_exposure"
-      ]
+        "factor_currency_exposure",
+        "factor_currency_exposure.basis",
+        "factor_currency_exposure.metrics.target_weight_sum.value",
+        "factor_currency_exposure.metrics.fixed_income_target_weight.value"
+      ],
+      "equals": {
+        "factor_currency_exposure.basis": "policy_targets",
+        "factor_currency_exposure.metrics.target_weight_sum.value": 1
+      }
     },
     {
       "id": "portfolio_risk_contribution",
@@ -1203,7 +1213,8 @@
         "view": "correlations",
         "factor_ids": [
           1,
-          2
+          7,
+          11
         ],
         "delivery": "full_matrix",
         "matrix_format": "dense"
@@ -1212,6 +1223,10 @@
         "delivery",
         "matrix_format",
         "estimation_metadata",
+        "estimation_metadata.governed_frequency",
+        "equity_credit_sensitivity",
+        "currency_translation.factor_currency_exposures",
+        "currency_translation.asset_fx_correlations",
         "anomaly_flags",
         "dense_matrix.factor_ids",
         "dense_matrix.values",
@@ -1224,6 +1239,7 @@
       "equals": {
         "delivery": "full_matrix",
         "matrix_format": "dense",
+        "estimation_metadata.governed_frequency": "weekly",
         "coverage.complete": true
       }
     },
@@ -1239,16 +1255,19 @@
             "weight": 0.6
           },
           {
-            "factor_id": 2,
+            "factor_id": 7,
             "weight": 0.4
           }
-        ]
+        ],
+        "risk_basis": "desmoothed_economic"
       },
       "required": [
         "weights",
         "analytics.expected_excess_return",
         "analytics.expected_total_return",
         "analytics.volatility",
+        "analytics.risk_basis",
+        "analytics.risk_contributions[0].marginal_contribution_to_risk",
         "analytics.risk_contributions",
         "analytics.reconciliation_error",
         "calculation.engine",
@@ -1259,7 +1278,8 @@
       "equals": {
         "view": "portfolio_analytics",
         "calculation.engine": "gradient_cma_expected_statistics",
-        "calculation.formula_version": "1.0.0"
+        "calculation.formula_version": "2.0.0",
+        "calculation.risk_basis": "desmoothed_economic"
       }
     },
     {
@@ -1355,6 +1375,9 @@
         "portfolio.model_identity.purpose_source",
         "portfolio.model_identity.designed_policy_weights",
         "portfolio.model_identity.demo_holdings",
+        "portfolio.model_identity.model_version",
+        "portfolio.model_identity.holdings_are_illustrative",
+        "portfolio.model_identity.policy_weights_publishable",
         "nodes[0].target_weight",
         "nodes[0].actual_weight",
         "nodes[0].factor_mapping.status",

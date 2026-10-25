@@ -49,18 +49,24 @@ review, and `attribution_required` values retain the returned attribution.
 `get_capital_market_assumptions` is a required connector tool. The full probe
 set verifies:
 
-- baseline return/currency/cash basis, currency composition and USD share,
-  uncertainty, desmoothing comparisons, refresh and total counts;
-- one-call bounded dense correlations with estimation metadata, confidence,
-  anomaly flags, matrix validation and complete coverage;
+- baseline return/currency/cash basis, dated non-fallback currency composition
+  and USD share, uncertainty, both private-market risk bases, refresh and total
+  counts;
+- one-call bounded dense correlations with weekly governance, daily/monthly
+  sensitivity, factor proxy construction, composition-aware FX inputs,
+  confidence, anomaly flags, matrix validation and complete coverage;
 - server-computed supplied-weight return, risk and Euler risk contribution
-  with formula version and reconciliation;
+  with marginal contribution, selected risk basis, formula version and
+  reconciliation;
 - model-detected regional regime probabilities, coverage, freshness and as-of
   dates.
 
-Skills also retain CMA regime blending, persistence, special-correlation
+Skills also request policy-target factor/currency exposure when reviewing
+designed models and verify target weights reconcile with fixed income present.
+Skills retain CMA regime blending, persistence, special-correlation
 application and endorsed stresses; portfolio purpose/model version/change
-dates and canonical factor mappings/proxy flags; benchmark origin, derivation,
+dates, illustrative-holdings/publishable-policy flags and canonical factor
+mappings/proxy flags; benchmark origin, derivation,
 validation, currency exposure and license tier; and total counts on screens.
 These fields must remain unavailable when the connector does not return them.
 Never recreate them or substitute local portfolio calculations.

@@ -1,5 +1,12 @@
 # Changelog
 
+## 6.8.1
+- Governed weekly equity-credit correlations with daily and monthly sensitivity and auditable proxy construction.
+- Added composition-aware currency translation, dated factor currency weights, dual private-market risk bases, and desmoothed economic risk as the portfolio-statistics default.
+- Expanded setup checks for policy-target exposure, persisted six-model identity, publishable policy weights, and illustrative holdings.
+- Updated dense-matrix and supplied-weight analytics guidance for the remediated Gradient MCP contract.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.8.0
 - Added response-semantics v2 handling for field-level basis, uncertainty, lineage, validation, publication rights, attribution and required disclosures across Portfolio Analytics skills.
 - Added explicit CMA currency composition and USD share, cash and return basis, private-market desmoothing comparisons, correlation estimation/confidence/anomaly evidence, regime-correlation application, regional regime reads and endorsed stresses.
