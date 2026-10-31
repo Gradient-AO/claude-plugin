@@ -274,7 +274,6 @@ def portfolio_import_governed_contract_checks():
         "commit_portfolio_import",
         "get_portfolio_import_session",
         "list_portfolio_import_runs",
-        "rollback_portfolio_import_run",
     }
     check(
         all(f"`{tool}`" in skill for tool in required_tools)
@@ -317,7 +316,6 @@ def portfolio_import_governed_contract_checks():
         and "exact displayed" in skill
         and "`confirmation_receipt_id` and `payload_digest`" in skill
         and "no record was deleted by omission" in skill
-        and "exact `destination_after_digest`" in skill
         and "`references/phase-2-governance.md`" in skill
         and "`references/phase-3-governance.md`" in skill
         and "`references/phase-4-governance.md`" in skill

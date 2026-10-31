@@ -138,22 +138,10 @@ Verify the commit before reporting success:
 Return the commit result, verification result, and any mismatch. Restate that
 the source was not modified and no record was deleted by omission.
 
-## 6. Optional history and rollback
+## 6. Optional history
 
 For history, call `list_portfolio_import_runs` and follow
 `next_cursor` until complete. Preserve lineage, status, counts, three digests,
-and commit/rollback times. History never authorizes rollback.
-
-Call `rollback_portfolio_import_run` only when the user explicitly requests
-rollback of one exact run in the current conversation. First display that
-run's exact lineage, counts, change count, status, and digests; explain that
-rollback reverses that committed run and may remove holdings the run created.
-Require the user to confirm that exact run and its exact `destination_after_digest`.
-Pass only that run ID and exact digest. Never use a
-preview digest, before digest, guessed digest, or a digest from another run.
-
-After rollback, require status `rolled_back`, then verify the same run through
-`list_portfolio_import_runs` and verify destination state through the relevant
-governed portfolio read tool. Report conflicts or superseded runs as blocked;
-never force, cascade, or approximate a rollback. Rollback never writes to the
-source.
+and commit/rollback times. History never authorizes rollback. The retired
+standalone run-rollback tool is not part of this single-session workflow; do
+not substitute the bundle rollback lifecycle for one committed run.
