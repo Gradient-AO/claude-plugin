@@ -65,7 +65,7 @@ report them as separate modules; never use the canonical illustrative portfolio 
    **Evaluation — Illustrative, Gradient Maintained — demo data, not the client's holdings or managers**,
    not Ready or Not licensed.
    Then apply `mode_requirements` for the selected construction mode. Run `check_contract.py --validate-mode <contracts.json> gradient-portfolio-construction <mode> <capabilities-response.json>`;
-   a missing `get_private_markets_holdings` makes only `private_markets` construction **Not ready**. For portfolio import, validate `gradient-portfolio-import governed`; all twelve governed import tools are required.
+   a missing `get_private_markets_holdings` makes only `private_markets` construction **Not ready**. For portfolio import, validate `gradient-portfolio-import governed`; all eleven governed import tools are required.
 4. Call `get_diligence_roster_funds`: roster size, capacity used and available, and reviews due within 30 days.
 ## 3. Contract self-test
 
@@ -77,7 +77,7 @@ preview, and must never commit. Private-markets construction adds one fictional 
 read probe. The **DDQ save-preview** set is 3 calls: it intentionally persists one fictional test
 document and one immutable reconciliation test run so that document identity and the chained save can be
 tested with `dry_run: true`; disclose that persistence before running it. The dedicated
-**portfolio-import-governed** defines 12 schema-driven calls and requires an authorized source connector, one provider/account, and one existing Gradient portfolio. It covers all sixteen runtime types, including Phase 4 portfolio/allocation/policy records and Phase 5 public-security, fixed-income, liquidity, classification, pacing, and source-document-reference records through the generic staging path. Its safe
+**portfolio-import-governed** defines 11 schema-driven calls and requires an authorized source connector, one provider/account, and one existing Gradient portfolio. It covers all sixteen runtime types, including Phase 4 portfolio/allocation/policy records and Phase 5 public-security, fixed-income, liquidity, classification, pacing, and source-document-reference records through the generic staging path. Its safe
 readiness path stops after preview plus session/history reads. Commit requires runtime "commit_enabled" treatment and current-conversation
 confirmation of the exact displayed diff, issues, controls, digest and receipt; rollback requires a separate
 explicit request with the exact destination-after digest. Monthly returns are month-end, source-reported
@@ -85,7 +85,7 @@ explicit request with the exact destination-after digest. Monthly returns are mo
 sessions; assignments target only portfolios, allocations, commitments, or overlays, with weights only on
 allocations. A client-owned scheduled task may stage only with `approval_surface: "gradient_ui"` and return
 `review_url`; every v1 run requires Gradient UI review and never auto-commits in Claude. This is connector
-ingest, not Gradient UI file upload. The complete matrix is 88 authorized calls.
+ingest, not Gradient UI file upload. The complete matrix is 87 authorized calls.
 For each probe, record pass, fail (with error code and HTTP status) or not run (not entitled), and the
 response `as_of`. Resolve `depends_on` arguments with `check_contract.py --resolve-args`; do not manually
 copy or invent chained IDs.

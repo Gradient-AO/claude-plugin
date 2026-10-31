@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.8.2
+- Added the governed portfolio-import bundle lifecycle to the public Gradient MCP tool catalog.
+- Retired the superseded standalone portfolio-import run rollback from public discovery.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.8.1
 - Governed weekly equity-credit correlations with daily and monthly sensitivity and auditable proxy construction.
 - Added composition-aware currency translation, dated factor currency weights, dual private-market risk bases, and desmoothed economic risk as the portfolio-statistics default.

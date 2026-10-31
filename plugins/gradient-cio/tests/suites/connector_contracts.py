@@ -52,8 +52,8 @@ def contract_manifest():
         f"contract probe sets have expected counts ({counts})",
     )
     check(
-        portfolio_import_probe_count == 12,
-        "portfolio-import workflow has twelve schema-driven probes",
+        portfolio_import_probe_count == 11,
+        "portfolio-import workflow has eleven schema-driven probes",
     )
     full_read_count = counts["standard"] + counts["full"]
     setup_guidance = SETUP_SKILL.read_text(encoding="utf-8")
@@ -196,9 +196,9 @@ def contract_manifest():
         public_tool_catalog.get("generated") is True
         and public_tool_catalog.get("source")
         == "@gradientcio/contracts canonical MCP tool catalog"
-        and len(public_tools) == 77
+        and len(public_tools) == 81
         and public_tools == sorted(set(public_tools)),
-        "public-tool catalog has generated 77-tool canonical parity",
+        "public-tool catalog has generated 81-tool canonical parity",
     )
     minimum = contracts.get("minimum_connector_contract", {})
     response_path_tools = set(minimum.get("required_response_field_paths", {}))
@@ -334,7 +334,6 @@ def contract_manifest():
         "commit_portfolio_import",
         "get_portfolio_import_session",
         "list_portfolio_import_runs",
-        "rollback_portfolio_import_run",
     }
     portfolio_import_probe_ids = {
         "portfolio_import_capabilities",
@@ -348,7 +347,6 @@ def contract_manifest():
         "portfolio_import_commit",
         "portfolio_import_session",
         "portfolio_import_run_history",
-        "portfolio_import_rollback",
     }
     check(
         construction_modes.get("private_markets") == {
@@ -385,7 +383,6 @@ def contract_manifest():
         "portfolio-import workflow is capability-gated and schema-driven",
     )
     commit_probe = by_id["portfolio_import_commit"]
-    rollback_probe = by_id["portfolio_import_rollback"]
     history_probe = by_id["portfolio_import_run_history"]
     generic_stage_probe = by_id["portfolio_import_stage_generic_records"]
     start_probe = by_id["portfolio_import_start_session"]
@@ -413,16 +410,6 @@ def contract_manifest():
         )
         and history_probe["tool"] == "list_portfolio_import_runs"
         and {"runs", "next_cursor"} <= set(history_probe.get("required", []))
-        and rollback_probe["tool"] == "rollback_portfolio_import_run"
-        and execution_paths <= set(rollback_probe.get("required", []))
-        and any(
-            "current-conversation request" in prerequisite
-            for prerequisite in rollback_probe["external_prerequisites"]
-        )
-        and any(
-            "destination_after_digest" in prerequisite
-            for prerequisite in rollback_probe["external_prerequisites"]
-        )
         and generic_stage_probe["tool"] == "stage_portfolio_import_records"
         and all(
             data_type

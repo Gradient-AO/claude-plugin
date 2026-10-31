@@ -605,8 +605,7 @@
           "preview_portfolio_import",
           "commit_portfolio_import",
           "get_portfolio_import_session",
-          "list_portfolio_import_runs",
-          "rollback_portfolio_import_run"
+          "list_portfolio_import_runs"
         ],
         "required_probe_ids": [
           "portfolio_import_capabilities",
@@ -619,8 +618,7 @@
           "portfolio_import_preview",
           "portfolio_import_commit",
           "portfolio_import_session",
-          "portfolio_import_run_history",
-          "portfolio_import_rollback"
+          "portfolio_import_run_history"
         ]
       }
     }
@@ -3318,31 +3316,6 @@
         "verified organization",
         "selected portfolio when filtering history",
         "follow next_cursor until null"
-      ],
-      "envelope": false
-    },
-    {
-      "id": "portfolio_import_rollback",
-      "set": "portfolio-import-governed",
-      "tool": "rollback_portfolio_import_run",
-      "args": {},
-      "required": [
-        "status",
-        "session_id",
-        "run_id",
-        "preview_payload_digest",
-        "destination_before_digest",
-        "destination_after_digest",
-        "counts",
-        "change_count",
-        "replayed"
-      ],
-      "schema_driven": true,
-      "external_prerequisites": [
-        "explicit current-conversation request to rollback one exact run",
-        "exact run details and effects displayed to user",
-        "explicit confirmation of exact destination_after_digest",
-        "no superseding or destination-conflict result"
       ],
       "envelope": false
     }
