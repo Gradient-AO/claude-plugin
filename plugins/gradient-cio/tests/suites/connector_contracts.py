@@ -17,6 +17,7 @@ from suites.harness import (
     IC_MEMO_DATA_MAP,
     IC_MEMO_EXAMPLE,
     IC_MEMO_SKILL,
+    KNOWN_TOOLS,
     ODD_REPORT_SKILL,
     PORTFOLIO_REVIEW_DATA_MAP,
     PORTFOLIO_REVIEW_SKILL,
@@ -192,13 +193,21 @@ def contract_manifest():
 
     public_tool_catalog = json.loads(PUBLIC_TOOLS.read_text(encoding="utf-8"))
     public_tools = public_tool_catalog["tools"]
+    known_tool_catalog = json.loads(KNOWN_TOOLS.read_text(encoding="utf-8"))
+    known_tools = known_tool_catalog["tools"]
     check(
         public_tool_catalog.get("generated") is True
         and public_tool_catalog.get("source")
         == "@gradientcio/contracts canonical MCP tool catalog"
-        and len(public_tools) == 81
-        and public_tools == sorted(set(public_tools)),
-        "public-tool catalog has generated 81-tool canonical parity",
+        and known_tool_catalog.get("generated") is True
+        and known_tool_catalog.get("source")
+        == "@gradientcio/contracts canonical MCP tool catalog"
+        and len(public_tools) == 50
+        and len(known_tools) == 81
+        and public_tools == sorted(set(public_tools))
+        and known_tools == sorted(set(known_tools))
+        and set(public_tools) < set(known_tools),
+        "public and known tool catalogs preserve generated canonical parity",
     )
     minimum = contracts.get("minimum_connector_contract", {})
     response_path_tools = set(minimum.get("required_response_field_paths", {}))
@@ -206,10 +215,10 @@ def contract_manifest():
     validation_contracts["minimum_connector_contract"]["required_tools"] = sorted(
         response_path_tools
     )
-    manifest_errors = validate_contract_manifest(validation_contracts, public_tools)
+    manifest_errors = validate_contract_manifest(validation_contracts, known_tools)
     check(
         not manifest_errors,
-        "contract dependencies, placeholders, response paths, and public tools are valid"
+        "contract dependencies, placeholders, response paths, and known tools are valid"
         + (f": {manifest_errors}" if manifest_errors else ""),
     )
     expected_minimum_tools = {
@@ -533,10 +542,10 @@ def contract_manifest():
         r"reconcile|rollback|save|screen|search|update|upload|batch)_[a-z0-9_]+\b",
         SKILL_REQUIREMENTS.read_text(encoding="utf-8"),
     ))
-    unknown_requirement_tools = requirement_tokens - set(public_tools)
+    unknown_requirement_tools = requirement_tokens - set(known_tools)
     check(
         not unknown_requirement_tools,
-        "skill requirement tool names exist in the generated catalog"
+        "skill requirement tool names exist in the known catalog"
         + (
             f": {sorted(unknown_requirement_tools)}"
             if unknown_requirement_tools
@@ -2150,6 +2159,13 @@ def contract_checker():
         contract_path = temp / "contracts.json"
         contract_path.write_text(json.dumps(contracts), encoding="utf-8")
         (temp / "public-tools.json").write_text(
+            json.dumps({
+                "generated": True,
+                "tools": ["preview_tool", "source_tool"],
+            }),
+            encoding="utf-8",
+        )
+        (temp / "known-tools.json").write_text(
             json.dumps({
                 "generated": True,
                 "tools": ["preview_tool", "source_tool"],

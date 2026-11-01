@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.8.3
+- Removed held manager-diligence tools from public MCP discovery while retaining conditionally supported peer-allocation intelligence and other published research surfaces.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.8.2
 - Added the governed portfolio-import bundle lifecycle to the public Gradient MCP tool catalog.
 - Retired the superseded standalone portfolio-import run rollback from public discovery.

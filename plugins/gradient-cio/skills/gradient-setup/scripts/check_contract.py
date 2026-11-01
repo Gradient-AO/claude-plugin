@@ -366,25 +366,47 @@ def _contains(actual, expected):
         )
     return actual == expected
 
-def load_and_validate_catalog(contracts_path):
-    catalog_path = contracts_path.parent / "public-tools.json"
+def _load_generated_catalog(catalog_path, label):
     if not catalog_path.is_file():
-        return None, [f"missing generated public-tool catalog {catalog_path}"]
+        return None, [f"missing generated {label} catalog {catalog_path}"]
     catalog = load(catalog_path)
     if (
         not isinstance(catalog, dict)
         or catalog.get("generated") is not True
         or not isinstance(catalog.get("tools"), list)
     ):
-        return None, ["public-tools.json is not a generated tool catalog"]
+        return None, [f"{catalog_path.name} is not a generated tool catalog"]
     tools = catalog["tools"]
     if (
         any(not isinstance(tool, str) or not tool for tool in tools)
         or len(tools) != len(set(tools))
         or tools != sorted(tools)
     ):
-        return None, ["public-tools.json tools must be unique sorted strings"]
+        return None, [
+            f"{catalog_path.name} tools must be unique sorted strings"
+        ]
     return tools, []
+
+
+def load_and_validate_catalog(contracts_path):
+    public_tools, public_errors = _load_generated_catalog(
+        contracts_path.parent / "public-tools.json",
+        "public-tool",
+    )
+    known_tools, known_errors = _load_generated_catalog(
+        contracts_path.parent / "known-tools.json",
+        "known-tool",
+    )
+    errors = public_errors + known_errors
+    if errors:
+        return None, errors
+    unknown_public_tools = set(public_tools) - set(known_tools)
+    if unknown_public_tools:
+        errors.append(
+            "public-tools.json contains tools absent from known-tools.json: "
+            + ", ".join(sorted(unknown_public_tools))
+        )
+    return known_tools, errors
 
 def resolve_args(argv):
     import pathlib

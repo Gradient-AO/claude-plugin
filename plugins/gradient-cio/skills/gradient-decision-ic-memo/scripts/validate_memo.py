@@ -65,12 +65,12 @@ SOURCE_HEADER = [
     "Digest",
 ]
 SOURCE_BASES = {"gradient_tool", "user_document", "regulatory_filing"}
-PUBLIC_TOOLS = set(
+KNOWN_TOOLS = set(
     json.loads(
         (
             SKILL_ROOT
             / "references"
-            / "public-tools.json"
+            / "known-tools.json"
         ).read_text(encoding="utf-8")
     )["tools"]
 )
@@ -200,7 +200,7 @@ def main(path):
                         errors.append(
                             f"Appendix A source row {row_number} must name a Gradient tool"
                         )
-                    for tool in sorted(tools - PUBLIC_TOOLS):
+                    for tool in sorted(tools - KNOWN_TOOLS):
                         errors.append(
                             f"Appendix A source row {row_number} names unknown tool '{tool}'"
                         )

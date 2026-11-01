@@ -20,6 +20,7 @@ CONTRACT_CHECKER = ROOT / "skills" / "gradient-setup" / "scripts" / "check_contr
 CONTRACTS = ROOT / "skills" / "gradient-setup" / "references" / "contracts.json"
 CONTRACT_CHECKS = ROOT / "skills" / "gradient-setup" / "references" / "contract-checks.md"
 PUBLIC_TOOLS = ROOT / "skills" / "gradient-setup" / "references" / "public-tools.json"
+KNOWN_TOOLS = ROOT / "skills" / "gradient-setup" / "references" / "known-tools.json"
 SHARED_REPORT_STYLE = ROOT / "shared" / "report-style.md"
 SHARED_MODULE_SCOPE = ROOT / "shared" / "module-scope.md"
 SHARED_CHART_DATA = ROOT / "shared" / "chart-data.md"

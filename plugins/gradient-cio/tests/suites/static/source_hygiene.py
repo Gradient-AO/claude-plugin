@@ -10,8 +10,8 @@ import zipfile
 
 from suites.harness import (
     FIX,
+    KNOWN_TOOLS,
     PPTX_TEMPLATE,
-    PUBLIC_TOOLS,
     RENDER,
     ROOT,
     SHARED_REPORT_STYLE,
@@ -100,10 +100,10 @@ def source_hygiene_checks(allow_branded):
         + (f": {legacy_hits}" if legacy_hits else ""),
     )
     tool_states = json.loads((FIX / "mcp-tools.json").read_text(encoding="utf-8"))
-    public_tools = set(
-        json.loads(PUBLIC_TOOLS.read_text(encoding="utf-8")).get("tools", [])
+    known_tools = set(
+        json.loads(KNOWN_TOOLS.read_text(encoding="utf-8")).get("tools", [])
     )
-    live_tools = public_tools | set(tool_states.get("live", []))
+    live_tools = known_tools | set(tool_states.get("live", []))
     planned_tools = set(tool_states.get("planned", []))
     planned_scope = tool_states.get("planned_scope", {})
     stale_simulation_name = "run_portfolio_attribution_simulation"

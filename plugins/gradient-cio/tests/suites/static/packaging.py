@@ -52,9 +52,10 @@ def self_contained_report_skill_checks(skills, validator_manifest):
             all((skill / "scripts" / name).is_file() for name in runtime_files)
             and all((skill / "assets" / "fonts" / name).is_file() for name in font_files)
             and (skill / "references" / "public-tools.json").is_file()
+            and (skill / "references" / "known-tools.json").is_file()
             for skill in report_skills
         ),
-        "report skills ship validator dependencies, tool catalog, and Inter fonts locally",
+        "report skills ship validator dependencies, tool catalogs, and Inter fonts locally",
     )
 
     failures = []

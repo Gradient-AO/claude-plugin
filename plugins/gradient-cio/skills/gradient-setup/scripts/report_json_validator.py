@@ -366,9 +366,15 @@ def appendix_tags(section: dict[str, JsonValue]) -> set[str]:
     return tags
 
 
-def _public_tools() -> frozenset[str]:
-    """Load the packaged connector tool catalog used for provenance checks."""
+def _known_tools() -> frozenset[str]:
+    """Load all known connector tools used for provenance checks."""
     paths = (
+        PLUGIN_ROOT / "references" / "known-tools.json",
+        PLUGIN_ROOT
+        / "skills"
+        / "gradient-setup"
+        / "references"
+        / "known-tools.json",
         PLUGIN_ROOT / "references" / "public-tools.json",
         PLUGIN_ROOT
         / "skills"
@@ -387,7 +393,7 @@ def _public_tools() -> frozenset[str]:
     return frozenset(tool for tool in tools if isinstance(tool, str))
 
 
-PUBLIC_TOOLS = _public_tools()
+KNOWN_TOOLS = _known_tools()
 
 
 def _gradient_tool_names(tool_view: str) -> set[str]:
@@ -659,7 +665,7 @@ def validate_provenance(
                 errors.append(
                     f"Source row {index} Tool / view must name a Gradient tool"
                 )
-            for tool_name in sorted(tool_names - PUBLIC_TOOLS):
+            for tool_name in sorted(tool_names - KNOWN_TOOLS):
                 errors.append(
                     f"Source row {index} names unknown Gradient tool '{tool_name}'"
                 )
