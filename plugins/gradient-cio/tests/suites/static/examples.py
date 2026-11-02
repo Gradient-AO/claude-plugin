@@ -85,7 +85,6 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
         (
             r"Firm profile & ownership",
             r"Regulatory, conflicts & custody",
-            r"Peer positioning",
             r"Fund operations & service providers",
             r"Reported equity holdings \(Form 13F\)",
             r"Monitoring, findings & DDQ",

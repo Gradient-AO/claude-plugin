@@ -1117,12 +1117,6 @@
         },
         {
           "type": "callout",
-          "tone": "info",
-          "title": "Peer allocation context",
-          "text": "Not licensed — Peer allocation context was skipped because peer allocation intelligence is not licensed for this organization. This review uses portfolio evidence only."
-        },
-        {
-          "type": "callout",
           "role": "analysis",
           "tone": "watch",
           "title": "Analysis — Private-assets headroom is narrow",
@@ -1898,11 +1892,6 @@
               "name": "GRIP context",
               "status": "available",
               "note": "Balanced stance with available history [S12]"
-            },
-            {
-              "name": "Peer allocation intelligence",
-              "status": "not licensed",
-              "note": "Not licensed — peer allocation intelligence is not licensed for this organization"
             },
             {
               "name": "Strategy Lab supplement",

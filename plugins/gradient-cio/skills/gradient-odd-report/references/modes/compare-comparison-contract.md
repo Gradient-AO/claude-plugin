@@ -1,22 +1,26 @@
-# Manager comparison execution contract
+# Named-manager comparison execution contract
+
+## Current product hold
+
+This contract is inactive while `manager_diligence_product_hold` is returned.
+Call only the advertised held reads, preserve the structured unavailable
+payload, and stop. Do not invoke retired discovery, profile, 13F, event,
+overlap, or write tools.
 
 Read the relevant section immediately before that workflow step.
 
-## Screening and identity resolution
+## Identity resolution
 
-- `screen_managers` accepts `min_raum`, `max_raum` (USD), `state`, `has_custody`,
-  `source_kind` (`registered` or `exempt`), `firm_type`, `min_flags`, `limit`
-  (1–200, default 50), and `cursor`.
-- It has no strategy, asset-class, or client-type filter. `search_managers.query`
-  matches manager name or CRD only. Disclose these limitations.
+- Compare only the 2–5 managers explicitly selected by the user. Do not screen
+  or rank a manager universe in this mode.
+- The retired manager search could resolve a supplied manager name or CRD only; it
+  must not discover or substitute comparison candidates.
 - `affirmative_disclosure_count` is the count of Form ADV Items 6–9 and 11
   answered yes, not a count of disciplinary events or red flags. Obtain Item 11
   from `disciplinary_disclosure_count`.
-- Show the screen in chat and ask the user to select up to five managers. In an
-  unattended run use the first five returned and disclose that choice.
 - Resolve roster parents through `get_diligence_roster_funds`; otherwise use
-  `search_managers`, then read `resolved_subject.firm_id` from
-  `get_manager_odd_profile` or `get_firm_13f_portfolio_review`.
+  the retired manager search, then read `resolved_subject.firm_id` from the
+  retired profile or firm 13F surfaces.
 - A null catalog `firm_id` means Form ADV-only comparison. Mark Form 13F,
   overlap, consistency, events, and findings
   `not_applicable — not in diligence catalog`.
@@ -28,23 +32,23 @@ Read the relevant section immediately before that workflow step.
 
 Per manager:
 
-1. `get_manager_odd_profile`, `mode: profile`, with `crd_number` or `firm_id`.
+1. The retired manager profile, `mode: profile`, with `crd_number` or `firm_id`.
 2. Optionally the same tool with `view: service_provider_controls`.
-3. `get_firm_13f_portfolio_review`, `mode: snapshot`, with `firm_id`; request
+3. The retired firm 13F portfolio review, `mode: snapshot`, with `firm_id`; request
    `view: issuer_risk` only when issuer-level risk is in scope.
-4. `get_firm_13f_portfolio_review`, `view: adv_13f_consistency`, with `firm_id`.
-5. `get_firm_fund_events`, `include_event_type_counts: true`, `per_page: 12`.
+4. The retired firm 13F portfolio review, `view: adv_13f_consistency`, with `firm_id`.
+5. The retired firm-fund events read with `include_event_type_counts: true`, `per_page: 12`.
 6. `get_manager_diligence_findings`, `view: open`, for roster managers.
 
 Across managers:
 
-- `get_manager_odd_profile`, `mode: comparison`, with 2–5 `crd_numbers`.
-- `get_multi_manager_13f_overlap` with 2–5 catalog `firm_ids`.
+- The retired multi-manager 13F overlap read with 2–5 catalog `firm_ids`.
 
 Read profile identity and `metrics`, private-fund provider fields, truncation
 flags, `positive_flags`, `disciplinary_disclosure_count`, report dates, and
-`changes`. Comparison percentiles are within each adviser's own returned
-`cohort`; never use them as a cross-manager league table.
+`changes`. Use only absolute filed values and dated changes from each selected
+manager's profile. Ignore returned peer/cohort fields, percentiles, universe
+positions, and rankings; never write "relative to peers."
 
 For Form 13F preserve `status`, concentration, positions, top positions,
 period, filing date, accession, and provenance. For overlap preserve manager
@@ -92,11 +96,12 @@ steps; Appendix — Sources and methods (`num: "A"`). Keep missing sections and
 show typed gaps.
 
 Use the exact layouts and block schemas in `references/report-style.md`;
-include comparison bars, per-manager cohort percentile strips, a returned
-overlap heat matrix, an events timeline when returned, coverage, source tags,
-units, dates, caveats, and the non-ranking disclaimer. Pair Coverage and Next
-steps in one compact `Coverage and next steps` closing section using a
-`two_col` block: coverage on the left and the next-steps table on the right.
+include absolute Form ADV comparison bars for filed RAUM, client counts, and
+Item 11 disclosures, a returned overlap heat matrix, an events timeline when
+returned, coverage, source tags, units, dates, caveats, and the non-ranking
+disclaimer. Pair Coverage and Next steps in one compact `Coverage and next
+steps` closing section using a `two_col` block: coverage on the left and the
+next-steps table on the right.
 No more than two consecutive tables. Add sourced `Key judgment —` and
 `Analysis —` callouts under the shared writing standard.
 
@@ -111,7 +116,5 @@ delivery.
 
 ## Optional writes
 
-Only after delivery offer `update_watchlist` and `update_manager_monitoring`.
-For one manager and action, preview with `dry_run: true`, show the receipt, ask
-for explicit confirmation, then commit with `dry_run: false` and the same
-unique `idempotency_key`. Never write in unattended or scheduled runs.
+No manager-diligence writes are advertised during the product hold. Do not
+preview or commit historical watchlist or monitoring mutations.

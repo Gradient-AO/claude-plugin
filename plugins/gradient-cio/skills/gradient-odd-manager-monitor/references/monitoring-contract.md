@@ -1,5 +1,12 @@
 # Manager-monitoring execution contract
 
+## Current product hold
+
+This contract is inactive while `manager_diligence_product_hold` is returned.
+Call only the advertised held reads, preserve the structured unavailable
+payload, and stop. Do not invoke retired queue, evidence, event, watchlist, or
+write tools and do not schedule a monitoring report.
+
 Read only the section needed for the current workflow step.
 
 ## Collection and incremental state
@@ -11,17 +18,17 @@ and offer roster additions only on request.
 Collect in parallel where possible:
 - `get_fund_diligence_monitoring`, optionally filtered with canonical roster
   `fund_ids`, as the governed fund review/evidence status surface;
-- `get_manager_diligence_attention_queue` default view;
+- the retired manager-diligence attention queue default view;
 - the same tool with `view: changes_since_review`;
 - the same tool with `view: red_flags`;
-- `get_manager_monitor_evidence`, `mode: alerts`, with `since_cursor` when
+- the retired manager-monitor evidence read, `mode: alerts`, with `since_cursor` when
   saved;
 - the same tool with `mode: coverage`;
 - the same tool with `view: draft_candidates` when the digest needs proposed
   monitor additions; treat candidates as read-only evidence, never as writes;
 - `get_manager_diligence_findings`, `view: open`, for parent firm and fund;
-- `get_firm_fund_events` per parent firm;
-- `get_research_watchlist_changes`.
+- the retired firm-fund events read per parent firm;
+- the retired research-watchlist changes read.
 
 If a required roster, attention, or monitor-evidence call returns not entitled
 or HTTP 403, stop cleanly and reply
@@ -39,7 +46,7 @@ use its governed firm review surface and canonical `firm_id`. Read `review`
 plus bounded `history.events`; page with the returned cursor only when the
 requested monitoring window requires older events.
 
-Every `get_firm_fund_events` call must pass the monitoring bounds as
+Every historical firm-fund events call used to pass the monitoring bounds as
 `event_date_from` and `event_date_to`. Preserve those two dates separately from
 the response's `latest_published_event`: the bounds describe what was queried;
 `latest_published_event` describes all-time event-feed freshness, is independent
@@ -62,6 +69,11 @@ Combine canonical fund monitoring status and review history with attention
 reasons, in-window changes, alerts, red flags, findings, events, watchlist
 changes, and reviews due within 30 days. Do not reconstruct review status from
 roster dates when the fund read tools return governed status.
+
+Every alert must trace to an absolute Form ADV fact, a dated change in a filed
+fact, or another governed event/finding listed below. Manager peer/cohort
+percentiles, relative standing, and percentile movement never create or change
+an alert or severity.
 
 High: tier-1 alert, new red flag, overdue high finding, overdue review, or
 identity attention. Medium: material change/new ADV, tier-2 alert, open medium
@@ -151,21 +163,8 @@ top item, number of subjects needing action, and the files.
 
 ## Follow-up writes
 
-Offer but never initiate:
-- `log_diligence_review` with exactly one canonical `firm_id` or `fund_id`
-  (never both), reviewed date, evidence-linked notes,
-  `evidence_limit_acknowledged: true`, and idempotency key; for a fund, re-read
-  `get_fund_diligence_review` before previewing so the proposed write is based
-  on current review state;
-- `update_diligence_finding` with finding ID, `if_version`, one status or
-  assignment/due-date change, note, and idempotency key;
-- `update_manager_monitoring` with action, CRD/firm, tier/email/key-person
-  settings, and idempotency key.
-
-Preview every listed item with `dry_run: true`. Commit only the explicitly
-confirmed items with `dry_run: false` and the same key; report receipts.
-Never repeat a committed review log. On version conflict, re-read and ask
-again. Scheduled runs never write.
+No manager-diligence writes are advertised during the product hold. Do not
+preview or commit historical review, finding, or monitoring mutations.
 
 ## Scheduling
 

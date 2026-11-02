@@ -7,7 +7,7 @@ metadata:
   subject: "real assets"
   output: "construction report"
   menu_order: "70"
-  modules: "portfolio,research,macroDesk,peerIntelligence,gradientSignals,firmFundDiligence,strategyLab"
+  modules: "portfolio,research,macroDesk,gradientSignals,firmFundDiligence,strategyLab"
   contracts: "portfolio"
   handoffs: "gradient-decision-ic-memo"
   summary: "Design real-assets allocation for inflation, diversification and liquidity."
@@ -68,7 +68,7 @@ Required evidence:
   `infrastructure` and `natural_resources` classes;
 - `commitments` charts only when the selected real-assets sleeve contains closed-end or drawdown exposures.
 
-Inflation and commodity context, manager diligence, peer allocations, CMA consensus and selected-series
+Inflation and commodity context, manager diligence, CMA consensus and selected-series
 Strategy Lab diagnostics are optional. An entitlement block is `Not licensed`; do not retry it.
 
 ## 3. Assess

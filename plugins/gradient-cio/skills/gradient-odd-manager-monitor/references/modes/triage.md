@@ -1,5 +1,9 @@
 # Diligence roster triage mode
 
+This mode is unavailable while `manager_diligence_product_hold` is returned.
+Call only the advertised held reads, preserve the structured unavailable
+payload, and stop without producing a triage report.
+
 Use when no operational-diligence subject is named or when two or more roster
 funds need prioritization. Deliver **"<Org> - Diligence Roster Triage
 <YYYY-MM-DD>"**, normally 2–3 PDF pages. One full report still covers one fund
@@ -11,6 +15,8 @@ or firm.
   next-review dates. Do not reconstruct them from roster dates.
 - Form ADV is adviser-reported. A filing or disclosure is a review trigger, not
   a conclusion.
+- Triage levels use absolute ADV facts, dated changes, and governed attention
+  reasons. Manager peer/cohort percentile movement is not a triage input.
 - Missing or unreadable queue evidence is insufficient, never clear or zero.
 - Triage prioritizes evidence collection; it does not make a hire, fire,
   redemption, termination, or allocation recommendation.
@@ -23,9 +29,8 @@ organizations remain. An empty roster is reported and roster additions are
 offered only on request.
 
 Call `get_fund_diligence_monitoring` for the canonical roster fund IDs. Then
-call `get_manager_diligence_attention_queue` with `view: red_flags` and
-`view: changes_since_review`, page with `limit: 50`, and join the results by
-canonical ID.
+stop when it returns the structured hold payload. Do not call the retired
+attention-queue views or attempt to reconstruct them locally.
 
 Do not call the large diligence brief or per-fund review history during triage.
 Save each response and preserve validation, coverage, pagination, evidence

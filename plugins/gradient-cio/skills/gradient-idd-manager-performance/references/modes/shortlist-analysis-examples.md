@@ -12,4 +12,4 @@ Set `meta.data_basis` to `gradient_governed` or `mixed`. The source table column
 
 ## Advance/reserve/reject rationale
 
-**Strong example (TEST):** Observation: One candidate advances with complete evidence; Candidate C remains reserve because one metric is unavailable [S2][S4]. Why it matters: Status reflects evidence completeness, not a hire recommendation. Uncertainty: The returned window does not establish result persistence. What would change the view: A governed refresh across three windows reversing the lead or returning Candidate C's missing metric.
+**Strong example (TEST):** Observation: Candidate A exceeds the user's excess-return threshold by 60 bps and meets the 90% downside-capture ceiling; Candidate C lacks capture evidence [S2][S4]. Why it matters: Advancement applies benchmark-relative criteria, not peer rank. Uncertainty: Three-window persistence has not been returned. What would change the view: Any window below 0 bps excess, above 90% capture, or resolving Candidate C's gap.

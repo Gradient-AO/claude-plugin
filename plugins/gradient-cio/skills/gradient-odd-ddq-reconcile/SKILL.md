@@ -16,6 +16,14 @@ metadata:
 
 # DDQ vs Form ADV reconciliation
 
+## Current product hold
+
+The public DDQ workflow is temporarily unavailable under
+`manager_diligence_product_hold`. Do not call retired extraction,
+reconciliation, preview, or save tools and do not produce a reconciliation
+from inferred filing evidence. Return the typed unavailable result and direct
+the user to `gradient-setup`.
+
 Use when a manager DDQ, AIMA/ILPA questionnaire, RFI, or equivalent document
 must be checked against governed Form ADV/Schedule D evidence. Every run
 produces a branded report unless the user explicitly requests chat only.
@@ -47,11 +55,9 @@ mapping requires judgment.
 
 ## 2. Reconcile
 
-Read `references/reconciliation-contract.md#governed-reconciliation`, then call
-`reconcile_manager_ddq_claims` once per canonical subject (or the allowed
-2–5-subject batch). Preserve returned verdicts, reasons, filed dates/values,
-gaps, methods, versions, units, and bases. An unresolved fund is not assessed,
-never locally compared.
+Read `references/reconciliation-contract.md#governed-reconciliation`. While
+the product hold is active, stop with the typed unavailable result. Preserve
+returned reasons and never locally compare an unresolved fund.
 
 ## 3. Build and deliver
 

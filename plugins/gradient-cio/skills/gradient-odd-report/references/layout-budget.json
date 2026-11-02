@@ -37,12 +37,6 @@
         "max_body_table_rows": 16,
         "max_visuals": 2
       },
-      "peer-positioning": {
-        "role": "analytical",
-        "requires_analysis": true,
-        "max_body_table_rows": 0,
-        "max_visuals": 2
-      },
       "fund-operations-service-providers": {
         "role": "analytical",
         "requires_analysis": true,

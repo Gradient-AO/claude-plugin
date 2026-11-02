@@ -48,7 +48,7 @@ def contract_manifest():
         probe.get("set") == "portfolio-import-governed" for probe in probes
     )
     check(
-        counts == {"standard": 8, "full": 59, "writes": 8, "ddq-save-preview": 3},
+        counts == {"standard": 6, "full": 44, "writes": 1, "ddq-save-preview": 0},
         f"contract probe sets have expected counts ({counts})",
     )
     check(
@@ -196,9 +196,9 @@ def contract_manifest():
         public_tool_catalog.get("generated") is True
         and public_tool_catalog.get("source")
         == "@gradientcio/contracts canonical MCP tool catalog"
-        and len(public_tools) == 81
+        and len(public_tools) == 53
         and public_tools == sorted(set(public_tools)),
-        "public-tool catalog has generated 81-tool canonical parity",
+        "public-tool catalog has generated 53-tool canonical parity",
     )
     minimum = contracts.get("minimum_connector_contract", {})
     response_path_tools = set(minimum.get("required_response_field_paths", {}))
@@ -214,24 +214,17 @@ def contract_manifest():
     )
     expected_minimum_tools = {
         "analyze_strategy_lab_compare",
-        "batch_reconcile_manager_ddq_claims",
         "build_strategy_lab_session",
         "check_portfolio_policy",
-        "create_diligence_finding",
-        "extract_ddq_claims",
         "get_benchmarks",
         "get_capital_market_assumptions",
         "get_cma_consensus_check",
         "get_diligence_roster_funds",
-        "get_firm_13f_portfolio_review",
-        "get_firm_entity_facts",
         "get_fund_diligence_monitoring",
         "get_fund_diligence_review",
         "get_gradient_capabilities",
         "get_macro_signals",
-        "get_manager_diligence_brief",
-        "get_manager_monitor_evidence",
-        "get_manager_odd_profile",
+        "get_manager_diligence_findings",
         "get_the_read",
         "get_portfolio_attribution",
         "get_portfolio_ex_ante_attribution",
@@ -244,20 +237,15 @@ def contract_manifest():
         "get_return_series",
         "list_organizations",
         "list_portfolios",
-        "log_diligence_review",
-        "reconcile_manager_ddq_claims",
         "run_strategy_lab_date_window_robustness",
         "run_strategy_lab_expected_statistics",
         "run_strategy_lab_private_markets_pme",
         "run_strategy_lab_relative_return",
         "save_strategy_lab_scenario",
-        "search_managers",
-        "update_manager_monitoring",
-        "upload_ddq_document",
     }
     minimum_probe_ids = set(minimum.get("required_probe_ids", []))
     check(
-        contracts.get("version") == "2026-10-25"
+        contracts.get("version") == "2026-11-01"
         and minimum.get("minimum_service_version") == "0.11.0"
         and minimum.get("compatibility_epoch") == 4
         and set(minimum.get("required_tools", [])) == expected_minimum_tools,
@@ -278,9 +266,10 @@ def contract_manifest():
             "cma_baseline",
             "cma_correlations_full_matrix",
             "cma_portfolio_analytics",
-            "entity_facts",
+            "roster",
             "fund_diligence_monitoring",
             "fund_diligence_review",
+            "findings",
             "cma_consensus",
             "cma_consensus_allocation",
             "strategy_benchmarks",
@@ -294,25 +283,12 @@ def contract_manifest():
             "strategy_date_windows_session",
             "strategy_date_windows",
             "equity_fundamentals",
-            "ddq_extract_fund_aliases",
-            "ddq_numeric_gap",
-            "batch_ddq_preview",
-            "manager_diligence_brief",
             "grip_cma_statistics",
             "roster_macro_exposure",
-            "issuer_risk",
-            "monitor_draft_candidates",
-            "write_create_finding",
-            "write_watchlist_manager",
-            "write_manager_monitoring",
-            "write_diligence_review",
-            "write_roster",
             "write_strategy_scenario",
-            "write_upload_ddq",
         } <= minimum_probe_ids
-        and response_path_tools
-        == expected_minimum_tools | {"update_diligence_roster", "update_watchlist"},
-        "minimum connector contract owns required probes and dry-run write response paths",
+        and response_path_tools == expected_minimum_tools,
+        "minimum connector contract owns required probes and response paths",
     )
     construction_modes = contracts.get("mode_requirements", {}).get(
         "gradient-portfolio-construction",
@@ -489,17 +465,8 @@ def contract_manifest():
         "capability probes use object-valued scoped coverage",
     )
     cross_domain_owner_probes = {
-        "adv_13f_consistency": (
-            "get_firm_13f_portfolio_review",
-            "adv_13f_consistency",
-        ),
         "grip_cma_statistics": ("get_macro_signals", "grip_cma_statistics"),
         "roster_macro_exposure": ("get_macro_signals", "roster_macro_exposure"),
-        "issuer_risk": ("get_firm_13f_portfolio_review", "issuer_risk"),
-        "monitor_draft_candidates": (
-            "get_manager_monitor_evidence",
-            "draft_candidates",
-        ),
     }
     cross_domain_paths = {
         "result_type",
@@ -545,50 +512,14 @@ def contract_manifest():
     )
 
     write_probes = [probe for probe in probes if probe.get("set") == "writes"]
-    expected_write_tools = {
-        "create_diligence_finding",
-        "preview_diligence_changes",
-        "update_watchlist",
-        "update_diligence_roster",
-        "update_manager_monitoring",
-        "log_diligence_review",
-        "save_strategy_lab_scenario",
-        "upload_ddq_document",
-    }
     check(
-        {probe["tool"] for probe in write_probes} == expected_write_tools,
-        "writes set contains singular and batch-preview tools",
-    )
-    singular_write_probes = [
-        probe for probe in write_probes
-        if probe["tool"] not in {
-            "preview_diligence_changes",
-            "upload_ddq_document",
-        }
-    ]
-    check(
-        all(
-            probe["args"].get("dry_run") is True
-            and probe.get("equals", {}).get("dry_run") is True
-            and probe.get("equals", {}).get("committed") is False
-            and "receipt_id" in probe.get("non_null", [])
-            for probe in singular_write_probes
-        ),
-        "singular write probes are dry-run previews with non-null receipts",
-    )
-    upload_preview = next(
-        probe for probe in write_probes
-        if probe["tool"] == "upload_ddq_document"
-    )
-    check(
-        upload_preview["args"].get("dry_run") is True
-        and upload_preview.get("equals", {}).get("status") == "preview"
-        and upload_preview.get("equals", {}).get("document_id") is None
-        and upload_preview.get("equals", {}).get("would_create.source")
-        == "mcp_ddq_upload"
-        and "request_fingerprint_sha256"
-        in upload_preview.get("non_null", []),
-        "DDQ upload probe is a non-persistent dry-run preview",
+        len(write_probes) == 1
+        and write_probes[0]["tool"] == "save_strategy_lab_scenario"
+        and write_probes[0]["args"].get("dry_run") is True
+        and write_probes[0].get("equals", {}).get("dry_run") is True
+        and write_probes[0].get("equals", {}).get("committed") is False
+        and "receipt_id" in write_probes[0].get("non_null", []),
+        "writes set contains only the Strategy Lab scenario preview",
     )
     check(
         not any(
@@ -599,89 +530,6 @@ def contract_manifest():
         "no contract probe requests a write commit",
     )
 
-    diligence_sections = [
-        "manager_adv",
-        "firm_fund_events",
-        "entity_facts",
-        "manager_monitor_evidence",
-        "firm_13f",
-        "open_findings",
-        "ddq_history",
-        "service_providers",
-        "enforcement_candidates",
-    ]
-    diligence_brief = by_id["manager_diligence_brief"]
-    diligence_required = set(diligence_brief.get("required", []))
-    section_contract_paths = {
-        f"sections.{section}.{field}"
-        for section in diligence_sections
-        for field in ("status", "validation_status", "payload_digest")
-    }
-    evidence_contract_paths = {
-        "brief_version",
-        "status",
-        "section_order",
-        "differentiated_analytics.projection_version",
-        "differentiated_analytics.status",
-        "differentiated_analytics.ddq_longitudinal",
-        "differentiated_analytics.odd_document_assessments",
-        "differentiated_analytics.odd_document_extractions",
-        "synthesis.red_flags",
-        "synthesis.changes_since_review",
-        "synthesis.manager_questions",
-        "synthesis.trigger_rows",
-        "synthesis.basis.expected_sections",
-        "synthesis.basis.used_sections",
-        "synthesis.basis.unavailable_sections",
-        "synthesis.basis.not_applicable_sections",
-        "synthesis.basis.latest_review_at",
-        "synthesis.basis.state",
-        "synthesis.basis.reasons",
-        "synthesis.basis.degraded",
-        "synthesis.basis.completeness",
-        "synthesis.basis.used_section_count",
-        "synthesis.basis.expected_section_count",
-    }
-    check(
-        diligence_brief.get("depends_on") == ["roster"]
-        and diligence_brief["args"].get("firm_id")
-        == "<roster:funds[0].parent_firm_id>"
-        and diligence_brief["args"].get("sections") == diligence_sections,
-        "manager-diligence brief probe chains the canonical roster firm",
-    )
-    check(
-        section_contract_paths | evidence_contract_paths <= diligence_required
-        and diligence_brief.get("equals", {}).get("brief_version")
-        == "manager-diligence-brief-v2"
-        and diligence_brief.get("equals", {}).get("section_order")
-        == diligence_sections,
-        "manager-diligence brief probe covers section and evidence contracts",
-    )
-    fund_monitoring = by_id["fund_diligence_monitoring"]
-    fund_review = by_id["fund_diligence_review"]
-    check(
-        fund_monitoring["tool"] == "get_fund_diligence_monitoring"
-        and fund_monitoring["args"].get("fund_ids")
-        == ["<roster:funds[0].fund_id>"]
-        and {"status", "monitoring", "item_count"}
-        <= set(fund_monitoring.get("required", []))
-        and fund_review["tool"] == "get_fund_diligence_review"
-        and fund_review["args"].get("fund_id")
-        == "<roster:funds[0].fund_id>"
-        and fund_review["args"].get("history_limit") == 10
-        and {
-            "status",
-            "fund_id",
-            "review",
-            "history.events",
-            "history.pagination.limit",
-            "history.pagination.next_cursor",
-            "history.pagination.has_more",
-            "history.pagination.total_count",
-            "history.pagination.truncated",
-        } <= set(fund_review.get("required", [])),
-        "fund-diligence read probes use canonical roster fund IDs",
-    )
     the_read = by_id["the_read"]
     check(
         the_read["args"] == {}
@@ -718,15 +566,40 @@ def contract_manifest():
         ) is True,
         "sample-portfolio probe verifies the canonical example",
     )
+    held_probe_ids = {
+        "roster",
+        "fund_diligence_monitoring",
+        "fund_diligence_review",
+        "findings",
+    }
+    held_tool_names = {
+        "get_diligence_roster_funds",
+        "get_fund_diligence_monitoring",
+        "get_fund_diligence_review",
+        "get_manager_diligence_findings",
+    }
     check(
-        "resolved_subject.crd_number"
-        in by_id["odd_profile"].get("required", [])
-        and "resolved_subject.crd_number"
-        in minimum.get("required_response_field_paths", {}).get(
-            "get_manager_odd_profile",
-            [],
+        {
+            by_id[probe_id]["tool"]
+            for probe_id in held_probe_ids
+        }
+        == held_tool_names
+        and all(
+            by_id[probe_id].get("required")
+            == ["status", "unavailable_reason"]
+            and by_id[probe_id].get("equals")
+            == {
+                "status": "unavailable",
+                "unavailable_reason": "manager_diligence_product_hold",
+            }
+            for probe_id in held_probe_ids
+        )
+        and all(
+            minimum.get("required_response_field_paths", {}).get(tool_name)
+            == ["status", "unavailable_reason"]
+            for tool_name in held_tool_names
         ),
-        "ODD profile contract guarantees the CRD used by the watchlist preview",
+        "held diligence tools require structured product-hold responses",
     )
     policy_probe = by_id["portfolio_policy"]
     check(
@@ -906,36 +779,6 @@ def contract_manifest():
         in regional_probe.get("required", []),
         "regional capital-markets probe verifies reporting coverage",
     )
-    ddq_gap_probe = by_id["ddq_numeric_gap"]
-    batch_ddq_probe = by_id["batch_ddq_preview"]
-    check(
-        ddq_gap_probe["tool"] == "reconcile_manager_ddq_claims"
-        and ddq_gap_probe.get("equals", {}).get(
-            "rows[0].numeric_gap.formula_id",
-        ) == "ddq-claim-filed-numeric-gap"
-        and batch_ddq_probe["tool"] == "batch_reconcile_manager_ddq_claims"
-        and batch_ddq_probe["args"].get("persist") is False
-        and batch_ddq_probe.get("equals", {}).get("read_only") is True
-        and batch_ddq_probe.get("equals", {}).get("completed_count") == 2,
-        "DDQ probes cover numeric gaps and read-only batch reconciliation",
-    )
-    batch_preview = by_id["write_batch_preview"]
-    batch_items = batch_preview["args"].get("items", [])
-    check(
-        len(batch_items) == 2
-        and all(
-            item.get("parameters", {}).get("dry_run") is True
-            for item in batch_items
-        )
-        and batch_preview.get("equals", {}).get("dry_run") is True
-        and batch_preview.get("equals", {}).get("committed") is False
-        and batch_preview.get("equals", {}).get("previewed") == 2
-        and {
-            "items[0].receipt_id",
-            "items[1].receipt_id",
-        } <= set(batch_preview.get("non_null", [])),
-        "batch write probe previews two changes without committing",
-    )
     contract_guidance = CONTRACT_CHECKS.read_text(encoding="utf-8")
     check(
         "| get_the_read" not in contract_guidance
@@ -1000,21 +843,6 @@ def contract_manifest():
             portfolio_review_data_map,
         )
     )
-    normalized_portfolio_review_guidance = re.sub(
-        r"\s+",
-        " ",
-        portfolio_review_guidance,
-    )
-    normalized_portfolio_review_template = re.sub(
-        r"\s+",
-        " ",
-        portfolio_review_template,
-    )
-    normalized_portfolio_review_data_map = re.sub(
-        r"\s+",
-        " ",
-        portfolio_review_data_map,
-    )
     construction_root = ROOT / "skills" / "gradient-portfolio-construction"
     construction_guidance = "\n".join(
         path.read_text(encoding="utf-8")
@@ -1038,11 +866,6 @@ def contract_manifest():
             / "modes"
             / "real_assets-construction-template.md",
         )
-    )
-    normalized_construction_guidance = re.sub(
-        r"\s+",
-        " ",
-        construction_guidance,
     )
     ic_memo_guidance = IC_MEMO_SKILL.read_text(encoding="utf-8")
     ic_memo_data_map = IC_MEMO_DATA_MAP.read_text(encoding="utf-8")
@@ -1303,37 +1126,39 @@ def contract_manifest():
         and "`null_reasons`" in scope_guidance,
         "exposure-reading skills use governed totals and preserve null reasons",
     )
-    check(
-        "`get_peer_allocation_intelligence`" in normalized_portfolio_review_guidance
-        and "`capabilities.peerIntelligence`" in normalized_portfolio_review_guidance
-        and "`peerIntelligence` is unavailable" in normalized_portfolio_review_guidance
-        and "Never treat this optional entitlement as a report failure"
-        in normalized_portfolio_review_guidance,
-        "portfolio review gates unlicensed peer context without failing",
+    retired_peer_markers = (
+        "get_peer_allocation_intelligence",
+        "peerIntelligence",
+        "peer intelligence",
+        "peer allocation intelligence",
+        "peer allocation context",
     )
-    peer_skip_text = (
-        "Peer allocation context was skipped because peer allocation "
-        "intelligence is not licensed for this organization"
-    )
+    peer_free_guidance = "\n".join(
+        (
+            portfolio_review_guidance,
+            construction_guidance,
+            SKILL_REQUIREMENTS.read_text(encoding="utf-8"),
+            (ROOT / "README.md").read_text(encoding="utf-8"),
+        )
+    ).lower()
     check(
-        peer_skip_text in normalized_portfolio_review_data_map
-        and peer_skip_text in normalized_portfolio_review_template
-        and "Peer allocation intelligence" in portfolio_review_template
-        and "Peer allocation context: Not licensed (optional)"
-        in SKILL_REQUIREMENTS.read_text(encoding="utf-8"),
-        "portfolio review discloses the optional peer-entitlement skip",
+        all(marker.lower() not in peer_free_guidance for marker in retired_peer_markers),
+        "portfolio skills, setup readiness, and catalog omit retired peer intelligence",
     )
+    setup_contract_text = (
+        ROOT / "skills" / "gradient-setup" / "references" / "contracts.json"
+    ).read_text(encoding="utf-8")
+    provider_catalog_text = (
+        ROOT
+        / "skills"
+        / "gradient-portfolio-import"
+        / "references"
+        / "provider-readiness-catalog.json"
+    ).read_text(encoding="utf-8")
     check(
-        "`get_peer_allocation_intelligence`" in normalized_construction_guidance
-        and "`capabilities.peerIntelligence`"
-        in normalized_construction_guidance
-        and "do not call or retry" in normalized_construction_guidance
-        and peer_skip_text in normalized_construction_guidance
-        and "Missing peer intelligence never lowers construction readiness"
-        in normalized_construction_guidance
-        and "keep the mode's readiness rating unchanged"
-        in SKILL_REQUIREMENTS.read_text(encoding="utf-8"),
-        "portfolio construction gates and skips optional peer context",
+        '"ranking_rows"' not in setup_contract_text
+        and "manager_fund_master_and_peer_statistics" not in provider_catalog_text,
+        "setup and provider catalogs omit manager peer-ranking readiness claims",
     )
     public_tools = json.loads(
         PUBLIC_TOOLS.read_text(encoding="utf-8")
@@ -1342,54 +1167,27 @@ def contract_manifest():
         CONTRACTS.read_text(encoding="utf-8")
     )["minimum_connector_contract"]["required_tools"]
     check(
-        "get_peer_allocation_intelligence" in public_tools
+        "get_peer_allocation_intelligence" not in public_tools
         and "get_peer_allocation_intelligence" not in minimum_tools,
-        "peer allocation tool is advertised but remains outside the minimum connector",
+        "retired peer allocation tool is absent from public and minimum catalogs",
     )
-    peer_fixture_states = []
+    peer_fixture_text = []
     for fixture_name in (
+        "portfolio-comprehensive.json",
+        "construction-private-markets.json",
         "construction-marketable-alternatives.json",
         "construction-real-assets.json",
+        "setup.json",
     ):
-        document = json.loads((FIX / fixture_name).read_text(encoding="utf-8"))
-        coverage = next(
-            section
-            for section in document["sections"]
-            if section.get("title") == "Coverage"
-        )
-        items = next(
-            block["items"]
-            for block in coverage["blocks"]
-            if block.get("type") == "coverage"
-        )
-        peer_fixture_states.append(
-            any(
-                item.get("name") == "Peer allocation intelligence"
-                and item.get("status") == "not licensed"
-                and peer_skip_text in item.get("note", "")
-                for item in items
-            )
+        peer_fixture_text.append(
+            (FIX / fixture_name).read_text(encoding="utf-8").lower()
         )
     check(
-        all(peer_fixture_states),
-        "construction fixtures preserve an optional unlicensed peer skip",
-    )
-    setup_document = json.loads((FIX / "setup.json").read_text(encoding="utf-8"))
-    setup_peer_unavailable = any(
-        item.get("name") == "Peer intelligence"
-        and item.get("status") == "unavailable"
-        for section in setup_document.get("sections", [])
-        if isinstance(section, dict)
-        for block in section.get("blocks", [])
-        if isinstance(block, dict) and block.get("type") == "coverage"
-        for item in block.get("items", [])
-        if isinstance(item, dict)
-    )
-    check(
-        setup_peer_unavailable
-        and "keep the mode's readiness rating unchanged"
-        in SKILL_REQUIREMENTS.read_text(encoding="utf-8"),
-        "setup reports unavailable peer access without downgrading construction",
+        all(
+            all(marker.lower() not in fixture for marker in retired_peer_markers)
+            for fixture in peer_fixture_text
+        ),
+        "portfolio, construction, and setup fixtures omit retired peer intelligence",
     )
     check(
         by_id["portfolio_factor_currency"]["tool"] == "get_portfolio_exposure"
@@ -1759,13 +1557,7 @@ def contract_manifest():
         "portfolio report skills document exposure includes and chart preservation",
     )
     check(
-        by_id["events"]["args"].get("view") == "subject"
-        and by_id["events_roster"]["args"].get("view")
-        == "organization_roster_timeline"
-        and by_id["entity_facts"]["args"].get("mode") == "snapshot"
-        and by_id["entity_facts"]["args"].get("firm_name")
-        == "<odd_profile:resolved_subject.name>"
-        and by_id["cma_consensus"]["args"] == {
+        by_id["cma_consensus"]["args"] == {
             "mode": "asset_class",
             "asset_classes": ["public_equity"],
         }
@@ -1784,45 +1576,7 @@ def contract_manifest():
             "resolved_allocation.fixed_income",
             {},
         ).get("expected") == 0.4,
-        "current event, entity-fact and CMA-consensus contracts are probed",
-    )
-    check(
-        by_id["ddq_extract_fund_aliases"]["args"].get("subject_scope")
-        == "fund"
-        and by_id["ddq_extract_fund_aliases"]["equals"].get(
-            "claims[0].field",
-        )
-        == "auditor_name"
-        and by_id["ddq_extract_fund_aliases"]["equals"].get(
-            "claims[4].field",
-        )
-        == "administrator_name"
-        and by_id["ddq_extract_fund_aliases"]["equals"].get(
-            "claims[7].field",
-        )
-        == "custodian_name"
-        and all(
-            by_id["ddq_extract_fund_aliases"]["equals"].get(
-                f"claims[{index}].extraction_reason_codes[0]",
-            )
-            == "reviewed_alias_match"
-            for index in (0, 4, 7)
-        ),
-        "fund DDQ probe covers auditor, administrator and custodian aliases",
-    )
-    numeric_claim = by_id["ddq_numeric_gap"]["args"]["claims"][0]
-    batch_claims = [
-        item["claims"][0]
-        for item in by_id["batch_ddq_preview"]["args"]["items"]
-    ]
-    check(
-        "asserted_as_of" not in numeric_claim
-        and all("asserted_as_of" not in claim for claim in batch_claims)
-        and by_id["ddq_numeric_gap"]["equals"].get(
-            "rows[0].as_of_assumed",
-        )
-        == "filing_date",
-        "DDQ probes rely on the server filing-date assumption",
+        "CMA-consensus contracts are probed",
     )
     check(
         all(resolved_issue not in contract_guidance for resolved_issue in (
@@ -1891,10 +1645,6 @@ def contract_manifest():
         "regime-state probe requires an explicit status",
     )
     check(
-        by_id["screen"]["args"].get("organization_id") == "<orgs:organizations[0].id>",
-        "screen probe uses chained organization ID",
-    )
-    check(
         by_id["capabilities_summary"]["args"].get("detail") == "summary",
         "capabilities probe requests summary detail",
     )
@@ -1910,38 +1660,9 @@ def contract_manifest():
         "capabilities probe distinguishes access modes from entitlements",
     )
     check(
-        by_id["write_roster"]["args"].get("action") == "add"
-        and by_id["write_roster"]["args"].get("subject_id")
-        == "<roster:funds[0].fund_id>",
-        "roster write probe exercises add with a canonical fund ID",
-    )
-    check(
-        bool(by_id["write_roster"]["args"].get("reason")),
-        "roster write probe exercises add-preview rationale",
-    )
-    check(
-        by_id["write_manager_monitoring"]["tool"] == "update_manager_monitoring"
-        and by_id["write_diligence_review"]["tool"] == "log_diligence_review"
-        and by_id["write_strategy_scenario"]["tool"] == "save_strategy_lab_scenario"
-        and by_id["write_diligence_review"]["args"].get(
-            "evidence_limit_acknowledged",
-        )
-        is True
+        by_id["write_strategy_scenario"]["tool"] == "save_strategy_lab_scenario"
         and by_id["write_strategy_scenario"]["args"].get("domain") == "relative",
-        "monitoring, review, and scenario writes have dry-run probes",
-    )
-    check(
-        by_id["ddq_save_preview"]["args"].get("reconciliation_id")
-        == "<ddq_reconcile_persisted:run_id>"
-        and by_id["ddq_save_preview"].get("equals", {}).get("outcome") == "preview",
-        "DDQ save preview chains persisted run ID",
-    )
-    check(
-        by_id["ddq_extract_persisted"]["args"].get("persist") is True
-        and "document_id" in by_id["ddq_extract_persisted"].get("non_null", [])
-        and by_id["ddq_reconcile_persisted"]["args"].get("document_id")
-        == "<ddq_extract_persisted:document_id>",
-        "DDQ extraction persists a document and reconciliation reuses it",
+        "Strategy Lab scenario write remains a dry-run probe",
     )
     odd_requirements = next(
         line
@@ -1949,11 +1670,9 @@ def contract_manifest():
         if line.startswith("| gradient-odd-report ")
     )
     check(
-        "full mode: get_diligence_roster_funds, get_manager_diligence_brief"
-        in odd_requirements
-        and "compare mode: search_managers, get_manager_odd_profile"
-        in odd_requirements,
-        "ODD readiness declares mode-specific required evidence",
+        all(tool_name in odd_requirements for tool_name in held_tool_names)
+        and "manager_diligence_product_hold" in odd_requirements,
+        "ODD readiness declares the structured product hold",
     )
     manager_monitor_contract = (
         ROOT
@@ -1971,16 +1690,12 @@ def contract_manifest():
     ).read_text(encoding="utf-8")
     check(
         all(
-            "get_fund_diligence_monitoring" in text
-            and "get_fund_diligence_review" in text
-            and "exactly one canonical" in text
-            and "`firm_id` or `fund_id`" in text
-            and "never both" in text
-            and "`dry_run: true`" in text
-            and "`dry_run: false`" in text
+            "manager_diligence_product_hold" in text
+            and "structured unavailable" in text
+            and "Do not invoke" in text
             for text in (manager_monitor_contract, odd_execution_contract)
         ),
-        "fund diligence guidance uses governed reads and exclusive review subjects",
+        "held diligence guidance stops on structured unavailable responses",
     )
     resolution_guidance = [
         ODD_REPORT_SKILL.read_text(encoding="utf-8")
@@ -2024,11 +1739,11 @@ def contract_manifest():
         IC_MEMO_DATA_MAP.read_text(encoding="utf-8"),
     ]
     check(
-        "server-derived signals" in evidence_wording[0].lower()
-        and "server-derived evidence signals" in evidence_wording[1].lower()
-        and "not report-ready" in evidence_wording[0].lower()
-        and "not an IC" in evidence_wording[1],
-        "diligence skills keep server evidence separate from plugin conclusions",
+        "typed unavailable result" in evidence_wording[0].lower()
+        and "do not retry" in evidence_wording[0].lower()
+        and "structured unavailable payload" in evidence_wording[1].lower()
+        and "`not assessed`" in evidence_wording[1].lower(),
+        "diligence product hold remains typed and non-inferential",
     )
 
 def contract_checker_static_edges():

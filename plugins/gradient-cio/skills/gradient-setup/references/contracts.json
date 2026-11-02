@@ -1,28 +1,21 @@
 {
-  "version": "2026-10-25",
+  "version": "2026-11-01",
   "minimum_connector_contract": {
     "minimum_service_version": "0.11.0",
     "compatibility_epoch": 4,
     "required_tools": [
       "analyze_strategy_lab_compare",
-      "batch_reconcile_manager_ddq_claims",
       "build_strategy_lab_session",
       "check_portfolio_policy",
-      "create_diligence_finding",
-      "extract_ddq_claims",
       "get_benchmarks",
       "get_capital_market_assumptions",
       "get_cma_consensus_check",
       "get_diligence_roster_funds",
-      "get_firm_13f_portfolio_review",
-      "get_firm_entity_facts",
       "get_fund_diligence_monitoring",
       "get_fund_diligence_review",
       "get_gradient_capabilities",
       "get_macro_signals",
-      "get_manager_diligence_brief",
-      "get_manager_monitor_evidence",
-      "get_manager_odd_profile",
+      "get_manager_diligence_findings",
       "get_portfolio_attribution",
       "get_portfolio_ex_ante_attribution",
       "get_portfolio_exposure",
@@ -35,28 +28,18 @@
       "get_the_read",
       "list_organizations",
       "list_portfolios",
-      "log_diligence_review",
-      "reconcile_manager_ddq_claims",
       "run_strategy_lab_date_window_robustness",
       "run_strategy_lab_expected_statistics",
       "run_strategy_lab_private_markets_pme",
       "run_strategy_lab_relative_return",
-      "save_strategy_lab_scenario",
-      "search_managers",
-      "update_manager_monitoring",
-      "upload_ddq_document"
+      "save_strategy_lab_scenario"
     ],
     "required_response_field_paths": {
       "analyze_strategy_lab_compare": [
         "domain",
-        "ranking_rows",
         "benchmark_mappings[0].status",
         "benchmark_mappings[0].selectionType",
         "benchmark_mappings[0].reason"
-      ],
-      "batch_reconcile_manager_ddq_claims": [
-        "result_type",
-        "items[0].data.rows[0].numeric_gap.formula_id"
       ],
       "build_strategy_lab_session": [
         "status",
@@ -79,13 +62,6 @@
         "semantics.risk_limit_status_rule",
         "liquidity.coverage.status",
         "concentration.coverage.status"
-      ],
-      "extract_ddq_claims": [
-        "subject_scope",
-        "claim_set_scope",
-        "claims",
-        "claims[0].extraction_reason_codes[0]",
-        "extraction_warnings"
       ],
       "get_benchmarks": [
         "benchmarks",
@@ -114,30 +90,16 @@
         "warnings"
       ],
       "get_diligence_roster_funds": [
-        "funds",
-        "capacity.effective_limit"
-      ],
-      "get_firm_entity_facts": [
-        "mode",
         "status",
-        "subject_key",
-        "facts"
+        "unavailable_reason"
       ],
       "get_fund_diligence_monitoring": [
         "status",
-        "monitoring",
-        "item_count"
+        "unavailable_reason"
       ],
       "get_fund_diligence_review": [
         "status",
-        "fund_id",
-        "review",
-        "history.events",
-        "history.pagination.limit",
-        "history.pagination.next_cursor",
-        "history.pagination.has_more",
-        "history.pagination.total_count",
-        "history.pagination.truncated"
+        "unavailable_reason"
       ],
       "get_gradient_capabilities": [
         "version",
@@ -152,24 +114,13 @@
         "scoped_coverage.view",
         "scoped_coverage.status"
       ],
-      "get_the_read": [
-        "coverage.status",
-        "coverage.missing_series",
-        "coverage.sections.visuals.status",
-        "coverage.sections.visuals.missing_fields",
-        "coverage.sections.visuals.degradation_reasons",
-        "coverage.unavailable_visuals",
-        "coverage.omitted_visual_reasons"
+      "get_macro_signals": [
+        "status",
+        "view"
       ],
-      "get_manager_diligence_brief": [
-        "brief_version",
-        "sections.manager_adv.status",
-        "synthesis.basis.state"
-      ],
-      "get_manager_odd_profile": [
-        "profile",
-        "resolved_subject",
-        "resolved_subject.crd_number"
+      "get_manager_diligence_findings": [
+        "status",
+        "unavailable_reason"
       ],
       "get_portfolio_attribution": [
         "coverage.status",
@@ -282,6 +233,15 @@
         "coverage.selected_point_count",
         "points[0].return"
       ],
+      "get_the_read": [
+        "coverage.status",
+        "coverage.missing_series",
+        "coverage.sections.visuals.status",
+        "coverage.sections.visuals.missing_fields",
+        "coverage.sections.visuals.degradation_reasons",
+        "coverage.unavailable_visuals",
+        "coverage.omitted_visual_reasons"
+      ],
       "list_organizations": [
         "organizations[0].id",
         "organizations[0].licensed_modules"
@@ -290,17 +250,6 @@
         "portfolios[0].portfolio_id",
         "portfolios[0].canonical_default",
         "total_count"
-      ],
-      "log_diligence_review": [
-        "action",
-        "dry_run",
-        "committed",
-        "outcome",
-        "receipt_id"
-      ],
-      "reconcile_manager_ddq_claims": [
-        "rows[0].numeric_gap.formula_id",
-        "rows[0].numeric_gap.formula_version"
       ],
       "run_strategy_lab_date_window_robustness": [
         "domain",
@@ -451,59 +400,6 @@
         "committed",
         "outcome",
         "receipt_id"
-      ],
-      "search_managers": [
-        "advisers",
-        "report_date"
-      ],
-      "update_manager_monitoring": [
-        "action",
-        "dry_run",
-        "committed",
-        "outcome",
-        "receipt_id"
-      ],
-      "upload_ddq_document": [
-        "document_id",
-        "status",
-        "dry_run",
-        "subject.id",
-        "file.content_sha256",
-        "would_create.source",
-        "request_fingerprint_sha256"
-      ],
-      "create_diligence_finding": [
-        "action",
-        "dry_run",
-        "committed",
-        "outcome",
-        "receipt_id"
-      ],
-      "update_diligence_roster": [
-        "action",
-        "dry_run",
-        "committed",
-        "outcome",
-        "receipt_id"
-      ],
-      "update_watchlist": [
-        "action",
-        "dry_run",
-        "committed",
-        "outcome",
-        "receipt_id"
-      ],
-      "get_macro_signals": [
-        "status",
-        "view"
-      ],
-      "get_firm_13f_portfolio_review": [
-        "status",
-        "view"
-      ],
-      "get_manager_monitor_evidence": [
-        "status",
-        "view"
       ]
     },
     "required_probe_ids": [
@@ -512,10 +408,7 @@
       "roster",
       "fund_diligence_monitoring",
       "fund_diligence_review",
-      "odd_profile",
       "the_read",
-      "manager_diligence_brief",
-      "entity_facts",
       "sample_portfolio",
       "portfolio_tree",
       "portfolio_exposure",
@@ -545,24 +438,13 @@
       "strategy_manager_compare",
       "strategy_date_windows_session",
       "strategy_date_windows",
-      "search_managers",
       "equity_fundamentals",
       "equity_risk_findings",
-      "ddq_extract_fund_aliases",
-      "ddq_numeric_gap",
-      "batch_ddq_preview",
-      "write_create_finding",
-      "write_watchlist_manager",
-      "write_manager_monitoring",
-      "write_diligence_review",
-      "write_roster",
       "write_strategy_scenario",
-      "write_upload_ddq",
       "capabilities_coverage",
       "grip_cma_statistics",
       "roster_macro_exposure",
-      "issuer_risk",
-      "monitor_draft_candidates"
+      "findings"
     ]
   },
   "mode_requirements": {
@@ -678,168 +560,48 @@
       "tool": "get_diligence_roster_funds",
       "args": {},
       "required": [
-        "funds",
-        "capacity.effective_limit",
-        "capacity.used"
-      ]
+        "status",
+        "unavailable_reason"
+      ],
+      "equals": {
+        "status": "unavailable",
+        "unavailable_reason": "manager_diligence_product_hold"
+      }
     },
     {
       "id": "fund_diligence_monitoring",
       "set": "full",
       "tool": "get_fund_diligence_monitoring",
-      "depends_on": [
-        "roster"
-      ],
       "args": {
         "fund_ids": [
-          "<roster:funds[0].fund_id>"
+          "22222222-2222-4222-8222-222222222222"
         ]
       },
       "required": [
         "status",
-        "monitoring",
-        "item_count"
-      ]
+        "unavailable_reason"
+      ],
+      "equals": {
+        "status": "unavailable",
+        "unavailable_reason": "manager_diligence_product_hold"
+      }
     },
     {
       "id": "fund_diligence_review",
       "set": "full",
       "tool": "get_fund_diligence_review",
-      "depends_on": [
-        "roster"
-      ],
       "args": {
-        "fund_id": "<roster:funds[0].fund_id>",
+        "fund_id": "22222222-2222-4222-8222-222222222222",
         "history_limit": 10
       },
       "required": [
         "status",
-        "fund_id",
-        "review",
-        "history.events",
-        "history.pagination.limit",
-        "history.pagination.next_cursor",
-        "history.pagination.has_more",
-        "history.pagination.total_count",
-        "history.pagination.truncated"
-      ]
-    },
-    {
-      "id": "odd_profile",
-      "set": "standard",
-      "tool": "get_manager_odd_profile",
-      "depends_on": [
-        "roster"
-      ],
-      "args": {
-        "firm_id": "<roster:funds[0].parent_firm_id>"
-      },
-      "required": [
-        "profile",
-        "resolved_subject",
-        "resolved_subject.crd_number"
-      ]
-    },
-    {
-      "id": "manager_diligence_brief",
-      "set": "full",
-      "tool": "get_manager_diligence_brief",
-      "depends_on": [
-        "roster"
-      ],
-      "args": {
-        "firm_id": "<roster:funds[0].parent_firm_id>",
-        "sections": [
-          "manager_adv",
-          "firm_fund_events",
-          "entity_facts",
-          "manager_monitor_evidence",
-          "firm_13f",
-          "open_findings",
-          "ddq_history",
-          "service_providers",
-          "enforcement_candidates"
-        ]
-      },
-      "required": [
-        "brief_version",
-        "status",
-        "section_order",
-        "sections.manager_adv.status",
-        "sections.manager_adv.validation_status",
-        "sections.manager_adv.payload_digest",
-        "sections.firm_fund_events.status",
-        "sections.firm_fund_events.validation_status",
-        "sections.firm_fund_events.payload_digest",
-        "sections.entity_facts.status",
-        "sections.entity_facts.validation_status",
-        "sections.entity_facts.payload_digest",
-        "sections.manager_monitor_evidence.status",
-        "sections.manager_monitor_evidence.validation_status",
-        "sections.manager_monitor_evidence.payload_digest",
-        "sections.firm_13f.status",
-        "sections.firm_13f.validation_status",
-        "sections.firm_13f.payload_digest",
-        "sections.open_findings.status",
-        "sections.open_findings.validation_status",
-        "sections.open_findings.payload_digest",
-        "sections.ddq_history.status",
-        "sections.ddq_history.validation_status",
-        "sections.ddq_history.payload_digest",
-        "sections.service_providers.status",
-        "sections.service_providers.validation_status",
-        "sections.service_providers.payload_digest",
-        "sections.enforcement_candidates.status",
-        "sections.enforcement_candidates.validation_status",
-        "sections.enforcement_candidates.payload_digest",
-        "differentiated_analytics.projection_version",
-        "differentiated_analytics.status",
-        "differentiated_analytics.ddq_longitudinal",
-        "differentiated_analytics.odd_document_assessments",
-        "differentiated_analytics.odd_document_extractions",
-        "synthesis.red_flags",
-        "synthesis.changes_since_review",
-        "synthesis.manager_questions",
-        "synthesis.trigger_rows",
-        "synthesis.basis.expected_sections",
-        "synthesis.basis.used_sections",
-        "synthesis.basis.unavailable_sections",
-        "synthesis.basis.not_applicable_sections",
-        "synthesis.basis.latest_review_at",
-        "synthesis.basis.state",
-        "synthesis.basis.reasons",
-        "synthesis.basis.degraded",
-        "synthesis.basis.completeness",
-        "synthesis.basis.used_section_count",
-        "synthesis.basis.expected_section_count"
+        "unavailable_reason"
       ],
       "equals": {
-        "brief_version": "manager-diligence-brief-v2",
-        "section_order": [
-          "manager_adv",
-          "firm_fund_events",
-          "entity_facts",
-          "manager_monitor_evidence",
-          "firm_13f",
-          "open_findings",
-          "ddq_history",
-          "service_providers",
-          "enforcement_candidates"
-        ]
+        "status": "unavailable",
+        "unavailable_reason": "manager_diligence_product_hold"
       }
-    },
-    {
-      "id": "monitor_coverage",
-      "set": "standard",
-      "tool": "get_manager_monitor_evidence",
-      "args": {
-        "mode": "coverage"
-      },
-      "required": [
-        "status",
-        "coverage.adv_freshness.status",
-        "coverage.monitored_total"
-      ]
     },
     {
       "id": "the_read",
@@ -1005,96 +767,21 @@
       ]
     },
     {
-      "id": "attention",
-      "set": "full",
-      "tool": "get_manager_diligence_attention_queue",
-      "args": {
-        "view": "changes_since_review",
-        "limit": 10
-      },
-      "required": [
-        "status",
-        "items",
-        "total_count"
-      ]
-    },
-    {
       "id": "findings",
       "set": "full",
       "tool": "get_manager_diligence_findings",
-      "depends_on": [
-        "roster"
-      ],
       "args": {
         "view": "open",
-        "firm_id": "<roster:funds[0].parent_firm_id>"
+        "firm_id": "11111111-1111-4111-8111-111111111111"
       },
       "required": [
         "status",
-        "findings",
-        "finding_count"
-      ]
-    },
-    {
-      "id": "events",
-      "set": "full",
-      "tool": "get_firm_fund_events",
-      "depends_on": [
-        "roster"
-      ],
-      "args": {
-        "view": "subject",
-        "firm_id": "<roster:funds[0].parent_firm_id>",
-        "per_page": 5
-      },
-      "required": [
-        "events",
-        "metadata.page",
-        "metadata.per_page",
-        "metadata.has_more"
-      ]
-    },
-    {
-      "id": "entity_facts",
-      "set": "full",
-      "tool": "get_firm_entity_facts",
-      "depends_on": [
-        "odd_profile"
-      ],
-      "args": {
-        "mode": "snapshot",
-        "firm_name": "<odd_profile:resolved_subject.name>"
-      },
-      "required": [
-        "mode",
-        "status",
-        "subject_key",
-        "facts",
-        "facts_truncated",
-        "source_scopes",
-        "comparability.benchmark_eligible_count",
-        "comparability.benchmark_excluded_count"
+        "unavailable_reason"
       ],
       "equals": {
-        "mode": "snapshot"
+        "status": "unavailable",
+        "unavailable_reason": "manager_diligence_product_hold"
       }
-    },
-    {
-      "id": "events_roster",
-      "set": "full",
-      "tool": "get_firm_fund_events",
-      "args": {
-        "view": "organization_roster_timeline",
-        "include_event_type_counts": true,
-        "per_page": 12
-      },
-      "required": [
-        "events",
-        "metadata.view",
-        "metadata.next_cursor",
-        "metadata.per_manager_counts",
-        "metadata.source_coverage.status"
-      ]
     },
     {
       "id": "conditions",
@@ -1341,18 +1028,6 @@
           "unit": "allocation_weight"
         }
       }
-    },
-    {
-      "id": "watchlist",
-      "set": "full",
-      "tool": "get_research_watchlist_changes",
-      "args": {
-        "limit": 5
-      },
-      "required": [
-        "status",
-        "observations"
-      ]
     },
     {
       "id": "portfolio_tree",
@@ -2230,7 +1905,6 @@
         "selected_series_summaries[2]",
         "selected_series_id_count",
         "selected_series_summary_count",
-        "ranking_rows",
         "benchmark_mappings[0].status",
         "benchmark_mappings[0].selectionType",
         "benchmark_mappings[0].reason"
@@ -2291,84 +1965,6 @@
       }
     },
     {
-      "id": "adv_13f_consistency",
-      "set": "full",
-      "tool": "get_firm_13f_portfolio_review",
-      "depends_on": [
-        "roster"
-      ],
-      "args": {
-        "view": "adv_13f_consistency",
-        "firm_id": "<roster:funds[0].parent_firm_id>"
-      },
-      "required": [
-        "result_type",
-        "view",
-        "status",
-        "read_only",
-        "persisted_draft_findings",
-        "sources",
-        "rows",
-        "rows[0].values.flags",
-        "rows[0].values.latest_13f_age_days"
-      ]
-    },
-    {
-      "id": "search_managers",
-      "set": "full",
-      "tool": "search_managers",
-      "depends_on": [
-        "orgs"
-      ],
-      "args": {
-        "organization_id": "<orgs:organizations[0].id>",
-        "query": "Bridgewater",
-        "limit": 3
-      },
-      "required": [
-        "advisers",
-        "has_more",
-        "report_date"
-      ]
-    },
-    {
-      "id": "multi_manager_13f_overlap",
-      "set": "full",
-      "tool": "get_multi_manager_13f_overlap",
-      "args": {
-        "firm_ids": [
-          "d7e6f8c1-3e4f-5a6b-7c8d-9e0f12345678",
-          "3e4f5a6b-7c8d-9e0f-1a2b-3c4d5e6f7a8b"
-        ]
-      },
-      "required": [
-        "status",
-        "managers[0].firm_id",
-        "managers[1].firm_id",
-        "pairwise[0].status",
-        "pairwise[0].weighted_overlap_pct"
-      ]
-    },
-    {
-      "id": "screen",
-      "set": "full",
-      "tool": "screen_managers",
-      "depends_on": [
-        "orgs"
-      ],
-      "args": {
-        "organization_id": "<orgs:organizations[0].id>",
-        "min_raum": 1000000000,
-        "limit": 3
-      },
-      "required": [
-        "advisers",
-        "advisers[0].crd_number",
-        "has_more"
-      ],
-      "envelope": false
-    },
-    {
       "id": "cftc_positioning",
       "set": "full",
       "tool": "get_macro_signals",
@@ -2424,44 +2020,6 @@
       "args": {
         "view": "roster_macro_exposure",
         "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>"
-      },
-      "required": [
-        "result_type",
-        "view",
-        "status",
-        "read_only",
-        "persisted_draft_findings",
-        "sources",
-        "rows"
-      ]
-    },
-    {
-      "id": "issuer_risk",
-      "set": "full",
-      "tool": "get_firm_13f_portfolio_review",
-      "depends_on": [
-        "roster"
-      ],
-      "args": {
-        "view": "issuer_risk",
-        "firm_id": "<roster:funds[0].parent_firm_id>"
-      },
-      "required": [
-        "result_type",
-        "view",
-        "status",
-        "read_only",
-        "persisted_draft_findings",
-        "sources",
-        "rows"
-      ]
-    },
-    {
-      "id": "monitor_draft_candidates",
-      "set": "full",
-      "tool": "get_manager_monitor_evidence",
-      "args": {
-        "view": "draft_candidates"
       },
       "required": [
         "result_type",
@@ -2572,354 +2130,6 @@
       ]
     },
     {
-      "id": "ddq_extract_fund_aliases",
-      "set": "full",
-      "tool": "extract_ddq_claims",
-      "args": {
-        "document_text": "Auditor: Example Audit LLP\nAdministrator: Example Fund Services\nCustodian: Example Trust",
-        "file_name": "gradient-contract-fund-aliases.txt",
-        "subject_scope": "fund",
-        "questionnaire_format": "unknown"
-      },
-      "required": [
-        "subject_scope",
-        "claim_set_scope",
-        "claims",
-        "claims[0].field",
-        "claims[0].raw_value",
-        "claims[0].extraction_reason_codes[0]",
-        "claims[4].field",
-        "claims[4].raw_value",
-        "claims[4].extraction_reason_codes[0]",
-        "claims[7].field",
-        "claims[7].raw_value",
-        "claims[7].extraction_reason_codes[0]",
-        "extraction_warnings"
-      ],
-      "equals": {
-        "subject_scope": "fund",
-        "claim_set_scope": "complete_checklist",
-        "claims[0].field": "auditor_name",
-        "claims[0].raw_value": "Example Audit LLP",
-        "claims[0].extraction_reason_codes[0]": "reviewed_alias_match",
-        "claims[4].field": "administrator_name",
-        "claims[4].raw_value": "Example Fund Services",
-        "claims[4].extraction_reason_codes[0]": "reviewed_alias_match",
-        "claims[7].field": "custodian_name",
-        "claims[7].raw_value": "Example Trust",
-        "claims[7].extraction_reason_codes[0]": "reviewed_alias_match"
-      },
-      "envelope": false
-    },
-    {
-      "id": "ddq_numeric_gap",
-      "set": "full",
-      "tool": "reconcile_manager_ddq_claims",
-      "depends_on": [
-        "roster"
-      ],
-      "args": {
-        "firm_id": "<roster:funds[0].parent_firm_id>",
-        "subject_scope": "firm",
-        "claim_set_scope": "selected_claims",
-        "file": {
-          "file_name": "gradient-contract-numeric-gap.txt",
-          "file_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        },
-        "claims": [
-          {
-            "field": "employees",
-            "claim_status": "asserted",
-            "raw_value": "42",
-            "quote": "Employees: 42",
-            "source_locator": {
-              "start": 0,
-              "end": 13,
-              "page": 1
-            },
-            "extraction_reason_codes": []
-          }
-        ]
-      },
-      "required": [
-        "result_type",
-        "rows[0].field",
-        "rows[0].claim.raw_value",
-        "rows[0].filed.raw_value",
-        "rows[0].numeric_gap.availability",
-        "rows[0].numeric_gap.signed_absolute_delta",
-        "rows[0].numeric_gap.signed_percentage_delta",
-        "rows[0].numeric_gap.absolute_delta_unit",
-        "rows[0].numeric_gap.percentage_delta_unit",
-        "rows[0].numeric_gap.absolute_delta_basis",
-        "rows[0].numeric_gap.percentage_delta_basis",
-        "rows[0].numeric_gap.formula_id",
-        "rows[0].numeric_gap.formula_version",
-        "rows[0].numeric_gap.missing_reason",
-        "verdict_counts",
-        "rows[0].as_of_assumed"
-      ],
-      "equals": {
-        "result_type": "ddq_reconciliation",
-        "rows[0].field": "employees",
-        "rows[0].numeric_gap.formula_id": "ddq-claim-filed-numeric-gap",
-        "rows[0].numeric_gap.formula_version": "v1",
-        "rows[0].as_of_assumed": "filing_date"
-      }
-    },
-    {
-      "id": "batch_ddq_preview",
-      "set": "full",
-      "tool": "batch_reconcile_manager_ddq_claims",
-      "depends_on": [
-        "roster"
-      ],
-      "args": {
-        "persist": false,
-        "items": [
-          {
-            "item_id": "numeric-gap-a",
-            "subject_scope": "firm",
-            "firm_id": "<roster:funds[0].parent_firm_id>",
-            "claim_set_scope": "selected_claims",
-            "file": {
-              "file_name": "gradient-contract-batch-a.txt",
-              "file_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-            },
-            "claims": [
-              {
-                "field": "employees",
-                "claim_status": "asserted",
-                "raw_value": "42",
-                "quote": "Employees: 42",
-                "source_locator": {
-                  "start": 0,
-                  "end": 13,
-                  "page": 1
-                },
-                "extraction_reason_codes": []
-              }
-            ]
-          },
-          {
-            "item_id": "numeric-gap-b",
-            "subject_scope": "firm",
-            "firm_id": "<roster:funds[0].parent_firm_id>",
-            "claim_set_scope": "selected_claims",
-            "file": {
-              "file_name": "gradient-contract-batch-b.txt",
-              "file_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-            },
-            "claims": [
-              {
-                "field": "employees",
-                "claim_status": "asserted",
-                "raw_value": "43",
-                "quote": "Employees: 43",
-                "source_locator": {
-                  "start": 0,
-                  "end": 13,
-                  "page": 1
-                },
-                "extraction_reason_codes": []
-              }
-            ]
-          }
-        ]
-      },
-      "required": [
-        "result_type",
-        "mode",
-        "read_only",
-        "requested_count",
-        "completed_count",
-        "unavailable_count",
-        "failed_count",
-        "items[0].status",
-        "items[0].data.rows[0].numeric_gap.formula_id",
-        "items[1].status",
-        "items[1].data.rows[0].numeric_gap.formula_id",
-        "source_statement",
-        "items[0].data.rows[0].as_of_assumed",
-        "items[1].data.rows[0].as_of_assumed"
-      ],
-      "equals": {
-        "result_type": "batch_ddq_reconciliation",
-        "mode": "preview",
-        "read_only": true,
-        "requested_count": 2,
-        "completed_count": 2,
-        "unavailable_count": 0,
-        "failed_count": 0,
-        "items[0].status": "completed",
-        "items[0].data.rows[0].numeric_gap.formula_id": "ddq-claim-filed-numeric-gap",
-        "items[1].status": "completed",
-        "items[1].data.rows[0].numeric_gap.formula_id": "ddq-claim-filed-numeric-gap",
-        "items[0].data.rows[0].as_of_assumed": "filing_date",
-        "items[1].data.rows[0].as_of_assumed": "filing_date"
-      }
-    },
-    {
-      "id": "write_create_finding",
-      "set": "writes",
-      "tool": "create_diligence_finding",
-      "depends_on": [
-        "orgs",
-        "roster"
-      ],
-      "args": {
-        "organization_id": "<orgs:organizations[0].id>",
-        "dry_run": true,
-        "idempotency_key": "gradient-contract-create-finding-v1",
-        "firm_id": "<roster:funds[0].parent_firm_id>",
-        "finding_code": "contract-self-test:dry-run-v1",
-        "title": "Gradient contract self-test preview",
-        "summary": "Dry-run contract verification; do not persist this finding.",
-        "severity": "low"
-      },
-      "required": [
-        "action",
-        "outcome",
-        "receipt_id"
-      ],
-      "non_null": [
-        "receipt_id"
-      ],
-      "equals": {
-        "dry_run": true,
-        "committed": false
-      },
-      "envelope": false
-    },
-    {
-      "id": "write_watchlist_manager",
-      "set": "writes",
-      "tool": "update_watchlist",
-      "depends_on": [
-        "orgs",
-        "odd_profile"
-      ],
-      "args": {
-        "organization_id": "<orgs:organizations[0].id>",
-        "dry_run": true,
-        "idempotency_key": "gradient-contract-watchlist-manager-v1",
-        "action": "add",
-        "item": {
-          "id": "contract-probe-manager-adv",
-          "kind": "manager",
-          "label": "Gradient contract probe manager",
-          "reference": "<odd_profile:resolved_subject.crd_number>",
-          "adv_crd": "<odd_profile:resolved_subject.crd_number>"
-        }
-      },
-      "required": [
-        "action",
-        "outcome",
-        "receipt_id"
-      ],
-      "non_null": [
-        "receipt_id"
-      ],
-      "equals": {
-        "dry_run": true,
-        "committed": false
-      },
-      "envelope": false
-    },
-    {
-      "id": "write_manager_monitoring",
-      "set": "writes",
-      "tool": "update_manager_monitoring",
-      "depends_on": [
-        "odd_profile",
-        "roster"
-      ],
-      "args": {
-        "dry_run": true,
-        "idempotency_key": "gradient-contract-monitoring-subscribe-v1",
-        "action": "subscribe",
-        "crd_number": "<odd_profile:resolved_subject.crd_number>",
-        "firm_id": "<roster:funds[0].parent_firm_id>",
-        "max_tier": 1,
-        "email_enabled": false
-      },
-      "required": [
-        "action",
-        "outcome",
-        "receipt_id"
-      ],
-      "non_null": [
-        "receipt_id"
-      ],
-      "equals": {
-        "dry_run": true,
-        "committed": false
-      },
-      "envelope": false
-    },
-    {
-      "id": "write_diligence_review",
-      "set": "writes",
-      "tool": "log_diligence_review",
-      "depends_on": [
-        "roster"
-      ],
-      "args": {
-        "dry_run": true,
-        "idempotency_key": "gradient-contract-diligence-review-v1",
-        "firm_id": "<roster:funds[0].parent_firm_id>",
-        "notes": "Gradient contract self-test preview; do not persist this review.",
-        "scope": {
-          "version": 1,
-          "purpose": "contract_self_test"
-        },
-        "evidence_limit_acknowledged": true
-      },
-      "required": [
-        "action",
-        "outcome",
-        "receipt_id"
-      ],
-      "non_null": [
-        "receipt_id"
-      ],
-      "equals": {
-        "dry_run": true,
-        "committed": false
-      },
-      "envelope": false
-    },
-    {
-      "id": "write_roster",
-      "set": "writes",
-      "tool": "update_diligence_roster",
-      "depends_on": [
-        "orgs",
-        "roster"
-      ],
-      "args": {
-        "organization_id": "<orgs:organizations[0].id>",
-        "dry_run": true,
-        "idempotency_key": "gradient-contract-roster-add-v1",
-        "action": "add",
-        "subject_id": "<roster:funds[0].fund_id>",
-        "reason": "Gradient contract self-test add preview"
-      },
-      "required": [
-        "action",
-        "outcome",
-        "receipt_id"
-      ],
-      "non_null": [
-        "receipt_id"
-      ],
-      "equals": {
-        "dry_run": true,
-        "committed": false
-      },
-      "envelope": false
-    },
-    {
       "id": "write_strategy_scenario",
       "set": "writes",
       "tool": "save_strategy_lab_scenario",
@@ -2942,208 +2152,6 @@
         "receipt_id"
       ],
       "equals": {
-        "dry_run": true,
-        "committed": false
-      },
-      "envelope": false
-    },
-    {
-      "id": "write_batch_preview",
-      "set": "writes",
-      "tool": "preview_diligence_changes",
-      "depends_on": [
-        "orgs",
-        "roster"
-      ],
-      "args": {
-        "organization_id": "<orgs:organizations[0].id>",
-        "items": [
-          {
-            "item_id": "finding-create",
-            "action": "create_diligence_finding",
-            "parameters": {
-              "dry_run": true,
-              "idempotency_key": "gradient-contract-batch-finding-v1",
-              "firm_id": "<roster:funds[0].parent_firm_id>",
-              "finding_code": "contract-self-test:batch-preview-v1",
-              "title": "Gradient batch contract preview",
-              "summary": "Batch dry-run verification; do not persist this finding.",
-              "severity": "low"
-            }
-          },
-          {
-            "item_id": "roster-add",
-            "action": "update_diligence_roster",
-            "parameters": {
-              "dry_run": true,
-              "idempotency_key": "gradient-contract-batch-roster-v1",
-              "action": "add",
-              "subject_id": "<roster:funds[0].fund_id>",
-              "reason": "Gradient batch contract self-test preview"
-            }
-          }
-        ]
-      },
-      "required": [
-        "commit_mode",
-        "item_count",
-        "previewed",
-        "failed",
-        "items[0].preview.outcome",
-        "items[1].preview.outcome"
-      ],
-      "non_null": [
-        "items[0].receipt_id",
-        "items[1].receipt_id"
-      ],
-      "equals": {
-        "dry_run": true,
-        "committed": false,
-        "commit_mode": "individual_existing_action_only",
-        "item_count": 2,
-        "previewed": 2,
-        "failed": 0,
-        "items[0].preview.dry_run": true,
-        "items[0].preview.committed": false,
-        "items[1].preview.dry_run": true,
-        "items[1].preview.committed": false
-      },
-      "envelope": false
-    },
-    {
-      "id": "write_upload_ddq",
-      "set": "writes",
-      "tool": "upload_ddq_document",
-      "depends_on": [
-        "orgs",
-        "roster"
-      ],
-      "args": {
-        "organization_id": "<orgs:organizations[0].id>",
-        "firm_id": "<roster:funds[0].parent_firm_id>",
-        "filename": "gradient-contract-upload-preview.txt",
-        "document_text": "Employees: 42",
-        "idempotency_key": "gradient-contract-upload-ddq-v1",
-        "dry_run": true
-      },
-      "required": [
-        "document_id",
-        "status",
-        "dry_run",
-        "idempotency_key",
-        "subject.kind",
-        "subject.id",
-        "file.filename",
-        "file.source_kind",
-        "file.size_bytes",
-        "file.content_sha256",
-        "would_create.asset_kind",
-        "would_create.visibility",
-        "would_create.source",
-        "would_create.initial_status",
-        "would_create.enqueue_extraction",
-        "request_fingerprint_sha256"
-      ],
-      "non_null": [
-        "subject.id",
-        "file.content_sha256",
-        "request_fingerprint_sha256"
-      ],
-      "equals": {
-        "document_id": null,
-        "status": "preview",
-        "dry_run": true,
-        "subject.kind": "firm",
-        "file.filename": "gradient-contract-upload-preview.txt",
-        "file.source_kind": "document_text",
-        "would_create.asset_kind": "document",
-        "would_create.visibility": "organization",
-        "would_create.source": "mcp_ddq_upload",
-        "would_create.initial_status": "ready",
-        "would_create.enqueue_extraction": false
-      },
-      "envelope": false
-    },
-    {
-      "id": "ddq_extract_persisted",
-      "set": "ddq-save-preview",
-      "tool": "extract_ddq_claims",
-      "depends_on": [
-        "orgs",
-        "roster"
-      ],
-      "args": {
-        "organization_id": "<orgs:organizations[0].id>",
-        "firm_id": "<roster:funds[0].parent_firm_id>",
-        "subject_scope": "firm",
-        "document_text": "Employees: 42",
-        "file_name": "gradient-contract-self-test-ddq.txt",
-        "persist": true,
-        "questionnaire_format": "unknown"
-      },
-      "required": [
-        "document_id",
-        "claim_set_scope",
-        "file.file_sha256",
-        "claims"
-      ],
-      "non_null": [
-        "document_id"
-      ],
-      "envelope": false
-    },
-    {
-      "id": "ddq_reconcile_persisted",
-      "set": "ddq-save-preview",
-      "tool": "reconcile_manager_ddq_claims",
-      "depends_on": [
-        "ddq_extract_persisted",
-        "orgs",
-        "roster"
-      ],
-      "args": {
-        "organization_id": "<orgs:organizations[0].id>",
-        "firm_id": "<roster:funds[0].parent_firm_id>",
-        "document_id": "<ddq_extract_persisted:document_id>",
-        "persist": true,
-        "claim_set_scope": "<ddq_extract_persisted:claim_set_scope>",
-        "file": "<ddq_extract_persisted:file>",
-        "claims": "<ddq_extract_persisted:claims>"
-      },
-      "required": [
-        "result_type",
-        "run_id",
-        "persistence.status",
-        "subject.firm_id",
-        "rows",
-        "verdict_counts"
-      ],
-      "non_null": [
-        "run_id"
-      ]
-    },
-    {
-      "id": "ddq_save_preview",
-      "set": "ddq-save-preview",
-      "tool": "save_ddq_reconciliation",
-      "depends_on": [
-        "orgs",
-        "ddq_reconcile_persisted"
-      ],
-      "args": {
-        "organization_id": "<orgs:organizations[0].id>",
-        "reconciliation_id": "<ddq_reconcile_persisted:run_id>",
-        "dry_run": true,
-        "idempotency_key": "gradient-contract-save-ddq-preview-v1"
-      },
-      "required": [
-        "reconciliation_id",
-        "outcome",
-        "persistence.status",
-        "reviewer_note_recorded"
-      ],
-      "equals": {
-        "outcome": "preview",
         "dry_run": true,
         "committed": false
       },

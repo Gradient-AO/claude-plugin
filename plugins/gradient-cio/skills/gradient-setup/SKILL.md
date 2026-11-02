@@ -29,7 +29,6 @@ report them as separate modules; never use the canonical illustrative portfolio 
 2. Call `list_organizations`. An auth error means the sign-in expired or lacks scopes: ask the user to reconnect.
    If more than one organization is returned and the user has not named one, ask which to check.
    Record `licensed_modules` and `role`.
-
 ## 2. Access and data readiness
 1. Call `get_gradient_capabilities` with the `organization_id` and `detail: "summary"`, omitting `scope`; for a bounded follow-up use `scope: {"view":"manager_diligence"}` and preserve `scoped_coverage`:
    - `product_entitlements` = commercial licenses; `capability_access_modes` = each capability's `live`,
@@ -66,17 +65,20 @@ report them as separate modules; never use the canonical illustrative portfolio 
    not Ready or Not licensed.
    Then apply `mode_requirements` for the selected construction mode. Run `check_contract.py --validate-mode <contracts.json> gradient-portfolio-construction <mode> <capabilities-response.json>`;
    a missing `get_private_markets_holdings` makes only `private_markets` construction **Not ready**. For portfolio import, validate `gradient-portfolio-import governed`; all eleven governed import tools are required.
-4. Call `get_diligence_roster_funds`: roster size, capacity used and available, and reviews due within 30 days.
+4. The four advertised manager-diligence tools are temporarily held:
+   `get_diligence_roster_funds`, `get_fund_diligence_monitoring`,
+   `get_fund_diligence_review`, and `get_manager_diligence_findings`.
+   Each must return exactly `status: "unavailable"` with
+   `unavailable_reason: "manager_diligence_product_hold"`. Record that
+   structured result without retrying or inferring roster, review, monitoring,
+   or finding data.
 ## 3. Contract self-test
-
-Run the probes in `references/contract-checks.md`. The **standard** set is 8 quick reads (default). The
-**full read** set is 67 reads (the 8 standard plus 59 full probes); run it when the user asks for a health
-check or self-test, or after a plugin update. The separate **writes** set is 8 dry-run previews, including
-monitoring, review and Strategy Lab scenario previews plus one batch-preview contract and one DDQ upload
-preview, and must never commit. Private-markets construction adds one fictional `private_markets_holdings`
-read probe. The **DDQ save-preview** set is 3 calls: it intentionally persists one fictional test
-document and one immutable reconciliation test run so that document identity and the chained save can be
-tested with `dry_run: true`; disclose that persistence before running it. The dedicated
+Run the probes in `references/contract-checks.md`. The **standard** set is 6 quick reads (default). The
+**full read** set is 50 reads (the 6 standard plus 44 full probes); run it when the user asks for a health
+check or self-test, or after a plugin update. The four held diligence probes verify only their structured
+unavailable payloads. The separate **writes** set contains the Strategy Lab scenario dry-run preview and
+must never commit. Private-markets construction adds one fictional `private_markets_holdings`
+read probe. The dedicated
 **portfolio-import-governed** defines 11 schema-driven calls and requires an authorized source connector, one provider/account, and one existing Gradient portfolio. It covers all sixteen runtime types, including Phase 4 portfolio/allocation/policy records and Phase 5 public-security, fixed-income, liquidity, classification, pacing, and source-document-reference records through the generic staging path. Its safe
 readiness path stops after preview plus session/history reads. Commit requires runtime "commit_enabled" treatment and current-conversation
 confirmation of the exact displayed diff, issues, controls, digest and receipt; rollback requires a separate
@@ -85,7 +87,8 @@ explicit request with the exact destination-after digest. Monthly returns are mo
 sessions; assignments target only portfolios, allocations, commitments, or overlays, with weights only on
 allocations. A client-owned scheduled task may stage only with `approval_surface: "gradient_ui"` and return
 `review_url`; every v1 run requires Gradient UI review and never auto-commits in Claude. This is connector
-ingest, not Gradient UI file upload. The complete matrix is 87 authorized calls.
+ingest, not Gradient UI file upload. The complete matrix is 52 calls, or 63
+when all eleven governed portfolio-import definitions are authorized.
 For each probe, record pass, fail (with error code and HTTP status) or not run (not entitled), and the
 response `as_of`. Resolve `depends_on` arguments with `check_contract.py --resolve-args`; do not manually
 copy or invent chained IDs.
@@ -95,7 +98,6 @@ For a saved response file you can check required paths with
 
 Treat every failed probe as a finding: quote the error code, HTTP status and request ID so the user can send
 it to Gradient support. Do not replace a failed result with a local calculation or infer an empty result.
-
 ## 4. Branding
 Check the plugin's `branding.json` (plugin root). `brand: "gradient"` is the explicit default and renders
 the GradientCIO mark. An empty `client_name` is intentional in the public marketplace package; it prevents a
@@ -103,7 +105,6 @@ client identity from shipping to every installer and is not an unbranded-report 
 client branding: an administrator sets the client name and logo before distributing a private client build
 (`python tools/set_branding.py` at the plugin root); for one report, give a name and logo in the conversation
 and the skill renders with `--brand`.
-
 ## 5. Build the report
 Write and validate `report.json` (JSON block mode, see `references/report-style.md`). Select PDF by default;
 select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select both when it says `both`
@@ -145,15 +146,14 @@ Sections (soft target 4–5 pages; hard ceiling 7):
 4. **Connection checks** — kicker gives the pass count as a sentence; table: Check, Tool, Result (chip), As of,
    Note with `widths` `["16%","28%","12%","12%","32%"]` and `nowrap: [3]`. Then a `findings` block listing
    new failures only (severity high when a core skill is blocked, medium otherwise).
-5. **Try next** — `questions` block with 3 prompts tailored to what is ready, e.g. "Run an ODD report on
-   <first roster fund>", "Give me this week's manager monitoring digest", "Build the macro briefing deck for
-   Thursday's committee".
+5. **Try next** — `questions` block with 3 prompts tailored to what is ready,
+   e.g. "Review our total portfolio", "Build a fixed-income sleeve allocation",
+   and "Build the macro briefing deck for Thursday's committee".
 6. **Appendix A — Sources and methods** (`num: "A"`) — tool, as-of, validation status, payload digest for each call.
 
 Then follow "Check and deliver" in `references/report-style.md`. Apply the
 canonical QA command's specific repair levers and rerun it until clean.
 
 ## 6. Offer next steps
-- If the user has roster funds and the monitoring skill is ready, offer to set up the weekly monitoring digest
-  as a scheduled task (see gradient-odd-manager-monitor).
+- Do not offer manager-monitor scheduling while the manager-diligence product hold is active.
 - If something is not licensed, say which module unlocks it; do not upsell beyond that.

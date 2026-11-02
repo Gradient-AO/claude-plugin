@@ -1,5 +1,11 @@
 # DDQ reconciliation contract
 
+## Current product hold
+
+This contract is inactive while `manager_diligence_product_hold` is returned.
+No DDQ extraction, reconciliation, preview, or persistence tool is advertised.
+Return the typed unavailable result and do not infer a verdict locally.
+
 Read the relevant section immediately before extraction, reconciliation,
 report construction, or persistence.
 
@@ -10,9 +16,9 @@ IDs first, otherwise search by name/CRD. Firm reconciliation requires
 `firm_id`; a bare CRD is insufficient. Fund reconciliation requires
 `subject_scope: "fund"` and catalog `fund_id`. If a `pfid:` candidate has no
 canonical ID, report `canonical_fund_id_unavailable`; never calculate a local
-verdict. `get_manager_odd_profile` is context only.
+verdict. The historical manager profile is unavailable during the hold.
 
-Use `extract_ddq_claims` once on canonical text. Fund-provider labels require
+The retired DDQ extraction step used canonical text. Fund-provider labels require
 fund scope. Preserve reviewed alias matches. Add quote-backed
 `transcribed_claims` for narrative answers. Hash the original file. For every
 claim preserve verbatim quote, raw value, exact character and line offsets,
@@ -30,7 +36,7 @@ mapping requires judgment.
 
 ## Governed reconciliation
 
-Call `reconcile_manager_ddq_claims` once per canonical subject, at most 21
+The retired governed reconciliation accepted one canonical subject, at most 21
 claims:
 - firm: `firm_id`, `claim_set_scope: "selected_claims"`, file, firm claims;
 - fund: `fund_id`, same file, that fund's claims;
@@ -105,12 +111,5 @@ results. QA and fact checks block delivery.
 
 ## Findings and workpaper writes
 
-Offer findings only after delivery. Preview batch changes through
-`preview_diligence_changes`, then commit each `create_diligence_finding` only
-after explicit confirmation, preserving unique finding code, stable
-idempotency key, severity, subject, and quoted/date-stamped summary.
-
-`save_ddq_reconciliation` requires the returned `run_id`. If null, do not
-invent one; the report remains the record. Use reconciliation history to note
-prior-run changes. Keep synthetic/test documents out of findings unless the
-user explicitly asks; prefix such titles `TEST:`.
+No manager-diligence writes are advertised during the product hold. Do not
+preview or commit historical findings or reconciliation records.

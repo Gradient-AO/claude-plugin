@@ -98,7 +98,7 @@
       "id": "sources-method",
       "num": "A",
       "title": "Appendix — Sources and methods",
-      "kicker": "Governed roster and attention-queue evidence",
+      "kicker": "Manager-diligence product hold",
       "blocks": [
         {
           "type": "table",
@@ -116,14 +116,14 @@
           "rows": [
             [
               "S1",
-              "Roster monitoring and attention queue",
-              "gradient_tool",
-              "get_manager_diligence_attention_queue",
-              "view: red_flags; roster fund IDs",
+              "Fund diligence monitoring — product hold",
+              "gradient_tool_metadata",
+              "get_fund_diligence_monitoring",
+              "status: unavailable",
               "2026-10-01",
-              "Illustrative test roster",
-              "passed",
-              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              "Unavailable during product hold",
+              "unavailable: manager_diligence_product_hold",
+              "not_applicable_metadata_response"
             ]
           ]
         },

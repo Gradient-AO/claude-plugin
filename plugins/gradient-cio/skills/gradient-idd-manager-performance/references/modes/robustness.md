@@ -7,6 +7,8 @@ Test whether a manager conclusion survives returned start-date, window, rolling-
 - Read `references/contracts/idd-methodology.md` before analysis and use only server-returned values.
 - Match each manager to its own benchmark; disclose unavailable or advisory matches.
 - Preserve methods, units, dates, observations, coverage, truncation, and request IDs.
+- Test benchmark-relative persistence only. Peer, cohort, and manager-universe
+  rankings or percentiles are prohibited.
 - Do not rank quality, recommend a hire, or turn missing evidence into a neutral result.
 - Label illustrative evidence exactly as required by `references/report-style.md`.
 

@@ -7,8 +7,9 @@ covers one subject and is normally 6–8 PDF pages.
 
 - Every number comes from Gradient evidence, a user document, or an explicitly
   governed calculation and carries `[S#]`.
-- Form ADV is adviser-reported; Gradient cohort analytics are positioning, not
-  quality or performance rankings. Firm Form 13F is not fund holdings.
+- Form ADV is adviser-reported. Use its absolute filed facts only; manager peer
+  cohorts, percentiles, rankings, and "relative to peers" claims are
+  prohibited. Firm Form 13F is not fund holdings.
 - Absence, truncation, validation failure, and subject-resolution failure are
   disclosed with their typed reasons, never interpreted as zero.
 - Server-derived evidence signals are inputs, not report-ready prose or the

@@ -22,7 +22,7 @@
       "return_series_id": "b0000000-0000-0000-0000-000000000002",
       "benchmark_series_id": "b0000000-0000-0000-0000-000000000004",
       "benchmark_status": "advisory",
-      "benchmark_rationale": "User-selected advisory peer benchmark",
+      "benchmark_rationale": "User-selected advisory mandate benchmark",
       "start_date": "2023-01-31",
       "end_date": "2025-12-31",
       "observation_count": 36

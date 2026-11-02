@@ -254,6 +254,10 @@ callout with that exact title, and ends with sourced Analysis.}
 ## 10. Manager & Operational Diligence
 
 {One row per manager with ≥ 1% of NAV; sort by exposure descending; "Other (<n> managers)" as last row.}
+{For Manager Hire, compare user-selected named managers on absolute Form ADV
+facts only. Do not include peer/cohort percentiles, universe rankings, peer
+positioning, or "relative to peers" claims. Keep benchmark-relative investment
+evidence in the performance sections.}
 
 ```
 | Manager | Strategy | Exposure (% NAV) | ODD red flags | Open findings (H/M/L) | Monitor alerts | GIPS status | Last review | Source |

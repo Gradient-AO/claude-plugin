@@ -1480,11 +1480,6 @@
               "note": "No selected series [S8]"
             },
             {
-              "name": "Peer allocation context",
-              "status": "unavailable",
-              "note": "Optional context not returned [S7]"
-            },
-            {
               "name": "Transaction costs",
               "status": "unavailable",
               "note": "Not returned [S8]"

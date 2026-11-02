@@ -1,5 +1,19 @@
 # Changelog
 
+## 6.8.5
+- Removed manager peer/cohort percentile positioning from ODD reports, monitoring guidance, setup readiness, fixtures, and capability copy while preserving absolute named-manager Form ADV comparison.
+- Prohibited peer and universe rankings in manager performance and manager-hire memos; shortlist advancement now uses user-specified benchmark-relative criteria and returned persistence evidence.
+- Client update: `/plugin marketplace update gradientcio`
+
+## 6.8.4
+- Removed the public peer-allocation intelligence tool and all related skill gating, workflow steps, readiness copy, fixtures and examples.
+- Client update: `/plugin marketplace update gradientcio`
+
+## 6.8.3
+- Aligned the public Gradient MCP catalog with the manager-diligence product hold while preserving structured hold responses for the four client-facing diligence reads.
+- Removed held diligence tools that are not invokable from client discovery so skills no longer receive raw tool-not-found protocol errors.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.8.2
 - Added the governed portfolio-import bundle lifecycle to the public Gradient MCP tool catalog.
 - Retired the superseded standalone portfolio-import run rollback from public discovery.

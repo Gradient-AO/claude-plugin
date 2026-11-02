@@ -371,86 +371,74 @@
           "rows": [
             [
               "S1",
-              "Diligence Roster and capacity",
+              "Diligence Roster and capacity — structured product-hold response",
               "gradient_tool",
               "get_diligence_roster_funds",
-              "illustrative sample",
+              "expected unavailable payload",
               "2026-10-04",
               "Illustrative sample data",
               {
-                "chip": "passed",
-                "status": "passed"
+                "chip": "Unavailable: manager_diligence_product_hold",
+                "status": "unavailable"
               },
-              "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              "not_available:no_payload"
             ],
             [
               "S2",
-              "Attention queue, changes since review, red flags",
-              "gradient_tool",
-              "get_manager_diligence_attention_queue",
+              "Attention queue, changes since review, red flags — bundled illustrative source",
+              "user_document",
+              "Bundled illustrative source",
               "illustrative sample",
               "2026-10-04",
               "Illustrative sample data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "not_applicable: bundled illustrative source",
               "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
             ],
             [
               "S3",
-              "Monitor alerts and coverage",
-              "gradient_tool",
-              "get_manager_monitor_evidence",
+              "Monitor alerts and coverage — bundled illustrative source",
+              "user_document",
+              "Bundled illustrative source",
               "illustrative sample",
               "2026-10-01",
               "Illustrative sample data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "not_applicable: bundled illustrative source",
               "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
             ],
             [
               "S4",
-              "Open findings — Ridgeview Advisors",
+              "Open findings — Ridgeview Advisors — structured product-hold response",
               "gradient_tool",
               "get_manager_diligence_findings",
-              "illustrative sample",
+              "expected unavailable payload",
               "2026-10-04",
               "Illustrative sample data",
               {
-                "chip": "advisory",
-                "status": "advisory"
+                "chip": "Unavailable: manager_diligence_product_hold",
+                "status": "unavailable"
               },
-              "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+              "not_available:no_payload"
             ],
             [
               "S5",
-              "Firm and fund events — Ridgeview Advisors",
-              "gradient_tool",
-              "get_firm_fund_events",
+              "Firm and fund events — Ridgeview Advisors — bundled illustrative source",
+              "user_document",
+              "Bundled illustrative source",
               "event_date_from=2026-09-28; event_date_to=2026-10-04; illustrative sample",
               "2026-10-04",
               "Illustrative sample data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "not_applicable: bundled illustrative source",
               "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
             ],
             [
               "S6",
-              "Research watchlist changes",
-              "gradient_tool",
-              "get_research_watchlist_changes",
+              "Research watchlist changes — bundled illustrative source",
+              "user_document",
+              "Bundled illustrative source",
               "illustrative sample",
               "2026-10-04",
               "Illustrative sample data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "not_applicable: bundled illustrative source",
               "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
             ]
           ],

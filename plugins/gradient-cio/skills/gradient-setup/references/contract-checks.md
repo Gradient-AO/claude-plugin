@@ -27,27 +27,28 @@ The standard `get_the_read` probe intentionally sends no arguments and verifies
 that `publication.requested_as_of_date` is null. `asOfDate` is a historical-publication cutoff, not a meeting
 or report date; the default probe therefore exercises the current latest-publication contract.
 
-**Standard set (default, 8 reads):** orgs, roster, odd_profile, monitor_coverage, the_read, calendar,
-sample_portfolio, capabilities_coverage. The scoped capability probe uses
+**Standard set (default, 6 reads):** orgs, roster, the_read, calendar,
+sample_portfolio, capabilities_coverage. The roster probe verifies the
+structured manager-diligence product-hold response. The scoped capability probe uses
 `scope: {view: manager_diligence}`; the sample probe verifies that `list_portfolios`
 returns Gradient's canonical example first.
 
-**Full read set (65 reads including standard):** standard plus capabilities_summary,
-fund_diligence_monitoring, fund_diligence_review, manager_diligence_brief,
-attention, findings, events, events_roster, entity_facts, conditions, credit_spreads, gradient_signal, regime_state,
-cma_baseline, cma_consensus, cma_consensus_allocation, watchlist,
+**Full read set (50 reads including standard):** standard plus capabilities_summary,
+fund_diligence_monitoring, fund_diligence_review, findings, conditions,
+credit_spreads, gradient_signal, regime_state, cma_baseline,
+cma_correlations_full_matrix, cma_portfolio_analytics, cma_consensus,
+cma_consensus_allocation,
 portfolio_tree, portfolio_exposure, portfolio_policy, portfolio_ownership, portfolio_returns,
 portfolio_attribution, portfolio_attribution_periods, portfolio_ex_ante_attribution,
 portfolio_factor_currency, portfolio_risk_contribution, portfolio_commitment_analytics,
 strategy_benchmarks, strategy_return_series, two Strategy Lab session builders,
 strategy_expected_statistics, strategy_pme_builder, strategy_pme,
 strategy_pme_sensitivity_builder, strategy_pme_sensitivity, strategy_relative_return,
-strategy_manager_compare, strategy_date_windows,
-adv_13f_consistency, issuer_risk, monitor_draft_candidates,
-multi_manager_13f_overlap, search_managers, screen, cftc_positioning, hf_crowding,
-grip_cma_statistics, roster_macro_exposure, regional_facts,
-regional_capital_markets, equity_fundamentals, equity_risk_findings, ddq_extract_fund_aliases,
-ddq_numeric_gap and batch_ddq_preview.
+strategy_manager_compare, strategy_date_windows, cftc_positioning, hf_crowding,
+grip_cma_statistics, roster_macro_exposure, regional facts/capital-markets,
+and public-equity fundamentals/risk findings. The three full-set diligence
+probes verify the same structured product-hold response as the standard roster
+probe.
 
 The portfolio policy probe verifies governed-only semantics and the 2% watch boundary. The returns probe
 requests the summary and benchmark-relative sections through an explicit `fields` projection, sets `limit:
@@ -60,27 +61,11 @@ another series. Attribution
 verifies the bounded Brinson-Fachler surface, persisted
 monthly segment basis, linked summary, segment effects and zero-residual reconciliation for the canonical
 example; no numeric attribution may be inferred when the tool reports typed unavailability. Equity fundamentals requires
-the complete leverage contract, including formula identity and period basis. DDQ probes require server-returned
-numeric-gap formula metadata; the batch probe is read-only and must complete both items.
+the complete leverage contract, including formula identity and period basis.
 
-**Writes set (8 dry-run previews):** write_create_finding, write_watchlist_manager,
-write_manager_monitoring, write_diligence_review, write_roster, write_strategy_scenario,
-write_batch_preview and write_upload_ddq. Every call must retain `dry_run: true`. The finding, watchlist,
-monitoring, review, roster and scenario action previews require `committed: false` and a non-null
-`receipt_id`; the upload preview instead
-requires `status: "preview"`, `document_id: null`, a request fingerprint and the complete `would_create`
-description. Never substitute
-`dry_run: false`, and never follow a preview receipt with a commit during a contract self-test. The roster
-probe exercises add with a canonical fund ID from the roster response; do not substitute its parent firm ID.
-It also sends a non-empty `reason` to verify add-preview rationale support. The batch probe verifies two
-isolated previews and must return `commit_mode: "individual_existing_action_only"`; do not execute its
-returned commit instructions.
-
-**DDQ save-preview set (3 calls):** ddq_extract_persisted, ddq_reconcile_persisted, then ddq_save_preview.
-The first call persists fictional inline text as a ready subject-bound document and must return a non-null
-`document_id`. The reconciliation reuses that stored document and persists an immutable test run. The chained
-save call is still a dry-run preview and must return `outcome: "preview"`, `dry_run: true` and `committed:
-false`.
+**Writes set (1 dry-run preview):** `write_strategy_scenario`. It must retain
+`dry_run: true`, return `committed: false` and a non-null `receipt_id`, and
+must never be followed by a commit during a contract self-test.
 
 **Portfolio-import-governed set (11 schema-driven definitions):**
 portfolio_import_capabilities, portfolio_import_schema,
@@ -110,14 +95,14 @@ The retired standalone run-rollback tool is not part of this set; do not
 substitute the bundle rollback lifecycle for one committed run. Source writes
 and deletion by omission are forbidden throughout.
 
-The complete matrix is 76 calls, or 87 when all eleven governed portfolio-import
+The complete matrix is 52 calls, or 63 when all eleven governed portfolio-import
 definitions are explicitly authorized and executed. Run the standard or full
 read set without write confirmation. Run the writes set only as previews.
-Before the DDQ save-preview set, tell the user that its reconciliation call
-persists a test document and immutable test workpaper.
 
-Skip a probe and mark it **not run** when its tool is not entitled. An empty roster is not a failure: mark
-all roster-dependent probes not run and say so.
+Skip a probe and mark it **not run** when its tool is not entitled. For the
+four advertised diligence tools, require `status: "unavailable"` and
+`unavailable_reason: "manager_diligence_product_hold"`; do not retry them or
+treat their absence of domain data as a malformed successful response.
 
 For `portfolio_exposure` and `portfolio_ownership`, determine scope from
 `sample_portfolio.portfolios[0].record_kind`, which must be `example`. Report a
@@ -147,8 +132,9 @@ The return-series catalog accepts only benchmark, commitment, synthetic, and mac
 performance is probed through `get_portfolio_historical_returns`; never send portfolio or allocation kinds
 to `get_return_series`. Macro joins and positioning use `get_macro_signals` views
 `grip_cma_statistics`, `roster_macro_exposure`, `cftc_positioning`, and `hedge_fund_crowding`.
-ADV–13F consistency and issuer risk use `get_firm_13f_portfolio_review`; monitor drafts use
-`get_manager_monitor_evidence` `view: draft_candidates`.
+The four held manager-diligence reads remain advertised only to return the
+structured `manager_diligence_product_hold` payload; no retired diligence
+surface is probed.
 
 Live IDD workflows may replace the common benchmark shorthand with
 `benchmark_series_ids`, keyed exactly by selected manager return-series ID. Preserve returned benchmark

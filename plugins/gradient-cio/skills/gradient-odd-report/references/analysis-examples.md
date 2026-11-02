@@ -16,13 +16,6 @@ Fictional examples marked **(TEST)** show the required depth. Use the pattern, n
 
 **Weak contrast:** “There are some regulatory and conflict issues [S4].” It does not name the event, exposure, custody evidence, or evidence boundary.
 
-## Peer positioning
-
-**Strong (TEST)**
-> (TEST) The adviser’s regulatory AUM is at the 64th percentile of its Gradient cohort, but its 11 private funds exceed the cohort median of six [S6]. This describes operating complexity rather than quality; cohort membership is model-defined, and a refreshed peer report could move both percentile and median.
-
-**Weak contrast:** “The manager is larger than peers [S6].” It offers no values and improperly reduces two cohort measures to a quality-like conclusion.
-
 ## Fund operations & service providers
 
 **Strong (TEST)**

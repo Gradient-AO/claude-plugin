@@ -217,29 +217,6 @@
           "source": "[S1]"
         },
         {
-          "type": "percentiles",
-          "title": "RAUM cohort percentile positioning",
-          "threshold": 75,
-          "items": [
-            {
-              "label": "Ridgeview (n=214)",
-              "percentile": 78,
-              "value_display": "$12.40B"
-            },
-            {
-              "label": "Harbor (n=187)",
-              "percentile": 59,
-              "value_display": "$4.85B"
-            },
-            {
-              "label": "Northfield (n=96)",
-              "percentile": 42,
-              "value_display": "$1.92B"
-            }
-          ],
-          "note": "Each percentile uses the adviser's own Gradient-selected cohort [S7]."
-        },
-        {
           "type": "table",
           "columns": [
             "Item",
@@ -361,16 +338,10 @@
         },
         {
           "type": "callout",
-          "tone": "info",
-          "title": "Cohort percentiles are not comparable across managers",
-          "text": "Each adviser is positioned within its own Gradient-selected cohort (Ridgeview: 214 advisers; Harbor: 187; Northfield: 96) [S7]. Percentiles are positioning, not a quality ranking."
-        },
-        {
-          "type": "callout",
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Scale differs without deciding mandate fit",
-          "text": "Observation: Ridgeview reports the most RAUM and clients; all three report zero Item 11 disclosures [S1][S2][S3]. Why it matters: Scale changes operating complexity, not mandate quality. Uncertainty: Adviser cohorts differ in strategy and client bases. What would change the view: User criteria requiring a named operating-scale threshold."
+          "text": "Observation: Ridgeview reports $12.40B RAUM and 41 clients, Harbor $4.85B and 28, and Northfield $1.92B and 12; all three report zero Item 11 disclosures [S1][S2][S3]. Why it matters: Absolute filed scale changes operating complexity, not mandate quality. Uncertainty: Form ADV facts are adviser-reported. What would change the view: A corrected filing or user criterion requiring a named operating-scale threshold."
         }
       ]
     },
@@ -657,11 +628,6 @@
                   "note": "Report 2026-10-01 [S1][S2][S3]"
                 },
                 {
-                  "name": "Cohort comparison",
-                  "status": "available",
-                  "note": "Each adviser in its own cohort [S7]"
-                },
-                {
                   "name": "Form 13F (2 of 3)",
                   "status": "partial",
                   "note": "Northfield not in catalog [S4][S5]"
@@ -775,156 +741,115 @@
           "rows": [
             [
               "S1",
-              "Form ADV profile — Ridgeview",
-              "gradient_tool",
-              "get_manager_odd_profile",
+              "Form ADV profile — Ridgeview — bundled illustrative source",
+              "user_document",
+              "Bundled illustrative source",
               "illustrative sample",
               "2026-10-01",
               "Illustrative sample data",
-              {
-                "chip": "not_run",
-                "status": "not_run"
-              },
+              "not_applicable: bundled illustrative source",
               "sha256:9364230b9895a9186656f1afaa4fdd9ff25a070143a72a1b504df9822dbd0c2c"
             ],
             [
               "S2",
-              "Form ADV profile — Harbor",
-              "gradient_tool",
-              "get_manager_odd_profile",
+              "Form ADV profile — Harbor — bundled illustrative source",
+              "user_document",
+              "Bundled illustrative source",
               "illustrative sample",
               "2026-10-01",
               "Illustrative sample data",
-              {
-                "chip": "advisory",
-                "status": "advisory"
-              },
+              "not_applicable: bundled illustrative source",
               "sha256:0ba26a4bbb2e102faee753294979c1138f605a155f985ac94efe3e887fdc52f7"
             ],
             [
               "S3",
-              "Form ADV profile — Northfield",
-              "gradient_tool",
-              "get_manager_odd_profile",
+              "Form ADV profile — Northfield — bundled illustrative source",
+              "user_document",
+              "Bundled illustrative source",
               "illustrative sample",
               "2026-10-01",
               "Illustrative sample data",
-              {
-                "chip": "not_run",
-                "status": "not_run"
-              },
+              "not_applicable: bundled illustrative source",
               "sha256:079104f42a886920dde0e602181eea3c7622408e953d392d251e822c3d4c40fc"
             ],
             [
               "S4",
-              "13F snapshot — Ridgeview",
-              "gradient_tool",
-              "get_firm_13f_portfolio_review",
+              "13F snapshot — Ridgeview — bundled illustrative source",
+              "user_document",
+              "Bundled illustrative source",
               "illustrative sample",
               "2026-08-14",
               "Illustrative sample data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "not_applicable: bundled illustrative source",
               "sha256:02bde3555a826680ac703dc2f2b89fbb093036a42c537ffa067590dde6b99d98"
             ],
             [
               "S5",
-              "13F snapshot — Harbor",
-              "gradient_tool",
-              "get_firm_13f_portfolio_review",
+              "13F snapshot — Harbor — bundled illustrative source",
+              "user_document",
+              "Bundled illustrative source",
               "illustrative sample",
               "2026-08-13",
               "Illustrative sample data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "not_applicable: bundled illustrative source",
               "sha256:ac6a4099593588f1ff12b41d56187683d45a4860c1d6b076ea601db88f9a9544"
             ],
             [
               "S6",
-              "13F overlap",
-              "gradient_tool",
-              "get_multi_manager_13f_overlap",
+              "13F overlap — bundled illustrative source",
+              "user_document",
+              "Bundled illustrative source",
               "illustrative sample",
               "2026-08-14",
               "Illustrative sample data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "not_applicable: bundled illustrative source",
               "sha256:92cdf7540064d7e561fae2a2b9b1cb371e49a0421b9ca8ccaf8d5ef73a6ed907"
             ],
             [
-              "S7",
-              "Cohort comparison",
-              "gradient_tool",
-              "get_manager_odd_profile",
-              "illustrative sample",
-              "2026-10-01",
-              "Illustrative sample data",
-              {
-                "chip": "not_run",
-                "status": "not_run"
-              },
-              "sha256:3cb10846a6ea6eae69552d0fdba086d996c6b674c6e6c2c707ffd556f51bf50d"
-            ],
-            [
               "S8",
-              "ADV–13F consistency — Ridgeview",
-              "gradient_tool",
-              "get_firm_13f_portfolio_review",
+              "ADV–13F consistency — Ridgeview — bundled illustrative source",
+              "user_document",
+              "Bundled illustrative source",
               "illustrative sample",
               "2026-10-01",
               "Illustrative sample data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "not_applicable: bundled illustrative source",
               "sha256:052330f5bbf0bf07ded0648cdacf9f452a9be7aef933b86130551d39c5cd9236"
             ],
             [
               "S9",
-              "Open findings — Ridgeview",
+              "Open findings — Ridgeview — structured product-hold response",
               "gradient_tool",
               "get_manager_diligence_findings",
-              "illustrative sample",
+              "expected unavailable payload",
               "2026-10-04",
               "Illustrative sample data",
               {
-                "chip": "advisory",
-                "status": "advisory"
+                "chip": "Unavailable: manager_diligence_product_hold",
+                "status": "unavailable"
               },
-              "sha256:c5b2df526a01725ac3e9171b38b2b72687d5f5faa1864768ec4c3bc85ceeb816"
+              "not_available:no_payload"
             ],
             [
               "S10",
-              "Firm events",
-              "gradient_tool",
-              "get_firm_fund_events",
+              "Firm events — bundled illustrative source",
+              "user_document",
+              "Bundled illustrative source",
               "illustrative sample",
               "2026-10-04",
               "Illustrative sample data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "not_applicable: bundled illustrative source",
               "sha256:50e4d573d06639839dc345c94ef1e122c0380d0a1c5e1c5c7477c6e8715cb44f"
             ],
             [
               "S11",
-              "ADV–13F consistency — Harbor",
-              "gradient_tool",
-              "get_firm_13f_portfolio_review",
+              "ADV–13F consistency — Harbor — bundled illustrative source",
+              "user_document",
+              "Bundled illustrative source",
               "illustrative sample",
               "2026-10-01",
               "Illustrative sample data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "not_applicable: bundled illustrative source",
               "sha256:ac4c506efcb81b48fdc16e42bff6a13136fcc0a2b78fcad838a590e4fccee0ab"
             ]
           ]
@@ -976,7 +901,7 @@
           "type": "callout",
           "tone": "info",
           "title": "Disclaimer",
-          "text": "Not investment, legal or compliance advice. No manager is ranked or recommended. Form ADV is adviser-reported, not SEC-verified. Form 13F is lagged, long-only reportable exposure. Percentiles are Gradient cohort positioning, not a quality ranking. All names and figures in this public sample are illustrative."
+          "text": "Not investment, legal or compliance advice. No manager is ranked or recommended. The named-manager comparison uses absolute Form ADV facts, which are adviser-reported and not SEC-verified. Form 13F is lagged, long-only reportable exposure. All names and figures in this public sample are illustrative."
         }
       ]
     }

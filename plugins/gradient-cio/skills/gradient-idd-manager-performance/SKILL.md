@@ -33,6 +33,9 @@ Set `meta.mode` to the selected value before validation. Do not combine modes in
 - Read `references/contracts/idd-methodology.md`, the selected mode contract, and its companion `<mode>-analysis-examples.md` before analysis.
 - Use only server-returned values; preserve methods, units, dates, observations, coverage, truncation and request IDs.
 - Match every manager to its own benchmark and disclose unavailable or advisory matches.
+- Peer, cohort, and manager-universe rankings or percentiles are prohibited.
+  Assess each manager against its user-selected or governed matched benchmark,
+  including benchmark-relative persistence across returned windows.
 - Do not rank manager quality, recommend a hire, or turn missing evidence into a neutral result.
 - Keep investment evidence separate from Form ADV, Form 13F and operational evidence.
 - Correlation and risk-contribution evidence are unavailable unless returned by a governed live tool.

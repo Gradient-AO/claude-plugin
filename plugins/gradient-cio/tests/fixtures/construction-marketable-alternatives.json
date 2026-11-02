@@ -1293,11 +1293,6 @@
               "name": "Redemption terms and scenarios",
               "status": "unavailable",
               "note": "Gate terms and saved-portfolio stress not returned [S8]"
-            },
-            {
-              "name": "Peer allocation intelligence",
-              "status": "not licensed",
-              "note": "Not licensed — Peer allocation context was skipped because peer allocation intelligence is not licensed for this organization. This construction report uses portfolio evidence only. [S1]"
             }
           ]
         }
