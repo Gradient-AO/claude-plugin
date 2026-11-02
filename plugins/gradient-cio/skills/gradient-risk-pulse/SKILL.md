@@ -10,7 +10,9 @@ metadata:
   contracts: "quick-takes,macro-signals"
   handoffs: "none"
   delivery: files
-  status: "core"
+  status: "paused"
+  status_reason: "GRIP remains saturated near its ceiling pending recalibration."
+  domain_listing: "true"
   version: "1.0.0"
   summary: "Explain GRIP's score, path and underlying risk-pressure pillars."
 ---

@@ -3,7 +3,7 @@ name: gradient-setup
 description: "Create a readiness report for GradientCIO access and data. Triggers: 'check GradientCIO setup', 'test connector readiness', 'which workflows are ready'. For workflow selection use gradient-menu."
 metadata:
   style_contract: "2.3.0"
-  group: "Utilities"
+  group: "Start"
   subject: "connection and readiness"
   output: "report"
   menu_order: "20"
@@ -90,7 +90,7 @@ when all eleven governed portfolio-import definitions are authorized.
 The full set must verify expected-return provenance inputs for policy
 (`user × policy_targets`), ex-ante attribution
 (`user × current_actual`), and CMA portfolio analytics
-(`cma_implied × supplied weights`). For each probe, record pass, fail (with error code and HTTP status) or not run (not entitled), and the
+(`cma_implied × policy_targets` for this governed probe). For each probe, record pass, fail (with error code and HTTP status) or not run (not entitled), and the
 response `as_of`. Resolve `depends_on` arguments with `check_contract.py --resolve-args`; do not manually
 copy or invent chained IDs.
 

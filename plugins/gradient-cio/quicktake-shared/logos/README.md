@@ -5,4 +5,6 @@ Put the official logo files here (light versions, for a dark background):
 
 SVG is preferred. PNGs need a transparent background and should be at least 200 px tall.
 If a file is missing, that half of the lockup falls back to the text wordmark.
-Never draw, trace, recolor or approximate either logo. Copy the same files into all four showcase skills.
+The canonical Gradient PNG is an approved exception at 129 px because the
+largest renderer target is 68 px.
+Never draw, trace, recolor or approximate either logo. Copy the same files into all five Quick Take skills.

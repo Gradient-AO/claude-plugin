@@ -11,8 +11,7 @@ catalog at `${CLAUDE_PLUGIN_ROOT}/shared/public-tools.json`.
 - `construction-private-markets`: 1 mode-specific holdings read.
 - `portfolio-import-governed`: 11 schema-driven import calls.
 
-Do not probe Blocked or Paused workflows. There are no peer-intelligence,
-manager-diligence, roster, manager-discovery, or manager-screening probes.
+Do not probe Blocked or Paused workflows.
 
 ## Expected-return provenance checks
 
@@ -24,7 +23,7 @@ returns explicit fields:
 - `portfolio_ex_ante_attribution`: `return_source=user`,
   `weight_basis=current_actual`;
 - CMA `portfolio_analytics`: `return_source=cma_implied`,
-  `weight_basis=supplied_weights`.
+  `weight_basis=policy_targets` for the governed policy-weight probe.
 
 Validate the response fields listed by each probe, preserve returned bases, and
 never blend sources.

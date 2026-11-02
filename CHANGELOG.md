@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.10.1
+- Retired the Portfolio Construction alias and reorganized the generated menu around Start, portfolio reports, decisions, managers, and Quick Takes with explicit Blocked and Paused reasons.
+- Removed remaining peer and retired-tool guidance, tightened public-tool reference validation, and packaged the expected-return source contract with the four portfolio decision workflows.
+- Added the official Gradient logo to every Quick Take and refreshed Portfolio Lens regime mapping from the published regime-state contract.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.10.0
 - Added five Gradient Quick Takes: Portfolio Lens, Signal Spotlight, Risk Pulse, Tactical Dashboard, and Ask Gradient.
 - Added synchronized canvas styling, bundled Inter fonts, standalone renderers, governed examples, and social copy guidance for square, portrait, and carousel delivery.

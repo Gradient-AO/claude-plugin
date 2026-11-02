@@ -18,7 +18,7 @@ metadata:
 
 # Portfolio Attribution
 
-Before using any expected return, excess return, or Sharpe ratio, read `${CLAUDE_PLUGIN_ROOT}/shared/contracts/expected-return-sources.md` and apply its return-source, weight-basis, comparison, and risk-free-rate labels.
+Before using any expected return, excess return, or Sharpe ratio, read `references/contracts/expected-return-sources.md` and apply its return-source, weight-basis, comparison, and risk-free-rate labels.
 
 
 Produce a sourced attribution report for one saved portfolio in exactly one

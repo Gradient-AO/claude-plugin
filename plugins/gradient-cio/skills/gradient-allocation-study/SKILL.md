@@ -18,7 +18,7 @@ metadata:
 
 # Allocation Study
 
-Before using any expected return, excess return, or Sharpe ratio, read `${CLAUDE_PLUGIN_ROOT}/shared/contracts/expected-return-sources.md` and apply its return-source, weight-basis, comparison, and risk-free-rate labels.
+Before using any expected return, excess return, or Sharpe ratio, read `references/contracts/expected-return-sources.md` and apply its return-source, weight-basis, comparison, and risk-free-rate labels.
 
 
 Study a total-plan or sleeve allocation for an existing Gradient portfolio. The committee decides; this skill never creates, updates or rebalances a portfolio.

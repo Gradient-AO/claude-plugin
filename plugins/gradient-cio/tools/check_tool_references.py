@@ -14,13 +14,8 @@ CATALOG = ROOT / "shared" / "public-tools.json"
 TOOL_TOKEN = re.compile(
     r"\b(?:analyze|build|check|commit|compare|confirm|create|get|list|preview|"
     r"resolve|rollback|run|save|screen|search|stage|start|update|upload)"
-    r"_[a-z0-9_]+\b"
+    r"_[a-z0-9_]*[a-z0-9]\b"
 )
-BACKTICK_OR_CALL = re.compile(
-    rf"`({TOOL_TOKEN.pattern})`|({TOOL_TOKEN.pattern})\s*\(",
-)
-
-
 def scanned_paths() -> list[pathlib.Path]:
     """Return the public guidance files that are allowed to name tools."""
     skills = ROOT / "skills"
@@ -39,8 +34,13 @@ def main() -> int:
     failures: list[str] = []
     for path in scanned_paths():
         text = path.read_text(encoding="utf-8")
-        for match in BACKTICK_OR_CALL.finditer(text):
-            name = match.group(1) or match.group(2)
+        for match in TOOL_TOKEN.finditer(text):
+            name = match.group(0)
+            line_start = text.rfind("\n", 0, match.start()) + 1
+            line_end = text.find("\n", match.end())
+            line_text = text[line_start : line_end if line_end >= 0 else None]
+            if f"{name}.py" in line_text:
+                continue
             if name.count("_") < 2 and name not in tools:
                 continue
             if name not in tools:

@@ -566,12 +566,11 @@
   }
  },
  "current_mapping": {
-  "source": "get_macro_signals view grip_cma_statistics, Oct 22, 2026",
-  "grip": 71,
-  "stance": "Defensive",
-  "regime": "CONTRACTION",
-  "as_of": "2026-10-22",
-  "refresh": "get_macro_signals view=grip_cma_statistics (regime_state when publishing resumes); stale after 45 days"
+  "source": "get_macro_signals view=regime_state, published NA state",
+  "regime": "EXPANSION",
+  "probability": 0.72,
+  "as_of": "2026-09-30",
+  "refresh": "get_macro_signals view=regime_state; stale after 45 days"
  },
  "validation": {
   "status": "passed"

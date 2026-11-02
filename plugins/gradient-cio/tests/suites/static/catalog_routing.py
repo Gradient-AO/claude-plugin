@@ -18,7 +18,7 @@ def catalog_routing_checks():
     theme_version = theme_match.group(1) if theme_match else ""
     check(bool(theme_version), "shared report theme declares THEME_VERSION")
     skills = sorted(p for p in (ROOT / "skills").iterdir() if (p / "SKILL.md").exists())
-    check(len(skills) == 19, f"exactly 19 shipped skills found ({len(skills)})")
+    check(len(skills) == 18, f"exactly 18 shipped skills found ({len(skills)})")
     release_references = [
         json.loads(
             (skill / "references" / "plugin-release.json").read_text(
@@ -225,9 +225,11 @@ def catalog_routing_checks():
                 mode_reference_errors.append(
                     f"{skill_name}: references/modes/{mode}.md"
                 )
-        if fm.get("status") != "alias":
-            order_group = f"{fm['group']}::{fm.get('status', 'core')}"
-            group_orders.setdefault(order_group, []).append(int(fm["menu_order"]))
+        if (
+            fm.get("status") in {"core", "blocked"}
+            or fm.get("domain_listing") == "true"
+        ):
+            group_orders.setdefault(fm["group"], []).append(int(fm["menu_order"]))
     menu_order_errors = {
         group: sorted(orders)
         for group, orders in group_orders.items()

@@ -30,12 +30,12 @@
     "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
   },
   "executive": {
-    "bottom_line": "GradientCIO is connected for organization Gradient [S1][S2]. Four manager-diligence tools are advertised and returned the structured manager_diligence_product_hold response [S3][S4]. 6 of 11 connection checks passed; macro regime state remains unavailable [S3].",
+    "bottom_line": "GradientCIO is connected for organization Gradient [S1][S2]. Twelve Core workflows are installed; four Paused and two Blocked workflows are reported separately and are not probed [S3][S4]. 6 of 11 connection checks passed; macro regime state remains unavailable [S3].",
     "tiles": [
       {
         "label": "Skills ready",
-        "value": "19",
-        "sub": "of 21",
+        "value": "12",
+        "sub": "of 18 · 2 Blocked · 4 Paused",
         "tone": "good"
       },
       {

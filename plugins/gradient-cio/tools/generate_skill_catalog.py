@@ -19,19 +19,19 @@ REQUIREMENTS = (
 )
 
 GROUP_ORDER = (
-    "Quick Takes",
+    "Start",
     "Portfolio reports",
     "Decisions",
     "Managers",
-    "Utilities",
+    "Quick Takes",
 )
 
 EXAMPLES = {
+    "Start": "Show the GradientCIO workflow menu.",
     "Quick Takes": "Create a Portfolio Lens Quick Take on a global 60/40.",
     "Portfolio reports": "Review our total portfolio for the quarter.",
     "Decisions": "Draft an IC memo for this allocation change.",
     "Managers": "Assess this manager against its benchmark.",
-    "Utilities": "Check which GradientCIO workflows are ready.",
     "Blocked": "Show workflows waiting on connector support.",
     "Paused": "Show workflows paused by product policy.",
 }
@@ -96,6 +96,12 @@ def descriptions() -> dict[str, dict[str, str]]:
             raise ValueError(f"{skill_file}: unsupported group {data['group']}")
         if data["status"] not in STATUSES:
             raise ValueError(f"{skill_file}: unsupported status {data['status']}")
+        if data["status"] in {"blocked", "paused"} and not data.get(
+            "status_reason"
+        ):
+            raise ValueError(
+                f"{skill_file}: {data['status']} skill requires status_reason"
+            )
         if not data["menu_order"].isdigit():
             raise ValueError(f"{skill_file}: menu_order must be an integer")
         if len(summary.split()) > 12:
@@ -105,6 +111,8 @@ def descriptions() -> dict[str, dict[str, str]]:
         result[name] = {
             "description": description,
             "summary": summary,
+            "status_reason": data.get("status_reason", ""),
+            "domain_listing": data.get("domain_listing", ""),
             **{key: data[key] for key in required_metadata},
         }
     return result
@@ -170,13 +178,32 @@ def menu_catalog(items: dict[str, dict[str, str]]) -> str:
         f"`/{plugin_name}:gradient-setup`.",
         "",
     ]
-    for group, rows in grouped_items(items).items():
+    domain_groups: dict[str, list[tuple[str, dict[str, str]]]] = {
+        group: [] for group in GROUP_ORDER
+    }
+    for name, item in items.items():
+        if item["status"] == "alias":
+            continue
+        if item["status"] == "core" or item["status"] == "blocked":
+            domain_groups[item["group"]].append((name, item))
+        elif item["domain_listing"] == "true":
+            domain_groups[item["group"]].append((name, item))
+    for rows in domain_groups.values():
+        rows.sort(key=lambda row: (int(row[1]["menu_order"]), row[0]))
+
+    for group, rows in domain_groups.items():
         if not rows:
             continue
         lines.append(f"## {group}")
         lines.extend(
             (
-                f"- `/{plugin_name}:{name}` — {item['summary']}"
+                f"- `/{plugin_name}:{name}`"
+                + (
+                    f" [{item['status'].title()}]"
+                    if item["status"] in {"blocked", "paused"}
+                    else ""
+                )
+                + f" — {item['summary']}"
                 + (
                     f" Next: {item['handoffs'].replace(',', ', ')}."
                     if item["handoffs"] != "none"
@@ -186,6 +213,17 @@ def menu_catalog(items: dict[str, dict[str, str]]) -> str:
             for name, item in rows
         )
         lines.extend(("", f'Example: “{EXAMPLES[group]}”', ""))
+    status_groups = grouped_items(items)
+    for status in ("Blocked", "Paused"):
+        rows = status_groups[status]
+        if not rows:
+            continue
+        lines.append(f"## {status}")
+        lines.extend(
+            f"- `/{plugin_name}:{name}` — {item['status_reason']}"
+            for name, item in rows
+        )
+        lines.extend(("", f'Example: “{EXAMPLES[status]}”', ""))
     lines.extend(
         (
             "Recommend one command when the task is clear. For multi-step work, "

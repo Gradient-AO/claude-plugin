@@ -13,6 +13,7 @@ metadata:
   handoffs: "gradient-decision-ic-memo"
   modes: "single,fit,compare"
   status: "blocked"
+  status_reason: "Public selected manager return-series IDs are not accessible."
   summary: "Evaluate named managers against benchmarks and portfolio fit."
 ---
 

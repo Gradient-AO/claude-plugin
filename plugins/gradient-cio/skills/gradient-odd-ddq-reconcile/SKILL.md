@@ -12,6 +12,7 @@ metadata:
   contracts: "odd-evidence"
   handoffs: "gradient-odd-report,gradient-decision-ic-memo"
   status: "paused"
+  status_reason: "Operational diligence is paused by product policy."
   summary: "Reconcile DDQ answers against Form ADV and surface discrepancies."
 ---
 
