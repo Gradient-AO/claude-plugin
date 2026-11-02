@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Package release metadata with every skill.
+"""Package release metadata and controlled shared contracts with skills.
 
 Common report files live once at plugin-level ``shared/`` and are resolved
-through ``CLAUDE_PLUGIN_ROOT``. Run after a plugin version bump:
+through ``CLAUDE_PLUGIN_ROOT`` unless explicitly packaged for a skill. Run
+after a plugin version bump or shared-contract edit:
     python tools/sync_shared.py          # sync
     python tools/sync_shared.py --check  # exit 1 if any copy differs (use before packaging)
 """
@@ -16,6 +17,20 @@ TREES = {}
 INTERNAL_RENDER_TARGETS = ()
 INTERNAL_SCRIPT_FILES = set()
 INTERNAL_REFERENCE_FILES = set()
+EXPECTED_RETURN_SKILLS = frozenset(
+    {
+        "gradient-allocation-study",
+        "gradient-decision-ic-memo",
+        "gradient-portfolio-attribution",
+        "gradient-portfolio-review",
+    }
+)
+TARGETED_FILES = {
+    (
+        "shared/contracts/expected-return-sources.md",
+        "references/contracts/expected-return-sources.md",
+    ): EXPECTED_RETURN_SKILLS,
+}
 
 CHAT_DELIVERY = re.compile(r"^\s+delivery:\s*chat\s*$", re.MULTILINE)
 
@@ -91,6 +106,16 @@ def shared_files():
                     str(pathlib.Path(destination_root) / relative),
                 )
 
+
+def targeted_shared_files(skill):
+    """Return canonical files packaged only with their declared skills."""
+    return tuple(
+        (source, destination)
+        for (source, destination), skill_names in TARGETED_FILES.items()
+        if skill.name in skill_names
+    )
+
+
 def main():
     check = "--check" in sys.argv
     bad = 0
@@ -99,7 +124,10 @@ def main():
         if not (skill / "SKILL.md").exists():
             continue
         bad += sync_plugin_release(skill, check, release_text)
-        pairs = chat_shared_files(skill) if is_chat_only(skill) else shared_files()
+        pairs = list(
+            chat_shared_files(skill) if is_chat_only(skill) else shared_files()
+        )
+        pairs.extend(targeted_shared_files(skill))
         for src, rel in pairs:
             s, d = ROOT / src, skill / rel
             if s.resolve() == d.resolve():

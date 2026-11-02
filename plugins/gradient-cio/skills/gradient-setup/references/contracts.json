@@ -650,7 +650,7 @@
       },
       "expected_return_provenance": {
         "return_source": "cma_implied",
-        "weight_basis": "supplied_weights",
+        "weight_basis": "policy_targets",
         "basis": "inferred_from_tool_until_mcp_fields_ship"
       }
     },

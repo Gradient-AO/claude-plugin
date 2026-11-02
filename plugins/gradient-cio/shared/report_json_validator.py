@@ -366,15 +366,7 @@ def appendix_tags(section: dict[str, JsonValue]) -> set[str]:
 
 def _public_tools() -> frozenset[str]:
     """Load the packaged connector tool catalog used for provenance checks."""
-    paths = (
-        PLUGIN_SHARED / "public-tools.json",
-        PLUGIN_ROOT
-        / "skills"
-        / "gradient-setup"
-        / "references"
-        / "public-tools.json",
-    )
-    path = next((candidate for candidate in paths if candidate.is_file()), paths[-1])
+    path = PLUGIN_SHARED / "public-tools.json"
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):

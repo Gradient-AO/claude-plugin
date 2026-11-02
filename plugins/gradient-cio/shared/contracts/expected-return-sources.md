@@ -8,7 +8,7 @@ expected-return, excess-return, or Sharpe-ratio figure.
 Every expected-return figure carries both:
 
 - `return_source`: `user` or `cma_implied`
-- `weight_basis`: `policy_targets`, `current_actual`, or `inline`
+- `weight_basis`: `policy_targets` or `current_actual`
 
 Never blend the two return sources and never present one as the other. A
 weighted result inherits the source of its expected-return inputs and the
@@ -21,7 +21,10 @@ governed combinations:
 |---|---|---|
 | `check_portfolio_policy.return_objective` | `user` | `policy_targets` |
 | `get_portfolio_ex_ante_attribution` | `user` | `current_actual` |
-| `get_capital_market_assumptions` with `view: portfolio_analytics` | `cma_implied` | supplied weights (`policy_targets`, `current_actual`, or `inline`) |
+| `get_capital_market_assumptions` with `view: portfolio_analytics` | `cma_implied` | the governed origin of the supplied weights (`policy_targets` or `current_actual`) |
+
+If CMA weights do not come from policy targets or current actuals, do not
+publish their expected return under this contract.
 
 Do not infer provenance for any other tool or field. Preserve a returned
 `return_source` or `weight_basis` when present; a returned value overrides the

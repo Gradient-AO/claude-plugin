@@ -13,6 +13,7 @@ metadata:
   handoffs: "gradient-odd-ddq-reconcile,gradient-odd-manager-monitor,gradient-manager-evaluation,gradient-decision-ic-memo"
   modes: "full,compare"
   status: "paused"
+  status_reason: "Operational diligence is paused by product policy."
   summary: "Produce sourced full or comparative operational due diligence reports."
 ---
 

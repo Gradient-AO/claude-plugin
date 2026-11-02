@@ -17,7 +17,7 @@ metadata:
 
 # Gradient IC memo
 
-Before using any expected return, excess return, or Sharpe ratio, read `${CLAUDE_PLUGIN_ROOT}/shared/contracts/expected-return-sources.md` and apply its return-source, weight-basis, comparison, and risk-free-rate labels.
+Before using any expected return, excess return, or Sharpe ratio, read `references/contracts/expected-return-sources.md` and apply its return-source, weight-basis, comparison, and risk-free-rate labels.
 
 
 Use when a portfolio, allocation, rebalance, manager, commitment, or policy

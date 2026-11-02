@@ -1749,7 +1749,7 @@ def contract_manifest():
     expected_provenance = {
         "portfolio_policy": ("user", "policy_targets"),
         "portfolio_ex_ante_attribution": ("user", "current_actual"),
-        "cma_portfolio_analytics": ("cma_implied", "supplied_weights"),
+        "cma_portfolio_analytics": ("cma_implied", "policy_targets"),
     }
     check(
         all(
@@ -1792,8 +1792,7 @@ def contract_manifest():
     check(
         all(status in requirements for status in ("| Core |", "| Blocked |", "| Paused |"))
         and "Do not probe Blocked or Paused workflows" in contract_guidance
-        and "manager-diligence" in contract_guidance
-        and "no peer-intelligence" in contract_guidance.casefold(),
+        and all(tool not in contract_guidance for tool in removed_tools),
         "setup guidance reports statuses and excludes held probes",
     )
 

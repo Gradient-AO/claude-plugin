@@ -13,6 +13,7 @@ metadata:
   handoffs: "gradient-odd-report,gradient-odd-ddq-reconcile"
   modes: "digest,triage"
   status: "paused"
+  status_reason: "Operational diligence is paused by product policy."
   summary: "Monitor manager changes and triage diligence rosters for focused follow-up."
 ---
 

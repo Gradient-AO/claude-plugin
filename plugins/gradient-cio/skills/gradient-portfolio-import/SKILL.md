@@ -3,10 +3,10 @@ name: gradient-portfolio-import
 description: "Create a provider-neutral governed portfolio import with a Gradient UI handoff or exact-preview confirmation in Claude. Triggers: 'import portfolio structure', 'import positions', 'import liquidity terms', 'import pacing plans', 'preview portfolio import'."
 metadata:
   version: "0.5.0"
-  group: "Utilities"
+  group: "Portfolio reports"
   subject: "portfolio import"
   output: "governed import"
-  menu_order: "30"
+  menu_order: "50"
   modules: "portfolio"
   contracts: "portfolio-import-governed"
   handoffs: "gradient-portfolio-review"
