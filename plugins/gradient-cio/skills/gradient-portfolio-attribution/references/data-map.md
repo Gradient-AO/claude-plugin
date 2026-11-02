@@ -16,7 +16,6 @@ every call and record one source row per response.
 | Largest-detractor drill-down | Rerun `get_portfolio_attribution` with the same role/window and `parent_allocation_id` set to the largest root detractor's returned allocation ID | Sub-allocation effects inside the detractor; preserve typed unavailable when it has no child cohort |
 | Ex ante attribution | `get_portfolio_ex_ante_attribution`, same `portfolio_id`, `benchmark_role`, `parent_allocation_id`, all sections | Method and formula version, horizon, basis, currency, assumptions, coverage, summary, residual, segment inputs/effects and diagnostics |
 | Manager resolution | Resolve the largest root detractor's exact allocation ID from `get_portfolio_structure`, then call `get_portfolio_exposure` with that `allocation_id` and `limit: 100` | Directly assigned held commitments plus fund and firm IDs in that allocation; use complete filtered totals/coverage and do not infer IDs from names |
-| Manager findings | `get_manager_diligence_findings`, `view: open` with exactly one resolved `firm_id` or `fund_id` per call | Entity scope, severity, status and due date; unmatched entities remain `Not assessed` |
 | Macro regime | `get_macro_signals`, `view: gradient_signal`, plus `view: regime_state` when available | Returned regime status and GRIP availability/degradation reasons for the historical period; context only, not a causal attribution |
 
 Use `get_benchmarks` by returned benchmark ID only when a governed response
@@ -86,6 +85,9 @@ When both lanes appear, preserve `diagnostics.entity_return_reconciliation`:
 basis fields, and `benchmark_composite_minus_entity_return` with its basis.
 These diagnostics explain the basis delta. Never compare, subtract or conflate
 the attribution-summary excess with historical-return policy-benchmark excess.
+When the absolute benchmark reconciliation gap exceeds 25 bp, add a visible
+note showing both values as `linked segment composite` and `policy benchmark
+entity`.
 
 Each attribution call builds its linked segment benchmark composite from that
 call's sibling cohort. The root call and a depth-1 drill-down therefore may
@@ -94,7 +96,12 @@ each call's `parent_allocation_id`, benchmark basis, benchmark return, and
 `diagnostics.entity_return_reconciliation`; do not present the drill-down active
 return as a decomposition that must equal the root active return.
 
-## Governed ex ante attribution
+## Governed ex ante attribution — user ER × current actual weights
+
+Label this lane `return_source=user` and `weight_basis=current_actual`. Do not
+present it as CMA-implied. A CMA-implied ex-ante lane is optional only after
+the MCP returns an explicit `return_source`; until then label it unavailable
+and do not derive it locally.
 
 `get_portfolio_ex_ante_attribution` is the sole source. V1 is a single-period,
 one-year expected Brinson-Fachler result:
@@ -115,7 +122,7 @@ market assumptions.
 ## Compatibility gate
 
 Use the canonical compatibility and fallback rules in
-`references/contracts/portfolio-attribution.md`. Both attribution skills use
+`${CLAUDE_PLUGIN_ROOT}/shared/contracts/portfolio-attribution.md`. Both attribution skills use
 that shared contract. Historical uses realized monthly observations and
 Carino linking; ex ante uses one expected period and current normalized
 weights.

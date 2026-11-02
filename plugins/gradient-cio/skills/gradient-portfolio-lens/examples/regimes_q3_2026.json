@@ -1,0 +1,579 @@
+{
+ "calibration_id": "a67ca6a3-9923-4199-98b2-f1756bc1b633",
+ "compatible_cma_release": "Q3-2026-policy-v2.4",
+ "horizon_years": 10,
+ "method": "Gradient regime overlay (reproduces get_macro_signals view grip_cma_statistics exactly): w = min(persistence, horizon)/horizon; return = mu*((1-w) + w*returnMult) + w*returnAdd; vol = sigma*sqrt((1-w) + w*volMult^2); correlations unchanged.",
+ "regimes": {
+  "CONTRACTION": {
+   "persistence_years": 2.5,
+   "adjustments": {
+    "1": {
+     "returnMult": 0.15,
+     "volMult": 1.6,
+     "returnAdd": null
+    },
+    "4": {
+     "returnMult": 0.25,
+     "volMult": 1.5,
+     "returnAdd": null
+    },
+    "5": {
+     "returnMult": -0.15,
+     "volMult": 1.8,
+     "returnAdd": null
+    },
+    "6": {
+     "returnMult": -0.3,
+     "volMult": 1.85,
+     "returnAdd": null
+    },
+    "7": {
+     "returnMult": 1,
+     "volMult": 1.15,
+     "returnAdd": 0.0075
+    },
+    "8": {
+     "returnMult": 1.35,
+     "volMult": 0.8,
+     "returnAdd": 0.025
+    },
+    "9": {
+     "returnMult": 1,
+     "volMult": 0.6,
+     "returnAdd": 0.002
+    },
+    "11": {
+     "returnMult": 0.25,
+     "volMult": 1.7,
+     "returnAdd": null
+    },
+    "12": {
+     "returnMult": 0.18,
+     "volMult": 1.55,
+     "returnAdd": null
+    },
+    "13": {
+     "returnMult": 0.1,
+     "volMult": 1.6,
+     "returnAdd": null
+    },
+    "14": {
+     "returnMult": 0.05,
+     "volMult": 1.75,
+     "returnAdd": null
+    },
+    "15": {
+     "returnMult": 0.35,
+     "volMult": 1.35,
+     "returnAdd": null
+    },
+    "16": {
+     "returnMult": 0.45,
+     "volMult": 1.2,
+     "returnAdd": null
+    },
+    "17": {
+     "returnMult": 0.7,
+     "volMult": 1.3,
+     "returnAdd": null
+    },
+    "18": {
+     "returnMult": 0.5,
+     "volMult": 1.4,
+     "returnAdd": null
+    }
+   }
+  },
+  "SYSTEMIC_STRESS": {
+   "persistence_years": 2,
+   "adjustments": {
+    "1": {
+     "returnMult": -0.4,
+     "volMult": 1.9,
+     "returnAdd": null
+    },
+    "4": {
+     "returnMult": -0.25,
+     "volMult": 1.75,
+     "returnAdd": null
+    },
+    "5": {
+     "returnMult": -0.65,
+     "volMult": 2.1,
+     "returnAdd": null
+    },
+    "6": {
+     "returnMult": -1,
+     "volMult": 2.2,
+     "returnAdd": null
+    },
+    "7": {
+     "returnMult": 1.15,
+     "volMult": 1.4,
+     "returnAdd": 0.012
+    },
+    "8": {
+     "returnMult": 1.5,
+     "volMult": 0.9,
+     "returnAdd": 0.025
+    },
+    "9": {
+     "returnMult": 1,
+     "volMult": 0.55,
+     "returnAdd": 0.001
+    },
+    "11": {
+     "returnMult": -0.35,
+     "volMult": 2,
+     "returnAdd": null
+    },
+    "12": {
+     "returnMult": -0.2,
+     "volMult": 1.85,
+     "returnAdd": null
+    },
+    "13": {
+     "returnMult": -0.3,
+     "volMult": 1.85,
+     "returnAdd": null
+    },
+    "14": {
+     "returnMult": -0.5,
+     "volMult": 2,
+     "returnAdd": null
+    },
+    "15": {
+     "returnMult": -0.05,
+     "volMult": 1.65,
+     "returnAdd": null
+    },
+    "16": {
+     "returnMult": 0.3,
+     "volMult": 1.35,
+     "returnAdd": null
+    },
+    "17": {
+     "returnMult": 0.2,
+     "volMult": 1.5,
+     "returnAdd": null
+    },
+    "18": {
+     "returnMult": 0.2,
+     "volMult": 1.65,
+     "returnAdd": null
+    }
+   }
+  },
+  "STAGFLATION": {
+   "persistence_years": 3,
+   "adjustments": {
+    "1": {
+     "returnMult": 0.05,
+     "volMult": 1.45,
+     "returnAdd": null
+    },
+    "4": {
+     "returnMult": 0.1,
+     "volMult": 1.4,
+     "returnAdd": null
+    },
+    "5": {
+     "returnMult": -0.1,
+     "volMult": 1.65,
+     "returnAdd": null
+    },
+    "6": {
+     "returnMult": -0.25,
+     "volMult": 1.75,
+     "returnAdd": null
+    },
+    "7": {
+     "returnMult": -0.1,
+     "volMult": 1.55,
+     "returnAdd": null
+    },
+    "8": {
+     "returnMult": -0.2,
+     "volMult": 1.6,
+     "returnAdd": null
+    },
+    "9": {
+     "returnMult": 1,
+     "volMult": 0.7,
+     "returnAdd": 0.004
+    },
+    "11": {
+     "returnMult": -0.05,
+     "volMult": 1.6,
+     "returnAdd": null
+    },
+    "12": {
+     "returnMult": 0.3,
+     "volMult": 1.25,
+     "returnAdd": null
+    },
+    "13": {
+     "returnMult": 0.05,
+     "volMult": 1.5,
+     "returnAdd": null
+    },
+    "14": {
+     "returnMult": -0.15,
+     "volMult": 1.75,
+     "returnAdd": null
+    },
+    "15": {
+     "returnMult": 0.1,
+     "volMult": 1.3,
+     "returnAdd": null
+    },
+    "16": {
+     "returnMult": 0.55,
+     "volMult": 1.2,
+     "returnAdd": null
+    },
+    "17": {
+     "returnMult": 0.6,
+     "volMult": 1.15,
+     "returnAdd": null
+    },
+    "18": {
+     "returnMult": 2.8,
+     "volMult": 1.2,
+     "returnAdd": null
+    }
+   }
+  },
+  "REFLATION": {
+   "persistence_years": 2,
+   "adjustments": {
+    "1": {
+     "returnMult": 1.3,
+     "volMult": 0.95,
+     "returnAdd": null
+    },
+    "4": {
+     "returnMult": 1.25,
+     "volMult": 0.9,
+     "returnAdd": null
+    },
+    "5": {
+     "returnMult": 1.4,
+     "volMult": 1.05,
+     "returnAdd": null
+    },
+    "6": {
+     "returnMult": 1.35,
+     "volMult": 1.1,
+     "returnAdd": null
+    },
+    "7": {
+     "returnMult": 0.8,
+     "volMult": 1.05,
+     "returnAdd": null
+    },
+    "8": {
+     "returnMult": 0.7,
+     "volMult": 1.1,
+     "returnAdd": null
+    },
+    "9": {
+     "returnMult": 0.85,
+     "volMult": 0.85,
+     "returnAdd": null
+    },
+    "11": {
+     "returnMult": 1.35,
+     "volMult": 0.95,
+     "returnAdd": null
+    },
+    "12": {
+     "returnMult": 1.35,
+     "volMult": 1,
+     "returnAdd": null
+    },
+    "13": {
+     "returnMult": 1.25,
+     "volMult": 0.95,
+     "returnAdd": null
+    },
+    "14": {
+     "returnMult": 1.15,
+     "volMult": 1.1,
+     "returnAdd": null
+    },
+    "15": {
+     "returnMult": 1.15,
+     "volMult": 0.95,
+     "returnAdd": null
+    },
+    "16": {
+     "returnMult": 1.2,
+     "volMult": 0.95,
+     "returnAdd": null
+    },
+    "17": {
+     "returnMult": 1.15,
+     "volMult": 0.95,
+     "returnAdd": null
+    },
+    "18": {
+     "returnMult": 1.8,
+     "volMult": 1.05,
+     "returnAdd": null
+    }
+   }
+  },
+  "DISINFLATIONARY_GROWTH": {
+   "persistence_years": 2,
+   "adjustments": {
+    "1": {
+     "returnMult": 1.7,
+     "volMult": 0.5,
+     "returnAdd": null
+    },
+    "4": {
+     "returnMult": 1.55,
+     "volMult": 0.45,
+     "returnAdd": null
+    },
+    "5": {
+     "returnMult": 1.75,
+     "volMult": 0.65,
+     "returnAdd": null
+    },
+    "6": {
+     "returnMult": 1.65,
+     "volMult": 0.7,
+     "returnAdd": null
+    },
+    "7": {
+     "returnMult": 0.7,
+     "volMult": 0.55,
+     "returnAdd": null
+    },
+    "8": {
+     "returnMult": 0.55,
+     "volMult": 0.5,
+     "returnAdd": null
+    },
+    "9": {
+     "returnMult": 0.65,
+     "volMult": 0.4,
+     "returnAdd": null
+    },
+    "11": {
+     "returnMult": 1.25,
+     "volMult": 0.65,
+     "returnAdd": null
+    },
+    "12": {
+     "returnMult": 1.45,
+     "volMult": 0.65,
+     "returnAdd": null
+    },
+    "13": {
+     "returnMult": 1.5,
+     "volMult": 0.6,
+     "returnAdd": null
+    },
+    "14": {
+     "returnMult": 1.35,
+     "volMult": 0.7,
+     "returnAdd": null
+    },
+    "15": {
+     "returnMult": 1.05,
+     "volMult": 0.75,
+     "returnAdd": null
+    },
+    "16": {
+     "returnMult": 0.85,
+     "volMult": 0.8,
+     "returnAdd": null
+    },
+    "17": {
+     "returnMult": 1.15,
+     "volMult": 0.7,
+     "returnAdd": null
+    },
+    "18": {
+     "returnMult": 1.2,
+     "volMult": 0.8,
+     "returnAdd": null
+    }
+   }
+  },
+  "RECOVERY": {
+   "persistence_years": 1.5,
+   "adjustments": {
+    "1": {
+     "returnMult": 1.35,
+     "volMult": 1.35,
+     "returnAdd": null
+    },
+    "4": {
+     "returnMult": 1.25,
+     "volMult": 1.25,
+     "returnAdd": null
+    },
+    "5": {
+     "returnMult": 1.8,
+     "volMult": 1.5,
+     "returnAdd": null
+    },
+    "6": {
+     "returnMult": 1.7,
+     "volMult": 1.55,
+     "returnAdd": null
+    },
+    "7": {
+     "returnMult": 0.85,
+     "volMult": 1,
+     "returnAdd": null
+    },
+    "8": {
+     "returnMult": 0.65,
+     "volMult": 0.95,
+     "returnAdd": null
+    },
+    "9": {
+     "returnMult": 0.8,
+     "volMult": 0.8,
+     "returnAdd": null
+    },
+    "11": {
+     "returnMult": 2,
+     "volMult": 1.15,
+     "returnAdd": null
+    },
+    "12": {
+     "returnMult": 1.5,
+     "volMult": 1.3,
+     "returnAdd": null
+    },
+    "13": {
+     "returnMult": 1.3,
+     "volMult": 1.25,
+     "returnAdd": null
+    },
+    "14": {
+     "returnMult": 1.08,
+     "volMult": 1.4,
+     "returnAdd": null
+    },
+    "15": {
+     "returnMult": 1.1,
+     "volMult": 1.05,
+     "returnAdd": null
+    },
+    "16": {
+     "returnMult": 0.9,
+     "volMult": 0.95,
+     "returnAdd": null
+    },
+    "17": {
+     "returnMult": 1.15,
+     "volMult": 1.15,
+     "returnAdd": null
+    },
+    "18": {
+     "returnMult": 1.5,
+     "volMult": 1.25,
+     "returnAdd": null
+    }
+   }
+  },
+  "LATE_CYCLE": {
+   "persistence_years": 3,
+   "adjustments": {
+    "1": {
+     "returnMult": 0.95,
+     "volMult": 0.85,
+     "returnAdd": null
+    },
+    "4": {
+     "returnMult": 0.95,
+     "volMult": 0.825,
+     "returnAdd": null
+    },
+    "5": {
+     "returnMult": 0.9,
+     "volMult": 0.95,
+     "returnAdd": null
+    },
+    "6": {
+     "returnMult": 0.9,
+     "volMult": 0.95,
+     "returnAdd": null
+    },
+    "7": {
+     "returnMult": 0.925,
+     "volMult": 0.925,
+     "returnAdd": null
+    },
+    "8": {
+     "returnMult": 0.825,
+     "volMult": 0.9,
+     "returnAdd": -0.008
+    },
+    "9": {
+     "returnMult": 0.925,
+     "volMult": 0.825,
+     "returnAdd": null
+    },
+    "11": {
+     "returnMult": 0.95,
+     "volMult": 0.95,
+     "returnAdd": null
+    },
+    "12": {
+     "returnMult": 0.95,
+     "volMult": 0.95,
+     "returnAdd": null
+    },
+    "13": {
+     "returnMult": 0.9,
+     "volMult": 0.925,
+     "returnAdd": null
+    },
+    "14": {
+     "returnMult": 0.85,
+     "volMult": 0.95,
+     "returnAdd": null
+    },
+    "15": {
+     "returnMult": 0.95,
+     "volMult": 0.95,
+     "returnAdd": null
+    },
+    "16": {
+     "returnMult": 0.975,
+     "volMult": 0.925,
+     "returnAdd": null
+    },
+    "17": {
+     "returnMult": 0.95,
+     "volMult": 0.9,
+     "returnAdd": null
+    },
+    "18": {
+     "returnMult": 0.975,
+     "volMult": 0.95,
+     "returnAdd": null
+    }
+   }
+  }
+ },
+ "current_mapping": {
+  "source": "get_macro_signals view grip_cma_statistics, Oct 22, 2026",
+  "grip": 71,
+  "stance": "Defensive",
+  "regime": "CONTRACTION",
+  "as_of": "2026-10-22",
+  "refresh": "get_macro_signals view=grip_cma_statistics (regime_state when publishing resumes); stale after 45 days"
+ },
+ "validation": {
+  "status": "passed"
+ }
+}

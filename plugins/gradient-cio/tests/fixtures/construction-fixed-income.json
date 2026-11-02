@@ -199,7 +199,7 @@
           "rows": [
             [
               "Fixed income",
-              "23.0%–33.0%",
+              "23.0%â€“33.0%",
               "28.0%",
               {
                 "chip": "Compliant",
@@ -337,7 +337,7 @@
               "low": 12.0,
               "high": 20.0,
               "target": 17.0,
-              "display": "14.0% → 17.0%"
+              "display": "14.0% â†’ 17.0%"
             },
             {
               "label": "Core-plus credit",
@@ -345,7 +345,7 @@
               "low": 5.0,
               "high": 12.0,
               "target": 7.0,
-              "display": "10.0% → 7.0%"
+              "display": "10.0% â†’ 7.0%"
             },
             {
               "label": "Global / emerging debt",
@@ -353,7 +353,7 @@
               "low": 0.0,
               "high": 6.0,
               "target": 4.0,
-              "display": "4.0% → 4.0%"
+              "display": "4.0% â†’ 4.0%"
             }
           ],
           "source": "[S1]"
@@ -439,7 +439,7 @@
               "14.0%",
               "17.0%",
               "+3.0pp",
-              "12.0%–20.0%",
+              "12.0%â€“20.0%",
               "Increase benchmark-aligned ballast [S3][S8]"
             ],
             [
@@ -447,7 +447,7 @@
               "10.0%",
               "7.0%",
               "-3.0pp",
-              "5.0%–12.0%",
+              "5.0%â€“12.0%",
               "Reduce credit concentration [S3][S4][S6]"
             ],
             [
@@ -455,7 +455,7 @@
               "4.0%",
               "4.0%",
               "0.0pp",
-              "0.0%–6.0%",
+              "0.0%â€“6.0%",
               "Maintain diversified role [S3][S7]"
             ]
           ]
@@ -1271,7 +1271,7 @@
               "S6",
               "Credit context",
               "gradient_tool",
-              "get_macro_conditions",
+              "get_macro_signals",
               "credit_spreads",
               "2026-06-30",
               "Illustrative sample data",

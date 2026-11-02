@@ -1,22 +1,23 @@
 # Manager-monitoring execution contract
 
-## Current product hold
+## Paused — operational diligence on hold
 
-This contract is inactive while `manager_diligence_product_hold` is returned.
-Call only the advertised held reads, preserve the structured unavailable
-payload, and stop. Do not invoke retired queue, evidence, event, watchlist, or
-write tools and do not schedule a monitoring report.
+This contract is inactive while capabilities report
+`manager_diligence_product_hold`. Do not call roster, monitoring, review, or
+findings tools; they are not in the client tool list. Do not invoke them and
+do not retry. Preserve the structured unavailable result, mark diligence
+`Not assessed`, and stop. Do not schedule a monitoring report.
 
 Read only the section needed for the current workflow step.
 
 ## Collection and incremental state
 
 Default to the last seven days ending today; scheduled runs use seven days.
-Resolve organization, then `get_diligence_roster_funds`. If empty, report it
+Resolve organization, then `hidden manager-diligence roster read`. If empty, report it
 and offer roster additions only on request.
 
 Collect in parallel where possible:
-- `get_fund_diligence_monitoring`, optionally filtered with canonical roster
+- `hidden manager-diligence monitoring read`, optionally filtered with canonical roster
   `fund_ids`, as the governed fund review/evidence status surface;
 - the retired manager-diligence attention queue default view;
 - the same tool with `view: changes_since_review`;
@@ -26,7 +27,7 @@ Collect in parallel where possible:
 - the same tool with `mode: coverage`;
 - the same tool with `view: draft_candidates` when the digest needs proposed
   monitor additions; treat candidates as read-only evidence, never as writes;
-- `get_manager_diligence_findings`, `view: open`, for parent firm and fund;
+- `hidden manager-diligence findings read`, `view: open`, for parent firm and fund;
 - the retired firm-fund events read per parent firm;
 - the retired research-watchlist changes read.
 
@@ -39,7 +40,7 @@ section with the same plain Not available reason and continue from independent
 evidence.
 
 For every fund due within 30 days, overdue, materially changed, or otherwise
-requiring attention, call `get_fund_diligence_review` with its canonical
+requiring attention, call `hidden manager-diligence review read` with its canonical
 `fund_id`. Apply the same review handling to every parent firm due within 30
 days, overdue, materially changed, unreviewed, or otherwise requiring attention:
 use its governed firm review surface and canonical `firm_id`. Read `review`
@@ -71,8 +72,6 @@ changes, and reviews due within 30 days. Do not reconstruct review status from
 roster dates when the fund read tools return governed status.
 
 Every alert must trace to an absolute Form ADV fact, a dated change in a filed
-fact, or another governed event/finding listed below. Manager peer/cohort
-percentiles, relative standing, and percentile movement never create or change
 an alert or severity.
 
 High: tier-1 alert, new red flag, overdue high finding, overdue review, or
@@ -155,7 +154,7 @@ Validate:
 `python <skill>/scripts/validate_monitor_digest.py report.json`
 
 Run one QA render of the same validated JSON:
-`python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Org> - Manager Monitoring Digest <date>" --budget <skill>/references/layout-budget.json`
+`python "${CLAUDE_PLUGIN_ROOT}/shared/qa_report.py" report.json --format <pdf|pptx|both> --out "<Org> - Manager Monitoring Digest <date>" --budget <skill>/references/layout-budget.json`
 
 Inspect all requested pages/slides, re-render after fixes, and spot-check
 against saved evidence. QA and fact checks block delivery. Reply with signal,

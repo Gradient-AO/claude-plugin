@@ -4,18 +4,22 @@ description: "Create single-lane or multi-lane portfolio attribution reports for
 metadata:
   version: "6.0.0"
   style_contract: "2.3.0"
-  group: "Portfolio Analytics"
+  group: "Portfolio reports"
   subject: "portfolio attribution"
   output: "report"
   menu_order: "20"
   modules: "portfolio"
   contracts: "portfolio-attribution"
-  handoffs: "gradient-portfolio-review,gradient-decision-ic-memo,gradient-portfolio-construction"
+  handoffs: "gradient-portfolio-review,gradient-decision-ic-memo,gradient-allocation-study"
   modes: "single,compare-lanes"
+  status: "core"
   summary: "Explain portfolio attribution or compare compatible historical and ex ante lanes."
 ---
 
 # Portfolio Attribution
+
+Before using any expected return, excess return, or Sharpe ratio, read `${CLAUDE_PLUGIN_ROOT}/shared/contracts/expected-return-sources.md` and apply its return-source, weight-basis, comparison, and risk-free-rate labels.
+
 
 Produce a sourced attribution report for one saved portfolio in exactly one
 public mode:
@@ -26,9 +30,9 @@ public mode:
 | `compare-lanes` | Compare compatible historical, ex ante and capability-gated simulated attribution lanes | `references/modes/compare-lanes.md` |
 
 Do not combine public modes in one report. Read
-`references/contracts/portfolio-attribution.md`,
-`references/contracts/mcp-evidence-and-analytics.md`,
-`references/module-scope.md`, and the selected mode contract before
+`${CLAUDE_PLUGIN_ROOT}/shared/contracts/portfolio-attribution.md`,
+`${CLAUDE_PLUGIN_ROOT}/shared/contracts/mcp-evidence-and-analytics.md`,
+`${CLAUDE_PLUGIN_ROOT}/shared/module-scope.md`, and the selected mode contract before
 collection. Apply the evidence contract to every Portfolio Analytics response,
 including field-level basis, uncertainty, lineage, validation, publishing
 rights, disclosures, portfolio identity, factor mappings, and benchmark
@@ -37,7 +41,12 @@ origin.
 ## Shared rules
 
 - Historical attribution comes only from `get_portfolio_attribution`; governed
-  ex ante attribution comes only from `get_portfolio_ex_ante_attribution`.
+  ex ante attribution is labeled **user ER × current actual weights** and comes
+  only from `get_portfolio_ex_ante_attribution`.
+- Add a visible benchmark-composite versus benchmark-entity reconciliation
+  note whenever `diagnostics.entity_return_reconciliation` exceeds 25 bp.
+- Keep CMA-implied ex-ante attribution unavailable until the connector exposes
+  explicit `return_source`; never derive it locally.
 - Strategy Lab, expected-statistics charts, local Brinson calculations, and
   return points never substitute for governed attribution.
 - Preserve returned methods, units, dates, bases, effects, residuals,
@@ -61,4 +70,4 @@ from this skill's `metadata.version`.
 Broad portfolio monitoring → `gradient-portfolio-review`; a proposed trade,
 rebalance, allocation change, or vote → `gradient-decision-ic-memo`;
 asset-class construction → the relevant mode of
-`gradient-portfolio-construction`.
+`gradient-allocation-study`.

@@ -113,15 +113,17 @@ apply its specific repair levers and rerun until clean.
   include the returned `diagnostics.entity_return_reconciliation` window,
   portfolio and benchmark basis/delta fields. Never compare, subtract or
   conflate the two excess values.
+- If the absolute benchmark delta exceeds 25 bp, add a visible
+  **Benchmark reconciliation** note showing both the linked segment composite
+  and policy benchmark entity returns.
 - State that root and depth-1 calls construct linked segment benchmark
   composites from different sibling cohorts; preserve each call's parent
   allocation and reconciliation instead of forcing the two active returns to
   match.
-- End with one to three sourced `Analysis —` callouts linking the largest
-  detractor segment to its managers' open findings and the returned macro
-  regime over the period. Context is not causal attribution.
+- End with one to three sourced `Analysis —` callouts on the largest detractor
+  and the returned macro regime. Context is not causal attribution.
 
-### 5. Governed Ex Ante Attribution
+### 5. Governed Ex Ante Attribution — user ER × current actual weights
 
 - Visual-first: put the segment-effect visual before either attribution table.
 - Amber `callout`: assumptions, not forecasts or guarantees.
@@ -138,6 +140,10 @@ apply its specific repair levers and rerun until clean.
   effects, method, formula version, horizon, basis, currency, return sources,
   assumption set and regime. Keep residual and tolerance values in Diagnostics
   only.
+- `kv` **Ex ante assumptions** must include `return_source: user` and
+  `weight_basis: current_actual`.
+- Keep a CMA-implied ex-ante lane unavailable until the connector exposes its
+  explicit `return_source`; never derive one locally.
 - Put `table` **Ex ante total effects** and `kv` **Ex ante reconciliation and
   method** beside each other in one `two_col`, then place the segment table
   after that layout. Do not emit three consecutive table/KV blocks.

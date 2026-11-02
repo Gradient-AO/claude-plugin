@@ -941,7 +941,7 @@ def registered_json_validator_checks(validator_manifest):
                     )
                 )
 
-            if skill_name == "gradient-idd-manager-performance":
+            if skill_name == "gradient-manager-evaluation":
                 recommendation = json.loads(json.dumps(document))
                 first_section = recommendation.get("sections", [])[0]
                 first_section.setdefault("blocks", []).append(

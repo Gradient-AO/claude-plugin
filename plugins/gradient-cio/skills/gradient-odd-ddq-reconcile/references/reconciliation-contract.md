@@ -1,8 +1,8 @@
 # DDQ reconciliation contract
 
-## Current product hold
+## Paused — operational diligence on hold
 
-This contract is inactive while `manager_diligence_product_hold` is returned.
+This contract is inactive while capabilities report `manager_diligence_product_hold`.
 No DDQ extraction, reconciliation, preview, or persistence tool is advertised.
 Return the typed unavailable result and do not infer a verdict locally.
 
@@ -104,7 +104,7 @@ Validate:
 `python <skill>/scripts/validate_ddq_report.py report.json`
 
 QA and render the same validated JSON:
-`python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - DDQ Reconciliation" --budget <skill>/references/layout-budget.json`
+`python "${CLAUDE_PLUGIN_ROOT}/shared/qa_report.py" report.json --format <pdf|pptx|both> --out "<Subject> - DDQ Reconciliation" --budget <skill>/references/layout-budget.json`
 
 Inspect every page/slide and spot-check every table against saved governed
 results. QA and fact checks block delivery.

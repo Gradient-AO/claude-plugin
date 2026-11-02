@@ -7,7 +7,6 @@ Call `get_gradient_capabilities` before any attribution read. Record availabilit
 - `get_portfolio_attribution`
 - `get_portfolio_ex_ante_attribution`
 - `simulate_portfolio_attribution` (planned)
-- `compare_portfolio_attribution` (planned)
 
 The planned tools are callable only when their exact capability entry is available. Preserve listed rows under `meta.capability_gate` by exact tool name, `contract: planned_conditional`, status and returned reason. When an exact row is absent, render `Not available — not listed by get_gradient_capabilities [S#]`. A listed disabled, unlicensed or unready entry renders `Not available — <availability_reason> per get_gradient_capabilities [S#]` and must not be called. Apply the same canonical text to the section callout and corresponding executive tile subtext; never describe a listed row as “not listed.”
 
@@ -21,7 +20,6 @@ The planned tools are callable only when their exact capability entry is availab
 | Historical | `get_portfolio_attribution` | Realized method, linking, currency, effects, residual and diagnostics |
 | Ex ante | `get_portfolio_ex_ante_attribution` | Horizon, expected-return basis, formula version, effects, residual and diagnostics |
 | Simulated | `simulate_portfolio_attribution` | Scenario ID, simulation method, lane identifiers, effects and uncertainty |
-| Comparison | `compare_portfolio_attribution` | Compatibility receipt, returned differences, concentration, persistence and persistent sources |
 
 For `get_portfolio_historical_returns`, project explicit `fields`, use `limit: 100`, preserve `no_subject_returns` and `not_yet_funded`, and disclose partial calendar years 2016 and 2026.
 

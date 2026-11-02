@@ -276,7 +276,6 @@ VISUAL_BLOCK_TYPES = frozenset(
     {
         "bars",
         "pie",
-        "percentiles",
         "line",
         "stacked",
         "waterfall",

@@ -130,12 +130,12 @@ availability or presentation rules.
 ## Visual grammar
 
 - Prefer the smallest visual that answers the section's question. Supported analytical blocks include
-  `chart`, `line`, `bars`, `pie`, `percentiles`, `waterfall`, `band`, `stacked`, `heat`, `timeline`, `tiles`, `coverage` and
+  `chart`, `line`, `bars`, `pie`, `waterfall`, `band`, `stacked`, `heat`, `timeline`, `tiles`, `coverage` and
   `findings`.
 - Match the visual to the question: `line` for a time series or trend; `stacked` for composition or mix
   (`pie` only for at most eight static slices); `waterfall` for contribution or bridge; `band` for a position
   against a range or limit; `bars` for ranking or entity comparison; `heat` for two-dimensional status;
-  `percentiles` for peer standing; `timeline` for dated events; `findings` for issues by severity; and
+  `timeline` for dated events; `findings` for issues by severity; and
   `coverage` for evidence availability.
 - Bars and other quantitative marks accept signed finite values. Preserve the sign in `value` and in the
   display label; do not convert negative values to absolute magnitudes.

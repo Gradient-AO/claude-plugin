@@ -96,12 +96,12 @@ LAYOUTS = frozenset(
     {"cover", "divider", "exhibit", "two-up", "table", "text", "appendix"}
 )
 VISUAL_BLOCKS = frozenset(
-    {"bars", "pie", "percentiles", "line", "stacked", "waterfall", "band", "heat", "timeline", "chart"}
+    {"bars", "pie", "line", "stacked", "waterfall", "band", "heat", "timeline", "chart"}
 )
 TABLE_BLOCKS = frozenset({"table", "kv", "coverage"})
 EXHIBIT_COMPANIONS = frozenset({"text", "markdown", "callout", "statement"})
 # Heat maps, timelines and table-mode charts need the full slide width.
-PAIRABLE_VISUALS = frozenset({"bars", "pie", "percentiles", "line", "stacked", "waterfall", "band"})
+PAIRABLE_VISUALS = frozenset({"bars", "pie", "line", "stacked", "waterfall", "band"})
 SUPPORTED_BLOCKS = frozenset(
     {
         "text",
@@ -112,7 +112,6 @@ SUPPORTED_BLOCKS = frozenset(
         "tiles",
         "bars",
         "pie",
-        "percentiles",
         "line",
         "stacked",
         "waterfall",
@@ -196,14 +195,6 @@ def _plain(value: JsonValue | object) -> str:
     text = re.sub(r"(?<!\w)\*([^*]+?)\*(?!\w)", r"\1", text)
     text = re.sub(r"`(.+?)`", r"\1", text)
     return text.strip()
-
-
-def _ordinal(value: float) -> str:
-    number = int(round(value))
-    suffix = "th"
-    if not 10 <= abs(number) % 100 <= 20:
-        suffix = {1: "st", 2: "nd", 3: "rd"}.get(abs(number) % 10, "th")
-    return f"{number}{suffix}"
 
 
 def _compact(value: JsonValue | object, words: int = 28) -> str:
@@ -463,7 +454,6 @@ def _validate_block_data(block: JsonObject, prefix: str) -> list[str]:
         "tiles": "tiles",
         "bars": "items",
         "pie": "items",
-        "percentiles": "items",
         "coverage": "items",
         "questions": "items",
         "stacked": "items",
@@ -1209,7 +1199,6 @@ class PptxRenderer:
             "tiles": self._tiles,
             "bars": self._bars,
             "pie": self._pie,
-            "percentiles": self._percentiles,
             "line": self._line,
             "stacked": self._stacked,
             "waterfall": self._waterfall,
@@ -1643,35 +1632,6 @@ class PptxRenderer:
             configured = _text(item.get("color")).lstrip("#")
             point.format.fill.solid()
             point.format.fill.fore_color.rgb = self._rgb(configured or PIE[index])
-
-    def _percentiles(
-        self, slide: Any, block: JsonObject, x: float, y: float, width: float, height: float
-    ) -> None:
-        items: list[JsonValue] = []
-        for value in _array(block.get("items")):
-            item = _object(value)
-            percentile = _number(item.get("percentile"))
-            items.append(
-                {
-                    "label": item.get("label", ""),
-                    "value": percentile,
-                    "display": item.get("value_display") or _ordinal(percentile),
-                }
-            )
-        self._bars(
-            slide,
-            {
-                "type": "bars",
-                "title": block.get("title"),
-                "items": items,
-                "max": 100,
-                "note": block.get("note"),
-            },
-            x,
-            y,
-            width,
-            height,
-        )
 
     def _line(
         self, slide: Any, block: JsonObject, x: float, y: float, width: float, height: float

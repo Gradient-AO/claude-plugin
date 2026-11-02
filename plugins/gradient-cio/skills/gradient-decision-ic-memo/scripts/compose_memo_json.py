@@ -20,6 +20,10 @@ import re
 import sys
 import tempfile
 from pathlib import Path
+
+PLUGIN_SHARED = Path(__file__).resolve().parents[3] / "shared"
+if str(PLUGIN_SHARED) not in sys.path:
+    sys.path.insert(0, str(PLUGIN_SHARED))
 from typing import Any
 
 SCRIPT_ROOT = Path(__file__).resolve().parent

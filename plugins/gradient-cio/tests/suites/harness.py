@@ -19,7 +19,7 @@ PPTX_TEMPLATE = ROOT / "assets" / "gradient-master.potx"
 CONTRACT_CHECKER = ROOT / "skills" / "gradient-setup" / "scripts" / "check_contract.py"
 CONTRACTS = ROOT / "skills" / "gradient-setup" / "references" / "contracts.json"
 CONTRACT_CHECKS = ROOT / "skills" / "gradient-setup" / "references" / "contract-checks.md"
-PUBLIC_TOOLS = ROOT / "skills" / "gradient-setup" / "references" / "public-tools.json"
+PUBLIC_TOOLS = ROOT / "shared" / "public-tools.json"
 SHARED_REPORT_STYLE = ROOT / "shared" / "report-style.md"
 SHARED_MODULE_SCOPE = ROOT / "shared" / "module-scope.md"
 SHARED_CHART_DATA = ROOT / "shared" / "chart-data.md"
@@ -119,7 +119,7 @@ CONSTRUCTION_VALIDATORS = [
         "private-markets construction",
         ROOT
         / "skills"
-        / "gradient-portfolio-construction"
+        / "gradient-allocation-study"
         / "scripts"
         / "validate_construction.py",
         FIX / "construction-private-markets.json",
@@ -128,7 +128,7 @@ CONSTRUCTION_VALIDATORS = [
         "fixed-income construction",
         ROOT
         / "skills"
-        / "gradient-portfolio-construction"
+        / "gradient-allocation-study"
         / "scripts"
         / "validate_construction.py",
         FIX / "construction-fixed-income.json",
@@ -137,7 +137,7 @@ CONSTRUCTION_VALIDATORS = [
         "global-public-equity construction",
         ROOT
         / "skills"
-        / "gradient-portfolio-construction"
+        / "gradient-allocation-study"
         / "scripts"
         / "validate_construction.py",
         FIX / "construction-global-public-equity.json",
@@ -146,7 +146,7 @@ CONSTRUCTION_VALIDATORS = [
         "marketable-alternatives construction",
         ROOT
         / "skills"
-        / "gradient-portfolio-construction"
+        / "gradient-allocation-study"
         / "scripts"
         / "validate_construction.py",
         FIX / "construction-marketable-alternatives.json",
@@ -155,7 +155,7 @@ CONSTRUCTION_VALIDATORS = [
         "real-assets construction",
         ROOT
         / "skills"
-        / "gradient-portfolio-construction"
+        / "gradient-allocation-study"
         / "scripts"
         / "validate_construction.py",
         FIX / "construction-real-assets.json",
@@ -163,7 +163,7 @@ CONSTRUCTION_VALIDATORS = [
 ]
 SETUP_SKILL = ROOT / "skills" / "gradient-setup" / "SKILL.md"
 STALE = re.compile(r"(?<!gradient-)\bgips-(compliance|standards|manager-diligence|report-review|asset-owner-review|policies-gap-check)\b|gradient-capabilities")
-REPORT_CONSTANTS = ROOT / "tools" / "report_constants.py"
+REPORT_CONSTANTS = ROOT / "shared" / "report_constants.py"
 if str(ROOT / "shared") not in sys.path:
     sys.path.insert(0, str(ROOT / "shared"))
 
@@ -217,17 +217,17 @@ CASES = [
     ("portfolio_attribution_report", ["portfolio-attribution-report.json", "OUT"], 8, 12, ["Portfolio Attribution Report", "Historical Attribution", "Governed Ex Ante Attribution", "Largest sub-allocation effect", "Analysis —"]),
     ("portfolio_attribution_compare_fallback", ["attribution-compare-fallback.json", "OUT"], 6, 10, ["Attribution Comparison", "Historical Attribution", "Cross-Lane Comparison"]),
     ("portfolio_attribution_compare_three_lane", ["attribution-compare-three-lane.json", "OUT"], 6, 10, ["Attribution Comparison", "Simulated Attribution", "Cross-Lane Comparison"]),
-    ("idd_manager_performance_single", ["idd-manager-performance-single.json", "OUT"], 3, 10, ["Northstar Select Equity Composite", "Absolute risk and return", "Reliability and date-window sensitivity"]),
-    ("idd_manager_performance_compare", ["idd-manager-performance-compare.json", "OUT"], 3, 9, ["Manager Comparison", "Relative performance and capture", "Correlation and robustness"]),
-    ("idd_manager_performance_robustness", ["idd-manager-performance-robustness.json", "OUT"], 3, 9, ["Manager Robustness", "Window sensitivity", "Rolling evidence"]),
-    ("idd_manager_portfolio_fit", ["idd-portfolio-fit.json", "OUT"], 3, 9, ["Northstar Portfolio Fit Review", "Correlation and diversification", "Simulation and stress"]),
-    ("idd_manager_shortlist", ["idd-shortlist.json", "OUT"], 3, 9, ["Northstar Manager Shortlist", "Performance comparison", "Advance/reserve/reject rationale"]),
+    ("manager_evaluation_single", ["idd-manager-performance-single.json", "OUT"], 3, 10, ["Northstar Select Equity Composite", "Absolute risk and return", "Reliability and date-window sensitivity"]),
+    ("manager_evaluation_compare", ["idd-manager-performance-compare.json", "OUT"], 3, 9, ["Manager Comparison", "Relative performance and capture", "Correlation and robustness"]),
+    ("manager_evaluation_fit", ["idd-portfolio-fit.json", "OUT"], 3, 9, ["Northstar Portfolio Fit Review", "Correlation and diversification", "Simulation and stress"]),
     ("idd_private_markets_pme", ["idd-private-markets-pme.json", "OUT"], 6, 8, ["PME", "J-curve cash-flow path", "Fund multiples path", "Context only — not a PME input", "benchmark_window_return"]),
     ("construction_private_markets", ["construction-private-markets.json", "OUT"], 8, 14, ["Private Markets Portfolio Construction", "Commitments, Pacing and Cash Flow", "Committee action requested"]),
     ("construction_fixed_income", ["construction-fixed-income.json", "OUT"], 8, 14, ["Fixed Income Portfolio Construction", "Rates and Credit Context", "Committee action requested"]),
     ("construction_global_public_equity", ["construction-global-public-equity.json", "OUT"], 8, 14, ["Global Public Equity Portfolio Construction", "Factor Exposures and Concentration", "Committee action requested"]),
     ("construction_marketable_alternatives", ["construction-marketable-alternatives.json", "OUT"], 8, 14, ["Marketable Alternatives Portfolio Construction", "Liquidity, Redemption and Operational Terms", "Committee action requested"]),
     ("construction_real_assets", ["construction-real-assets.json", "OUT"], 8, 14, ["Real Assets Portfolio Construction", "Commitments, Liquidity and Valuation", "Committee action requested"]),
+    ("allocation_total_plan", ["allocation-total-plan.json", "OUT"], 8, 14, ["Total Plan Allocation Study", "Expected Return Assumptions", "CMA Risk and Euler Contribution"]),
+    ("liquidity_pacing", ["liquidity-pacing.json", "OUT"], 6, 10, ["Liquidity and Pacing", "Commitment Pacing Projection", "Capital-Call Coverage"]),
     ("compare",  ["compare.json", "OUT"],                            5, 9,  ["Manager Comparison", "Side-by-side comparison", "Form 13F overlap"]),
 ]
 

@@ -11,9 +11,9 @@ This public mode preserves two internal report variants. Set `meta.mode` to:
 
 ## Non-negotiable rules
 
-- Follow `references/module-scope.md` for Portfolio Analytics and Strategy Lab
+- Follow `${CLAUDE_PLUGIN_ROOT}/shared/module-scope.md` for Portfolio Analytics and Strategy Lab
   boundaries.
-- Read `references/contracts/portfolio-attribution.md` before collection and
+- Read `${CLAUDE_PLUGIN_ROOT}/shared/contracts/portfolio-attribution.md` before collection and
   analysis.
 - For the selected internal variant's structured-analysis boundary, read
   `references/modes/compare-lanes-fallback-analysis-examples.md` for
@@ -109,7 +109,7 @@ automatic flow combines them.
 
 ```text
 python <skill>/scripts/validate_attribution_compare.py report.json
-python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Attribution Comparison <YYYY-MM-DD>" --budget <skill>/references/modes/compare-lanes-layout-budget.json
+python "${CLAUDE_PLUGIN_ROOT}/shared/qa_report.py" report.json --format <pdf|pptx|both> --out "<Portfolio> - Attribution Comparison <YYYY-MM-DD>" --budget <skill>/references/modes/compare-lanes-layout-budget.json
 ```
 
 Inspect all requested contact sheets and reconcile every displayed value to

@@ -1,0 +1,18 @@
+{
+ "cma": "cma_live.json",
+ "regimes": "regimes_q3_2026.json",
+ "format": "capital_vs_risk",
+ "slug": "total_plan_capital_vs_risk",
+ "portfolios": [
+  "model_total_plan.json"
+ ],
+ "headline": "Public Equity is 35% of the Total Plan model and an implied 55% of its risk",
+ "takeaway": "Why: Public Equity’s sleeves carry the model’s highest assumed volatilities (13.6–21.5%) and move closely together (correlations 0.57–0.91), so their risks add up. Core bonds are assumed to have low volatility (5.6–6.7%) and to be nearly uncorrelated with developed equity (−0.03 to −0.04), so they take capital without adding much risk.",
+ "highlight_factors": [
+  4,
+  1,
+  6,
+  5
+ ],
+ "mcp_check": "mcp/portfolio_analytics_total_plan.json"
+}

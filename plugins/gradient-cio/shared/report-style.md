@@ -92,7 +92,6 @@ exactly two series and renders compact paired dots plus the second-minus-first g
 the exact unit-aware label). Retain raw signed values and negative signs ·
 `pie {title?, items:[{label, value, display?, color?}], center?, note?}` (finite nonnegative `value`; one to
 eight positive slices) ·
-`percentiles {title?, items:[{label, percentile, value_display}], threshold, note?}` ·
 `waterfall {title?, items:[{label, value, display?, total?}], note?}` ·
 `band {title?, items:[{label, value, low, high, target?, display?}], note?}` ·
 `stacked {title?, items:[{label, segments:[{label, value, display?, color?}]}], suffix?, note?}` (set
@@ -118,7 +117,7 @@ hard `force` breaks are never removed automatically. Use `force` only for stable
 effective layout budget's `forced_breaks`; generated appendices manage their own forced starts.
 The section with `id: "executive"` gets the executive band.
 For analytical sections, `kicker` is a message-first conclusion rather than a topic label. Place a visual
-(`chart`, `line`, `bars`, `pie`, `percentiles`, `waterfall`, `band`, `stacked`, `heat`, `timeline`, `tiles`, `coverage` or
+(`chart`, `line`, `bars`, `pie`, `waterfall`, `band`, `stacked`, `heat`, `timeline`, `tiles`, `coverage` or
 `findings`) or a typed
 `Not available — <reason>` callout before the first table. Do not place more than two tables consecutively,
 including inside either side of `two_col`.

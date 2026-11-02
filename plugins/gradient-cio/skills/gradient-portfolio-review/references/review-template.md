@@ -183,8 +183,6 @@ Use JSON block mode. Set:
   `% NAV`, `As of`, `Coverage`.
 - `table` **Governed concentration checks** with columns `Axis`, `Observed`, `Limit`, `Status`, `Source`.
 - Optional returned factor, currency, sector, geography and 13F look-through blocks. Preserve each basis.
-- `findings` **Exposure-weighted diligence findings** for every resolved manager or fund; preserve severity,
-  due date and exposure. Use a typed unavailable state for unmatched entities.
 - Include the standard 13F lag, coverage and FX caveat whenever 13F evidence appears.
 - End with one to three sourced `Analysis —` callouts.
 
@@ -203,8 +201,14 @@ Use JSON block mode. Set:
 - Name assumption set, CMA release, regime, horizon, currency and evidence basis.
 - Use governed policy / CMA evidence for saved-portfolio forward assumptions and embed relevant returned
   `allocations` chart items unchanged.
-- `table` **Forward assumptions and decomposition** with columns `Measure`, `Portfolio`, `Policy / reference`,
-  `Basis`, `Source` only when the server returns equivalent tabular evidence.
+- `table` **Expected return assumptions by sleeve** with columns `Sleeve`,
+  `User ER — policy targets`, `CMA-implied ER — policy targets`, `Gap (bp)`,
+  `Difference explanation`. Never blend the sources.
+- `kv` **Return objective on user assumptions** and a separate **CMA basis**
+  line, each with explicit `return_source` and `weight_basis`.
+- `table` **Forward assumptions and decomposition** with columns `Measure`,
+  `Portfolio`, `Policy / reference`, `Basis`, `Source` only when the server
+  returns equivalent tabular evidence.
 - Optional `table` **Strategy Lab sandbox** with returned simulation, expected-statistics, relative-return,
   or date-window robustness results only when `return_series_ids` were selected.
 - Label Strategy Lab content `Selected-series sandbox — not saved-portfolio analytics`.
@@ -213,6 +217,11 @@ Use JSON block mode. Set:
 - Never title this section or any block `Simulated attribution`. No public saved-portfolio simulated
   attribution contract exists.
 - End with one to three sourced `Analysis —` callouts.
+
+If an allocation limit equals current actual or policy target, its displayed
+status is `limit basis unverified`. If historical returns and attribution
+disagree on benchmark return for the same period, show both values labeled
+`policy benchmark entity` and `linked segment composite`.
 
 ### 10. Liquidity and Commitments
 

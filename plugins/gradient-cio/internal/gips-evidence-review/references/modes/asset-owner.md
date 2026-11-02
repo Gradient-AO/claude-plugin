@@ -6,7 +6,7 @@ GIPS standards for asset owners.
 
 Shared references live in the internal module's `references/` directory. Load `asset-owners.md`, `verification.md`,
 `output-format.md` and `report-layout.md`; before drafting, also load the internal module's
-`references/writing-standards.md` and `references/analysis-examples.md`.
+`${CLAUDE_PLUGIN_ROOT}/shared/writing-standards.md` and `references/analysis-examples.md`.
 
 ## Step 1 — Confirm the right standards apply
 
@@ -56,7 +56,7 @@ markdown and validate and compose them with this skill's scripts, writing
 the resulting validated JSON as `report.json`. Require evidence-status
 tiles, evidence coverage, findings and severity summaries, sourced analysis, and typed unavailable blocks
 when expected evidence is missing. Market charts are not required. Follow `output-format.md`,
-`report-layout.md` and this skill's `references/report-style.md`.
+`report-layout.md` and `${CLAUDE_PLUGIN_ROOT}/shared/report-style.md`.
 
 Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select
 both when it says `both` or `board pack`. Both formats must come from the same validated `report.json`; the

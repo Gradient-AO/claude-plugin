@@ -6,7 +6,7 @@ Apply this contract to every `gradient-idd-*` report.
 
 - Use only server-returned metrics and source evidence. Do not calculate, infer, or backfill analytics locally.
 - Preserve each metric's method, version, basis, units, date window, observation count, and availability reason.
-- Label illustrative evidence exactly as required by `report-style.md`.
+- Label illustrative evidence exactly as required by `${CLAUDE_PLUGIN_ROOT}/shared/report-style.md`.
 - Distinguish unavailable, not licensed, insufficient, and not applicable results.
 
 ## Benchmark matching

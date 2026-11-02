@@ -22,35 +22,28 @@ from suites.harness import (
 
 
 def source_hygiene_checks(allow_branded):
-    manager_performance_modes = (
+    manager_evaluation_modes = (
         ROOT
         / "skills"
-        / "gradient-idd-manager-performance"
+        / "gradient-manager-evaluation"
         / "references"
         / "modes"
     )
     mode_contract_errors = []
-    for mode_path in sorted(manager_performance_modes.glob("*.md")):
+    for mode_name in ("single.md", "fit.md", "compare.md"):
+        mode_path = manager_evaluation_modes / mode_name
         mode_text = mode_path.read_text(encoding="utf-8")
         if mode_text.startswith("---"):
             mode_contract_errors.append(
                 f"{mode_path.name}: mode references must not declare skill frontmatter"
             )
-        if "Assessment Report" in mode_text or "Comparison Report" in mode_text or "Robustness Report" in mode_text:
+        if "Shortlist" in mode_text or "universe ranking" in mode_text.casefold():
             mode_contract_errors.append(
-                f"{mode_path.name}: use the canonical Manager Performance output name"
+                f"{mode_path.name}: manager evaluation cannot restore shortlist or universe ranking"
             )
-        for required_text in (
-            "meta.data_basis",
-            "Tag`, `Evidence`, `Basis`, `Tool / view`, `Key parameters`, `As of`, `Data scope`, `Validation`, `Digest",
-        ):
-            if required_text not in mode_text:
-                mode_contract_errors.append(
-                    f"{mode_path.name}: missing required evidence instruction {required_text!r}"
-                )
     check(
         not mode_contract_errors,
-        "manager-performance mode references inherit the root skill contract"
+        "manager-evaluation mode references inherit the root skill contract"
         + (f": {mode_contract_errors}" if mode_contract_errors else ""),
     )
     stale = []
@@ -75,6 +68,8 @@ def source_hygiene_checks(allow_branded):
         "gradient-odd-" "manager-compare",
         "gradient-portfolio-attribution-" "compare",
         "gradient-idd-" "manager-shortlist",
+        "gradient-idd-manager-performance",
+        "gradient-idd-manager-portfolio-fit",
         "roster-" "summary",
         "roster_" "summary",
     )
@@ -157,7 +152,10 @@ def source_hygiene_checks(allow_branded):
                 )
                 if not allowed_scope or "capabilit" not in text.casefold():
                     planned_scope_errors.append(f"{relative}: {tool_name}")
-            elif tool_name != "run_id" and tool_name not in live_tools:
+            elif (
+                tool_name not in {"check_values", "run_id"}
+                and tool_name not in live_tools
+            ):
                 unknown_tools.append(
                     f"{path.relative_to(ROOT).as_posix()}: {tool_name}"
                 )
@@ -172,20 +170,24 @@ def source_hygiene_checks(allow_branded):
         + (f": {planned_scope_errors}" if planned_scope_errors else ""),
     )
     r = subprocess.run([sys.executable, str(ROOT / "tools" / "sync_shared.py"), "--check"], capture_output=True, text=True, encoding="utf-8", errors="replace")
-    check(r.returncode == 0, "shared renderer and style guide in sync in every skill")
+    check(r.returncode == 0, "shared release metadata is synchronized in every skill")
+    r = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "tools" / "sync_quicktake_shared.py"),
+            "--check",
+        ],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    check(r.returncode == 0, "shared Quick Take canvas kit is in sync")
     gips_root = ROOT / "internal" / "gips-evidence-review"
     check(
-        (gips_root / "references" / "report-style.md").read_text(encoding="utf-8")
-        == SHARED_REPORT_STYLE.read_text(encoding="utf-8"),
-        "internal GIPS report style matches the shared renderer contract",
-    )
-    gips_writing = (
-        gips_root / "references" / "writing-standards.md"
-    ).read_text(encoding="utf-8")
-    check(
-        "# GIPS evidence-review writing standards" in gips_writing
-        and "This GIPS-only contract is owned" in gips_writing,
-        "internal GIPS writing standards declare GIPS-only ownership",
+        not (gips_root / "references" / "report-style.md").exists()
+        and SHARED_REPORT_STYLE.is_file(),
+        "internal GIPS review resolves the plugin-level shared report style",
     )
     gips_modes = "\n".join(
         path.read_text(encoding="utf-8")

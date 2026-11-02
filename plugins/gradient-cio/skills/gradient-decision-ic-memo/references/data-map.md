@@ -16,7 +16,6 @@ coverage and do not present lab results as the portfolio.
 | Need | Tool | Notes |
 |---|---|---|
 | Organization | `list_organizations` | Ask if more than one and the user hasn't chosen. |
-| Assumption set | `list_assumption_sets` | Use the one the user names, else the default; state it in the header. |
 | Portfolio id and name | `list_portfolios` | Match the user's portfolio by name. Record `data_scope`. |
 | Strategy Lab series | User-supplied `return_series_ids` | Optional. Do not infer from the portfolio ID. |
 | Capabilities | `get_gradient_capabilities` summary; use a supported scope object only when a matching coverage view applies | Only if a later call fails — preserve tool availability and any matching `scoped_coverage`, and distinguish entitlement from outage in the Not available reason. |
@@ -33,15 +32,13 @@ coverage and do not present lab results as the portfolio.
 | 5.3 | Contributors / detractors | Governed holding or asset-class contribution data from a user report | Not available |
 | 6.1 | Factor exposures | Portfolio Analytics: `get_portfolio_exposure` with `include: [factor_currency_exposure]`; use the unchanged returned chart item and preserve its basis, `render_hint`, and chart ID | Not available |
 | 6.2 | Concentration, diversification | Portfolio Analytics: `get_portfolio_exposure` with `include: [risk_contribution, lookthrough_13f]` plus `get_portfolio_structure`; label 13F issuer evidence as a lagged, long-only estimate | Concentration rows from exposure only; model-derived diversification rows Not available |
-| 7.1 | Expected return, vol, Sharpe, beta | Portfolio Analytics: use `check_portfolio_policy.return_objective` and equivalent governed results returned on the saved-portfolio basis; use `list_assumption_sets` and `get_capital_market_assumptions` for assumption context | Unsupported portfolio statistics are Not available; never weight CMA rows locally or substitute Strategy Lab series results |
+| 7.1 | Expected return, vol, Sharpe, beta | `check_portfolio_policy.return_objective` is `user × policy_targets`; CMA `portfolio_analytics` with supplied policy weights is `cma_implied × policy_targets` | Show both sources side by side with the gap in bp; label the risk-free-rate source; never blend or weight CMA rows locally |
+| 7.1 / 13 | Before/after risk contribution for Allocation Change or Rebalance | Two `get_capital_market_assumptions` `portfolio_analytics` calls using the current and proposed supplied weights | Preserve returned CMA risk, marginal contribution and Euler contribution; never calculate covariance locally |
 | 7.1 | Drawdown, CVaR, probability of meeting objective | Portfolio Analytics source or user report when returned on the same portfolio basis | Not available; do not substitute a Strategy Lab series result |
-| 7.2 | Consensus check | `get_cma_consensus_check` (mode `allocation`, with an inline canonical allocation derived from `get_portfolio_exposure`, `target_return` = IPS objective); use `portfolio_id` only for a stored licensed portfolio | mode `asset_class` for held classes |
 | 7.3 | Regime overlay | `get_macro_signals` (view `gradient_signal` → `sources.grip.current`); `get_capital_market_assumptions` (regime view) | Regime row Not available |
-| 8 | Stress tests, scenarios | Portfolio Analytics or user-supplied scenario report on the saved portfolio. Optional Strategy Lab: `run_strategy_lab_simulation` / `run_strategy_lab_date_window_robustness` only for explicitly selected return series, in rows labeled `Strategy Lab — <series>` | Not available |
 | 9 | Liquidity tiers, unfunded, pacing | `check_portfolio_policy.liquidity` plus `get_portfolio_exposure` with `include: [commitment_pacing, liquidity_scorecard]`; preserve included chart items unchanged | User liquidity schedule quoted as a document; else Not available |
-| 10 | Managers: exposure and diligence status | `get_manager_diligence_findings` (view `exposure_weighted`) | During the product hold, preserve the structured unavailable payload and mark manager diligence `Not assessed` |
-| 11 | GIPS | Internal `../../internal/gips-evidence-review/contract.md` asset-owner mode for total-fund reporting; the GIPS section of `gradient-odd-report` for manager claims, verification and performance integrity | Not assessed — reason |
-| 12 | Market context | `get_macro_signals` (`gradient_signal`; GRIP from `sources.grip.current`), `get_macro_conditions` (indicators, themes relevant to holdings), `get_the_read`, `get_macro_calendar` (scheduled_events, 30 days) | Omit unavailable bullets' content but keep the bullet with Not available |
+| 10 | Managers: operational diligence | No calls while diligence is paused | `Not assessed — operational diligence paused` |
+| 11 | GIPS / ODD evidence | No calls while diligence is paused | `Not assessed — operational diligence paused` |
 | 13 | Proposed change and impact | Use governed current-policy results and a server-returned proposed-case analysis only when available on the same basis | Optional Strategy Lab comparison only when the user selected a lab return-series basket representing the proposal; label it as a separate lab basis. Otherwise mark proposed policy impacts Not available |
 
 For Section 9, cite `commitments-cashflow.metrics.cashflow_breakeven` only when returned. Preserve its
@@ -72,6 +69,6 @@ as a substitute for 12 returned month-end observations.
 ## Never
 
 - Never substitute numbers from general knowledge, earlier conversations, or another portfolio.
-- Never present `research_watchlist`, 13F, or peer data as the portfolio's own holdings.
+- Never present `research_watchlist`, 13F as the portfolio's own holdings.
 - Never use a Portfolio Analytics ID as a Strategy Lab return-series or session ID.
 - Never retry a call more than once; record the error and move on.

@@ -37,9 +37,8 @@ from report_vocab import (  # noqa: E402
 TRACKED_BUDGETS = (
     ROOT / "internal" / "gips-evidence-review" / "references" / "layout-budget.json",
     ROOT / "skills" / "gradient-decision-ic-memo" / "references" / "layout-budget.json",
-    ROOT / "skills" / "gradient-idd-manager-performance" / "references" / "layout-budget.json",
-    ROOT / "skills" / "gradient-idd-manager-portfolio-fit" / "references" / "layout-budget.json",
-    ROOT / "skills" / "gradient-idd-manager-performance" / "references" / "modes" / "shortlist-layout-budget.json",
+    ROOT / "skills" / "gradient-manager-evaluation" / "references" / "layout-budget.json",
+    ROOT / "skills" / "gradient-manager-evaluation" / "references" / "fit-layout-budget.json",
     ROOT / "skills" / "gradient-idd-private-markets-pme" / "references" / "layout-budget.json",
     ROOT / "skills" / "gradient-odd-ddq-reconcile" / "references" / "layout-budget.json",
     ROOT / "skills" / "gradient-odd-report" / "references" / "layout-budget-compare.json",
@@ -48,7 +47,8 @@ TRACKED_BUDGETS = (
     ROOT / "skills" / "gradient-odd-report" / "references" / "layout-budget.json",
     ROOT / "skills" / "gradient-portfolio-attribution" / "references" / "modes" / "compare-lanes-layout-budget.json",
     ROOT / "skills" / "gradient-portfolio-attribution" / "references" / "layout-budget.json",
-    ROOT / "skills" / "gradient-portfolio-construction" / "references" / "layout-budget.json",
+    ROOT / "skills" / "gradient-allocation-study" / "references" / "layout-budget.json",
+    ROOT / "skills" / "gradient-liquidity-pacing" / "references" / "layout-budget.json",
     ROOT / "skills" / "gradient-portfolio-review" / "references" / "layout-budget.json",
     ROOT / "skills" / "gradient-setup" / "references" / "layout-budget.json",
 )
@@ -101,7 +101,7 @@ def layout_vocab_contracts():
         (
             ROOT
             / "skills"
-            / "gradient-idd-manager-performance"
+            / "gradient-manager-evaluation"
             / "references"
             / "layout-budget.json",
             {"meta": {"mode": "single"}},
@@ -110,7 +110,7 @@ def layout_vocab_contracts():
         (
             ROOT
             / "skills"
-            / "gradient-portfolio-construction"
+            / "gradient-allocation-study"
             / "references"
             / "layout-budget.json",
             {"meta": {"mode": "real_assets"}},
@@ -259,8 +259,8 @@ def layout_vocab_contracts():
     )
 
     validator_profiles = (
-        ROOT / "tools" / "idd_report_validator.py",
-        ROOT / "tools" / "construction_report_validator.py",
+        ROOT / "shared" / "idd_report_validator.py",
+        ROOT / "shared" / "construction_report_validator.py",
         ROOT / "internal" / "gips-evidence-review" / "scripts" / "validate_gips_report.py",
         ROOT / "skills" / "gradient-decision-ic-memo" / "scripts" / "validate_memo.py",
         ROOT / "skills" / "gradient-odd-ddq-reconcile" / "scripts" / "validate_ddq_report.py",

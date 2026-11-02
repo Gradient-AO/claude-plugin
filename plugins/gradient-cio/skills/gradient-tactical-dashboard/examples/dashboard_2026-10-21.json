@@ -1,0 +1,516 @@
+{
+ "inputs": {
+  "rr": "rr_2026-10-21.json",
+  "cma": "cma_baseline_2026-10-12.json",
+  "regime": "regime_2026-09-30.json",
+  "grip": "grip_2026-10-21.json"
+ },
+ "as_of": {
+  "ref": "rr:as_of_date"
+ },
+ "headline": "Momentum vs. Gradient's 10-year assumptions: one agreement, two splits",
+ "subtitle": "+ = first-named side ahead (momentum) or favored (10-yr assumptions)",
+ "context": [
+  {
+   "label": "US regime (model-detected)",
+   "value": {
+    "ref": "regime:regions[region=NA].latest.label",
+    "fmt": "title"
+   },
+   "detail": [
+    {
+     "ref": "regime:regions[region=NA].latest.probabilities.CONTRACTION",
+     "fmt": "prob0"
+    },
+    " probability · ",
+    {
+     "ref": "regime:regions[region=NA].latest.observation_date",
+     "fmt": "date"
+    }
+   ]
+  },
+  {
+   "label": "GRIP risk gauge",
+   "value": {
+    "ref": "grip:current.gripScore",
+    "fmt": "int"
+   },
+   "value_color": "stance",
+   "stance": {
+    "ref": "grip:current.stance"
+   },
+   "detail": [
+    {
+     "ref": "grip:current.stance"
+    },
+    " stance · ",
+    {
+     "ref": "grip:as_of_date",
+     "fmt": "date"
+    }
+   ]
+  },
+  {
+   "label": "Unusual moves this week",
+   "value": {
+    "ref": "rr:notable_pair_count",
+    "fmt": "int"
+   },
+   "detail": [
+    "of ",
+    {
+     "ref": "rr:eligible_pair_count",
+     "fmt": "int"
+    },
+    " pairs scanned"
+   ]
+  }
+ ],
+ "columns": [
+  "3-mo momentum",
+  "Latest signal",
+  "10-yr CMA edge",
+  "Agree?"
+ ],
+ "rows": [
+  {
+   "group": "Styles & factors"
+  },
+  {
+   "label": "Growth vs. Value",
+   "sublabel": "DM styles",
+   "cells": [
+    {
+     "value": {
+      "ref": "rr:board_total[pair_id=growth_vs_value].relative_3m_pct",
+      "fmt": "pct1"
+     }
+    },
+    {
+     "value": {
+      "ref": "rr:board_total[pair_id=growth_vs_value].winning_move_pct",
+      "fmt": "pct1"
+     },
+     "note": [
+      {
+       "ref": "rr:board_total[pair_id=growth_vs_value].winning_horizon_days",
+       "fmt": "int"
+      },
+      "-day · ",
+      {
+       "ref": "rr:board_total[pair_id=growth_vs_value].percentile_abs",
+       "fmt": "ord"
+      },
+      " pctile"
+     ]
+    },
+    {
+     "value": {
+      "op": "sub",
+      "args": [
+       {
+        "ref": "cma:items[factor_id=2].excess_return_effective"
+       },
+       {
+        "ref": "cma:items[factor_id=3].excess_return_effective"
+       }
+      ],
+      "scale": 100,
+      "fmt": "pp1"
+     },
+     "note": "growth − value"
+    },
+    {
+     "agree": [
+      {
+       "ref": "rr:board_total[pair_id=growth_vs_value].relative_3m_pct"
+      },
+      {
+       "op": "sub",
+       "args": [
+        {
+         "ref": "cma:items[factor_id=2].excess_return_effective"
+        },
+        {
+         "ref": "cma:items[factor_id=3].excess_return_effective"
+        }
+       ]
+      }
+     ],
+     "note": "3-mo vs. 10-yr"
+    }
+   ]
+  },
+  {
+   "label": "Small Caps vs. Market",
+   "sublabel": "US size",
+   "cells": [
+    {
+     "value": {
+      "ref": "rr:board_total[pair_id=size_vs_us_market].relative_3m_pct",
+      "fmt": "pct1"
+     }
+    },
+    {
+     "value": {
+      "ref": "rr:board_total[pair_id=size_vs_us_market].winning_move_pct",
+      "fmt": "pct1"
+     },
+     "note": [
+      {
+       "ref": "rr:board_total[pair_id=size_vs_us_market].winning_horizon_days",
+       "fmt": "int"
+      },
+      "-day · ",
+      {
+       "ref": "rr:board_total[pair_id=size_vs_us_market].percentile_abs",
+       "fmt": "ord"
+      },
+      " pctile"
+     ]
+    },
+    {
+     "value": {
+      "op": "sub",
+      "args": [
+       {
+        "ref": "cma:items[factor_id=5].excess_return_effective"
+       },
+       {
+        "ref": "cma:items[factor_id=4].excess_return_effective"
+       }
+      ],
+      "scale": 100,
+      "fmt": "pp1"
+     },
+     "note": "small − large DM †"
+    },
+    {
+     "agree": [
+      {
+       "ref": "rr:board_total[pair_id=size_vs_us_market].relative_3m_pct"
+      },
+      {
+       "op": "sub",
+       "args": [
+        {
+         "ref": "cma:items[factor_id=5].excess_return_effective"
+        },
+        {
+         "ref": "cma:items[factor_id=4].excess_return_effective"
+        }
+       ]
+      }
+     ],
+     "note": "3-mo vs. 10-yr"
+    }
+   ]
+  },
+  {
+   "label": "Quality vs. US Market",
+   "sublabel": "US factor",
+   "cells": [
+    {
+     "value": {
+      "ref": "rr:board_total[pair_id=quality_vs_us_market].relative_3m_pct",
+      "fmt": "pct1"
+     }
+    },
+    {
+     "value": {
+      "ref": "rr:board_total[pair_id=quality_vs_us_market].winning_move_pct",
+      "fmt": "pct1"
+     },
+     "note": [
+      {
+       "ref": "rr:board_total[pair_id=quality_vs_us_market].winning_horizon_days",
+       "fmt": "int"
+      },
+      "-day · ",
+      {
+       "ref": "rr:board_total[pair_id=quality_vs_us_market].percentile_abs",
+       "fmt": "ord"
+      },
+      " pctile"
+     ]
+    },
+    {
+     "value": {
+      "text": "n/a"
+     },
+     "color": "none",
+     "note": "no matching factor"
+    },
+    {
+     "value": {
+      "text": "—"
+     },
+     "color": "none",
+     "note": "no CMA"
+    }
+   ]
+  },
+  {
+   "label": "Momentum vs. US Market",
+   "sublabel": "US factor",
+   "cells": [
+    {
+     "value": {
+      "ref": "rr:board_total[pair_id=momentum_vs_us_market].relative_3m_pct",
+      "fmt": "pct1"
+     }
+    },
+    {
+     "value": {
+      "ref": "rr:board_total[pair_id=momentum_vs_us_market].winning_move_pct",
+      "fmt": "pct1"
+     },
+     "note": [
+      {
+       "ref": "rr:board_total[pair_id=momentum_vs_us_market].winning_horizon_days",
+       "fmt": "int"
+      },
+      "-day · ",
+      {
+       "ref": "rr:board_total[pair_id=momentum_vs_us_market].percentile_abs",
+       "fmt": "ord"
+      },
+      " pctile"
+     ]
+    },
+    {
+     "value": {
+      "text": "n/a"
+     },
+     "color": "none",
+     "note": "no matching factor"
+    },
+    {
+     "value": {
+      "text": "—"
+     },
+     "color": "none",
+     "note": "no CMA"
+    }
+   ],
+   "square": false
+  },
+  {
+   "group": "Regions"
+  },
+  {
+   "label": "US vs. EM",
+   "sublabel": "Regions",
+   "cells": [
+    {
+     "value": {
+      "ref": "rr:board_total[pair_id=us_vs_em].relative_3m_pct",
+      "fmt": "pct1"
+     }
+    },
+    {
+     "value": {
+      "ref": "rr:board_total[pair_id=us_vs_em].winning_move_pct",
+      "fmt": "pct1"
+     },
+     "note": [
+      {
+       "ref": "rr:board_total[pair_id=us_vs_em].winning_horizon_days",
+       "fmt": "int"
+      },
+      "-day · ",
+      {
+       "ref": "rr:board_total[pair_id=us_vs_em].percentile_abs",
+       "fmt": "ord"
+      },
+      " pctile"
+     ]
+    },
+    {
+     "value": {
+      "op": "sub",
+      "args": [
+       {
+        "ref": "cma:items[factor_id=1].excess_return_effective"
+       },
+       {
+        "ref": "cma:items[factor_id=6].excess_return_effective"
+       }
+      ],
+      "scale": 100,
+      "fmt": "pp1"
+     },
+     "note": "DM − EM †"
+    },
+    {
+     "agree": [
+      {
+       "ref": "rr:board_total[pair_id=us_vs_em].relative_3m_pct"
+      },
+      {
+       "op": "sub",
+       "args": [
+        {
+         "ref": "cma:items[factor_id=1].excess_return_effective"
+        },
+        {
+         "ref": "cma:items[factor_id=6].excess_return_effective"
+        }
+       ]
+      }
+     ],
+     "note": "3-mo vs. 10-yr"
+    }
+   ]
+  },
+  {
+   "label": "US vs. Europe",
+   "sublabel": "Regions",
+   "cells": [
+    {
+     "value": {
+      "ref": "rr:board_total[pair_id=us_vs_europe].relative_3m_pct",
+      "fmt": "pct1"
+     }
+    },
+    {
+     "value": {
+      "ref": "rr:board_total[pair_id=us_vs_europe].winning_move_pct",
+      "fmt": "pct1"
+     },
+     "note": [
+      {
+       "ref": "rr:board_total[pair_id=us_vs_europe].winning_horizon_days",
+       "fmt": "int"
+      },
+      "-day · ",
+      {
+       "ref": "rr:board_total[pair_id=us_vs_europe].percentile_abs",
+       "fmt": "ord"
+      },
+      " pctile"
+     ]
+    },
+    {
+     "value": {
+      "text": "n/a"
+     },
+     "color": "none",
+     "note": "no regional factor"
+    },
+    {
+     "value": {
+      "text": "—"
+     },
+     "color": "none",
+     "note": "no CMA"
+    }
+   ]
+  },
+  {
+   "label": "Japan vs. US",
+   "sublabel": "Regions",
+   "cells": [
+    {
+     "value": {
+      "ref": "rr:board_total[pair_id=japan_vs_us].relative_3m_pct",
+      "fmt": "pct1"
+     }
+    },
+    {
+     "value": {
+      "ref": "rr:board_total[pair_id=japan_vs_us].winning_move_pct",
+      "fmt": "pct1"
+     },
+     "note": [
+      {
+       "ref": "rr:board_total[pair_id=japan_vs_us].winning_horizon_days",
+       "fmt": "int"
+      },
+      "-day · ",
+      {
+       "ref": "rr:board_total[pair_id=japan_vs_us].percentile_abs",
+       "fmt": "ord"
+      },
+      " pctile"
+     ]
+    },
+    {
+     "value": {
+      "text": "n/a"
+     },
+     "color": "none",
+     "note": "no regional factor"
+    },
+    {
+     "value": {
+      "text": "—"
+     },
+     "color": "none",
+     "note": "no CMA"
+    }
+   ]
+  },
+  {
+   "label": "Germany vs. UK",
+   "sublabel": "Europe",
+   "cells": [
+    {
+     "value": {
+      "ref": "rr:board_total[pair_id=germany_vs_uk].relative_3m_pct",
+      "fmt": "pct1"
+     }
+    },
+    {
+     "value": {
+      "ref": "rr:board_total[pair_id=germany_vs_uk].winning_move_pct",
+      "fmt": "pct1"
+     },
+     "note": [
+      {
+       "ref": "rr:board_total[pair_id=germany_vs_uk].winning_horizon_days",
+       "fmt": "int"
+      },
+      "-day · ",
+      {
+       "ref": "rr:board_total[pair_id=germany_vs_uk].percentile_abs",
+       "fmt": "ord"
+      },
+      " pctile"
+     ]
+    },
+    {
+     "value": {
+      "text": "n/a"
+     },
+     "color": "none",
+     "note": "no regional factor"
+    },
+    {
+     "value": {
+      "text": "—"
+     },
+     "color": "none",
+     "note": "no CMA"
+    }
+   ],
+   "square": false
+  }
+ ],
+ "footnotes": [
+  "Momentum, signal: Gradient relative returns. CMA edge: Gradient ICAPM 10-yr expected excess return, USD, Q3 2026. Agree/Split compares the two signs. † Proxy: DM equity for US; DM small vs. large for US size."
+ ],
+ "explain": "Growth vs. Value is the only pair where momentum and Gradient's 10-year assumptions agree, both leaning toward value. US vs. EM and small caps are split. Without a CMA match, quality has led the market by 8.2% over three months, the momentum factor had a sharp week, and Europe and Japan have both led the US. With the regime model reading US contraction and GRIP in Defensive, the call stays with your committee.",
+ "source_line": "Sources: Gradient relative-return signals and GRIP (Oct 21, 2026), Gradient ICAPM CMAs (released Oct 12, 2026), regime state (Sep 30, 2026).",
+ "col_widths": [
+  0.3,
+  0.17,
+  0.19,
+  0.19,
+  0.15
+ ],
+ "explain_square": "Growth vs. Value is the only pair where momentum and Gradient's 10-year assumptions agree, both leaning toward value. US vs. EM and small caps are split. Quality has led the market by 8.2% over three months, and Europe and Japan have both led the US. The call stays with your committee.",
+ "post_question": "Show me momentum, this week's signal and Gradient's 10-year assumptions side by side for eight allocator pairs, and flag where they agree.",
+ "watch": "If US vs. EM momentum turns while the assumptions hold, that split resolves toward the long-run view.",
+ "watch_on_square": true
+}

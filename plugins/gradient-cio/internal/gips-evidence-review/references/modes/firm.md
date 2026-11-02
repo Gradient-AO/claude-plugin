@@ -6,7 +6,7 @@ standards for firms, line by line.
 
 Shared references live in the internal module's `references/` directory. Always load `firms-report-checklist.md`,
 `output-format.md` and `report-layout.md`; before drafting, also load the internal module's
-`references/writing-standards.md` and `references/analysis-examples.md`.
+`${CLAUDE_PLUGIN_ROOT}/shared/writing-standards.md` and `references/analysis-examples.md`.
 
 ## Step 1 — Classify the document
 
@@ -68,7 +68,7 @@ a definitive deficiency.
 Always deliver a branded review. Write `review.md`, `visuals.json` and `meta.json`; preserve the authoritative
 markdown and validate and compose them with this skill's scripts, writing
 the resulting validated JSON as `report.json`. Market charts are not required. Follow
-`output-format.md`, `report-layout.md` and this skill's `references/report-style.md`.
+`output-format.md`, `report-layout.md` and `${CLAUDE_PLUGIN_ROOT}/shared/report-style.md`.
 
 Select PDF by default; select PPTX when the request says `PowerPoint`, `deck`, `slides` or `.pptx`; select
 both when it says `both` or `board pack`. Both formats must come from the same validated `report.json`; any

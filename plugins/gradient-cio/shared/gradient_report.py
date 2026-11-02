@@ -1095,37 +1095,6 @@ def b_heat(b):
     note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
     return f'{title}<table class="grid heat"><thead><tr>{head}</tr></thead><tbody>{"".join(rows)}</tbody></table>{note}'
 
-def ordinal(value):
-    """Return an integer with its English ordinal suffix (1st, 2nd, 3rd, 11th, 63rd)."""
-    number = int(round(float(value)))
-    suffix = "th" if 10 <= abs(number) % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(abs(number) % 10, "th")
-    return f"{number}{suffix}"
-
-def b_percentiles(b):
-    items = b["items"]; thr = b.get("threshold", 75)
-    W, lw, rw, rh = 640, 200, 70, 26
-    x0, x1 = lw, W - rw; sx = lambda p: x0 + (x1 - x0) * p / 100
-    H = rh * len(items) + 30
-    s = [_svg_start(W, H, b.get("title"), b.get("description") or b.get("note")),
-         f'<rect x="{sx(thr):.1f}" y="0" width="{x1-sx(thr):.1f}" height="{H-22}" fill="{CORAL}" opacity="0.10"/>',
-         f'<text x="{x1-4}" y="11" text-anchor="end" class="ax" fill="{CORAL}">top quartile ≥{ordinal(thr)}</text>']
-    for p in (0, 25, 50, 75, 100):
-        s.append(f'<line x1="{sx(p):.1f}" x2="{sx(p):.1f}" y1="14" y2="{H-22}" stroke="{RULE}"/>'
-                 f'<text x="{sx(p):.1f}" y="{H-8}" text-anchor="middle" class="ax">{p}</text>')
-    for k, i in enumerate(items):
-        y = 16 + k * rh + rh / 2; p = float(i["percentile"])
-        col = CORAL if p >= thr else (INK if p >= 50 else "#6B7785")
-        s.append(f'<text x="{lw-12}" y="{y+4:.1f}" text-anchor="end" class="cl">{esc(i["label"])}</text>'
-                 f'<line x1="{x0}" x2="{sx(p):.1f}" y1="{y:.1f}" y2="{y:.1f}" stroke="{col}" stroke-width="1.5" opacity="0.35"/>'
-                 f'<circle cx="{sx(p):.1f}" cy="{y:.1f}" r="6" fill="{col}" stroke="{PAPER}" stroke-width="2"/>'
-                 f'<text x="{x1+10}" y="{y+4:.1f}" class="cv">{ordinal(p)}</text>')
-        if i.get("value_display"):
-            s.append(f'<text x="{sx(p):.1f}" y="{y-9:.1f}" text-anchor="middle" class="ax">{esc(i["value_display"])}</text>')
-    s.append("</svg>")
-    title = f'<div class="btitle">{esc(b["title"])}</div>' if b.get("title") else ""
-    note = f'<div class="note">{rich(b["note"])}</div>' if b.get("note") else ""
-    return title + "".join(s) + note
-
 def b_callout(b):
     c = {"good": LIME, "watch": AMBER, "bad": CORAL, "info": INK}.get(b.get("tone", "info"), INK)
     if str(b.get("title") or "").strip().rstrip(".").casefold() == "not available":
@@ -1675,7 +1644,7 @@ def b_markdown(b):
     return '<div class="md">' + "".join(md_to_html(b["text"])) + "</div>"
 
 BLOCKS = {"text": b_text, "bullets": b_bullets, "kv": b_kv, "table": b_table, "tiles": b_tiles,
-          "bars": b_bars, "pie": b_pie, "percentiles": b_percentiles, "callout": b_callout, "coverage": b_coverage,
+          "bars": b_bars, "pie": b_pie, "callout": b_callout, "coverage": b_coverage,
           "findings": b_findings, "timeline": b_timeline, "questions": b_questions, "two_col": b_two_col, "pagebreak": b_pagebreak,
           "markdown": b_markdown, "line": b_line, "statement": b_statement, "chart": b_chart,
           "waterfall": b_waterfall, "band": b_band, "stacked": b_stacked, "heat": b_heat}

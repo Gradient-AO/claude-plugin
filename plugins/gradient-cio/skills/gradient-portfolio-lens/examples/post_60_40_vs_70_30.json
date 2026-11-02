@@ -1,0 +1,27 @@
+{
+ "cma": "cma_live.json",
+ "regimes": "regimes_q3_2026.json",
+ "format": "head_to_head",
+ "slug": "60_40_vs_70_30",
+ "portfolios": [
+  "lib:global_60_40",
+  "lib:global_70_30"
+ ],
+ "scenarios": [
+  "baseline",
+  "regime:REFLATION",
+  "regime:LATE_CYCLE",
+  "regime:STAGFLATION",
+  "regime:CONTRACTION",
+  "regime:SYSTEMIC_STRESS",
+  "whatif:stock_bond_corr_+0.4"
+ ],
+ "headline": "Gradient’s assumptions imply more equity lowers risk-adjusted return in every scenario",
+ "takeaway": "Why: Gradient assumes bonds earn more per unit of risk on their own (0.37) than developed or emerging equity (0.36 and 0.35) and are nearly uncorrelated with them (−0.03), so each step from bonds into equities lowers the ratio. On these assumptions it would peak near 26% equity (0.54), which shows how much the result rests on the bond assumptions; return targets, not this ratio alone, set equity weights.",
+ "highlight_factors": [
+  7,
+  1,
+  6
+ ],
+ "mcp_check": "mcp/portfolio_analytics_global_60_40.json"
+}

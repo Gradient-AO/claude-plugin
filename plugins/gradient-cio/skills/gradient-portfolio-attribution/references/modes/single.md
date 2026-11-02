@@ -10,7 +10,7 @@ resolved by tightening prose and layout, not deleting evidence.
 
 - Historical attribution comes only from `get_portfolio_attribution`; ex ante
   attribution comes only from `get_portfolio_ex_ante_attribution`.
-- Read `references/contracts/portfolio-attribution.md` and apply its shared
+- Read `${CLAUDE_PLUGIN_ROOT}/shared/contracts/portfolio-attribution.md` and apply its shared
   compatibility gate before comparing lanes.
 - Strategy Lab, expected-statistics charts, local Brinson, and return points
   never substitute for governed attribution.
@@ -31,7 +31,7 @@ benchmark role (default policy), parent cohort (default root), historical
 period (default latest complete trailing 12 months), and audience. Ask one
 focused question only for unresolved ambiguity.
 
-Read `references/module-scope.md` before tool selection.
+Read `${CLAUDE_PLUGIN_ROOT}/shared/module-scope.md` before tool selection.
 
 ## 2. Collect
 
@@ -69,8 +69,8 @@ and regime are context, not causal attribution.
 ## 4. Build and deliver
 
 Read `references/attribution-template.md`,
-`references/writing-standards.md`, `references/analysis-examples.md`,
-`references/chart-data.md`, and `references/report-style.md` only before
+`${CLAUDE_PLUGIN_ROOT}/shared/writing-standards.md`, `references/analysis-examples.md`,
+`${CLAUDE_PLUGIN_ROOT}/shared/chart-data.md`, and `${CLAUDE_PLUGIN_ROOT}/shared/report-style.md` only before
 drafting and rendering. Follow the exact section order, four executive tiles,
 required visuals, sourced analysis, and typed unavailable states. Section 1
 includes three to five sourced Key judgments. Sections 3–6 are visual-first.
@@ -82,7 +82,7 @@ Validate and render the same report source:
 
 ```text
 python <skill>/scripts/validate_attribution.py report.json
-python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Portfolio Attribution Report <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json
+python "${CLAUDE_PLUGIN_ROOT}/shared/qa_report.py" report.json --format <pdf|pptx|both> --out "<Portfolio> - Portfolio Attribution Report <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json
 ```
 
 PDF is default; explicit slide wording selects PPTX; `both` or `board pack`
@@ -98,6 +98,6 @@ monitored diagnostic count, and files.
 - A trade, rebalance, allocation change, or vote →
   `gradient-decision-ic-memo`.
 - Asset-class construction → the relevant mode of
-  `gradient-portfolio-construction`.
+  `gradient-allocation-study`.
 - A multi-lane historical, ex ante and capability-gated simulation comparison
   → `compare-lanes` mode.

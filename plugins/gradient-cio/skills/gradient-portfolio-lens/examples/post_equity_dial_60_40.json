@@ -1,0 +1,18 @@
+{
+ "cma": "cma_live.json",
+ "regimes": "regimes_q3_2026.json",
+ "format": "equity_dial",
+ "slug": "equity_dial_60_40",
+ "portfolios": [
+  "lib:global_60_40",
+  "lib:global_70_30"
+ ],
+ "mcp_check": "mcp/portfolio_analytics_global_60_40.json",
+ "headline": "Gradient’s assumptions imply a 26% equity mix earns the most per unit of risk",
+ "takeaway": "Why: Gradient assumes bonds earn slightly more per unit of risk on their own (0.37) than developed or emerging equity (0.36 and 0.35), and that they barely move with equities (−0.03). Mixing the two cuts risk faster than return up to about 26% equity; past that, equity volatility dominates. Return targets, not this ratio, set most equity weights.",
+ "highlight_factors": [
+  7,
+  1,
+  6
+ ]
+}

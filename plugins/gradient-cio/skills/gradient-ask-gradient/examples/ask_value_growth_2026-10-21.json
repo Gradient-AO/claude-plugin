@@ -1,0 +1,199 @@
+{
+ "slug": "value_vs_growth",
+ "inputs": {
+  "cma": "cma_baseline_2026-10-12.json",
+  "rr": "rr_2026-10-21.json"
+ },
+ "as_of": {
+  "ref": "rr:as_of_date"
+ },
+ "headline": "Gradient's 10-year assumptions favor Value over Growth, with less risk",
+ "tiles": [
+  {
+   "label": "DM Value, 10-yr",
+   "value": {
+    "ref": "cma:items[factor_id=3].excess_return_effective",
+    "fmt": "x100pct1",
+    "sign": false
+   },
+   "color": "accent",
+   "detail": [
+    "expected excess return · vol ",
+    {
+     "ref": "cma:items[factor_id=3].volatility_effective",
+     "fmt": "x100pct1",
+     "sign": false
+    }
+   ]
+  },
+  {
+   "label": "DM Growth, 10-yr",
+   "value": {
+    "ref": "cma:items[factor_id=2].excess_return_effective",
+    "fmt": "x100pct1",
+    "sign": false
+   },
+   "detail": [
+    "expected excess return · vol ",
+    {
+     "ref": "cma:items[factor_id=2].volatility_effective",
+     "fmt": "x100pct1",
+     "sign": false
+    }
+   ]
+  },
+  {
+   "label": "This week: Growth vs. Value",
+   "value": {
+    "ref": "rr:board_total[pair_id=growth_vs_value].winning_move_pct",
+    "fmt": "pct1"
+   },
+   "color": "sign",
+   "detail": [
+    {
+     "ref": "rr:board_total[pair_id=growth_vs_value].winning_horizon_days",
+     "fmt": "int"
+    },
+    "-day move · ",
+    {
+     "ref": "rr:board_total[pair_id=growth_vs_value].percentile_abs",
+     "fmt": "ord"
+    },
+    " pctile"
+   ]
+  }
+ ],
+ "chart": {
+  "title": "Gradient ICAPM 10-year expected excess return and volatility, equity factors (USD)",
+  "bars": [
+   {
+    "label": "EM equity",
+    "value": {
+     "ref": "cma:items[factor_id=6].excess_return_effective",
+     "fmt": "x100pct1",
+     "sign": false
+    },
+    "value2": {
+     "ref": "cma:items[factor_id=6].volatility_effective",
+     "fmt": "x100pct1",
+     "sign": false
+    }
+   },
+   {
+    "label": "DM value",
+    "value": {
+     "ref": "cma:items[factor_id=3].excess_return_effective",
+     "fmt": "x100pct1",
+     "sign": false
+    },
+    "highlight": true,
+    "value2": {
+     "ref": "cma:items[factor_id=3].volatility_effective",
+     "fmt": "x100pct1",
+     "sign": false
+    }
+   },
+   {
+    "label": "DM small cap",
+    "value": {
+     "ref": "cma:items[factor_id=5].excess_return_effective",
+     "fmt": "x100pct1",
+     "sign": false
+    },
+    "value2": {
+     "ref": "cma:items[factor_id=5].volatility_effective",
+     "fmt": "x100pct1",
+     "sign": false
+    }
+   },
+   {
+    "label": "DM equity",
+    "value": {
+     "ref": "cma:items[factor_id=1].excess_return_effective",
+     "fmt": "x100pct1",
+     "sign": false
+    },
+    "value2": {
+     "ref": "cma:items[factor_id=1].volatility_effective",
+     "fmt": "x100pct1",
+     "sign": false
+    }
+   },
+   {
+    "label": "DM large cap",
+    "value": {
+     "ref": "cma:items[factor_id=4].excess_return_effective",
+     "fmt": "x100pct1",
+     "sign": false
+    },
+    "value2": {
+     "ref": "cma:items[factor_id=4].volatility_effective",
+     "fmt": "x100pct1",
+     "sign": false
+    }
+   },
+   {
+    "label": "DM growth",
+    "value": {
+     "ref": "cma:items[factor_id=2].excess_return_effective",
+     "fmt": "x100pct1",
+     "sign": false
+    },
+    "highlight": true,
+    "value2": {
+     "ref": "cma:items[factor_id=2].volatility_effective",
+     "fmt": "x100pct1",
+     "sign": false
+    }
+   }
+  ],
+  "value_label": "Return",
+  "value2_label": "Volatility"
+ },
+ "explain": "Gradient's model expects DM Value to out-earn DM Growth by 2.1 points a year over the next decade, with lower volatility. Per unit of risk the gap is wider still: about 0.36 of excess return per unit of volatility for Value against 0.21 for Growth. Growth ranks last among the equity factors shown, below DM Large Cap. That doesn't turn this week's swing into a signal: the assumptions are a 10-year anchor, while the relative-return scan measures what just happened. Our read: the two happen to point the same way, which is worth a committee conversation, not a trade.",
+ "explain_square": "Gradient's model expects DM Value to out-earn DM Growth by 2.1 points a year over the next decade, with lower volatility, so Value wins on a risk-adjusted basis too. That doesn't make this week's swing a signal: the assumptions are a 10-year anchor. Our read: both point the same way, worth a committee conversation, not a trade.",
+ "source_line": "Sources: Gradient ICAPM CMAs, 10-yr arithmetic excess return over cash, USD, unhedged; Gradient relative-return signals (Oct 21, 2026).",
+ "post_question": "Value just had a big week against growth. What do Gradient's 10-year assumptions say about the two styles?",
+ "eyebrow": "Ask Gradient  ·  Value vs. Growth",
+ "subtitle": "Gradient ICAPM 10-year assumptions for developed-market equity styles, USD",
+ "check_values": [
+  {
+   "op": "div",
+   "args": [
+    {
+     "ref": "cma:items[factor_id=3].excess_return_effective"
+    },
+    {
+     "ref": "cma:items[factor_id=3].volatility_effective"
+    }
+   ],
+   "fmt": "num2"
+  },
+  {
+   "op": "div",
+   "args": [
+    {
+     "ref": "cma:items[factor_id=2].excess_return_effective"
+    },
+    {
+     "ref": "cma:items[factor_id=2].volatility_effective"
+    }
+   ],
+   "fmt": "num2"
+  },
+  {
+   "op": "sub",
+   "args": [
+    {
+     "ref": "cma:items[factor_id=3].excess_return_effective"
+    },
+    {
+     "ref": "cma:items[factor_id=2].excess_return_effective"
+    }
+   ],
+   "scale": 100,
+   "fmt": "pp1"
+  }
+ ],
+ "watch": "A narrower Value–Growth gap in Gradient's next CMA release, or Growth regaining momentum, would weaken the case that the two views agree."
+}

@@ -1,0 +1,147 @@
+{
+ "validation": {
+  "status": "passed_with_warnings",
+  "advisory_only": true
+ },
+ "provenance": {
+  "retrieved_at": "2026-11-02T15:11:55Z",
+  "reproducibility": {
+   "payload_digest": "8aae71edcf44e3f27db03bb8eb69a3d804366c783573a1aa31a6935feba8f6ba"
+  }
+ },
+ "release": {
+  "version": "Q3-2026-policy-v2.4"
+ },
+ "calculation": {
+  "cma_release_version": "Q3-2026-policy-v2.4"
+ },
+ "analytics": {
+  "expected_excess_return": 0.044181,
+  "expected_total_return": 0.076305,
+  "volatility": 0.0902760655616782,
+  "risk_contributions": [
+   {
+    "factor_id": 1,
+    "percent_of_total": 0.17715178691713743
+   },
+   {
+    "factor_id": 4,
+    "percent_of_total": 0.20379524304439667
+   },
+   {
+    "factor_id": 5,
+    "percent_of_total": 0.04020106716068566
+   },
+   {
+    "factor_id": 6,
+    "percent_of_total": 0.1297732224003812
+   },
+   {
+    "factor_id": 7,
+    "percent_of_total": 0.007555127420893029
+   },
+   {
+    "factor_id": 8,
+    "percent_of_total": 0.0029815143088787505
+   },
+   {
+    "factor_id": 9,
+    "percent_of_total": 1.5125732604452939e-05
+   },
+   {
+    "factor_id": 11,
+    "percent_of_total": 0.04951758915409473
+   },
+   {
+    "factor_id": 12,
+    "percent_of_total": 0.07668244894426823
+   },
+   {
+    "factor_id": 13,
+    "percent_of_total": 0.14520833115642662
+   },
+   {
+    "factor_id": 14,
+    "percent_of_total": 0.06280744550208774
+   },
+   {
+    "factor_id": 15,
+    "percent_of_total": 0.023810215961053368
+   },
+   {
+    "factor_id": 16,
+    "percent_of_total": 0.037033701343414833
+   },
+   {
+    "factor_id": 17,
+    "percent_of_total": 0.02689284802078965
+   },
+   {
+    "factor_id": 18,
+    "percent_of_total": 0.01657433293288747
+   }
+  ]
+ },
+ "weights": [
+  {
+   "factor_id": 1,
+   "weight": 0.1063333333
+  },
+  {
+   "factor_id": 4,
+   "weight": 0.1499999998
+  },
+  {
+   "factor_id": 5,
+   "weight": 0.0236666668
+  },
+  {
+   "factor_id": 6,
+   "weight": 0.0700000001
+  },
+  {
+   "factor_id": 7,
+   "weight": 0.126818182
+  },
+  {
+   "factor_id": 8,
+   "weight": 0.0504545457
+  },
+  {
+   "factor_id": 9,
+   "weight": 0.05
+  },
+  {
+   "factor_id": 11,
+   "weight": 0.0727272723
+  },
+  {
+   "factor_id": 12,
+   "weight": 0.0833623867
+  },
+  {
+   "factor_id": 13,
+   "weight": 0.07629908
+  },
+  {
+   "factor_id": 14,
+   "weight": 0.041466891
+  },
+  {
+   "factor_id": 15,
+   "weight": 0.0278087339
+  },
+  {
+   "factor_id": 16,
+   "weight": 0.0512647787
+  },
+  {
+   "factor_id": 17,
+   "weight": 0.0544252951
+  },
+  {
+   "factor_id": 18,
+   "weight": 0.0153728347
+  }
+ ]
+}

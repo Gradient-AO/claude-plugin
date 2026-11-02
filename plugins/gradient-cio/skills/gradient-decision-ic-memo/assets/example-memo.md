@@ -42,7 +42,7 @@
 - **IPS:** 6 constraints Compliant, 1 Watch, 2 Breach, 3 Not assessed. Breaches: fixed income band and cash band.
 - **Performance:** 1Y return 6.9% versus 6.4% for the policy benchmark (+49 bps). Governed attribution is unavailable for the selected period [S2].
 - **Outlook:** Expected return 6.7% versus a 7.0% objective, volatility 13.1%, 44.0% probability of meeting the objective [S3].
-- **Liquidity & diligence:** Stress coverage 2.61 on the liquidity model; zero High diligence findings [S1] [S5] [S9].
+- **Liquidity & diligence:** Stress coverage 2.61 on the liquidity model; operational diligence is paused [S1] [S5] [S9].
 
 ## 3. Portfolio Snapshot
 
@@ -196,21 +196,11 @@ Not available — `get_portfolio_attribution` returned `coverage.status: unavail
 
 ## 10. Manager & Operational Diligence
 
-| Manager | Strategy | Exposure (% NAV) | ODD red flags | Open findings (H/M/L) | Monitor alerts | GIPS status | Last review | Source |
-|---|---|---|---|---|---|---|---|---|
-| Manager A | Global equity | 8.5% | 0 | 0/1/0 | 0 | Claims, verified | 2026-06-30 | [S5] |
-| Other (17 managers) | Various | 91.5% | n/a | 0/2/3 | 0 | n/a | n/a | [S5] |
-
-**Exposure-weighted findings:** No active High findings [S5].
-**Attention queue:** None overdue [S5].
+Not assessed — operational diligence paused [S5].
 
 ## 11. Performance Integrity & GIPS
 
-### 11.1 Total fund
-Not assessed — no GIPS Asset Owner Report provided.
-
-### 11.2 Manager A
-**Overall assessment:** Satisfactory with follow-ups. Verification report for the latest year not yet received.
+Not assessed — operational diligence paused [S5].
 
 ## 12. Market Context
 
@@ -279,13 +269,13 @@ Not assessed — no GIPS Asset Owner Report provided.
 | S1 | get_portfolio_exposure; get_portfolio_structure; check_portfolio_policy | gradient_tool | get_portfolio_exposure; get_portfolio_structure; check_portfolio_policy | portfolio_id=example; governed policy and exposure views | 2026-09-30 | Illustrative sample data | passed | sha256:test-s1 |
 | S2 | get_portfolio_historical_returns; get_portfolio_attribution | gradient_tool | get_portfolio_historical_returns; get_portfolio_attribution | portfolio_id=example; policy benchmark; performance available; attribution unavailable (`no_weight_cohorts`) | 2026-09-30 | Illustrative sample data | partial | sha256:test-s2 |
 | S3 | check_portfolio_policy; user document | gradient_tool | check_portfolio_policy | return_objective; forward-analysis.pdf | 2026-09-11 | Illustrative sample data | passed | sha256:test-s3 |
-| S4 | get_cma_consensus_check | gradient_tool | get_cma_consensus_check | mode=allocation | 2026-06-30 | Mixed — Illustrative sample data + User-Authorized Live | passed | sha256:test-s4 |
-| S5 | get_manager_diligence_findings | gradient_tool | get_manager_diligence_findings | view=exposure_weighted | 2026-10-02 | Illustrative sample data | advisory | sha256:test-s5 |
+| S4 | CMA portfolio analytics | gradient_tool | get_capital_market_assumptions | view=portfolio_analytics; supplied weights | 2026-06-30 | Mixed — Illustrative sample data + User-Authorized Live | passed | sha256:test-s4 |
+| S5 | Capability hold | gradient_tool | get_gradient_capabilities | detail=summary | 2026-10-02 | Illustrative sample data | manager_diligence_product_hold | sha256:test-s5 |
 | S6 | get_portfolio_exposure | gradient_tool | get_portfolio_exposure | portfolio_id=example; include=factor_currency_exposure,risk_contribution | 2026-09-30 | Illustrative sample data | passed | sha256:test-s6 |
 | S7 | get_macro_signals | gradient_tool | get_macro_signals | view=gradient_signal (sources.grip) | 2026-10-01 | User-Authorized Live | passed | sha256:test-s7 |
 | S8 | Illustrative scenario assumptions | user_document | User-supplied assumptions | 2008 historical; 5th percentile | 2026-09-30 | Illustrative sample data | not applicable | sha256:test-s8 |
 | S9 | get_portfolio_exposure | gradient_tool | get_portfolio_exposure | portfolio_id=example; include=commitment_pacing,liquidity_scorecard | 2026-06-30 | Illustrative sample data | passed | sha256:test-s9 |
-| S10 | get_macro_conditions; get_the_read; get_macro_calendar | gradient_tool | get_macro_conditions; get_the_read; get_macro_calendar | theme=inflation; am edition; 30 days | 2026-10-02 | User-Authorized Live | passed | sha256:test-s10 |
+| S10 | Macro context | gradient_tool | get_macro_signals | supported portfolio context view | 2026-10-02 | User-Authorized Live | passed | sha256:test-s10 |
 | S11 | Server-returned illustrative proposed-case analysis | user_document | User-supplied assumptions | target weights and implementation estimate per Section 13.1 | 2026-09-30 | Illustrative sample data | passed | sha256:test-s11 |
 
 ## Appendix B — Server Metric Methods

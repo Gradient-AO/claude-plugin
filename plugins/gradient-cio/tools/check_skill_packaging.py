@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Check that every skill works when it is installed on its own.
+"""Check that every skill works inside the installed plugin bundle.
 
-Some install channels ship each skill folder without the plugin root, so a
-skill must carry its own validators and fonts. This copies every skill into an
-empty temporary directory, imports each of its validator scripts there, checks
-the bundled Inter fonts and release descriptor, and confirms the manifest
-versions and the shipped skill list agree.
+The report runtime, references, tool catalog, and fonts are canonical at the
+plugin level. This copies the complete plugin into an empty temporary
+directory, imports every skill validator against that shared runtime, checks
+the Inter fonts and release descriptor, and confirms the manifest versions and
+the shipped skill list agree.
 
     python tools/check_skill_packaging.py
 """
@@ -26,6 +26,14 @@ REPOSITORY = ROOT.parents[1]
 REQUIRED_FONTS = ("inter-latin-regular.ttf", "inter-latin-semibold.ttf")
 NAME_LINE = re.compile(r"^name:\s*(\S+)\s*$", re.MULTILINE)
 CHAT_DELIVERY = re.compile(r"^\s+delivery:\s*chat\s*$", re.MULTILINE)
+CANVAS_OUTPUT = re.compile(r"^\s+output:\s*[\"']?canvas[\"']?\s*$", re.MULTILINE)
+CANVAS_RENDERERS = {
+    "gradient-portfolio-lens": "pa_viz.py",
+    "gradient-signal-spotlight": "render_spotlight.py",
+    "gradient-risk-pulse": "render_riskpulse.py",
+    "gradient-tactical-dashboard": "render_dashboard.py",
+    "gradient-ask-gradient": "render_ask.py",
+}
 PLUGIN_ROOT_ASSIGNMENT = re.compile(
     r"^\s*(\w+)\s*=\s*Path\(__file__\)\.resolve\(\)\.parents\[\d+\]",
     re.MULTILINE,
@@ -42,9 +50,17 @@ def shipped_skills() -> list[pathlib.Path]:
 
 
 def tracked_skill_names() -> set[str] | None:
-    """Return skill folder names tracked by git, or None outside a checkout."""
+    """Return skill folders present in the releasable working tree."""
     result = subprocess.run(
-        ["git", "ls-files", "--", "plugins/gradient-cio/skills/*/SKILL.md"],
+        [
+            "git",
+            "ls-files",
+            "--cached",
+            "--others",
+            "--exclude-standard",
+            "--",
+            "plugins/gradient-cio/skills/*/SKILL.md",
+        ],
         cwd=REPOSITORY,
         capture_output=True,
         text=True,
@@ -52,7 +68,11 @@ def tracked_skill_names() -> set[str] | None:
     )
     if result.returncode != 0:
         return None
-    return {pathlib.PurePosixPath(line).parent.name for line in result.stdout.splitlines() if line}
+    return {
+        pathlib.PurePosixPath(line).parent.name
+        for line in result.stdout.splitlines()
+        if line and (REPOSITORY / pathlib.PurePosixPath(line)).is_file()
+    }
 
 
 def plugin_manifest() -> dict[str, str]:
@@ -80,6 +100,7 @@ def check_versions(plugin: dict[str, str]) -> list[str]:
 def check_skill(
     skill: pathlib.Path,
     scratch: pathlib.Path,
+    installed_root: pathlib.Path,
     plugin: dict[str, str],
 ) -> list[str]:
     failures: list[str] = []
@@ -116,13 +137,27 @@ def check_skill(
                 )
     if CHAT_DELIVERY.search(text):
         return failures
+    if CANVAS_OUTPUT.search(text):
+        renderer = CANVAS_RENDERERS.get(skill.name, "")
+        required = (
+            skill / "scripts" / renderer,
+            skill / "scripts" / "brand.py",
+            skill / "references" / "canvas-spec.md",
+            skill / "assets" / "fonts" / "Inter-Regular.ttf",
+        )
+        for path in required:
+            if not path.is_file():
+                failures.append(
+                    f"{skill.name}: missing canvas runtime "
+                    f"{path.relative_to(skill)}"
+                )
+        return failures
 
-    isolated = scratch / "install" / skill.name
-    shutil.copytree(skill, isolated, ignore=shutil.ignore_patterns("__pycache__"))
+    isolated = installed_root / "skills" / skill.name
     scripts = isolated / "scripts"
     for font in REQUIRED_FONTS:
-        if not (isolated / "assets" / "fonts" / font).is_file():
-            failures.append(f"{skill.name}: assets/fonts/{font} is missing from the skill folder")
+        if not (installed_root / "assets" / "fonts" / font).is_file():
+            failures.append(f"{skill.name}: plugin assets/fonts/{font} is missing")
     validators = sorted(path.stem for path in scripts.glob("*valid*.py")) if scripts.is_dir() else []
     if not validators:
         failures.append(f"{skill.name}: no validator scripts found in scripts/")
@@ -159,13 +194,19 @@ def main() -> int:
             failures.append(f"{name}: tracked SKILL.md is missing from the working tree")
     with tempfile.TemporaryDirectory(prefix="gradient-skill-packaging-") as directory:
         scratch = pathlib.Path(directory)
+        installed_root = scratch / "install" / "gradient-cio"
+        shutil.copytree(
+            ROOT,
+            installed_root,
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+        )
         for skill in skills:
-            failures.extend(check_skill(skill, scratch, plugin))
+            failures.extend(check_skill(skill, scratch, installed_root, plugin))
     if failures:
         for failure in failures:
             print(f"FAIL — {failure}", file=sys.stderr)
         return 1
-    print(f"OK — {len(skills)} skills package on their own")
+    print(f"OK — {len(skills)} skills resolve the installed plugin bundle")
     return 0
 
 

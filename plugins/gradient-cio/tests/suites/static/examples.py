@@ -10,7 +10,7 @@ from report_theme import DEFAULT_COVER_DISCLOSURE, FULL_SAMPLE_DISCLOSURE
 
 
 ANALYSIS_EXAMPLE_CONTRACTS = {
-    "gradient-portfolio-construction": (
+    "gradient-allocation-study": (
         True,
         (
             r"Target Portfolio Structure",
@@ -23,9 +23,13 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
             r"Factor, Currency and Concentration Evidence",
             r"Target Sub-Segment Structure",
             r"Inflation, Commodity and Diversification Context",
+            r"Expected Return Assumptions",
+            r"CMA Risk and Euler Contribution",
+            r"Regime and Stress Scenarios",
+            r"Liquidity and Capital-Call Coverage",
         ),
     ),
-    "gradient-idd-manager-performance": (
+    "gradient-manager-evaluation": (
         True,
         (
             r"Absolute risk and return",
@@ -34,12 +38,6 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
             r"Risk and return",
             r"Relative performance and capture",
             r"Correlation and robustness",
-            r"Window sensitivity",
-            r"Rolling evidence",
-            r"Regime evidence",
-            r"Candidate evidence",
-            r"Performance comparison",
-            r"Advance/reserve/reject rationale",
         ),
     ),
     "gradient-idd-private-markets-pme": (
@@ -127,9 +125,12 @@ ANALYSIS_EXAMPLE_CONTRACTS = {
 
 
 ANALYSIS_EXAMPLE_PATHS = {
-    "gradient-idd-manager-performance": (
+    "gradient-allocation-study": (
         "references/analysis-examples.md",
-        "references/modes/shortlist-analysis-examples.md",
+        "references/modes/total_plan-analysis-examples.md",
+    ),
+    "gradient-manager-evaluation": (
+        "references/analysis-examples.md",
     ),
     "gradient-odd-report": (
         "references/analysis-examples.md",

@@ -2,9 +2,9 @@
 
 Use for a 2–5 named-manager operational comparison or Form 13F overlap.
 Candidate discovery and optional Form ADV screening belong to
-`gradient-idd-manager-performance` in `shortlist` mode, which must follow screening with governed
+`gradient-manager-evaluation` in `shortlist` mode, which must follow screening with governed
 performance evidence. Return, benchmark, or track-record comparison belongs to
-`gradient-idd-manager-performance`. Deliver **"<Mandate or first manager> -
+`gradient-manager-evaluation`. Deliver **"<Mandate or first manager> -
 Manager Comparison <YYYY-MM-DD>"**, normally 5–9 PDF pages. This is evidence
 comparison, not a ranking or investment recommendation.
 
@@ -49,14 +49,13 @@ Read
 `references/modes/compare-comparison-contract.md#flags-signal-and-next-steps`.
 Apply its deterministic High, Medium, and Info rules, comparison signal,
 completeness denominator, and allowed next-step list. Compare only absolute
-Form ADV facts for the user-selected named managers. Do not use manager peer
-cohorts, percentiles, universe rankings, or "relative to peers" language.
+Form ADV facts for the user-selected named managers. Do not use external-population ranking language.
 
 ## 4. Build and deliver
 
 Read
 `references/modes/compare-comparison-contract.md#report-and-rendering-contract`,
-then `references/report-style.md`, `references/writing-standards.md`, and
+then `${CLAUDE_PLUGIN_ROOT}/shared/report-style.md`, `${CLAUDE_PLUGIN_ROOT}/shared/writing-standards.md`, and
 `references/modes/compare-analysis-examples.md` only when drafting or
 rendering. Set `meta.mode` to `compare`, keep every fixed section, and show
 typed gaps. Every figure has a unit, date, and `[S#]`; every analytical
@@ -71,7 +70,7 @@ python <skill>/scripts/validate_odd_report.py report.json
 Then run the canonical delivery QA on that same validated file:
 
 ```text
-python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Mandate> - Manager Comparison <YYYY-MM-DD>" --budget <skill>/references/layout-budget-compare.json
+python "${CLAUDE_PLUGIN_ROOT}/shared/qa_report.py" report.json --format <pdf|pptx|both> --out "<Mandate> - Manager Comparison <YYYY-MM-DD>" --budget <skill>/references/layout-budget-compare.json
 ```
 
 Use PDF by default, PPTX for explicit slide wording, or both for `both` or
@@ -83,7 +82,7 @@ managers and signal, top flag, and next-step count.
 
 - Full diligence on a selected manager → this skill's `full` mode.
 - Return and benchmark evidence for the same candidates →
-  `gradient-idd-manager-performance`.
+  `gradient-manager-evaluation`.
 - DDQ conflict or manager response needed → `gradient-odd-ddq-reconcile`.
 - Manager-hire decision paper → `gradient-decision-ic-memo`.
 

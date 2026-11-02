@@ -57,7 +57,8 @@
     "data_basis": "gradient_governed",
     "confidentiality": "Confidential — manager selection review",
     "cover_disclosure": "Illustrative sample · not client data",
-    "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
+    "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers",
+    "mode": "fit"
   },
   "executive": {
     "bottom_line": "No conclusion is possible yet: the comparison, benchmark-relative and robustness results were not returned for this manager [S1].",

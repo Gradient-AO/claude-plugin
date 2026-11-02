@@ -81,9 +81,15 @@ def main() -> int:
     environment.setdefault("PYTHONUTF8", "1")
     if version_check() != 0:
         return 1
-    for script in ("sync_shared.py", "generate_skill_catalog.py"):
+    for script in (
+        "sync_shared.py",
+        "sync_quicktake_shared.py",
+        "generate_skill_catalog.py",
+        "check_tool_references.py",
+    ):
+        arguments = ["--check"] if script != "check_tool_references.py" else []
         completed = subprocess.run(
-            [sys.executable, str(TOOLS / script), "--check"],
+            [sys.executable, str(TOOLS / script), *arguments],
             cwd=REPOSITORY,
             env=environment,
             check=False,

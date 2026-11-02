@@ -1,0 +1,21 @@
+{
+ "cma": "cma_live.json",
+ "regimes": "regimes_q3_2026.json",
+ "format": "marginal_move",
+ "slug": "equity_to_private_debt",
+ "portfolios": [
+  "model_total_plan.json"
+ ],
+ "move": {
+  "from": "Public Equity",
+  "to": "Private Debt",
+  "amount": 0.05
+ },
+ "headline": "Shifting 5% to Private Debt: implied −0.30 pp of volatility for −0.03 pp of return",
+ "takeaway": "Why: Gradient assumes Private Debt earns 5.11% over cash, close to developed equity’s 5.79%, with lower volatility (13.1% vs 16.2%) and a 0.51 correlation with developed equity. Public Equity already drives 55% of the model’s risk, so trading it for Private Debt removes more expected risk than return, before any allowance for illiquidity and fees.",
+ "highlight_factors": [
+  15,
+  1
+ ],
+ "mcp_check": "mcp/portfolio_analytics_total_plan.json"
+}

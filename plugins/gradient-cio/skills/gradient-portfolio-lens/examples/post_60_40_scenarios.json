@@ -1,0 +1,31 @@
+{
+ "cma": "cma_live.json",
+ "regimes": "regimes_q3_2026.json",
+ "format": "scenario_stress",
+ "slug": "60_40_scenarios",
+ "portfolios": [
+  "lib:global_60_40"
+ ],
+ "scenarios": [
+  "baseline",
+  "regime:RECOVERY",
+  "regime:REFLATION",
+  "regime:DISINFLATIONARY_GROWTH",
+  "regime:LATE_CYCLE",
+  "regime:STAGFLATION",
+  "regime:CONTRACTION",
+  "regime:SYSTEMIC_STRESS",
+  "whatif:stock_bond_corr_+0.4"
+ ],
+ "headline": "Stagflation and Systemic Stress cut the 60/40\u2019s implied risk-adjusted return by about 40%",
+ "takeaway": "Why: in both, Gradient\u2019s overlays cut expected equity returns and raise equity volatility. Stagflation also lowers bonds\u2019 implied return (to 1.41%) and is assumed to last 3 years; Systemic Stress assumes bonds rally (2.41%) but lasts 2. At equal assumed duration Systemic Stress would be harsher (0.25 vs 0.29), so neither is clearly the worst.",
+ "highlight_factors": [
+  7
+ ],
+ "highlight_scenarios": [
+  "Stagflation",
+  "Systemic Stress"
+ ],
+ "acknowledge_persistence": true,
+ "mcp_check": "mcp/portfolio_analytics_global_60_40.json"
+}

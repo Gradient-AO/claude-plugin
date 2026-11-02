@@ -19,6 +19,10 @@ import re
 import sys
 from pathlib import Path
 
+PLUGIN_SHARED = Path(__file__).resolve().parents[3] / "shared"
+if str(PLUGIN_SHARED) not in sys.path:
+    sys.path.insert(0, str(PLUGIN_SHARED))
+
 SCRIPT_ROOT = Path(__file__).resolve().parent
 SKILL_ROOT = SCRIPT_ROOT.parent
 sys.path.insert(0, str(SCRIPT_ROOT))
@@ -67,11 +71,7 @@ SOURCE_HEADER = [
 SOURCE_BASES = {"gradient_tool", "user_document", "regulatory_filing"}
 PUBLIC_TOOLS = set(
     json.loads(
-        (
-            SKILL_ROOT
-            / "references"
-            / "public-tools.json"
-        ).read_text(encoding="utf-8")
+        (PLUGIN_SHARED / "public-tools.json").read_text(encoding="utf-8")
     )["tools"]
 )
 TOOL_PATTERN = re.compile(

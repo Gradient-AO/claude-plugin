@@ -2151,14 +2151,20 @@ def render(keep):
     out.mkdir(parents=True, exist_ok=True)
     external_pdf_tools = shutil.which("pdfinfo") and shutil.which("pdftotext")
     with tempfile.TemporaryDirectory() as isolated_directory:
-        source_skill = ROOT / "skills" / "gradient-portfolio-attribution"
-        isolated_skill = pathlib.Path(isolated_directory) / source_skill.name
-        shutil.copytree(source_skill, isolated_skill)
+        isolated_plugin = pathlib.Path(isolated_directory) / "gradient-cio"
+        shutil.copytree(
+            ROOT,
+            isolated_plugin,
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+        )
+        isolated_skill = (
+            isolated_plugin / "skills" / "gradient-portfolio-attribution"
+        )
         isolated_pdf = out / "portfolio-attribution-isolated.pdf"
         isolated_render = subprocess.run(
             [
                 sys.executable,
-                str(isolated_skill / "scripts" / "gradient_report.py"),
+                str(isolated_plugin / "shared" / "gradient_report.py"),
                 str(FIX / "portfolio-attribution-report.json"),
                 str(isolated_pdf),
             ],
@@ -2174,7 +2180,7 @@ def render(keep):
             and isolated_pdf.stat().st_size > 0
             and "using system fonts"
             not in (isolated_render.stdout + isolated_render.stderr),
-            "isolated attribution skill renders with packaged Inter fonts",
+            "isolated plugin renders attribution with shared packaged Inter fonts",
         )
     for name, args, lo, hi, must in CASES:
         pdf = out / f"{name}.pdf"

@@ -39,7 +39,7 @@ def connector_cutover():
         ROOT
         / "assets"
         / "examples"
-        / "gradient-idd-manager-performance-single.pptx"
+        / "gradient-manager-evaluation-single.pptx"
     )
     native_line_charts = 0
     chart_parts: list[str] = []
@@ -833,31 +833,31 @@ def connector_cutover():
 
     idd_validators = (
         (
-            "manager performance",
+            "manager evaluation single",
             ROOT
             / "skills"
-            / "gradient-idd-manager-performance"
+            / "gradient-manager-evaluation"
             / "scripts"
-            / "validate_manager_performance.py",
+            / "validate_manager_evaluation.py",
             "idd-manager-performance-single.json",
         ),
         (
-            "manager portfolio fit",
+            "manager evaluation fit",
             ROOT
             / "skills"
-            / "gradient-idd-manager-portfolio-fit"
+            / "gradient-manager-evaluation"
             / "scripts"
-            / "validate_manager_portfolio_fit.py",
+            / "validate_manager_evaluation.py",
             "idd-portfolio-fit.json",
         ),
         (
-            "manager shortlist",
+            "manager evaluation compare",
             ROOT
             / "skills"
-            / "gradient-idd-manager-performance"
+            / "gradient-manager-evaluation"
             / "scripts"
-            / "validate_manager_performance.py",
-            "idd-shortlist.json",
+            / "validate_manager_evaluation.py",
+            "idd-manager-performance-compare.json",
         ),
         (
             "private-markets PME",
@@ -913,20 +913,20 @@ def connector_cutover():
             else ""
         ),
     )
-    performance_root = ROOT / "skills" / "gradient-idd-manager-performance"
+    performance_root = ROOT / "skills" / "gradient-manager-evaluation"
     performance_guidance = re.sub(
         r"\s+",
         " ",
         "\n".join(
             (
                 (performance_root / "SKILL.md").read_text(encoding="utf-8"),
-                (performance_root / "references" / "modes" / "shortlist.md").read_text(
+                (performance_root / "references" / "modes" / "single.md").read_text(
                     encoding="utf-8"
                 ),
                 (performance_root / "references" / "modes" / "compare.md").read_text(
                     encoding="utf-8"
                 ),
-                (performance_root / "references" / "modes" / "robustness.md").read_text(
+                (performance_root / "references" / "modes" / "fit.md").read_text(
                     encoding="utf-8"
                 ),
             )
@@ -940,12 +940,12 @@ def connector_cutover():
         ).read_text(encoding="utf-8").casefold(),
     )
     check(
-        "manager-universe rankings" in performance_guidance
-        and "benchmark-relative advancement criteria" in performance_guidance
+        "benchmark-relative evidence only" in performance_guidance
         and "benchmark-relative persistence" in performance_guidance
-        and "manager-universe rankings" in memo_guidance
-        and "benchmark-relative persistence" in memo_guidance,
-        "manager performance and IC guidance prohibit peer rankings while preserving benchmark evidence",
+        and "benchmark-relative evidence" in memo_guidance
+        and "universe ranking" not in performance_guidance
+        and "universe ranking" not in memo_guidance,
+        "manager evaluation and IC guidance prohibit universe rankings while preserving benchmark evidence",
     )
     writing_standards = (
         ROOT / "shared" / "writing-standards.md"
@@ -1093,7 +1093,7 @@ def connector_cutover():
             "series-view lineage remains independent of the canonical outer digest",
         )
 
-        for legacy_mode in ("compare", "robustness"):
+        for legacy_mode in ("compare",):
             legacy_document = json.loads(
                 (FIX / f"idd-manager-performance-{legacy_mode}.json").read_text(
                     encoding="utf-8"
@@ -2630,7 +2630,7 @@ def connector_cutover():
                 "Forward Return and Risk",
                 "Commitments, Pacing and Cash Flow",
                 "Liquidity and Denominator Risk",
-                "Diversification and Manager Diligence",
+                "Diversification and Coverage",
                 "Proposed Program and Implementation",
                 "Risks, Open Items and Approvals",
                 "Coverage",
@@ -2735,7 +2735,7 @@ def connector_cutover():
                 "Factor, Currency and Concentration Evidence",
                 "Forward Return and Risk",
                 "Liquidity, Redemption and Operational Terms",
-                "Manager Lineup and Diligence",
+                "Manager Lineup and Coverage",
                 "Scenarios and Robustness",
                 "Implementation Plan",
                 "Risks, Open Items and Approvals",
@@ -2773,7 +2773,7 @@ def connector_cutover():
                 "Inflation, Commodity and Diversification Context",
                 "Forward Return and Risk",
                 "Commitments, Liquidity and Valuation",
-                "Manager and Fund Diligence",
+                "Manager and Fund Coverage",
                 "Scenarios and Robustness",
                 "Implementation Plan",
                 "Risks, Open Items and Approvals",
@@ -2804,15 +2804,15 @@ def connector_cutover():
     }
     construction_skill_names = {
         "private-markets construction":
-            "gradient-portfolio-construction",
+            "gradient-allocation-study",
         "fixed-income construction":
-            "gradient-portfolio-construction",
+            "gradient-allocation-study",
         "global-public-equity construction":
-            "gradient-portfolio-construction",
+            "gradient-allocation-study",
         "marketable-alternatives construction":
-            "gradient-portfolio-construction",
+            "gradient-allocation-study",
         "real-assets construction":
-            "gradient-portfolio-construction",
+            "gradient-allocation-study",
     }
     for label, _validator, fixture in CONSTRUCTION_VALIDATORS:
         expected = construction_expectations[label]
@@ -2864,11 +2864,11 @@ def connector_cutover():
         skill_text = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
         check(
             skill_text.index(
-                "python scripts/validate_construction.py report.json"
+                "python <skill>/scripts/validate_construction.py report.json"
             )
-            < skill_text.index("python scripts/qa_report.py report.json")
-            and "--budget references/layout-budget.json" in skill_text
-            and "python scripts/render.py report.json" not in skill_text,
+            < skill_text.index('${CLAUDE_PLUGIN_ROOT}/shared/qa_report.py')
+            and "--budget <skill>/references/layout-budget.json" in skill_text
+            and "${CLAUDE_PLUGIN_ROOT}/shared/render.py" not in skill_text,
             f"{label} delivery runs validator before budgeted QA",
         )
 
@@ -3048,7 +3048,7 @@ def connector_cutover():
 
     double_counted = cloned_fixture("construction-private-markets.json")
     report_section(
-        double_counted, "Diversification and Manager Diligence"
+        double_counted, "Diversification and Coverage"
     )["blocks"].append({
         "type": "text",
         "text": "We added company NAV to commitment exposure [S9].",
@@ -3130,7 +3130,7 @@ def connector_cutover():
         "construction-private-markets.json"
     )
     report_section(
-        conflated_exact_range, "Diversification and Manager Diligence"
+        conflated_exact_range, "Diversification and Coverage"
     )["blocks"].append({
         "type": "text",
         "text": "The exact ILPA projected value is 3.0–4.0x [S9].",

@@ -19,20 +19,23 @@ REQUIREMENTS = (
 )
 
 GROUP_ORDER = (
-    "Start",
-    "Investment due diligence",
-    "Operational due diligence",
-    "Portfolio Analytics",
-    "Investment memos",
+    "Quick Takes",
+    "Portfolio reports",
+    "Decisions",
+    "Managers",
+    "Utilities",
 )
 
 EXAMPLES = {
-    "Start": "Check which GradientCIO workflows are ready.",
-    "Investment due diligence": "Compare these managers' track records.",
-    "Operational due diligence": "Prepare ODD on the finalist.",
-    "Portfolio Analytics": "Review our total portfolio for the quarter.",
-    "Investment memos": "Draft an IC memo for this allocation change.",
+    "Quick Takes": "Create a Portfolio Lens Quick Take on a global 60/40.",
+    "Portfolio reports": "Review our total portfolio for the quarter.",
+    "Decisions": "Draft an IC memo for this allocation change.",
+    "Managers": "Assess this manager against its benchmark.",
+    "Utilities": "Check which GradientCIO workflows are ready.",
+    "Blocked": "Show workflows waiting on connector support.",
+    "Paused": "Show workflows paused by product policy.",
 }
+STATUSES = ("core", "blocked", "paused", "alias")
 
 README_BEGIN = "<!-- BEGIN GENERATED SKILL CATALOG -->"
 README_END = "<!-- END GENERATED SKILL CATALOG -->"
@@ -78,6 +81,7 @@ def descriptions() -> dict[str, dict[str, str]]:
             "modules",
             "contracts",
             "handoffs",
+            "status",
         )
         if (
             not name
@@ -90,6 +94,8 @@ def descriptions() -> dict[str, dict[str, str]]:
             )
         if data["group"] not in GROUP_ORDER:
             raise ValueError(f"{skill_file}: unsupported group {data['group']}")
+        if data["status"] not in STATUSES:
+            raise ValueError(f"{skill_file}: unsupported status {data['status']}")
         if not data["menu_order"].isdigit():
             raise ValueError(f"{skill_file}: menu_order must be an integer")
         if len(summary.split()) > 12:
@@ -109,10 +115,19 @@ def grouped_items(
 ) -> dict[str, list[tuple[str, dict[str, str]]]]:
     """Group and order skills entirely from their frontmatter metadata."""
     grouped: dict[str, list[tuple[str, dict[str, str]]]] = {
-        group: [] for group in GROUP_ORDER
+        **{group: [] for group in GROUP_ORDER},
+        "Blocked": [],
+        "Paused": [],
     }
     for name, item in items.items():
-        grouped[item["group"]].append((name, item))
+        if item["status"] == "alias":
+            continue
+        destination = (
+            "Blocked" if item["status"] == "blocked"
+            else "Paused" if item["status"] == "paused"
+            else item["group"]
+        )
+        grouped[destination].append((name, item))
     for rows in grouped.values():
         rows.sort(key=lambda row: (int(row[1]["menu_order"]), row[0]))
     return grouped
@@ -200,7 +215,10 @@ def requirements_names() -> set[str]:
     """Read public skill names from the readiness requirements table."""
     names: set[str] = set()
     for line in REQUIREMENTS.read_text(encoding="utf-8").splitlines():
-        match = re.match(r"\|\s*(gradient-[^|]+?)\s*\|", line)
+        match = re.match(
+            r"\|\s*(?:Core|Blocked|Paused)\s*\|\s*(gradient-[^|]+?)\s*\|",
+            line,
+        )
         if match:
             names.add(match.group(1).split(" — ", 1)[0].strip())
     return names
@@ -212,7 +230,9 @@ def main() -> int:
     args = parser.parse_args()
 
     items = descriptions()
-    installed = set(items)
+    installed = {
+        name for name, item in items.items() if item["status"] != "alias"
+    }
     required = requirements_names()
     if installed != required:
         raise SystemExit(
