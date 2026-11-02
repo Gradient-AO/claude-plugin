@@ -7,6 +7,8 @@ Assess one manager return series against its matched benchmark, including the ob
 - Read `references/contracts/idd-methodology.md` before analysis and use only server-returned values.
 - Match the manager to its own benchmark; disclose unavailable, advisory, or alternative matches.
 - Preserve methods, units, dates, observations, coverage, truncation, and request IDs.
+- Do not publish peer, cohort, or manager-universe rankings or percentiles.
+  Persistence means benchmark-relative behavior across returned windows.
 - Do not rank quality, recommend a hire, or turn missing evidence into a neutral result.
 - Label illustrative evidence exactly as required by `references/report-style.md`.
 - Never derive or interpolate a plotted point locally. If the governed series views are not published, use the exact fallback `Not available — series views not published`.

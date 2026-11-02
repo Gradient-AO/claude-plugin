@@ -65,14 +65,6 @@ fields, and never compare or conflate the two excess values.
 
 ## Optional evidence
 
-Call `get_peer_allocation_intelligence` only when
-`capabilities.peerIntelligence` and the tool row both report available access.
-Otherwise do not call or retry it and use this typed disclosure:
-`Not licensed — Peer allocation context was skipped because peer allocation intelligence
-is not licensed for this organization. This construction report uses
-portfolio evidence only.` Peer context is optional and never changes the
-construction readiness rating by itself.
-
 | Need | Tool | Rule |
 |---|---|---|
 | CMA comparison | `get_cma_consensus_check`; fixed-income classes held | Preserve positioning, coverage and method |
@@ -216,11 +208,10 @@ fields, and never compare or conflate the two excess values.
 |---|---|---|
 | CMA comparison | `get_cma_consensus_check`; `mode: asset_class`, returned `hedge_funds` / `absolute_return` classes | Preserve positioning, coverage and method |
 | Macro regime | `get_macro_signals`; `view: gradient_signal`, plus `view: regime_state` when available | Preserve GRIP availability/degradation reasons and returned regime status; context only, never a forecast |
-| Peer policy | `get_peer_allocation_intelligence`; policy or cohort mode | Context only; preserve cohort, date, denominator and coverage |
 | Crowding context | `get_macro_signals`; `view: hedge_fund_crowding` | Market context only; never infer the selected managers' positions |
 | Portfolio macro context | `get_macro_signals`; `view: roster_macro_exposure`, selected `portfolio_id` | Optional and entitlement-dependent |
 | Equity look-through | `get_portfolio_exposure`; `include: [lookthrough_13f]`, selected `portfolio_id` | Optional; long-only US-listed subset with lag, short-book and FX caveats |
-| Manager evidence | `get_manager_diligence_brief`, `get_manager_diligence_findings` `view: open`, `get_manager_monitor_evidence`, `get_manager_odd_profile` for every resolved manager or fund in the sleeve | Preserve entity scope and severity; never infer that an unmatched holding has no findings |
+| Manager evidence | `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve | During the product hold, preserve the structured unavailable payload and mark manager diligence `Not assessed` |
 | Selected-series diagnostics | `build_strategy_lab_session` with selected `return_series_ids`, then a supported `run_strategy_lab_*` tool with the returned session | Selected-series sandbox; never pass a Portfolio Analytics ID |
 | User documents | IPS, mandate, liquidity schedule, manager report or transition plan | Tag as user documents with date and scope |
 
@@ -304,8 +295,8 @@ fields, and never compare or conflate the two excess values.
 |---|---|---|
 | CMA positioning | `get_cma_consensus_check`; `mode: asset_class`, held private-market classes | Preserve returned positioning and coverage |
 | Macro regime | `get_macro_signals`; `view: gradient_signal`, plus `view: regime_state` when available | Preserve GRIP availability/degradation reasons and returned regime status; context only, never a forecast |
-| Manager evidence | `get_manager_diligence_brief`, `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve | Preserve entity scope and severity; separate server evidence from plugin conclusions |
-| Manager shortlist | Return-based shortlist through `gradient-idd-manager-performance` in `shortlist` mode; Form ADV screen (`search_managers`, `screen_managers`) through `gradient-odd-report` in `compare` mode | Handoff rather than duplicating a comparison |
+| Manager evidence | `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve | During the product hold, preserve the structured unavailable payload and mark manager diligence `Not assessed` |
+| Manager shortlist | Return-based comparison through `gradient-idd-manager-performance` only when the user supplies canonical candidate series IDs | Discovery and Form ADV screening are unavailable during the product hold |
 | Selected-series robustness | Pass selected `return_series_ids` directly to a supported `run_strategy_lab_*` tool and add the required benchmark field. Do not also pass a `strategy_lab_session` stub. | Optional sandbox only; never pass `portfolio_id` |
 | User documents | IPS, pacing plan, cash-flow forecast or consultant recommendation | Tag as user document with document date and scope |
 
@@ -382,11 +373,10 @@ fields, and never compare or conflate the two excess values.
 |---|---|---|
 | CMA comparison | `get_cma_consensus_check`; returned `real_assets`, `real_estate`, `infrastructure` or `natural_resources` classes | Preserve class, positioning, coverage and method |
 | Macro regime | `get_macro_signals`; `view: gradient_signal`, plus `view: regime_state` when available | Preserve GRIP availability/degradation reasons and returned regime status; context only, never a forecast |
-| Peer policy | `get_peer_allocation_intelligence`; policy or cohort mode | Context only; preserve cohort, date, denominator and coverage |
 | Inflation context | `get_macro_conditions`; a schema-supported inflation view | Facts only; never infer asset sensitivity or forecast inflation |
 | Commodity positioning | `get_macro_signals`; `view: cftc_positioning` | Context only; not a portfolio exposure or expected-return source |
 | Broader context | `get_the_read`; `visuals: none` | Facts only; at most two short paragraphs |
-| Manager evidence | `get_manager_diligence_brief`, `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve | Preserve entity scope and severity; never infer that an unmatched holding has no findings |
+| Manager evidence | `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve | During the product hold, preserve the structured unavailable payload and mark manager diligence `Not assessed` |
 | Selected-series diagnostics | `build_strategy_lab_session` with selected `return_series_ids`, then a supported `run_strategy_lab_*` tool with the returned session | Selected-series sandbox; never pass a Portfolio Analytics ID |
 | User documents | IPS, real-assets taxonomy, commodity mandate, linker benchmark, appraisal or pacing plan | Tag as user documents with date and scope |
 

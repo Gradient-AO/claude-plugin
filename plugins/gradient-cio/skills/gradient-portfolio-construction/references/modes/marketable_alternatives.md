@@ -7,7 +7,7 @@ metadata:
   subject: "marketable alternatives"
   output: "construction report"
   menu_order: "60"
-  modules: "portfolio,research,peerIntelligence,gradientSignals,firmFundDiligence,strategyLab"
+  modules: "portfolio,research,gradientSignals,firmFundDiligence,strategyLab"
   contracts: "portfolio"
   handoffs: "gradient-decision-ic-memo"
   summary: "Design a hedge-fund allocation across strategies, factors and liquidity."
@@ -66,7 +66,7 @@ Required evidence:
 - active assumption set and capital-market assumptions for returned `hedge_funds` or `absolute_return`
   classes.
 
-Manager diligence, peer allocation intelligence, hedge-fund crowding and selected-series Strategy Lab
+Manager diligence, hedge-fund crowding and selected-series Strategy Lab
 diagnostics are optional. An entitlement block is `Not licensed`; do not retry it.
 
 ## 3. Assess

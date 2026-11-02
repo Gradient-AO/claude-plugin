@@ -75,6 +75,12 @@ from historical risk. Missing subject returns, unfunded commitments, partial
 calendar years, truncation, and incomplete fixed-income aggregates retain
 their governed meanings.
 
+For Manager Hire memos, peer/cohort percentiles, manager-universe rankings,
+peer positioning, and "relative to peers" claims are prohibited. Preserve
+candidate returns against the user-selected or governed matched benchmark and
+benchmark-relative persistence across returned windows. Operational comparisons
+may use absolute Form ADV facts for user-selected named managers only.
+
 ## 4. Draft
 
 Immediately before drafting read `references/memo-template.md`,
@@ -114,9 +120,9 @@ files.
 - Manager Hire candidate returns against benchmarks →
   `gradient-idd-manager-performance` (one candidate:
   `gradient-idd-manager-performance`).
-- Manager Hire candidate operations comparison (Form ADV, service providers,
-  disclosures, 13F) → `gradient-odd-report` in `compare` mode; full finalist
-  review → `gradient-odd-report` in `full` mode.
+- Manager Hire candidate operations comparison (absolute Form ADV facts,
+  service providers, disclosures, 13F) → `gradient-odd-report` in `compare`
+  mode; full finalist review → `gradient-odd-report` in `full` mode.
 
 Only when asked, an Allocation Change/Rebalance based on a real matching
 Strategy Lab basket may preview `save_strategy_lab_scenario`. Show the preview

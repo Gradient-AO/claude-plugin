@@ -17,6 +17,16 @@ metadata:
 
 # Manager monitoring and triage
 
+## Current product hold
+
+Manager diligence is temporarily held. The only advertised tools are
+`get_diligence_roster_funds`, `get_fund_diligence_monitoring`,
+`get_fund_diligence_review`, and `get_manager_diligence_findings`; each must
+return `status: "unavailable"` with
+`unavailable_reason: "manager_diligence_product_hold"`. Do not retry, call
+retired diligence tools, produce a digest/triage report, or schedule monitoring.
+Return the typed unavailable result and direct the user to `gradient-setup`.
+
 Produce one organization-wide report in exactly one mode:
 
 | Mode | Use when | Mode contract |
@@ -46,6 +56,9 @@ collecting evidence.
   or zero.
 - Form ADV is adviser-reported. A new filing is a review trigger, not a
   finding.
+- Alerts and severity come from absolute Form ADV facts, dated filed changes,
+  findings, and governed monitoring events. Never create an alert from a
+  manager peer/cohort percentile or percentile movement.
 - Preserve canonical IDs, governed review status, evidence status, reasons,
   validation, dates, pagination, and digests.
 - Only supported, evidence-triggered actions may appear. No hire, fire,

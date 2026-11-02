@@ -1,5 +1,12 @@
 # ODD execution contract
 
+## Current product hold
+
+This contract is inactive while `manager_diligence_product_hold` is returned.
+Call only the advertised held reads, preserve the structured unavailable
+payload, and stop. Do not invoke any retired tool or produce a report from the
+historical workflow details below.
+
 Read only the section needed for the current workflow step.
 
 ## Full-report evidence
@@ -9,18 +16,18 @@ Call `get_gradient_capabilities`, then:
    `fund_id`, then `get_fund_diligence_review` with the same ID and a bounded
    history. Preserve nullable `review`, every history event, and pagination
    metadata. A firm-only report has no fund read substitute.
-2. `get_manager_diligence_brief` with `fund_id` or `firm_id` and all nine
+2. The retired manager diligence brief with `fund_id` or `firm_id` and all nine
    sections: `manager_adv`, `firm_fund_events`, `entity_facts`,
    `manager_monitor_evidence`, `firm_13f`, `open_findings`, `ddq_history`,
    `service_providers`, `enforcement_candidates`.
-3. `get_firm_13f_portfolio_review`, `mode: snapshot`, on the parent `firm_id`.
+3. The retired firm 13F portfolio review, `mode: snapshot`, on the parent `firm_id`.
    Retry one `backend_timeout`; then retry snapshot without `quarters`. Request
    `view: issuer_risk` only when the report needs issuer-level risk evidence.
 4. `get_manager_diligence_findings`, `view: open`, for firm and fund.
-5. `get_firm_fund_events`, `include_event_type_counts: true`.
+5. The retired firm-fund events read with `include_event_type_counts: true`.
 6. If a DDQ exists, follow `gradient-odd-ddq-reconcile` extraction and
    reconciliation.
-7. `get_firm_13f_portfolio_review`, `view: adv_13f_consistency`, with parent
+7. The retired firm 13F portfolio review, `view: adv_13f_consistency`, with parent
    `firm_id`.
 
 If a required roster, monitoring, review, or brief call returns not entitled
@@ -36,7 +43,8 @@ Save and parse the whole brief. Read every section and row. ADV lives under
 digest, synthesis basis, differentiated analytics, source vintage, thresholds,
 and availability. Synthesis and differentiated analytics are
 server-derived evidence signals; they are not report-ready prose or an ODD
-conclusion.
+conclusion. Ignore any returned manager cohort, percentile, or peer-positioning
+field; it is outside this report contract.
 
 If direct profile fails `response_contract_invalid`, use the brief's ADV
 section. For `subject_resolution_unavailable`, write
@@ -48,16 +56,15 @@ disclose advisory failures.
 
 ## Interpretation
 
-Form ADV is adviser-reported. Gradient cohort percentiles are positioning, not
-quality. Use Form ADV question meanings, Schedule A/B ownership bands, and
-firm-level 13F caveats. ADV–13F flags are identity/scope/recency context only;
+Form ADV is adviser-reported. Use absolute Form ADV question meanings,
+Schedule A/B ownership bands, filed amounts and counts, and firm-level 13F
+caveats. Manager peer cohorts, percentiles, rankings, and "relative to peers"
+claims are prohibited. ADV–13F flags are identity/scope/recency context only;
 do not infer from a ratio when legal-entity identity is unconfirmed.
 
 Full ODD signal:
-- elevated: Item 11 disclosure, high finding, tier-1 alert, or at least two
-  cohort metrics at/above the 75th percentile;
-- watch: one such metric, medium finding, tier-2 alert, or ownership/control
-  change;
+- elevated: Item 11 disclosure, high finding, or tier-1 alert;
+- watch: medium finding, tier-2 alert, or ownership/control change;
 - clear: none, labeled `No flags identified`;
 - insufficient: ADV unavailable or blocking-invalid.
 
@@ -72,12 +79,11 @@ Sections use these exact IDs and titles, in order:
 1. `executive` / Executive summary
 2. `firm-profile-ownership` / Firm profile & ownership
 3. `regulatory-conflicts-custody` / Regulatory, conflicts & custody
-4. `peer-positioning` / Peer positioning
-5. `fund-operations-service-providers` / Fund operations & service providers
-6. `reported-equity-holdings` / Reported equity holdings (Form 13F)
-7. `monitoring-findings-ddq` / Monitoring, findings & DDQ
-8. `follow-up-open-items` / Follow-up questions & open items
-9. `sources-method` / Appendix — Sources and methods (`num: "A"`)
+4. `fund-operations-service-providers` / Fund operations & service providers
+5. `reported-equity-holdings` / Reported equity holdings (Form 13F)
+6. `monitoring-findings-ddq` / Monitoring, findings & DDQ
+7. `follow-up-open-items` / Follow-up questions & open items
+8. `sources-method` / Appendix — Sources and methods (`num: "A"`)
 
 The governed visual slots are exact:
 - Executive summary: evidence `coverage`.
@@ -87,7 +93,6 @@ The governed visual slots are exact:
   every segment; otherwise use a typed unavailable callout.
 - Regulatory, conflicts & custody: regulatory evidence `table` or typed
   unavailable `callout`.
-- Peer positioning: `percentiles` or `bars`.
 - Fund operations & service providers: service-provider `table` or typed
   unavailable `callout`.
 - Reported equity holdings (Form 13F): `bars`, `kv`, or `table`, with the
@@ -101,7 +106,7 @@ Keep missing sections with specific typed unavailability; generic `Visual
 evidence` placeholders are forbidden. Do not force page breaks in the full
 report. Let compact regulatory and fund-operations sections flow; use
 `two_col` only when their content remains within their existing section
-budgets, otherwise keep their evidence and analysis separate. Sections 2–7
+budgets, otherwise keep their evidence and analysis separate. Sections 2–6
 are analytical and each requires one to three sourced `Analysis —` callouts.
 Use the exact block schemas in `report-style.md`, the four ADV tiles, and the
 shared sourced-analysis rules. Recommendations to hire, fire, redeem,
@@ -119,8 +124,5 @@ and spot-check tables. QA and fact checks block delivery.
 
 ## Writes after delivery
 
-Offer, but never initiate: `log_diligence_review` with exactly one canonical
-`firm_id` or `fund_id` (never both),
-`update_manager_monitoring`, or `update_watchlist`. Preview with
-`dry_run: true`; after explicit confirmation commit the identical change with
-`dry_run: false` and the same idempotency key, then report the receipt.
+No manager-diligence writes are advertised during the product hold. Do not
+preview or commit historical review, monitoring, or watchlist mutations.

@@ -1,6 +1,15 @@
 # Shortlist mode
 
-Build a shortlist from user-supplied candidates or a server-returned mandate universe. An optional Form ADV screen may narrow factual criteria, but every advancing candidate must then receive governed return and benchmark evidence. Never treat Form ADV fields as an investment-style conclusion. Deliver a branded PDF by default and PowerPoint only when requested.
+Manager discovery and Form ADV screening are unavailable while
+`manager_diligence_product_hold` is active. Use this mode only with a complete
+user-supplied candidate set whose canonical return-series IDs are already
+known; otherwise return the typed unavailable result.
+
+Build a shortlist from user-supplied candidates or a server-returned candidate
+set. An optional Form ADV screen may narrow factual eligibility, but every
+advancing candidate must then receive governed return and benchmark evidence.
+Never treat Form ADV fields as an investment-style conclusion. Deliver a
+branded PDF by default and PowerPoint only when requested.
 
 ## Non-negotiable rules
 
@@ -8,19 +17,32 @@ Build a shortlist from user-supplied candidates or a server-returned mandate uni
 - Use only server-returned values and preserve methods, units, dates, observations, coverage, truncation, and request IDs.
 - Match each manager to its own benchmark; disclose unavailable or advisory matches.
 - A candidate without governed performance evidence cannot advance.
+- Peer, cohort, and manager-universe rankings or percentiles are prohibited.
+  Do not advance a candidate because of relative standing among candidates.
 - Do not rank manager quality, recommend a hire, or turn missing evidence into a neutral result.
 - Keep investment evidence separate from Form ADV, Form 13F, and other operational evidence.
 - Label illustrative evidence exactly as required by `references/report-style.md`.
 
 ## 1. Resolve and collect
 
-Resolve the organization and mandate. If requested, use `screen_managers` for factual Form ADV criteria and disclose search limits. Resolve canonical entity and return-series links for every candidate.
+Resolve the organization and mandate. Capture the user's benchmark-relative
+advancement criteria before assessing candidates—for example minimum excess
+return, downside capture, and persistence across specified returned windows.
+If those criteria are absent, ask one focused question. Do not run Form ADV
+screening during the product hold. Resolve return-series links only from
+currently advertised Strategy Lab tools or user-supplied canonical IDs.
 
 For governed performance collection, benchmark matching, connector fallbacks, and evidence preservation, follow `references/modes/compare.md`. Use its named Strategy Lab tools with separately matched benchmarks. Run independent reads in parallel and save large payloads. If a required capability is unavailable or not licensed, show that typed status.
 
 ## 2. Assess
 
-Apply the approved metric and reliability rules in the shared IDD methodology contract. Separate factual screening results from governed investment evidence. Assign advance, reserve, or reject only from the disclosed mandate criteria and available evidence, and state what would change each conclusion.
+Apply the approved metric and reliability rules in the shared IDD methodology
+contract. Separate factual screening results from governed investment
+evidence. Assign advance, reserve, or reject only by evaluating each candidate
+against the user's disclosed benchmark-relative criteria and returned
+persistence evidence. Never use candidate order, peer standing, or a
+manager-universe rank. State which criterion passed, failed, or remained
+unavailable and what would change each conclusion.
 
 ## 3. Build the report
 

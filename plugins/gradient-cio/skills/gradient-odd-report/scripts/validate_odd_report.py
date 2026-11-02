@@ -36,7 +36,6 @@ FULL_SPEC = ReportSpec(
             "Executive summary",
             "Firm profile & ownership",
             "Regulatory, conflicts & custody",
-            "Peer positioning",
             "Fund operations & service providers",
             "Reported equity holdings (Form 13F)",
             "Monitoring, findings & DDQ",
@@ -65,11 +64,6 @@ FULL_SPEC = ReportSpec(
             r"Regulatory, conflicts & custody",
             frozenset({"table", "callout"}),
             "regulatory evidence",
-        ),
-        SlotRule(
-            r"Peer positioning",
-            frozenset({"percentiles", "bars"}),
-            "peer visual",
         ),
         SlotRule(
             r"Fund operations & service providers",
@@ -102,12 +96,13 @@ FULL_SPEC = ReportSpec(
     ),
     forbidden_body_patterns=(
         r"\b(?:hire|fire|terminate|redeem from|allocate to)\b",
+        r"\b(?:peer|cohort)(?:-based)?\s+(?:percentiles?|rankings?|positioning)\b",
+        r"\brelative\s+to\s+peers\b",
     ),
     require_question_sources=True,
     analysis_section_patterns=(
         r"Firm profile & ownership",
         r"Regulatory, conflicts & custody",
-        r"Peer positioning",
         r"Fund operations & service providers",
         r"Reported equity holdings \(Form 13F\)",
         r"Monitoring, findings & DDQ",
@@ -115,7 +110,6 @@ FULL_SPEC = ReportSpec(
     analytical_section_patterns=(
         r"Firm profile & ownership",
         r"Regulatory, conflicts & custody",
-        r"Peer positioning",
         r"Fund operations & service providers",
         r"Reported equity holdings \(Form 13F\)",
         r"Monitoring, findings & DDQ",
@@ -169,11 +163,6 @@ COMPARE_SPEC = ReportSpec(
             minimum=3,
         ),
         SlotRule(
-            r"Side-by-side comparison",
-            frozenset({"percentiles"}),
-            "per-manager cohort percentile strips",
-        ),
-        SlotRule(
             r"Operational flags",
             frozenset({"findings"}),
             "per-manager findings",
@@ -222,6 +211,8 @@ COMPARE_SPEC = ReportSpec(
     forbidden_body_patterns=(
         r"\b(?:best|preferred|top-tier|best-in-class)\s+(?:manager|adviser|firm)\b",
         r"\b(?:hire|fire|terminate|redeem from|allocate to)\b",
+        r"\b(?:peer|cohort)(?:-based)?\s+(?:percentiles?|rankings?|positioning)\b",
+        r"\brelative\s+to\s+peers\b",
     ),
     require_action_row_sources=True,
     analysis_section_patterns=(
@@ -276,7 +267,6 @@ def validate_full_layout(document: JsonValue) -> list[str]:
         "executive",
         "firm-profile-ownership",
         "regulatory-conflicts-custody",
-        "peer-positioning",
         "fund-operations-service-providers",
         "reported-equity-holdings",
         "monitoring-findings-ddq",

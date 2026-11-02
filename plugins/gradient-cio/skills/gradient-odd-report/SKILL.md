@@ -17,6 +17,16 @@ metadata:
 
 # Gradient ODD report
 
+## Current product hold
+
+Manager diligence is temporarily held. The only advertised tools are
+`get_diligence_roster_funds`, `get_fund_diligence_monitoring`,
+`get_fund_diligence_review`, and `get_manager_diligence_findings`; each must
+return `status: "unavailable"` with
+`unavailable_reason: "manager_diligence_product_hold"`. Do not retry, call
+retired diligence tools, or build a report from inferred evidence. Return the
+typed unavailable result and direct the user to `gradient-setup`.
+
 Produce a sourced operational due-diligence report in exactly one mode:
 
 | Mode | Use when | Mode contract |
@@ -33,7 +43,8 @@ in one report.
 - Two to five named managers with explicit comparison intent → `compare`.
 - Multiple subjects without explicit comparison intent, or an unspecified
   subject → `gradient-odd-manager-monitor` in `triage` mode.
-- One comparison subject → ask for named peers; six or more → ask which five.
+- One comparison subject → ask which other named manager to compare; six or
+  more → ask which five.
 
 Ask at most one routing question. Read the selected mode contract before
 collecting evidence.
@@ -42,8 +53,9 @@ collecting evidence.
 
 - Every number comes from Gradient evidence, a user document, or an explicitly
   governed calculation and carries `[S#]`.
-- Form ADV is adviser-reported; Gradient cohort analytics are positioning, not
-  quality or performance rankings. Firm Form 13F is not fund holdings.
+- Form ADV is adviser-reported. Compare user-selected named managers only on
+  absolute filed facts; manager peer cohorts, percentiles, rankings, and
+  "relative to peers" claims are prohibited. Firm Form 13F is not fund holdings.
 - Preserve validation, coverage, truncation, typed reasons, as-of dates,
   provenance, and digests. Missing evidence is never zero.
 - Server-derived signals are evidence inputs, not report-ready conclusions.

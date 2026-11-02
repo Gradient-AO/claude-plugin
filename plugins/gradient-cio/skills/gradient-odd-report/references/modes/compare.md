@@ -25,11 +25,11 @@ Resolve the organization first and pass `organization_id` where supported. Ask
 at most one question.
 
 - Two to five named managers → compare directly.
-- One manager → ask for named peers.
+- One manager → ask which other named manager to compare.
 - Six or more → ask which five.
 
 Before resolving IDs, read
-`references/modes/compare-comparison-contract.md#screening-and-identity-resolution`.
+`references/modes/compare-comparison-contract.md#identity-resolution`.
 
 ## 2. Collect
 
@@ -48,8 +48,9 @@ Continue with independent evidence after a typed failure.
 Read
 `references/modes/compare-comparison-contract.md#flags-signal-and-next-steps`.
 Apply its deterministic High, Medium, and Info rules, comparison signal,
-completeness denominator, and allowed next-step list. Percentiles remain within
-each manager's own Gradient cohort and are never a quality ranking.
+completeness denominator, and allowed next-step list. Compare only absolute
+Form ADV facts for the user-selected named managers. Do not use manager peer
+cohorts, percentiles, universe rankings, or "relative to peers" language.
 
 ## 4. Build and deliver
 

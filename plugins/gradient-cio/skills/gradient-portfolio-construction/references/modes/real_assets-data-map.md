@@ -45,22 +45,14 @@ fields, and never compare or conflate the two excess values.
 
 ## Optional evidence
 
-Call `get_peer_allocation_intelligence` only when
-`capabilities.peerIntelligence` and the tool row both report available access.
-Otherwise do not call or retry it. Disclose: `Not licensed — Peer allocation
-context was skipped because peer allocation intelligence is not licensed for this
-organization. This construction report uses portfolio evidence only.` Missing
-peer context never lowers construction readiness by itself.
-
 | Need | Tool | Rule |
 |---|---|---|
 | CMA comparison | `get_cma_consensus_check`; returned `real_assets`, `real_estate`, `infrastructure` or `natural_resources` classes | Preserve class, positioning, coverage and method |
 | Macro regime | `get_macro_signals`; `view: gradient_signal`, plus `view: regime_state` when available | Preserve GRIP availability/degradation reasons and returned regime status; context only, never a forecast |
-| Peer policy | `get_peer_allocation_intelligence`; policy or cohort mode | Context only; preserve cohort, date, denominator and coverage |
 | Inflation context | `get_macro_conditions`; a schema-supported inflation view | Facts only; never infer asset sensitivity or forecast inflation |
 | Commodity positioning | `get_macro_signals`; `view: cftc_positioning` | Context only; not a portfolio exposure or expected-return source |
 | Broader context | `get_the_read`; `visuals: none` | Facts only; at most two short paragraphs |
-| Manager evidence | `get_manager_diligence_brief`, `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve | Preserve entity scope and severity; never infer that an unmatched holding has no findings |
+| Manager evidence | `get_manager_diligence_findings` `view: open` for every resolved manager or fund in the sleeve | During the product hold, preserve the structured unavailable payload and mark manager diligence `Not assessed` |
 | Selected-series diagnostics | `build_strategy_lab_session` with selected `return_series_ids`, then a supported `run_strategy_lab_*` tool with the returned session | Selected-series sandbox; never pass a Portfolio Analytics ID |
 | User documents | IPS, real-assets taxonomy, commodity mandate, linker benchmark, appraisal or pacing plan | Tag as user documents with date and scope |
 

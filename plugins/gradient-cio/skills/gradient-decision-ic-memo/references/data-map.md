@@ -39,7 +39,7 @@ coverage and do not present lab results as the portfolio.
 | 7.3 | Regime overlay | `get_macro_signals` (view `gradient_signal` → `sources.grip.current`); `get_capital_market_assumptions` (regime view) | Regime row Not available |
 | 8 | Stress tests, scenarios | Portfolio Analytics or user-supplied scenario report on the saved portfolio. Optional Strategy Lab: `run_strategy_lab_simulation` / `run_strategy_lab_date_window_robustness` only for explicitly selected return series, in rows labeled `Strategy Lab — <series>` | Not available |
 | 9 | Liquidity tiers, unfunded, pacing | `check_portfolio_policy.liquidity` plus `get_portfolio_exposure` with `include: [commitment_pacing, liquidity_scorecard]`; preserve included chart items unchanged | User liquidity schedule quoted as a document; else Not available |
-| 10 | Managers: exposure, ODD, findings, alerts | `get_manager_diligence_findings` (view `exposure_weighted`); `get_manager_diligence_attention_queue`; per manager ≥ 1% NAV: `get_manager_odd_profile` (view `red_flags`), `get_manager_monitor_evidence` (mode `alerts`) | Per manager: `get_manager_diligence_brief` (one call covers server-derived ADV, monitor, 13F, events, differentiated analytics and deterministic synthesis evidence signals) |
+| 10 | Managers: exposure and diligence status | `get_manager_diligence_findings` (view `exposure_weighted`) | During the product hold, preserve the structured unavailable payload and mark manager diligence `Not assessed` |
 | 11 | GIPS | Internal `../../internal/gips-evidence-review/contract.md` asset-owner mode for total-fund reporting; the GIPS section of `gradient-odd-report` for manager claims, verification and performance integrity | Not assessed — reason |
 | 12 | Market context | `get_macro_signals` (`gradient_signal`; GRIP from `sources.grip.current`), `get_macro_conditions` (indicators, themes relevant to holdings), `get_the_read`, `get_macro_calendar` (scheduled_events, 30 days) | Omit unavailable bullets' content but keep the bullet with Not available |
 | 13 | Proposed change and impact | Use governed current-policy results and a server-returned proposed-case analysis only when available on the same basis | Optional Strategy Lab comparison only when the user selected a lab return-series basket representing the proposal; label it as a separate lab basis. Otherwise mark proposed policy impacts Not available |
@@ -54,17 +54,11 @@ as a substitute for 12 returned month-end observations.
 
 ## Manager-level rules (Section 10)
 
-- Build the manager list from `exposure_weighted` findings scope or `get_portfolio_exposure`, not from memory.
-- For each manager ≥ 1% NAV, resolve its CRD or firm_id from the exposure data; use `search_managers` only if
-  the exposure data has a name without an identifier.
-- `ODD red flags` column = count of items in `red_flags.items` plus the top metric name, e.g. `1 (custody share)`.
-  If the ADV section failed validation, write `Not available — validation`.
-- `Open findings (H/M/L)` = counts by severity from `get_manager_diligence_findings` view `open`.
-- `Monitor alerts` = `alert_count`; if `source_alignments` is not `aligned`, write `Not evaluated`.
-- `Last review` = latest review date from the attention queue or brief `latest_review_at`.
-- The brief's `synthesis` and `differentiated_analytics` are server-derived evidence signals, not an IC
-  conclusion or memo-ready prose. Preserve evidence paths, thresholds, source vintages and completeness; the
-  plugin owns the manager assessment, portfolio implication and all narrative.
+- Build the manager list from `get_portfolio_exposure`, not from memory.
+- The held findings call returns `status: unavailable` and
+  `unavailable_reason: manager_diligence_product_hold`; do not retry it or
+  infer ODD, findings, alerts, or last-review values.
+- Keep manager diligence rows `Not assessed` until the hold is lifted.
 - When manager evidence returns `record_kind: demo`, label it **Synthetic manager evidence — demo data** in
   the manager row and source appendix. Never describe demo evidence as manager-reported or live diligence.
 

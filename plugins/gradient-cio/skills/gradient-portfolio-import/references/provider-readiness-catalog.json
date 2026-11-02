@@ -102,27 +102,6 @@
               "golden_case_ids": []
             }
           ]
-        },
-        {
-          "lane_id": "manager_fund_master_and_peer_statistics",
-          "mode": "model_gap",
-          "destination": "undecided",
-          "status": "discovery_required",
-          "evidence": {
-            "connector_identity": null,
-            "observed_tools": []
-          },
-          "candidate_data_types": [],
-          "coverage": [
-            {
-              "data_type": null,
-              "status": "discovery_required",
-              "source_schema_digest": null,
-              "terms_status": "unreviewed",
-              "dry_run_reference": null,
-              "golden_case_ids": []
-            }
-          ]
         }
       ]
     },
@@ -440,27 +419,6 @@
             },
             {
               "data_type": "monthly_return_observation",
-              "status": "discovery_required",
-              "source_schema_digest": null,
-              "terms_status": "unreviewed",
-              "dry_run_reference": null,
-              "golden_case_ids": []
-            }
-          ]
-        },
-        {
-          "lane_id": "manager_fund_master_and_peer_statistics",
-          "mode": "model_gap",
-          "destination": "undecided",
-          "status": "discovery_required",
-          "evidence": {
-            "connector_identity": null,
-            "observed_tools": []
-          },
-          "candidate_data_types": [],
-          "coverage": [
-            {
-              "data_type": null,
               "status": "discovery_required",
               "source_schema_digest": null,
               "terms_status": "unreviewed",

@@ -652,30 +652,24 @@
           "rows": [
             [
               "S1",
-              "DDQ reconciliation, 20 claims with numeric gaps",
-              "gradient_tool",
-              "reconcile_manager_ddq_claims",
+              "DDQ reconciliation, 20 claims with numeric gaps — bundled illustrative source",
+              "user_document",
+              "Bundled illustrative source",
               "illustrative sample",
               "2026-10-01",
               "Illustrative sample data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "not_applicable: bundled illustrative source",
               "sha256:f7d651b2f80f66bfed38fc7041a906cab927de85ad580cf8dc38713fbc66bafa"
             ],
             [
               "S2",
-              "Form ADV profile incl. Schedule D 7.B.1",
-              "gradient_tool",
-              "get_manager_odd_profile",
+              "Form ADV profile incl. Schedule D 7.B.1 — bundled illustrative source",
+              "user_document",
+              "Bundled illustrative source",
               "illustrative sample",
               "2026-10-01",
               "Illustrative sample data",
-              {
-                "chip": "not run",
-                "status": "not_run"
-              },
+              "not_applicable: bundled illustrative source",
               "sha256:a04715c67d5ce3adfd18b7b78a12cf0cbf791f70803e2feffcd7826418a2b647"
             ],
             [

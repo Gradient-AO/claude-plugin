@@ -8,7 +8,7 @@ metadata:
   subject: "portfolio construction"
   output: "construction report"
   menu_order: "30"
-  modules: "portfolio,research,macroDesk,peerIntelligence,gradientSignals,firmFundDiligence,strategyLab"
+  modules: "portfolio,research,macroDesk,gradientSignals,firmFundDiligence,strategyLab"
   contracts: "portfolio-construction"
   handoffs: "gradient-decision-ic-memo"
   modes: "private_markets,fixed_income,global_public_equity,marketable_alternatives,real_assets"
@@ -42,12 +42,6 @@ Select exactly one mode and set `meta.mode` before validation:
 - Historical attribution comes only from `get_portfolio_attribution`; never derive it locally.
 - Missing constraints or governed results stay typed unavailable. Do not infer policy status or numeric targets.
 - Label illustrative records exactly as required by `references/report-style.md`.
-- Gate peer context on both `capabilities.peerIntelligence` and the
-  `get_peer_allocation_intelligence` tool row. If either is unavailable, do not
-  call or retry the tool; disclose the optional skip and continue from
-  portfolio evidence. Missing peer intelligence never lowers construction
-  readiness by itself.
-
 ## Collect and assess
 
 Collect the portfolio record, allocation tree, mode-filtered exposure pages, policy result, historical returns, governed attribution and applicable assumptions. Request chart-style evidence through `get_portfolio_exposure.include` only after checking capability availability. Add only the needed include names, preserve each returned chart item, `render_hint`, and chart ID unchanged, and disclose `truncated: true`. For a proposed mapped factor mix, call `get_capital_market_assumptions` with `view: "portfolio_analytics"` and the supplied weights; use its return, risk, and Euler risk contributions without local recomputation. Request one-call full-matrix correlations when the complete selected-factor relationship is needed. Apply additional mode-specific evidence and restrictions from the selected workflow.

@@ -173,10 +173,6 @@ Use JSON block mode. Set:
   `Headroom`, `Status`.
 - `table` **Sub-allocation versus policy** with the same columns when depth-1 rows exist.
 - One unchanged returned allocation chart when available.
-- Optional peer-allocation context may follow only when `peerIntelligence` is licensed and the tool returns
-  usable evidence. When it is not licensed, include one `callout` in this section:
-  `Not licensed — Peer allocation context was skipped because peer allocation intelligence is not licensed for this
-  organization. This review uses portfolio evidence only.`
 - End with one to three sourced `Analysis —` callouts identifying breaches, watch rows and the smallest
   returned headroom without proposing a rebalance.
 
@@ -237,8 +233,6 @@ decision or vote.
 - `coverage` block with every expected source for comprehensive mode.
 - Status values: `available`, `degraded`, `unavailable`, `not licensed`.
 - Notes include as-of date, returned rows, basis/fingerprint and error code/request ID where applicable.
-- Include **Peer allocation intelligence**. When unlicensed, use status `not licensed` and note
-  `Not licensed — peer allocation intelligence is not licensed for this organization`.
 
 ### Appendix — Sources and methods (`num: "A"`)
 

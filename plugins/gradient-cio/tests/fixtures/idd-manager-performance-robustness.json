@@ -144,7 +144,7 @@
           "role": "analysis",
           "tone": "info",
           "title": "Analysis — Comparison unavailable",
-          "text": "Observation: Comparative metrics are unavailable [S1]. Why it matters: No ranking is supportable. Uncertainty: Missing evidence may differ by manager. What would change the view: A governed comparison result."
+          "text": "Observation: Comparative metrics are unavailable [S1]. Why it matters: Absolute and matched-benchmark outcomes cannot be assessed. Uncertainty: Missing evidence may differ by manager. What would change the view: A governed comparison result."
         }
       ]
     },
@@ -239,7 +239,7 @@
           "type": "callout",
           "tone": "info",
           "title": "Governed evidence boundary",
-          "text": "The report preserves the returned subject identity, benchmark mapping, observation window, units, methods, coverage status and request provenance [S1]. Missing performance, correlation, capture, simulation or regime fields remain unavailable. No local statistics, substitutions, rankings or neutral defaults are introduced."
+          "text": "The report preserves the returned subject identity, benchmark mapping, observation window, units, methods, coverage status and request provenance [S1]. Missing performance, correlation, capture, simulation or regime fields remain unavailable. No local statistics, substitutions, peer or universe rankings, or neutral defaults are introduced."
         },
         {
           "type": "callout",

@@ -9,6 +9,8 @@ PDF pages, with attention items first.
 - No alerts means none in the processed window; always state window and source
   as-of. Empty or unpublished evidence is typed unavailable, never none or zero.
 - Form ADV is adviser-reported. A new filing is a review trigger, not a finding.
+- Alerts use absolute filed ADV facts and dated changes, never manager
+  peer/cohort percentile moves or relative standing.
 - Only supported, evidence-triggered actions may appear. No hire, fire,
   redemption, termination, or allocation recommendation.
 - Do not create findings, log reviews, change monitoring, or schedule work

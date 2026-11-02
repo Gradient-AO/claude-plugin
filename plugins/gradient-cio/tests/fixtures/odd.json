@@ -40,7 +40,7 @@
     "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
   },
   "executive": {
-    "bottom_line": "Ridgeview reports $12.40B regulatory AUM, 38 private funds and no Item 11 disclosures [S1]. No cohort metric is in the top quartile; the highest is AUM per adviser representative at the 62.6th percentile [S1]. Firm events are not yet published, so completeness is degraded and this is not a clean bill of health.",
+    "bottom_line": "Ridgeview reports $12.40B regulatory AUM, 38 private funds and no Item 11 disclosures [S1]. No High or Medium signal is present in the absolute ADV facts and governed findings reviewed [S1][S2]. Firm events are not yet published, so completeness is degraded and this is not a clean bill of health.",
     "tiles": [
       {
         "label": "Regulatory AUM",
@@ -264,62 +264,6 @@
       "kicker": "The filing evidence identifies custody and conflict items for review"
     },
     {
-      "id": "peer-positioning",
-      "title": "Peer positioning",
-      "kicker": "Gradient cohort analytics · 587 advisers",
-      "blocks": [
-        {
-          "type": "percentiles",
-          "threshold": 75,
-          "items": [
-            {
-              "label": "AUM per adviser rep",
-              "percentile": 62.59,
-              "value_display": "$589M"
-            },
-            {
-              "label": "Discretionary share",
-              "percentile": 63.8,
-              "value_display": "100%"
-            },
-            {
-              "label": "Disclosure flag load",
-              "percentile": 39.86,
-              "value_display": "0"
-            },
-            {
-              "label": "Custody asset share",
-              "percentile": 36.23,
-              "value_display": "84.7%"
-            },
-            {
-              "label": "Private fund share",
-              "percentile": 31.92,
-              "value_display": "84.5%"
-            },
-            {
-              "label": "AUM per employee",
-              "percentile": 23.63,
-              "value_display": "$132M"
-            },
-            {
-              "label": "Client HHI",
-              "percentile": 9.8,
-              "value_display": "0.60"
-            }
-          ],
-          "note": "Percentiles are positioning within a Gradient-selected cohort, not a quality ranking [S1]."
-        },
-        {
-          "type": "callout",
-          "role": "analysis",
-          "tone": "watch",
-          "title": "Analysis — Percentiles do not close gaps",
-          "text": "Observation: No pillar reaches the 75th percentile, while events remain unavailable [S1]. Why it matters: Moderate peer positioning does not override unresolved findings. Uncertainty: Gradient-selected cohort coverage may not represent every comparable adviser. What would change the view: Refreshed results above the 75th percentile or new findings."
-        }
-      ]
-    },
-    {
       "id": "fund-operations-service-providers",
       "title": "Fund operations & service providers",
       "blocks": [
@@ -460,44 +404,35 @@
           "rows": [
             [
               "S1",
-              "Form ADV profile",
-              "gradient_tool",
-              "get_manager_odd_profile",
+              "Form ADV profile — bundled illustrative source",
+              "user_document",
+              "Bundled illustrative source",
               "illustrative sample",
               "2026-10-01",
               "Illustrative sample data",
-              {
-                "chip": "not_run",
-                "status": "not_run"
-              },
+              "not_applicable: bundled illustrative source",
               "sha256:273814b06d98b1737c111b83024663b8e8600d4b69330958b9c6b9c61b827814"
             ],
             [
               "S2",
-              "Manager Monitor",
-              "gradient_tool",
-              "get_manager_monitor_evidence",
+              "Manager Monitor — bundled illustrative source",
+              "user_document",
+              "Bundled illustrative source",
               "illustrative sample",
               "2026-10-01",
               "Illustrative sample data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "not_applicable: bundled illustrative source",
               "sha256:2bdcc27a6e4cd1e329899b4d04e170b5c8d8495ae3ac85508662595e0ddba249"
             ],
             [
               "S3",
-              "Form 13F snapshot",
-              "gradient_tool",
-              "get_firm_13f_portfolio_review",
+              "Form 13F snapshot — bundled illustrative source",
+              "user_document",
+              "Bundled illustrative source",
               "illustrative sample",
               "2026-08-14",
               "Illustrative sample data",
-              {
-                "chip": "passed",
-                "status": "passed"
-              },
+              "not_applicable: bundled illustrative source",
               "sha256:b978ab9ea42f3266f45899cd2105866e57f56016496c2bd775d7260eab4fd245"
             ]
           ]
@@ -505,8 +440,8 @@
         {
           "type": "bullets",
           "items": [
-            "Method: the ODD signal applies the governed Item 11, finding, alert, ownership-change and cohort-percentile rules to available evidence; unavailable evidence degrades completeness rather than becoming zero [S1] [S2] [S3].",
-            "Form ADV is adviser-reported. Gradient cohort percentiles describe positioning, not quality or performance. Form 13F is firm-level, lagged and partial [S1] [S3].",
+            "Method: the ODD signal applies governed absolute Item 11, finding, alert and ownership-change rules to available evidence; unavailable evidence degrades completeness rather than becoming zero [S1] [S2] [S3].",
+            "Form ADV is adviser-reported and interpreted from absolute filed facts. Form 13F is firm-level, lagged and partial [S1] [S3].",
             "This sample report is a diligence aid, not investment, legal or compliance advice. No hire, fire, redemption, termination or allocation recommendation is made."
           ]
         }

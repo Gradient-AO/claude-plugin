@@ -913,6 +913,40 @@ def connector_cutover():
             else ""
         ),
     )
+    performance_root = ROOT / "skills" / "gradient-idd-manager-performance"
+    performance_guidance = re.sub(
+        r"\s+",
+        " ",
+        "\n".join(
+            (
+                (performance_root / "SKILL.md").read_text(encoding="utf-8"),
+                (performance_root / "references" / "modes" / "shortlist.md").read_text(
+                    encoding="utf-8"
+                ),
+                (performance_root / "references" / "modes" / "compare.md").read_text(
+                    encoding="utf-8"
+                ),
+                (performance_root / "references" / "modes" / "robustness.md").read_text(
+                    encoding="utf-8"
+                ),
+            )
+        ).casefold(),
+    )
+    memo_guidance = re.sub(
+        r"\s+",
+        " ",
+        (
+            ROOT / "skills" / "gradient-decision-ic-memo" / "SKILL.md"
+        ).read_text(encoding="utf-8").casefold(),
+    )
+    check(
+        "manager-universe rankings" in performance_guidance
+        and "benchmark-relative advancement criteria" in performance_guidance
+        and "benchmark-relative persistence" in performance_guidance
+        and "manager-universe rankings" in memo_guidance
+        and "benchmark-relative persistence" in memo_guidance,
+        "manager performance and IC guidance prohibit peer rankings while preserving benchmark evidence",
+    )
     writing_standards = (
         ROOT / "shared" / "writing-standards.md"
     ).read_text(encoding="utf-8")
@@ -1554,7 +1588,6 @@ def connector_cutover():
             "executive",
             "firm-profile-ownership",
             "regulatory-conflicts-custody",
-            "peer-positioning",
             "fund-operations-service-providers",
             "reported-equity-holdings",
             "monitoring-findings-ddq",
@@ -1567,7 +1600,28 @@ def connector_cutover():
             for section in odd_sections
         )
         and "Visual evidence" not in json.dumps(odd_fixture),
-        "ODD fixture retains exact IDs without forced breaks or generic visuals",
+        "ODD fixture retains peer-free IDs without forced breaks or generic visuals",
+    )
+    odd_text = json.dumps(odd_fixture, ensure_ascii=False).casefold()
+    compare_fixture = json.loads(
+        (FIX / "compare.json").read_text(encoding="utf-8")
+    )
+    compare_text = json.dumps(compare_fixture, ensure_ascii=False).casefold()
+    manager_peer_markers = (
+        "peer positioning",
+        "peer-positioning",
+        "cohort percentile",
+        "relative to peers",
+    )
+    check(
+        all(marker not in odd_text for marker in manager_peer_markers)
+        and all(marker not in compare_text for marker in manager_peer_markers)
+        and not any(
+            block.get("type") == "percentiles"
+            for section in compare_fixture["sections"]
+            for block in section.get("blocks", [])
+        ),
+        "ODD fixtures use absolute ADV facts without manager-peer percentiles",
     )
 
     ddq_validator = next(

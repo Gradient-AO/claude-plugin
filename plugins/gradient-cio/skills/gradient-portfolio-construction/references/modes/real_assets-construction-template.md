@@ -136,10 +136,6 @@ apply its specific repair levers and rerun until clean.
 ### 13. Coverage
 
 - `coverage` block with every expected source and its typed status.
-- Include **Peer allocation intelligence**. When unlicensed, use status
-  `not licensed` and note `Not licensed — Peer allocation context was skipped
-  because peer allocation intelligence is not licensed for this organization. This
-  construction report uses portfolio evidence only.`
 
 ### Appendix — Sources and methods (`num: "A"`)
 

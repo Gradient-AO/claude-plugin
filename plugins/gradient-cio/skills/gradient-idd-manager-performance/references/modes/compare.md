@@ -7,6 +7,9 @@ Compare 2–10 selected manager return series against the separately matched ben
 - Read `references/contracts/idd-methodology.md` before analysis and use only server-returned values.
 - Match each manager to its own benchmark; disclose unavailable or advisory matches.
 - Preserve methods, units, dates, observations, coverage, truncation, and request IDs.
+- Do not publish peer, cohort, or manager-universe rankings or percentiles.
+  Compare each manager only with its matched benchmark and preserve returned
+  benchmark-relative persistence evidence.
 - Do not rank quality, recommend a hire, or turn missing evidence into a neutral result.
 - Label illustrative evidence exactly as required by `references/report-style.md`.
 

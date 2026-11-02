@@ -7,7 +7,7 @@ metadata:
   subject: "total portfolio"
   output: "review"
   menu_order: "10"
-  modules: "portfolio,research,peerIntelligence,strategyLab"
+  modules: "portfolio,research,strategyLab"
   contracts: "portfolio"
   handoffs: "gradient-portfolio-attribution,gradient-decision-ic-memo"
   modes: "brief,comprehensive"
@@ -42,7 +42,7 @@ mode for full, detailed, deep-dive, or board-book requests. Base name:
 Resolve organization, capabilities, portfolio, period, audience, and mode; ask
 at most one question. Use the latest completed month/quarter/year end.
 Portfolio-unlicensed access may use only the illustrative record and makes the
-report Partial. Peer Intelligence is optional and never blocks delivery.
+report Partial.
 
 Before tool selection read `references/module-scope.md`; before exact calls
 read `references/data-map.md#calls-arguments-and-the-fields-used`. Read
@@ -96,11 +96,6 @@ The level sets colour only: write `signal.label` as a plain sentence naming the
 finding ("One asset class near its policy limit"), never "1 on watch".
 Completeness is used versus expected sources for the selected mode and appears
 in the sources appendix, not on the cover.
-
-If `capabilities.peerIntelligence` reports that `peerIntelligence` is unavailable, do not call
-`get_peer_allocation_intelligence`; disclose the optional skip and complete
-from portfolio evidence. Never treat this optional entitlement as a report
-failure.
 
 ## 4. Build, validate, deliver
 

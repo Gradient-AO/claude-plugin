@@ -11,8 +11,8 @@
       "label": "Ready to use, with some skills limited"
     },
     "completeness": {
-      "used": 13,
-      "expected": 14,
+      "used": 6,
+      "expected": 11,
       "state": "partial"
     },
     "cover_facts": [
@@ -30,7 +30,7 @@
     "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
   },
   "executive": {
-    "bottom_line": "GradientCIO is connected and healthy for organization Gradient [S1][S2]. Nineteen of twenty-one skills are ready; the macro briefing has one unavailable view, and the IC memo needs the Portfolio and Strategy Lab modules for live portfolio data [S2]. 13 of 14 connection checks passed; macro regime state returned Not available (HTTP 500) [S3].",
+    "bottom_line": "GradientCIO is connected for organization Gradient [S1][S2]. Four manager-diligence tools are advertised and returned the structured manager_diligence_product_hold response [S3][S4]. 6 of 11 connection checks passed; macro regime state remains unavailable [S3].",
     "tiles": [
       {
         "label": "Skills ready",
@@ -52,7 +52,7 @@
       },
       {
         "label": "Checks passed",
-        "value": "13 / 14",
+        "value": "6 / 11",
         "sub": "1 unavailable check",
         "tone": "good"
       }
@@ -167,7 +167,7 @@
             ],
             [
               "Not licensed",
-              "Portfolio, Strategy Lab, Peer intelligence",
+              "Portfolio, Strategy Lab",
               "S2"
             ],
             [
@@ -182,7 +182,7 @@
             ],
             [
               "Roster capacity",
-              "1 of 3 fund slots used",
+              "Unavailable — manager diligence product hold",
               "S4"
             ]
           ]
@@ -220,11 +220,6 @@
               "name": "Strategy Lab",
               "status": "partial",
               "note": "Conditional; not licensed"
-            },
-            {
-              "name": "Peer intelligence",
-              "status": "unavailable",
-              "note": "Not licensed"
             }
           ]
         }
@@ -232,7 +227,7 @@
     },
     {
       "title": "Connection checks",
-      "kicker": "13 of 14 checks passed against the GradientCIO connection",
+      "kicker": "6 of 11 checks passed against the GradientCIO connection",
       "blocks": [
         {
           "type": "table",
@@ -275,31 +270,31 @@
               "roster",
               "get_diligence_roster_funds",
               {
-                "chip": "Pass",
-                "status": "passed"
+                "chip": "Unavailable",
+                "status": "watch"
               },
               "2026-10-04",
-              ""
+              "manager_diligence_product_hold"
             ],
             [
-              "odd_profile",
-              "get_manager_odd_profile",
+              "fund_monitoring",
+              "get_fund_diligence_monitoring",
               {
-                "chip": "Pass",
-                "status": "passed"
+                "chip": "Unavailable",
+                "status": "watch"
               },
               "2026-10-04",
-              "CRD 999901"
+              "manager_diligence_product_hold"
             ],
             [
-              "monitor_coverage",
-              "get_manager_monitor_evidence",
+              "fund_review",
+              "get_fund_diligence_review",
               {
-                "chip": "Pass",
-                "status": "passed"
+                "chip": "Unavailable",
+                "status": "watch"
               },
-              "2026-10-01",
-              "ADV freshness current"
+              "2026-10-04",
+              "manager_diligence_product_hold"
             ],
             [
               "the_read",
@@ -322,34 +317,14 @@
               ""
             ],
             [
-              "attention",
-              "get_manager_diligence_attention_queue",
-              {
-                "chip": "Pass",
-                "status": "passed"
-              },
-              "2026-10-04",
-              ""
-            ],
-            [
               "findings",
               "get_manager_diligence_findings",
               {
-                "chip": "Pass",
-                "status": "passed"
+                "chip": "Unavailable",
+                "status": "watch"
               },
               "2026-10-04",
-              "Validator advisory on empty list (known)"
-            ],
-            [
-              "events",
-              "get_firm_fund_events",
-              {
-                "chip": "Pass",
-                "status": "passed"
-              },
-              "2026-10-04",
-              "Publication not ready (known)"
+              "manager_diligence_product_hold"
             ],
             [
               "conditions",
@@ -390,16 +365,6 @@
               },
               "2026-10-04",
               "Risk-free fresh; receipt validation unavailable"
-            ],
-            [
-              "watchlist",
-              "get_research_watchlist_changes",
-              {
-                "chip": "Pass",
-                "status": "passed"
-              },
-              "2026-10-04",
-              "No items selected"
             ]
           ],
           "widths": [
@@ -415,9 +380,13 @@
         },
         {
           "type": "findings",
-          "items": [],
-          "empty_title": "No new failures",
-          "empty_text": "All probes completed without a new failure. The CMA baseline returns a fresh risk-free rate."
+          "items": [
+            {
+              "severity": "medium",
+              "title": "Manager diligence is temporarily held",
+              "detail": "All four advertised diligence tools returned unavailable with manager_diligence_product_hold. Do not retry or infer manager evidence."
+            }
+          ]
         }
       ],
       "new_page": false
@@ -431,12 +400,12 @@
           "type": "questions",
           "items": [
             {
-              "q": "Run an ODD report on Ridgeview Global Macro Fund II.",
-              "why": "Your one roster fund; a new Form ADV was filed after its last review."
+              "q": "Review the total portfolio for the latest quarter.",
+              "why": "Portfolio Analytics remains available independently of the manager-diligence hold."
             },
             {
-              "q": "Give me this week's manager monitoring digest, and schedule it for Mondays.",
-              "why": "Keeps the roster under watch without manual checks."
+              "q": "Run portfolio attribution for the latest completed period.",
+              "why": "Uses the available governed portfolio evidence."
             },
             {
               "q": "Build the macro briefing deck for Thursday's committee.",
@@ -489,7 +458,7 @@
             ],
             [
               "S3",
-              "Contract probes (14)",
+              "Contract probes (11)",
               "see table in section 04",
               "2026-10-04",
               {
@@ -499,12 +468,12 @@
             ],
             [
               "S4",
-              "Diligence Roster",
+              "Manager-diligence product hold",
               "get_diligence_roster_funds",
               "2026-10-04",
               {
-                "chip": "passed",
-                "status": "passed"
+                "chip": "unavailable",
+                "status": "unavailable"
               }
             ],
             [
