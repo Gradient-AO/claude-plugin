@@ -4,28 +4,31 @@ description: "Create full or comparative operational due-diligence reports for m
 metadata:
   version: "5.8.0"
   style_contract: "2.3.0"
-  group: "Operational due diligence"
+  group: "Managers"
   subject: "manager or fund"
   output: "ODD report"
   menu_order: "10"
   modules: "firmFundDiligence,research"
   contracts: "odd-evidence"
-  handoffs: "gradient-odd-ddq-reconcile,gradient-odd-manager-monitor,gradient-idd-manager-performance,gradient-decision-ic-memo"
+  handoffs: "gradient-odd-ddq-reconcile,gradient-odd-manager-monitor,gradient-manager-evaluation,gradient-decision-ic-memo"
   modes: "full,compare"
+  status: "paused"
   summary: "Produce sourced full or comparative operational due diligence reports."
 ---
 
 # Gradient ODD report
 
-## Current product hold
+Before using any expected return, excess return, or Sharpe ratio, read `${CLAUDE_PLUGIN_ROOT}/shared/contracts/expected-return-sources.md` and apply its return-source, weight-basis, comparison, and risk-free-rate labels.
 
-Manager diligence is temporarily held. The only advertised tools are
-`get_diligence_roster_funds`, `get_fund_diligence_monitoring`,
-`get_fund_diligence_review`, and `get_manager_diligence_findings`; each must
-return `status: "unavailable"` with
-`unavailable_reason: "manager_diligence_product_hold"`. Do not retry, call
-retired diligence tools, or build a report from inferred evidence. Return the
-typed unavailable result and direct the user to `gradient-setup`.
+
+## Paused — operational diligence on hold
+
+Manager diligence is temporarily held. Roster, monitoring, review, and
+findings tools are not in the client tool list. Do not call them. Do not retry.
+`get_gradient_capabilities` reports `manager_diligence_product_hold`.
+Do not build a report from inferred evidence. Return the typed unavailable result,
+mark diligence `Not assessed`, and direct the user to
+`gradient-setup`.
 
 Produce a sourced operational due-diligence report in exactly one mode:
 
@@ -54,14 +57,13 @@ collecting evidence.
 - Every number comes from Gradient evidence, a user document, or an explicitly
   governed calculation and carries `[S#]`.
 - Form ADV is adviser-reported. Compare user-selected named managers only on
-  absolute filed facts; manager peer cohorts, percentiles, rankings, and
-  "relative to peers" claims are prohibited. Firm Form 13F is not fund holdings.
+  absolute filed facts. Firm Form 13F is not fund holdings.
 - Preserve validation, coverage, truncation, typed reasons, as-of dates,
   provenance, and digests. Missing evidence is never zero.
 - Server-derived signals are evidence inputs, not report-ready conclusions.
 - Never recommend a hire, fire, termination, redemption, or allocation.
 - Writes are post-delivery, preview-first, and explicitly confirmed.
-- Read `references/contracts/odd-evidence.md` when consuming a validated
+- Read `${CLAUDE_PLUGIN_ROOT}/shared/contracts/odd-evidence.md` when consuming a validated
   `gradient-idd-odd-ic-handoff/v1` object; keep investment evidence separate
   from operational findings.
 
@@ -82,5 +84,5 @@ results. Validation, QA, or fact-check failures block delivery.
 
 - Roster triage or recurring monitoring → `gradient-odd-manager-monitor`.
 - Supplied manager assertions or DDQ conflicts → `gradient-odd-ddq-reconcile`.
-- Return, benchmark, or track-record evidence → `gradient-idd-manager-performance`.
+- Return, benchmark, or track-record evidence → `gradient-manager-evaluation`.
 - A manager decision paper → `gradient-decision-ic-memo`.

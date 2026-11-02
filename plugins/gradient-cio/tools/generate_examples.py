@@ -26,26 +26,26 @@ ZIP_TIME = (2020, 1, 1, 0, 0, 0)
 
 DIRECT_SOURCES = {
     "gradient-odd-ddq-reconcile": "ddq.json",
-    "gradient-idd-manager-performance-single": "idd-manager-performance-single.json",
-    "gradient-idd-manager-performance-compare": "idd-manager-performance-compare.json",
-    "gradient-idd-manager-performance-robustness": "idd-manager-performance-robustness.json",
-    "gradient-idd-manager-performance-shortlist": "idd-shortlist.json",
-    "gradient-idd-manager-portfolio-fit": "idd-portfolio-fit.json",
+    "gradient-manager-evaluation-single": "idd-manager-performance-single.json",
+    "gradient-manager-evaluation-compare": "idd-manager-performance-compare.json",
+    "gradient-manager-evaluation-fit": "idd-portfolio-fit.json",
     "gradient-idd-private-markets-pme": "idd-private-markets-pme.json",
-    "gradient-portfolio-construction-fixed-income": "construction-fixed-income.json",
-    "gradient-portfolio-construction-global-public-equity": "construction-global-public-equity.json",
+    "gradient-allocation-study-total-plan": "allocation-total-plan.json",
+    "gradient-allocation-study-fixed-income": "construction-fixed-income.json",
+    "gradient-allocation-study-global-public-equity": "construction-global-public-equity.json",
     "gradient-decision-ic-memo": "ic-memo.json",
     "gradient-odd-report-compare": "compare.json",
     "gradient-odd-manager-monitor": "digest.json",
     "gradient-odd-manager-monitor-triage": "triage.json",
-    "gradient-portfolio-construction-marketable-alternatives": "construction-marketable-alternatives.json",
+    "gradient-allocation-study-marketable-alternatives": "construction-marketable-alternatives.json",
+    "gradient-liquidity-pacing": "liquidity-pacing.json",
     "gradient-odd-report": "odd.json",
     "gradient-portfolio-attribution": "portfolio-attribution-report.json",
     "gradient-portfolio-attribution-lanes-fallback": "attribution-compare-fallback.json",
     "gradient-portfolio-attribution-lanes-three-lane": "attribution-compare-three-lane.json",
     "gradient-portfolio-review": "portfolio-comprehensive.json",
-    "gradient-portfolio-construction-private-markets": "construction-private-markets.json",
-    "gradient-portfolio-construction-real-assets": "construction-real-assets.json",
+    "gradient-allocation-study-private-markets": "construction-private-markets.json",
+    "gradient-allocation-study-real-assets": "construction-real-assets.json",
     "gradient-setup": "setup.json",
 }
 
@@ -65,10 +65,10 @@ GIPS_SOURCES = {
 
 def skill_for_artifact(artifact: str) -> str:
     """Resolve a mode-specific example filename to its installed skill."""
-    if artifact.startswith("gradient-portfolio-construction-"):
-        return "gradient-portfolio-construction"
-    if artifact.startswith("gradient-idd-manager-performance-"):
-        return "gradient-idd-manager-performance"
+    if artifact.startswith("gradient-allocation-study-"):
+        return "gradient-allocation-study"
+    if artifact.startswith("gradient-manager-evaluation-"):
+        return "gradient-manager-evaluation"
     if artifact.startswith("gradient-odd-report-"):
         return "gradient-odd-report"
     if artifact.startswith("gradient-odd-manager-monitor-"):
@@ -83,9 +83,9 @@ def budget_for_artifact(artifact: str) -> Path:
     if artifact.startswith("internal-gips-review-"):
         return ROOT / "internal" / "gips-evidence-review" / "references" / "layout-budget.json"
     mode_budgets = {
-        "gradient-idd-manager-performance-shortlist": (
-            "gradient-idd-manager-performance",
-            "references/modes/shortlist-layout-budget.json",
+        "gradient-manager-evaluation-fit": (
+            "gradient-manager-evaluation",
+            "references/fit-layout-budget.json",
         ),
         "gradient-odd-report-compare": (
             "gradient-odd-report",

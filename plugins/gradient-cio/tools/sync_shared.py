@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Package canonical shared files and release metadata with every skill.
+"""Package release metadata with every skill.
 
-Run after a plugin version bump or any change to a file listed in FILES:
+Common report files live once at plugin-level ``shared/`` and are resolved
+through ``CLAUDE_PLUGIN_ROOT``. Run after a plugin version bump:
     python tools/sync_shared.py          # sync
     python tools/sync_shared.py --check  # exit 1 if any copy differs (use before packaging)
 """
@@ -10,52 +11,11 @@ import re
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 PLUGIN_RELEASE_REFERENCE = pathlib.Path("references/plugin-release.json")
-FILES = {"shared/gradient_report.py": "scripts/gradient_report.py",
-         "shared/gradient_pptx.py": "scripts/gradient_pptx.py",
-         "shared/report_theme.py": "scripts/report_theme.py",
-         "shared/report_layout.py": "scripts/report_layout.py",
-         "shared/render.py": "scripts/render.py",
-         "shared/compose_report.py": "scripts/compose_report.py",
-         "shared/check_layout.py": "scripts/check_layout.py",
-         "shared/qa_report.py": "scripts/qa_report.py",
-         "shared/analysis_quality.py": "scripts/analysis_quality.py",
-         "shared/validate_handoff.py": "scripts/validate_handoff.py",
-         "tools/layout_budget_schema.py": "scripts/layout_budget_schema.py",
-         "tools/report_constants.py": "scripts/report_constants.py",
-         "tools/report_json_validator.py": "scripts/report_json_validator.py",
-         "tools/report_vocab.py": "scripts/report_vocab.py",
-         "tools/construction_report_validator.py": "scripts/construction_report_validator.py",
-         "tools/idd_report_validator.py": "scripts/idd_report_validator.py",
-         "skills/gradient-setup/references/public-tools.json": "references/public-tools.json",
-         "shared/report-style.md": "references/report-style.md",
-         "shared/writing-standards.md": "references/writing-standards.md",
-         "shared/chart-data.md": "references/chart-data.md",
-         "shared/module-scope.md": "references/module-scope.md"}
-
-TREES = {
-    "assets/fonts": "assets/fonts",
-    "shared/contracts": "references/contracts",
-}
-INTERNAL_RENDER_TARGETS = (
-    ROOT / "internal" / "gips-evidence-review",
-)
-INTERNAL_SCRIPT_FILES = {
-    "scripts/gradient_report.py",
-    "scripts/gradient_pptx.py",
-    "scripts/report_theme.py",
-    "scripts/report_layout.py",
-    "scripts/render.py",
-    "scripts/compose_report.py",
-    "scripts/check_layout.py",
-    "scripts/qa_report.py",
-    "scripts/analysis_quality.py",
-    "scripts/validate_handoff.py",
-    "scripts/layout_budget_schema.py",
-}
-INTERNAL_REFERENCE_FILES = {
-    "references/module-scope.md",
-    "references/report-style.md",
-}
+FILES = {}
+TREES = {}
+INTERNAL_RENDER_TARGETS = ()
+INTERNAL_SCRIPT_FILES = set()
+INTERNAL_REFERENCE_FILES = set()
 
 CHAT_DELIVERY = re.compile(r"^\s+delivery:\s*chat\s*$", re.MULTILINE)
 
@@ -65,12 +25,8 @@ def is_chat_only(skill):
     return bool(CHAT_DELIVERY.search((skill / "SKILL.md").read_text(encoding="utf-8")))
 
 def chat_shared_files(skill):
-    """Yield shared references needed by chat skills with module boundaries."""
-    text = (skill / "SKILL.md").read_text(encoding="utf-8")
-    match = re.search(r'^\s+modules:\s*["\']?([^"\'\n]+)', text, re.MULTILINE)
-    if match is None or match.group(1).strip() == "none":
-        return ()
-    return (("shared/module-scope.md", "references/module-scope.md"),)
+    """Shared references are no longer copied into skill folders."""
+    return ()
 
 
 TEXT_SUFFIXES = {".py", ".md", ".json", ".txt"}

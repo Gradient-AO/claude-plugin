@@ -1,0 +1,21 @@
+{
+ "cma": "cma_live.json",
+ "regimes": "regimes_q3_2026.json",
+ "format": "currency_lens",
+ "slug": "60_40_currency_gbp",
+ "portfolios": [
+  "lib:global_60_40"
+ ],
+ "homes": [
+  "USD",
+  "GBP"
+ ],
+ "headline": "For a sterling investor, Gradient\u2019s assumptions imply a near-full dollar hedge is best",
+ "takeaway": "Why: Gradient\u2019s dollar and sterling cash rates are almost equal (3.21% and 3.16%), so hedging gives up almost no carry. Meanwhile the dollar is assumed to lose 0.91% a year against an unhedged sterling investor, with 6.75% volatility. Hedging removes both, so the implied ratio keeps rising toward a full hedge.",
+ "focus_home": "GBP",
+ "highlight_factors": [
+  "fx",
+  "USD",
+  "GBP"
+ ]
+}

@@ -6,6 +6,10 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+PLUGIN_SHARED = Path(__file__).resolve().parents[3] / "shared"
+if str(PLUGIN_SHARED) not in sys.path:
+    sys.path.insert(0, str(PLUGIN_SHARED))
+
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 if hasattr(sys.stderr, "reconfigure"):

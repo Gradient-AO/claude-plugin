@@ -1,8 +1,9 @@
 # Diligence roster triage mode
 
-This mode is unavailable while `manager_diligence_product_hold` is returned.
-Call only the advertised held reads, preserve the structured unavailable
-payload, and stop without producing a triage report.
+This mode is unavailable while capabilities report
+`manager_diligence_product_hold`. Do not call roster, monitoring, review, or
+findings tools. Mark diligence `Not assessed` and stop without producing a
+triage report.
 
 Use when no operational-diligence subject is named or when two or more roster
 funds need prioritization. Deliver **"<Org> - Diligence Roster Triage
@@ -16,7 +17,6 @@ or firm.
 - Form ADV is adviser-reported. A filing or disclosure is a review trigger, not
   a conclusion.
 - Triage levels use absolute ADV facts, dated changes, and governed attention
-  reasons. Manager peer/cohort percentile movement is not a triage input.
 - Missing or unreadable queue evidence is insufficient, never clear or zero.
 - Triage prioritizes evidence collection; it does not make a hire, fire,
   redemption, termination, or allocation recommendation.
@@ -28,7 +28,7 @@ Resolve the organization and diligence roster. Ask only when multiple
 organizations remain. An empty roster is reported and roster additions are
 offered only on request.
 
-Call `get_fund_diligence_monitoring` for the canonical roster fund IDs. Then
+Call `hidden manager-diligence monitoring read` for the canonical roster fund IDs. Then
 stop when it returns the structured hold payload. Do not call the retired
 attention-queue views or attempt to reconstruct them locally.
 
@@ -72,7 +72,7 @@ Executive summary contains a sourced flagged-funds `table`. Roster detail
 contains the sourced ranked roster `table`. The appendix contains the source
 `table`. Every action row carries an `[S#]` source tag.
 
-Read `references/report-style.md` and `references/writing-standards.md` only
+Read `${CLAUDE_PLUGIN_ROOT}/shared/report-style.md` and `${CLAUDE_PLUGIN_ROOT}/shared/writing-standards.md` only
 when drafting or rendering. Keep typed gaps and the distinction between triage
 levels and full-review conclusions.
 
@@ -80,7 +80,7 @@ Validate and render the same report source:
 
 ```text
 python <skill>/scripts/validate_monitor_digest.py report.json
-python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Org> - Diligence Roster Triage <date>" --budget <skill>/references/layout-budget-triage.json
+python "${CLAUDE_PLUGIN_ROOT}/shared/qa_report.py" report.json --format <pdf|pptx|both> --out "<Org> - Diligence Roster Triage <date>" --budget <skill>/references/layout-budget-triage.json
 ```
 
 PDF is default; explicit slide wording selects PPTX; `both` or `board pack`

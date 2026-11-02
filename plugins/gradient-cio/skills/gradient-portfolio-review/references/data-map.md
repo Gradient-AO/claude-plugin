@@ -10,20 +10,14 @@ Read `module-scope.md` first; every saved-portfolio call in this map is Portfoli
 |---|---|---|
 | `get_gradient_capabilities` | `organization_id` for the unscoped summary | `effective_capabilities.portfolio`; per Portfolio Analytics tool in `tools[]`: `name`, `available`, `access_mode` (`live` / `illustrative`), `availability_reason`, `availability_explanation` |
 | `list_portfolios` | `organization_id` | `portfolios[].{portfolio_id, portfolio_name, base_currency, record_kind (user / example), canonical_default}`, `provenance.data_scope.{kind, label}` |
-| `list_assumption_sets` | `organization_id`; select the active/default set using returned fields | Assumption-set identity, release/version, horizon and currency needed by forward chart context; preserve the returned selection basis |
 | `get_portfolio_structure` | `view: allocation_tree`, `portfolio_id`, `max_depth` 3, `node_limit` 100 | Portfolio record kind, purpose, policy model version/effective date/last-change date; canonical factor mappings and Gradient proxy flags; `nodes[].{allocation_id, parent_id, allocation_name, asset_classification, depth, is_leaf, target_weight, target_weight_total_portfolio, target_weight_total_portfolio_basis, target_weight_total_portfolio_coverage, actual_weight, lower_limit, upper_limit, allocation_policy}`; `coverage.{status, returned_count, truncated, missing_reasons}` |
 | `get_portfolio_structure` | `view: ownership_weights`, `portfolio_id` | `by_owner[].weights[]` (optional) |
 | `get_portfolio_historical_returns` | `portfolio_id`, `end_date` = period end, `limit: 100`; request `sections: [standard_periods, calendar_years, cumulative_growth, risk_metrics, drawdown_series, rolling, benchmark_relative]`; request `points` separately only when needed | Each projected section as returned, including policy-benchmark identity, coverage, partial-period flags, the anchored portfolio/benchmark growth rows, calendar-year benchmark/excess values, monthly drawdowns, rolling 12M/36M return/volatility/excess, display bases and `record_kind` |
 | `check_portfolio_policy` | `portfolio_id` | Governed-only `overall_status`; `allocation_bands`; `return_objective`; `risk_limits.{observation_basis, rows, coverage}`; `liquidity.{buckets, locked_share, unfunded_commitment_ratio, coverage}`; `concentration.groups`; comparison semantics, methodology and provenance |
 | `get_portfolio_attribution` | `portfolio_id`, `benchmark_role: policy`, `parent_allocation_id: root`, month-end `start_date` / `end_date`, `sections: [summary, segments, diagnostics]` | Coverage and typed missing reasons; realized Brinson-Fachler allocation, selection and interaction; symmetric-Carino linked summary; segment effects; residual and diagnostics; period, basis, currency, formula version and tolerance |
-| `get_return_series` | `series_kind: benchmark`, benchmark `series_id`, `trailing_months` / `start_date` / `end_date` | Benchmark-only `series.{name, record_kind}`, `availability.{status, reason}`, `coverage.{source_point_count, source_start_date, source_end_date, selected_*}`, `display.return_unit` (`decimal_fraction`), `points[].{period_date, return}`. Portfolio returns come only from `get_portfolio_historical_returns`. |
 | `get_benchmarks` | `view: catalog`, `benchmark_id` (preferred) or `limit` + `cursor` | Benchmark identity and classes plus real-market versus simulated/derived origin, derivation metadata, validation status, currency exposures, license tier, `total_count`, and `next_cursor` |
 | `get_portfolio_exposure` | `portfolio_id`, a returned display name or snake_case `asset_classification` alias when filtering, `limit` 100, `cursor` = `next_cursor` until `has_more` is false; add only needed `include` from `factor_currency_exposure`, `risk_contribution`, `commitment_pacing`, `liquidity_scorecard`, `lookthrough_13f` | `as_of_date`, `exposures[].{commitment_name, manager_name, fund_name, asset_classification, currency, as_of_date, value_basis, market_value_base, nav_base, null_reasons, commitment_amount, unfunded_base}`, page-scoped `page_totals`, filtered `portfolio_totals`, `aggregates_by_asset_classification`, and requested included sections; chart-style items retain `chart_id`, `status`, `basis`, payload, `render_hint`, and truncation. Use governed fixed-income metrics only from complete `portfolio_totals` or the Fixed Income aggregate |
-| `get_macro_signals` | `view: roster_macro_exposure`, `portfolio_id` (required) | As returned; optional context only |
-| `get_the_read` | `visuals: none` | `overview.headline`, `publication.{resolved_as_of_date, freshness, fallback_applied, fallback_reason}`, `coverage.status`; numbers only from `read.facts`, never from prose |
 | `get_macro_signals` | `view: gradient_signal` | GRIP `sources.grip.current`, availability, index degradation and outlook reasons; context only, never a forecast |
-| `get_macro_conditions` | `view: indicators`, `seriesIds: [T10Y2Y, T10Y3M]`, `startDate` / `endDate` through the review period | `dated_series[].{series_id,label,unit,coverage_status,missing_reason,observations[].{date,value}}` as returned. Do not derive either spread from separate yield observations |
-| `get_manager_diligence_findings` | `view: open` for every resolved manager or fund represented in the portfolio | During the product hold, preserve the structured unavailable payload and mark manager diligence `Not assessed` |
 | `get_capital_market_assumptions` | `view: baseline`, `collection: primary_factors`, `base_currency` = portfolio currency; page to `total_count` | Assumption/release identity, horizon, return/currency/cash basis, expected return and volatility with uncertainty, factor currency composition/USD share, currency-factor semantics, private-market desmoothing comparison, validation and field-level evidence |
 | `get_capital_market_assumptions` | `view: correlations`, selected factor IDs, `delivery: full_matrix`, `matrix_format: dense` | Complete bounded matrix, estimation window/frequency/shrinkage/date, key-correlation uncertainty, anomalies, validation and coverage |
 | `get_capital_market_assumptions` | `view: regime`, active assumption context | Blending formula, persistence, effective weights, correlation application/special overrides, current regional probabilities/coverage and endorsed stresses |
@@ -60,11 +54,22 @@ When `commitments-cashflow.metrics.cashflow_breakeven` is returned, cite its gov
 period and value without recomputing it from rows. Do not call a positive single-period flow breakeven, and
 do not describe target-band Portfolio Drift because `commitment_pacing` does not return it.
 For saved-portfolio forward assumptions, use `check_portfolio_policy.return_objective`,
-`list_assumption_sets` and `get_capital_market_assumptions`. When canonical
 factor mappings and supplied weights are available, request `view:
 portfolio_analytics`; do not derive portfolio statistics by weighting CMA rows.
 Strategy Lab expected-statistics remains available only through the separately
 selected-series session path below.
+
+Expected-return provenance is fixed until explicit fields ship:
+`check_portfolio_policy.return_objective` is `user × policy_targets`;
+`get_portfolio_ex_ante_attribution` is `user × current_actual`; and CMA
+`portfolio_analytics` is `cma_implied × supplied weights`. When user and CMA
+values both use policy targets, show them by sleeve with a signed bp gap and a
+one-line cited explanation.
+
+If an allocation limit equals either the observed current actual weight or the
+policy target, emit `limit basis unverified`, not Breach. When
+`diagnostics.entity_return_reconciliation` exceeds 25 bp, show the historical
+policy benchmark entity and attribution linked segment composite separately.
 
 ### Strategy Lab supplement
 
@@ -75,13 +80,8 @@ result contract:
 
 | Need | Tool | Fields used |
 |---|---|---|
-| Simulated return and tail risk | `run_strategy_lab_simulation` | `mean_return`, `volatility`, `sharpe_ratio`, `max_drawdown`, `var_95`, `cvar_95`, terminal distribution, path count, horizon and stress basis |
-| Forward series statistics | `run_strategy_lab_expected_statistics` | returned expected-statistics rows, covariance and cross-sectional statistics |
-| Benchmark-relative diagnostics | `run_strategy_lab_relative_return` | active return, tracking error, information ratio and benchmark-relative evidence |
-| Date-window robustness | `run_strategy_lab_date_window_robustness` | window-level return, volatility, drawdown and reliability evidence |
 
 Label every result **Selected-series sandbox — not saved-portfolio analytics**. Do not pass a Portfolio
-Analytics `portfolio_id` to these tools. Do not substitute `run_strategy_lab_relative_return` for Brinson
 attribution. If no return series are selected, report `Not available — no Strategy Lab return series selected`
 without downgrading the Portfolio Analytics core.
 

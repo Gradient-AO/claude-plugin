@@ -7,9 +7,8 @@ covers one subject and is normally 6–8 PDF pages.
 
 - Every number comes from Gradient evidence, a user document, or an explicitly
   governed calculation and carries `[S#]`.
-- Form ADV is adviser-reported. Use its absolute filed facts only; manager peer
-  cohorts, percentiles, rankings, and "relative to peers" claims are
-  prohibited. Firm Form 13F is not fund holdings.
+- Form ADV is adviser-reported. Use its absolute filed facts only. Firm Form
+  13F is not fund holdings.
 - Absence, truncation, validation failure, and subject-resolution failure are
   disclosed with their typed reasons, never interpreted as zero.
 - Server-derived evidence signals are inputs, not report-ready prose or the
@@ -31,7 +30,7 @@ as a separate command.
 
 If a `gradient-idd-*` skill supplied a
 `gradient-idd-odd-ic-handoff/v1` object, read
-`references/contracts/odd-evidence.md` and keep its return and benchmark
+`${CLAUDE_PLUGIN_ROOT}/shared/contracts/odd-evidence.md` and keep its return and benchmark
 evidence as investment evidence, separate from ODD findings.
 
 ## 2. Collect full-report evidence
@@ -67,7 +66,7 @@ the regulatory and conflicts section.
 
 Read
 `references/odd-execution-contract.md#full-report-layout-and-delivery`, then
-`references/report-style.md`, `references/writing-standards.md`, and
+`${CLAUDE_PLUGIN_ROOT}/shared/report-style.md`, `${CLAUDE_PLUGIN_ROOT}/shared/writing-standards.md`, and
 `references/analysis-examples.md` only when drafting or rendering. Set
 `meta.mode` to `full`, keep all fixed section IDs and governed visual slots,
 use no forced page breaks, and show specific typed unavailable blocks in place
@@ -77,7 +76,7 @@ Validate and render the same report source:
 
 ```text
 python <skill>/scripts/validate_odd_report.py report.json
-python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - ODD Report" --budget <skill>/references/layout-budget.json
+python "${CLAUDE_PLUGIN_ROOT}/shared/qa_report.py" report.json --format <pdf|pptx|both> --out "<Subject> - ODD Report" --budget <skill>/references/layout-budget.json
 ```
 
 PDF is default; explicit slide wording selects PPTX; `both` or `board pack`
@@ -90,7 +89,7 @@ completeness, top concern, open-item count, and files.
 - Reconcile supplied manager assertions → `gradient-odd-ddq-reconcile`.
 - Compare candidates' operational and regulatory evidence → this skill's
   `compare` mode.
-- Return or benchmark evidence → `gradient-idd-manager-performance`.
+- Return or benchmark evidence → `gradient-manager-evaluation`.
 - Ongoing change tracking after the review → `gradient-odd-manager-monitor`.
 - Feed the executive and follow-up sections into a decision memo →
   `gradient-decision-ic-memo`.

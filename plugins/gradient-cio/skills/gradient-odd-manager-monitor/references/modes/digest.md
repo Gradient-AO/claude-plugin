@@ -10,7 +10,6 @@ PDF pages, with attention items first.
   as-of. Empty or unpublished evidence is typed unavailable, never none or zero.
 - Form ADV is adviser-reported. A new filing is a review trigger, not a finding.
 - Alerts use absolute filed ADV facts and dated changes, never manager
-  peer/cohort percentile moves or relative standing.
 - Only supported, evidence-triggered actions may appear. No hire, fire,
   redemption, termination, or allocation recommendation.
 - Do not create findings, log reviews, change monitoring, or schedule work
@@ -43,7 +42,7 @@ allowed action list. Every recommended action cites the triggering `[S#]`.
 ## 3. Build and deliver
 
 Read `references/monitoring-contract.md#report-and-delivery`, then
-`references/report-style.md`, `references/writing-standards.md`, and
+`${CLAUDE_PLUGIN_ROOT}/shared/report-style.md`, `${CLAUDE_PLUGIN_ROOT}/shared/writing-standards.md`, and
 `references/analysis-examples.md` only while drafting or rendering. Set
 `meta.mode` to `digest`. Keep the exact active- or quiet-week section grammar,
 required tiles, governed visual slots, visual-first analytical sections,
@@ -54,7 +53,7 @@ Validate and render the same report source:
 
 ```text
 python <skill>/scripts/validate_monitor_digest.py report.json
-python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Org> - Manager Monitoring Digest <date>" --budget <skill>/references/layout-budget.json
+python "${CLAUDE_PLUGIN_ROOT}/shared/qa_report.py" report.json --format <pdf|pptx|both> --out "<Org> - Manager Monitoring Digest <date>" --budget <skill>/references/layout-budget.json
 ```
 
 PDF is default; explicit slide wording selects PPTX; `both` or `board pack`

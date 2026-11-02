@@ -55,10 +55,9 @@ rejected record.
   create, update, or leave unchanged the exact `EntityReturn` observation shown
   in the preview.
 
-After commit, verify through the exact import run and session plus a governed
-return read such as `get_portfolio_historical_returns` for portfolio entities
-or `get_return_series` only when that public read supports the imported entity
-kind. Mark any entity return not exposed by a governed read as unverified.
+After commit, verify through the exact import run and session plus
+`get_portfolio_historical_returns` for portfolio entities. Mark any imported
+return not exposed by that governed read as unverified.
 
 ## `benchmark_definition`
 

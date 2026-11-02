@@ -3,7 +3,7 @@ name: gradient-portfolio-review
 description: "Create a portfolio monitoring review for a board or committee. Triggers: 'review our total portfolio', 'prepare a quarterly portfolio review', 'monitor portfolio risks'. For a decision memo use gradient-decision-ic-memo."
 metadata:
   style_contract: "2.3.0"
-  group: "Portfolio Analytics"
+  group: "Portfolio reports"
   subject: "total portfolio"
   output: "review"
   menu_order: "10"
@@ -11,10 +11,14 @@ metadata:
   contracts: "portfolio"
   handoffs: "gradient-portfolio-attribution,gradient-decision-ic-memo"
   modes: "brief,comprehensive"
+  status: "core"
   summary: "Review portfolio performance, policy, exposures, risk and liquidity."
 ---
 
 # Portfolio review
+
+Before using any expected return, excess return, or Sharpe ratio, read `${CLAUDE_PLUGIN_ROOT}/shared/contracts/expected-return-sources.md` and apply its return-source, weight-basis, comparison, and risk-free-rate labels.
+
 
 Use for periodic total-portfolio monitoring without a requested trade, vote, or
 recommendation. Default to a 6–8 page brief; use the 15–20 page comprehensive
@@ -44,9 +48,9 @@ at most one question. Use the latest completed month/quarter/year end.
 Portfolio-unlicensed access may use only the illustrative record and makes the
 report Partial.
 
-Before tool selection read `references/module-scope.md`; before exact calls
+Before tool selection read `${CLAUDE_PLUGIN_ROOT}/shared/module-scope.md`; before exact calls
 read `references/data-map.md#calls-arguments-and-the-fields-used`. Read
-`references/contracts/mcp-evidence-and-analytics.md` before collecting any
+`${CLAUDE_PLUGIN_ROOT}/shared/contracts/mcp-evidence-and-analytics.md` before collecting any
 Portfolio Analytics response and apply its field-level evidence, publication,
 bulk-matrix, server-analytics, identity, and compatibility rules.
 
@@ -63,15 +67,13 @@ Use `get_capital_market_assumptions` `view: "portfolio_analytics"` for any
 mapped supplied-weight forward portfolio statistics; never weight CMA rows or
 calculate covariance risk or risk contribution locally.
 
-For chart-style evidence, read `references/chart-data.md` just before use:
+For chart-style evidence, read `${CLAUDE_PLUGIN_ROOT}/shared/chart-data.md` just before use:
 request only the needed `get_portfolio_exposure.include` values, preserve every
 returned chart item, `render_hint`, and chart ID unchanged, and disclose
 `truncated: true`.
 
 For comprehensive collection and optional selected-series Strategy Lab calls,
 read `references/data-map.md#comprehensive-mode-collection`. Only supported
-supplements such as `run_strategy_lab_relative_return` and
-`run_strategy_lab_date_window_robustness` may appear, labeled selected-series
 sandbox. They never replace saved-portfolio attribution.
 
 Retry only once when `retryable: true`. Record error code/request ID and
@@ -81,13 +83,21 @@ continue. Entitlement errors are Not licensed, not outages.
 
 Use returned performance, governed policy status, exposure aggregates,
 fixed-income aggregates, attribution, liquidity, and forward-assumption bases
-without local recomputation. Read `references/writing-standards.md` and
+without local recomputation. Read `${CLAUDE_PLUGIN_ROOT}/shared/writing-standards.md` and
 `references/analysis-examples.md` only before drafting analysis.
 
-Treat a return-objective breach from
-`check_portfolio_policy.return_objective` as a forward assumption: it compares
-target-weighted expected return with the governed objective and is not a
-realized-return breach.
+Title `check_portfolio_policy.return_objective` **Return objective on user
+assumptions** and label it `return_source=user`,
+`weight_basis=policy_targets`. Add a separate CMA-basis line from
+`get_capital_market_assumptions` `portfolio_analytics` on policy targets.
+
+If a policy limit numerically equals the current actual weight or policy target,
+do not call it a breach. Label the row **limit basis unverified** until a
+distinct governed limit basis is returned.
+
+When historical returns and attribution provide different benchmark returns for
+the same period, show both as **policy benchmark entity** and **linked segment
+composite**. Never select one silently.
 
 Signal: breach for any policy Breach; otherwise watch for policy Watch or
 underperformance over both 1Y and 3Y; otherwise satisfactory; insufficient
@@ -104,14 +114,14 @@ Brief mode follows its exact Summary, Performance, Allocation, Look-through,
 Risk, Outlook, Coverage, and applicable Appendix sequence. Comprehensive mode
 follows its exact comprehensive order. Keep unavailable sections.
 
-Read `references/report-style.md` only before JSON construction/rendering.
+Read `${CLAUDE_PLUGIN_ROOT}/shared/report-style.md` only before JSON construction/rendering.
 Set `meta.mode` to `brief` or `comprehensive`; do not add a root
 `review_mode`. Then run these commands in order against the same JSON.
 Fix validation failures before running QA:
 
 ```text
 python <skill>/scripts/validate_review.py report.json
-python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Portfolio> - Portfolio Review <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json
+python "${CLAUDE_PLUGIN_ROOT}/shared/qa_report.py" report.json --format <pdf|pptx|both> --out "<Portfolio> - Portfolio Review <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json
 ```
 
 PDF is default; explicit slide wording selects PPTX; `both`/`board pack`

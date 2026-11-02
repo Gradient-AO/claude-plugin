@@ -4,7 +4,7 @@ description: "Create a monitoring digest or triage a diligence roster. Triggers:
 metadata:
   version: "5.8.0"
   style_contract: "2.3.0"
-  group: "Operational due diligence"
+  group: "Managers"
   subject: "manager roster"
   output: "monitoring digest or triage report"
   menu_order: "30"
@@ -12,20 +12,23 @@ metadata:
   contracts: "odd-evidence"
   handoffs: "gradient-odd-report,gradient-odd-ddq-reconcile"
   modes: "digest,triage"
+  status: "paused"
   summary: "Monitor manager changes and triage diligence rosters for focused follow-up."
 ---
 
 # Manager monitoring and triage
 
-## Current product hold
+Before using any expected return, excess return, or Sharpe ratio, read `${CLAUDE_PLUGIN_ROOT}/shared/contracts/expected-return-sources.md` and apply its return-source, weight-basis, comparison, and risk-free-rate labels.
 
-Manager diligence is temporarily held. The only advertised tools are
-`get_diligence_roster_funds`, `get_fund_diligence_monitoring`,
-`get_fund_diligence_review`, and `get_manager_diligence_findings`; each must
-return `status: "unavailable"` with
-`unavailable_reason: "manager_diligence_product_hold"`. Do not retry, call
-retired diligence tools, produce a digest/triage report, or schedule monitoring.
-Return the typed unavailable result and direct the user to `gradient-setup`.
+
+## Paused — operational diligence on hold
+
+Manager diligence is temporarily held. Roster, monitoring, review, and
+findings tools are not in the client tool list. Do not call them.
+`get_gradient_capabilities` reports `manager_diligence_product_hold`. Do not
+produce a digest or triage from inferred evidence, and do not schedule
+monitoring. Mark diligence `Not assessed` and direct the user to
+`gradient-setup`.
 
 Produce one organization-wide report in exactly one mode:
 
@@ -58,7 +61,6 @@ collecting evidence.
   finding.
 - Alerts and severity come from absolute Form ADV facts, dated filed changes,
   findings, and governed monitoring events. Never create an alert from a
-  manager peer/cohort percentile or percentile movement.
 - Preserve canonical IDs, governed review status, evidence status, reasons,
   validation, dates, pagination, and digests.
 - Only supported, evidence-triggered actions may appear. No hire, fire,

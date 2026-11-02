@@ -1,0 +1,12 @@
+{"as_of":"2026-10-12","release":{"version":"Q3-2026-policy-v2.4","as_of":"2026-10-12"},"comparability":{"horizon_years":10,"return_basis":"excess_over_local_rf","compounding":"arithmetic","currency_basis":"USD"},
+"items":[
+{"factor_id":1,"name":"Global Public Equity DM","short":"DM equity","excess_return_effective":0.057867090564562886,"volatility_effective":0.16225050594277773},
+{"factor_id":2,"name":"Global Growth DM","short":"DM growth","excess_return_effective":0.04230134674867203,"volatility_effective":0.20486900936888902},
+{"factor_id":3,"name":"Global Value DM","short":"DM value","excess_return_effective":0.06283090718256171,"volatility_effective":0.17674114980429578},
+{"factor_id":4,"name":"Global Large Cap DM","short":"DM large cap","excess_return_effective":0.045816182019936924,"volatility_effective":0.13561389196072193},
+{"factor_id":5,"name":"Global Small Cap DM","short":"DM small cap","excess_return_effective":0.05962594864819724,"volatility_effective":0.19177471900197932},
+{"factor_id":6,"name":"Global Public Equity EM","short":"EM equity","excess_return_effective":0.07432554537645522,"volatility_effective":0.21489326142984397},
+{"factor_id":7,"name":"Global Aggregate Bonds","short":"Global agg bonds","excess_return_effective":0.021054249794819097,"volatility_effective":0.05619945861116504},
+{"factor_id":8,"name":"Global Government Bonds","short":"Global govt bonds","excess_return_effective":0.019543855468837804,"volatility_effective":0.06698485584177584}],
+"provenance":{"as_of":"2026-10-23T00:37:13.068474+00:00","source_as_of":"2026-10-14","method":{"methodology_ref":"gradient://methodology/gradient-cma-baseline"},"reproducibility":{"payload_digest":"2fb089105b31aa721a12c5e9ec4d6f1f4a5e38f16a2f096179e22c009a832f15"},"data_scope":{"label":"User-Authorized Live"}},
+"validation":{"status":"passed"}}

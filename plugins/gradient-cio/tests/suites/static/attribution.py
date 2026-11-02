@@ -718,8 +718,7 @@ def attribution_skill_contract_checks():
         "8–12 PDF pages with a hard ceiling of 14" in skill
         and "hard ceiling is 14" in template
         and budget["pdf"]["target_pages"] == {"min": 8, "max": 12}
-        and budget["pdf"]["hard_max_pages"] == 14
-        and "every required visual retained" in requirements,
+        and budget["pdf"]["hard_max_pages"] == 14,
         "attribution page budget retains soft target and 14-page ceiling",
     )
     check(

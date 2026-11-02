@@ -46,8 +46,8 @@ The composer validates these semantic slots by block type and title.
 | 7 | `bars` **Gradient vs consensus gap (bps)** and `tiles` **Forward context** | Signed bars; tiles show GRIP score/stance, policy expected return, and return objective. |
 | 8 | `bars` **Scenario impacts (%)** before the text | Portfolio impacts use signed bars ordered worst first. If no governed scenario result is available, use a typed unavailable callout with this exact title. |
 | 9 | `bars` **Liquidity tiers (% NAV)** plus returned commitments charts | Pass liquidity-scorecard, pacing, and cash-flow chart items unchanged when available. |
-| 10 | `findings` **Exposure-weighted diligence findings** | Include severity, exposure, and due date; use `empty_title` when none are returned. |
-| 11 | `coverage` **GIPS review coverage** and `callout` **GIPS follow-ups** | Keep total-fund and in-scope manager coverage compact; the callout carries material findings, follow-ups, or a typed none/unavailable state. |
+| 10 | `callout` **Operational diligence** | Exact text: `Not assessed — operational diligence paused`. |
+| 11 | `callout` **GIPS / ODD evidence** | Exact text: `Not assessed — operational diligence paused`. |
 | 12 | `tiles` **Macro readings** | Three or four dated, sourced facts only. |
 | 13 | `two_col` **Current vs proposed weights**, or `callout` **No change proposed** | Never manufacture a proposed case. |
 | 14 | `tiles` **Risk count by rating** before the text | High / Medium / Low use bad / watch / good tones. |

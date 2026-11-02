@@ -1,0 +1,16 @@
+{
+ "cma": "cma_live.json",
+ "regimes": "regimes_q3_2026.json",
+ "format": "capital_vs_risk",
+ "slug": "endowment_capital_vs_risk",
+ "portfolios": [
+  "lib:endowment_style"
+ ],
+ "mcp_check": "mcp/portfolio_analytics_endowment_style.json",
+ "headline": "Private Equity and Venture: 28% of an endowment-style mix, an implied 44% of its risk",
+ "takeaway": "Why: Gradient assumes Private Equity and Venture Capital carry the mix’s highest volatilities (20.9% and 24.5%), and Private Equity moves closely with developed equity (0.72), so its risk adds to the equity sleeve’s rather than offsetting it. Hedge Funds are 18% of capital but an implied 7% of risk, at 6.8% volatility.",
+ "highlight_factors": [
+  13,
+  1
+ ]
+}

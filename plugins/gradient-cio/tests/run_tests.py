@@ -10,6 +10,7 @@ if hasattr(sys.stderr, "reconfigure"):
 
 from suites.harness import fails
 from suites.layout_vocab_contracts import layout_vocab_contracts
+from suites.quicktake_regressions import quicktake_regressions
 from suites.renderer_regressions import render
 from suites.static_checks import static
 
@@ -23,6 +24,7 @@ def main():
     static("--allow-branded" in args)
     layout_vocab_contracts()
     if "--static" not in args:
+        quicktake_regressions()
         render("--keep" in args)
     print(f"\n{'ALL PASSED' if not fails else str(len(fails)) + ' FAILED'}")
     sys.exit(1 if fails else 0)

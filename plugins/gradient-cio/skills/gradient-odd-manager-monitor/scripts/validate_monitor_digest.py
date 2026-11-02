@@ -8,6 +8,10 @@ import sys
 from datetime import date
 from pathlib import Path
 
+PLUGIN_SHARED = Path(__file__).resolve().parents[3] / "shared"
+if str(PLUGIN_SHARED) not in sys.path:
+    sys.path.insert(0, str(PLUGIN_SHARED))
+
 SCRIPT_ROOT = Path(__file__).resolve().parent
 if str(SCRIPT_ROOT) not in sys.path:
     sys.path.insert(0, str(SCRIPT_ROOT))

@@ -7,6 +7,10 @@ import re
 import sys
 from pathlib import Path
 
+PLUGIN_SHARED = Path(__file__).resolve().parents[3] / "shared"
+if str(PLUGIN_SHARED) not in sys.path:
+    sys.path.insert(0, str(PLUGIN_SHARED))
+
 
 SCRIPT_ROOT = Path(__file__).resolve().parent
 if str(SCRIPT_ROOT) not in sys.path:
@@ -96,8 +100,6 @@ FULL_SPEC = ReportSpec(
     ),
     forbidden_body_patterns=(
         r"\b(?:hire|fire|terminate|redeem from|allocate to)\b",
-        r"\b(?:peer|cohort)(?:-based)?\s+(?:percentiles?|rankings?|positioning)\b",
-        r"\brelative\s+to\s+peers\b",
     ),
     require_question_sources=True,
     analysis_section_patterns=(
@@ -211,8 +213,6 @@ COMPARE_SPEC = ReportSpec(
     forbidden_body_patterns=(
         r"\b(?:best|preferred|top-tier|best-in-class)\s+(?:manager|adviser|firm)\b",
         r"\b(?:hire|fire|terminate|redeem from|allocate to)\b",
-        r"\b(?:peer|cohort)(?:-based)?\s+(?:percentiles?|rankings?|positioning)\b",
-        r"\brelative\s+to\s+peers\b",
     ),
     require_action_row_sources=True,
     analysis_section_patterns=(

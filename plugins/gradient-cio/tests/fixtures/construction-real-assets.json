@@ -199,7 +199,7 @@
           "rows": [
             [
               "Real assets",
-              "10.0%–20.0%",
+              "10.0%â€“20.0%",
               "15.0%",
               {
                 "chip": "Compliant",
@@ -373,7 +373,7 @@
               "low": 2.0,
               "high": 6.0,
               "target": 3.0,
-              "display": "5.0% → 3.0%"
+              "display": "5.0% â†’ 3.0%"
             },
             {
               "label": "Listed infrastructure",
@@ -381,7 +381,7 @@
               "low": 2.0,
               "high": 5.0,
               "target": 4.0,
-              "display": "3.0% → 4.0%"
+              "display": "3.0% â†’ 4.0%"
             },
             {
               "label": "Private real estate",
@@ -389,7 +389,7 @@
               "low": 2.0,
               "high": 5.0,
               "target": 3.0,
-              "display": "3.0% → 3.0%"
+              "display": "3.0% â†’ 3.0%"
             },
             {
               "label": "Private infrastructure",
@@ -397,7 +397,7 @@
               "low": 2.0,
               "high": 4.0,
               "target": 3.0,
-              "display": "2.5% → 3.0%"
+              "display": "2.5% â†’ 3.0%"
             },
             {
               "label": "Natural resources",
@@ -405,7 +405,7 @@
               "low": 0.0,
               "high": 2.0,
               "target": 1.5,
-              "display": "1.0% → 1.5%"
+              "display": "1.0% â†’ 1.5%"
             }
           ],
           "source": "[S1]"
@@ -520,7 +520,7 @@
               "5.0%",
               "3.0%",
               "-2.0pp",
-              "2.0%–6.0%",
+              "2.0%â€“6.0%",
               "Reduce largest sub-segment [S3][S4]"
             ],
             [
@@ -528,7 +528,7 @@
               "3.0%",
               "4.0%",
               "+1.0pp",
-              "2.0%–5.0%",
+              "2.0%â€“5.0%",
               "Increase marketable infrastructure role [S3][S4]"
             ],
             [
@@ -536,7 +536,7 @@
               "3.0%",
               "3.0%",
               "0.0pp",
-              "2.0%–5.0%",
+              "2.0%â€“5.0%",
               "Maintain while valuations refresh [S4][S8]"
             ],
             [
@@ -544,7 +544,7 @@
               "2.5%",
               "3.0%",
               "+0.5pp",
-              "2.0%–4.0%",
+              "2.0%â€“4.0%",
               "Phase after diligence [S7][S8]"
             ],
             [
@@ -552,7 +552,7 @@
               "1.0%",
               "1.5%",
               "+0.5pp",
-              "0.0%–2.0%",
+              "0.0%â€“2.0%",
               "Broaden sub-segment mix [S3][S7]"
             ],
             [
@@ -1150,7 +1150,7 @@
       ]
     },
     {
-      "title": "Manager and Fund Diligence",
+      "title": "Manager and Fund Coverage",
       "blocks": [
         {
           "type": "table",
@@ -1545,7 +1545,7 @@
               "S7",
               "Macro context and diligence",
               "gradient_tool",
-              "get_macro_conditions",
+              "get_macro_signals",
               "illustrative",
               "2026-06-30",
               "Illustrative sample data",

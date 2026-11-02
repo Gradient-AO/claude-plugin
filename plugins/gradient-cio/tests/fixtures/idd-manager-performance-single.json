@@ -109,7 +109,7 @@
         "rationale": "Performance evidence supports continued diligence but does not determine a hire or allocation decision."
       }
     },
-    "data_basis": "gradient_governed",
+    "data_basis": "mixed",
     "cover_disclosure": "Illustrative sample · not client data",
     "data_scope_banner": "Illustrative, Gradient Maintained — demo data, not the client's holdings or managers"
   },
@@ -1250,8 +1250,8 @@
             [
               "S1",
               "Observed manager and primary-benchmark summary metrics",
-              "gradient_tool",
-              "analyze_strategy_lab_compare",
+              "user_document",
+              "User-provided return-series evidence",
               "manager=returns-test-northstar-select; benchmark=benchmark-test-northstar-core-equity; start=2020-01-31; end=2025-12-31",
               "2025-12-31",
               "72 monthly observations; USD total return; illustrative sample data",
@@ -1261,8 +1261,8 @@
             [
               "S2",
               "Realized paths, rolling statistics, relative metrics, capture, and distribution",
-              "gradient_tool",
-              "run_strategy_lab_relative_return",
+              "user_document",
+              "User-provided return-series evidence",
               "manager=returns-test-northstar-select; benchmark=benchmark-test-northstar-core-equity; rolling_months=12,36",
               "2025-12-31",
               "Common 72-month manager/benchmark window; illustrative sample data",
@@ -1272,8 +1272,8 @@
             [
               "S3",
               "Date-window robustness",
-              "gradient_tool",
-              "run_strategy_lab_date_window_robustness",
+              "user_document",
+              "User-provided return-series evidence",
               "starts=2020-01-31,2021-01-31,2022-01-31,2023-01-31; end=2025-12-31",
               "2025-12-31",
               "Four returned start-date windows; illustrative sample data",
@@ -1283,8 +1283,8 @@
             [
               "S4",
               "10-year simulated expected-statistics outputs",
-              "gradient_tool",
-              "run_strategy_lab_expected_statistics",
+              "user_document",
+              "User-provided return-series evidence",
               "horizon=10y; outputs=annualized_return,annualized_volatility,terminal_wealth_median",
               "2025-12-31",
               "Server-returned model outputs; illustrative sample data",
@@ -1294,8 +1294,8 @@
             [
               "S5",
               "Alternative-benchmark sensitivity",
-              "gradient_tool",
-              "analyze_strategy_lab_compare",
+              "user_document",
+              "User-provided return-series evidence",
               "manager=returns-test-northstar-select; benchmark=benchmark-test-northstar-broad-equity; status=advisory",
               "2025-12-31",
               "Same 72-month window; illustrative sample data",

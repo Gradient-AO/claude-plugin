@@ -1,163 +1,39 @@
 [
   {
-    "prompt": "Import private-market holdings from our authorized provider after I confirm the exact preview",
-    "expected": "gradient-portfolio-import",
-    "not": "gradient-portfolio-review",
-    "description_terms": [
-      "governed",
-      "provider-neutral"
-    ]
-  },
-  {
-    "prompt": "Stage a portfolio structure and policy import for Gradient UI review",
-    "expected": "gradient-portfolio-import",
+    "prompt": "Use gradient-allocation-study for fictional routing case 1 (TEST).",
+    "expected": "gradient-allocation-study",
     "not": "gradient-menu",
-    "description_terms": [
-      "provider-neutral",
-      "Gradient UI handoff"
-    ]
+    "description_terms": []
   },
   {
-    "prompt": "Import public security positions and fixed-income analytics from our authorized connector",
-    "expected": "gradient-portfolio-import",
+    "prompt": "Use gradient-allocation-study for fictional routing case 2 (TEST).",
+    "expected": "gradient-allocation-study",
     "not": "gradient-menu",
-    "description_terms": [
-      "governed",
-      "positions"
-    ]
+    "description_terms": []
   },
   {
-    "prompt": "Preview commitment liquidity terms, classifications, and pacing plans",
-    "expected": "gradient-portfolio-import",
+    "prompt": "Use gradient-allocation-study for fictional routing case 3 (TEST).",
+    "expected": "gradient-allocation-study",
     "not": "gradient-menu",
-    "description_terms": [
-      "liquidity terms",
-      "pacing plans"
-    ]
+    "description_terms": []
   },
   {
-    "prompt": "Schedule a client-owned connector import that stages records for mandatory Gradient UI review",
-    "expected": "gradient-portfolio-import",
+    "prompt": "Use gradient-allocation-study for fictional routing case 4 (TEST).",
+    "expected": "gradient-allocation-study",
     "not": "gradient-menu",
-    "description_terms": [
-      "Gradient UI handoff",
-      "provider-neutral"
-    ]
+    "description_terms": []
   },
   {
-    "prompt": "Compare these managers' track records against suitable benchmarks",
-    "expected": "gradient-idd-manager-performance",
-    "not": "gradient-odd-report",
-    "description_terms": [
-      "performance",
-      "benchmark"
-    ]
+    "prompt": "Use gradient-allocation-study for fictional routing case 5 (TEST).",
+    "expected": "gradient-allocation-study",
+    "not": "gradient-menu",
+    "description_terms": []
   },
   {
-    "prompt": "Compare these advisers' Form ADV disclosures and service providers",
-    "expected": "gradient-odd-report",
-    "not": "gradient-idd-manager-performance",
-    "description_terms": [
-      "comparative",
-      "Form ADV"
-    ]
-  },
-  {
-    "prompt": "Is this one manager's performance statistically meaningful?",
-    "expected": "gradient-idd-manager-performance",
-    "not": "gradient-odd-report",
-    "description_terms": [
-      "single-manager",
-      "meaningful"
-    ]
-  },
-  {
-    "prompt": "Does this result persist across start dates and rolling windows?",
-    "expected": "gradient-idd-manager-performance",
-    "not": "gradient-odd-report",
-    "description_terms": [
-      "persistence",
-      "rolling"
-    ]
-  },
-  {
-    "prompt": "What does adding this manager do to portfolio diversification?",
-    "expected": "gradient-idd-manager-portfolio-fit",
-    "not": "gradient-decision-ic-memo",
-    "description_terms": [
-      "portfolio-fit",
-      "diversification"
-    ]
-  },
-  {
-    "prompt": "Run a public-market-equivalent analysis on this private fund",
-    "expected": "gradient-idd-private-markets-pme",
-    "not": "gradient-portfolio-construction",
-    "description_terms": [
-      "private-markets",
-      "PME"
-    ]
-  },
-  {
-    "prompt": "Build an investment-diligence shortlist for this manager mandate",
-    "expected": "gradient-idd-manager-performance",
-    "not": "gradient-odd-report",
-    "description_terms": [
-      "manager shortlist",
-      "mandate"
-    ]
-  },
-  {
-    "prompt": "Screen Form ADV records for advisers that could fit this mandate",
-    "expected": "gradient-odd-report",
-    "not": "gradient-idd-manager-performance",
-    "description_terms": [
-      "comparative",
-      "Form ADV"
-    ]
-  },
-  {
-    "prompt": "What does adding this hedge fund manager do to our portfolio's diversification?",
-    "expected": "gradient-idd-manager-portfolio-fit",
-    "not": "gradient-portfolio-construction",
-    "description_terms": [
-      "prospective manager",
-      "diversification"
-    ]
-  },
-  {
-    "prompt": "Design the target strategy mix for our hedge fund sleeve",
-    "expected": "gradient-portfolio-construction",
-    "not": "gradient-idd-manager-portfolio-fit",
-    "description_terms": [
-      "sleeve",
-      "strategy mix"
-    ]
-  },
-  {
-    "prompt": "Compare the operational risk of our two manager-hire finalists",
-    "expected": "gradient-odd-report",
-    "not": "gradient-idd-manager-performance",
-    "description_terms": [
-      "comparative"
-    ]
-  },
-  {
-    "prompt": "Run operational due diligence on this finalist",
-    "expected": "gradient-odd-report",
-    "not": "gradient-idd-manager-performance",
-    "description_terms": [
-      "operational due diligence"
-    ]
-  },
-  {
-    "prompt": "Draft the IC memo for hiring this manager using the IDD and ODD findings",
+    "prompt": "Use gradient-decision-ic-memo for fictional routing case 1 (TEST).",
     "expected": "gradient-decision-ic-memo",
-    "not": "gradient-idd-manager-performance",
-    "description_terms": [
-      "decision memo",
-      "manager hire"
-    ]
+    "not": "gradient-menu",
+    "description_terms": []
   },
   {
     "prompt": "Use gradient-decision-ic-memo for fictional routing case 2 (TEST).",
@@ -184,56 +60,8 @@
     "description_terms": []
   },
   {
-    "prompt": "Use gradient-idd-manager-performance for fictional routing case 4 (TEST).",
-    "expected": "gradient-idd-manager-performance",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-idd-manager-performance for fictional routing case 5 (TEST).",
-    "expected": "gradient-idd-manager-performance",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-idd-manager-portfolio-fit for fictional routing case 3 (TEST).",
-    "expected": "gradient-idd-manager-portfolio-fit",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-idd-manager-portfolio-fit for fictional routing case 4 (TEST).",
-    "expected": "gradient-idd-manager-portfolio-fit",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-idd-manager-portfolio-fit for fictional routing case 5 (TEST).",
-    "expected": "gradient-idd-manager-portfolio-fit",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-idd-manager-performance shortlist mode for fictional routing case 2 (TEST).",
-    "expected": "gradient-idd-manager-performance",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-idd-manager-performance shortlist mode for fictional routing case 3 (TEST).",
-    "expected": "gradient-idd-manager-performance",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-idd-manager-performance shortlist mode for fictional routing case 4 (TEST).",
-    "expected": "gradient-idd-manager-performance",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-idd-manager-performance shortlist mode for fictional routing case 5 (TEST).",
-    "expected": "gradient-idd-manager-performance",
+    "prompt": "Use gradient-idd-private-markets-pme for fictional routing case 1 (TEST).",
+    "expected": "gradient-idd-private-markets-pme",
     "not": "gradient-menu",
     "description_terms": []
   },
@@ -258,6 +86,66 @@
   {
     "prompt": "Use gradient-idd-private-markets-pme for fictional routing case 5 (TEST).",
     "expected": "gradient-idd-private-markets-pme",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-liquidity-pacing for fictional routing case 1 (TEST).",
+    "expected": "gradient-liquidity-pacing",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-liquidity-pacing for fictional routing case 2 (TEST).",
+    "expected": "gradient-liquidity-pacing",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-liquidity-pacing for fictional routing case 3 (TEST).",
+    "expected": "gradient-liquidity-pacing",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-liquidity-pacing for fictional routing case 4 (TEST).",
+    "expected": "gradient-liquidity-pacing",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-liquidity-pacing for fictional routing case 5 (TEST).",
+    "expected": "gradient-liquidity-pacing",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-manager-evaluation for fictional routing case 1 (TEST).",
+    "expected": "gradient-manager-evaluation",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-manager-evaluation for fictional routing case 2 (TEST).",
+    "expected": "gradient-manager-evaluation",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-manager-evaluation for fictional routing case 3 (TEST).",
+    "expected": "gradient-manager-evaluation",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-manager-evaluation for fictional routing case 4 (TEST).",
+    "expected": "gradient-manager-evaluation",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-manager-evaluation for fictional routing case 5 (TEST).",
+    "expected": "gradient-manager-evaluation",
     "not": "gradient-menu",
     "description_terms": []
   },
@@ -322,18 +210,6 @@
     "description_terms": []
   },
   {
-    "prompt": "Use gradient-odd-report compare mode for fictional routing case 4 (TEST).",
-    "expected": "gradient-odd-report",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-odd-report compare mode for fictional routing case 5 (TEST).",
-    "expected": "gradient-odd-report",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
     "prompt": "Use gradient-odd-manager-monitor for fictional routing case 1 (TEST).",
     "expected": "gradient-odd-manager-monitor",
     "not": "gradient-menu",
@@ -360,6 +236,12 @@
   {
     "prompt": "Use gradient-odd-manager-monitor for fictional routing case 5 (TEST).",
     "expected": "gradient-odd-manager-monitor",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-odd-report for fictional routing case 1 (TEST).",
+    "expected": "gradient-odd-report",
     "not": "gradient-menu",
     "description_terms": []
   },
@@ -418,32 +300,8 @@
     "description_terms": []
   },
   {
-    "prompt": "Use gradient-portfolio-attribution compare-lanes mode for fictional routing case 1 (TEST).",
-    "expected": "gradient-portfolio-attribution",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-portfolio-attribution compare-lanes mode for fictional routing case 2 (TEST).",
-    "expected": "gradient-portfolio-attribution",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-portfolio-attribution compare-lanes mode for fictional routing case 3 (TEST).",
-    "expected": "gradient-portfolio-attribution",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-portfolio-attribution compare-lanes mode for fictional routing case 4 (TEST).",
-    "expected": "gradient-portfolio-attribution",
-    "not": "gradient-menu",
-    "description_terms": []
-  },
-  {
-    "prompt": "Use gradient-portfolio-attribution compare-lanes mode for fictional routing case 5 (TEST).",
-    "expected": "gradient-portfolio-attribution",
+    "prompt": "Use gradient-portfolio-construction for fictional routing case 1 (TEST).",
+    "expected": "gradient-portfolio-construction",
     "not": "gradient-menu",
     "description_terms": []
   },
@@ -468,6 +326,36 @@
   {
     "prompt": "Use gradient-portfolio-construction for fictional routing case 5 (TEST).",
     "expected": "gradient-portfolio-construction",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-portfolio-import for fictional routing case 1 (TEST).",
+    "expected": "gradient-portfolio-import",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-portfolio-import for fictional routing case 2 (TEST).",
+    "expected": "gradient-portfolio-import",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-portfolio-import for fictional routing case 3 (TEST).",
+    "expected": "gradient-portfolio-import",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-portfolio-import for fictional routing case 4 (TEST).",
+    "expected": "gradient-portfolio-import",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-portfolio-import for fictional routing case 5 (TEST).",
+    "expected": "gradient-portfolio-import",
     "not": "gradient-menu",
     "description_terms": []
   },
@@ -532,30 +420,153 @@
     "description_terms": []
   },
   {
-    "prompt": "Compare historical, governed ex ante, and simulated attribution lanes for this portfolio",
-    "expected": "gradient-portfolio-attribution",
-    "not": "gradient-portfolio-review",
-    "description_terms": [
-      "multi-lane",
-      "attribution"
-    ]
+    "prompt": "Use gradient-ask-gradient for fictional routing case 1 (TEST).",
+    "expected": "gradient-ask-gradient",
+    "not": "gradient-menu",
+    "description_terms": []
   },
   {
-    "prompt": "Run one saved portfolio attribution report without a cross-lane comparison",
-    "expected": "gradient-portfolio-attribution",
-    "not": "gradient-portfolio-review",
-    "description_terms": [
-      "single-lane",
-      "attribution"
-    ]
+    "prompt": "Use gradient-ask-gradient for fictional routing case 2 (TEST).",
+    "expected": "gradient-ask-gradient",
+    "not": "gradient-menu",
+    "description_terms": []
   },
   {
-    "prompt": "Assess one prospective manager against the current sleeve rather than redesigning the sleeve",
-    "expected": "gradient-idd-manager-portfolio-fit",
-    "not": "gradient-portfolio-construction",
-    "description_terms": [
-      "portfolio-fit",
-      "prospective manager"
-    ]
+    "prompt": "Use gradient-ask-gradient for fictional routing case 3 (TEST).",
+    "expected": "gradient-ask-gradient",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-ask-gradient for fictional routing case 4 (TEST).",
+    "expected": "gradient-ask-gradient",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-ask-gradient for fictional routing case 5 (TEST).",
+    "expected": "gradient-ask-gradient",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-portfolio-lens for fictional routing case 1 (TEST).",
+    "expected": "gradient-portfolio-lens",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-portfolio-lens for fictional routing case 2 (TEST).",
+    "expected": "gradient-portfolio-lens",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-portfolio-lens for fictional routing case 3 (TEST).",
+    "expected": "gradient-portfolio-lens",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-portfolio-lens for fictional routing case 4 (TEST).",
+    "expected": "gradient-portfolio-lens",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-portfolio-lens for fictional routing case 5 (TEST).",
+    "expected": "gradient-portfolio-lens",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-risk-pulse for fictional routing case 1 (TEST).",
+    "expected": "gradient-risk-pulse",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-risk-pulse for fictional routing case 2 (TEST).",
+    "expected": "gradient-risk-pulse",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-risk-pulse for fictional routing case 3 (TEST).",
+    "expected": "gradient-risk-pulse",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-risk-pulse for fictional routing case 4 (TEST).",
+    "expected": "gradient-risk-pulse",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-risk-pulse for fictional routing case 5 (TEST).",
+    "expected": "gradient-risk-pulse",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-signal-spotlight for fictional routing case 1 (TEST).",
+    "expected": "gradient-signal-spotlight",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-signal-spotlight for fictional routing case 2 (TEST).",
+    "expected": "gradient-signal-spotlight",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-signal-spotlight for fictional routing case 3 (TEST).",
+    "expected": "gradient-signal-spotlight",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-signal-spotlight for fictional routing case 4 (TEST).",
+    "expected": "gradient-signal-spotlight",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-signal-spotlight for fictional routing case 5 (TEST).",
+    "expected": "gradient-signal-spotlight",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-tactical-dashboard for fictional routing case 1 (TEST).",
+    "expected": "gradient-tactical-dashboard",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-tactical-dashboard for fictional routing case 2 (TEST).",
+    "expected": "gradient-tactical-dashboard",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-tactical-dashboard for fictional routing case 3 (TEST).",
+    "expected": "gradient-tactical-dashboard",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-tactical-dashboard for fictional routing case 4 (TEST).",
+    "expected": "gradient-tactical-dashboard",
+    "not": "gradient-menu",
+    "description_terms": []
+  },
+  {
+    "prompt": "Use gradient-tactical-dashboard for fictional routing case 5 (TEST).",
+    "expected": "gradient-tactical-dashboard",
+    "not": "gradient-menu",
+    "description_terms": []
   }
 ]

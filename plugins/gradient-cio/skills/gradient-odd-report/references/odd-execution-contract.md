@@ -1,19 +1,21 @@
 # ODD execution contract
 
-## Current product hold
+## Paused — operational diligence on hold
 
-This contract is inactive while `manager_diligence_product_hold` is returned.
-Call only the advertised held reads, preserve the structured unavailable
-payload, and stop. Do not invoke any retired tool or produce a report from the
-historical workflow details below.
+This contract is inactive while capabilities report
+`manager_diligence_product_hold`. Do not call roster, monitoring, review, or
+findings tools; they are not in the client tool list. Do not invoke them and
+do not retry. Preserve the structured unavailable result, mark diligence
+`Not assessed`, and stop. Do not produce a report from the historical
+workflow details below.
 
 Read only the section needed for the current workflow step.
 
 ## Full-report evidence
 
 Call `get_gradient_capabilities`, then:
-1. For a fund report, call `get_fund_diligence_monitoring` with that canonical
-   `fund_id`, then `get_fund_diligence_review` with the same ID and a bounded
+1. For a fund report, call `hidden manager-diligence monitoring read` with that canonical
+   `fund_id`, then `hidden manager-diligence review read` with the same ID and a bounded
    history. Preserve nullable `review`, every history event, and pagination
    metadata. A firm-only report has no fund read substitute.
 2. The retired manager diligence brief with `fund_id` or `firm_id` and all nine
@@ -23,7 +25,7 @@ Call `get_gradient_capabilities`, then:
 3. The retired firm 13F portfolio review, `mode: snapshot`, on the parent `firm_id`.
    Retry one `backend_timeout`; then retry snapshot without `quarters`. Request
    `view: issuer_risk` only when the report needs issuer-level risk evidence.
-4. `get_manager_diligence_findings`, `view: open`, for firm and fund.
+4. `hidden manager-diligence findings read`, `view: open`, for firm and fund.
 5. The retired firm-fund events read with `include_event_type_counts: true`.
 6. If a DDQ exists, follow `gradient-odd-ddq-reconcile` extraction and
    reconciliation.
@@ -43,9 +45,7 @@ Save and parse the whole brief. Read every section and row. ADV lives under
 digest, synthesis basis, differentiated analytics, source vintage, thresholds,
 and availability. Synthesis and differentiated analytics are
 server-derived evidence signals; they are not report-ready prose or an ODD
-conclusion. Ignore any returned manager cohort, percentile, or peer-positioning
-field; it is outside this report contract.
-
+conclusion.
 If direct profile fails `response_contract_invalid`, use the brief's ADV
 section. For `subject_resolution_unavailable`, write
 `Not available — subject_resolution_unavailable` plus the reason, continue
@@ -58,8 +58,7 @@ disclose advisory failures.
 
 Form ADV is adviser-reported. Use absolute Form ADV question meanings,
 Schedule A/B ownership bands, filed amounts and counts, and firm-level 13F
-caveats. Manager peer cohorts, percentiles, rankings, and "relative to peers"
-claims are prohibited. ADV–13F flags are identity/scope/recency context only;
+caveats. ADV–13F flags are identity/scope/recency context only;
 do not infer from a ratio when legal-entity identity is unconfirmed.
 
 Full ODD signal:
@@ -117,7 +116,7 @@ Validate:
 
 Run one QA render of the same validated JSON to PDF by default, PPTX for slide
 wording, or both for `both`/`board pack`:
-`python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - ODD Report" --budget <skill>/references/layout-budget.json`
+`python "${CLAUDE_PLUGIN_ROOT}/shared/qa_report.py" report.json --format <pdf|pptx|both> --out "<Subject> - ODD Report" --budget <skill>/references/layout-budget.json`
 
 Inspect all pages/slides, re-render after fixes, reconcile numeric comparisons,
 and spot-check tables. QA and fact checks block delivery.

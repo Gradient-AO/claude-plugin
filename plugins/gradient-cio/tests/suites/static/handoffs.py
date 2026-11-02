@@ -201,9 +201,9 @@ def handoff_contract_checks():
             str(
                 ROOT
                 / "skills"
-                / "gradient-idd-manager-performance"
+                / "gradient-manager-evaluation"
                 / "scripts"
-                / "validate_manager_performance.py"
+                / "validate_manager_evaluation.py"
             ),
             str(FIX / "idd-manager-performance-single.json"),
         ],

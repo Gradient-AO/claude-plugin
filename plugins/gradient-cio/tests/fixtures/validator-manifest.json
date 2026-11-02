@@ -1,66 +1,127 @@
 {
-  "gradient-decision-ic-memo": {"validator": "skills/gradient-decision-ic-memo/scripts/validate_memo.py", "fixtures": ["ic.md"]},
-  "gradient-idd-manager-performance": {
-    "validator": "skills/gradient-idd-manager-performance/scripts/validate_manager_performance.py",
+  "gradient-decision-ic-memo": {
+    "validator": "skills/gradient-decision-ic-memo/scripts/validate_memo.py",
+    "fixtures": [
+      "ic.md"
+    ]
+  },
+  "gradient-manager-evaluation": {
+    "validator": "skills/gradient-manager-evaluation/scripts/validate_manager_evaluation.py",
     "modes": {
-      "single": ["idd-manager-performance-single.json"],
-      "compare": ["idd-manager-performance-compare.json"],
-      "robustness": ["idd-manager-performance-robustness.json"],
-      "shortlist": ["idd-shortlist.json"]
+      "single": [
+        "idd-manager-performance-single.json"
+      ],
+      "fit": [
+        "idd-portfolio-fit.json"
+      ],
+      "compare": [
+        "idd-manager-performance-compare.json"
+      ]
     }
   },
-  "gradient-idd-manager-portfolio-fit": {"validator": "skills/gradient-idd-manager-portfolio-fit/scripts/validate_manager_portfolio_fit.py", "fixtures": ["idd-portfolio-fit.json"]},
   "gradient-idd-private-markets-pme": {
     "validator": "skills/gradient-idd-private-markets-pme/scripts/validate_private_markets_pme.py",
-    "fixtures": ["idd-private-markets-pme.json"],
-    "chat_fixtures": ["idd-private-markets-pme-zero-evidence.json"]
+    "fixtures": [
+      "idd-private-markets-pme.json"
+    ],
+    "chat_fixtures": [
+      "idd-private-markets-pme-zero-evidence.json"
+    ]
   },
-  "gradient-odd-ddq-reconcile": {"validator": "skills/gradient-odd-ddq-reconcile/scripts/validate_ddq_report.py", "fixtures": ["ddq.json"]},
+  "gradient-liquidity-pacing": {
+    "validator": "skills/gradient-liquidity-pacing/scripts/validate_liquidity_pacing.py",
+    "fixtures": [
+      "liquidity-pacing.json"
+    ]
+  },
+  "gradient-odd-ddq-reconcile": {
+    "validator": "skills/gradient-odd-ddq-reconcile/scripts/validate_ddq_report.py",
+    "fixtures": [
+      "ddq.json"
+    ]
+  },
   "gradient-odd-manager-monitor": {
     "validator": "skills/gradient-odd-manager-monitor/scripts/validate_monitor_digest.py",
     "modes": {
-      "digest": ["digest.json"],
-      "triage": ["triage.json"]
+      "digest": [
+        "digest.json"
+      ],
+      "triage": [
+        "triage.json"
+      ]
     }
   },
   "gradient-odd-report": {
     "validator": "skills/gradient-odd-report/scripts/validate_odd_report.py",
     "modes": {
-      "full": ["odd.json"],
-      "compare": ["compare.json"]
+      "full": [
+        "odd.json"
+      ],
+      "compare": [
+        "compare.json"
+      ]
     }
   },
   "gradient-portfolio-attribution": {
     "modes": {
       "single": {
         "validator": "skills/gradient-portfolio-attribution/scripts/validate_attribution.py",
-        "fixtures": ["portfolio-attribution-report.json"]
+        "fixtures": [
+          "portfolio-attribution-report.json"
+        ]
       },
       "compare-lanes": {
         "validator": "skills/gradient-portfolio-attribution/scripts/validate_attribution_compare.py",
-        "fixtures": ["attribution-compare-fallback.json", "attribution-compare-three-lane.json"]
+        "fixtures": [
+          "attribution-compare-fallback.json",
+          "attribution-compare-three-lane.json"
+        ]
       }
     }
   },
   "gradient-portfolio-import": {
-    "chat_fixtures": ["portfolio-import-preview.json"]
+    "chat_fixtures": [
+      "portfolio-import-preview.json"
+    ]
   },
-  "gradient-portfolio-construction": {
-    "validator": "skills/gradient-portfolio-construction/scripts/validate_construction.py",
+  "gradient-allocation-study": {
+    "validator": "skills/gradient-allocation-study/scripts/validate_construction.py",
     "modes": {
-      "private_markets": ["construction-private-markets.json"],
-      "fixed_income": ["construction-fixed-income.json"],
-      "global_public_equity": ["construction-global-public-equity.json"],
-      "marketable_alternatives": ["construction-marketable-alternatives.json"],
-      "real_assets": ["construction-real-assets.json"]
+      "total_plan": [
+        "allocation-total-plan.json"
+      ],
+      "private_markets": [
+        "construction-private-markets.json"
+      ],
+      "fixed_income": [
+        "construction-fixed-income.json"
+      ],
+      "global_public_equity": [
+        "construction-global-public-equity.json"
+      ],
+      "marketable_alternatives": [
+        "construction-marketable-alternatives.json"
+      ],
+      "real_assets": [
+        "construction-real-assets.json"
+      ]
     }
   },
   "gradient-portfolio-review": {
     "validator": "skills/gradient-portfolio-review/scripts/validate_review.py",
     "modes": {
-      "brief": ["portfolio.json"],
-      "comprehensive": ["portfolio-comprehensive.json"]
+      "brief": [
+        "portfolio.json"
+      ],
+      "comprehensive": [
+        "portfolio-comprehensive.json"
+      ]
     }
   },
-  "gradient-setup": {"validator": "skills/gradient-setup/scripts/validate_setup.py", "fixtures": ["setup.json"]}
+  "gradient-setup": {
+    "validator": "skills/gradient-setup/scripts/validate_setup.py",
+    "fixtures": [
+      "setup.json"
+    ]
+  }
 }

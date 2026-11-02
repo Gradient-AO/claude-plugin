@@ -1,0 +1,9 @@
+{"_note": "Maps model sleeve names to Gradient ICAPM CMA factor ids as [factor_id, proxy]. proxy=true means the match is approximate and must be disclosed in the post text.",
+ "US Large Cap Equity": [4, true], "US Small/Mid Cap Equity": [5, true], "International Developed Equity": [1, false],
+ "Japan Equity": [1, true], "Emerging Markets Equity": [6, false],
+ "Government Bonds": [8, false], "Investment Grade Corporate": [7, true], "Investment Grade Fixed Income": [7, true],
+ "High Yield Bonds": [11, false], "TIPS / Inflation-Linked": [8, true], "Emerging Market Debt": [11, true], "UK Corporate Bonds": [7, true],
+ "Private Equity Buyout": [13, false], "Buyout": [13, false], "Private Equity Growth": [13, true], "Venture Capital": [14, false],
+ "Fixed Income Relative Value": [17, true], "Hedge Fund Multi-Strategy": [17, false], "Private Debt": [15, false],
+ "Real Estate Core": [12, false], "Real Estate Value-Add": [12, true], "Infrastructure": [16, false], "Commodities": [18, false],
+ "Money Market": [9, false], "Short Duration Bonds": [9, true]}

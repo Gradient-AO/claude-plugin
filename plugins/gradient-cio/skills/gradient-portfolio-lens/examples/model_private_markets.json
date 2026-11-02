@@ -1,0 +1,82 @@
+{
+ "portfolio_id": "illustrative-private-markets",
+ "name": "Private Markets",
+ "model_label": "Gradient Private Markets model",
+ "weights_basis": "policy_targets",
+ "classes": [
+  {
+   "name": "Alternatives",
+   "target": 0.6073174003301335,
+   "lower": null,
+   "upper": null,
+   "sleeves": [
+    {
+     "name": "Private Equity Buyout",
+     "weight": 0.28587274584874806,
+     "factor_id": 13,
+     "proxy": false
+    },
+    {
+     "name": "Private Equity Growth",
+     "weight": 0.03243639280311538,
+     "factor_id": 13,
+     "proxy": true
+    },
+    {
+     "name": "Venture Capital",
+     "weight": 0.1729940955661921,
+     "factor_id": 14,
+     "proxy": false
+    },
+    {
+     "name": "Private Debt",
+     "weight": 0.1160141661120779,
+     "factor_id": 15,
+     "proxy": false
+    }
+   ]
+  },
+  {
+   "name": "Real Assets",
+   "target": 0.39268259966986646,
+   "lower": null,
+   "upper": null,
+   "sleeves": [
+    {
+     "name": "Real Estate Core",
+     "weight": 0.20706342410267903,
+     "factor_id": 12,
+     "proxy": false
+    },
+    {
+     "name": "Real Estate Value-Add",
+     "weight": 0.03608927564849044,
+     "factor_id": 12,
+     "proxy": true
+    },
+    {
+     "name": "Infrastructure",
+     "weight": 0.14952989991869706,
+     "factor_id": 16,
+     "proxy": false
+    }
+   ]
+  }
+ ],
+ "provenance": {
+  "as_of": "2026-10-23T21:36:24+00:00",
+  "method": {
+   "methodology_ref": "gradient://methodology/portfolio-structure"
+  },
+  "data_scope": {
+   "kind": "live",
+   "label": "User-Authorized Live"
+  },
+  "reproducibility": {
+   "payload_digest": "cdf83febd60d7a7a9e571d648bd077729c850399d08cab841a8ea43d1b596682"
+  }
+ },
+ "validation": {
+  "status": "passed"
+ }
+}

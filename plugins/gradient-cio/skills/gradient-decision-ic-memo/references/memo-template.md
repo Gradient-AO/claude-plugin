@@ -170,30 +170,21 @@ liquidity, concentration, leverage, prohibited/restricted, ESG/other. Governed r
 **Assumptions:** <assumption set>, CMA release <version>, <horizon>-year horizon, <base currency>, <hedging>.
 ```
 
-**7.1 Portfolio expected statistics** {columns fixed; "Proposed" = "n/a" if Section 13 has no change; Status applies to the Current column and must match Section 4}
+**7.1 Expected-return assumptions by sleeve**
 
 ```
-| Metric | Current | Proposed | Policy portfolio | IPS objective / limit | Status |
-|---|---|---|---|---|---|
-| Expected return (nominal, ann.) | | | | | |
-| Expected excess return over cash | | | | | |
-| Expected volatility (ann.) | | | | | |
-| Sharpe ratio | | | | n/a | n/a |
-| Expected max drawdown | | | | | |
-| 95% CVaR (1-year) | | | | | |
-| Probability of meeting return objective | | | | n/a | n/a |
-```
-
-**7.2 Consensus check** {from get_cma_consensus_check; one row per asset class held}
-
-```
-| Asset class | Gradient expected excess | Consensus reference | Gap (bps) | Comparability | Source |
+| Sleeve | User ER — policy targets | CMA-implied ER — policy targets | Gap (bp) | Difference explanation | Source |
 |---|---|---|---|---|---|
 ```
 
+Every expected-return row includes `return_source` and `weight_basis`. Every
+Sharpe or excess-return figure labels its risk-free-rate source.
+
+**7.2 Before/after CMA risk contribution** {required for Allocation Change and Rebalance}
+
 ```
-**Allocation-implied return:** Gradient <x.x>% vs consensus <y.y>% (<publisher>, <date>) [S#].
-**Assumption quality:** <quality_receipt status and any governance flags, or "No flags">.
+| Sleeve | Current weight | Proposed weight | Current Euler contribution | Proposed Euler contribution | Change | Source |
+|---|---|---|---|---|---|
 ```
 
 **7.3 Regime overlay**
@@ -253,36 +244,11 @@ callout with that exact title, and ends with sourced Analysis.}
 
 ## 10. Manager & Operational Diligence
 
-{One row per manager with ≥ 1% of NAV; sort by exposure descending; "Other (<n> managers)" as last row.}
-{For Manager Hire, compare user-selected named managers on absolute Form ADV
-facts only. Do not include peer/cohort percentiles, universe rankings, peer
-positioning, or "relative to peers" claims. Keep benchmark-relative investment
-evidence in the performance sections.}
-
-```
-| Manager | Strategy | Exposure (% NAV) | ODD red flags | Open findings (H/M/L) | Monitor alerts | GIPS status | Last review | Source |
-|---|---|---|---|---|---|---|---|---|
-```
-
-```
-**Exposure-weighted findings:** <top findings ranked by exposure, or "No active findings"> [S#].
-**Attention queue:** <managers overdue for review, or "None overdue"> [S#].
-```
+**Not assessed — operational diligence paused**
 
 ## 11. Performance Integrity & GIPS
 
-{Paste sections from the internal GIPS review contract in asset-owner mode (total fund) and the GIPS section of gradient-odd-report
-(each manager ≥ 5% NAV or being hired), unchanged, ordered: total fund first, then managers by exposure descending.}
-{The visual layer is compact: `GIPS review coverage` followed by `GIPS follow-ups`; do not repeat the pasted
-handoff in a second long table.}
-
-```
-### 11.1 Total fund
-<internal GIPS review oversight-body summary, or "Not assessed — <reason>">
-
-### 11.2 <Manager name>
-<gradient-odd-report GIPS subsection>
-```
+**Not assessed — operational diligence paused**
 
 ## 12. Market Context
 

@@ -96,17 +96,6 @@
           ]
         },
         {
-          "type": "percentiles",
-          "items": [
-            {
-              "label": "Metric",
-              "percentile": 80,
-              "value_display": "x"
-            }
-          ],
-          "threshold": 75
-        },
-        {
           "type": "line",
           "title": "Synthetic TEST series",
           "y_suffix": "%",

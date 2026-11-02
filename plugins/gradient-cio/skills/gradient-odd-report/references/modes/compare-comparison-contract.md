@@ -1,24 +1,23 @@
 # Named-manager comparison execution contract
 
-## Current product hold
+## Paused — operational diligence on hold
 
-This contract is inactive while `manager_diligence_product_hold` is returned.
-Call only the advertised held reads, preserve the structured unavailable
-payload, and stop. Do not invoke retired discovery, profile, 13F, event,
-overlap, or write tools.
+This contract is inactive while capabilities report
+`manager_diligence_product_hold`. Do not call roster, monitoring, review, or
+findings tools; they are not in the client tool list. Mark diligence
+`Not assessed` and stop. Do not invoke retired discovery, profile, 13F,
+event, overlap, or write tools.
 
 Read the relevant section immediately before that workflow step.
 
 ## Identity resolution
 
-- Compare only the 2–5 managers explicitly selected by the user. Do not screen
-  or rank a manager universe in this mode.
-- The retired manager search could resolve a supplied manager name or CRD only; it
-  must not discover or substitute comparison candidates.
+- Compare only the 2–5 named comparison managers explicitly selected by the
+  user. Do not discover or substitute candidates.
 - `affirmative_disclosure_count` is the count of Form ADV Items 6–9 and 11
   answered yes, not a count of disciplinary events or red flags. Obtain Item 11
   from `disciplinary_disclosure_count`.
-- Resolve roster parents through `get_diligence_roster_funds`; otherwise use
+- Resolve roster parents through `hidden manager-diligence roster read`; otherwise use
   the retired manager search, then read `resolved_subject.firm_id` from the
   retired profile or firm 13F surfaces.
 - A null catalog `firm_id` means Form ADV-only comparison. Mark Form 13F,
@@ -38,7 +37,7 @@ Per manager:
    `view: issuer_risk` only when issuer-level risk is in scope.
 4. The retired firm 13F portfolio review, `view: adv_13f_consistency`, with `firm_id`.
 5. The retired firm-fund events read with `include_event_type_counts: true`, `per_page: 12`.
-6. `get_manager_diligence_findings`, `view: open`, for roster managers.
+6. `hidden manager-diligence findings read`, `view: open`, for roster managers.
 
 Across managers:
 
@@ -47,8 +46,7 @@ Across managers:
 Read profile identity and `metrics`, private-fund provider fields, truncation
 flags, `positive_flags`, `disciplinary_disclosure_count`, report dates, and
 `changes`. Use only absolute filed values and dated changes from each selected
-manager's profile. Ignore returned peer/cohort fields, percentiles, universe
-positions, and rankings; never write "relative to peers."
+manager's profile. Use only absolute filed facts for each named comparison manager.
 
 For Form 13F preserve `status`, concentration, positions, top positions,
 period, filing date, accession, and provenance. For overlap preserve manager
@@ -95,7 +93,7 @@ flags; Form 13F overlap; ADV–13F consistency and events; Coverage and next
 steps; Appendix — Sources and methods (`num: "A"`). Keep missing sections and
 show typed gaps.
 
-Use the exact layouts and block schemas in `references/report-style.md`;
+Use the exact layouts and block schemas in `${CLAUDE_PLUGIN_ROOT}/shared/report-style.md`;
 include absolute Form ADV comparison bars for filed RAUM, client counts, and
 Item 11 disclosures, a returned overlap heat matrix, an events timeline when
 returned, coverage, source tags, units, dates, caveats, and the non-ranking
@@ -109,7 +107,7 @@ Validate with:
 `python <skill>/scripts/validate_odd_report.py report.json`
 
 Run canonical delivery QA on the same validated JSON:
-`python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Mandate> - Manager Comparison <YYYY-MM-DD>" --budget <skill>/references/layout-budget-compare.json`
+`python "${CLAUDE_PLUGIN_ROOT}/shared/qa_report.py" report.json --format <pdf|pptx|both> --out "<Mandate> - Manager Comparison <YYYY-MM-DD>" --budget <skill>/references/layout-budget-compare.json`
 
 Follow `report-style.md` Check and deliver; page QA and fact checks block
 delivery.

@@ -1,0 +1,20 @@
+{
+ "cma": "cma_live.json",
+ "regimes": "regimes_q3_2026.json",
+ "format": "diversifier_scorecard",
+ "slug": "diversifiers_60_40",
+ "portfolios": [
+  "lib:global_60_40"
+ ],
+ "diversifier_step": 0.1,
+ "mcp_check": "mcp/portfolio_analytics_global_60_40.json",
+ "headline": "Real Estate tops the 60/40 diversifier list, but only on its smoothed volatility",
+ "takeaway": "Why: Gradient assumes Real Estate earns 5.44% over cash at 11.0% volatility; at Gradient’s policy-channel volatility (18.1%) it no longer improves the ratio. Government Bonds (1.95% premium, −0.04 correlation with developed equity) improve it on either basis. Commodities cost the most: a 0.88% premium for 22.9% volatility.",
+ "highlight_factors": [
+  12,
+  8,
+  18
+ ],
+ "acknowledge_small_differences": true,
+ "acknowledge_sensitivity_flip": true
+}

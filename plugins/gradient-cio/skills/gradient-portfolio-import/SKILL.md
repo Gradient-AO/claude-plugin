@@ -3,14 +3,15 @@ name: gradient-portfolio-import
 description: "Create a provider-neutral governed portfolio import with a Gradient UI handoff or exact-preview confirmation in Claude. Triggers: 'import portfolio structure', 'import positions', 'import liquidity terms', 'import pacing plans', 'preview portfolio import'."
 metadata:
   version: "0.5.0"
-  group: "Portfolio Analytics"
+  group: "Utilities"
   subject: "portfolio import"
   output: "governed import"
-  menu_order: "40"
+  menu_order: "30"
   modules: "portfolio"
   contracts: "portfolio-import-governed"
   handoffs: "gradient-portfolio-review"
   delivery: chat
+  status: "core"
   summary: "Stage governed portfolio records for Gradient UI review or exact-preview confirmation."
 ---
 
@@ -18,7 +19,7 @@ metadata:
 
 Import supported records into one existing Gradient portfolio. Reply in chat. For Gradient UI review, stage records and return the server review URL; mapping through commit stays in Gradient. Otherwise require explicit confirmation of the exact Claude preview. Never write to the source.
 
-Read `references/module-scope.md`, `references/phase-2-governance.md`, `references/phase-3-governance.md`, `references/phase-4-governance.md`, `references/phase-5-governance.md`, `references/provider-readiness-catalog.json`, `references/provider-recipe-catalog.json`, and `references/provider-recipe-contract.md`. The readiness catalog is discovery-only, not capability or mapping evidence. Recipes are optional reviewed evidence; they never replace runtime schema discovery. Load one only for a cataloged provider.
+Read `${CLAUDE_PLUGIN_ROOT}/shared/module-scope.md`, `references/phase-2-governance.md`, `references/phase-3-governance.md`, `references/phase-4-governance.md`, `references/phase-5-governance.md`, `references/provider-readiness-catalog.json`, `references/provider-recipe-catalog.json`, and `references/provider-recipe-contract.md`. The readiness catalog is discovery-only, not capability or mapping evidence. Recipes are optional reviewed evidence; they never replace runtime schema discovery. Load one only for a cataloged provider.
 
 ## Hard boundaries
 

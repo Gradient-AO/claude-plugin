@@ -4,19 +4,23 @@ description: "Create a DDQ reconciliation report against Form ADV evidence. Trig
 metadata:
   version: "5.8.0"
   style_contract: "2.3.0"
-  group: "Operational due diligence"
+  group: "Managers"
   subject: "DDQ"
   output: "reconciliation"
   menu_order: "20"
   modules: "firmFundDiligence"
   contracts: "odd-evidence"
   handoffs: "gradient-odd-report,gradient-decision-ic-memo"
+  status: "paused"
   summary: "Reconcile DDQ answers against Form ADV and surface discrepancies."
 ---
 
 # DDQ vs Form ADV reconciliation
 
-## Current product hold
+Before using any expected return, excess return, or Sharpe ratio, read `${CLAUDE_PLUGIN_ROOT}/shared/contracts/expected-return-sources.md` and apply its return-source, weight-basis, comparison, and risk-free-rate labels.
+
+
+## Paused — operational diligence on hold
 
 The public DDQ workflow is temporarily unavailable under
 `manager_diligence_product_hold`. Do not call retired extraction,
@@ -62,7 +66,7 @@ returned reasons and never locally compare an unresolved fund.
 ## 3. Build and deliver
 
 Read `references/reconciliation-contract.md#report-contract`, then
-`references/report-style.md`, `references/writing-standards.md`, and
+`${CLAUDE_PLUGIN_ROOT}/shared/report-style.md`, `${CLAUDE_PLUGIN_ROOT}/shared/writing-standards.md`, and
 `references/analysis-examples.md` only while drafting/rendering. Keep the fixed
 section order and deterministic compact or per-fund reconciliation structure,
 exact source/location tags, typed
@@ -72,7 +76,7 @@ Validate and QA the same report source:
 
 ```text
 python <skill>/scripts/validate_ddq_report.py report.json
-python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - DDQ Reconciliation" --budget <skill>/references/layout-budget.json
+python "${CLAUDE_PLUGIN_ROOT}/shared/qa_report.py" report.json --format <pdf|pptx|both> --out "<Subject> - DDQ Reconciliation" --budget <skill>/references/layout-budget.json
 ```
 
 PDF is default; explicit slide wording selects PPTX; `both`/`board pack`

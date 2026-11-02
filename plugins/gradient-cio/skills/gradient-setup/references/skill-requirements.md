@@ -20,22 +20,26 @@ and `effective_capabilities` must equal whether that mode is not `unavailable`. 
 `available` and `access_mode` remain the final invocation decision. A false entitlement with
 `capability_access_modes.<capability>: "illustrative"` is evaluation access, not live licensed access.
 
-| Skill | Produces | Required tools | Optional tools | Module(s) |
-|---|---|---|---|---|
-| gradient-odd-report | Full or comparative ODD report PDF | get_diligence_roster_funds, get_fund_diligence_review, get_manager_diligence_findings | get_fund_diligence_monitoring | firmFundDiligence; Not ready while the advertised tools return `manager_diligence_product_hold` |
-| gradient-odd-ddq-reconcile | DDQ reconciliation PDF | — | — | firmFundDiligence; Not ready while the public DDQ workflow is held |
-| gradient-odd-manager-monitor | Monitoring digest or roster-triage PDF | get_diligence_roster_funds, get_fund_diligence_monitoring, get_fund_diligence_review, get_manager_diligence_findings | — | firmFundDiligence; Not ready while the advertised tools return `manager_diligence_product_hold` |
-| gradient-decision-ic-memo — Portfolio Analytics core | IC memo PDF | list_portfolios, get_portfolio_structure, get_portfolio_exposure (including factor/currency, risk, pacing and liquidity sections), check_portfolio_policy, get_portfolio_historical_returns, get_portfolio_attribution, get_capital_market_assumptions | get_cma_consensus_check, macro tools, diligence tools | portfolio, research |
-| gradient-decision-ic-memo — Strategy Lab supplement | Optional selected-series appendix | get_benchmarks, get_return_series, run_strategy_lab_expected_statistics | run_strategy_lab_simulation, run_strategy_lab_relative_return, run_strategy_lab_date_window_robustness | strategyLab optional; missing makes the memo Partial, not Not licensed |
-| gradient-portfolio-review | Brief (6–8 page) or comprehensive (15–20 page) portfolio review PDF | list_portfolios, get_portfolio_structure, get_portfolio_exposure, check_portfolio_policy, get_portfolio_historical_returns | **Comprehensive Portfolio Analytics:** get_portfolio_attribution, get_portfolio_exposure includes (`factor_currency_exposure`, `risk_contribution`, `commitment_pacing`, `liquidity_scorecard`, `lookthrough_13f`), list_assumption_sets; **context:** get_benchmarks, get_macro_signals (`roster_macro_exposure`), get_macro_conditions indicators series, get_the_read, get_capital_market_assumptions; **Strategy Lab supplement (module optional):** selected `return_series_ids` passed directly to run_strategy_lab_simulation, run_strategy_lab_expected_statistics, run_strategy_lab_relative_return or run_strategy_lab_date_window_robustness | portfolio (research and strategyLab optional) |
-| gradient-portfolio-attribution | Single-mode 8–12 page attribution PDF (hard ceiling 14; every required visual retained) or compare-lanes 6–10 page PDF | list_portfolios, get_portfolio_structure, get_portfolio_historical_returns, get_portfolio_attribution, get_portfolio_ex_ante_attribution | single mode: get_benchmarks for missing labels only; compare-lanes mode: capability-gated planned simulation and comparison tools, whose absence selects the fallback variant | portfolio |
-| gradient-portfolio-construction | Five-mode 10–14 page construction decision pack | list_portfolios, get_portfolio_structure, get_portfolio_exposure (with mode-specific includes), check_portfolio_policy, get_portfolio_historical_returns, get_portfolio_attribution, list_assumption_sets, get_capital_market_assumptions | mode-specific macro, research, diligence and selected-series Strategy Lab tools | portfolio, research (macroDesk, gradientSignals, firmFundDiligence and strategyLab optional by mode) |
-| gradient-portfolio-import | Chat-only, provider-neutral governed import for sixteen portfolio record types | get_portfolio_import_capabilities, get_portfolio_import_schema, start_portfolio_import_session, stage_private_market_holding_records, stage_portfolio_import_records, resolve_portfolio_import_entities, confirm_portfolio_import_mappings, preview_portfolio_import, commit_portfolio_import, get_portfolio_import_session, list_portfolio_import_runs | client-authorized read-only source connector; no source writes or UI file-upload substitution; scheduled runs stage with `approval_surface: "gradient_ui"` and require UI review; commit requires the exact runtime-enabled lane plus current-conversation confirmation | portfolio |
-| gradient-idd-manager-performance | Single, comparison or robustness performance PDF | get_benchmarks, get_return_series, analyze_strategy_lab_compare, run_strategy_lab_expected_statistics, run_strategy_lab_relative_return; request `series_views: true` when historical manager-versus-benchmark views are required; catalog benchmark mappings require returned status/rationale and realized/simulated scopes | run_strategy_lab_date_window_robustness with dated windows for benchmark-relative persistence; shortlist discovery is unavailable during the manager-diligence product hold; missing correlation and risk contribution stay unavailable | strategyLab |
-| gradient-idd-manager-portfolio-fit | Portfolio-fit and scenario PDF | get_return_series, run_strategy_lab_expected_statistics, run_strategy_lab_simulation | compare_strategy_lab_saved_scenarios; missing correlation and risk contribution stay unavailable | strategyLab |
-| gradient-idd-private-markets-pme | Private-markets PME PDF | get_benchmarks, get_private_markets_holdings, build_strategy_lab_session, run_strategy_lab_private_markets_pme | — | strategyLab |
-| gradient-menu | In-chat grouped command catalog | none | — | — |
-| gradient-setup | Readiness PDF | list_organizations, get_gradient_capabilities | all probes in contract-checks.md, including four structured manager-diligence hold responses, sample-portfolio exposure, structure, historical returns, historical and ex ante attribution, policy and opt-in analytical sections, session-bound IDD Strategy Lab tools, and the Strategy Lab scenario dry-run preview | — |
+| Status | Skill | Produces | Required tools | Optional tools | Module(s) |
+|---|---|---|---|---|---|
+| Core | gradient-portfolio-lens | Portfolio Lens canvas and social copy | get_capital_market_assumptions | get_macro_signals | research |
+| Core | gradient-signal-spotlight | Signal Spotlight canvas and social copy | get_macro_signals | — | gradientSignals |
+| Core | gradient-risk-pulse | Risk Pulse canvas and social copy | get_macro_signals | — | gradientSignals |
+| Core | gradient-tactical-dashboard | Tactical Dashboard canvas and social copy | get_macro_signals, get_capital_market_assumptions | — | gradientSignals, research |
+| Core | gradient-ask-gradient | Ask Gradient canvas and social copy | get_macro_signals, get_capital_market_assumptions | check_portfolio_policy, get_portfolio_exposure | gradientSignals, research |
+| Core | gradient-portfolio-review | Brief or comprehensive portfolio review PDF | list_portfolios, get_portfolio_structure, get_portfolio_exposure, check_portfolio_policy, get_portfolio_historical_returns | get_portfolio_attribution, get_benchmarks, get_macro_signals, get_capital_market_assumptions | portfolio |
+| Core | gradient-portfolio-attribution | Single or compare-lanes attribution PDF | list_portfolios, get_portfolio_structure, get_portfolio_historical_returns, get_portfolio_attribution, get_portfolio_ex_ante_attribution | get_benchmarks | portfolio |
+| Core | gradient-allocation-study | Total-plan or sleeve allocation study | list_portfolios, get_portfolio_structure, get_portfolio_exposure, check_portfolio_policy, get_portfolio_historical_returns, get_portfolio_attribution, get_capital_market_assumptions | get_private_markets_holdings | portfolio, research |
+| Core | gradient-liquidity-pacing | 6–10 page liquidity and pacing PDF | check_portfolio_policy, get_portfolio_exposure, get_private_markets_holdings, get_capital_market_assumptions | — | portfolio |
+| Core | gradient-decision-ic-memo | IC memo PDF | list_portfolios, get_portfolio_structure, get_portfolio_exposure, check_portfolio_policy, get_portfolio_historical_returns, get_portfolio_attribution, get_capital_market_assumptions | Strategy Lab supplement; missing makes the memo Partial | portfolio, research |
+| Blocked | gradient-manager-evaluation | Single, fit or named-manager comparison PDF | — | — | Blocked until public selected return-series IDs are accessible |
+| Core | gradient-idd-private-markets-pme | Private-markets PME PDF or typed no-cash-flow result | get_benchmarks, get_portfolio_exposure, get_private_markets_holdings, build_strategy_lab_session, run_strategy_lab_private_markets_pme | — | strategyLab |
+| Core | gradient-portfolio-import | Governed import preview / UI handoff | get_portfolio_import_capabilities, get_portfolio_import_schema, start_portfolio_import_session, stage_private_market_holding_records, stage_portfolio_import_records, resolve_portfolio_import_entities, confirm_portfolio_import_mappings, preview_portfolio_import, commit_portfolio_import, get_portfolio_import_session, list_portfolio_import_runs | rollback_portfolio_import_bundle for an explicit bundle rollback request only | portfolio |
+| Core | gradient-menu | In-chat grouped command catalog | none | — | — |
+| Core | gradient-setup | Readiness PDF | list_organizations, get_gradient_capabilities | Active Core probes only | — |
+| Paused | gradient-odd-report | ODD report | — | — | Paused — operational diligence on hold |
+| Paused | gradient-odd-ddq-reconcile | DDQ reconciliation | — | — | Paused — operational diligence on hold |
+| Paused | gradient-odd-manager-monitor | Monitoring digest | — | — | Paused — operational diligence on hold |
 
 ## MCP evidence and analytics expansion
 
@@ -71,19 +75,9 @@ validation, currency exposure and license tier; and total counts on screens.
 These fields must remain unavailable when the connector does not return them.
 Never recreate them or substitute local portfolio calculations.
 
-Use `get_gradient_capabilities.scope` for bounded readiness checks and preserve the returned scoped
-`scoped_coverage`. `get_return_series` accepts benchmark, commitment, synthetic, and macro series only. Use
-`get_portfolio_historical_returns` for portfolio performance; portfolio and allocation return-series kinds
-are not public contract options.
-
-For `run_strategy_lab_relative_return`, `series_views` is opt-in: send the boolean `true` to receive the
-typed historical views for the first selected manager and its resolved benchmark. Preserve each view's
-`status` (`available`, `insufficient-data`, or `unavailable`) and its `method`, `basis`, `window`,
-`observation_count`, `payload_digest`, and nullable `payload`; do not infer a payload from status alone.
-Beta/alpha belongs only at `simulated_metrics.beta_alpha`; do not read or expect a top-level `beta_alpha`.
-Treat `provenance.source_as_of` as the end date of the returned source evidence window, while
-`provenance.as_of`/`retrieved_at` identify retrieval time. Never substitute retrieval time for source
-freshness.
+Use `get_gradient_capabilities.scope` for bounded readiness checks and preserve
+the returned `scoped_coverage`. Selected manager return-series IDs are not
+available through the public connector, so manager evaluation remains Blocked.
 
 For Portfolio Analytics commitment pacing, the first `commitment_pacing` chart item is
 `commitments-cashflow` and must return `metrics.cashflow_breakeven.{status,period,value}`. The metric is
@@ -187,29 +181,13 @@ exact `start_portfolio_import_session.review_url`. Never resolve mappings,
 preview, approve, commit, publish, or roll back in Claude. Every v1 scheduled
 run requires Gradient UI review.
 
-Core skills (any one **Not licensed** or blocked makes the overall signal `not_ready` only if the client
-licensed the module it needs): gradient-odd-report, gradient-odd-ddq-reconcile, gradient-odd-manager-monitor,
-gradient-decision-ic-memo, gradient-portfolio-review,
-gradient-portfolio-attribution,
-gradient-portfolio-construction, gradient-portfolio-import,
-gradient-idd-manager-performance,
-gradient-idd-manager-portfolio-fit,
-gradient-idd-private-markets-pme.
-
-The public manager-diligence surface is temporarily limited to
-`get_diligence_roster_funds`, `get_fund_diligence_monitoring`,
-`get_fund_diligence_review`, and `get_manager_diligence_findings`. These tools
-remain advertised but return only `status: "unavailable"` and
-`unavailable_reason: "manager_diligence_product_hold"`. Treat this as a
-product hold, not a missing-tool connector failure; do not retry or infer
-roster, monitoring, review, finding, DDQ, screening, or comparison evidence.
-Manager-diligence workflows are Not ready until the hold is lifted.
+Menu status is canonical: Core workflows are runnable subject to their required tools; gradient-manager-evaluation is Blocked; operational-diligence workflows are Paused.
 
 gradient-portfolio-review without `portfolio` can still review Gradient's illustrative portfolio: rate it **Partial**.
-Apply the same Partial rating to gradient-portfolio-attribution and each portfolio-construction skill when only the illustrative portfolio is
+Apply the same Partial rating to gradient-portfolio-attribution and gradient-allocation-study when only the illustrative portfolio is
 available; the report must carry the standard illustrative label and cannot describe a client portfolio.
 
-For `gradient-portfolio-construction`, apply `mode_requirements` after the shared skill rating. Only
+For `gradient-allocation-study`, apply `mode_requirements` after the shared skill rating. Only
 `private_markets` requires `get_private_markets_holdings`; if that tool is not advertised and available,
 rate private-markets construction **Not ready** while leaving fixed income, global public equity,
 marketable alternatives and real assets unchanged. A callable tool returning no mapped artifact is not a

@@ -1,27 +1,31 @@
 ---
 name: gradient-idd-private-markets-pme
-description: "Create a private-markets PME report for one fund or manager. Triggers: 'run private-markets PME', 'compare this fund to public markets', 'assess PME performance'. For program construction use gradient-portfolio-construction."
+description: "Create a private-markets PME report for one fund or manager. Triggers: 'run private-markets PME', 'compare this fund to public markets', 'assess PME performance'. For program construction use gradient-allocation-study."
 metadata:
   version: "0.1.1"
   style_contract: "2.3.0"
-  group: "Investment due diligence"
+  group: "Managers"
   subject: "private-markets performance"
   output: "PME Report"
-  menu_order: "30"
+  menu_order: "10"
   modules: "strategyLab"
   contracts: "idd-methodology,idd-odd-ic-handoff"
   handoffs: "gradient-odd-report,gradient-decision-ic-memo"
+  status: "core"
   summary: "Assess private-market performance against public-market equivalents."
 ---
 
 # Private-Markets Performance
 
+Before using any expected return, excess return, or Sharpe ratio, read `${CLAUDE_PLUGIN_ROOT}/shared/contracts/expected-return-sources.md` and apply its return-source, weight-basis, comparison, and risk-free-rate labels.
+
+
 Assess one private fund from dated cash flows against returned public-market benchmarks using server-computed PME and direct alpha. Deliver a branded PDF by default and PowerPoint only when requested.
 
 ## Non-negotiable rules
 
-- Read `references/contracts/idd-methodology.md` before analysis and use only server-returned values.
-- Read `references/module-scope.md` before using Portfolio Analytics or Strategy Lab tools.
+- Read `${CLAUDE_PLUGIN_ROOT}/shared/contracts/idd-methodology.md` before analysis and use only server-returned values.
+- Read `${CLAUDE_PLUGIN_ROOT}/shared/module-scope.md` before using Portfolio Analytics or Strategy Lab tools.
 - Read `references/data-map.md` and `references/analysis-examples.md` before collection and analysis.
 - Resolve one canonical `portfolio_id` and one canonical `commitment_id`; do not substitute a return-series, fund, manager, or benchmark ID.
 - Resolve the commitment by matching both returned `manager_name` and returned `commitment_name`. Never resolve on either name alone.
@@ -31,7 +35,7 @@ Assess one private fund from dated cash flows against returned public-market ben
 - Preserve methods, units, dates, observations, coverage, truncation, and request IDs.
 - Holdings and ILPA company detail provide context only. Never pass holdings or ILPA values into the PME calculator or use them to replace PME output.
 - Do not rank quality, recommend a hire, or turn missing evidence into a neutral result.
-- Label illustrative evidence exactly as required by `references/report-style.md`.
+- Label illustrative evidence exactly as required by `${CLAUDE_PLUGIN_ROOT}/shared/report-style.md`.
 
 ## 1. Resolve and collect
 
@@ -40,6 +44,9 @@ Follow the tool order and source roles in `references/data-map.md`:
 1. Resolve the selected portfolio through `list_portfolios` and use its returned `portfolio_id`.
 2. Call `get_portfolio_exposure` for the canonical portfolio and page the relevant private-market classifications to completion. Match the user's target against both returned `manager_name` and `commitment_name`, then use that row's returned `commitment_id`. If more than one row remains plausible, stop and ask with a short list containing only returned `commitment_name`, `commitment_amount`, and NAV (`nav_base`); do not guess. If no canonical row is returned, ask for clarification.
 3. Immediately inspect the matched row's `pme_ready` and `cash_flow_coverage.status`, `reason`, `first_flow_date`, `last_flow_date`, and `flow_count`. If `pme_ready` is not true or coverage is not `available`, fail fast before `get_private_markets_holdings` or `get_benchmarks`. This readiness branch has checked **0 builder paths**.
+   If every returned commitment has `pme_ready=false` or cash-flow coverage is
+   unavailable, return exactly **Not available — no commitment cash flows**.
+   Do not build a hollow report.
 4. Query `get_benchmarks` with `view: "catalog"` for one primary candidate using the smallest bounded query practical: apply returned mandate classifications as exact supported filters, set a small `limit`, and widen or page only until one suitable primary is identified. Do not page the full catalog pre-emptively. Use only returned identity and classification fields. For private credit, prefer a returned suitable leveraged-loan or high-yield candidate; never invent or force one.
 5. Call `build_strategy_lab_session` for that primary benchmark with exactly:
 
@@ -80,7 +87,7 @@ Keep investment evidence separate from Form ADV, Form 13F, and other operational
 
 Use these fixed sections: Executive conclusion; Cash-flow and benchmark coverage; PME and direct alpha; IRR and multiple context; Benchmark sensitivity; Limitations and follow-ups; Appendix A — Sources and methods (`num: "A"`). Keep each section even when evidence is unavailable. Every figure carries a unit, date, and `[S#]` source tag.
 
-Read `references/report-style.md` and `references/writing-standards.md`. Build one validated `report.json`; do not hand-build HTML, Word, PDF, or slides and do not override the shared theme.
+Read `${CLAUDE_PLUGIN_ROOT}/shared/report-style.md` and `${CLAUDE_PLUGIN_ROOT}/shared/writing-standards.md`. Build one validated `report.json`; do not hand-build HTML, Word, PDF, or slides and do not override the shared theme.
 
 - Set `meta.report_kind` to exactly `private_markets_pme`.
 - Map PME and direct-alpha discussion only from returned `ks_pme`, `direct_alpha`, benchmark basis/comparison, coverage, metric-basis, and diagnostic fields.
@@ -91,7 +98,7 @@ Read `references/report-style.md` and `references/writing-standards.md`. Build o
 
 ## 4. Handoff
 
-Validate and attach a `gradient-idd-odd-ic-handoff/v1` object using `references/contracts/idd-odd-ic-handoff.schema.json`. Include canonical or advisory identity status, canonical portfolio and commitment links where the schema permits, both benchmark IDs, evidence, limitations, and benchmark-selection rationale.
+Validate and attach a `gradient-idd-odd-ic-handoff/v1` object using `${CLAUDE_PLUGIN_ROOT}/shared/contracts/idd-odd-ic-handoff.schema.json`. Include canonical or advisory identity status, canonical portfolio and commitment links where the schema permits, both benchmark IDs, evidence, limitations, and benchmark-selection rationale.
 
 A viable fund → `gradient-odd-report`; a commitment decision → `gradient-decision-ic-memo`.
 
@@ -101,7 +108,7 @@ Run the shared IDD contract validator, then canonical delivery QA:
 
 ```text
 python <skill>/scripts/validate_private_markets_pme.py report.json
-python <skill>/scripts/qa_report.py report.json --format <pdf|pptx|both> --out "<Subject> - PME Report <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json
+python "${CLAUDE_PLUGIN_ROOT}/shared/qa_report.py" report.json --format <pdf|pptx|both> --out "<Subject> - PME Report <YYYY-MM-DD>" --budget <skill>/references/layout-budget.json
 ```
 
 Inspect every requested contact sheet and spot-check every number against saved evidence. QA failures block delivery. Return the file plus three lines: conclusion, largest limitation, and follow-up count.

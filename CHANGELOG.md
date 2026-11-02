@@ -1,5 +1,23 @@
 # Changelog
 
+## 6.10.0
+- Added five Gradient Quick Takes: Portfolio Lens, Signal Spotlight, Risk Pulse, Tactical Dashboard, and Ask Gradient.
+- Added synchronized canvas styling, bundled Inter fonts, standalone renderers, governed examples, and social copy guidance for square, portrait, and carousel delivery.
+- Added Quick Take readiness requirements and connector probes for relative-return and GRIP data, plus catalog, packaging, and shared-kit validation.
+- Client update: `/plugin marketplace update gradientcio`
+
+## 6.9.0
+- Added expected-return provenance and risk-free-rate source contracts across report workflows, including user-versus-CMA comparisons where both bases are available.
+- Replaced Portfolio Construction with Allocation Study, added total-plan allocation and Liquidity & Pacing reports, and retained the former construction command as a one-release alias.
+- Merged manager performance and portfolio-fit workflows into the blocked Manager Evaluation skill; removed shortlist, discovery, peer-ranking and held diligence dependencies.
+- Paused operational-diligence workflows in the menu, added private-markets PME cash-flow readiness, and refreshed setup status reporting and probes.
+- Centralized the report runtime, standards and public tool catalog at plugin level; added CI enforcement for references to unavailable tools.
+- Client update: `/plugin marketplace update gradientcio`
+
+## 6.8.6
+- Manager-diligence skills no longer call roster, monitoring, review, or findings tools. Readiness uses the capabilities hold reason `manager_diligence_product_hold`.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.8.5
 - Removed manager peer/cohort percentile positioning from ODD reports, monitoring guidance, setup readiness, fixtures, and capability copy while preserving absolute named-manager Form ADV comparison.
 - Prohibited peer and universe rankings in manager performance and manager-hire memos; shortlist advancement now uses user-specified benchmark-relative criteria and returned persistence evidence.

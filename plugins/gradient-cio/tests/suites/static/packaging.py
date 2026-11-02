@@ -1,4 +1,4 @@
-"""Self-contained skill packaging regression checks."""
+"""Plugin-level shared-runtime packaging regression checks."""
 
 import os
 import pathlib
@@ -45,16 +45,15 @@ def self_contained_report_skill_checks(skills, validator_manifest):
         "inter-latin-ext-semibold.ttf",
     )
     report_skills = [
-        skill for skill in skills if (skill / "scripts" / "gradient_report.py").is_file()
+        skill
+        for skill in skills
+        if "delivery: chat" not in (skill / "SKILL.md").read_text(encoding="utf-8")
     ]
     check(
-        all(
-            all((skill / "scripts" / name).is_file() for name in runtime_files)
-            and all((skill / "assets" / "fonts" / name).is_file() for name in font_files)
-            and (skill / "references" / "public-tools.json").is_file()
-            for skill in report_skills
-        ),
-        "report skills ship validator dependencies, tool catalog, and Inter fonts locally",
+        all((ROOT / "shared" / name).is_file() for name in runtime_files)
+        and all((ROOT / "assets" / "fonts" / name).is_file() for name in font_files)
+        and (ROOT / "shared" / "public-tools.json").is_file(),
+        "plugin ships shared validator dependencies, tool catalog, and Inter fonts",
     )
 
     failures = []
@@ -68,11 +67,15 @@ def self_contained_report_skill_checks(skills, validator_manifest):
     for skill_name, registration in validator_manifest.items():
         with tempfile.TemporaryDirectory() as temporary:
             isolated_root = pathlib.Path(temporary)
+            installed_root = isolated_root / "gradient-cio"
+            shutil.copytree(
+                ROOT,
+                installed_root,
+                ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+            )
             isolated_fixtures = isolated_root / "fixtures"
             isolated_fixtures.mkdir()
-            source_skill = ROOT / "skills" / skill_name
-            isolated_skill = isolated_root / "skills" / skill_name
-            shutil.copytree(source_skill, isolated_skill)
+            isolated_skill = installed_root / "skills" / skill_name
             for validator_name, fixture_name in _registered_validator_cases(
                 registration
             ):
@@ -84,10 +87,10 @@ def self_contained_report_skill_checks(skills, validator_manifest):
                 isolated_fixture.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(source_fixture, isolated_fixture)
                 validator_path = (
-                    isolated_root / pathlib.Path(validator_name)
+                    installed_root / pathlib.Path(validator_name)
                 ).resolve()
                 expected_prefix = (
-                    isolated_root / "skills" / skill_name
+                    installed_root / "skills" / skill_name
                 ).resolve()
                 try:
                     validator_path.relative_to(expected_prefix)
@@ -121,11 +124,12 @@ def self_contained_report_skill_checks(skills, validator_manifest):
                         sys.executable,
                         "-c",
                         (
+                            f"import sys; sys.path.insert(0, {str(installed_root / 'shared')!r}); "
                             "import gradient_report; "
                             "assert '@font-face' in gradient_report.FONT_LINK"
                         ),
                     ],
-                    cwd=isolated_skill / "scripts",
+                    cwd=installed_root / "shared",
                     env=environment,
                     capture_output=True,
                     text=True,

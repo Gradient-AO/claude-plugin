@@ -367,7 +367,18 @@ def _contains(actual, expected):
     return actual == expected
 
 def load_and_validate_catalog(contracts_path):
-    catalog_path = contracts_path.parent / "public-tools.json"
+    sibling_catalog_path = contracts_path.with_name("public-tools.json")
+    try:
+        plugin_catalog_path = (
+            contracts_path.parents[3] / "shared" / "public-tools.json"
+        )
+    except IndexError:
+        plugin_catalog_path = sibling_catalog_path
+    catalog_path = (
+        plugin_catalog_path
+        if plugin_catalog_path.is_file()
+        else sibling_catalog_path
+    )
     if not catalog_path.is_file():
         return None, [f"missing generated public-tool catalog {catalog_path}"]
     catalog = load(catalog_path)
