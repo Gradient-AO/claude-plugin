@@ -276,7 +276,10 @@ def portfolio_import_governed_contract_checks():
         "list_portfolio_import_runs",
     }
     check(
-        all(f"`{tool}`" in skill for tool in required_tools)
+        len(required_tools) == 11
+        and "eleven named Gradient import tools" in skill
+        and "twelve named Gradient import tools" not in skill
+        and all(f"`{tool}`" in skill for tool in required_tools)
         and "one data type per import session" in skill
         and "existing Gradient portfolio" in skill
         and all(

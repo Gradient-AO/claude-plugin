@@ -1,13 +1,15 @@
 # Connector contract checks
 
 Validate `contracts.json` before running probes. The connector must satisfy
-service version 0.11.0, compatibility epoch 4, and the shared active-tool
+service version 0.11.1, compatibility epoch 4, and the shared active-tool
 catalog at `${CLAUDE_PLUGIN_ROOT}/shared/public-tools.json`.
 
 ## Probe sets
 
 - `standard`: 3 Core readiness reads.
-- `full`: 28 additional Core reads.
+- `full`: 26 additional Core reads.
+- `optional`: 4 private-markets PME diagnostics that are outside minimum
+  readiness and are not run by default.
 - `construction-private-markets`: 1 mode-specific holdings read.
 - `portfolio-import-governed`: 11 schema-driven import calls.
 

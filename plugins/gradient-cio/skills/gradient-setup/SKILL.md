@@ -53,7 +53,7 @@ report them as separate modules; never use the canonical illustrative portfolio 
      <this skill's directory>/references/contracts.json <capabilities-response.json>
    ```
 
-   This requires service version 0.11.0 or newer, compatibility epoch 4, every required public tool, and a
+   This requires service version 0.11.1 or newer, compatibility epoch 4, every required public tool, and a
    coherent `capability_access_modes` map whose modes agree with `effective_capabilities`.
    On failure, stop before skill or probe execution, mark the connector `not_ready`, quote the validator
    failure, and tell the user to update or reconnect GradientCIO. Do not replace missing connector
@@ -74,9 +74,9 @@ report them as separate modules; never use the canonical illustrative portfolio 
 ## 3. Contract self-test
 Run the probes in `references/contract-checks.md`. The **standard** set is the
 quick Core readiness set. The **full read** set adds only active Core probes;
-run it when the user asks for a health
-check or self-test, or after a plugin update. The separate **writes** set contains the Strategy Lab scenario dry-run preview and
-must never commit. Private-markets construction adds one fictional `private_markets_holdings` read probe. The dedicated
+run it for a health check, self-test, or after a plugin update. The four private-markets PME diagnostics
+are **optional**, outside minimum readiness, and are not part of the default full read. Private-markets
+construction adds one fictional `private_markets_holdings` read probe. The dedicated
 **portfolio-import-governed** defines 11 schema-driven calls and requires an authorized source connector, one provider/account, and one existing Gradient portfolio. It covers all sixteen runtime types, including Phase 4 portfolio/allocation/policy records and Phase 5 public-security, fixed-income, liquidity, classification, pacing, and source-document-reference records through the generic staging path. Its safe
 readiness path stops after preview plus session/history reads. Commit requires runtime "commit_enabled" treatment and current-conversation
 confirmation of the exact displayed diff, issues, controls, digest and receipt; rollback requires a separate
@@ -85,8 +85,8 @@ explicit request with the exact destination-after digest. Monthly returns are mo
 sessions; assignments target only portfolios, allocations, commitments, or overlays, with weights only on
 allocations. A client-owned scheduled task may stage only with `approval_surface: "gradient_ui"` and return
 `review_url`; every v1 run requires Gradient UI review and never auto-commits in Claude. This is connector
-ingest, not Gradient UI file upload. The complete matrix is 32 active Core read calls, or 43
-when all eleven governed portfolio-import definitions are authorized.
+ingest, not Gradient UI file upload. The complete default matrix is 30 active Core read calls, or 41 when
+all eleven governed portfolio-import definitions are authorized. Running the optional PME diagnostics adds four calls.
 The full set must verify expected-return provenance inputs for policy
 (`user × policy_targets`), ex-ante attribution
 (`user × current_actual`), and CMA portfolio analytics

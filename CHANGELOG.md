@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.10.2
+- Aligned setup probes with MCP 0.11.1, including full CMA envelopes, economic risk basis, policy-target exposure, governed policy coverage, bounded historical-return calls, and optional PME diagnostics.
+- Corrected portfolio-import readiness and public-tool guidance, while retaining rollback as the only client-catalog bundle lifecycle action.
+- Fixed tactical-dashboard square layouts under Linux font metrics and made installed-copy packaging checks tolerate a missing marketplace manifest.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.10.1
 - Retired the Portfolio Construction alias and reorganized the generated menu around Start, portfolio reports, decisions, managers, and Quick Takes with explicit Blocked and Paused reasons.
 - Removed remaining peer and retired-tool guidance, tightened public-tool reference validation, and packaged the expected-return source contract with the four portfolio decision workflows.

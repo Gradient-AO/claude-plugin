@@ -150,6 +150,30 @@ def quicktake_regressions() -> None:
 
     with tempfile.TemporaryDirectory(prefix="gradient-quicktakes-") as directory:
         output = pathlib.Path(directory)
+        dashboard_example = (
+            ROOT
+            / "skills"
+            / "gradient-tactical-dashboard"
+            / "examples"
+            / "dashboard_2026-10-21.json"
+        )
+        adaptive_dashboard = json.loads(
+            dashboard_example.read_text(encoding="utf-8")
+        )
+        adaptive_dashboard["inputs"] = {
+            name: str((dashboard_example.parent / source).resolve())
+            for name, source in adaptive_dashboard["inputs"].items()
+        }
+        adaptive_dashboard["explain_square"] = (
+            adaptive_dashboard["explain"]
+            + " The complete committee analysis remains on the square canvas "
+            "while the scorecard bands adapt to measured Inter font metrics."
+        )
+        adaptive_spec = output / "dashboard-adaptive.json"
+        adaptive_spec.write_text(
+            json.dumps(adaptive_dashboard),
+            encoding="utf-8",
+        )
         render_cases = (
             (
                 "gradient-portfolio-lens",
@@ -225,6 +249,23 @@ def quicktake_regressions() -> None:
                     str(output / "dashboard"),
                 ],
                 output / "dashboard" / "dashboard_2026-10-21_square.png",
+            ),
+            (
+                "gradient-tactical-dashboard",
+                [
+                    "scripts/render_dashboard.py",
+                    "--spec",
+                    str(adaptive_spec),
+                    "--sizes",
+                    "square",
+                    "--brand",
+                    "gradient",
+                    "--out",
+                    str(output / "dashboard-adaptive"),
+                ],
+                output
+                / "dashboard-adaptive"
+                / "dashboard_2026-10-21_square.png",
             ),
             (
                 "gradient-ask-gradient",

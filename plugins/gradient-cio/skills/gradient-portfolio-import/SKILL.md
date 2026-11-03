@@ -31,7 +31,7 @@ Read `${CLAUDE_PLUGIN_ROOT}/shared/module-scope.md`, `references/phase-2-governa
 - Never mutate the source. Never delete, clear, replace, or truncate source records. Never delete a Gradient record by omission: omitted source rows are no-ops.
 - Never auto-commit. Mapping confirmation is not commit authorization.
 - A provider recipe is optional. Never use an unreviewed, retired, or schema-drifted recipe as mapping evidence; fall back to field-by-field runtime discovery without inventing a mapping. That fallback supports preview, not commit, until Gradient returns a reviewed mapping-profile artifact.
-- Use source reads plus the twelve named Gradient import tools. Use destination reads only for selection and verification. No source write tool is permitted.
+- Use source reads plus the eleven named Gradient import tools. Use destination reads only for selection and verification. No source write tool is permitted.
 - This is Claude MCP connector ingest, not file upload. Never claim a first-party parser or automate the UI. UI approval requires an explicit handoff request and `approval_surface: "gradient_ui"`; otherwise Claude confirmation is mandatory.
 - Destination verification preserves response-semantics v2 evidence and publishing restrictions.
 

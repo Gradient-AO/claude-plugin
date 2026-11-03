@@ -9,7 +9,7 @@ Modules (from `list_organizations.licensed_modules` and `capabilities`): `firmFu
 `macroDesk`, `gradientSignals`, `portfolio`, `strategyLab`.
 
 Before rating any skill, validate the top-level `minimum_connector_contract` in `contracts.json`. The
-connector must advertise service version 0.11.0 or newer, compatibility epoch 4, every required tool, and a
+connector must advertise service version 0.11.1 or newer, compatibility epoch 4, every required tool, and a
 coherent `capability_access_modes` map. The contract's required probes must remain internally valid. A
 connector-contract failure is **Not ready**: stop before running skills or probes, request a connector update
 or reconnect, and do not substitute local calculations.
@@ -54,14 +54,14 @@ review, and `attribution_required` values retain the returned attribution.
 set verifies:
 
 - baseline return/currency/cash basis, dated non-fallback currency composition
-  and USD share, uncertainty, both private-market risk bases, refresh and total
+  and USD share, uncertainty, canonical economic risk inputs, refresh and total
   counts;
 - one-call bounded dense correlations with weekly governance, daily/monthly
   sensitivity, factor proxy construction, composition-aware FX inputs,
   confidence, anomaly flags, matrix validation and complete coverage;
 - server-computed supplied-weight return, risk and Euler risk contribution
-  with marginal contribution, selected risk basis, formula version and
-  reconciliation;
+  with marginal contribution, the canonical economic risk basis, formula
+  version and reconciliation;
 - model-detected regional regime probabilities, coverage, freshness and as-of
   dates.
 
@@ -92,7 +92,7 @@ For private-markets PME, `get_portfolio_exposure` must return each exposure's `p
 `date_basis`, `currency`, `method`, `payload_digest`, and `points`. Benchmark comparisons must preserve
 `benchmark_window_return`.
 
-For `gradient-portfolio-import`, all twelve required tools must be advertised
+For `gradient-portfolio-import`, all eleven required tools must be advertised
 and available, and the selected source connector must be client-authorized.
 Run the dedicated `portfolio-import-governed` probe set only after the user
 selects one source provider/account and one existing Gradient portfolio.

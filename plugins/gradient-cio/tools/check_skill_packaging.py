@@ -82,9 +82,34 @@ def plugin_manifest() -> dict[str, str]:
     )
 
 
-def check_versions(plugin: dict[str, str]) -> list[str]:
+def is_repository_checkout(
+    repository: pathlib.Path = REPOSITORY,
+    plugin_root: pathlib.Path = ROOT,
+) -> bool:
+    """Return whether the plugin is running from this repository layout."""
+    expected_root = repository / "plugins" / "gradient-cio"
+    markers = (
+        repository / ".git",
+        repository / "CLAUDE.md",
+        repository / "CHANGELOG.md",
+    )
+    return plugin_root.resolve() == expected_root.resolve() and any(
+        marker.exists() for marker in markers
+    )
+
+
+def check_versions(
+    plugin: dict[str, str],
+    repository: pathlib.Path = REPOSITORY,
+    plugin_root: pathlib.Path = ROOT,
+) -> list[str]:
+    marketplace_path = repository / ".claude-plugin" / "marketplace.json"
+    if not marketplace_path.is_file():
+        if is_repository_checkout(repository, plugin_root):
+            return ["repository marketplace.json is missing"]
+        return []
     marketplace = json.loads(
-        (REPOSITORY / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8")
+        marketplace_path.read_text(encoding="utf-8")
     )
     entries = [entry for entry in marketplace.get("plugins", []) if entry.get("name") == plugin["name"]]
     if len(entries) != 1:
