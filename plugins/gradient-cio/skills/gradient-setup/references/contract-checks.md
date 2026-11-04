@@ -7,7 +7,7 @@ catalog at `${CLAUDE_PLUGIN_ROOT}/shared/public-tools.json`.
 ## Probe sets
 
 - `standard`: 3 Core readiness reads.
-- `full`: 26 additional Core reads.
+- `full`: 29 additional Core reads.
 - `optional`: 4 private-markets PME diagnostics that are outside minimum
   readiness and are not run by default.
 - `construction-private-markets`: 1 mode-specific holdings read.

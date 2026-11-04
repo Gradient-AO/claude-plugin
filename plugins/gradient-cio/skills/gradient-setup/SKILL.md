@@ -85,7 +85,7 @@ explicit request with the exact destination-after digest. Monthly returns are mo
 sessions; assignments target only portfolios, allocations, commitments, or overlays, with weights only on
 allocations. A client-owned scheduled task may stage only with `approval_surface: "gradient_ui"` and return
 `review_url`; every v1 run requires Gradient UI review and never auto-commits in Claude. This is connector
-ingest, not Gradient UI file upload. The complete default matrix is 30 active Core read calls, or 41 when
+ingest, not Gradient UI file upload. The complete default matrix is 33 active Core read calls, or 44 when
 all eleven governed portfolio-import definitions are authorized. Running the optional PME diagnostics adds four calls.
 The full set must verify expected-return provenance inputs for policy
 (`user × policy_targets`), ex-ante attribution

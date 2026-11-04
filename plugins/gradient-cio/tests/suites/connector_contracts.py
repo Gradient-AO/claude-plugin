@@ -50,7 +50,7 @@ def contract_manifest():
         set_counts
         == {
             "standard": 3,
-            "full": 26,
+            "full": 29,
             "optional": 4,
             "construction-private-markets": 1,
             "portfolio-import-governed": 11,
@@ -62,10 +62,10 @@ def contract_manifest():
     normalized_setup_guidance = " ".join(setup_guidance.split())
     normalized_contract_guidance = " ".join(contract_guidance.split())
     check(
-        "30 active Core read calls, or 41" in normalized_setup_guidance
+        "33 active Core read calls, or 44" in normalized_setup_guidance
         and "optional PME diagnostics adds four calls"
         in normalized_setup_guidance
-        and "`full`: 26 additional Core reads" in normalized_contract_guidance
+        and "`full`: 29 additional Core reads" in normalized_contract_guidance
         and "`optional`: 4 private-markets PME diagnostics"
         in normalized_contract_guidance,
         "setup probe counts are derived from the active contract manifest",

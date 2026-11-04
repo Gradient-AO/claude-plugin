@@ -72,9 +72,9 @@ def quicktake_regressions() -> None:
     )
     check(
         lens.get("format") == "capital_vs_risk"
-        and abs(float(lens_base.get("vol", 0)) - 0.09027606555788975) < 1e-12
+        and abs(float(lens_base.get("vol", 0)) - 0.0902760655616782) < 1e-12
         and len(lens_classes) > 0
-        and abs(float(lens_classes[0].get("risk_share", 0)) - 0.5509213195523073)
+        and abs(float(lens_classes[0].get("risk_share", 0)) - 0.550921319522601)
         < 1e-12,
         "Portfolio Lens preserves expected volatility and Euler risk share",
     )

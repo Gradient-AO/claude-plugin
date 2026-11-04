@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.11.0
+- Added Portfolio Lens support for server-returned inline allocation frontiers and governed regime batches, with explicit separation from loaded or saved portfolio analytics.
+- Replaced the single Portfolio Lens cross-check recipe with spec-driven MCP evidence manifests and retained local calculations only as regression checks.
+- Added setup probes for the new ad hoc allocation views and documented their non-overlap with Portfolio Lens presentation semantics.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.10.2
 - Aligned setup probes with MCP 0.11.1, including full CMA envelopes, economic risk basis, policy-target exposure, governed policy coverage, bounded historical-return calls, and optional PME diagnostics.
 - Corrected portfolio-import readiness and public-tool guidance, while retaining rollback as the only client-catalog bundle lifecycle action.

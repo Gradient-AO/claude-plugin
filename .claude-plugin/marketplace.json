@@ -7,7 +7,7 @@
       "name": "gradient-cio",
       "source": "./plugins/gradient-cio",
       "description": "Portfolio analytics, Quick Take canvases, allocation studies, attribution, investment decisions, manager evaluation, private-markets PME, governed portfolio import, and setup with branded report and social-content tooling.",
-      "version": "6.10.2",
+      "version": "6.11.0",
       "homepage": "https://gradientcio.com"
     }
   ]

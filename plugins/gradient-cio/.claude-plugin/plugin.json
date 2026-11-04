@@ -1,6 +1,6 @@
 {
   "name": "gradient-cio",
-  "version": "6.10.2",
+  "version": "6.11.0",
   "description": "Gradient CIO client skills for portfolio analytics, Quick Take canvases, governed portfolio import, investment decisions, allocation studies, attribution, manager evaluation, private-markets PME, and setup. Includes branded report and social-content tooling plus the GradientCIO connector.",
   "author": {
     "name": "GradientCIO"

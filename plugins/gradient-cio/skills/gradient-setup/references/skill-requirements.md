@@ -22,7 +22,7 @@ and `effective_capabilities` must equal whether that mode is not `unavailable`. 
 
 | Status | Skill | Produces | Required tools | Optional tools | Module(s) |
 |---|---|---|---|---|---|
-| Core | gradient-portfolio-lens | Portfolio Lens canvas and social copy | get_capital_market_assumptions | get_macro_signals | research |
+| Core | gradient-portfolio-lens | Portfolio Lens canvas and social copy | get_capital_market_assumptions (`portfolio_analytics`, `allocation_frontier`, `allocation_regimes`; inline weights only) | get_macro_signals | research |
 | Core | gradient-signal-spotlight | Signal Spotlight canvas and social copy | get_macro_signals | — | gradientSignals |
 | Core | gradient-tactical-dashboard | Tactical Dashboard canvas and social copy | get_macro_signals, get_capital_market_assumptions | — | gradientSignals, research |
 | Core | gradient-ask-gradient | Ask Gradient canvas and social copy | get_macro_signals, get_capital_market_assumptions | check_portfolio_policy, get_portfolio_exposure | gradientSignals, research |
