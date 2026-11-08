@@ -43,8 +43,8 @@ report them as separate modules; never use the canonical illustrative portfolio 
    - per tool: `entitled`, `available`, `scoped`, `healthy`, `data_ready`, `availability_reason`,
      `missing_oauth_scopes`;
    - `coverage[]`: domain, status (`available`, `conditional`, `unavailable`), `as_of`.
-   Summary intentionally omits per-backend readiness. Request `detail: "full"` only when
-   diagnosing those details.
+   Summary intentionally omits per-backend readiness. Request `detail: "full"` only with an explicit
+   `tools` array of up to 10 names when diagnosing those details; pass `tools: []` for chart packs only.
 2. Save the summary response, then validate the machine-readable `minimum_connector_contract` in
    `references/contracts.json`:
 
@@ -68,7 +68,7 @@ report them as separate modules; never use the canonical illustrative portfolio 
    Then apply `mode_requirements` for the selected allocation-study mode. Run
    `check_contract.py --validate-mode <contracts.json>
    gradient-allocation-study <mode> <capabilities-response.json>`. For
-   portfolio import, validate `gradient-portfolio-import governed`.
+   portfolio import, validate `gradient-portfolio-import governed`; for private-markets PME, validate `gradient-idd-private-markets-pme live`.
 4. Report workflow status separately from runtime readiness: Core, Blocked, or
    Paused. Do not probe Blocked or Paused workflows.
 ## 3. Contract self-test

@@ -152,6 +152,7 @@ def contract_manifest():
 
     allocation_modes = modes.get("gradient-allocation-study", {})
     import_mode = modes.get("gradient-portfolio-import", {}).get("governed", {})
+    pme_mode = modes.get("gradient-idd-private-markets-pme", {}).get("live", {})
     check(
         set(allocation_modes)
         == {
@@ -166,8 +167,24 @@ def contract_manifest():
         == ["get_private_markets_holdings"]
         and len(import_mode.get("required_tools", [])) == 11
         and len(import_mode.get("required_probe_ids", [])) == 11
+        and pme_mode.get("required_tools")
+        == [
+            "list_portfolios",
+            "get_portfolio_exposure",
+            "get_benchmarks",
+            "build_strategy_lab_session",
+            "run_strategy_lab_private_markets_pme",
+        ]
+        and pme_mode.get("required_probe_ids")
+        == [
+            "sample_portfolio",
+            "portfolio_exposure",
+            "strategy_benchmarks",
+            "strategy_pme_builder",
+            "strategy_pme",
+        ]
         and "rollback_portfolio_import_bundle" in public_tools,
-        "allocation and governed-import mode requirements match active workflows",
+        "allocation, governed-import and PME mode requirements match active workflows",
     )
 
     requirements = SKILL_REQUIREMENTS.read_text(encoding="utf-8")
@@ -176,6 +193,8 @@ def contract_manifest():
         and "Do not probe Blocked or Paused workflows" in contract_guidance
         and "all eleven required tools" in requirements
         and "all twelve required tools" not in requirements
+        and "| Core | gradient-idd-private-markets-pme" in requirements
+        and "run_strategy_lab_private_markets_pme" in requirements
         and "desmoothed_economic" not in requirements
         and "reported_smoothed" not in requirements
         and all(tool not in contract_guidance for tool in removed_tools),

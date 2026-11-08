@@ -8,11 +8,10 @@ metadata:
   subject: "private-markets performance"
   output: "PME Report"
   menu_order: "20"
-  modules: "strategyLab"
+  modules: "portfolio,strategyLab"
   contracts: "idd-methodology,idd-odd-ic-handoff"
   handoffs: "gradient-odd-report,gradient-decision-ic-memo"
-  status: "blocked"
-  status_reason: "The live private-markets PME builder path is not currently available."
+  status: "core"
   summary: "Assess private-market performance against public-market equivalents."
 ---
 

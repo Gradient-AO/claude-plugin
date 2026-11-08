@@ -46,7 +46,3 @@ Expected output contract:
 - residual, diagnostics, coverage and provenance.
 
 The plugin calls this tool only when `get_gradient_capabilities` lists it available. When the row is absent, the report renders `Not available — not listed by get_gradient_capabilities` and cites that capability response. Without it, fallback comparison is limited to displaying, sign-classifying and ordering returned effects one returned segment per row; aggregate sign counts are not permitted.
-
-## Strategy Lab diversification
-
-`run_strategy_lab_diversification` is not a live public tool. Manager-performance, shortlist and portfolio-fit workflows no longer reference or probe it. Correlation, covariance and risk-contribution outputs remain unavailable unless another governed live result returns them directly.

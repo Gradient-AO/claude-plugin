@@ -245,6 +245,24 @@
         ]
       }
     },
+    "gradient-idd-private-markets-pme": {
+      "live": {
+        "required_tools": [
+          "list_portfolios",
+          "get_portfolio_exposure",
+          "get_benchmarks",
+          "build_strategy_lab_session",
+          "run_strategy_lab_private_markets_pme"
+        ],
+        "required_probe_ids": [
+          "sample_portfolio",
+          "portfolio_exposure",
+          "strategy_benchmarks",
+          "strategy_pme_builder",
+          "strategy_pme"
+        ]
+      }
+    },
     "gradient-allocation-study": {
       "private_markets": {
         "required_tools": [

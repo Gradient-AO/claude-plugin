@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.12.0
+- Enabled private-markets PME as a Core workflow backed by the live Strategy Lab PME builder.
+- Added PME readiness contracts and probes, and tightened detailed capability requests to explicit bounded tool lists.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.11.0
 - Added Portfolio Lens support for server-returned inline allocation frontiers and governed regime batches, with explicit separation from loaded or saved portfolio analytics.
 - Replaced the single Portfolio Lens cross-check recipe with spec-driven MCP evidence manifests and retained local calculations only as regression checks.

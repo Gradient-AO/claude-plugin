@@ -50,7 +50,7 @@ Example: “Draft an IC memo for this allocation change.”
 
 ## Managers
 - `/gradient-cio:gradient-manager-evaluation` [Blocked] — Evaluate named managers against benchmarks and portfolio fit. Next: gradient-decision-ic-memo.
-- `/gradient-cio:gradient-idd-private-markets-pme` [Blocked] — Assess private-market performance against public-market equivalents. Next: gradient-odd-report, gradient-decision-ic-memo.
+- `/gradient-cio:gradient-idd-private-markets-pme` — Assess private-market performance against public-market equivalents. Next: gradient-odd-report, gradient-decision-ic-memo.
 
 Example: “Assess this manager against its benchmark.”
 
@@ -65,7 +65,6 @@ Example: “Create a Portfolio Lens Quick Take on a global 60/40.”
 
 ## Blocked
 - `/gradient-cio:gradient-manager-evaluation` — Public selected manager return-series IDs are not accessible.
-- `/gradient-cio:gradient-idd-private-markets-pme` — The live private-markets PME builder path is not currently available.
 
 Example: “Show workflows waiting on connector support.”
 
