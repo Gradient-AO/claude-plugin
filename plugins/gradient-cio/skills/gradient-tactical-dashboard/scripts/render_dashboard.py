@@ -42,6 +42,54 @@ def rounded(fig, x, y, w, h, fc, ec="none", r=0.08, lw=0.6):
     return ax
 
 
+def measure_analysis_top(fig, L, R, H, s, k, y_bottom, explain, label, watch):
+    """Measure the analysis block with the active font metrics."""
+    tmp = plt.figure(figsize=fig.get_size_inches(), dpi=fig.dpi)
+    top = draw_analysis(
+        tmp,
+        tmp.canvas.get_renderer(),
+        L,
+        R,
+        H,
+        s,
+        k,
+        y_bottom,
+        explain,
+        label,
+        watch,
+    )
+    plt.close(tmp)
+    return top
+
+
+def measure_footnote_tail(fig, s, footnotes):
+    """Return post-table spacing and wrapped footnote height in pixels."""
+    renderer = fig.canvas.get_renderer()
+    height = 10.0
+    for footnote in footnotes:
+        text = "\n".join(textwrap.wrap(smart(footnote), 120))
+        artist = fig.text(0, 0, text, fontsize=5.4 * s, color=MUTED)
+        height += artist.get_window_extent(renderer).height + 2.0
+        artist.remove()
+    return height
+
+
+def fit_table_heights(base, minimum, counts, available):
+    """Compress table bands proportionally, without crossing readable minima."""
+    natural = sum(base[key] * counts[key] for key in base)
+    if natural <= available:
+        return dict(base)
+    floor = sum(minimum[key] * counts[key] for key in base)
+    if floor > available:
+        return None
+    capacity = natural - floor
+    compression = (natural - available) / capacity if capacity else 0.0
+    return {
+        key: base[key] - (base[key] - minimum[key]) * compression
+        for key in base
+    }
+
+
 def render(spec, data, size_key, brand_mode, out):
     W, H = SIZES[size_key]
     dpi = 200
@@ -101,13 +149,68 @@ def render(spec, data, size_key, brand_mode, out):
     widths = spec.get("col_widths") or [0.30] + [0.70 / len(cols)] * len(cols)
     label_w = widths[0]
     xs_ = [label_w + sum(widths[1:1 + j]) for j in range(len(cols))]
-    head_h = 30 if tall else 26
     n_data = sum(1 for r in rows if "group" not in r)
     n_grp = len(rows) - n_data
-    row_h = (47 if n_data > 6 else 58) if tall else 44
-    grp_h = 24 if tall else 22
-    tbl_h = hp(head_h + row_h * n_data + grp_h * n_grp)
+    base_heights = {
+        "head": 30 if tall else 26,
+        "row": (47 if n_data > 6 else 58) if tall else 44,
+        "group": 24 if tall else 22,
+    }
+    minimum_heights = {
+        "head": 26 if tall else 22,
+        "row": 42 if tall else 36,
+        "group": 20 if tall else 17,
+    }
+    band_counts = {"head": 1, "row": n_data, "group": n_grp}
     y_top = st.y
+
+    # Measure bottom-up content first, then fit table bands into the actual
+    # space left by Inter on this platform. This keeps all analysis text while
+    # preventing Linux font metrics from pushing it into the final table row.
+    explain = smart(spec["explain"] if tall or not spec.get("explain_square") else spec["explain_square"])
+    watch = smart(spec.get("watch")) if (tall or spec.get("watch_on_square")) else None
+    analysis_label = spec.get("analysis_label", "WHAT THE INPUTS SAY")
+    analysis_k = k
+    footnote_tail = measure_footnote_tail(fig, s, spec.get("footnotes", []))
+    heights = None
+    analysis_top = 0.0
+    minimum_analysis_k = 0.78 if tall else 0.72
+    while analysis_k + 1e-9 >= minimum_analysis_k:
+        analysis_top = measure_analysis_top(
+            fig,
+            L,
+            R,
+            H,
+            s,
+            analysis_k,
+            footer_top + hp(22),
+            explain,
+            analysis_label,
+            watch,
+        )
+        available_table = (
+            (y_top - analysis_top) * H - 12.0 - footnote_tail
+        )
+        heights = fit_table_heights(
+            base_heights,
+            minimum_heights,
+            band_counts,
+            available_table,
+        )
+        if heights is not None:
+            break
+        analysis_k -= 0.02
+    if heights is None:
+        plt.close(fig)
+        sys.exit(
+            f"STOP ({size_key}): content cannot fit at readable minimum sizes. "
+            "Drop a row or a footnote, or shorten the headline."
+        )
+    head_h = heights["head"]
+    row_h = heights["row"]
+    grp_h = heights["group"]
+    tbl_h = hp(head_h + row_h * n_data + grp_h * n_grp)
+
     for j, c in enumerate(cols):
         x = L + (R - L) * xs_[j]
         fig.text(x + 8 / W, y_top - hp(6), smart(c).upper(), fontsize=5.6 * s, color=INK2, weight="bold",
@@ -126,10 +229,12 @@ def render(spec, data, size_key, brand_mode, out):
             fig.add_artist(plt.Rectangle((L, yr - hp(row_h)), R - L, hp(row_h), color=PANEL, lw=0, zorder=0))
         zebra += 1
         yc = yr - hp(row_h / 2)
-        fig.text(L + 6 / W, yc + hp(7 if rw.get("sublabel") else 0), title_label(smart(rw["label"])),
+        detail_up = min(7.0, row_h * 0.16)
+        detail_down = min(12.0, row_h * 0.28)
+        fig.text(L + 6 / W, yc + hp(detail_up if rw.get("sublabel") else 0), title_label(smart(rw["label"])),
                  fontsize=(7.6 if n_data > 6 else 8.2) * s * k, color=INK, weight="bold", va="center")
         if rw.get("sublabel"):
-            fig.text(L + 6 / W, yc - hp(12), smart(rw["sublabel"]), fontsize=5.6 * s, color=MUTED, va="center")
+            fig.text(L + 6 / W, yc - hp(detail_down), smart(rw["sublabel"]), fontsize=5.6 * s, color=MUTED, va="center")
         for j, cell in enumerate(rw["cells"]):
             x = L + (R - L) * xs_[j] + 8 / W
             if "agree" in cell:
@@ -150,9 +255,9 @@ def render(spec, data, size_key, brand_mode, out):
                 note = value(note, data)[0]
             if isinstance(note, list):
                 note = "".join(value(x, data)[0] if isinstance(x, dict) else x for x in note)
-            fig.text(x, yc + hp(7 if note else 0), v, fontsize=9.2 * s * k, color=col, weight="bold", va="center")
+            fig.text(x, yc + hp(detail_up if note else 0), v, fontsize=9.2 * s * k, color=col, weight="bold", va="center")
             if note:
-                fig.text(x, yc - hp(12), smart(note), fontsize=5.6 * s, color=INK2, va="center")
+                fig.text(x, yc - hp(detail_down), smart(note), fontsize=5.6 * s, color=INK2, va="center")
         yr -= hp(row_h)
     fig.add_artist(plt.Line2D([L, R], [yr] * 2, color=GRID, lw=0.8))
     st.y = y_top - tbl_h
@@ -162,19 +267,14 @@ def render(spec, data, size_key, brand_mode, out):
         st.gap(2)
 
     # ---- analysis (+ optional watch line) anchored above the footer ----
-    explain = smart(spec["explain"] if tall or not spec.get("explain_square") else spec["explain_square"])
-    watch = smart(spec.get("watch")) if (tall or spec.get("watch_on_square")) else None
-    # dry run on a scratch figure to measure the block before drawing it
-    tmp = plt.figure(figsize=fig.get_size_inches(), dpi=dpi)
-    t_top = draw_analysis(tmp, tmp.canvas.get_renderer(), L, R, H, s, k, footer_top + hp(22), explain,
-                          spec.get("analysis_label", "WHAT THE INPUTS SAY"), watch)
-    plt.close(tmp)
-    if t_top + hp(12) > st.y:
+    if analysis_top + hp(12) > st.y + hp(0.5):
         plt.close(fig)
-        sys.exit(f"STOP ({size_key}): analysis overlaps the table by {(t_top + hp(12) - st.y) * H:.0f}px. "
-                 "Shorten the analysis or watch line, drop a row or a footnote, or shorten the headline.")
-    draw_analysis(fig, rnd, L, R, H, s, k, footer_top + hp(22), explain,
-                  spec.get("analysis_label", "WHAT THE INPUTS SAY"), watch)
+        sys.exit(
+            f"STOP ({size_key}): adaptive layout left "
+            f"{(analysis_top + hp(12) - st.y) * H:.1f}px of overlap."
+        )
+    draw_analysis(fig, rnd, L, R, H, s, analysis_k, footer_top + hp(22), explain,
+                  analysis_label, watch)
 
     os.makedirs(out, exist_ok=True)
     fn = os.path.join(out, f"dashboard_{as_of}_{size_key}.png")

@@ -11,7 +11,7 @@ metadata:
   handoffs: "gradient-portfolio-review"
   delivery: files
   status: "core"
-  version: "1.0.0"
+  version: "1.1.0"
   summary: "Explain illustrative portfolio risk, allocation moves, stresses and diversifiers."
 ---
 
@@ -19,7 +19,8 @@ metadata:
 
 Quick Takes on common portfolios that show what Gradient computes. Read **`references/canvas-spec.md`** (canvas grammar,
 brand, data rules, copy patterns) and **`references/lens-framework.md`** (portfolio library, scenarios, methods, gates,
-caveats) before starting.
+caveats) before starting. Also read
+**`${CLAUDE_PLUGIN_ROOT}/shared/contracts/mcp-evidence-and-analytics.md`** before calling analytics tools.
 
 Each run produces page 1 and the page-2 assumptions card in square (1080×1080) and portrait (1080×1350), a LinkedIn
 carousel PDF, `post_copy.md`, and an evidence note for the user.
@@ -62,14 +63,22 @@ Compare `get_capital_market_assumptions view=baseline` → `release.version` and
 Choose one point a CIO would find useful. Check `quicktakes.csv` (canvas-spec §9) so the portfolio × format does not repeat
 within a quarter. Copy the closest spec from `examples/` (`post_*.json`).
 
-### 3. Cross-check against the MCP (required for every post)
+### 3. Collect server analytics evidence (required for every post)
 ```
 python3 scripts/pa_viz.py mcp-weights --spec <spec.json>
 ```
-Call `get_capital_market_assumptions` with exactly the printed arguments (`view: "portfolio_analytics"`, `weights`) and
-`fields`: `analytics`, `release`, `calculation`, `validation`, `provenance`, `weights`. Save the result as
-`examples/mcp/pa_<slug>.json` and set `"mcp_check"` in the spec. The render stops if the local engine and the MCP
-disagree (0.5 bp return, 0.5 bp volatility, 0.25 pp risk share): that means the CMA file is stale, so rebuild it.
+The command prints the server calls required by the selected format. Save every result and list it in the spec's
+`mcp_evidence` manifest. Use `portfolio_analytics` for each point allocation, `allocation_frontier` for frontier
+formats, and `allocation_regimes` for governed regime rows. These are inline-only ad hoc calls: always pass `weights`
+and never pass `portfolio_id` or rely on a loaded portfolio.
+
+Displayed return, volatility, Sharpe, variance and risk-contribution values come from those saved server payloads.
+`pa_core.py` recomputes them only as a regression check. The render stops on a missing payload, stale release, different
+weights, failed server validation, or a regression difference beyond tolerance.
+
+Do not substitute the efficient frontier for the old next-1% or fixed-equity-dial perturbation. Publish
+`marginal_map` or `equity_dial` only when the evidence manifest contains the documented server variants needed by that
+chart. Unsupported local what-if scenarios stay explicitly labeled local and separate from governed regime rows.
 
 ### 4. Facts, then words
 ```
@@ -106,9 +115,10 @@ LinkedIn PDF and `post_copy.md`, then the evidence note: CMA release and publica
 diffs, every gate result, and the source of every claim.
 
 ## Files
-- `scripts/pa_core.py`: engine (portfolio library and archetypes, scenarios, gates, caveat registry).
-- `scripts/pa_viz.py`: facts, MCP gate and renderer for every canvas, plus page 2 and the LinkedIn PDF.
-- `scripts/mcp_check.py`: prints the MCP call for a spec and verifies the saved result.
+- `scripts/pa_core.py`: regression engine (portfolio library, scenarios, gates and caveats); never the publication
+  source when server analytics are available.
+- `scripts/pa_viz.py`: server-payload facts, regression gates and renderer for every canvas, plus page 2 and the LinkedIn PDF.
+- `scripts/mcp_check.py`: prints the spec-driven MCP evidence recipe and verifies every saved result.
 - `scripts/build_cma_mcp.py`: builds the CMA file from saved MCP payloads. `scripts/build_model.py`: model files.
 - `scripts/brand.py`, `assets/`, `references/canvas-spec.md`: synced from the plugin's shared Quick Take kit. Do not edit here.
 - `references/lens-framework.md`; `references/legacy/` (the retired skills' instructions and idea menus, for reference).

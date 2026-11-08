@@ -9,7 +9,7 @@ Modules (from `list_organizations.licensed_modules` and `capabilities`): `firmFu
 `macroDesk`, `gradientSignals`, `portfolio`, `strategyLab`.
 
 Before rating any skill, validate the top-level `minimum_connector_contract` in `contracts.json`. The
-connector must advertise service version 0.11.0 or newer, compatibility epoch 4, every required tool, and a
+connector must advertise service version 0.11.1 or newer, compatibility epoch 4, every required tool, and a
 coherent `capability_access_modes` map. The contract's required probes must remain internally valid. A
 connector-contract failure is **Not ready**: stop before running skills or probes, request a connector update
 or reconnect, and do not substitute local calculations.
@@ -22,7 +22,7 @@ and `effective_capabilities` must equal whether that mode is not `unavailable`. 
 
 | Status | Skill | Produces | Required tools | Optional tools | Module(s) |
 |---|---|---|---|---|---|
-| Core | gradient-portfolio-lens | Portfolio Lens canvas and social copy | get_capital_market_assumptions | get_macro_signals | research |
+| Core | gradient-portfolio-lens | Portfolio Lens canvas and social copy | get_capital_market_assumptions (`portfolio_analytics`, `allocation_frontier`, `allocation_regimes`; inline weights only) | get_macro_signals | research |
 | Core | gradient-signal-spotlight | Signal Spotlight canvas and social copy | get_macro_signals | — | gradientSignals |
 | Core | gradient-tactical-dashboard | Tactical Dashboard canvas and social copy | get_macro_signals, get_capital_market_assumptions | — | gradientSignals, research |
 | Core | gradient-ask-gradient | Ask Gradient canvas and social copy | get_macro_signals, get_capital_market_assumptions | check_portfolio_policy, get_portfolio_exposure | gradientSignals, research |
@@ -32,7 +32,7 @@ and `effective_capabilities` must equal whether that mode is not `unavailable`. 
 | Core | gradient-liquidity-pacing | 6–10 page liquidity and pacing PDF | check_portfolio_policy, get_portfolio_exposure, get_private_markets_holdings, get_capital_market_assumptions | — | portfolio |
 | Core | gradient-decision-ic-memo | IC memo PDF | list_portfolios, get_portfolio_structure, get_portfolio_exposure, check_portfolio_policy, get_portfolio_historical_returns, get_portfolio_attribution, get_capital_market_assumptions | Strategy Lab supplement; missing makes the memo Partial | portfolio, research |
 | Blocked | gradient-manager-evaluation | Single, fit or named-manager comparison PDF | — | — | Blocked until public selected return-series IDs are accessible |
-| Blocked | gradient-idd-private-markets-pme | Private-markets PME PDF or typed no-cash-flow result | — | — | Blocked — live private-markets PME builder path unavailable |
+| Core | gradient-idd-private-markets-pme | Private-markets PME PDF or typed no-cash-flow result | list_portfolios, get_portfolio_exposure, get_benchmarks, build_strategy_lab_session, run_strategy_lab_private_markets_pme | get_private_markets_holdings | portfolio, strategyLab |
 | Core | gradient-portfolio-import | Governed import preview / UI handoff | get_portfolio_import_capabilities, get_portfolio_import_schema, start_portfolio_import_session, stage_private_market_holding_records, stage_portfolio_import_records, resolve_portfolio_import_entities, confirm_portfolio_import_mappings, preview_portfolio_import, commit_portfolio_import, get_portfolio_import_session, list_portfolio_import_runs | rollback_portfolio_import_bundle for an explicit bundle rollback request only | portfolio |
 | Core | gradient-menu | In-chat grouped command catalog | none | — | — |
 | Core | gradient-setup | Readiness PDF | list_organizations, get_gradient_capabilities | Active Core probes only | — |
@@ -54,14 +54,14 @@ review, and `attribution_required` values retain the returned attribution.
 set verifies:
 
 - baseline return/currency/cash basis, dated non-fallback currency composition
-  and USD share, uncertainty, both private-market risk bases, refresh and total
+  and USD share, uncertainty, canonical economic risk inputs, refresh and total
   counts;
 - one-call bounded dense correlations with weekly governance, daily/monthly
   sensitivity, factor proxy construction, composition-aware FX inputs,
   confidence, anomaly flags, matrix validation and complete coverage;
 - server-computed supplied-weight return, risk and Euler risk contribution
-  with marginal contribution, selected risk basis, formula version and
-  reconciliation;
+  with marginal contribution, the canonical economic risk basis, formula
+  version and reconciliation;
 - model-detected regional regime probabilities, coverage, freshness and as-of
   dates.
 
@@ -92,7 +92,7 @@ For private-markets PME, `get_portfolio_exposure` must return each exposure's `p
 `date_basis`, `currency`, `method`, `payload_digest`, and `points`. Benchmark comparisons must preserve
 `benchmark_window_return`.
 
-For `gradient-portfolio-import`, all twelve required tools must be advertised
+For `gradient-portfolio-import`, all eleven required tools must be advertised
 and available, and the selected source connector must be client-authorized.
 Run the dedicated `portfolio-import-governed` probe set only after the user
 selects one source provider/account and one existing Gradient portfolio.

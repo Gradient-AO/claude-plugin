@@ -296,6 +296,64 @@ def compute(spec, base_dir):
     return F
 
 
+def apply_server_evidence(F, evidence):
+    """Replace publication metrics with server-returned values.
+
+    The local values already in F remain useful only for the regression gates.
+    """
+    payloads = evidence.get("payloads") or {}
+    base_payload = payloads.get("base") or {}
+    analytics = base_payload.get("analytics") or {}
+    if analytics and "base" in F:
+        F["base"].update(
+            exp_excess=analytics["expected_excess_return"],
+            exp_total=analytics.get("expected_total_return"),
+            vol=analytics["volatility"],
+            ret_per_risk=analytics.get("sharpe_ratio"),
+        )
+        factor_shares = {
+            int(row["factor_id"]): row["percent_of_total"]
+            for row in analytics.get("risk_contributions", [])
+        }
+        portfolio = F["_ports"][0]
+        factor_weights = mcp_check.factor_weights(portfolio)
+        by_class = {row["name"]: row for row in F["base"].get("classes", [])}
+        for cls in portfolio["classes"]:
+            risk_share = 0.0
+            for sleeve in cls["sleeves"]:
+                factor_id = sleeve["factor_id"]
+                total_factor_weight = factor_weights.get(factor_id, 0.0)
+                if total_factor_weight > 0:
+                    risk_share += (factor_shares.get(factor_id, 0.0)
+                                   * sleeve["weight"] / total_factor_weight)
+            if cls["name"] in by_class:
+                by_class[cls["name"]]["risk_share"] = risk_share
+    regime_payload = payloads.get("regimes") or {}
+    if F["format"] == "scenario_stress" and regime_payload:
+        by_regime = {
+            row["regime_id"]: row
+            for row in regime_payload.get("regime_results", [])
+        }
+        baseline_analytics = regime_payload.get("analytics") or analytics
+        for row in F["rows"]:
+            scenario = row["scenario"]
+            server_analytics = (
+                baseline_analytics if scenario == "baseline"
+                else by_regime.get(scenario.removeprefix("regime:"), {}).get("analytics")
+                if scenario.startswith("regime:")
+                else None
+            )
+            if server_analytics:
+                row["results"][0].update(
+                    exp_excess=server_analytics["expected_excess_return"],
+                    vol=server_analytics["volatility"],
+                    ret_per_risk=server_analytics.get("sharpe_ratio"),
+                )
+    F["publication_source"] = evidence.get("publication_source")
+    F["_server_evidence"] = evidence
+    return F
+
+
 # =============================================================================== layout helpers
 def axes_px(fig, x0, y0, w, h):
     W, H = fig.get_figwidth() * fig.dpi, fig.get_figheight() * fig.dpi
@@ -1046,10 +1104,19 @@ def main():
     if spec["format"] not in CHARTS:
         sys.exit(f"Unknown format {spec['format']!r}. Options: {', '.join(CHARTS)}")
     if args.cmd == "mcp-weights":
-        print(json.dumps(mcp_check.mcp_call(core.load_portfolio(spec["portfolios"][0],
-                                                              os.path.dirname(os.path.abspath(args.spec)))), indent=1))
+        portfolio = core.load_portfolio(
+            spec["portfolios"][0],
+            os.path.dirname(os.path.abspath(args.spec)),
+        )
+        print(json.dumps(mcp_check.mcp_recipe(spec, portfolio), indent=1))
         return
-    F = compute(spec, os.path.dirname(os.path.abspath(args.spec)))
+    base_dir = os.path.dirname(os.path.abspath(args.spec))
+    evidence = None
+    if not spec.get("offline_reason"):
+        evidence = mcp_check.verify(spec, base_dir)
+    F = compute(spec, base_dir)
+    if evidence is not None:
+        F = apply_server_evidence(F, evidence)
     if args.cmd == "facts":
         print(json.dumps({k: v for k, v in F.items() if not k.startswith("_")}, indent=2, default=str))
         return
@@ -1057,7 +1124,7 @@ def main():
         print(f"WARNING: rendering without the MCP cross-check ({spec['offline_reason']}). Not for publication.",
               file=sys.stderr)
     else:
-        spec["_mcp_result"] = mcp_check.verify(spec, os.path.dirname(os.path.abspath(args.spec)))
+        spec["_mcp_result"] = evidence
         print(f"MCP cross-check passed: payload {spec['_mcp_result']['payload_digest_12']}, "
               f"Δ return {spec['_mcp_result']['diffs']['exp_excess']:.5%}, Δ vol {spec['_mcp_result']['diffs']['vol']:.5%}")
     if len(spec.get("headline", "")) > 90:

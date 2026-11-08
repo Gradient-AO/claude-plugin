@@ -1,7 +1,7 @@
 {
-  "version": "2026-11-02",
+  "version": "2026-11-03",
   "minimum_connector_contract": {
-    "minimum_service_version": "0.11.0",
+    "minimum_service_version": "0.11.1",
     "compatibility_epoch": 4,
     "required_tools": [
       "build_strategy_lab_session",
@@ -17,23 +17,22 @@
       "get_portfolio_structure",
       "get_private_markets_holdings",
       "list_organizations",
-      "list_portfolios",
-      "run_strategy_lab_private_markets_pme"
+      "list_portfolios"
     ],
     "required_response_field_paths": {
       "build_strategy_lab_session": [
         "status",
         "domain",
         "strategy_lab_session",
-        "coverage.status",
-        "provenance.builder"
+        "coverage.status"
       ],
       "check_portfolio_policy": [
         "overall_status",
         "allocation_bands.coverage.status",
         "return_objective.coverage.status",
         "risk_limits.coverage.status",
-        "risk_limits.coverage.missing_reason_codes[0]",
+        "risk_limits.coverage.assessed_count",
+        "risk_limits.coverage.total_count",
         "risk_limits.observation_basis.configuration_status",
         "risk_limits.observation_basis.source_tool",
         "risk_limits.observation_basis.volatility_basis",
@@ -182,59 +181,19 @@
         "portfolios[0].portfolio_id",
         "portfolios[0].canonical_default",
         "total_count"
-      ],
-      "run_strategy_lab_private_markets_pme": [
-        "domain",
-        "ks_pme",
-        "direct_alpha",
-        "irr",
-        "tvpi",
-        "dpi",
-        "rvpi",
-        "benchmark_comparisons",
-        "benchmark_comparisons[0].benchmark_window_return",
-        "cash_flow_series",
-        "cash_flow_series.status",
-        "cash_flow_series.date_basis",
-        "cash_flow_series.currency",
-        "cash_flow_series.method",
-        "cash_flow_series.payload_digest",
-        "cash_flow_series.points",
-        "multiples_series",
-        "multiples_series.status",
-        "multiples_series.date_basis",
-        "multiples_series.currency",
-        "multiples_series.method",
-        "multiples_series.payload_digest",
-        "multiples_series.points",
-        "pme_series",
-        "pme_series.status",
-        "pme_series.date_basis",
-        "pme_series.currency",
-        "pme_series.method",
-        "pme_series.payload_digest",
-        "pme_series.points",
-        "irr_series",
-        "irr_series.status",
-        "irr_series.date_basis",
-        "irr_series.currency",
-        "irr_series.method",
-        "irr_series.payload_digest",
-        "irr_series.points",
-        "result_rows",
-        "has_sufficient_data",
-        "data_quality_limitations",
-        "result_freshness"
       ]
     },
     "required_probe_ids": [
       "orgs",
       "capabilities_summary",
+      "allocation_recipes",
       "sample_portfolio",
       "portfolio_tree",
       "portfolio_exposure",
       "portfolio_policy",
-      "portfolio_returns",
+      "portfolio_returns_summary",
+      "portfolio_returns_growth",
+      "portfolio_returns_rolling",
       "portfolio_attribution",
       "portfolio_ex_ante_attribution",
       "portfolio_factor_currency",
@@ -247,12 +206,10 @@
       "cma_baseline",
       "cma_correlations_full_matrix",
       "cma_portfolio_analytics",
+      "cma_allocation_frontier",
+      "cma_allocation_regimes",
       "strategy_benchmarks",
       "strategy_expected_statistics_session",
-      "strategy_pme_builder",
-      "strategy_pme",
-      "strategy_pme_sensitivity_builder",
-      "strategy_pme_sensitivity",
       "strategy_date_windows_session",
       "grip_cma_statistics"
     ]
@@ -285,6 +242,24 @@
           "portfolio_import_commit",
           "portfolio_import_session",
           "portfolio_import_run_history"
+        ]
+      }
+    },
+    "gradient-idd-private-markets-pme": {
+      "live": {
+        "required_tools": [
+          "list_portfolios",
+          "get_portfolio_exposure",
+          "get_benchmarks",
+          "build_strategy_lab_session",
+          "run_strategy_lab_private_markets_pme"
+        ],
+        "required_probe_ids": [
+          "sample_portfolio",
+          "portfolio_exposure",
+          "strategy_benchmarks",
+          "strategy_pme_builder",
+          "strategy_pme"
         ]
       }
     },
@@ -373,6 +348,35 @@
       "envelope": false
     },
     {
+      "id": "allocation_recipes",
+      "set": "full",
+      "tool": "get_gradient_capabilities",
+      "depends_on": [
+        "orgs"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "detail": "full"
+      },
+      "required": [
+        "allocation_recipes",
+        "allocation_recipes[0].action_id",
+        "allocation_recipes[0].recipe.analysisScope",
+        "allocation_recipes[0].recipe.portfolioDependency",
+        "allocation_recipes[0].recipe.steps[0].tool",
+        "allocation_recipes[0].recipe.steps[0].inputHandoff",
+        "allocation_recipes[0].recipe.steps[0].requiredResultBlocks",
+        "allocation_recipes[0].recipe.steps[0].numericTransformOwner"
+      ],
+      "equals": {
+        "detail": "full",
+        "allocation_recipes[0].recipe.analysisScope": "ad_hoc_inline_allocation",
+        "allocation_recipes[0].recipe.portfolioDependency": "none",
+        "allocation_recipes[0].recipe.steps[0].numericTransformOwner": "server"
+      },
+      "envelope": false
+    },
+    {
       "id": "sample_portfolio",
       "set": "standard",
       "tool": "list_portfolios",
@@ -405,12 +409,10 @@
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
         "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
+        "basis": "policy_targets",
         "include": [
           "factor_currency_exposure"
         ],
-        "include_context": {
-          "basis": "policy_targets"
-        },
         "limit": 1
       },
       "required": [
@@ -436,6 +438,7 @@
       "args": {
         "organization_id": "<orgs:organizations[0].id>",
         "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
+        "basis": "policy_targets",
         "include": [
           "risk_contribution"
         ],
@@ -554,6 +557,7 @@
       "tool": "get_capital_market_assumptions",
       "args": {
         "view": "baseline",
+        "envelope": "full",
         "per_page": 5
       },
       "required": [
@@ -578,6 +582,7 @@
       "tool": "get_capital_market_assumptions",
       "args": {
         "view": "correlations",
+        "envelope": "full",
         "factor_ids": [
           1,
           7,
@@ -626,7 +631,7 @@
             "weight": 0.4
           }
         ],
-        "risk_basis": "desmoothed_economic"
+        "risk_basis": "economic"
       },
       "required": [
         "weights",
@@ -646,12 +651,99 @@
         "view": "portfolio_analytics",
         "calculation.engine": "gradient_cma_expected_statistics",
         "calculation.formula_version": "2.0.0",
-        "calculation.risk_basis": "desmoothed_economic"
+        "analytics.risk_basis": "economic"
       },
       "expected_return_provenance": {
         "return_source": "cma_implied",
         "weight_basis": "policy_targets",
         "basis": "inferred_from_tool_until_mcp_fields_ship"
+      }
+    },
+    {
+      "id": "cma_allocation_frontier",
+      "set": "full",
+      "tool": "get_capital_market_assumptions",
+      "args": {
+        "view": "allocation_frontier",
+        "weights": [
+          {
+            "factor_id": 1,
+            "weight": 0.6
+          },
+          {
+            "factor_id": 7,
+            "weight": 0.4
+          }
+        ],
+        "point_count": 7,
+        "risk_basis": "economic"
+      },
+      "required": [
+        "analysis_scope",
+        "portfolio_dependency",
+        "frontier.current_portfolio",
+        "frontier.points",
+        "frontier.special_portfolios",
+        "frontier.selected_optimized_portfolio",
+        "frontier.one_way_turnover",
+        "frontier.metric_deltas",
+        "frontier.constraints",
+        "frontier.diagnostics",
+        "release.version",
+        "calculation.formula_version",
+        "response_semantics.schema_version"
+      ],
+      "equals": {
+        "view": "allocation_frontier",
+        "analysis_scope": "ad_hoc_inline_allocation",
+        "portfolio_dependency": "none",
+        "frontier.engine": "@gradientcio/analytics-calculators",
+        "frontier.diagnostics.convergence_status": "completed"
+      }
+    },
+    {
+      "id": "cma_allocation_regimes",
+      "set": "full",
+      "tool": "get_capital_market_assumptions",
+      "args": {
+        "view": "allocation_regimes",
+        "weights": [
+          {
+            "factor_id": 1,
+            "weight": 0.6
+          },
+          {
+            "factor_id": 7,
+            "weight": 0.4
+          }
+        ],
+        "regime_ids": [
+          "RECOVERY",
+          "LATE_CYCLE"
+        ],
+        "risk_basis": "economic"
+      },
+      "required": [
+        "analysis_scope",
+        "portfolio_dependency",
+        "requested_regime_ids",
+        "regime_results[0].analytics.expected_total_return",
+        "regime_results[0].analytics.volatility",
+        "regime_results[0].analytics.risk_contributions",
+        "regime_results[0].validation_receipt",
+        "ranking",
+        "batch_consistency",
+        "release.version",
+        "response_semantics.schema_version"
+      ],
+      "equals": {
+        "view": "allocation_regimes",
+        "analysis_scope": "ad_hoc_inline_allocation",
+        "portfolio_dependency": "none",
+        "batch_consistency.single_cma_release": true,
+        "batch_consistency.single_assumption_set": true,
+        "batch_consistency.single_currency_projection": true,
+        "batch_consistency.single_factor_order": true
       }
     },
     {
@@ -793,7 +885,9 @@
         "allocation_bands.coverage.status",
         "return_objective.coverage.status",
         "risk_limits.coverage.status",
-        "risk_limits.coverage.missing_reason_codes[0]",
+        "risk_limits.coverage.assessed_count",
+        "risk_limits.coverage.total_count",
+        "risk_limits.coverage.missing_reason_codes",
         "risk_limits.observation_basis.configuration_status",
         "risk_limits.observation_basis.source_tool",
         "risk_limits.observation_basis.volatility_basis",
@@ -809,9 +903,11 @@
       "equals": {
         "portfolio.record_kind": "example",
         "policy_provenance.basis": "governed_inputs_only",
-        "risk_limits.coverage.status": "unavailable",
-        "risk_limits.coverage.missing_reason_codes[0]": "risk_observation_missing",
-        "risk_limits.observation_basis.configuration_status": "unavailable",
+        "risk_limits.coverage.status": "available",
+        "risk_limits.coverage.assessed_count": 3,
+        "risk_limits.coverage.total_count": 3,
+        "risk_limits.coverage.missing_reason_codes": [],
+        "risk_limits.observation_basis.configuration_status": "governed",
         "risk_limits.observation_basis.source_tool": "get_portfolio_historical_returns",
         "risk_limits.observation_basis.volatility_basis": "annualized_from_monthly_sample",
         "risk_limits.observation_basis.drawdown_basis": "maximum_compounded_peak_to_trough_magnitude",
@@ -857,7 +953,7 @@
       ]
     },
     {
-      "id": "portfolio_returns",
+      "id": "portfolio_returns_summary",
       "set": "full",
       "tool": "get_portfolio_historical_returns",
       "depends_on": [
@@ -871,9 +967,6 @@
         "sections": [
           "standard_periods",
           "calendar_years",
-          "cumulative_growth",
-          "drawdown_series",
-          "rolling",
           "risk_metrics",
           "benchmark_relative"
         ],
@@ -882,11 +975,9 @@
           "filters",
           "coverage",
           "display",
+          "policy_benchmark",
           "standard_periods",
           "calendar_years",
-          "cumulative_growth",
-          "drawdown_series",
-          "rolling",
           "risk_metrics",
           "benchmark_relative"
         ]
@@ -898,13 +989,11 @@
         "coverage.missing_reasons",
         "coverage.selected_point_count",
         "coverage.sections.standard_periods.status",
-        "coverage.sections.cumulative_growth.status",
-        "coverage.sections.drawdown_series.status",
-        "coverage.sections.rolling.status",
         "coverage.sections.risk_metrics.status",
         "coverage.sections.benchmark_relative.status",
         "display.return_unit",
         "display.risk_free_rate",
+        "policy_benchmark",
         "standard_periods",
         "calendar_years",
         "calendar_years[0].year",
@@ -921,22 +1010,6 @@
         "calendar_years[10].missing_reason",
         "calendar_years[10].policy_benchmark_return",
         "calendar_years[10].arithmetic_excess_return",
-        "cumulative_growth[0].period_date",
-        "cumulative_growth[0].growth_index",
-        "cumulative_growth[0].is_base_row",
-        "cumulative_growth[0].policy_benchmark_growth_index",
-        "drawdown_series",
-        "drawdown_series[0].period_date",
-        "drawdown_series[0].drawdown",
-        "drawdown_series[0].policy_benchmark_drawdown",
-        "rolling",
-        "rolling[0].window",
-        "rolling[0].period_date",
-        "rolling[0].return",
-        "rolling[0].annualized_volatility",
-        "rolling[0].policy_benchmark_return",
-        "rolling[0].policy_benchmark_annualized_volatility",
-        "rolling[0].arithmetic_excess_return",
         "risk_metrics.month_count",
         "risk_metrics.annualized_volatility",
         "risk_metrics.sharpe_ratio",
@@ -961,9 +1034,6 @@
         "calendar_years[10].year": 2016,
         "calendar_years[10].partial": true,
         "calendar_years[10].coverage_status": "partial",
-        "cumulative_growth[0].growth_index": 1,
-        "cumulative_growth[0].is_base_row": true,
-        "cumulative_growth[0].policy_benchmark_growth_index": 1,
         "benchmark_relative.commitments_total": 69,
         "benchmark_relative.commitments_returned": 69,
         "benchmark_relative.commitments_truncated": false,
@@ -996,6 +1066,111 @@
           "unit": "count"
         }
       ]
+    },
+    {
+      "id": "portfolio_returns_growth",
+      "set": "full",
+      "tool": "get_portfolio_historical_returns",
+      "depends_on": [
+        "orgs",
+        "sample_portfolio"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
+        "limit": 100,
+        "sections": [
+          "points",
+          "cumulative_growth"
+        ],
+        "fields": [
+          "portfolio",
+          "filters",
+          "coverage",
+          "display",
+          "policy_benchmark",
+          "points",
+          "cumulative_growth"
+        ]
+      },
+      "required": [
+        "portfolio.portfolio_id",
+        "portfolio.record_kind",
+        "coverage.status",
+        "coverage.missing_reasons",
+        "coverage.sections.points.status",
+        "coverage.sections.cumulative_growth.status",
+        "display.return_unit",
+        "policy_benchmark",
+        "points",
+        "points[0].period_date",
+        "points[0].return",
+        "cumulative_growth",
+        "cumulative_growth[0].period_date",
+        "cumulative_growth[0].growth_index",
+        "cumulative_growth[0].is_base_row",
+        "cumulative_growth[0].policy_benchmark_growth_index"
+      ],
+      "equals": {
+        "portfolio.record_kind": "example",
+        "display.return_unit": "decimal_fraction",
+        "cumulative_growth[0].growth_index": 1,
+        "cumulative_growth[0].is_base_row": true,
+        "cumulative_growth[0].policy_benchmark_growth_index": 1
+      }
+    },
+    {
+      "id": "portfolio_returns_rolling",
+      "set": "full",
+      "tool": "get_portfolio_historical_returns",
+      "depends_on": [
+        "orgs",
+        "sample_portfolio"
+      ],
+      "args": {
+        "organization_id": "<orgs:organizations[0].id>",
+        "portfolio_id": "<sample_portfolio:portfolios[0].portfolio_id>",
+        "limit": 100,
+        "sections": [
+          "rolling",
+          "drawdown_series"
+        ],
+        "fields": [
+          "portfolio",
+          "filters",
+          "coverage",
+          "display",
+          "policy_benchmark",
+          "rolling",
+          "drawdown_series"
+        ]
+      },
+      "required": [
+        "portfolio.portfolio_id",
+        "portfolio.record_kind",
+        "coverage.status",
+        "coverage.missing_reasons",
+        "coverage.sections.rolling.status",
+        "coverage.sections.drawdown_series.status",
+        "display.return_unit",
+        "policy_benchmark",
+        "rolling",
+        "rolling[0].window",
+        "rolling[0].period_date",
+        "rolling[0].return",
+        "rolling[0].annualized_volatility",
+        "rolling[0].policy_benchmark_return",
+        "rolling[0].policy_benchmark_annualized_volatility",
+        "rolling[0].arithmetic_excess_return",
+        "drawdown_series",
+        "drawdown_series[0].period_date",
+        "drawdown_series[0].drawdown",
+        "drawdown_series[0].policy_benchmark_drawdown"
+      ],
+      "equals": {
+        "portfolio.record_kind": "example",
+        "display.return_unit": "decimal_fraction"
+      }
     },
     {
       "id": "portfolio_attribution",
@@ -1171,8 +1346,7 @@
         "status",
         "domain",
         "strategy_lab_session",
-        "coverage.status",
-        "provenance.builder"
+        "coverage.status"
       ],
       "non_null": [
         "strategy_lab_session"
@@ -1180,13 +1354,12 @@
       "equals": {
         "status": "available",
         "domain": "expected-statistics",
-        "coverage.status": "available",
-        "provenance.builder": "server"
+        "coverage.status": "available"
       }
     },
     {
       "id": "strategy_pme_builder",
-      "set": "full",
+      "set": "optional",
       "tool": "build_strategy_lab_session",
       "args": {
         "domain": "private-markets-pme",
@@ -1217,7 +1390,7 @@
     },
     {
       "id": "strategy_pme",
-      "set": "full",
+      "set": "optional",
       "tool": "run_strategy_lab_private_markets_pme",
       "depends_on": [
         "strategy_pme_builder"
@@ -1274,7 +1447,7 @@
     },
     {
       "id": "strategy_pme_sensitivity_builder",
-      "set": "full",
+      "set": "optional",
       "tool": "build_strategy_lab_session",
       "args": {
         "domain": "private-markets-pme",
@@ -1305,7 +1478,7 @@
     },
     {
       "id": "strategy_pme_sensitivity",
-      "set": "full",
+      "set": "optional",
       "tool": "run_strategy_lab_private_markets_pme",
       "depends_on": [
         "strategy_pme_sensitivity_builder"
@@ -1375,8 +1548,7 @@
         "status",
         "domain",
         "strategy_lab_session",
-        "coverage.status",
-        "provenance.builder"
+        "coverage.status"
       ],
       "non_null": [
         "strategy_lab_session"
@@ -1384,8 +1556,7 @@
       "equals": {
         "status": "available",
         "domain": "date-windows",
-        "coverage.status": "available",
-        "provenance.builder": "server"
+        "coverage.status": "available"
       }
     },
     {

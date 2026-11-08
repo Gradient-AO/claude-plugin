@@ -14,7 +14,10 @@ from suites.static.attribution import (
 from suites.static.catalog_routing import catalog_routing_checks
 from suites.static.examples import analysis_example_checks, public_example_cover_checks
 from suites.static.handoffs import handoff_contract_checks
-from suites.static.packaging import self_contained_report_skill_checks
+from suites.static.packaging import (
+    marketplace_packaging_checks,
+    self_contained_report_skill_checks,
+)
 from suites.static.provider_recipes import provider_recipe_golden_checks
 from suites.static.report_validators import (
     portfolio_import_governed_contract_checks,
@@ -29,6 +32,7 @@ def static(allow_branded):
     print("Static checks")
     skills, validator_manifest = catalog_routing_checks()
     attribution_skill_contract_checks()
+    marketplace_packaging_checks()
     self_contained_report_skill_checks(skills, validator_manifest)
     sources_appendix_contract_checks()
     registered_json_validator_checks(validator_manifest)

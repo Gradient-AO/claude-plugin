@@ -34,6 +34,12 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 |---|---|---|
 | `gradient-decision-ic-memo` | Create a sourced decision memo for an investment committee. Triggers: 'draft an IC memo', 'prepare an allocation vote', 'write a manager hire memo'. For portfolio monitoring use gradient-portfolio-review. | portfolio,research,strategyLab,firmFundDiligence |
 
+### Managers
+
+| Skill | Produces / routes | Modules |
+|---|---|---|
+| `gradient-idd-private-markets-pme` | Create a private-markets PME report for one fund or manager. Triggers: 'run private-markets PME', 'compare this fund to public markets', 'assess PME performance'. For program construction use gradient-allocation-study. | portfolio,strategyLab |
+
 ### Quick Takes
 
 | Skill | Produces / routes | Modules |
@@ -48,7 +54,6 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 | Skill | Produces / routes | Modules |
 |---|---|---|
 | `gradient-manager-evaluation` | Create benchmark-relative manager evaluation reports. Triggers: 'assess one track record', 'test manager portfolio fit', 'compare these named managers'. | strategyLab |
-| `gradient-idd-private-markets-pme` | Create a private-markets PME report for one fund or manager. Triggers: 'run private-markets PME', 'compare this fund to public markets', 'assess PME performance'. For program construction use gradient-allocation-study. | strategyLab |
 
 ### Paused
 
