@@ -5,6 +5,8 @@ description: "Gradient PA · Currency Lens: shows how a portfolio such as a glob
 
 # Gradient PA · Currency Lens
 
+> **Archived legacy reference — do not execute directly.** Current Portfolio Lens workflows use `SKILL.md` at the skill root, `references/lens-framework.md`, and `scripts/build_cma_mcp.py`. Legacy script names below (`build_cma.py`, `check_core_sync.py`, `pa_framework.md`) are retained for historical reference only.
+
 > **Blocked pending data confirmation.** The renderer refuses to run until the CMA file records `fx.expected_change_basis` (spot change vs currency excess return, confirmed by Gradient) and `fx.usd_share` (USD-denominated share of each factor). Peer-review tests showed the best hedge ratio moves from 30% to 0% or ~100% depending on these two inputs (framework §4b). The samples are withheld.
 
 **Chart:** one investor's curve: implied return per unit of risk against the share of the dollar exposure hedged (0–100% in 5% steps), with unhedged, most efficient and fully hedged marked. **One home currency per post** (`focus_home`); make the sterling or euro view its own post. **Hero:** the implied most efficient hedge ratio.

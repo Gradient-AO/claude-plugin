@@ -3,6 +3,9 @@
 A post spec is a JSON file. Words (headline, analysis, labels) are typed by Claude.
 Every NUMBER is a reference into a saved Gradient payload, so it is read, never typed.
 
+Source of truth: quicktake-shared/spec.py in the GradientCIO plugin. Never edit a skill's copy;
+edit this file and run `python plugins/gradient-cio/tools/sync_quicktake_shared.py`.
+
 Inputs:   "inputs": {"rr": "path/to/relative_returns.json", "cma": "path/to/cma.json"}
 Ref:      {"ref": "rr:board_total[pair_id=growth_vs_value].relative_3m_pct", "fmt": "pct1"}
 Derived:  {"op": "sub", "args": [ref, ref], "scale": 100, "fmt": "pp1"}   ops: sub add mul div
@@ -13,7 +16,10 @@ Path syntax: dot keys, [n] list index, [key=value] first list item whose key equ
 Formats: pct1 (value already in %), pct0, x100pct1 / x100pct0 (decimal -> %), pp1 (percentage
 points), int, num2, prob0 (decimal probability -> %), date (ISO -> Oct 21, 2026), ord (95 -> 95th), title, text.
 """
-import json, os, re, sys
+import json
+import os
+import re
+import sys
 
 _SEG = re.compile(r"([^.\[\]]+)|\[(\d+)\]|\[([^=\]]+)=([^\]]+)\]")
 
@@ -72,7 +78,15 @@ def resolve(node, data):
         v = get_path(data[src], path)
     elif "op" in node:
         a, b = (resolve(x, data) for x in node["args"])
-        v = {"sub": a - b, "add": a + b, "mul": a * b, "div": a / b}[node["op"]]
+        op = node["op"]
+        if op == "div":
+            if b == 0:
+                raise ValueError(f"division by zero in spec op: {node}")
+            v = a / b
+        elif op in ("sub", "add", "mul"):
+            v = {"sub": a - b, "add": a + b, "mul": a * b}[op]
+        else:
+            raise ValueError(f"unsupported op {op!r} in node: {node}")
     else:
         raise ValueError(f"node has no ref, op or text: {node}")
     if isinstance(v, (int, float)) and not isinstance(v, bool) and node.get("scale"):

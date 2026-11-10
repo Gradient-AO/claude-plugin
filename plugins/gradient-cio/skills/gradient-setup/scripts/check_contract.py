@@ -27,7 +27,8 @@ def get(obj, path):
     return obj
 
 def load(p):
-    d = json.load(open(p, encoding="utf-8"))
+    with open(p, encoding="utf-8") as fh:
+        d = json.load(fh)
     if isinstance(d, list) and d and isinstance(d[0], dict) and "text" in d[0]:   # MCP content wrapper
         d = json.loads(d[0]["text"])
     return d

@@ -4,63 +4,32 @@
 from __future__ import annotations
 
 import argparse
-import datetime
 import json
 import os
 import shutil
 import subprocess
 import sys
 import tempfile
-import zipfile
 from pathlib import Path
 
+if str(Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-ROOT = Path(__file__).resolve().parents[1]
+from _common import (
+    EXAMPLE_DIRECT_SOURCES as DIRECT_SOURCES,
+    EXAMPLE_GIPS_SOURCES as GIPS_SOURCES,
+    FIXED_TIME,
+    PLUGIN_ROOT,
+    ZIP_TIME,
+    normalize_pptx,
+)
+
+ROOT = PLUGIN_ROOT
 FIXTURES = ROOT / "tests" / "fixtures"
 QA_RENDERER = ROOT / "shared" / "qa_report.py"
 GIPS_COMPOSER = (
     ROOT / "internal" / "gips-evidence-review" / "scripts" / "compose_gips_report.py"
 )
-FIXED_TIME = datetime.datetime(2020, 1, 1, tzinfo=datetime.timezone.utc)
-ZIP_TIME = (2020, 1, 1, 0, 0, 0)
-
-DIRECT_SOURCES = {
-    "gradient-odd-ddq-reconcile": "ddq.json",
-    "gradient-manager-evaluation-single": "idd-manager-performance-single.json",
-    "gradient-manager-evaluation-compare": "idd-manager-performance-compare.json",
-    "gradient-manager-evaluation-fit": "idd-portfolio-fit.json",
-    "gradient-idd-private-markets-pme": "idd-private-markets-pme.json",
-    "gradient-allocation-study-total-plan": "allocation-total-plan.json",
-    "gradient-allocation-study-fixed-income": "construction-fixed-income.json",
-    "gradient-allocation-study-global-public-equity": "construction-global-public-equity.json",
-    "gradient-decision-ic-memo": "ic-memo.json",
-    "gradient-odd-report-compare": "compare.json",
-    "gradient-odd-manager-monitor": "digest.json",
-    "gradient-odd-manager-monitor-triage": "triage.json",
-    "gradient-allocation-study-marketable-alternatives": "construction-marketable-alternatives.json",
-    "gradient-liquidity-pacing": "liquidity-pacing.json",
-    "gradient-odd-report": "odd.json",
-    "gradient-portfolio-attribution": "portfolio-attribution-report.json",
-    "gradient-portfolio-attribution-lanes-fallback": "attribution-compare-fallback.json",
-    "gradient-portfolio-attribution-lanes-three-lane": "attribution-compare-three-lane.json",
-    "gradient-portfolio-review": "portfolio-comprehensive.json",
-    "gradient-allocation-study-private-markets": "construction-private-markets.json",
-    "gradient-allocation-study-real-assets": "construction-real-assets.json",
-    "gradient-setup": "setup.json",
-}
-
-GIPS_SOURCES = {
-    "internal-gips-review-asset-owner": (
-        "gips" "-asset-owner-review.md",
-        "gips" "-asset-owner-review-visuals.json",
-        "gips" "-asset-owner-review-meta.json",
-    ),
-    "internal-gips-review-firm": (
-        "gips" "-report-review.md",
-        "gips" "-report-review-visuals.json",
-        "gips" "-report-review-meta.json",
-    ),
-}
 
 
 def skill_for_artifact(artifact: str) -> str:
@@ -114,34 +83,6 @@ def budget_for_artifact(artifact: str) -> Path:
         / "references"
         / "layout-budget.json"
     )
-
-
-def normalize_pptx(path: Path) -> None:
-    """Remove volatile Office timestamps and normalize ZIP member dates."""
-    from pptx import Presentation
-
-    presentation = Presentation(path)
-    presentation.core_properties.created = FIXED_TIME
-    presentation.core_properties.modified = FIXED_TIME
-    presentation.core_properties.last_modified_by = "GradientCIO"
-    presentation.save(path)
-    with tempfile.NamedTemporaryFile(
-        dir=path.parent, suffix=".pptx", delete=False
-    ) as handle:
-        temporary = Path(handle.name)
-    try:
-        with zipfile.ZipFile(path, "r") as source, zipfile.ZipFile(
-            temporary, "w"
-        ) as target:
-            for source_info in source.infolist():
-                info = zipfile.ZipInfo(source_info.filename, ZIP_TIME)
-                info.compress_type = source_info.compress_type
-                info.external_attr = source_info.external_attr
-                info.create_system = source_info.create_system
-                target.writestr(info, source.read(source_info.filename))
-        os.replace(temporary, path)
-    finally:
-        temporary.unlink(missing_ok=True)
 
 
 def gips_source(skill: str, directory: Path) -> Path:

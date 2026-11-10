@@ -24,8 +24,6 @@ from brand import *  # noqa: F401,F403
 
 SERIES = "RISK PULSE"
 ANALYSIS_LABEL = "WHAT’S DRIVING IT"
-AMBER = "#F2B84B"
-STANCE_COLOR = {"Constructive": ACCENT, "Neutral": INK2, "Defensive": AMBER, "Unfavorable": NEG}
 PILLAR_LABELS = {
     "credit_price_of_risk": "Credit price of risk",
     "funding_liquidity_intermediation": "Funding & liquidity",
@@ -274,9 +272,7 @@ def main():
         print(json.dumps(F, indent=2)); return
     if not (args.headline and args.explain):
         sys.exit("--headline and --explain are required to render")
-    if len(args.headline) > 90: sys.exit("Headline over 90 characters.")
-    if len(args.explain) > 700: sys.exit("Analysis over 700 characters.")
-    if args.watch and len(args.watch) > 200: sys.exit("Watch line over 200 characters.")
+    check_copy_limits(args.headline, args.explain, args.watch)
     for kk in args.sizes.split(","):
         print(render(p, F, smart(args.headline), smart(args.explain), smart(args.subtitle), smart(args.watch),
                      args.brand, kk.strip(), args.out, smart(args.explain_square)))

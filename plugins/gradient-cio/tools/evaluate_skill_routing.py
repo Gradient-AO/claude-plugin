@@ -7,31 +7,32 @@ import argparse
 import json
 import pathlib
 import re
-import shutil
 import subprocess
 import sys
 
+if str(pathlib.Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+from _common import (
+    PLUGIN_ROOT,
+    SKILLS_DIR,
+    parse_skill_frontmatter,
+    resolve_claude_command,
+)
+
+ROOT = PLUGIN_ROOT
 FIXTURES = ROOT / "tests" / "fixtures" / "skill-routing.json"
-SKILLS = ROOT / "skills"
-
-
-def _frontmatter_value(text: str, key: str) -> str:
-    match = re.search(rf"(?m)^{re.escape(key)}:\s*(.+?)\s*$", text)
-    if match is None:
-        return ""
-    return match.group(1).strip().strip("\"'")
+SKILLS = SKILLS_DIR
 
 
 def _installed_skills() -> list[dict[str, str]]:
     installed: list[dict[str, str]] = []
     for path in sorted(SKILLS.glob("*/SKILL.md")):
-        text = path.read_text(encoding="utf-8")
+        data = parse_skill_frontmatter(path)
         installed.append(
             {
-                "name": _frontmatter_value(text, "name"),
-                "description": _frontmatter_value(text, "description"),
+                "name": data.get("name", ""),
+                "description": data.get("description", ""),
             }
         )
     return installed
@@ -75,16 +76,6 @@ def _prompt(
         f"INSTALLED SKILLS:\n{json.dumps(installed, ensure_ascii=False)}\n\n"
         f"CASES:\n{json.dumps(cases, ensure_ascii=False)}"
     )
-
-
-def _claude_command() -> list[str] | None:
-    claude = shutil.which("claude")
-    if claude is not None:
-        return [claude]
-    npx = shutil.which("npx")
-    if npx is not None:
-        return [npx, "-y", "@anthropic-ai/claude-code"]
-    return None
 
 
 def evaluate(
@@ -143,7 +134,7 @@ def main() -> int:
     parser.add_argument("--require-claude", action="store_true")
     parser.add_argument("--batch-size", type=int, default=50)
     args = parser.parse_args()
-    claude_command = _claude_command()
+    claude_command = resolve_claude_command()
     if claude_command is None:
         if args.require_claude:
             print("FAIL — Claude CLI is required but unavailable", file=sys.stderr)

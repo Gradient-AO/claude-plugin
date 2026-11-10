@@ -213,6 +213,20 @@ def source_hygiene_checks(allow_branded):
         r.returncode == 0,
         "README, menu and readiness requirements match installed skills",
     )
+    r = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "tools" / "check_tool_references.py"),
+        ],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    check(
+        r.returncode == 0,
+        "every tool reference in skills/ and shared/ is in shared/public-tools.json",
+    )
     py311 = shutil.which("python3.11")
     if py311:
         r = subprocess.run([py311, "-m", "py_compile", str(RENDER)], capture_output=True, text=True, encoding="utf-8", errors="replace")
@@ -255,7 +269,15 @@ def source_hygiene_checks(allow_branded):
     theme_source = (ROOT / "shared" / "report_theme.py").read_text(encoding="utf-8")
     renderer_sources = "\n".join(
         (ROOT / "shared" / name).read_text(encoding="utf-8")
-        for name in ("gradient_report.py", "gradient_pptx.py")
+        for name in (
+            "gradient_report.py",
+            "gradient_pptx.py",
+            "report_svg_charts.py",
+            "pdf_postprocess.py",
+            "pptx_primitives.py",
+            "pptx_charts.py",
+        )
+        if (ROOT / "shared" / name).is_file()
     )
     canonical_colors = re.findall(r'"#[0-9A-F]{6}"', theme_source)
     duplicated = sorted(

@@ -24,7 +24,7 @@ verification report, or performance document exists, include a GIPS and
 performance-integrity subsection.
 
 When supplied evidence includes a composite, pooled-fund report, or
-advertisement, load `../../internal/gips-evidence-review/contract.md` in
+advertisement, load `${CLAUDE_PLUGIN_ROOT}/internal/gips-evidence-review/contract.md` in
 `firm` mode and carry its validated findings into the report; do not expose it
 as a separate command.
 

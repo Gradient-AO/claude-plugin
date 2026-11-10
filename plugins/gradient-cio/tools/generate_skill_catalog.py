@@ -6,14 +6,19 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from pathlib import Path
 
+if str(Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-ROOT = Path(__file__).resolve().parents[1]
-SKILLS = ROOT / "skills"
+from _common import PLUGIN_MANIFEST_PATH, PLUGIN_ROOT, SKILLS_DIR, parse_skill_frontmatter
+
+ROOT = PLUGIN_ROOT
+SKILLS = SKILLS_DIR
 README = ROOT / "README.md"
 MENU = SKILLS / "gradient-menu" / "SKILL.md"
-PLUGIN_MANIFEST = ROOT / ".claude-plugin" / "plugin.json"
+PLUGIN_MANIFEST = PLUGIN_MANIFEST_PATH
 REQUIREMENTS = (
     SKILLS / "gradient-setup" / "references" / "skill-requirements.md"
 )
@@ -42,27 +47,7 @@ README_END = "<!-- END GENERATED SKILL CATALOG -->"
 MENU_BEGIN = "<!-- BEGIN GENERATED SKILL MENU -->"
 MENU_END = "<!-- END GENERATED SKILL MENU -->"
 
-
-def frontmatter(path: Path) -> dict[str, str]:
-    """Read the flat fields needed from a skill's YAML frontmatter."""
-    text = path.read_text(encoding="utf-8")
-    match = re.match(r"^---\n(.*?)\n---\n", text, re.DOTALL)
-    if not match:
-        raise ValueError(f"{path}: missing frontmatter")
-    values: dict[str, str] = {}
-    for line in match.group(1).splitlines():
-        if ":" not in line:
-            continue
-        key, raw = line.split(":", 1)
-        raw = raw.strip()
-        if raw.startswith('"'):
-            try:
-                values[key.strip()] = json.loads(raw)
-                continue
-            except json.JSONDecodeError:
-                pass
-        values[key.strip()] = raw.strip("'\"")
-    return values
+frontmatter = parse_skill_frontmatter
 
 
 def descriptions() -> dict[str, dict[str, str]]:

@@ -4,83 +4,20 @@
 from __future__ import annotations
 
 import argparse
-import datetime
-import io
 import os
 import pathlib
-import re
 import subprocess
 import sys
-import tempfile
-import zipfile
 
+if str(pathlib.Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+from _common import PLUGIN_ROOT, normalize_pptx
+
+ROOT = PLUGIN_ROOT
 SOURCE = ROOT / "tests" / "fixtures" / "golden-report.json"
 RENDERER = ROOT / "shared" / "render.py"
-FIXED_TIME = datetime.datetime(2020, 1, 1, tzinfo=datetime.timezone.utc)
-ZIP_TIME = (2020, 1, 1, 0, 0, 0)
-CORE_TIMESTAMP = re.compile(
-    rb"(<dcterms:(?:created|modified)[^>]*>)[^<]*(</dcterms:(?:created|modified)>)"
-)
-
-
-def _normalized_zip(payload: bytes) -> bytes:
-    source_buffer = io.BytesIO(payload)
-    target_buffer = io.BytesIO()
-    with zipfile.ZipFile(source_buffer, "r") as source, zipfile.ZipFile(
-        target_buffer, "w"
-    ) as target:
-        for source_info in source.infolist():
-            content = source.read(source_info.filename)
-            if source_info.filename == "docProps/core.xml":
-                content = CORE_TIMESTAMP.sub(
-                    rb"\g<1>2020-01-01T00:00:00Z\g<2>", content
-                )
-            info = zipfile.ZipInfo(source_info.filename, ZIP_TIME)
-            info.compress_type = source_info.compress_type
-            info.comment = source_info.comment
-            info.extra = source_info.extra
-            info.internal_attr = source_info.internal_attr
-            info.external_attr = source_info.external_attr
-            info.create_system = source_info.create_system
-            target.writestr(info, content)
-    return target_buffer.getvalue()
-
-
-def _normalize_pptx(path: pathlib.Path) -> None:
-    """Remove volatile Office timestamps and normalize ZIP member dates."""
-    from pptx import Presentation
-
-    presentation = Presentation(path)
-    presentation.core_properties.created = FIXED_TIME
-    presentation.core_properties.modified = FIXED_TIME
-    presentation.core_properties.last_modified_by = "GradientCIO"
-    presentation.save(path)
-
-    with tempfile.NamedTemporaryFile(
-        dir=path.parent, suffix=".pptx", delete=False
-    ) as handle:
-        temporary = pathlib.Path(handle.name)
-    try:
-        with zipfile.ZipFile(path, "r") as source, zipfile.ZipFile(
-            temporary, "w"
-        ) as target:
-            for source_info in source.infolist():
-                content = source.read(source_info.filename)
-                if source_info.filename.endswith(".xlsx"):
-                    content = _normalized_zip(content)
-                info = zipfile.ZipInfo(source_info.filename, ZIP_TIME)
-                info.compress_type = source_info.compress_type
-                info.comment = source_info.comment
-                info.extra = source_info.extra
-                info.internal_attr = source_info.internal_attr
-                info.external_attr = source_info.external_attr
-                info.create_system = source_info.create_system
-                target.writestr(info, content)
-        os.replace(temporary, path)
-    finally:
-        temporary.unlink(missing_ok=True)
+_normalize_pptx = normalize_pptx
 
 
 def main() -> int:
@@ -119,7 +56,7 @@ def main() -> int:
         return result.returncode
     pptx_path = base.with_suffix(".pptx")
     if pptx_path.is_file():
-        _normalize_pptx(pptx_path)
+        normalize_pptx(pptx_path, nested_xlsx=True)
     generated = [
         str(path)
         for path in (base.with_suffix(".pdf"), pptx_path)

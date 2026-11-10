@@ -5,6 +5,8 @@ description: "Gradient PA · Head-to-Head: compares two allocations (for example
 
 # Gradient PA · Head-to-Head
 
+> **Archived legacy reference — do not execute directly.** Current Portfolio Lens workflows use `SKILL.md` at the skill root, `references/lens-framework.md`, and `scripts/build_cma_mcp.py`. Legacy script names below (`build_cma.py`, `check_core_sync.py`, `pa_framework.md`) are retained for historical reference only.
+
 Two allocations, several economies: **which has the higher implied return per unit of risk, and what would moving from A to B be expected to change?**
 
 **Chart:** a dumbbell per scenario on an implied return-per-unit-of-risk axis (lime = first portfolio, slate = second, allocations in the legend). One point: which portfolio sits to the right. **Hero:** both baseline ratios and how many scenarios the leader wins. Extra return, extra risk and return per unit of added risk per scenario are in `facts` for the takeaway and post text.

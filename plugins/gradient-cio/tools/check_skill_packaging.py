@@ -7,7 +7,7 @@ directory, imports every skill validator against that shared runtime, checks
 the Inter fonts and release descriptor, and confirms the manifest versions and
 the shipped skill list agree.
 
-    python tools/check_skill_packaging.py
+    python plugins/gradient-cio/tools/check_skill_packaging.py
 """
 
 from __future__ import annotations
@@ -20,20 +20,23 @@ import subprocess
 import sys
 import tempfile
 
+if str(pathlib.Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
-REPOSITORY = ROOT.parents[1]
+from _common import (
+    CANVAS_OUTPUT,
+    CANVAS_RENDERERS,
+    CHAT_DELIVERY,
+    PLUGIN_ROOT,
+    REPO_ROOT,
+    build_plugin_release_payload,
+    load_plugin_manifest,
+)
+
+ROOT = PLUGIN_ROOT
+REPOSITORY = REPO_ROOT
 REQUIRED_FONTS = ("inter-latin-regular.ttf", "inter-latin-semibold.ttf")
 NAME_LINE = re.compile(r"^name:\s*(\S+)\s*$", re.MULTILINE)
-CHAT_DELIVERY = re.compile(r"^\s+delivery:\s*chat\s*$", re.MULTILINE)
-CANVAS_OUTPUT = re.compile(r"^\s+output:\s*[\"']?canvas[\"']?\s*$", re.MULTILINE)
-CANVAS_RENDERERS = {
-    "gradient-portfolio-lens": "pa_viz.py",
-    "gradient-signal-spotlight": "render_spotlight.py",
-    "gradient-risk-pulse": "render_riskpulse.py",
-    "gradient-tactical-dashboard": "render_dashboard.py",
-    "gradient-ask-gradient": "render_ask.py",
-}
 PLUGIN_ROOT_ASSIGNMENT = re.compile(
     r"^\s*(\w+)\s*=\s*Path\(__file__\)\.resolve\(\)\.parents\[\d+\]",
     re.MULTILINE,
@@ -77,9 +80,7 @@ def tracked_skill_names() -> set[str] | None:
 
 def plugin_manifest() -> dict[str, str]:
     """Read the canonical plugin identity used by packaging checks."""
-    return json.loads(
-        (ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8")
-    )
+    return load_plugin_manifest(ROOT)
 
 
 def is_repository_checkout(
@@ -139,13 +140,7 @@ def check_skill(
     except (OSError, json.JSONDecodeError) as error:
         failures.append(f"{skill.name}: plugin-release.json is unavailable ({error})")
     else:
-        expected_release = {
-            "schema": "gradient-cio-plugin-release/v1",
-            "marketplace": "gradientcio",
-            "plugin": plugin["name"],
-            "release_version": plugin["version"],
-            "update_command": "/plugin marketplace update gradientcio",
-        }
+        expected_release = build_plugin_release_payload(plugin)
         if any(release.get(key) != value for key, value in expected_release.items()):
             failures.append(
                 f"{skill.name}: plugin-release.json does not match the plugin manifest"

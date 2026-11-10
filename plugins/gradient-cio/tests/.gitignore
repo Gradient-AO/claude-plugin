@@ -1,0 +1,5 @@
+out/
+*.html
+*-layout.json
+*-qa*.json
+*-qa*.png

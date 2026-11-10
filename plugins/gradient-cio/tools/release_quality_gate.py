@@ -6,17 +6,20 @@ from __future__ import annotations
 import argparse
 import os
 import pathlib
-import shutil
 import subprocess
 import sys
 
+if str(pathlib.Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
-REPOSITORY = ROOT.parents[1]
+from _common import PLUGIN_ROOT, REPO_ROOT, TOOLS_DIR, resolve_claude_command
+from quick_checks import run_fast_script_checks
+
+ROOT = PLUGIN_ROOT
+REPOSITORY = REPO_ROOT
 TESTS = ROOT / "tests" / "run_tests.py"
-ROUTING_EVALUATOR = ROOT / "tools" / "evaluate_skill_routing.py"
-SYNC_CHECK = ROOT / "tools" / "sync_shared.py"
-PACKAGING_CHECK = ROOT / "tools" / "check_skill_packaging.py"
+ROUTING_EVALUATOR = TOOLS_DIR / "evaluate_skill_routing.py"
+PACKAGING_CHECK = TOOLS_DIR / "check_skill_packaging.py"
 
 
 def main() -> int:
@@ -37,14 +40,9 @@ def main() -> int:
         test_command.append("--allow-branded")
     environment = dict(os.environ)
     environment.setdefault("PYTHONUTF8", "1")
-    sync_check = subprocess.run(
-        [sys.executable, str(SYNC_CHECK), "--check"],
-        cwd=REPOSITORY,
-        env=environment,
-        check=False,
-    )
-    if sync_check.returncode != 0:
-        return sync_check.returncode
+    fast_rc = run_fast_script_checks(environment)
+    if fast_rc != 0:
+        return fast_rc
 
     packaging = subprocess.run(
         [sys.executable, str(PACKAGING_CHECK)],
@@ -76,15 +74,7 @@ def main() -> int:
     if routing.returncode != 0:
         return routing.returncode
 
-    claude = shutil.which("claude")
-    npx = shutil.which("npx")
-    claude_command = (
-        [claude]
-        if claude is not None
-        else [npx, "-y", "@anthropic-ai/claude-code"]
-        if npx is not None
-        else None
-    )
+    claude_command = resolve_claude_command()
     if claude_command is None:
         if args.require_claude:
             print("FAIL — Claude CLI is required but unavailable", file=sys.stderr)

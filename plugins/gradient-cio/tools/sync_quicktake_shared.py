@@ -1,88 +1,110 @@
 #!/usr/bin/env python3
 """Copy the shared Quick Take kit into each Quick Take skill, or check that the copies match (CI).
 
-  python3 tools/sync_quicktake_shared.py          # write the copies
-  python3 tools/sync_quicktake_shared.py --check  # exit 1 if any copy differs (use in CI and before release)
+  python plugins/gradient-cio/tools/sync_quicktake_shared.py          # write the copies
+  python plugins/gradient-cio/tools/sync_quicktake_shared.py --check  # exit 1 if any copy differs
 
 Only the skills in QUICKTAKE_SKILLS are touched; the report skills keep their own shared files.
 
 Why copies: each skill folder must stay self-contained when it is installed, so it carries its own
-scripts/brand.py, assets/fonts, assets/logos and references/canvas-spec.md. quicktake-shared/ is the only place to edit them.
+scripts/brand.py, assets/fonts, assets/logos, references/canvas-spec.md, and (for spec-driven
+skills) scripts/spec.py and references/spec_format.md. quicktake-shared/ is the only place to edit them.
 """
-import filecmp
-import os
+
+from __future__ import annotations
+
+import pathlib
 import shutil
 import sys
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SHARED = os.path.join(ROOT, "quicktake-shared")
-QUICKTAKE_SKILLS = [
-    "gradient-portfolio-lens",
-    "gradient-signal-spotlight",
-    "gradient-risk-pulse",
-    "gradient-tactical-dashboard",
-    "gradient-ask-gradient",
-]
-SKILLS = os.path.join(ROOT, "skills")
-# shared path -> destination inside each skill
-MAP = [
+if str(pathlib.Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+
+from _common import CANVAS_RENDERERS, PLUGIN_ROOT, SKILLS_DIR, normalized_digest
+
+ROOT = PLUGIN_ROOT
+SHARED = ROOT / "quicktake-shared"
+SKILLS = SKILLS_DIR
+QUICKTAKE_SKILLS = tuple(CANVAS_RENDERERS.keys())
+SPEC_SKILLS = frozenset(
+    {
+        "gradient-tactical-dashboard",
+        "gradient-ask-gradient",
+    }
+)
+# shared path -> destination inside each Quick Take skill
+MAP = (
     ("brand.py", "scripts/brand.py"),
     ("canvas-spec.md", "references/canvas-spec.md"),
     ("fonts", "assets/fonts"),
     ("logos", "assets/logos"),
-]
-RETIRED = ["references/brand.md"]  # replaced by canvas-spec.md
+)
+# shared path -> destination inside spec-driven Quick Take skills
+SPEC_MAP = (
+    ("spec.py", "scripts/spec.py"),
+    ("spec_format.md", "references/spec_format.md"),
+)
+RETIRED = ("references/brand.md",)  # replaced by canvas-spec.md
 
 
-def files(src):
-    if os.path.isfile(src):
-        yield "", src
+def files(src: pathlib.Path):
+    if src.is_file():
+        yield pathlib.Path(), src
         return
-    for d, _, fs in os.walk(src):
-        for f in fs:
-            p = os.path.join(d, f)
-            yield os.path.relpath(p, src), p
+    for path in sorted(src.rglob("*")):
+        if path.is_file():
+            yield path.relative_to(src), path
 
 
-def main(check):
-    drift = []
-    skills = [d for d in QUICKTAKE_SKILLS if os.path.isfile(os.path.join(SKILLS, d, "SKILL.md"))]
+def main(check: bool) -> int:
+    drift: list[str] = []
+    skills = [
+        name for name in QUICKTAKE_SKILLS if (SKILLS / name / "SKILL.md").is_file()
+    ]
     missing = sorted(set(QUICKTAKE_SKILLS) - set(skills))
     if missing:
         print("WARNING: Quick Take skills not found: " + ", ".join(missing))
     for sk in skills:
-        for src_rel, dst_rel in MAP:
-            src = os.path.join(SHARED, src_rel)
+        skill_mappings = list(MAP)
+        if sk in SPEC_SKILLS:
+            skill_mappings.extend(SPEC_MAP)
+        for src_rel, dst_rel in skill_mappings:
+            src = SHARED / src_rel
             for rel, sp in files(src):
-                dp = os.path.join(SKILLS, sk, dst_rel, rel) if rel else os.path.join(SKILLS, sk, dst_rel)
-                same = os.path.isfile(dp) and filecmp.cmp(sp, dp, shallow=False)
+                dp = (
+                    SKILLS / sk / dst_rel / rel
+                    if str(rel) != "."
+                    else SKILLS / sk / dst_rel
+                )
+                same = dp.is_file() and normalized_digest(sp) == normalized_digest(dp)
                 if not same:
-                    drift.append(os.path.relpath(dp, ROOT))
+                    drift.append(dp.relative_to(ROOT).as_posix())
                     if not check:
-                        os.makedirs(os.path.dirname(dp), exist_ok=True)
+                        dp.parent.mkdir(parents=True, exist_ok=True)
                         shutil.copy2(sp, dp)
-        for r in RETIRED:
-            p = os.path.join(SKILLS, sk, r)
-            if os.path.exists(p):
-                drift.append(os.path.relpath(p, ROOT) + " (retired)")
+        for retired_rel in RETIRED:
+            retired_path = SKILLS / sk / retired_rel
+            if retired_path.exists():
+                drift.append(retired_path.relative_to(ROOT).as_posix() + " (retired)")
                 if not check:
-                    os.remove(p)
+                    retired_path.unlink()
     if check:
         if drift:
             print(
                 "Shared files out of sync:\n  "
                 + "\n  ".join(drift)
-                + "\nRun: python3 tools/sync_quicktake_shared.py"
+                + "\nRun: python plugins/gradient-cio/tools/sync_quicktake_shared.py"
             )
-            sys.exit(1)
+            return 1
         print(f"OK: {len(skills)} Quick Take skills match quicktake-shared/.")
-    else:
-        print(
-            f"Synced {len(skills)} skills; {len(drift)} file(s) updated."
-            if drift
-            else "Already in sync."
-        )
+        return 0
+    print(
+        f"Synced {len(skills)} skills; {len(drift)} file(s) updated."
+        if drift
+        else "Already in sync."
+    )
+    return 0
 
 
 if __name__ == "__main__":
-    main("--check" in sys.argv)
+    raise SystemExit(main("--check" in sys.argv))

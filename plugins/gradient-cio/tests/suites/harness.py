@@ -13,6 +13,11 @@ import zipfile
 from release_quality import run_artifact_checks, run_source_checks
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
+if str(ROOT / "tools") not in sys.path:
+    sys.path.insert(0, str(ROOT / "tools"))
+
+from _common import parse_skill_frontmatter_text
+
 FIX = ROOT / "tests" / "fixtures"
 RENDER = ROOT / "shared" / "gradient_report.py"
 PPTX_TEMPLATE = ROOT / "assets" / "gradient-master.potx"
@@ -72,8 +77,20 @@ GIPS_REPORT_VALIDATOR = (
     / "validate_gips_report.py"
 )
 GIPS_VARIANTS = [
-    ("asset-owner review", "gips-asset-owner-review", 4, 7, ["GIPS Asset Owner Review", "Oversight summary"]),
-    ("report review", "gips" "-report-review", 4, 7, ["GIPS Report Review", "Preparer fix list"]),
+    (
+        "asset-owner review",
+        "gips-asset-owner-review",
+        4,
+        7,
+        ["GIPS Asset Owner Review", "Oversight summary"],
+    ),
+    (
+        "report review",
+        "gips-report-review",
+        4,
+        7,
+        ["GIPS Report Review", "Preparer fix list"],
+    ),
 ]
 ANALYTICAL_REPORT_VALIDATORS = [
     (
@@ -162,7 +179,10 @@ CONSTRUCTION_VALIDATORS = [
     ),
 ]
 SETUP_SKILL = ROOT / "skills" / "gradient-setup" / "SKILL.md"
-STALE = re.compile(r"(?<!gradient-)\bgips-(compliance|standards|manager-diligence|report-review|asset-owner-review|policies-gap-check)\b|gradient-capabilities")
+STALE = re.compile(
+    r"(?<!gradient-)\bgips-(compliance|standards|manager-diligence|report-review|asset-owner-review|policies-gap-check)"
+    r"(?!\.(?:md|json)\b|-visuals\.json\b|-meta\.json\b)\b|gradient-capabilities"
+)
 REPORT_CONSTANTS = ROOT / "shared" / "report_constants.py"
 if str(ROOT / "shared") not in sys.path:
     sys.path.insert(0, str(ROOT / "shared"))
@@ -260,11 +280,27 @@ def markdown_handoff_bodies(markdown):
     }
 
 def frontmatter(text):
-    m = re.match(r"^---\n(.*?)\n---\n", text, re.S)
-    if not m:
-        return {}
-    out = {}
-    for line in m.group(1).splitlines():
-        if ":" in line:
-            k, v = line.split(":", 1); out[k.strip()] = v.strip().strip('"')
-    return out
+    return parse_skill_frontmatter_text(text)
+
+
+def iter_registered_validator_cases(registration, *, include_chat=False):
+    cases = []
+    default_validator = registration.get("validator")
+    cases.extend(
+        (None, fixture_name, default_validator)
+        for fixture_name in registration.get("fixtures", [])
+    )
+    for mode, mode_registration in registration.get("modes", {}).items():
+        if isinstance(mode_registration, dict):
+            validator = mode_registration.get("validator")
+            fixture_names = mode_registration.get("fixtures", [])
+        else:
+            validator = default_validator
+            fixture_names = mode_registration
+        cases.extend((mode, fixture_name, validator) for fixture_name in fixture_names)
+    if include_chat:
+        cases.extend(
+            ("chat", fixture_name, None)
+            for fixture_name in registration.get("chat_fixtures", [])
+        )
+    return cases
