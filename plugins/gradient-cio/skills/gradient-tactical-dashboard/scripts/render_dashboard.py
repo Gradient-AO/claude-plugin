@@ -33,15 +33,6 @@ def color_for(cell, raw):
     return INK
 
 
-def rounded(fig, x, y, w, h, fc, ec="none", r=0.08, lw=0.6):
-    H = fig.get_figheight() * fig.dpi
-    W = fig.get_figwidth() * fig.dpi
-    ax = fig.add_axes([x, y, w, h]); ax.set_axis_off()
-    ax.add_patch(FancyBboxPatch((0, 0), 1, 1, boxstyle=f"round,pad=0,rounding_size={r}",
-                                transform=ax.transAxes, fc=fc, ec=ec, lw=lw, mutation_aspect=h * H / (w * W)))
-    return ax
-
-
 def measure_analysis_top(fig, L, R, H, s, k, y_bottom, explain, label, watch):
     """Measure the analysis block with the active font metrics."""
     tmp = plt.figure(figsize=fig.get_size_inches(), dpi=fig.dpi)
@@ -131,8 +122,7 @@ def render(spec, data, size_key, brand_mode, out):
             v, raw = value(t["value"], data)
             col = INK
             if t.get("value_color") == "stance":
-                col = {"Constructive": ACCENT, "Neutral": INK2, "Defensive": "#F2B84B",
-                       "Unfavorable": NEG}.get(str(resolve(t["stance"], data)) if t.get("stance") else "", INK)
+                col = STANCE_COLOR.get(str(resolve(t["stance"], data)) if t.get("stance") else "", INK)
             fig.text(x0 + 16 / W, y0 + th - hp(14), smart(t["label"]).upper(), fontsize=5.8 * s, color=INK2,
                      weight="bold", va="top")
             fig.text(x0 + 16 / W, y0 + th / 2 - hp(2), v, fontsize=(13 if tall else 10.5) * s, color=col,
@@ -245,7 +235,7 @@ def render(spec, data, size_key, brand_mode, out):
                 elif (a_ > 0) == (b_ > 0):
                     v, col = "Agree", ACCENT
                 else:
-                    v, col = "Split", "#F2B84B"
+                    v, col = "Split", AMBER
                 raw = None
             else:
                 v, raw = value(cell["value"], data) if "value" in cell else ("—", None)
@@ -295,9 +285,7 @@ def main():
     data, meta = load_inputs(spec["inputs"], os.path.dirname(os.path.abspath(args.spec)))
     if args.facts_only:
         print(json.dumps(facts_dump(spec, data, meta), indent=2, default=str)); return
-    for f, mx in (("headline", 90), ("explain", 700), ("watch", 200)):
-        if len(spec.get(f, "")) > mx:
-            sys.exit(f"{f} over {mx} characters.")
+    check_copy_limits(spec.get("headline"), spec.get("explain"), spec.get("watch"))
     n_rows = sum(1 for r in spec["rows"] if "group" not in r)
     if n_rows > 8:
         sys.exit("At most 8 comparison rows (portrait).")

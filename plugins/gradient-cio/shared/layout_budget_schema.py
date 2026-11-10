@@ -268,14 +268,14 @@ def _section_identifiers(section: dict[str, Any], index: int) -> set[str]:
     return resolved
 
 
-def _resolve_section_matches(
+def _resolve_indexed_section_matches(
     sections: list[Any],
     identifier: object,
-) -> list[dict[str, Any]]:
+) -> list[tuple[int, dict[str, Any]]]:
     """Prefer authored identifiers, then fall back to one-based position."""
     normalized = str(identifier).strip().lstrip("0") or "0"
     explicit = [
-        section
+        (index, section)
         for index, section in enumerate(sections, start=1)
         if isinstance(section, dict)
         and normalized in _section_identifiers(section, index)
@@ -283,10 +283,21 @@ def _resolve_section_matches(
     if explicit:
         return explicit
     return [
-        section
+        (index, section)
         for index, section in enumerate(sections, start=1)
         if isinstance(section, dict)
         and normalized == str(index)
+    ]
+
+
+def _resolve_section_matches(
+    sections: list[Any],
+    identifier: object,
+) -> list[dict[str, Any]]:
+    """Prefer authored identifiers, then fall back to one-based position."""
+    return [
+        section
+        for _, section in _resolve_indexed_section_matches(sections, identifier)
     ]
 
 

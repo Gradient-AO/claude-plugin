@@ -5,6 +5,8 @@ description: "Gradient Model Portfolio Lab: turns Gradient's model portfolios (T
 
 # Gradient Model Portfolio Lab
 
+> **Archived legacy reference — do not execute directly.** Current Portfolio Lens workflows use `SKILL.md` at the skill root, `references/lens-framework.md`, and `scripts/build_cma_mcp.py`. Legacy script names below (`build_cma.py`, `lab.py`, `portfolio_math.py`) are retained for historical reference only.
+
 The content series is built on analysis only Gradient can produce: its model portfolios combined with its own capital market assumptions (CMAs). Each post shows a real model allocation, estimates its risk, and evaluates marginal changes: marginal return and marginal risk of the next 1%, or a specific move from one sleeve to another. Readers engage even when the allocation doesn't match their own, because the question ("where does the risk sit?", "what does this move do?") applies to every plan.
 
 **Read before starting:** `references/models_and_data.md` (models, IDs, how to fetch inputs, the real-data rules, known assumption caveats) and `references/templates_and_ideas.md` (templates, pre-tested idea menu, writing and copy rules).

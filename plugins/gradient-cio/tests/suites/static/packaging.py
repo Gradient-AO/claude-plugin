@@ -8,7 +8,7 @@ import subprocess
 import sys
 import tempfile
 
-from suites.harness import FIX, ROOT, check
+from suites.harness import FIX, ROOT, check, iter_registered_validator_cases
 
 
 def marketplace_packaging_checks():
@@ -51,22 +51,13 @@ def marketplace_packaging_checks():
     )
 
 
-def _registered_validator_cases(registration):
-    cases = []
-    default_validator = registration.get("validator")
-    cases.extend(
-        (default_validator, fixture_name)
-        for fixture_name in registration.get("fixtures", [])
-    )
-    for mode_registration in registration.get("modes", {}).values():
-        if isinstance(mode_registration, dict):
-            validator = mode_registration.get("validator")
-            fixture_names = mode_registration.get("fixtures", [])
-        else:
-            validator = default_validator
-            fixture_names = mode_registration
-        cases.extend((validator, fixture_name) for fixture_name in fixture_names)
-    return cases
+def _registered_validator_cases(registration, *, include_chat=False):
+    return [
+        (validator, fixture_name)
+        for _mode, fixture_name, validator in iter_registered_validator_cases(
+            registration, include_chat=include_chat
+        )
+    ]
 
 
 def self_contained_report_skill_checks(skills, validator_manifest):
@@ -85,11 +76,6 @@ def self_contained_report_skill_checks(skills, validator_manifest):
         "inter-latin-ext-regular.ttf",
         "inter-latin-ext-semibold.ttf",
     )
-    report_skills = [
-        skill
-        for skill in skills
-        if "delivery: chat" not in (skill / "SKILL.md").read_text(encoding="utf-8")
-    ]
     check(
         all((ROOT / "shared" / name).is_file() for name in runtime_files)
         and all((ROOT / "assets" / "fonts" / name).is_file() for name in font_files)
@@ -100,33 +86,34 @@ def self_contained_report_skill_checks(skills, validator_manifest):
     failures = []
     exercised = 0
     expected = sum(
-        len(_registered_validator_cases(registration))
+        len(_registered_validator_cases(registration, include_chat=True))
         for registration in validator_manifest.values()
     )
     environment = os.environ.copy()
     environment.pop("PYTHONPATH", None)
-    for skill_name, registration in validator_manifest.items():
-        with tempfile.TemporaryDirectory() as temporary:
-            isolated_root = pathlib.Path(temporary)
-            installed_root = isolated_root / "gradient-cio"
-            shutil.copytree(
-                ROOT,
-                installed_root,
-                ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
-            )
-            isolated_fixtures = isolated_root / "fixtures"
-            isolated_fixtures.mkdir()
+    with tempfile.TemporaryDirectory() as temporary:
+        isolated_root = pathlib.Path(temporary)
+        installed_root = isolated_root / "gradient-cio"
+        shutil.copytree(
+            ROOT,
+            installed_root,
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+        )
+        isolated_fixtures = isolated_root / "fixtures"
+        isolated_fixtures.mkdir()
+        smoke_tested_validators = set()
+        for skill_name, registration in validator_manifest.items():
             isolated_skill = installed_root / "skills" / skill_name
             for validator_name, fixture_name in _registered_validator_cases(
-                registration
+                registration, include_chat=True
             ):
-                if not validator_name:
-                    failures.append(f"{skill_name}/{fixture_name}: missing validator")
-                    continue
                 source_fixture = FIX / fixture_name
                 isolated_fixture = isolated_fixtures / fixture_name
                 isolated_fixture.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(source_fixture, isolated_fixture)
+                if validator_name is None:
+                    exercised += 1
+                    continue
                 validator_path = (
                     installed_root / pathlib.Path(validator_name)
                 ).resolve()
@@ -140,6 +127,16 @@ def self_contained_report_skill_checks(skills, validator_manifest):
                         f"{skill_name}/{fixture_name}: validator is outside its skill"
                     )
                     continue
+                if not validator_path.is_file():
+                    failures.append(
+                        f"{skill_name}/{fixture_name}: missing validator {validator_name}"
+                    )
+                    continue
+                exercised += 1
+                smoke_key = (skill_name, validator_name)
+                if smoke_key in smoke_tested_validators:
+                    continue
+                smoke_tested_validators.add(smoke_key)
                 validated = subprocess.run(
                     [
                         sys.executable,
@@ -153,7 +150,6 @@ def self_contained_report_skill_checks(skills, validator_manifest):
                     encoding="utf-8",
                     errors="replace",
                 )
-                exercised += 1
                 if validated.returncode != 0:
                     detail = (validated.stdout or validated.stderr).strip()[-500:]
                     failures.append(

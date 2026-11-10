@@ -6,27 +6,34 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import pathlib
-import shutil
 import subprocess
 import sys
 
+if str(pathlib.Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
-REPOSITORY = ROOT.parents[1]
-TOOLS = ROOT / "tools"
+from _common import (
+    MARKETPLACE_MANIFEST_PATH,
+    PLUGIN_ROOT,
+    REPO_ROOT,
+    TOOLS_DIR,
+    load_plugin_manifest,
+    resolve_claude_command,
+)
+
+ROOT = PLUGIN_ROOT
+REPOSITORY = REPO_ROOT
+TOOLS = TOOLS_DIR
 
 
 def version_check() -> int:
-    plugin = json.loads(
-        (ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8")
-    )["version"]
+    plugin = load_plugin_manifest()["version"]
     marketplace = json.loads(
-        (REPOSITORY / ".claude-plugin" / "marketplace.json").read_text(
-            encoding="utf-8"
-        )
+        MARKETPLACE_MANIFEST_PATH.read_text(encoding="utf-8")
     )
     listed = next(
         entry["version"]
@@ -66,19 +73,9 @@ def version_check() -> int:
     return 0
 
 
-def claude_command() -> list[str] | None:
-    claude = shutil.which("claude")
-    if claude is not None:
-        return [claude]
-    npx = shutil.which("npx")
-    if npx is not None:
-        return [npx, "-y", "@anthropic-ai/claude-code"]
-    return None
-
-
-def main() -> int:
-    environment = dict(os.environ)
-    environment.setdefault("PYTHONUTF8", "1")
+def run_fast_script_checks(environment: dict[str, str] | None = None) -> int:
+    env = dict(os.environ if environment is None else environment)
+    env.setdefault("PYTHONUTF8", "1")
     if version_check() != 0:
         return 1
     for script in (
@@ -91,12 +88,30 @@ def main() -> int:
         completed = subprocess.run(
             [sys.executable, str(TOOLS / script), *arguments],
             cwd=REPOSITORY,
-            env=environment,
+            env=env,
             check=False,
         )
         if completed.returncode != 0:
             return completed.returncode
-    command = claude_command()
+    return 0
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--skip-claude-validate",
+        action="store_true",
+        help="run Python fast checks without invoking `claude plugin validate .`",
+    )
+    args = parser.parse_args()
+    environment = dict(os.environ)
+    environment.setdefault("PYTHONUTF8", "1")
+    fast_rc = run_fast_script_checks(environment)
+    if fast_rc != 0:
+        return fast_rc
+    if args.skip_claude_validate:
+        return 0
+    command = resolve_claude_command()
     if command is None:
         print("FAIL — install Node.js or the Claude CLI to run `claude plugin validate .`")
         return 1

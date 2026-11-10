@@ -2,6 +2,7 @@
 name: gradient-portfolio-review
 description: "Create a portfolio monitoring review for a board or committee. Triggers: 'review our total portfolio', 'prepare a quarterly portfolio review', 'monitor portfolio risks'. For a decision memo use gradient-decision-ic-memo."
 metadata:
+  version: "1.0.0"
   style_contract: "2.3.0"
   group: "Portfolio reports"
   subject: "total portfolio"
@@ -18,7 +19,6 @@ metadata:
 # Portfolio review
 
 Before using any expected return, excess return, or Sharpe ratio, read `references/contracts/expected-return-sources.md` and apply its return-source, weight-basis, comparison, and risk-free-rate labels.
-
 
 Use for periodic total-portfolio monitoring without a requested trade, vote, or
 recommendation. Default to a 6–8 page brief; use the 15–20 page comprehensive

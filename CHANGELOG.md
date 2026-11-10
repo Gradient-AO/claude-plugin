@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.13.0
+- Modularized the shared PDF and PowerPoint renderers into reusable chart, primitive, post-processing, and layout components.
+- Split renderer and report validation coverage into focused suites, removed obsolete fixtures, and strengthened packaging and source-hygiene checks.
+- Consolidated release tooling around shared path, frontmatter, synchronization, validation, and command-resolution helpers.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.12.0
 - Enabled private-markets PME as a Core workflow backed by the live Strategy Lab PME builder.
 - Added PME readiness contracts and probes, and tightened detailed capability requests to explicit bounded tool lists.

@@ -32,6 +32,19 @@ GRID = "#242C36"
 ACCENT = "#C6F432"    # Gradient lime
 POS = ACCENT          # up moves
 NEG = "#FF6B5E"       # down moves (coral)
+AMBER = "#F2B84B"     # defensive / split warning tone
+BAR_MUTED = "#3A4553" # non-highlighted bar fill
+STANCE_COLOR = {"Constructive": ACCENT, "Neutral": INK2, "Defensive": AMBER, "Unfavorable": NEG}
+
+# Muted chart palette for multi-series Portfolio Lens canvases
+LENS_BLUE = "#7393BA"
+LENS_AMBER = "#C9A25E"
+LENS_NEG = "#C9776D"
+LENS_SOFT = "#2A3340"
+LENS_CLASS_COLORS = ["#A3BF4E", "#6F8DB3", "#BFA06A", "#8E80AD", "#5E6B78", "#5C9C95", "#B5736B"]
+LENS_FILL_ALPHA = 0.10
+LENS_GREYS = ["#4E5966", "#5C6774", "#6A7582", "#3F4955", "#77828E", "#56616D"]
+
 BRAND_URL = "GradientCIO.com"
 # ONE disclaimer for every Gradient post (image, Substack). LinkedIn and X use "Not investment advice."
 DISCLAIMER = ("For informational purposes only; not investment advice. Figures are model assumptions, not forecasts, "
@@ -371,3 +384,48 @@ def style_axes(ax, s, monthly=False):
     else:
         ax.xaxis.set_major_locator(mdates.MonthLocator(bymonth=[1, 4, 7, 10]))
         ax.xaxis.set_major_formatter(mdates.DateFormatter("%b '%y"))
+
+
+def rounded_panel(fig, x, y, w, h, fc, ec="none", r=0.08, lw=0.6):
+    """Draw a rounded-rectangle panel axes at figure coordinates [x, y, w, h]."""
+    H = fig.get_figheight() * fig.dpi
+    W = fig.get_figwidth() * fig.dpi
+    ax = fig.add_axes([x, y, w, h])
+    ax.set_axis_off()
+    ax.add_patch(
+        FancyBboxPatch(
+            (0, 0),
+            1,
+            1,
+            boxstyle=f"round,pad=0,rounding_size={r}",
+            transform=ax.transAxes,
+            fc=fc,
+            ec=ec,
+            lw=lw,
+            mutation_aspect=h * H / (w * W),
+        )
+    )
+    return ax
+
+
+rounded = rounded_panel
+
+
+def check_copy_limits(
+    headline,
+    explain,
+    watch=None,
+    *,
+    max_headline=90,
+    max_explain=700,
+    max_watch=200,
+):
+    """Exit if headline, analysis, or watch copy exceeds canonical Quick Take limits."""
+    import sys as _sys
+
+    if len(headline or "") > max_headline:
+        _sys.exit(f"headline over {max_headline} characters.")
+    if len(explain or "") > max_explain:
+        _sys.exit(f"explain over {max_explain} characters.")
+    if watch and len(watch) > max_watch:
+        _sys.exit(f"watch over {max_watch} characters.")

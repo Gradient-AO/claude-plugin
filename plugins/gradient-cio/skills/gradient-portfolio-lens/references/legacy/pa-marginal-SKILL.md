@@ -5,6 +5,8 @@ description: "Gradient PA · Marginal: marginal return and marginal risk of addi
 
 # Gradient PA · Marginal
 
+> **Archived legacy reference — do not execute directly.** Current Portfolio Lens workflows use `SKILL.md` at the skill root, `references/lens-framework.md`, and `scripts/build_cma_mcp.py`. Legacy script names below (`build_cma.py`, `check_core_sync.py`, `pa_framework.md`) are retained for historical reference only.
+
 Three formats on a Gradient model (or reference portfolio), each under any `scenario`:
 - `marginal_map`: **ranked bars** of the implied % change in return per unit of risk from adding 1% to each class (funded pro rata); best lime, worst muted coral. Hero: the best class's implied change.
 - `marginal_move`: **before/after risk bars** with only the moved class colored. Hero: implied change in volatility for the change in return.

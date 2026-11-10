@@ -2,6 +2,7 @@
 name: gradient-setup
 description: "Create a readiness report for GradientCIO access and data. Triggers: 'check GradientCIO setup', 'test connector readiness', 'which workflows are ready'. For workflow selection use gradient-menu."
 metadata:
+  version: "1.0.0"
   style_contract: "2.3.0"
   group: "Start"
   subject: "connection and readiness"
@@ -17,8 +18,7 @@ metadata:
 # Gradient setup and readiness check
 
 Before using any expected return, excess return, or Sharpe ratio, read `${CLAUDE_PLUGIN_ROOT}/shared/contracts/expected-return-sources.md` and apply its return-source, weight-basis, comparison, and risk-free-rate labels.
-Use when the user is new to the Gradient skills, says "set up Gradient", "get started", "is Gradient connected", "what is ready for my organization", "check my access", "health check", "self-test", or another Gradient skill
-fails because the connector is missing, unauthorized or returning errors. For only "what can I do?" or
+Use when the user is new to the Gradient skills, says "set up Gradient", "get started", "is Gradient connected", "what is ready for my organization", "check my access", "health check", "self-test", or another Gradient skill fails because the connector is missing, unauthorized or returning errors. For only "what can I do?" or
 "show commands", use `gradient-menu`. Also use this readiness check after a plugin update.
 The deliverable is a short branded **"Gradient Readiness Report"**, plus a three-line chat summary and two or
 three prompts the user can try next. Keep the language plain: the reader may not be technical.

@@ -34,15 +34,6 @@ def joined(x, data):
     return "".join(value(i, data)[0] if isinstance(i, dict) else i for i in x)
 
 
-def rounded(fig, x, y, w, h, fc, ec="none", r=0.08):
-    H = fig.get_figheight() * fig.dpi
-    W = fig.get_figwidth() * fig.dpi
-    ax = fig.add_axes([x, y, w, h]); ax.set_axis_off()
-    ax.add_patch(FancyBboxPatch((0, 0), 1, 1, boxstyle=f"round,pad=0,rounding_size={r}", transform=ax.transAxes,
-                                fc=fc, ec=ec, lw=0.6, mutation_aspect=h * H / (w * W)))
-    return ax
-
-
 def render(spec, data, size_key, brand_mode, out):
     W, H = SIZES[size_key]
     dpi = 200
@@ -133,7 +124,7 @@ def render(spec, data, size_key, brand_mode, out):
                      color=INK2, weight="bold", ha="right", va="bottom")
         for i, (b, v) in enumerate(zip(reversed(bars), reversed(vals))):
             hl = b.get("highlight")
-            ax.barh(i, v, height=0.56, color=ACCENT if hl else "#3A4553", lw=0)
+            ax.barh(i, v, height=0.56, color=ACCENT if hl else BAR_MUTED, lw=0)
             yfig = bot + (top - bot) * ((i + 0.6) / (n + 0.2))
             fig.text(L, yfig, title_label(smart(b["label"])), fontsize=lfs, va="center",
                      color=INK if hl else INK2, weight="bold" if hl else "normal")
@@ -162,9 +153,7 @@ def main():
     data, meta = load_inputs(spec["inputs"], os.path.dirname(os.path.abspath(args.spec)))
     if args.facts_only:
         print(json.dumps(facts_dump(spec, data, meta), indent=2, default=str)); return
-    for f, mx in (("headline", 90), ("explain", 700), ("watch", 200)):
-        if len(spec.get(f, "")) > mx:
-            sys.exit(f"{f} over {mx} characters.")
+    check_copy_limits(spec.get("headline"), spec.get("explain"), spec.get("watch"))
     if spec.get("chart") and len(spec["chart"]["bars"]) > 8:
         sys.exit("At most 8 bars.")
     for kk in args.sizes.split(","):

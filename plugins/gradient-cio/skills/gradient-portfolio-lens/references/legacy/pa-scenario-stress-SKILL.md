@@ -5,6 +5,8 @@ description: "Gradient PA · Scenario Stress: plots one portfolio (a 60/40, 70/3
 
 # Gradient PA · Scenario Stress
 
+> **Archived legacy reference — do not execute directly.** Current Portfolio Lens workflows use `SKILL.md` at the skill root, `references/lens-framework.md`, and `scripts/build_cma_mcp.py`. Legacy script names below (`build_cma.py`, `check_core_sync.py`, `pa_framework.md`) are retained for historical reference only.
+
 One portfolio, every economy. **Chart:** ranked bars of implied return per unit of risk by economy; baseline lime (with a dashed reference line), weakest regime muted coral, the rest grey. **Hero:** baseline ratio → weakest regime's ratio. One point: how much the weakest 10-year scenarios cut the implied ratio. Scenarios within 0.02 of the weakest are highlighted as tied, and a persistence check stops the render if the ranking only reflects assumed duration (framework §4b).
 
 ## Spec

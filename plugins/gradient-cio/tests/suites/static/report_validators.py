@@ -7,7 +7,7 @@ import subprocess
 import sys
 import tempfile
 
-from suites.harness import FIX, ROOT, check
+from suites.harness import FIX, ROOT, check, iter_registered_validator_cases
 from report_json_validator import validate_sources_appendix_identity
 
 
@@ -789,20 +789,12 @@ def registered_json_validator_checks(validator_manifest):
     exercised = 0
     for skill_name, registration in validator_manifest.items():
         cases = [
-            (None, fixture_name, ROOT / registration["validator"])
-            for fixture_name in registration.get("fixtures", [])
-        ]
-        for mode, mode_registration in registration.get("modes", {}).items():
-            if isinstance(mode_registration, dict):
-                validator = ROOT / mode_registration["validator"]
-                fixture_names = mode_registration.get("fixtures", [])
-            else:
-                validator = ROOT / registration["validator"]
-                fixture_names = mode_registration
-            cases.extend(
-                (mode, fixture_name, validator)
-                for fixture_name in fixture_names
+            (mode, fixture_name, ROOT / validator_rel)
+            for mode, fixture_name, validator_rel in iter_registered_validator_cases(
+                registration
             )
+            if validator_rel is not None
+        ]
         for mode, fixture_name, validator in cases:
             fixture = FIX / fixture_name
             if fixture.suffix != ".json" or not fixture.is_file():

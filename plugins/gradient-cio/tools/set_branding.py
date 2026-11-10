@@ -1,22 +1,38 @@
 #!/usr/bin/env python3
 """Brand this plugin for one client before distributing it.
 
-    python tools/set_branding.py --client "Northwind Pension Plan" --logo path/to/logo.png
-    python tools/set_branding.py --client "Northwind Pension Plan" --confidentiality "Confidential — Northwind IC"
-    python tools/set_branding.py --reset          # back to Gradient branding
+    python plugins/gradient-cio/tools/set_branding.py --client "Northwind Pension Plan" --logo path/to/logo.png
+    python plugins/gradient-cio/tools/set_branding.py --client "Northwind Pension Plan" --confidentiality "Confidential — Northwind IC"
+    python plugins/gradient-cio/tools/set_branding.py --reset          # back to Gradient branding
 
 Writes branding.json at the plugin root and copies the logo to assets/client-logo.<ext>.
 Logos: PNG or SVG, wide format, transparent or dark-friendly (the cover is dark). Colours never change.
-Then repackage the plugin (zip the plugin folder as <name>.plugin).
+Never commit a non-default branding.json to main.
 """
-import argparse, json, pathlib, shutil
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+from __future__ import annotations
 
-def main():
+import argparse
+import json
+import pathlib
+import shutil
+import sys
+
+if str(pathlib.Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+
+from _common import PLUGIN_ROOT
+
+ROOT = PLUGIN_ROOT
+
+
+def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--client"); ap.add_argument("--logo"); ap.add_argument("--confidentiality")
-    ap.add_argument("--no-powered-by", action="store_true"); ap.add_argument("--reset", action="store_true")
+    ap.add_argument("--client")
+    ap.add_argument("--logo")
+    ap.add_argument("--confidentiality")
+    ap.add_argument("--no-powered-by", action="store_true")
+    ap.add_argument("--reset", action="store_true")
     a = ap.parse_args()
     for old in (ROOT / "assets").glob("client-logo.*"):
         old.unlink()
@@ -38,11 +54,16 @@ def main():
                 ap.error("logo must be .png, .svg or .jpg")
             (ROOT / "assets").mkdir(exist_ok=True)
             dst = ROOT / "assets" / ("client-logo" + src.suffix.lower())
-            shutil.copyfile(src, dst); b["client_logo"] = f"assets/{dst.name}"
+            shutil.copyfile(src, dst)
+            b["client_logo"] = f"assets/{dst.name}"
         b["confidentiality"] = a.confidentiality or ""
         b["powered_by"] = not a.no_powered_by
-    (ROOT / "branding.json").write_text(json.dumps(b, indent=2) + "\n", encoding="utf-8")
+    (ROOT / "branding.json").write_text(
+        json.dumps(b, indent=2) + "\n", encoding="utf-8"
+    )
     print("branding:", json.dumps(b))
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

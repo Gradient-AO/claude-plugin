@@ -15,7 +15,7 @@ Formats (spec "format"):
   marginal_move    risk mix before vs after a move (100% bars)
   capital_vs_risk  ribbon: share of capital flowing into share of risk
 
-Every number is computed by pa_core.py from saved Gradient inputs. Claude writes only the words.
+Every number is computed from server-backed Gradient payloads (with `pa_core.py` fallback only when the connector lacks a format's capability). Claude writes only the words.
 """
 import argparse, json, os, sys
 
@@ -37,15 +37,15 @@ SERIES = "PORTFOLIO LENS"
 LABEL = {"head_to_head": "HEAD-TO-HEAD", "scenario_stress": "SCENARIO STRESS", "currency_lens": "CURRENCY LENS",
          "marginal_map": "NEXT 1%", "marginal_move": "THE MOVE", "capital_vs_risk": "WHERE THE RISK SITS",
          "equity_dial": "EQUITY DIAL", "diversifier_scorecard": "DIVERSIFIER SCORECARD"}
-# Muted chart palette: the brand lime stays the single highlight; every other series is toned down so
-# charts with several colors stay calm. Edit here only.
-BLUE = "#7393BA"     # slate blue (second series)
-AMBER = "#C9A25E"    # ochre (warnings)
-NEG = "#C9776D"      # muted coral (weaker / lower)
-SOFT = "#2A3340"
-CLASS_COLORS = ["#A3BF4E", "#6F8DB3", "#BFA06A", "#8E80AD", "#5E6B78", "#5C9C95", "#B5736B"]
-FILL_ALPHA = 0.10
-GREYS = ["#4E5966", "#5C6774", "#6A7582", "#3F4955", "#77828E", "#56616D"]
+# Muted chart palette from shared brand tokens: the brand lime stays the single highlight;
+# every other series is toned down so charts with several colors stay calm.
+BLUE = LENS_BLUE
+AMBER = LENS_AMBER
+NEG = LENS_NEG
+SOFT = LENS_SOFT
+CLASS_COLORS = LENS_CLASS_COLORS
+FILL_ALPHA = LENS_FILL_ALPHA
+GREYS = LENS_GREYS
 
 MATERIAL_GAP = 0.02   # smallest difference in return per unit of risk treated as a meaningful ranking
 DEFAULT_DIVERSIFIERS = [8, 17, 12, 16, 18, 9, 19]   # order shown when nothing else ranks them

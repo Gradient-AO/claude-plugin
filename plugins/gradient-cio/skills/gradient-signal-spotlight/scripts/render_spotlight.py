@@ -289,9 +289,7 @@ def main():
         print(json.dumps(F, indent=2)); return
     if not (args.headline and args.explain):
         sys.exit("--headline and --explain are required to render")
-    if len(args.headline) > 90: sys.exit("Headline over 90 characters; shorten it.")
-    if len(args.explain) > 780: sys.exit("Analysis over 780 characters; shorten it.")
-    if args.watch and len(args.watch) > 200: sys.exit("Watch line over 200 characters; shorten it.")
+    check_copy_limits(args.headline, args.explain, args.watch)
     if args.chart == "three_month" and not sel.get("three_month_path"):
         sys.exit("STOP: payload has no three_month_path; use --chart one_year.")
     args.headline, args.explain = smart(args.headline), smart(args.explain)

@@ -86,7 +86,7 @@ always as a preview first, and only after you confirm.
 
 ## House style
 
-All skills render with the same `scripts/gradient_report.py` and follow `references/report-style.md`
+All skills render with the same `shared/render.py` (`shared/gradient_report.py` and `shared/gradient_pptx.py`) and follow `shared/report-style.md`
 (cover, labels, signal levels, writing rules, file naming and delivery). Reports never change colours or fonts.
 
 ## Client branding
@@ -101,10 +101,10 @@ Gradient branding. A single report can also be branded at run time (see `shared/
 Follow `CLAUDE.md` at the repository root: it is the single source for the change, test, versioning and
 release process. Edit the renderer and style guide only in `shared/`, then run `python tools/sync_shared.py`.
 
-Validation policy shared by multiple JSON reports lives in `tools/report_constants.py`; generic report
-contracts live in `tools/report_json_validator.py`, and construction contracts live in
-`tools/construction_report_validator.py`. Skill-local validators retain their small `parents[3]` path
-bootstrap so they can be invoked directly from a skill while importing the plugin-level tools.
+Validation policy shared by multiple JSON reports lives in `shared/report_constants.py`; generic report
+contracts live in `shared/report_json_validator.py`, and construction contracts live in
+`shared/construction_report_validator.py`. Skill-local validators retain their small `parents[3]` path
+bootstrap so they can be invoked directly from a skill while importing the plugin-level shared modules.
 
 `tests/run_tests.py` is the test entry point. It orchestrates the focused modules under `tests/suites/`; use
 `--static` for the fast contract and validator lane, or run it without flags for the complete PDF, PowerPoint,

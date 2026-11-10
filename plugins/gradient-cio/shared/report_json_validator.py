@@ -23,6 +23,9 @@ from report_layout import SIGNAL_LABEL_MAX_CHARACTERS, cover_policy_errors  # no
 from report_constants import (  # noqa: E402
     ILLUSTRATIVE_LABEL,
     METADATA_RESPONSE_DIGEST,
+    PLACEHOLDER_PATTERNS,
+    SHA256_DIGEST_PATTERN,
+    collect_strings,
 )
 
 
@@ -60,7 +63,6 @@ SOURCE_COLUMNS = (
 )
 SOURCES_APPENDIX_TITLE = "Appendix — Sources and methods"
 SOURCES_APPENDIX_NUM = "A"
-SHA256_DIGEST_PATTERN = re.compile(r"sha256:[0-9a-f]{64}")
 SOURCE_VALIDATION_VALUES = frozenset(
     {
         "passed",
@@ -79,12 +81,6 @@ ABSENT_PAYLOAD_VALIDATIONS = frozenset(
     {"failed", "unavailable", "not_run", "not_applicable"}
 )
 NO_PAYLOAD_DIGEST = "not_available:no_payload"
-PLACEHOLDER_PATTERNS = (
-    re.compile(r"<[^<>\n]{2,100}>"),
-    re.compile(r"\{\{[^{}\n]+\}\}"),
-    re.compile(r"\b(?:TBD|TODO|FIXME|TK)\b", re.IGNORECASE),
-    re.compile(r"\[(?:INSERT|PLACEHOLDER)[^\]]*\]", re.IGNORECASE),
-)
 TYPED_UNAVAILABLE_PATTERN = re.compile(
     r"\b(?:not available|unavailable|not licensed|not run|not assessed|"
     r"not applicable|insufficient evidence|canonical_[a-z_]+_unavailable)\b",
@@ -251,17 +247,6 @@ class ReportSpec:
         "completeness",
     )
     required_top_level_fields: tuple[str, ...] = ("executive", "sections")
-
-
-def collect_strings(value: JsonValue) -> list[str]:
-    """Return every string nested in a JSON-compatible value."""
-    if isinstance(value, str):
-        return [value]
-    if isinstance(value, list):
-        return [item for child in value for item in collect_strings(child)]
-    if isinstance(value, dict):
-        return [item for child in value.values() for item in collect_strings(child)]
-    return []
 
 
 def contains_number(value: JsonValue) -> bool:

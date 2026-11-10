@@ -42,25 +42,11 @@ from pathlib import Path
 from typing import Any
 
 from gradient_report import md_document_to_report
+from report_constants import PLACEHOLDER_COMBINED_PATTERN as PLACEHOLDER, collect_strings
 from report_layout import load_layout_budget, validate_report_budget
 
 
 SOURCE_TAG = re.compile(r"\[S(\d+)\]")
-PLACEHOLDER = re.compile(
-    r"<[^<>\n]{2,100}>|\{\{[^{}\n]+\}\}|\b(?:TBD|TODO|FIXME|TK)\b",
-    re.IGNORECASE,
-)
-
-
-def collect_strings(value: Any) -> list[str]:
-    """Return every nested string."""
-    if isinstance(value, str):
-        return [value]
-    if isinstance(value, list):
-        return [text for item in value for text in collect_strings(item)]
-    if isinstance(value, dict):
-        return [text for item in value.values() for text in collect_strings(item)]
-    return []
 
 
 def normalize_unavailable(block: dict[str, Any]) -> dict[str, Any]:
