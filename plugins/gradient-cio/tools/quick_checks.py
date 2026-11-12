@@ -32,17 +32,18 @@ TOOLS = TOOLS_DIR
 
 def version_check() -> int:
     plugin = load_plugin_manifest()["version"]
-    marketplace = json.loads(
-        MARKETPLACE_MANIFEST_PATH.read_text(encoding="utf-8")
-    )
-    listed = next(
-        entry["version"]
-        for entry in marketplace["plugins"]
-        if entry["name"] == "gradient-cio"
-    )
-    if plugin != listed:
-        print(f"FAIL — plugin.json {plugin} != marketplace.json {listed}")
-        return 1
+    if MARKETPLACE_MANIFEST_PATH.is_file():
+        marketplace = json.loads(
+            MARKETPLACE_MANIFEST_PATH.read_text(encoding="utf-8")
+        )
+        listed = next(
+            entry["version"]
+            for entry in marketplace["plugins"]
+            if entry["name"] == "gradient-cio"
+        )
+        if plugin != listed:
+            print(f"FAIL — plugin.json {plugin} != marketplace.json {listed}")
+            return 1
     release_references = sorted(
         (ROOT / "skills").glob("*/references/plugin-release.json")
     )
@@ -78,6 +79,7 @@ def run_fast_script_checks(environment: dict[str, str] | None = None) -> int:
     env.setdefault("PYTHONUTF8", "1")
     if version_check() != 0:
         return 1
+    workdir = REPOSITORY if MARKETPLACE_MANIFEST_PATH.is_file() else ROOT
     for script in (
         "sync_shared.py",
         "sync_quicktake_shared.py",
@@ -87,7 +89,7 @@ def run_fast_script_checks(environment: dict[str, str] | None = None) -> int:
         arguments = ["--check"] if script != "check_tool_references.py" else []
         completed = subprocess.run(
             [sys.executable, str(TOOLS / script), *arguments],
-            cwd=REPOSITORY,
+            cwd=workdir,
             env=env,
             check=False,
         )
@@ -115,9 +117,10 @@ def main() -> int:
     if command is None:
         print("FAIL — install Node.js or the Claude CLI to run `claude plugin validate .`")
         return 1
+    validate_cwd = REPOSITORY if MARKETPLACE_MANIFEST_PATH.is_file() else ROOT
     return subprocess.run(
         [*command, "plugin", "validate", "."],
-        cwd=REPOSITORY,
+        cwd=validate_cwd,
         env=environment,
         check=False,
     ).returncode

@@ -98,6 +98,7 @@ def descriptions() -> dict[str, dict[str, str]]:
             "summary": summary,
             "status_reason": data.get("status_reason", ""),
             "domain_listing": data.get("domain_listing", ""),
+            "oauth_scopes": data.get("oauth_scopes", ""),
             **{key: data[key] for key in required_metadata},
         }
     return result
@@ -186,6 +187,11 @@ def menu_catalog(items: dict[str, dict[str, str]]) -> str:
                 + (
                     f" [{item['status'].title()}]"
                     if item["status"] in {"blocked", "paused"}
+                    else ""
+                )
+                + (
+                    f" [Scope: {item['oauth_scopes']}]"
+                    if item.get("oauth_scopes")
                     else ""
                 )
                 + f" — {item['summary']}"

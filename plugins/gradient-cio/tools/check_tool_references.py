@@ -19,12 +19,16 @@ TOOL_TOKEN = re.compile(
 def scanned_paths() -> list[pathlib.Path]:
     """Return the public guidance files that are allowed to name tools."""
     skills = ROOT / "skills"
+    shared = ROOT / "shared"
+    quicktake_shared = ROOT / "quicktake-shared"
     return sorted(
-        [
+        {
             *skills.glob("*/SKILL.md"),
             *skills.glob("*/references/data-map.md"),
             *skills.glob("*/references/modes/*-data-map.md"),
-        ]
+            *shared.glob("*.md"),
+            *quicktake_shared.glob("*.md"),
+        }
     )
 
 

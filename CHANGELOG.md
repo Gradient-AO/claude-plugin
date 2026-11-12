@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.14.0
+- Expanded the public connector catalog and readiness contracts for Strategy Lab, research, macro, CMA, and public-equity workflows.
+- Restored Risk Pulse as a Core workflow while retaining explicit saturation safeguards.
+- Improved installed-copy validation, catalog generation, and connector contract checks.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.13.0
 - Modularized the shared PDF and PowerPoint renderers into reusable chart, primitive, post-processing, and layout components.
 - Split renderer and report validation coverage into focused suites, removed obsolete fixtures, and strengthened packaging and source-hygiene checks.

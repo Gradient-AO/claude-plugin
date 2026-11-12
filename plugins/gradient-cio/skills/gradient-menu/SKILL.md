@@ -39,7 +39,7 @@ Example: “Show the GradientCIO workflow menu.”
 - `/gradient-cio:gradient-portfolio-attribution` — Explain portfolio attribution or compare compatible historical and ex ante lanes. Next: gradient-portfolio-review, gradient-decision-ic-memo, gradient-allocation-study.
 - `/gradient-cio:gradient-allocation-study` — Study total-plan and sleeve allocation choices. Next: gradient-decision-ic-memo.
 - `/gradient-cio:gradient-liquidity-pacing` — Assess liquidity tiers, commitments, pacing and capital-call coverage. Next: gradient-decision-ic-memo.
-- `/gradient-cio:gradient-portfolio-import` — Stage governed portfolio records for Gradient UI review or exact-preview confirmation. Next: gradient-portfolio-review.
+- `/gradient-cio:gradient-portfolio-import` [Scope: portfolio:import] — Stage governed portfolio records for Gradient UI review or exact-preview confirmation. Next: gradient-portfolio-review.
 
 Example: “Review our total portfolio for the quarter.”
 
@@ -57,7 +57,7 @@ Example: “Assess this manager against its benchmark.”
 ## Quick Takes
 - `/gradient-cio:gradient-portfolio-lens` — Explain illustrative portfolio risk, allocation moves, stresses and diversifiers. Next: gradient-portfolio-review.
 - `/gradient-cio:gradient-signal-spotlight` — Explain an unusual relative-return move and its likely driver.
-- `/gradient-cio:gradient-risk-pulse` [Paused] — Explain GRIP's score, path and underlying risk-pressure pillars.
+- `/gradient-cio:gradient-risk-pulse` — Explain GRIP's score, path and underlying risk-pressure pillars.
 - `/gradient-cio:gradient-tactical-dashboard` — Compare momentum, signals and assumptions without making an allocation call.
 - `/gradient-cio:gradient-ask-gradient` — Answer one investment question with governed Gradient data. Next: gradient-portfolio-lens.
 
@@ -72,7 +72,6 @@ Example: “Show workflows waiting on connector support.”
 - `/gradient-cio:gradient-odd-report` — Operational diligence is paused by product policy.
 - `/gradient-cio:gradient-odd-ddq-reconcile` — Operational diligence is paused by product policy.
 - `/gradient-cio:gradient-odd-manager-monitor` — Operational diligence is paused by product policy.
-- `/gradient-cio:gradient-risk-pulse` — GRIP remains saturated near its ceiling pending recalibration.
 
 Example: “Show workflows paused by product policy.”
 

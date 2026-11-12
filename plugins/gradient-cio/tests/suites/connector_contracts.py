@@ -75,9 +75,9 @@ def contract_manifest():
         public_catalog.get("generated") is True
         and public_catalog.get("source")
         == "active repo contract/probe closure for mcp.gradientcio.com"
-        and len(public_tools) == 27
+        and len(public_tools) == 45
         and public_tools == sorted(set(public_tools)),
-        "shared public-tool catalog contains 27 unique active tools",
+        "shared public-tool catalog contains 45 unique active tools",
     )
     manifest_errors = validate_contract_manifest(contracts, public_tools)
     check(

@@ -10,9 +10,7 @@ metadata:
   contracts: "quick-takes,macro-signals"
   handoffs: "none"
   delivery: files
-  status: "paused"
-  status_reason: "GRIP remains saturated near its ceiling pending recalibration."
-  domain_listing: "true"
+  status: "core"
   version: "1.0.0"
   summary: "Explain GRIP's score, path and underlying risk-pressure pillars."
 ---
@@ -34,7 +32,7 @@ Save one JSON file with: `as_of_date`, `availability`, `index_metadata` (for `la
 
 ### 2. Gates (the script enforces these)
 - `validation.status` must be `passed`.
-- **Saturation:** if 10 or more of the last 20 readings are at or above 95, the render stops. A gauge pinned at its ceiling cannot show change, so hold the weekly post until Gradient recalibrates GRIP (it has read 92–99 since early October 2026 at pressure z-scores near 0.5). Use `--allow-saturated` only for a one-off post that says so explicitly.
+- **Saturation:** if 10 or more of the last 20 readings are at or above 95 (or `saturationDetected` is `true`), the render stops. A gauge pinned at its ceiling cannot show change; use `--allow-saturated` only for a one-off post that says so explicitly.
 - `availability.status` must be `available` or `degraded`. When degraded, the footer automatically names the lagging input; mention it in the evidence note.
 - Data more than 3 business days old stops the render unless the user accepts it (`--allow-stale`).
 

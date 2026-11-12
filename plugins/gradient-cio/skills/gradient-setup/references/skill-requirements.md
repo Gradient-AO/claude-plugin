@@ -22,21 +22,21 @@ and `effective_capabilities` must equal whether that mode is not `unavailable`. 
 
 | Status | Skill | Produces | Required tools | Optional tools | Module(s) |
 |---|---|---|---|---|---|
-| Core | gradient-portfolio-lens | Portfolio Lens canvas and social copy | get_capital_market_assumptions (`portfolio_analytics`, `allocation_frontier`, `allocation_regimes`; inline weights only) | get_macro_signals | research |
-| Core | gradient-signal-spotlight | Signal Spotlight canvas and social copy | get_macro_signals | — | gradientSignals |
-| Core | gradient-tactical-dashboard | Tactical Dashboard canvas and social copy | get_macro_signals, get_capital_market_assumptions | — | gradientSignals, research |
-| Core | gradient-ask-gradient | Ask Gradient canvas and social copy | get_macro_signals, get_capital_market_assumptions | check_portfolio_policy, get_portfolio_exposure | gradientSignals, research |
-| Core | gradient-portfolio-review | Brief or comprehensive portfolio review PDF | list_portfolios, get_portfolio_structure, get_portfolio_exposure, check_portfolio_policy, get_portfolio_historical_returns | get_portfolio_attribution, get_benchmarks, get_macro_signals, get_capital_market_assumptions | portfolio |
-| Core | gradient-portfolio-attribution | Single or compare-lanes attribution PDF | list_portfolios, get_portfolio_structure, get_portfolio_historical_returns, get_portfolio_attribution, get_portfolio_ex_ante_attribution | get_benchmarks | portfolio |
-| Core | gradient-allocation-study | Total-plan or sleeve allocation study | list_portfolios, get_portfolio_structure, get_portfolio_exposure, check_portfolio_policy, get_portfolio_historical_returns, get_portfolio_attribution, get_capital_market_assumptions | get_private_markets_holdings | portfolio, research |
+| Core | gradient-portfolio-lens | Portfolio Lens canvas and social copy | get_capital_market_assumptions (`portfolio_analytics`, `allocation_frontier`, `allocation_regimes`; inline weights only) | get_macro_signals, get_cma_consensus_check, list_assumption_sets | research |
+| Core | gradient-signal-spotlight | Signal Spotlight canvas and social copy | get_macro_signals | get_macro_conditions, get_macro_calendar | gradientSignals |
+| Core | gradient-tactical-dashboard | Tactical Dashboard canvas and social copy | get_macro_signals, get_capital_market_assumptions | get_the_read, get_macro_conditions, get_macro_calendar, get_regional_research | gradientSignals, research |
+| Core | gradient-ask-gradient | Ask Gradient canvas and social copy | get_macro_signals, get_capital_market_assumptions | check_portfolio_policy, get_portfolio_exposure, get_the_read, get_macro_conditions, get_macro_calendar, get_regional_research, get_public_equity_fundamentals, get_public_equity_filing_evidence | gradientSignals, research |
+| Core | gradient-portfolio-review | Brief or comprehensive portfolio review PDF | list_portfolios, get_portfolio_structure, get_portfolio_exposure, check_portfolio_policy, get_portfolio_historical_returns | get_portfolio_attribution, get_benchmarks, get_macro_signals, get_capital_market_assumptions, list_assumption_sets | portfolio |
+| Core | gradient-portfolio-attribution | Single or compare-lanes attribution PDF | list_portfolios, get_portfolio_structure, get_portfolio_historical_returns, get_portfolio_attribution, get_portfolio_ex_ante_attribution | get_benchmarks, list_assumption_sets | portfolio |
+| Core | gradient-allocation-study | Total-plan or sleeve allocation study | list_portfolios, get_portfolio_structure, get_portfolio_exposure, check_portfolio_policy, get_portfolio_historical_returns, get_portfolio_attribution, get_capital_market_assumptions | get_private_markets_holdings, get_cma_consensus_check, list_assumption_sets, run_strategy_lab_simulation, run_strategy_lab_expected_statistics, run_strategy_lab_diversification, get_strategy_lab_saved_scenarios, compare_strategy_lab_saved_scenarios, save_strategy_lab_scenario | portfolio, research |
 | Core | gradient-liquidity-pacing | 6–10 page liquidity and pacing PDF | check_portfolio_policy, get_portfolio_exposure, get_private_markets_holdings, get_capital_market_assumptions | — | portfolio |
-| Core | gradient-decision-ic-memo | IC memo PDF | list_portfolios, get_portfolio_structure, get_portfolio_exposure, check_portfolio_policy, get_portfolio_historical_returns, get_portfolio_attribution, get_capital_market_assumptions | Strategy Lab supplement; missing makes the memo Partial | portfolio, research |
+| Core | gradient-decision-ic-memo | IC memo PDF | list_portfolios, get_portfolio_structure, get_portfolio_exposure, check_portfolio_policy, get_portfolio_historical_returns, get_portfolio_attribution, get_capital_market_assumptions | Strategy Lab supplement (`get_return_series`, `run_strategy_lab_expected_statistics`, `run_strategy_lab_relative_return`, `run_strategy_lab_date_window_robustness`, `analyze_strategy_lab_compare`); missing makes the memo Partial | portfolio, research |
 | Blocked | gradient-manager-evaluation | Single, fit or named-manager comparison PDF | — | — | Blocked until public selected return-series IDs are accessible |
 | Core | gradient-idd-private-markets-pme | Private-markets PME PDF or typed no-cash-flow result | list_portfolios, get_portfolio_exposure, get_benchmarks, build_strategy_lab_session, run_strategy_lab_private_markets_pme | get_private_markets_holdings | portfolio, strategyLab |
-| Core | gradient-portfolio-import | Governed import preview / UI handoff | get_portfolio_import_capabilities, get_portfolio_import_schema, start_portfolio_import_session, stage_private_market_holding_records, stage_portfolio_import_records, resolve_portfolio_import_entities, confirm_portfolio_import_mappings, preview_portfolio_import, commit_portfolio_import, get_portfolio_import_session, list_portfolio_import_runs | rollback_portfolio_import_bundle for an explicit bundle rollback request only | portfolio |
+| Core | gradient-portfolio-import | Governed import preview / UI handoff | get_portfolio_import_capabilities, get_portfolio_import_schema, start_portfolio_import_session, stage_private_market_holding_records, stage_portfolio_import_records, resolve_portfolio_import_entities, confirm_portfolio_import_mappings, preview_portfolio_import, commit_portfolio_import, get_portfolio_import_session, list_portfolio_import_runs | rollback_portfolio_import_bundle for an explicit bundle rollback request only | portfolio (OAuth scope `portfolio:import`) |
 | Core | gradient-menu | In-chat grouped command catalog | none | — | — |
 | Core | gradient-setup | Readiness PDF | list_organizations, get_gradient_capabilities | Active Core probes only | — |
-| Paused | gradient-risk-pulse | Risk Pulse canvas and social copy | — | — | Paused — GRIP saturated near its ceiling pending recalibration |
+| Core | gradient-risk-pulse | Risk Pulse canvas and social copy | get_macro_signals | get_macro_conditions, get_macro_calendar | gradientSignals |
 | Paused | gradient-odd-report | ODD report | — | — | Paused — operational diligence on hold |
 | Paused | gradient-odd-ddq-reconcile | DDQ reconciliation | — | — | Paused — operational diligence on hold |
 | Paused | gradient-odd-manager-monitor | Monitoring digest | — | — | Paused — operational diligence on hold |
@@ -93,7 +93,7 @@ For private-markets PME, `get_portfolio_exposure` must return each exposure's `p
 `benchmark_window_return`.
 
 For `gradient-portfolio-import`, all eleven required tools must be advertised
-and available, and the selected source connector must be client-authorized.
+and available with `scoped: true` (`portfolio:import` OAuth scope granted; if `missing_oauth_scopes` includes `portfolio:import`, report **Not ready — reconnect GradientCIO and grant OAuth scope `portfolio:import`**), and the selected source connector must be client-authorized.
 Run the dedicated `portfolio-import-governed` probe set only after the user
 selects one source provider/account and one existing Gradient portfolio.
 Use one session per selected data type. Holdings stage through
