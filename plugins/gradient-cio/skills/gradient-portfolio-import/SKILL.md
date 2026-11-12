@@ -8,6 +8,7 @@ metadata:
   output: "governed import"
   menu_order: "50"
   modules: "portfolio"
+  oauth_scopes: "portfolio:import"
   contracts: "portfolio-import-governed"
   handoffs: "gradient-portfolio-review"
   delivery: chat

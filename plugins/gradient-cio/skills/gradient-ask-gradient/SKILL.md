@@ -30,7 +30,7 @@ Good questions are ones a CIO would actually type, that Gradient data answers cl
 | Diversification | CMA `correlations` (with frequency sensitivity) | "Are bonds still diversifying equities in Gradient's assumptions?" |
 | Portfolio risk | CMA `portfolio_analytics` (server-computed risk contribution) for a reference portfolio or archetype | "How much of a 60/40's risk comes from equities on Gradient's assumptions?" |
 | Regime context | CMA `regime` overlays; `get_macro_signals` `regime_state` when published | "How do Gradient's stagflation assumptions change bond returns?" |
-| Risk posture | `get_macro_signals` `grip_index` (not while GRIP is saturated) | "Which part of the market is driving risk pressure this month?" |
+| Risk posture | `get_macro_signals` `grip_index` (when GRIP is not saturated) | "Which part of the market is driving risk pressure this month?" |
 | Liquidity | `check_portfolio_policy` liquidity and `get_portfolio_exposure` `liquidity_scorecard` on a Gradient model (illustrative) | "How liquid is a Total Plan-style portfolio in a stress month?" |
 
 For the deeper portfolio canvases (equity dial, diversifier scorecard, stress map), use `gradient-portfolio-lens` instead. Never use Strategy Lab demo series (synthetic) or peer data (Gradient no longer publishes peer analysis). Avoid questions that ask for a recommendation ("What should I overweight?"). Never use client portfolios or client data; use Gradient's illustrative data or public data. Don't show licensed third-party CMA consensus numbers.

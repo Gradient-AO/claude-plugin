@@ -46,6 +46,7 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 |---|---|---|
 | `gradient-portfolio-lens` | Create a Portfolio Lens Quick Take from Gradient assumptions and portfolio analytics. Triggers: 'Portfolio Lens', '60/40 risk', 'marginal move', 'stress map', 'equity dial', 'diversifier scorecard'. For a committee report use gradient-portfolio-review. | research |
 | `gradient-signal-spotlight` | Create a Signal Spotlight Quick Take from Gradient relative-return signals. Triggers: 'Signal Spotlight', 'relative-value post', 'growth vs value', 'chart of the day', 'this week's market post'. | gradientSignals |
+| `gradient-risk-pulse` | Create a Risk Pulse Quick Take from Gradient's GRIP risk gauge. Triggers: 'Risk Pulse', 'GRIP post', 'weekly risk reading', 'risk gauge', 'market stress post', 'this week's GRIP'. | gradientSignals |
 | `gradient-tactical-dashboard` | Create a Tactical Dashboard Quick Take comparing Gradient momentum, signals and long-run assumptions. Triggers: 'tactical dashboard', 'monthly scorecard', 'TAA post', 'momentum vs value', 'where signals disagree'. | research,gradientSignals |
 | `gradient-ask-gradient` | Create an Ask Gradient Quick Take answering one investment question with Gradient data. Triggers: 'Ask Gradient post', 'investment Q&A', 'one question post', 'Gradient demo post', 'turn this answer into social content'. | research,gradientSignals |
 
@@ -62,7 +63,6 @@ Start with `gradient-menu` to browse commands in chat or `gradient-setup` to che
 | `gradient-odd-report` | Create full or comparative operational due-diligence reports for managers or funds, including Form ADV and GIPS evidence. Triggers: 'run operational due diligence', 'compare manager operations', 'verify a manager GIPS claim'. For roster triage use gradient-odd-manager-monitor. | firmFundDiligence,research |
 | `gradient-odd-ddq-reconcile` | Create a DDQ reconciliation report against Form ADV evidence. Triggers: 'reconcile this DDQ', 'verify questionnaire answers', 'check DDQ discrepancies'. For a full operational review use gradient-odd-report. | firmFundDiligence |
 | `gradient-odd-manager-monitor` | Create a monitoring digest or triage a diligence roster. Triggers: 'prepare the weekly manager digest', 'show roster changes', 'review manager alerts', 'triage the manager roster'. For a full operational review use gradient-odd-report. | firmFundDiligence |
-| `gradient-risk-pulse` | Create a Risk Pulse Quick Take from Gradient's GRIP risk gauge. Triggers: 'Risk Pulse', 'GRIP post', 'weekly risk reading', 'risk gauge', 'market stress post', 'this week's GRIP'. | gradientSignals |
 
 <!-- END GENERATED SKILL CATALOG -->
 

@@ -574,9 +574,25 @@ def validate_mode(argv):
     }
     missing_tools = set(requirement["required_tools"]) - available_tools
     if missing_tools:
+        missing_scopes = sorted(
+            {
+                scope
+                for row in rows
+                if isinstance(row, dict)
+                and row.get("name") in missing_tools
+                for scope in (row.get("missing_oauth_scopes") or [])
+                if isinstance(scope, str) and scope
+            }
+        )
+        scope_suffix = (
+            f" (missing OAuth scopes: {', '.join(missing_scopes)} — reconnect GradientCIO to grant)"
+            if missing_scopes
+            else ""
+        )
         print(
             f"FAIL mode: {skill}.{mode} missing required tools "
             + ", ".join(sorted(missing_tools))
+            + scope_suffix
         )
         return 1
     print(

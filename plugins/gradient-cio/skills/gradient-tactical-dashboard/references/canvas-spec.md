@@ -21,7 +21,7 @@ assumptions imply…", "the scan ranked…", "one question in Claude pulled…")
 |---|---|---|---|---|
 | **Portfolio Lens** | `gradient-portfolio-lens` | What do Gradient's assumptions imply for a common portfolio? | Allocation discussions, education, committee pre-reads | CMA `portfolio_analytics` (server-computed return, risk, Euler risk contribution), regime overlays, correlations |
 | **Signal Spotlight** | `gradient-signal-spotlight` | Which spread moved unusually, and why? | A weekly market note | `get_macro_signals` relative returns |
-| **Risk Pulse** | `gradient-risk-pulse` | Where is market risk pressure coming from? | A weekly risk note (**paused while GRIP is saturated**) | `get_macro_signals` GRIP |
+| **Risk Pulse** | `gradient-risk-pulse` | Where is market risk pressure coming from? | A weekly risk note (gated when GRIP is saturated) | `get_macro_signals` GRIP |
 | **Tactical Dashboard** | `gradient-tactical-dashboard` | Where do momentum, signals and 10-year assumptions disagree? | A monthly scorecard | Relative returns + CMA + GRIP (+ regime when published) |
 | **Ask Gradient** | `gradient-ask-gradient` | One real question, answered live with Gradient data | Anything that fits one question | Rotates across the platform (see that skill's topic table) |
 
