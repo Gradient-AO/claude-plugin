@@ -1,6 +1,6 @@
 # GradientCIO plugins for Claude
 
-Public plugin marketplace for [GradientCIO](https://gradientcio.com) clients.
+Public plugin marketplace for [Gradient CIO](https://www.gradientcio.com) clients. See the [Claude setup guide](https://www.gradientcio.com/claude) and [platform overview](https://www.gradientcio.com/platform).
 
 ## Install
 
@@ -50,6 +50,6 @@ See [plugins/gradient-cio/README.md](plugins/gradient-cio/README.md) and [CHANGE
 
 Apache-2.0 (see [LICENSE](LICENSE) and [NOTICE](NOTICE)). The license does not cover the GradientCIO name, logo or report design.
 
-Privacy: [GradientCIO Privacy Policy](https://www.gradientcio.com/home/privacy)
+Privacy: [Gradient CIO Privacy Policy](https://www.gradientcio.com/privacy) · [Terms of Service](https://www.gradientcio.com/terms) · [Security](https://www.gradientcio.com/security)
 
 Questions: support@gradientcio.com
