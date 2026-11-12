@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.14.1
+- Updated public Gradient CIO links to the current website, Claude setup guide, platform overview, privacy policy, terms, and security pages.
+- Client update: `/plugin marketplace update gradientcio`
+
 ## 6.14.0
 - Expanded the public connector catalog and readiness contracts for Strategy Lab, research, macro, CMA, and public-equity workflows.
 - Restored Risk Pulse as a Core workflow while retaining explicit saturation safeguards.

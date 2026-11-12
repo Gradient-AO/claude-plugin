@@ -1,10 +1,10 @@
 # Gradient CIO — client skills
 
-Skills for institutional allocators that turn GradientCIO evidence into
+Skills for institutional allocators that turn [Gradient CIO](https://www.gradientcio.com) evidence into
 decision-ready reports and one-page Quick Take canvases. Report skills deliver
 branded PDFs; Quick Takes deliver square and portrait images, a LinkedIn
 carousel where applicable, and matching social copy. `gradient-menu` replies
-in chat without loading rendering tools.
+in chat without loading rendering tools. See the [Claude setup guide](https://www.gradientcio.com/claude) and [platform overview](https://www.gradientcio.com/platform).
 
 ## Skills
 
